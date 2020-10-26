@@ -1,0 +1,434 @@
+package indi.sly.system.kernel.objects.prototypes;
+
+import indi.sly.system.common.exceptions.*;
+import indi.sly.system.common.functions.*;
+import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.enviroment.SpaceTypes;
+import indi.sly.system.kernel.memory.caches.InfoObjectCacheObject;
+import indi.sly.system.kernel.objects.Identification;
+import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.entities.InfoEntity;
+import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
+import indi.sly.system.kernel.objects.types.TypeObject;
+import indi.sly.system.kernel.processes.dumps.DumpDefinition;
+import indi.sly.system.kernel.processes.dumps.DumpObject;
+import indi.sly.system.kernel.security.SecurityDescriptorObject;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+
+import javax.inject.Named;
+import java.util.*;
+import java.util.function.Predicate;
+
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class InfoObject extends ACoreObject {
+    protected InfoObjectFactoryObject factory;
+    protected InfoObjectProcessorRegister processorRegister;
+
+    protected UUID id;
+    protected UUID poolID;
+    protected StatusDefinition status;
+
+    public UUID getID() {
+        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
+        return this.id;
+    }
+
+    public UUID getParentID() {
+        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
+        return this.status.getParentID();
+    }
+
+
+    public UUID getType() {
+        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
+        return this.getInfo().getType();
+    }
+
+    public long getOccupied() {
+        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
+        return this.getInfo().getOccupied();
+    }
+
+    public long getOpened() {
+        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
+        return this.getInfo().getOpened();
+    }
+
+    public String getName() {
+        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
+        return this.getInfo().getName();
+    }
+
+    public UUID getHandle() {
+        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
+        return this.status.getOpen().getHandle();
+    }
+
+    public List<Identification> getIdentifications() {
+        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
+        return Collections.unmodifiableList(this.status.getIdentifications());
+    }
+
+    //
+
+    private synchronized void occupy() {
+        InfoEntity info = this.getInfo();
+        info.setOccupied(info.getOccupied() + 1);
+
+        InfoObject parent = this.getParent();
+        if (ObjectUtils.allNotNull(parent)) {
+            parent.occupy();
+        }
+    }
+
+    private synchronized void free() {
+        InfoEntity info = this.getInfo();
+        info.setOccupied(info.getOccupied() - 1);
+
+        InfoObject parent = this.getParent();
+        if (ObjectUtils.allNotNull(parent)) {
+            parent.free();
+        }
+    }
+
+    private synchronized InfoEntity getInfo() {
+        return this.processorRegister.getInfo().apply(this.poolID, this.id, this.status);
+    }
+
+    public synchronized InfoObject getParent() {
+        InfoEntity info = this.getInfo();
+
+        if (UUIDUtils.isAnyNullOrEmpty(this.status.getParentID())) {
+            return null;
+        } else {
+            return this.processorRegister.getParent().apply(this.status.getParentID());
+        }
+    }
+
+    public synchronized Map<Long, Date> getDate() {
+        InfoEntity info = this.getInfo();
+
+        Map<Long, Date> date = ObjectUtils.transferFromByteArray(info.getDate());
+
+        return Collections.unmodifiableMap(date);
+    }
+
+    public synchronized SecurityDescriptorObject getSecurityDescriptor() {
+        InfoEntity info = this.getInfo();
+
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeObject type = typeManager.get(this.getType());
+
+        Function3<SecurityDescriptorObject, InfoEntity, TypeObject, StatusDefinition> func = this.processorRegister.getSecurityDescriptor();
+
+        if (ObjectUtils.isAnyNull(func)) {
+            throw new StatusNotSupportedException();
+        }
+
+        return func.apply(info, type, this.status);
+    }
+
+    public synchronized DumpObject dump() {
+        InfoEntity info = this.getInfo();
+
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeObject type = typeManager.get(this.getType());
+
+        List<Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, StatusDefinition>> funcs = this.processorRegister.getDumps();
+
+        DumpDefinition dump = new DumpDefinition();
+
+        for (Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, StatusDefinition> pair : funcs) {
+            dump = pair.apply(dump, info, type, this.status);
+        }
+
+        return this.factory.buildDumpObject(dump);
+    }
+
+    public synchronized UUID open(long openAttribute, Object... arguments) {
+        if (this.isOpened()) {
+            throw new StatusAlreadyFinishedException();
+        }
+
+        InfoEntity info = this.getInfo();
+
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeObject type = typeManager.get(this.getType());
+
+        List<Function6<UUID, UUID, InfoEntity, TypeObject, StatusDefinition, Long, Object[]>> funcs = this.processorRegister.getOpens();
+
+        UUID handle = UUIDUtils.getEmpty();
+
+        for (Function6<UUID, UUID, InfoEntity, TypeObject, StatusDefinition, Long, Object[]> pair : funcs) {
+            handle = pair.apply(handle, info, type, this.status, openAttribute, arguments);
+            if (ObjectUtils.isAnyNull(handle)) {
+                throw new StatusUnexpectedException();
+            }
+        }
+
+        this.status.getOpen().setAttribute(openAttribute);
+
+        this.status.getOpen().setHandle(handle);
+
+        InfoObject parent = this.getParent();
+        if (ObjectUtils.allNotNull(parent)) {
+            parent.occupy();
+        }
+
+        return handle;
+    }
+
+    public synchronized void close() {
+        InfoEntity info = this.getInfo();
+
+        if (!this.isOpened()) {
+            throw new StatusAlreadyFinishedException();
+        }
+
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeObject type = typeManager.get(this.getType());
+
+        List<Consumer3<InfoEntity, TypeObject, StatusDefinition>> funcs = this.processorRegister.getCloses();
+
+        for (Consumer3<InfoEntity, TypeObject, StatusDefinition> pair : funcs) {
+            pair.accept(info, type, this.status);
+        }
+
+        InfoObject parent = this.getParent();
+        if (ObjectUtils.allNotNull(parent)) {
+            parent.free();
+        }
+    }
+
+    public synchronized boolean isOpened() {
+        return !UUIDUtils.isAnyNullOrEmpty(this.status.getOpen().getHandle());
+    }
+
+    public synchronized InfoObject createChildAndOpen(UUID type, Identification identification, long openAttribute, Object... arguments) {
+        if (!UUIDUtils.isAnyNullOrEmpty(this.status.getOpen().getHandle()) || ObjectUtils.isAnyNull(identification)) {
+            throw new ConditionParametersException();
+        }
+        if (ObjectUtils.isAnyNull(arguments)) {
+            arguments = new Object[0];
+        }
+
+        InfoEntity info = this.getInfo();
+
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeObject typeObject = typeManager.get(this.getType());
+
+        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, UUID, Identification>> funcs = this.processorRegister.getCreateChildAndOpens();
+
+        InfoEntity childInfo = null;
+
+        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, UUID, Identification> pair : funcs) {
+            childInfo = pair.apply(childInfo, info, typeObject, this.status, type, identification);
+        }
+
+        if (ObjectUtils.isAnyNull(info)) {
+            throw new StatusUnexpectedException();
+        }
+
+        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
+
+        InfoObject childInfoObject = this.factoryManager.create(InfoObject.class);
+        this.factory.buildKernelObject(childInfo, this, childInfoObject);
+
+        kernelCache.add(SpaceTypes.USER, childInfoObject);
+
+        childInfoObject.open(openAttribute, arguments);
+
+        return childInfoObject;
+    }
+
+    public synchronized InfoObject getChild(Identification identification) {
+        return this.rebuildChild(identification, null);
+    }
+
+    public synchronized InfoObject rebuildChild(Identification identification, StatusOpenDefinition statusOpen) {
+        if (ObjectUtils.isAnyNull(identification)) {
+            throw new ConditionParametersException();
+        }
+
+        InfoEntity info = this.getInfo();
+
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeObject type = typeManager.get(this.getType());
+
+        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification, StatusOpenDefinition>> funcs = this.processorRegister.getGetOrRebuildChilds();
+
+        InfoEntity childInfo = null;
+
+        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification, StatusOpenDefinition> pair : funcs) {
+            childInfo = pair.apply(childInfo, info, type, this.status, identification, statusOpen);
+        }
+
+        if (ObjectUtils.isAnyNull(childInfo)) {
+            throw new StatusUnexpectedException();
+        }
+
+        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
+
+        InfoObject childCachedInfo = kernelCache.getIfExisted(SpaceTypes.ALL, childInfo.getID());
+        if (ObjectUtils.allNotNull(childCachedInfo)) {
+            return childCachedInfo;
+        } else {
+            InfoObject childInfoObject = this.factoryManager.create(InfoObject.class);
+
+            this.factory.buildKernelObject(childInfo, statusOpen, this, childCachedInfo);
+
+            kernelCache.add(SpaceTypes.USER, childInfoObject);
+
+            return childInfoObject;
+        }
+    }
+
+    public synchronized void deleteChild(Identification identification) {
+        if (ObjectUtils.isAnyNull(identification)) {
+            throw new ConditionParametersException();
+        }
+
+        InfoEntity info = this.getInfo();
+        InfoObject childInfoObject = this.getChild(identification);
+
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeObject type = typeManager.get(this.getType());
+
+        List<Consumer4<InfoEntity, TypeObject, StatusDefinition, Identification>> funcs = this.processorRegister.getDeleteChilds();
+
+        for (Consumer4<InfoEntity, TypeObject, StatusDefinition, Identification> pair : funcs) {
+            pair.accept(info, type, this.status, identification);
+        }
+
+        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
+        kernelCache.delete(SpaceTypes.ALL, childInfoObject.getID());
+    }
+
+    public synchronized Set<InfoSummaryDefinition> queryChild(Predicate<InfoSummaryDefinition> wildcard) {
+        if (ObjectUtils.isAnyNull(wildcard)) {
+            throw new ConditionParametersException();
+        }
+
+        InfoEntity info = this.getInfo();
+
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeObject type = typeManager.get(this.getType());
+
+        List<Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject, StatusDefinition, Predicate<InfoSummaryDefinition>>> funcs = this.processorRegister
+                .getQueryChilds();
+
+        Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
+
+        for (Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject, StatusDefinition, Predicate<InfoSummaryDefinition>> pair : funcs) {
+            infoSummaries = pair.apply(infoSummaries, info, type, this.status, wildcard);
+        }
+
+        return infoSummaries;
+    }
+
+    public synchronized void renameChild(Identification oldIdentification, Identification newIdentification) {
+        if (ObjectUtils.isAnyNull(oldIdentification, newIdentification)) {
+            throw new ConditionParametersException();
+        }
+
+        InfoEntity info = this.getInfo();
+
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeObject type = typeManager.get(this.getType());
+
+        List<Consumer5<InfoEntity, TypeObject, StatusDefinition, Identification, Identification>> funcs = this.processorRegister.getRenameChilds();
+
+        for (Consumer5<InfoEntity, TypeObject, StatusDefinition, Identification, Identification> pair : funcs) {
+            pair.accept(info, type, this.status, oldIdentification, newIdentification);
+        }
+    }
+
+    public synchronized Map<String, String> readProperties() {
+        InfoEntity info = this.getInfo();
+
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeObject type = typeManager.get(this.getType());
+
+        List<Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, StatusDefinition>> funcs = this.processorRegister.getReadProperties();
+
+        Map<String, String> properties = new HashMap<>();
+
+        for (Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, StatusDefinition> pair : funcs) {
+            properties = pair.apply(properties, info, type, this.status);
+        }
+
+        return Collections.unmodifiableMap(properties);
+    }
+
+    public synchronized void writeProperties(Map<String, String> properties) {
+        if (ObjectUtils.isAnyNull(properties)) {
+            throw new ConditionParametersException();
+        }
+
+        InfoEntity info = this.getInfo();
+
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeObject type = typeManager.get(this.getType());
+
+        List<Consumer4<InfoEntity, TypeObject, StatusDefinition, Map<String, String>>> funcs = this.processorRegister.getWriteProperties();
+
+        for (Consumer4<InfoEntity, TypeObject, StatusDefinition, Map<String, String>> pair : funcs) {
+            pair.accept(info, type, this.status, properties);
+        }
+    }
+
+    public synchronized AInfoContentObject getContent() {
+        InfoEntity info = this.getInfo();
+
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeObject type = typeManager.get(this.getType());
+
+        AInfoContentObject content = type.getTypeInitializer().getContentProcedure(info, () -> {
+            List<Function4<byte[], byte[], InfoEntity, TypeObject, StatusDefinition>> funcs = this.processorRegister.getReadContents();
+
+            byte[] contentSource = null;
+
+            for (Function4<byte[], byte[], InfoEntity, TypeObject, StatusDefinition> pair : funcs) {
+                contentSource = pair.apply(contentSource, info, type, status);
+            }
+
+            return contentSource;
+        }, (byte[] contentSource) -> {
+            List<Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]>> funcs = this.processorRegister.getWriteContents();
+
+            for (Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]> pair : funcs) {
+                pair.accept(info, type, status, contentSource);
+            }
+        }, this.status.getOpen());
+
+        return content;
+    }
+}

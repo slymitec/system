@@ -1,0 +1,30 @@
+package indi.sly.system.kernel.security;
+
+public interface AccessControlTypes {
+    long NULL = 0;
+
+    /* Kernel: 0~31, User: 32~63 */
+
+    long LISTCHILD_READDATA_ALLOW = 1L;
+    long TRAVERSE_EXECUTE_ALLOW = 1L << 2;
+    long CREATECHILD_WRITEDATA_ALLOW = 1L << 4;
+    long TAKEONWERSHIP_ALLOW = 1L << 6;
+    long READPROPERTIES_ALLOW = 1L << 8;
+    long WRITEPROPERTIES_ALLOW = 1L << 10;
+    long READPERMISSIONDESCRIPTOR_ALLOW = 1L << 12;
+    long CHANGEPERMISSIONDESCRIPTOR_ALLOW = 1L << 14;
+    long DELETECHILD_ALLOW = 1L << 16;
+
+    long LISTCHILD_READDATA_DENY = 1L << 1;
+    long TRAVERSE_EXECUTE_DENY = 1L << 3;
+    long CREATECHILD_WRITEDATA_DENY = 1L << 5;
+    long TAKEONWERSHIP_DENY = 1L << 7;
+    long READPROPERTIES_DENY = 1L << 9;
+    long WRITEPROPERTIES_DENY = 1L << 11;
+    long READPERMISSIONDESCRIPTOR_DENY = 1L << 13;
+    long CHANGEPERMISSIONDESCRIPTOR_DENY = 1L << 15;
+    long DELETECHILD_DENY = 1L << 17;
+
+    long FULLCONTROL_ALLOW = 0x5555555555555555L;
+    long FULLCONTROL_DENY = 0xAAAAAAAAAAAAAAAAL;
+}

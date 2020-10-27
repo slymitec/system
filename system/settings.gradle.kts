@@ -1,4 +1,3 @@
 rootProject.name = "system"
 
-include("common")
-include("kernel")
+include("common", "kernel")

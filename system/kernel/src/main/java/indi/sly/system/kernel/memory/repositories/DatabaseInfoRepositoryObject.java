@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class DatabaseEntityRepositoryObject extends AEntityRepositoryObject {
+public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
     @PersistenceContext
     private EntityManager entityManager;
 

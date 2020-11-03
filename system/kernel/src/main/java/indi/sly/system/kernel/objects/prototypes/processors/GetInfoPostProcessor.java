@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope;
 import indi.sly.system.common.functions.Function3;
 import indi.sly.system.kernel.core.ACoreObject;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.AEntityRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
 import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
@@ -22,7 +22,7 @@ public class GetInfoPostProcessor extends ACoreObject implements IKernelObjectPo
         this.info = (repositoryID, id, status) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
 
-            AEntityRepositoryObject entityRepository = memoryManager.getEntityRepository(repositoryID);
+            AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(repositoryID);
 
             return entityRepository.get(id);
         };

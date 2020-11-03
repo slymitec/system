@@ -2,15 +2,14 @@ package indi.sly.system.kernel.objects.entities;
 
 import indi.sly.system.common.support.IDeepCloneable;
 import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.utility.*;
 
 import javax.persistence.*;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -114,27 +113,28 @@ public class InfoEntity implements IDeepCloneable<InfoEntity>, ISerializable {
     }
 
     @Override
-    public final boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        InfoEntity other = (InfoEntity) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InfoEntity that = (InfoEntity) o;
+        return id.equals(that.id) &&
+                type.equals(that.type) &&
+                occupied == that.occupied &&
+                opened == that.opened &&
+                Objects.equals(name, that.name) &&
+                Arrays.equals(date, that.date) &&
+                Arrays.equals(securityDescriptor, that.securityDescriptor) &&
+                Arrays.equals(properties, that.properties) &&
+                Arrays.equals(content, that.content);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        int result = Objects.hash(id, type, occupied, opened, name);
+        result = 31 * result + Arrays.hashCode(date);
+        result = 31 * result + Arrays.hashCode(securityDescriptor);
+        result = 31 * result + Arrays.hashCode(properties);
+        result = 31 * result + Arrays.hashCode(content);
         return result;
     }
 
@@ -171,30 +171,18 @@ public class InfoEntity implements IDeepCloneable<InfoEntity>, ISerializable {
 
     @Override
     public InfoEntity deepClone() {
-        InfoEntity infoEntity = new InfoEntity();
+        InfoEntity info = new InfoEntity();
 
-        infoEntity.id = this.id;
-        infoEntity.type = this.type;
-        infoEntity.occupied = this.occupied;
-        infoEntity.opened = this.opened;
-        infoEntity.name = this.name;
-        if (ObjectUtils.allNotNull(this.date)) {
-            infoEntity.date = new byte[this.date.length];
-            System.arraycopy(this.date, 0, infoEntity.date, 0, this.date.length);
-        }
-        if (ObjectUtils.allNotNull(this.securityDescriptor)) {
-            infoEntity.securityDescriptor = new byte[this.securityDescriptor.length];
-            System.arraycopy(this.securityDescriptor, 0, infoEntity.securityDescriptor, 0, this.securityDescriptor.length);
-        }
-        if (ObjectUtils.allNotNull(this.properties)) {
-            infoEntity.properties = new byte[this.properties.length];
-            System.arraycopy(this.properties, 0, infoEntity.properties, 0, this.properties.length);
-        }
-        if (ObjectUtils.allNotNull(this.content)) {
-            infoEntity.content = new byte[this.content.length];
-            System.arraycopy(this.content, 0, infoEntity.content, 0, this.content.length);
-        }
+        info.id = this.id;
+        info.type = this.type;
+        info.occupied = this.occupied;
+        info.opened = this.opened;
+        info.name = this.name;
+        info.date = ArrayUtils.copyBytes(this.date);
+        info.securityDescriptor = ArrayUtils.copyBytes(this.securityDescriptor);
+        info.properties = ArrayUtils.copyBytes(this.properties);
+        info.content = ArrayUtils.copyBytes(this.content);
 
-        return infoEntity;
+        return info;
     }
 }

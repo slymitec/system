@@ -10,25 +10,24 @@ import java.io.ObjectOutput;
 public class ProcessContentDefinition implements ISerializable {
     public ProcessContentDefinition() {
         this.handleTable = new HandleTableDefinition();
-        this.port = new PortDefinition();
+        this.communication = new CommunicationDefinition();
         this.statistics = new StatisticsDefinition();
         this.status = new StatusDefintion();
         this.token = new TokenDefinition();
     }
 
+    private CommunicationDefinition communication;
     private HandleTableDefinition handleTable;
-    private PortDefinition port;
     private StatusDefintion status;
     private StatisticsDefinition statistics;
     private TokenDefinition token;
 
+    public CommunicationDefinition getCommunication() {
+        return this.communication;
+    }
 
     public HandleTableDefinition getHandleTable() {
         return this.handleTable;
-    }
-
-    public PortDefinition getPort() {
-        return this.port;
     }
 
     public StatusDefintion getStatus() {

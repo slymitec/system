@@ -18,11 +18,9 @@ import java.util.UUID;
 public class HandleEntryDefinition implements ISerializable {
     private final Map<Long, Date> date;
     private StatusDefinition status;
-    private UUID transferProcessID;
 
     public HandleEntryDefinition() {
         this.date = new HashMap<>();
-        this.transferProcessID = UUIDUtils.getEmpty();
     }
 
     public Map<Long, Date> getDate() {
@@ -37,14 +35,6 @@ public class HandleEntryDefinition implements ISerializable {
         this.status = status;
     }
 
-    public UUID getTransferProcessID() {
-        return this.transferProcessID;
-    }
-
-    public void setTransferProcessID(UUID transferProcessID) {
-        this.transferProcessID = transferProcessID;
-    }
-
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         int valueInteger;
@@ -54,7 +44,6 @@ public class HandleEntryDefinition implements ISerializable {
             this.date.put(NumberUtils.readExternalLong(in), new Date(NumberUtils.readExternalLong(in)));
         }
         this.status = ObjectUtils.readExternal(in);
-        this.transferProcessID = UUIDUtils.readExternal(in);
     }
 
     @Override
@@ -64,6 +53,5 @@ public class HandleEntryDefinition implements ISerializable {
             NumberUtils.writeExternalLong(out, pair.getValue().getTime());
         }
         ObjectUtils.writeExternal(out, this.status);
-        UUIDUtils.writeExternal(out, this.transferProcessID);
     }
 }

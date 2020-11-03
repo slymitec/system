@@ -2,7 +2,6 @@ package indi.sly.system.kernel.objects.entities;
 
 import indi.sly.system.common.support.IDeepCloneable;
 import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 
@@ -10,6 +9,7 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -63,28 +63,19 @@ public class InfoRelationEntity implements IDeepCloneable<InfoRelationEntity>, I
     }
 
     @Override
-    public final boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        InfoRelationEntity other = (InfoRelationEntity) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InfoRelationEntity that = (InfoRelationEntity) o;
+        return id.equals(that.id) &&
+                parentID.equals(that.parentID) &&
+                type.equals(that.type) &&
+                Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
+        return Objects.hash(id, parentID, type, name);
     }
 
     @Override
@@ -110,13 +101,13 @@ public class InfoRelationEntity implements IDeepCloneable<InfoRelationEntity>, I
 
     @Override
     public InfoRelationEntity deepClone() {
-        InfoRelationEntity InfoRelationEntity = new InfoRelationEntity();
+        InfoRelationEntity infoRelation = new InfoRelationEntity();
 
-        InfoRelationEntity.id = this.id;
-        InfoRelationEntity.parentID = this.parentID;
-        InfoRelationEntity.type = this.type;
-        InfoRelationEntity.name = this.name;
+        infoRelation.id = this.id;
+        infoRelation.parentID = this.parentID;
+        infoRelation.type = this.type;
+        infoRelation.name = this.name;
 
-        return InfoRelationEntity;
+        return infoRelation;
     }
 }

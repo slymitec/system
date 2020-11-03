@@ -5,10 +5,9 @@ import indi.sly.system.common.exceptions.StatusNotExistedException;
 import indi.sly.system.common.exceptions.StatusNotReadyException;
 import indi.sly.system.common.exceptions.StatusNotSupportedException;
 import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.AEntityRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoRelationEntity;
@@ -47,7 +46,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
     @Override
     public void deleteProcedure(InfoEntity info) {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AEntityRepositoryObject entityRepository = memoryManager.getEntityRepository(this.getPoolID(info.getID(), info.getType()));
+        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
         List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
 
@@ -79,7 +78,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AEntityRepositoryObject entityRepository = memoryManager.getEntityRepository(this.getPoolID(info.getID(), info.getType()));
+        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
         this.lockProcedure(info, LockTypes.WRITE);
 
@@ -109,7 +108,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AEntityRepositoryObject entityRepository = memoryManager.getEntityRepository(this.getPoolID(info.getID(), info.getType()));
+        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
         String childName = StringUtils.readFormBytes(identification.getID());
 
@@ -131,7 +130,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
     @Override
     public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate<InfoSummaryDefinition> wildcard) {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AEntityRepositoryObject entityRepository = memoryManager.getEntityRepository(this.getPoolID(info.getID(), info.getType()));
+        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
         this.lockProcedure(info, LockTypes.WRITE);
 
@@ -158,7 +157,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AEntityRepositoryObject entityRepository = memoryManager.getEntityRepository(this.getPoolID(info.getID(), info.getType()));
+        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
         this.lockProcedure(info, LockTypes.WRITE);
 
@@ -186,7 +185,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AEntityRepositoryObject entityRepository = memoryManager.getEntityRepository(this.getPoolID(info.getID(), info.getType()));
+        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
         this.lockProcedure(info, LockTypes.WRITE);
 

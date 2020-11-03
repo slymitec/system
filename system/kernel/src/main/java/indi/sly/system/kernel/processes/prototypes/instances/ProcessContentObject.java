@@ -27,7 +27,7 @@ public class ProcessContentObject extends AInfoContentObject {
 
 
     private HandleTableDefinition handleTable;
-    private PortDefinition port;
+    private CommunicationDefinition port;
     private UUID sessionID;
     private StatisticsDefinition statistics;
 
@@ -49,11 +49,11 @@ public class ProcessContentObject extends AInfoContentObject {
         this.handleTable = handleTable;
     }
 
-    public PortDefinition getPort() {
+    public CommunicationDefinition getPort() {
         return port;
     }
 
-    public void setPort(PortDefinition port) {
+    public void setPort(CommunicationDefinition port) {
         this.port = port;
     }
 

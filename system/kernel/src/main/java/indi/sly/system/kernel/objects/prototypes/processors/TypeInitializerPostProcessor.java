@@ -8,7 +8,7 @@ import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.ACoreObject;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.AEntityRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
@@ -90,7 +90,7 @@ public class TypeInitializerPostProcessor extends ACoreObject implements IKernel
 
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             UUID childRepositoryID = childType.getTypeInitializer().getPoolID(infoSummary.getID(), infoSummary.getType());
-            AEntityRepositoryObject entityRepository = memoryManager.getEntityRepository(childRepositoryID);
+            AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(childRepositoryID);
             childInfo = entityRepository.get(infoSummary.getID());
 
             childType.getTypeInitializer().getProcedure(childInfo);
@@ -112,7 +112,7 @@ public class TypeInitializerPostProcessor extends ACoreObject implements IKernel
 
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             UUID childRepositoryID = childType.getTypeInitializer().getPoolID(childInfo.getID(), childInfo.getType());
-            AEntityRepositoryObject entityRepository = memoryManager.getEntityRepository(childRepositoryID);
+            AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(childRepositoryID);
             entityRepository.delete(childInfo);
 
             type.getTypeInitializer().deleteChildProcedure(info, identification);

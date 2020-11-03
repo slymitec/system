@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.objects.types;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -14,7 +13,7 @@ import indi.sly.system.common.functions.Consumer;
 import indi.sly.system.common.functions.Provider;
 import indi.sly.system.kernel.core.ACoreObject;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.AEntityRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
@@ -39,7 +38,7 @@ public abstract class ATypeInitializer extends ACoreObject {
 
     public final void lockProcedure(InfoEntity info, long lockMode) {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AEntityRepositoryObject infoRepository = memoryManager.getEntityRepository(this.getPoolID(info.getID(), info.getType()));
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
         infoRepository.lock(info, lockMode);
     }

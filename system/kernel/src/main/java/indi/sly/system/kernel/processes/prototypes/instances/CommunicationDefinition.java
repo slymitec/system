@@ -8,7 +8,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.UUID;
 
-public class PortDefinition implements ISerializable {
+public class CommunicationDefinition implements ISerializable {
     private UUID fromDebug;
     private UUID fromException;
     private UUID toDebug;

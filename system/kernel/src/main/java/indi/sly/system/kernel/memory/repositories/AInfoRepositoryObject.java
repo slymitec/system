@@ -7,7 +7,7 @@ import indi.sly.system.kernel.core.ACoreObject;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoRelationEntity;
 
-public abstract class AEntityRepositoryObject extends ACoreObject {
+public abstract class AInfoRepositoryObject extends ACoreObject {
     public abstract boolean contain(UUID id);
 
     public abstract InfoEntity get(UUID id);

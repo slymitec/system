@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import javax.inject.Named;
 
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
+import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.repositories.AInfoRepositoryObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -24,30 +26,33 @@ import indi.sly.system.kernel.processes.dumps.DumpObject;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoObjectFactoryObject extends ACoreObject {
-    protected Set<IInfoObjectProcessor> postProcessors;
+    protected Set<IInfoObjectProcessor> infoObjectProcessors;
 
-    public void initKernelObjectFactory() {
-        this.postProcessors = new ConcurrentSkipListSet<>();
+    public void initInfoObjectFactory() {
+        this.infoObjectProcessors = new ConcurrentSkipListSet<>();
 
         Set<ACoreObject> coreObjects = this.factoryManager.getCoreObjectRepository().getByImplementInterface(SpaceTypes.KERNEL, IInfoObjectProcessor.class);
 
         for (ACoreObject pair : coreObjects) {
             if (pair instanceof IInfoObjectProcessor) {
-                postProcessors.add((IInfoObjectProcessor) pair);
+                infoObjectProcessors.add((IInfoObjectProcessor) pair);
             }
         }
     }
 
-    public void buildRootKernelObject(InfoObject infoObject) {
-        InfoObjectProcessorRegister processorRegister = new InfoObjectProcessorRegister();
-        for (IInfoObjectProcessor pair : this.postProcessors) {
-            pair.postProcess(null, processorRegister);
-        }
+    public void buildRootInfoObject(InfoObject infoObject) {
+        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID);
+        InfoEntity infoEntity = infoRepository.get(this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
 
-        StatusDefinition status = new StatusDefinition();
+        InfoObjectProcessorRegister processorRegister = new InfoObjectProcessorRegister();
+        for (IInfoObjectProcessor pair : this.infoObjectProcessors) {
+            pair.postProcess(infoEntity, processorRegister);
+        }
 
         StatusOpenDefinition statusOpen = new StatusOpenDefinition();
         statusOpen.setAttribute(StatusOpenDefinitionOpenAttributeTypes.CLOSE);
+        StatusDefinition status = new StatusDefinition();
         status.setOpen(statusOpen);
 
         infoObject.factory = this;
@@ -57,14 +62,14 @@ public class InfoObjectFactoryObject extends ACoreObject {
         infoObject.status = status;
     }
 
-    public void buildKernelObject(InfoEntity info, InfoObject parentInfoObject, InfoObject infoObject) {
-        this.buildKernelObject(info, null, parentInfoObject, infoObject);
+    public InfoObject buildInfoObject(InfoEntity info, InfoObject parentInfo) {
+        return this.buildInfoObject(info, null, parentInfo);
     }
 
-    public void buildKernelObject(InfoEntity info, StatusOpenDefinition statusOpen, InfoObject parentInfoObject, InfoObject infoObject) {
-        InfoObjectProcessorRegister processorRegister = new InfoObjectProcessorRegister();
-        for (IInfoObjectProcessor pair : this.postProcessors) {
-            pair.postProcess(info, processorRegister);
+    public InfoObject buildInfoObject(InfoEntity info, StatusOpenDefinition statusOpen, InfoObject parentInfo) {
+        InfoObjectProcessorRegister infoObjectProcessorRegister = new InfoObjectProcessorRegister();
+        for (IInfoObjectProcessor pair : this.infoObjectProcessors) {
+            pair.postProcess(info, infoObjectProcessorRegister);
         }
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
@@ -77,8 +82,8 @@ public class InfoObjectFactoryObject extends ACoreObject {
             statusOpen.setAttribute(StatusOpenDefinitionOpenAttributeTypes.CLOSE);
         }
         status.setOpen(statusOpen);
-        status.setParentID(parentInfoObject.getID());
-        status.getIdentifications().addAll(parentInfoObject.status.getIdentifications());
+        status.setParentID(parentInfo.getID());
+        status.getIdentifications().addAll(parentInfo.status.getIdentifications());
         Identification identification;
         if (StringUtils.isNameIllegal(info.getName())) {
             identification = new Identification(info.getName());
@@ -87,11 +92,14 @@ public class InfoObjectFactoryObject extends ACoreObject {
         }
         status.getIdentifications().add(identification);
 
-        infoObject.factory = this;
-        infoObject.processorRegister = processorRegister;
+        InfoObject infoObject = this.factoryManager.create(InfoObject.class);
+
+        infoObject.processorRegister = infoObjectProcessorRegister;
         infoObject.id = info.getID();
         infoObject.poolID = poolID;
         infoObject.status = status;
+
+        return infoObject;
     }
 
     public DumpObject buildDumpObject(DumpDefinition dumpDefinition) {

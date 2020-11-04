@@ -80,4 +80,14 @@ public class ProcessObject extends ACoreObject {
 
         return processHandleTable;
     }
+
+    public synchronized ProcessTokenObject getToken() {
+        ProcessEntity process = this.getProcess();
+
+        ProcessTokenObject processToken = this.factoryManager.create(ProcessTokenObject.class);
+
+        //...
+
+        return processToken;
+    }
 }

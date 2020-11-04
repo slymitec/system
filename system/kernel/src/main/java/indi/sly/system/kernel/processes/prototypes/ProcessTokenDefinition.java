@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.security;
+package indi.sly.system.kernel.processes.prototypes;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -9,7 +9,7 @@ import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.NumberUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 
-public class TokenDefinition implements ISerializable {
+public class ProcessTokenDefinition implements ISerializable {
     private UUID accountID;
     private long privilegeTypes;
 

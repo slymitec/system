@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.prototypes.instances;
 
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableDefinition;
-import indi.sly.system.kernel.security.TokenDefinition;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenDefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -14,14 +14,14 @@ public class ProcessContentDefinition implements ISerializable {
         this.communication = new CommunicationDefinition();
         this.statistics = new StatisticsDefinition();
         this.status = new StatusDefintion();
-        this.token = new TokenDefinition();
+        this.token = new ProcessTokenDefinition();
     }
 
     private CommunicationDefinition communication;
     private ProcessHandleTableDefinition handleTable;
     private StatusDefintion status;
     private StatisticsDefinition statistics;
-    private TokenDefinition token;
+    private ProcessTokenDefinition token;
 
     public CommunicationDefinition getCommunication() {
         return this.communication;
@@ -39,7 +39,7 @@ public class ProcessContentDefinition implements ISerializable {
         return this.statistics;
     }
 
-    public TokenDefinition getToken() {
+    public ProcessTokenDefinition getToken() {
         return this.token;
     }
 

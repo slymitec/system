@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.security;
+package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.support.IDeepCloneable;
 import indi.sly.system.common.support.ISerializable;

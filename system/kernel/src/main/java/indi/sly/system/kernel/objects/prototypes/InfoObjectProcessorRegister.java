@@ -9,7 +9,7 @@ import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.types.TypeObject;
 import indi.sly.system.kernel.processes.dumps.DumpDefinition;
-import indi.sly.system.kernel.security.SecurityDescriptorObject;
+import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 
 public class InfoObjectProcessorRegister {
     public InfoObjectProcessorRegister() {

@@ -40,11 +40,11 @@ public class ProcessEntity implements IDeepCloneable<ProcessEntity>, ISerializab
     @Column(length = 4096, name = "Token", nullable = false)
     protected byte[] token;
 
-    public UUID getId() {
+    public UUID getID() {
         return this.id;
     }
 
-    public void setId(UUID id) {
+    public void setID(UUID id) {
         this.id = id;
     }
 

@@ -20,8 +20,6 @@ import java.util.*;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessHandleTableObject extends ABytesProcessObject {
-    private ProcessHandleTableDefinition processHandleTable;
-
     @Override
     protected void read(byte[] source) {
         this.processHandleTable = ObjectUtils.transferFromByteArray(source);
@@ -31,6 +29,8 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
     protected byte[] write() {
         return ObjectUtils.transferToByteArray(this.processHandleTable);
     }
+
+    private ProcessHandleTableDefinition processHandleTable;
 
     public Map<Long, Date> getDate(UUID handle) {
         this.init();

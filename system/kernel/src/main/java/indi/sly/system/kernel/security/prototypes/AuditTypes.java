@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.security;
+package indi.sly.system.kernel.security.prototypes;
 
 public interface AuditTypes {
     long NULL = 0L;

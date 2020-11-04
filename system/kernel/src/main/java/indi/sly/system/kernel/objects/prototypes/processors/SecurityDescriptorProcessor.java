@@ -7,7 +7,9 @@ import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
+import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.caches.InfoObjectCacheObject;
+import indi.sly.system.kernel.memory.repositories.ProcessRepositoryObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
@@ -19,11 +21,13 @@ import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
 import indi.sly.system.kernel.objects.types.TypeInitializerAttributeTypes;
 import indi.sly.system.kernel.objects.types.TypeObject;
 import indi.sly.system.kernel.processes.dumps.DumpDefinition;
-import indi.sly.system.kernel.security.*;
+import indi.sly.system.kernel.processes.entities.ProcessEntity;
+import indi.sly.system.kernel.security.prototypes.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -36,11 +40,8 @@ public class SecurityDescriptorProcessor extends ACoreObject implements IInfoObj
         this.securityDescriptor = (info, type, status) -> {
             SecurityDescriptorObject securityDescriptor = this.factoryManager.create(SecurityDescriptorObject.class);
 
-            SecurityDescriptorAnalysisDefinition securityDescriptorAnalysis = new SecurityDescriptorAnalysisDefinition();
-            securityDescriptorAnalysis.setKernelEntity(info);
-            securityDescriptorAnalysis.getIdentifications().addAll(status.getIdentifications());
-
-            securityDescriptor.setSecurityDescriptor(securityDescriptorAnalysis);
+            securityDescriptor.setSource(info::getSecurityDescriptor, info::setSecurityDescriptor);
+            securityDescriptor.setLock((lockType) -> type.getTypeInitializer().lockProcedure(info, lockType));
 
             if (!UUIDUtils.isAnyNullOrEmpty(status.getParentID())) {
                 InfoObjectCacheObject infoCacheObject = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
@@ -64,7 +65,7 @@ public class SecurityDescriptorProcessor extends ACoreObject implements IInfoObj
                 securityDescriptor.setAudit(false);
             }
 
-            securityDescriptor.setLock((lockMode) -> type.getTypeInitializer().lockProcedure(info, lockMode));
+            securityDescriptor.setLock((lockType) -> type.getTypeInitializer().lockProcedure(info, lockType));
 
             return securityDescriptor;
         };

@@ -14,7 +14,7 @@ import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.types.TypeObject;
 import indi.sly.system.kernel.processes.dumps.DumpDefinition;
 import indi.sly.system.kernel.processes.dumps.DumpObject;
-import indi.sly.system.kernel.security.SecurityDescriptorObject;
+import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -257,8 +257,7 @@ public class InfoObject extends ACoreObject {
 
         InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
 
-        InfoObject childInfoObject = this.factoryManager.create(InfoObject.class);
-        this.factory.buildKernelObject(childInfo, this, childInfoObject);
+        InfoObject childInfoObject = this.factory.buildInfoObject(childInfo, this);
 
         kernelCache.add(SpaceTypes.USER, childInfoObject);
 
@@ -299,9 +298,7 @@ public class InfoObject extends ACoreObject {
         if (ObjectUtils.allNotNull(childCachedInfo)) {
             return childCachedInfo;
         } else {
-            InfoObject childInfoObject = this.factoryManager.create(InfoObject.class);
-
-            this.factory.buildKernelObject(childInfo, statusOpen, this, childCachedInfo);
+            InfoObject childInfoObject = this.factory.buildInfoObject(childInfo, statusOpen, this);
 
             kernelCache.add(SpaceTypes.USER, childInfoObject);
 

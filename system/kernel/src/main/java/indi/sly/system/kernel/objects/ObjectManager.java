@@ -1,13 +1,10 @@
 package indi.sly.system.kernel.objects;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Named;
-import javax.sound.sampled.DataLine.Info;
 
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
-import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
 import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -27,13 +24,13 @@ public class ObjectManager extends AManager {
         if (startupTypes == StartupTypes.STEP_INIT) {
 
         } else if (startupTypes == StartupTypes.STEP_KERNEL) {
-            InfoObjectFactoryObject factory = this.factoryManager.create(InfoObjectFactoryObject.class);
-            factory.initKernelObjectFactory();
+            InfoObjectFactoryObject infoObjectfactory = this.factoryManager.create(InfoObjectFactoryObject.class);
+            infoObjectfactory.initInfoObjectFactory();
 
-            InfoObject rootInfoObject = this.factoryManager.create(InfoObject.class);
-            factory.buildRootKernelObject(rootInfoObject);
+            InfoObject rootInfo = this.factoryManager.create(InfoObject.class);
+            infoObjectfactory.buildRootInfoObject(rootInfo);
 
-            this.factoryManager.getCoreObjectRepository().addByID(SpaceTypes.KERNEL, this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID, rootInfoObject);
+            this.factoryManager.getCoreObjectRepository().addByID(SpaceTypes.KERNEL, this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID, rootInfo);
         }
     }
 
@@ -42,12 +39,12 @@ public class ObjectManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        InfoObject infoObject = this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, InfoObject.class, this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
+        InfoObject info = this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, InfoObject.class, this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
         for (Identification identification : identifications) {
-            infoObject = infoObject.getChild(identification);
+            info = info.getChild(identification);
         }
 
-        return infoObject;
+        return info;
     }
 
     public InfoObject rebuild(List<Identification> identifications, StatusOpenDefinition open) {
@@ -55,14 +52,14 @@ public class ObjectManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        InfoObject infoObject;
+        InfoObject info;
         if (identifications.size() > 0) {
-            infoObject = this.get(identifications.subList(0, identifications.size() - 1));
-            infoObject = infoObject.rebuildChild(identifications.get(identifications.size() - 1), open);
+            info = this.get(identifications.subList(0, identifications.size() - 1));
+            info = info.rebuildChild(identifications.get(identifications.size() - 1), open);
         } else {
-            infoObject = this.get(identifications);
+            info = this.get(identifications);
         }
 
-        return infoObject;
+        return info;
     }
 }

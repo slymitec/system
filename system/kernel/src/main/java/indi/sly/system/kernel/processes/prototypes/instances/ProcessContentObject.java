@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.prototypes.instances;
 
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableDefinition;
-import indi.sly.system.kernel.security.TokenDefinition;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -32,7 +32,7 @@ public class ProcessContentObject extends AInfoContentObject {
     private UUID sessionID;
     private StatisticsDefinition statistics;
 
-    private TokenDefinition token;
+    private ProcessTokenDefinition token;
 
     public UUID getParentProcessID() {
         return parentProcessID;
@@ -82,11 +82,11 @@ public class ProcessContentObject extends AInfoContentObject {
         this.status = status;
     }
 
-    public TokenDefinition getToken() {
+    public ProcessTokenDefinition getToken() {
         return token;
     }
 
-    public void setToken(TokenDefinition token) {
+    public void setToken(ProcessTokenDefinition token) {
         this.token = token;
     }
 }

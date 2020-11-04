@@ -35,7 +35,7 @@ public class ProcessProcessor extends ACoreObject implements IInfoObjectProcesso
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             ProcessThreadManager processThreadManager = this.factoryManager.getManager(ProcessThreadManager.class);
 
-            ProcessObject process = processThreadManager.getCurrentPorcessObject();
+            ProcessObject process = processThreadManager.getCurrentProcess();
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
             handle = processHandleTable.addInfo(status);
 
@@ -45,7 +45,7 @@ public class ProcessProcessor extends ACoreObject implements IInfoObjectProcesso
         this.close = (info, type, status) -> {
             ProcessThreadManager processThreadManager = this.factoryManager.getManager(ProcessThreadManager.class);
 
-            ProcessObject process = processThreadManager.getCurrentPorcessObject();
+            ProcessObject process = processThreadManager.getCurrentProcess();
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
             processHandleTable.deleteInfo(status.getHandle());
         };

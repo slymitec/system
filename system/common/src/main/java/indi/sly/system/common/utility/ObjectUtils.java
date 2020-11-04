@@ -48,18 +48,6 @@ public class ObjectUtils extends org.apache.commons.lang3.ObjectUtils {
         }
     }
 
-    public static <T> T getObject(Class<T> requiredType) {
-        try {
-            return SpringUtils.getApplicationContext().getBean(requiredType);
-        } catch (Exception e) {
-            throw new StatusNotExistedException();
-        }
-    }
-
-    public static Object getObject(String name) {
-        return SpringUtils.getApplicationContext().getBean(name);
-    }
-
     public static byte[] transferToByteArray(Object object) {
         if (ObjectUtils.isAnyNull(object)) {
             return null;

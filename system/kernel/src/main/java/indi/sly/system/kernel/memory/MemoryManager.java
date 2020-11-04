@@ -23,11 +23,11 @@ public class MemoryManager extends AManager {
     @Override
     public void startup(long startupTypes) {
         if (startupTypes == StartupTypes.STEP_INIT) {
-            this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL, ObjectUtils.getObject(InfoObjectCacheObject.class));
-            this.factoryManager.getCoreObjectRepository().addByID(SpaceTypes.KERNEL, this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID, ObjectUtils.getObject(DatabaseInfoRepositoryObject.class));
+            this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL, this.factoryManager.create(InfoObjectCacheObject.class));
+            this.factoryManager.getCoreObjectRepository().addByID(SpaceTypes.KERNEL, this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID, this.factoryManager.create(DatabaseInfoRepositoryObject.class));
 
-            this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL, ObjectUtils.getObject(ProcessRepositoryObject.class));
-            this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL, ObjectUtils.getObject(AccountGroupRepositoryObject.class));
+            this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL, this.factoryManager.create(ProcessRepositoryObject.class));
+            this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL, this.factoryManager.create(AccountGroupRepositoryObject.class));
         } else if (startupTypes == StartupTypes.STEP_KERNEL) {
         }
     }

@@ -43,13 +43,13 @@ public class ProcessObject extends ACoreObject {
         return this.getProcess().getSessionID();
     }
 
-    public ProcessStatusObject getStatus() {
+    public synchronized ProcessStatusObject getStatus() {
 
 
         return null;
     }
 
-    public ProcessHandleTableObject getHandleTable() {
+    public synchronized ProcessHandleTableObject getHandleTable() {
         ProcessEntity process = this.getProcess();
 
         ProcessHandleTableObject processHandleTable = this.factoryManager.create(ProcessHandleTableObject.class);

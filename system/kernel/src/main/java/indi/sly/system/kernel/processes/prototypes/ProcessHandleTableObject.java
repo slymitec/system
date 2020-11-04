@@ -40,7 +40,7 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
         return Collections.unmodifiableMap(processHandleEntry.getDate());
     }
 
-    public InfoObject getInfo(UUID handle) {
+    public synchronized InfoObject getInfo(UUID handle) {
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, DateTimeObject.class);
         Date nowDateTime = dateTime.getCurrentDateTime();
@@ -64,7 +64,7 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
         return info;
     }
 
-    public UUID addInfo(StatusDefinition status) {
+    public synchronized UUID addInfo(StatusDefinition status) {
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, DateTimeObject.class);
         Date nowDateTime = dateTime.getCurrentDateTime();
 
@@ -86,7 +86,7 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
         return handle;
     }
 
-    public void deleteInfo(UUID handle) {
+    public synchronized void deleteInfo(UUID handle) {
         this.lock(LockTypes.WRITE);
         this.init();
 

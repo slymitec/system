@@ -1,16 +1,18 @@
-package indi.sly.system.kernel.core.prototypes;
+package indi.sly.system.kernel.core;
 
 import indi.sly.system.common.exceptions.AKernelException;
 import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.functions.Provider;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.AManager;
+import indi.sly.system.common.utility.SpringUtils;
 import indi.sly.system.kernel.core.boot.StartupTypes;
 import indi.sly.system.kernel.core.date.DateTimeObject;
 import indi.sly.system.kernel.core.enviroment.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.core.enviroment.UserSpace;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.CoreObjectRepositoryObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
@@ -28,15 +30,17 @@ public class FactoryManager extends AManager {
     @Override
     public void startup(long startupTypes) {
         if (startupTypes == StartupTypes.STEP_INIT) {
-            this.coreObjectRepository = ObjectUtils.getObject(CoreObjectRepositoryObject.class);
+            this.factoryManager = this;
 
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, ObjectUtils.getObject(FactoryManager.class));
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, ObjectUtils.getObject(MemoryManager.class));
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, ObjectUtils.getObject(TypeManager.class));
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, ObjectUtils.getObject(ObjectManager.class));
+            this.coreObjectRepository = this.create(CoreObjectRepositoryObject.class);
+
+            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(FactoryManager.class));
+            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(MemoryManager.class));
+            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(TypeManager.class));
+            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(ObjectManager.class));
             // ...
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, ObjectUtils.getObject(DateTimeObject.class));
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, ObjectUtils.getObject(CoreObjectRepositoryObject.class));
+            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(DateTimeObject.class));
+            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(CoreObjectRepositoryObject.class));
         } else if (startupTypes == StartupTypes.STEP_KERNEL) {
         }
     }
@@ -50,7 +54,7 @@ public class FactoryManager extends AManager {
 
         T coreObject = null;
         try {
-            coreObject = ObjectUtils.getObject(clazz);
+            coreObject = SpringUtils.getApplicationContext().getBean(clazz);
         } catch (AKernelException e) {
             Constructor<T> constructor = null;
             try {
@@ -70,7 +74,7 @@ public class FactoryManager extends AManager {
             coreObject = new SpringObjenesis().newInstance(clazz);
         }
 
-        coreObject.factoryManager = this;
+        coreObject.setFactoryManager(this);
 
         return coreObject;
     }
@@ -89,7 +93,7 @@ public class FactoryManager extends AManager {
     }
 
     public KernelSpace getKernelSpace() {
-        return ObjectUtils.getObject(KernelSpace.class);
+        return SpringUtils.getApplicationContext().getBean(KernelSpace.class);
     }
 
     private Provider<UserSpace> userSpaceContainer;

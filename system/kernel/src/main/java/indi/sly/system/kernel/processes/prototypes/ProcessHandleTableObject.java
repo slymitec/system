@@ -1,16 +1,14 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.exceptions.AKernelException;
-import indi.sly.system.common.functions.Consumer;
-import indi.sly.system.common.functions.Provider;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.date.DateTimeObject;
 import indi.sly.system.kernel.core.date.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.objects.ObjectManager;
-import indi.sly.system.kernel.objects.prototypes.ABytesProcessObject;
+import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -66,10 +64,35 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
         return info;
     }
 
-    public UUID addInfo(StatusDefinition info) {
-        return null;
+    public UUID addInfo(StatusDefinition status) {
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, DateTimeObject.class);
+        Date nowDateTime = dateTime.getCurrentDateTime();
+
+        UUID handle = UUIDUtils.createRandom();
+
+        ProcessHandleEntryDefinition processHandleEntry = new ProcessHandleEntryDefinition();
+        processHandleEntry.getIdentifications().addAll(status.getIdentifications());
+        processHandleEntry.setOpen(status.getOpen());
+        processHandleEntry.getDate().put(DateTimeTypes.CREATE, nowDateTime);
+
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        this.processHandleTable.add(handle, processHandleEntry);
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
+
+        return handle;
     }
 
     public void deleteInfo(UUID handle) {
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        this.processHandleTable.delete(handle);
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
     }
 }

@@ -11,7 +11,6 @@ import indi.sly.system.common.utility.ObjectUtils;
 
 public class StatusOpenDefinition implements ISerializable {
     private long attribute;
-
     private ISerializable context;
 
     public long getAttribute() {

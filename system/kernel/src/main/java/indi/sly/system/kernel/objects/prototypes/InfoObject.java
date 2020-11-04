@@ -4,7 +4,7 @@ import indi.sly.system.common.exceptions.*;
 import indi.sly.system.common.functions.*;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.memory.caches.InfoObjectCacheObject;
 import indi.sly.system.kernel.objects.Identification;
@@ -194,9 +194,9 @@ public class InfoObject extends ACoreObject {
         this.status.getOpen().setAttribute(openAttribute);
         this.status.setHandle(handle);
 
-        InfoObject parent = this.getParent();
-        if (ObjectUtils.allNotNull(parent)) {
-            parent.occupy();
+        InfoObject parentInfo = this.getParent();
+        if (ObjectUtils.allNotNull(parentInfo)) {
+            parentInfo.occupy();
         }
 
         return handle;
@@ -220,9 +220,9 @@ public class InfoObject extends ACoreObject {
 
         this.status.setHandle(null);
 
-        InfoObject parent = this.getParent();
-        if (ObjectUtils.allNotNull(parent)) {
-            parent.free();
+        InfoObject parentInfo = this.getParent();
+        if (ObjectUtils.allNotNull(parentInfo)) {
+            parentInfo.free();
         }
     }
 

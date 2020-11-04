@@ -3,7 +3,7 @@ package indi.sly.system.kernel.memory.repositories;
 import java.util.List;
 import java.util.UUID;
 
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoRelationEntity;
 

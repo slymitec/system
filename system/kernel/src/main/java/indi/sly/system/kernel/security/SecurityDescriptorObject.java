@@ -2,7 +2,7 @@ package indi.sly.system.kernel.security;
 
 import indi.sly.system.common.exceptions.StatusNotSupportedException;
 import indi.sly.system.common.functions.Consumer;
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,7 +6,7 @@ import indi.sly.system.common.functions.*;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.Identification;

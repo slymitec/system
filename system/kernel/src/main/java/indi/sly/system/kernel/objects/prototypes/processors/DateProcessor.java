@@ -4,7 +4,7 @@ import indi.sly.system.common.functions.Consumer4;
 import indi.sly.system.common.functions.Function4;
 import indi.sly.system.common.functions.Function6;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.core.date.DateTimeObject;
 import indi.sly.system.kernel.core.date.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;

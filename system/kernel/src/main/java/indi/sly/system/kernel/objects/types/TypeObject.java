@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 
 public class TypeObject extends ACoreObject {
     private TypeDefinition type;

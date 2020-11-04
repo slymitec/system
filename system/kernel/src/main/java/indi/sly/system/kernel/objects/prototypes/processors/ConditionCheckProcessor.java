@@ -5,7 +5,7 @@ import indi.sly.system.common.exceptions.StatusNotSupportedException;
 import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.functions.*;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;

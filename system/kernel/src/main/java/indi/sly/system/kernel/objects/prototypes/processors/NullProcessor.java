@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.functions.*;
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;

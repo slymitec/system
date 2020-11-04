@@ -41,7 +41,6 @@ public class ProcessHandleEntryDefinition implements ISerializable {
         this.open = open;
     }
 
-
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         int valueInteger;

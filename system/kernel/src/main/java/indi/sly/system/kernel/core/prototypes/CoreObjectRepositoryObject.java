@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.core;
+package indi.sly.system.kernel.core.prototypes;
 
 import indi.sly.system.common.exceptions.*;
 import indi.sly.system.common.types.LockTypes;
@@ -8,6 +8,7 @@ import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.enviroment.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.core.enviroment.UserSpace;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.memory.caches.InfoObjectCacheDefinition;
 
 @Named

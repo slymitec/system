@@ -4,7 +4,7 @@ import indi.sly.system.common.functions.Consumer3;
 import indi.sly.system.common.functions.Function6;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.memory.caches.InfoObjectCacheObject;
 import indi.sly.system.kernel.objects.Identification;

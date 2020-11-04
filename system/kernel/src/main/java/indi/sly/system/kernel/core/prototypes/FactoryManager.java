@@ -1,10 +1,11 @@
-package indi.sly.system.kernel.core;
+package indi.sly.system.kernel.core.prototypes;
 
 import indi.sly.system.common.exceptions.AKernelException;
 import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.functions.Provider;
 import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.StartupTypes;
 import indi.sly.system.kernel.core.date.DateTimeObject;
 import indi.sly.system.kernel.core.enviroment.KernelSpace;

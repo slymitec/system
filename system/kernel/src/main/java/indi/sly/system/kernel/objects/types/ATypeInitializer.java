@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Scope;
 
 import indi.sly.system.common.functions.Consumer;
 import indi.sly.system.common.functions.Provider;
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.Identification;
@@ -66,6 +66,7 @@ public abstract class ATypeInitializer extends ACoreObject {
 
         content.setSource(funcRead, funcWrite);
         content.setLock((lockMode) -> this.lockProcedure(info, lockMode));
+        content.setStatusOpen(statusOpen);
 
         return content;
     }

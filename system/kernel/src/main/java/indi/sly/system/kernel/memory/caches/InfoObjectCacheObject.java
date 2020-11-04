@@ -9,13 +9,13 @@ import java.util.concurrent.locks.Lock;
 import javax.inject.Named;
 
 import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.kernel.core.CoreObjectRepositoryObject;
+import indi.sly.system.kernel.core.prototypes.CoreObjectRepositoryObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 

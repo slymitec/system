@@ -11,7 +11,7 @@ import indi.sly.system.common.utility.ObjectUtils;
 
 public class StatusOpenDefinition implements ISerializable {
     private long attribute;
-    private UUID handle;
+
     private ISerializable context;
 
     public long getAttribute() {
@@ -20,14 +20,6 @@ public class StatusOpenDefinition implements ISerializable {
 
     public void setAttribute(long openAttribute) {
         this.attribute = openAttribute;
-    }
-
-    public UUID getHandle() {
-        return handle;
-    }
-
-    public void setHandle(UUID handle) {
-        this.handle = handle;
     }
 
     public ISerializable getContext() {

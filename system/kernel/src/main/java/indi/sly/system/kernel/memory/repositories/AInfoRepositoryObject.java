@@ -16,7 +16,7 @@ public abstract class AInfoRepositoryObject extends ACoreObject {
 
     public abstract void delete(InfoEntity info);
 
-    public abstract void lock(InfoEntity info, long lockMode);
+    public abstract void lock(InfoEntity info, long lockType);
 
     public abstract List<InfoRelationEntity> listRelation(InfoEntity info);
 

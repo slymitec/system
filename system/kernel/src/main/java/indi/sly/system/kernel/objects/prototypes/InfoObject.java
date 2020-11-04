@@ -48,7 +48,6 @@ public class InfoObject extends ACoreObject {
         return this.status.getParentID();
     }
 
-
     public UUID getType() {
         if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
@@ -86,7 +85,7 @@ public class InfoObject extends ACoreObject {
             throw new ConditionContextException();
         }
 
-        return this.status.getOpen().getHandle();
+        return this.status.getHandle();
     }
 
     public List<Identification> getIdentifications() {
@@ -96,8 +95,6 @@ public class InfoObject extends ACoreObject {
 
         return Collections.unmodifiableList(this.status.getIdentifications());
     }
-
-    //
 
     private synchronized void occupy() {
         InfoEntity info = this.getInfo();
@@ -195,8 +192,7 @@ public class InfoObject extends ACoreObject {
         }
 
         this.status.getOpen().setAttribute(openAttribute);
-
-        this.status.getOpen().setHandle(handle);
+        this.status.setHandle(handle);
 
         InfoObject parent = this.getParent();
         if (ObjectUtils.allNotNull(parent)) {
@@ -222,6 +218,8 @@ public class InfoObject extends ACoreObject {
             pair.accept(info, type, this.status);
         }
 
+        this.status.setHandle(null);
+
         InfoObject parent = this.getParent();
         if (ObjectUtils.allNotNull(parent)) {
             parent.free();
@@ -229,11 +227,11 @@ public class InfoObject extends ACoreObject {
     }
 
     public synchronized boolean isOpened() {
-        return !UUIDUtils.isAnyNullOrEmpty(this.status.getOpen().getHandle());
+        return !UUIDUtils.isAnyNullOrEmpty(this.status.getHandle());
     }
 
     public synchronized InfoObject createChildAndOpen(UUID type, Identification identification, long openAttribute, Object... arguments) {
-        if (!UUIDUtils.isAnyNullOrEmpty(this.status.getOpen().getHandle()) || ObjectUtils.isAnyNull(identification)) {
+        if (!UUIDUtils.isAnyNullOrEmpty(this.status.getHandle()) || ObjectUtils.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
         if (ObjectUtils.isAnyNull(arguments)) {

@@ -16,7 +16,7 @@ import indi.sly.system.kernel.core.ACoreObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
-import indi.sly.system.kernel.objects.prototypes.processors.IKernelObjectPostProcessor;
+import indi.sly.system.kernel.objects.prototypes.processors.IInfoObjectProcessor;
 import indi.sly.system.kernel.objects.types.TypeObject;
 import indi.sly.system.kernel.processes.dumps.DumpDefinition;
 import indi.sly.system.kernel.processes.dumps.DumpObject;
@@ -24,23 +24,23 @@ import indi.sly.system.kernel.processes.dumps.DumpObject;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoObjectFactoryObject extends ACoreObject {
-    protected Set<IKernelObjectPostProcessor> postProcessors;
+    protected Set<IInfoObjectProcessor> postProcessors;
 
     public void initKernelObjectFactory() {
         this.postProcessors = new ConcurrentSkipListSet<>();
 
-        Set<ACoreObject> coreObjects = this.factoryManager.getCoreObjectRepository().getByImplementInterface(SpaceTypes.KERNEL, IKernelObjectPostProcessor.class);
+        Set<ACoreObject> coreObjects = this.factoryManager.getCoreObjectRepository().getByImplementInterface(SpaceTypes.KERNEL, IInfoObjectProcessor.class);
 
         for (ACoreObject pair : coreObjects) {
-            if (pair instanceof IKernelObjectPostProcessor) {
-                postProcessors.add((IKernelObjectPostProcessor) pair);
+            if (pair instanceof IInfoObjectProcessor) {
+                postProcessors.add((IInfoObjectProcessor) pair);
             }
         }
     }
 
     public void buildRootKernelObject(InfoObject infoObject) {
         InfoObjectProcessorRegister processorRegister = new InfoObjectProcessorRegister();
-        for (IKernelObjectPostProcessor pair : this.postProcessors) {
+        for (IInfoObjectProcessor pair : this.postProcessors) {
             pair.postProcess(null, processorRegister);
         }
 
@@ -63,7 +63,7 @@ public class InfoObjectFactoryObject extends ACoreObject {
 
     public void buildKernelObject(InfoEntity info, StatusOpenDefinition statusOpen, InfoObject parentInfoObject, InfoObject infoObject) {
         InfoObjectProcessorRegister processorRegister = new InfoObjectProcessorRegister();
-        for (IKernelObjectPostProcessor pair : this.postProcessors) {
+        for (IInfoObjectProcessor pair : this.postProcessors) {
             pair.postProcess(info, processorRegister);
         }
 

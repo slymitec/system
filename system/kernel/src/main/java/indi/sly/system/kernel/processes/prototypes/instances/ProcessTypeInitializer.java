@@ -86,7 +86,7 @@ public class ProcessTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    protected Class<? extends AInfoContentObject> getContentProcedureType(InfoEntity info, StatusOpenDefinition statusOpen) {
+    protected Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, StatusOpenDefinition statusOpen) {
         return ProcessContentObject.class;
     }
 

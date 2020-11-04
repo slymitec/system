@@ -26,8 +26,8 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ConditionCheckPostProcessor extends ACoreObject implements IKernelObjectPostProcessor {
-    public ConditionCheckPostProcessor() {
+public class ConditionCheckProcessor extends ACoreObject implements IInfoObjectProcessor {
+    public ConditionCheckProcessor() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             if (status.getOpen().getAttribute() != StatusOpenDefinitionOpenAttributeTypes.CLOSE || status.getOpen().getAttribute() == openAttribute) {
                 throw new StatusAlreadyFinishedException();

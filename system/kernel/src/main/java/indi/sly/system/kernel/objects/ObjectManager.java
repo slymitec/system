@@ -1,10 +1,14 @@
 package indi.sly.system.kernel.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Named;
+import javax.sound.sampled.DataLine.Info;
 
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
+import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
+import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -38,12 +42,27 @@ public class ObjectManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        InfoObject resultInfoObject = this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, InfoObject.class, this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
-
+        InfoObject infoObject = this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, InfoObject.class, this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
         for (Identification identification : identifications) {
-            resultInfoObject = resultInfoObject.getChild(identification);
+            infoObject = infoObject.getChild(identification);
         }
 
-        return resultInfoObject;
+        return infoObject;
+    }
+
+    public InfoObject rebuild(List<Identification> identifications, StatusOpenDefinition open) {
+        if (ObjectUtils.isAnyNull(identifications, open)) {
+            throw new ConditionParametersException();
+        }
+
+        InfoObject infoObject;
+        if (identifications.size() > 0) {
+            infoObject = this.get(identifications.subList(0, identifications.size() - 1));
+            infoObject = infoObject.rebuildChild(identifications.get(identifications.size() - 1), open);
+        } else {
+            infoObject = this.get(identifications);
+        }
+
+        return infoObject;
     }
 }

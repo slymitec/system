@@ -31,8 +31,8 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SecurityDescriptorPostProcessor extends ACoreObject implements IKernelObjectPostProcessor {
-    public SecurityDescriptorPostProcessor() {
+public class SecurityDescriptorProcessor extends ACoreObject implements IInfoObjectProcessor {
+    public SecurityDescriptorProcessor() {
         this.securityDescriptor = (info, type, status) -> {
             SecurityDescriptorObject securityDescriptor = this.factoryManager.create(SecurityDescriptorObject.class);
 

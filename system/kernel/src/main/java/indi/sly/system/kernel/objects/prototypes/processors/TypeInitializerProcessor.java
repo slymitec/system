@@ -28,8 +28,8 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TypeInitializerPostProcessor extends ACoreObject implements IKernelObjectPostProcessor {
-    public TypeInitializerPostProcessor() {
+public class TypeInitializerProcessor extends ACoreObject implements IInfoObjectProcessor {
+    public TypeInitializerProcessor() {
         this.dump = (dump, info, type, status) -> {
             type.getTypeInitializer().dumpProcedure(info, dump);
 

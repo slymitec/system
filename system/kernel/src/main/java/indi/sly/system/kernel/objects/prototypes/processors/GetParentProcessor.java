@@ -18,8 +18,8 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GetParentPostProcessor extends ACoreObject implements IKernelObjectPostProcessor {
-    public GetParentPostProcessor() {
+public class GetParentProcessor extends ACoreObject implements IInfoObjectProcessor {
+    public GetParentProcessor() {
         this.parent = (id) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
 
@@ -27,9 +27,9 @@ public class GetParentPostProcessor extends ACoreObject implements IKernelObject
                 throw new StatusNotExistedException();
             }
 
-            InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
+            InfoObjectCacheObject infoObjectCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
 
-            return kernelCache.getIfExisted(SpaceTypes.ALL, id);
+            return infoObjectCache.getIfExisted(SpaceTypes.ALL, id);
         };
     }
 

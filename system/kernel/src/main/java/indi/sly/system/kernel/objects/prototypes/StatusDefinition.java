@@ -16,6 +16,7 @@ import indi.sly.system.kernel.objects.Identification;
 public class StatusDefinition implements ISerializable {
     private final List<Identification> identifications;
     private UUID parentID;
+    private UUID handle;
     private StatusOpenDefinition open;
 
     public StatusDefinition() {
@@ -33,6 +34,15 @@ public class StatusDefinition implements ISerializable {
 
     public void setParentID(UUID parentID) {
         this.parentID = parentID;
+    }
+
+
+    public UUID getHandle() {
+        return handle;
+    }
+
+    public void setHandle(UUID handle) {
+        this.handle = handle;
     }
 
     public StatusOpenDefinition getOpen() {
@@ -61,7 +71,7 @@ public class StatusDefinition implements ISerializable {
         for (Identification pair : this.identifications) {
             ObjectUtils.writeExternal(out, pair);
         }
-        UUIDUtils.writeExternal(out,this.parentID);
+        UUIDUtils.writeExternal(out, this.parentID);
         ObjectUtils.writeExternal(out, this.open);
     }
 }

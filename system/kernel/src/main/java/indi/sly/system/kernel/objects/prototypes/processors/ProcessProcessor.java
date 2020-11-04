@@ -9,7 +9,10 @@ import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
 import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
 import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
 import indi.sly.system.kernel.objects.types.TypeObject;
+import indi.sly.system.kernel.processes.ProcessThreadManager;
 import indi.sly.system.kernel.processes.dumps.DumpDefinition;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -21,17 +24,30 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessorPostProcessor extends ACoreObject implements IKernelObjectPostProcessor {
-    public ProcessorPostProcessor() {
+public class ProcessProcessor extends ACoreObject implements IInfoObjectProcessor {
+    public ProcessProcessor() {
         this.dump = (dump, info, type, status) -> {
             int unFinished;
 
             return dump;
         };
 
-        this.open = (handle, info, type, status, openAttribute, arguments) -> handle;
+        this.open = (handle, info, type, status, openAttribute, arguments) -> {
+            ProcessThreadManager processThreadManager = this.factoryManager.getManager(ProcessThreadManager.class);
+
+            ProcessObject process = processThreadManager.getCurrentPorcessObject();
+            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+            handle = processHandleTable.addInfo(status);
+
+            return handle;
+        };
 
         this.close = (info, type, status) -> {
+            ProcessThreadManager processThreadManager = this.factoryManager.getManager(ProcessThreadManager.class);
+
+            ProcessObject process = processThreadManager.getCurrentPorcessObject();
+            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+            processHandleTable.deleteInfo(status.getHandle());
         };
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> childInfo;

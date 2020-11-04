@@ -21,8 +21,8 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class NullPostProcessor extends ACoreObject implements IKernelObjectPostProcessor {
-    public NullPostProcessor() {
+public class NullProcessor extends ACoreObject implements IInfoObjectProcessor {
+    public NullProcessor() {
         this.dump = (dump, info, type, status) -> dump;
 
         this.open = (handle, info, type, status, openAttribute, arguments) -> handle;

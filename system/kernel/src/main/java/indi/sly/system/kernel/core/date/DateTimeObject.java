@@ -6,6 +6,6 @@ import indi.sly.system.kernel.core.ACoreObject;
 
 public class DateTimeObject extends ACoreObject {
     public Date getCurrentDateTime() {
-        return null;
+        return new Date();
     }
 }

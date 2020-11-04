@@ -183,7 +183,7 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public Class<? extends AInfoContentObject> getContentProcedureType(InfoEntity info, StatusOpenDefinition statusOpen) {
+    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, StatusOpenDefinition statusOpen) {
         return NamelessFolderContentObject.class;
     }
 

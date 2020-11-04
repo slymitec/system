@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes.instances;
 
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableDefinition;
 import indi.sly.system.kernel.security.TokenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -26,7 +27,7 @@ public class ProcessContentObject extends AInfoContentObject {
     private long flag;
 
 
-    private HandleTableDefinition handleTable;
+    private ProcessHandleTableDefinition handleTable;
     private CommunicationDefinition port;
     private UUID sessionID;
     private StatisticsDefinition statistics;
@@ -41,11 +42,11 @@ public class ProcessContentObject extends AInfoContentObject {
         this.parentProcessID = parentProcessID;
     }
 
-    public HandleTableDefinition getHandleTable() {
+    public ProcessHandleTableDefinition getHandleTable() {
         return handleTable;
     }
 
-    public void setHandleTable(HandleTableDefinition handleTable) {
+    public void setHandleTable(ProcessHandleTableDefinition handleTable) {
         this.handleTable = handleTable;
     }
 

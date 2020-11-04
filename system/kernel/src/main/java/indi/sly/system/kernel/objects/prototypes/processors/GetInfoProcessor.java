@@ -17,14 +17,14 @@ import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GetInfoPostProcessor extends ACoreObject implements IKernelObjectPostProcessor {
-    public GetInfoPostProcessor() {
+public class GetInfoProcessor extends ACoreObject implements IInfoObjectProcessor {
+    public GetInfoProcessor() {
         this.info = (repositoryID, id, status) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
 
-            AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(repositoryID);
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(repositoryID);
 
-            return entityRepository.get(id);
+            return infoRepository.get(id);
         };
     }
 

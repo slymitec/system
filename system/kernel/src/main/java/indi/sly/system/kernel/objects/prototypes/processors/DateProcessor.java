@@ -24,8 +24,8 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class DatePostProcessor extends ACoreObject implements IKernelObjectPostProcessor {
-    public DatePostProcessor() {
+public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
+    public DateProcessor() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, DateTimeObject.class);
             Date nowDateTime = dateTime.getCurrentDateTime();

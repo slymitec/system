@@ -1,39 +1,46 @@
-package indi.sly.system.kernel.processes.prototypes.instances;
+package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.NumberUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
+import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.UUID;
 
-public class HandleEntryDefinition implements ISerializable {
+public class ProcessHandleEntryDefinition implements ISerializable {
     private final Map<Long, Date> date;
-    private StatusDefinition status;
+    private final List<Identification> identifications;
+    private StatusOpenDefinition open;
 
-    public HandleEntryDefinition() {
+    public ProcessHandleEntryDefinition() {
         this.date = new HashMap<>();
+        this.identifications = new ArrayList<>();
     }
 
     public Map<Long, Date> getDate() {
         return this.date;
     }
 
-    public StatusDefinition getStatus() {
-        return this.status;
+
+    public List<Identification> getIdentifications() {
+        return this.identifications;
     }
 
-    public void setStatus(StatusDefinition status) {
-        this.status = status;
+    public StatusOpenDefinition getOpen() {
+        return open;
     }
+
+    public void setOpen(StatusOpenDefinition open) {
+        this.open = open;
+    }
+
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -43,7 +50,11 @@ public class HandleEntryDefinition implements ISerializable {
         for (int i = 0; i < valueInteger; i++) {
             this.date.put(NumberUtils.readExternalLong(in), new Date(NumberUtils.readExternalLong(in)));
         }
-        this.status = ObjectUtils.readExternal(in);
+        valueInteger = NumberUtils.readExternalInteger(in);
+        for (int i = 0; i < valueInteger; i++) {
+            this.identifications.add(ObjectUtils.readExternal(in));
+        }
+        this.open = ObjectUtils.readExternal(in);
     }
 
     @Override
@@ -52,6 +63,10 @@ public class HandleEntryDefinition implements ISerializable {
             NumberUtils.writeExternalLong(out, pair.getKey());
             NumberUtils.writeExternalLong(out, pair.getValue().getTime());
         }
-        ObjectUtils.writeExternal(out, this.status);
+        NumberUtils.writeExternalInteger(out, this.identifications.size());
+        for (Identification pair : this.identifications) {
+            ObjectUtils.writeExternal(out, pair);
+        }
+        ObjectUtils.writeExternal(out, this.open);
     }
 }

@@ -19,7 +19,7 @@ import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
-import indi.sly.system.kernel.processes.dumps.DumpDefinition;
+import indi.sly.system.kernel.objects.prototypes.DumpDefinition;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)

@@ -23,8 +23,8 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class OpenOrCloseContextProcessor extends ACoreObject implements IInfoObjectProcessor {
-    public OpenOrCloseContextProcessor() {
+public class OpenOrCloseProcessor extends ACoreObject implements IInfoObjectProcessor {
+    public OpenOrCloseProcessor() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             status.getOpen().setAttribute(openAttribute);
 

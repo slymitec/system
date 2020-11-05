@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.processes.shadows;
+package indi.sly.system.kernel.objects.prototypes;
 
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -8,12 +8,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ShadowKernelModeObject extends ACoreObject {
-    public void shadow() {
-
-    }
-
-    public void exit() {
-
-    }
+public class DumpObject extends ACoreObject {
+    //Store to memory
+    //Read Info...
 }

@@ -14,10 +14,10 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GetProcessPostProcessor extends ACoreObject implements IProcessObjectProcessor {
+public class GetProcessProcessor extends ACoreObject implements IProcessObjectProcessor {
     private final Function<ProcessEntity, UUID> process;
 
-    public GetProcessPostProcessor() {
+    public GetProcessProcessor() {
         this.process = id -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
 

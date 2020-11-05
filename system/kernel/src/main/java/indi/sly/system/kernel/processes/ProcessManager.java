@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
+import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.StartupTypes;
@@ -10,8 +11,11 @@ import indi.sly.system.kernel.memory.repositories.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObjectFactoryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.processes.shadows.ShadowKernelModeObject;
 import indi.sly.system.kernel.processes.threads.ThreadLifeCycleObject;
+import indi.sly.system.kernel.security.prototypes.PrivilegeTypes;
+import org.aspectj.runtime.internal.cflowstack.ThreadStackImpl11;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -37,13 +41,7 @@ public class ProcessManager extends AManager {
     public void shutdown() {
     }
 
-    public ProcessObject getCurrentProcess() {
-        UUID processID = UUID.randomUUID();
-
-        return this.getProcess(processID);
-    }
-
-    public ProcessObject getProcess(UUID processID) {
+    private ProcessObject getTargetProcess(UUID processID) {
         if (UUIDUtils.isAnyNullOrEmpty(processID)) {
             throw new ConditionParametersException();
         }
@@ -54,6 +52,27 @@ public class ProcessManager extends AManager {
         ProcessEntity process = processRepository.get(processID);
 
         return this.processObjectfactory.buildProcessObject(process);
+    }
+
+
+    public ProcessObject getCurrentProcess() {
+        //Thread...
+        UUID processID = UUIDUtils.createRandom();
+
+        return this.getTargetProcess(processID);
+    }
+
+    public ProcessObject getProcess(UUID processID) {
+        ProcessObject currentProcess = this.getCurrentProcess();
+        ProcessTokenObject currentProcessToken = currentProcess.getToken();
+        ProcessObject process = this.getTargetProcess(processID);
+        ProcessTokenObject processToken = process.getToken();
+
+        if (!currentProcessToken.getAccountID().equals(processToken.getAccountID()) && !currentProcessToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_RUN_APP_WITH_ANOTHER_ACCOUNT)) {
+            throw new ConditionPermissionsException();
+        }
+
+        return process;
     }
 
 

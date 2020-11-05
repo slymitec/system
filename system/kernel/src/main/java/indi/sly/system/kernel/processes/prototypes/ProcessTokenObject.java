@@ -85,7 +85,7 @@ public class ProcessTokenObject extends ABytesProcessObject {
     }
 
     public void setAccountID(UUID accountID) {
-        if (!this.checkPrivilegeTypes(PrivilegeTypes.PROCESSES_RUN_APP_WITH_ANOTHER_ACCOUNT)) {
+        if (!this.isPrivilegeTypes(PrivilegeTypes.PROCESSES_RUN_APP_WITH_ANOTHER_ACCOUNT)) {
             throw new ConditionPermissionsException();
         }
 
@@ -99,7 +99,7 @@ public class ProcessTokenObject extends ABytesProcessObject {
     }
 
     public void setPrivilegeTypes(long privilegeTypes) {
-        if (!this.checkPrivilegeTypes(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+        if (!this.isPrivilegeTypes(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
             throw new ConditionPermissionsException();
         }
 
@@ -122,11 +122,11 @@ public class ProcessTokenObject extends ABytesProcessObject {
         this.lock(LockTypes.NONE);
     }
 
-    public boolean checkPrivilegeTypes(long privilegeTypes) {
+    public boolean isPrivilegeTypes(long privilegeTypes) {
         return LogicalUtils.isAllExist(this.getPrivilegeTypes(), privilegeTypes);
     }
 
-    public boolean checkRoleTypes(long roleTypes) {
+    public boolean isRoleTypes(long roleTypes) {
         return LogicalUtils.isAllExist(this.getRoleTypes(), roleTypes);
     }
 }

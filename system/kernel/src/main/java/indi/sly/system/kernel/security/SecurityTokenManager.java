@@ -20,16 +20,4 @@ public class SecurityTokenManager extends AManager {
     @Override
     public void shutdown() {
     }
-
-    public void checkPrivilegeTypesInCurrentProcessToken(long privilegeTypes) {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrentProcess();
-
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.checkPrivilegeTypes(privilegeTypes)) {
-            throw new ConditionPermissionsException();
-        }
-    }
 }

@@ -9,7 +9,7 @@ import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
 import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
 import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
 import indi.sly.system.kernel.objects.types.TypeObject;
-import indi.sly.system.kernel.processes.dumps.DumpDefinition;
+import indi.sly.system.kernel.objects.prototypes.DumpDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -19,8 +19,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-@Named
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+//@Named
+//@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class NullProcessor extends ACoreObject implements IInfoObjectProcessor {
     public NullProcessor() {
         this.dump = (dump, info, type, status) -> dump;
@@ -81,5 +81,4 @@ public class NullProcessor extends ACoreObject implements IInfoObjectProcessor {
         processorRegister.getReadContents().add(this.readContent);
         processorRegister.getWriteContents().add(this.writeContent);
     }
-
 }

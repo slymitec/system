@@ -81,6 +81,38 @@ public class ProcessObject extends ACoreObject {
         return processHandleTable;
     }
 
+    public synchronized ProcessStatisticsObject getStatistics() {
+        ProcessEntity process = this.getProcess();
+
+        ProcessStatisticsObject processStatistics = this.factoryManager.create(ProcessStatisticsObject.class);
+
+        processStatistics.setSource(() -> {
+            List<Function2<byte[], byte[], ProcessEntity>> funcs = this.processorRegister.getReadProcessStatistics();
+
+            byte[] source = null;
+
+            for (Function2<byte[], byte[], ProcessEntity> pair : funcs) {
+                source = pair.apply(source, process);
+            }
+
+            return source;
+        }, (byte[] source) -> {
+            List<Consumer2<ProcessEntity, byte[]>> funcs = this.processorRegister.getWriteProcessStatistics();
+
+            for (Consumer2<ProcessEntity, byte[]> pair : funcs) {
+                pair.accept(process, source);
+            }
+        });
+        processStatistics.setLock((lockType) -> {
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+            processRepository.lock(process, lockType);
+        });
+
+        return processStatistics;
+    }
+
     public synchronized ProcessTokenObject getToken() {
         ProcessEntity process = this.getProcess();
 

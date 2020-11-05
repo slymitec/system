@@ -1,5 +1,6 @@
 package indi.sly.system.common.utility;
 
+import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.StatusDisabilityException;
 
 import java.io.IOException;
@@ -44,12 +45,8 @@ public class UUIDUtils {
     }
 
     public static UUID readFormBytes(byte[] value) throws StatusDisabilityException {
-        if (ObjectUtils.isAnyNull(value)) {
-            throw new NullPointerException();
-        }
-
-        if (value.length != 16) {
-            throw new StatusDisabilityException();
+        if (ObjectUtils.isAnyNull(value) || value.length != 16) {
+            throw new ConditionParametersException();
         }
 
         return new UUID(
@@ -61,7 +58,7 @@ public class UUIDUtils {
 
     public static byte[] writeToBytes(UUID value) {
         if (ObjectUtils.isAnyNull(value)) {
-            throw new NullPointerException();
+            throw new ConditionParametersException();
         }
 
         byte[] result = new byte[16];

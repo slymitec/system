@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public class SecurityDescriptorDefinition implements IDeepCloneable<SecurityDescriptorDefinition>, ISerializable {
-    private static final long serialVersionUID = 7385733211448716541L;
+    private static final long serialVersionUID = 1L;
 
     private boolean inherit;
     private Set<UUID> owners;

@@ -20,8 +20,6 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.processors.IInfoObjectProcessor;
 import indi.sly.system.kernel.objects.types.TypeObject;
-import indi.sly.system.kernel.processes.dumps.DumpDefinition;
-import indi.sly.system.kernel.processes.dumps.DumpObject;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)

@@ -10,9 +10,11 @@ import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
 import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
 import indi.sly.system.kernel.objects.types.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.dumps.DumpDefinition;
+import indi.sly.system.kernel.objects.prototypes.DumpDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -27,7 +29,16 @@ import java.util.function.Predicate;
 public class ProcessProcessor extends ACoreObject implements IInfoObjectProcessor {
     public ProcessProcessor() {
         this.dump = (dump, info, type, status) -> {
-            int unFinished;
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+            ProcessObject process = processManager.getCurrentProcess();
+            ProcessStatisticsObject processStatistics = process.getStatistics();
+            processStatistics.addInfoDump(1);
+
+            ProcessTokenObject processToken = process.getToken();
+
+            dump.setProcessID(process.getID());
+            dump.setAccountID(processToken.getAccountID());
 
             return dump;
         };
@@ -39,6 +50,9 @@ public class ProcessProcessor extends ACoreObject implements IInfoObjectProcesso
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
             handle = processHandleTable.addInfo(status);
 
+            ProcessStatisticsObject processStatistics = process.getStatistics();
+            processStatistics.addInfoOpen(1);
+
             return handle;
         };
 
@@ -48,28 +62,86 @@ public class ProcessProcessor extends ACoreObject implements IInfoObjectProcesso
             ProcessObject process = processManager.getCurrentProcess();
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
             processHandleTable.deleteInfo(status.getHandle());
+
+            ProcessStatisticsObject processStatistics = process.getStatistics();
+            processStatistics.addInfoClose(1);
         };
 
-        this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> childInfo;
+        this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification, statusOpen) -> childInfo;
+            ProcessObject process = processManager.getCurrentProcess();
+            ProcessStatisticsObject processStatistics = process.getStatistics();
+            processStatistics.addInfoCreate(1);
+
+            return childInfo;
+        };
+
+        this.getOrRebuildChild = (childInfo, info, type, status, identification, statusOpen) -> {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+            ProcessObject process = processManager.getCurrentProcess();
+            ProcessStatisticsObject processStatistics = process.getStatistics();
+            processStatistics.addInfoGet(1);
+
+            return childInfo;
+        };
 
         this.deleteChild = (info, type, status, identification) -> {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+            ProcessObject process = processManager.getCurrentProcess();
+            ProcessStatisticsObject processStatistics = process.getStatistics();
+            processStatistics.addInfoDelete(1);
         };
 
-        this.queryChild = (summaryDefinitions, info, type, status, queryChild) -> summaryDefinitions;
+        this.queryChild = (summaryDefinitions, info, type, status, queryChild) -> {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+            ProcessObject process = processManager.getCurrentProcess();
+            ProcessStatisticsObject processStatistics = process.getStatistics();
+            processStatistics.addInfoQuery(1);
+
+            return summaryDefinitions;
+        };
 
         this.renameChild = (info, type, status, oldIdentification, newIdentification) -> {
         };
 
-        this.readProperties = (properties, info, type, status) -> properties;
+        this.readProperties = (properties, info, type, status) -> {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        this.writeProperties = (info, type, status, properties) -> {
+            ProcessObject process = processManager.getCurrentProcess();
+            ProcessStatisticsObject processStatistics = process.getStatistics();
+            processStatistics.addInfoRead(1);
+
+            return properties;
         };
 
-        this.readContent = (content, info, type, status) -> content;
+        this.writeProperties = (info, type, status, properties) -> {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+            ProcessObject process = processManager.getCurrentProcess();
+            ProcessStatisticsObject processStatistics = process.getStatistics();
+            processStatistics.addInfoWrite(1);
+        };
+
+        this.readContent = (content, info, type, status) -> {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+            ProcessObject process = processManager.getCurrentProcess();
+            ProcessStatisticsObject processStatistics = process.getStatistics();
+            processStatistics.addInfoRead(1);
+
+            return content;
+        };
 
         this.writeContent = (info, type, status, content) -> {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+            ProcessObject process = processManager.getCurrentProcess();
+            ProcessStatisticsObject processStatistics = process.getStatistics();
+            processStatistics.addInfoWrite(1);
         };
     }
 

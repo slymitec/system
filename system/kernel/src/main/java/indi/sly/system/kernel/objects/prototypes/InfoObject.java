@@ -12,8 +12,6 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.types.TypeObject;
-import indi.sly.system.kernel.processes.dumps.DumpDefinition;
-import indi.sly.system.kernel.processes.dumps.DumpObject;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

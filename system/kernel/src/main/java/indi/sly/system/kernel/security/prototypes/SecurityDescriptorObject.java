@@ -1,25 +1,23 @@
 package indi.sly.system.kernel.security.prototypes;
 
+import indi.sly.system.common.exceptions.ConditionParametersException;
+import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.exceptions.StatusInsufficientResourcesException;
 import indi.sly.system.common.exceptions.StatusNotSupportedException;
-import indi.sly.system.common.functions.Consumer;
 import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.objects.Identification;
-import indi.sly.system.kernel.processes.ProcessThreadManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.SecurityDescriptorSummaryDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
 public class SecurityDescriptorObject extends ABytesProcessObject {
     public SecurityDescriptorObject() {
-        this.parent = new ArrayList<>();
+        this.parents = new ArrayList<>();
         this.identifications = new ArrayList<>();
     }
 
@@ -44,16 +42,15 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
         return source;
     }
 
-    private SecurityDescriptorDefinition securityDescriptor;
     private final List<Identification> identifications;
-    protected final List<SecurityDescriptorObject> parent;
+    private final List<SecurityDescriptorObject> parents;
+    private SecurityDescriptorDefinition securityDescriptor;
     private boolean permission;
     private boolean audit;
 
-
     public void setParentSecurityDescriptor(SecurityDescriptorObject parentSecurityDescriptor) {
-        this.parent.addAll(parentSecurityDescriptor.parent);
-        this.parent.add(parentSecurityDescriptor);
+        this.parents.addAll(parentSecurityDescriptor.parents);
+        this.parents.add(parentSecurityDescriptor);
     }
 
     public void setPermission(boolean permission) {
@@ -66,27 +63,19 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
 
     //
 
-    private boolean checkThisAccessControlType(long accessControlType) {
-        ProcessThreadManager processThreadManager = this.factoryManager.getManager(ProcessThreadManager.class);
-
-        ProcessObject process = processThreadManager.getCurrentProcess();
-        ProcessTokenObject processToken = process.getToken();
-
-        return true;
+    public SecurityDescriptorSummaryDefinition getSummary() {
+        return null;
     }
+
+    //
 
     public void checkAccessControlType(long accessControlType) {
         if (!this.permission) {
             throw new StatusNotSupportedException();
         }
 
-        for (SecurityDescriptorObject pair : this.parent) {
-            pair.checkThisAccessControlType(accessControlType);
-        }
-
-
-
         //...
+
     }
 
     public void writeAudit(long accessControlType) {
@@ -97,11 +86,24 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
         //...
     }
 
-    public SecurityDescriptorSummaryDefinition getSummary() {
-        return null;
+    public void checkRoleTypes(UUID roleType) {
+        if (UUIDUtils.isAnyNullOrEmpty(roleType)) {
+            throw new ConditionParametersException();
+        }
+
+        this.init();
+
+        if (!this.securityDescriptor.getRoles().contains(roleType)) {
+            throw new ConditionPermissionsException();
+        }
     }
 
-    public void setOwner(List<UUID> owners) {
+
+    public void setInherit(boolean inherit) {
+
+    }
+
+    public void setOwners(List<UUID> owners) {
 //        SecurityDescriptorDefinition securityDescriptor = this.analysis.getSecurityDescriptor();
 //
 //        Set<UUID> newOwners = securityDescriptor.getOwners();
@@ -114,7 +116,11 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
 
     }
 
-    private Object notFinished;
+    public void setAccessControlTypes(Map<UUID, Long> accessControl) {
 
-    // read, write SecurityDescriptor, owner, etc..
+    }
+
+    public void setRoleTypes(List<UUID> roleTypes) {
+
+    }
 }

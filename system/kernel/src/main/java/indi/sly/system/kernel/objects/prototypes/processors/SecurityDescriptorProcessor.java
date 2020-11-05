@@ -20,8 +20,10 @@ import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
 import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
 import indi.sly.system.kernel.objects.types.TypeInitializerAttributeTypes;
 import indi.sly.system.kernel.objects.types.TypeObject;
+import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.dumps.DumpDefinition;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.security.prototypes.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -119,7 +121,10 @@ public class SecurityDescriptorProcessor extends ACoreObject implements IInfoObj
                 SecurityDescriptorDefinition securityDescriptor = new SecurityDescriptorDefinition();
 
                 if (childType.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_PERMISSION)) {
-                    securityDescriptor.getOwners().add(null);//Current Account
+                    ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+                    ProcessObject process = processManager.getCurrentProcess();
+
+                    securityDescriptor.getOwners().add(process.getToken().getAccountID());
                     securityDescriptor.setInherit(true);
                 }
 

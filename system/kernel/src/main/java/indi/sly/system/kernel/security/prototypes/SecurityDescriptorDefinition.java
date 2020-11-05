@@ -57,61 +57,20 @@ public class SecurityDescriptorDefinition implements IDeepCloneable<SecurityDesc
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-
-        SecurityDescriptorDefinition other = (SecurityDescriptorDefinition) obj;
-
-        if (other.inherit != this.inherit || other.auditTypes != this.auditTypes) {
-            return false;
-        }
-        if (other.owners.size() != this.owners.size() || other.accessControl.size() != this.accessControl.size() || other.roles.size() != this.roles.size()) {
-            return false;
-        }
-        for (UUID pair : this.owners) {
-            if (!other.owners.contains(pair)) {
-                return false;
-            }
-        }
-        for (Entry<UUID, Long> pair : this.accessControl.entrySet()) {
-            if (other.accessControl.containsKey(pair.getKey())) {
-                return false;
-            } else if (!other.accessControl.get(pair.getKey()).equals(pair.getValue())) {
-                return false;
-            }
-        }
-        for (UUID pair : this.roles) {
-            if (!other.roles.contains(pair)) {
-                return false;
-            }
-        }
-
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SecurityDescriptorDefinition that = (SecurityDescriptorDefinition) o;
+        return inherit == that.inherit &&
+                auditTypes == that.auditTypes &&
+                owners.equals(that.owners) &&
+                accessControl.equals(that.accessControl) &&
+                roles.equals(that.roles);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-
-        result = prime * result + (inherit ? 1231 : 1237);
-        for (UUID pair : this.owners) {
-            result += pair.hashCode();
-        }
-        for (Entry<UUID, Long> pair : this.accessControl.entrySet()) {
-            result += pair.getKey().hashCode() ^ pair.getValue().hashCode();
-        }
-        for (UUID pair : this.roles) {
-            result += pair.hashCode();
-        }
-        result = prime * result + (int) (auditTypes ^ (auditTypes >>> 32));
-
-        return result;
+        return Objects.hash(inherit, owners, accessControl, roles, auditTypes);
     }
 
     @Override
@@ -125,9 +84,7 @@ public class SecurityDescriptorDefinition implements IDeepCloneable<SecurityDesc
 
         securityDescriptor.inherit = this.inherit;
         securityDescriptor.owners.addAll(this.owners);
-        for (Entry<UUID, Long> pair : this.accessControl.entrySet()) {
-            securityDescriptor.accessControl.put(pair.getKey(), pair.getValue());
-        }
+        securityDescriptor.accessControl.putAll(this.accessControl);
         securityDescriptor.roles.addAll(this.roles);
         securityDescriptor.auditTypes = this.auditTypes;
 

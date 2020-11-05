@@ -86,7 +86,30 @@ public class ProcessObject extends ACoreObject {
 
         ProcessTokenObject processToken = this.factoryManager.create(ProcessTokenObject.class);
 
-        //...
+        processToken.setSource(() -> {
+            List<Function2<byte[], byte[], ProcessEntity>> funcs = this.processorRegister.getReadProcessTokens();
+
+            byte[] source = null;
+
+            for (Function2<byte[], byte[], ProcessEntity> pair : funcs) {
+                source = pair.apply(source, process);
+            }
+
+            return source;
+        }, (byte[] source) -> {
+            List<Consumer2<ProcessEntity, byte[]>> funcs = this.processorRegister.getWriteProcessTokens();
+
+            for (Consumer2<ProcessEntity, byte[]> pair : funcs) {
+                pair.accept(process, source);
+            }
+        });
+        processToken.setLock((lockType) -> {
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+            processRepository.lock(process, lockType);
+        });
+        processToken.setProcess(this);
 
         return processToken;
     }

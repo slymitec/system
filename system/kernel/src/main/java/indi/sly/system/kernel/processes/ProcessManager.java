@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessThreadManager extends AManager {
+public class ProcessManager extends AManager {
     private ProcessObjectFactoryObject processObjectfactory;
 
     @Override

@@ -9,7 +9,7 @@ import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
 import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
 import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
 import indi.sly.system.kernel.objects.types.TypeObject;
-import indi.sly.system.kernel.processes.ProcessThreadManager;
+import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.dumps.DumpDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -33,9 +33,9 @@ public class ProcessProcessor extends ACoreObject implements IInfoObjectProcesso
         };
 
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
-            ProcessThreadManager processThreadManager = this.factoryManager.getManager(ProcessThreadManager.class);
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-            ProcessObject process = processThreadManager.getCurrentProcess();
+            ProcessObject process = processManager.getCurrentProcess();
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
             handle = processHandleTable.addInfo(status);
 
@@ -43,9 +43,9 @@ public class ProcessProcessor extends ACoreObject implements IInfoObjectProcesso
         };
 
         this.close = (info, type, status) -> {
-            ProcessThreadManager processThreadManager = this.factoryManager.getManager(ProcessThreadManager.class);
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-            ProcessObject process = processThreadManager.getCurrentProcess();
+            ProcessObject process = processManager.getCurrentProcess();
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
             processHandleTable.deleteInfo(status.getHandle());
         };

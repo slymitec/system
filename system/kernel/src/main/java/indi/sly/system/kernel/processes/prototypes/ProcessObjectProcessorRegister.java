@@ -14,11 +14,15 @@ public class ProcessObjectProcessorRegister {
     public ProcessObjectProcessorRegister() {
         this.readProcessHandleTables = new ArrayList<>();
         this.writeProcessHandleTables = new ArrayList<>();
+        this.readProcessTokens = new ArrayList<>();
+        this.writeProcessTokens = new ArrayList<>();
     }
 
     private Function<ProcessEntity, UUID> process;
     private final List<Function2<byte[], byte[], ProcessEntity>> readProcessHandleTables;
     private final List<Consumer2<ProcessEntity, byte[]>> writeProcessHandleTables;
+    private final List<Function2<byte[], byte[], ProcessEntity>> readProcessTokens;
+    private final List<Consumer2<ProcessEntity, byte[]>> writeProcessTokens;
 
     public Function<ProcessEntity, UUID> getProcess() {
         return this.process;
@@ -34,5 +38,13 @@ public class ProcessObjectProcessorRegister {
 
     public List<Consumer2<ProcessEntity, byte[]>> getWriteProcessHandleTables() {
         return this.writeProcessHandleTables;
+    }
+
+    public List<Function2<byte[], byte[], ProcessEntity>> getReadProcessTokens() {
+        return this.readProcessTokens;
+    }
+
+    public List<Consumer2<ProcessEntity, byte[]>> getWriteProcessTokens() {
+        return this.writeProcessTokens;
     }
 }

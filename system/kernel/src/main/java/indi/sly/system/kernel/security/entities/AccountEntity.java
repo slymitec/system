@@ -20,11 +20,11 @@ public class AccountEntity {
     @JoinTable(name = "KernelAccountsGroups", joinColumns = {@JoinColumn(name = "AccountID")}, inverseJoinColumns = {@JoinColumn(name = "GroupID")})
     protected List<GroupEntity> groups;
 
-    public UUID getId() {
+    public UUID getID() {
         return this.id;
     }
 
-    public void setId(UUID id) {
+    public void setID(UUID id) {
         this.id = id;
     }
 

@@ -113,8 +113,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         CriteriaQuery<InfoRelationEntity> criteriaQuery = criteriaBuilder.createQuery(InfoRelationEntity.class);
         Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
         criteriaQuery.select(root);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("Parent"), info));
-
+        criteriaQuery.where(criteriaBuilder.equal(root.get("ParentID"), info.getID()));
         TypedQuery<InfoRelationEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
         List<InfoRelationEntity> relations = typedQuery.getResultList();
 

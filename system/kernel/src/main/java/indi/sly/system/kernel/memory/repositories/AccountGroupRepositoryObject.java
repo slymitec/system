@@ -5,8 +5,10 @@ import indi.sly.system.common.exceptions.StatusAlreadyExistedException;
 import indi.sly.system.common.exceptions.StatusNotExistedException;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.objects.entities.InfoRelationEntity;
 import indi.sly.system.kernel.security.entities.AccountEntity;
 import indi.sly.system.kernel.security.entities.GroupEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -16,6 +18,11 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.List;
 import java.util.UUID;
 
 @Named
@@ -49,7 +56,43 @@ public class AccountGroupRepositoryObject extends ACoreObject {
             throw new ConditionParametersException();
         }
 
-        AccountEntity group = this.entityManager.find(AccountEntity.class, id);
+        AccountEntity account = this.entityManager.find(AccountEntity.class, id);
+
+        if (ObjectUtils.isAnyNull(account)) {
+            throw new StatusNotExistedException();
+        }
+
+        return account;
+    }
+
+    public AccountEntity getAccount(String name) {
+        if (StringUtils.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<AccountEntity> criteriaQuery = criteriaBuilder.createQuery(AccountEntity.class);
+        Root<AccountEntity> root = criteriaQuery.from(AccountEntity.class);
+        criteriaQuery.select(root);
+        criteriaQuery.where(criteriaBuilder.equal(root.get("Name"), name));
+        TypedQuery<AccountEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
+        List<AccountEntity> accounts = typedQuery.getResultList();
+
+        if (accounts.isEmpty()) {
+            throw new StatusNotExistedException();
+        }
+
+        AccountEntity account = accounts.get(0);
+
+        return account;
+    }
+
+    public GroupEntity getGroup(UUID id) {
+        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+            throw new ConditionParametersException();
+        }
+
+        GroupEntity group = this.entityManager.find(GroupEntity.class, id);
 
         if (ObjectUtils.isAnyNull(group)) {
             throw new StatusNotExistedException();
@@ -58,18 +101,26 @@ public class AccountGroupRepositoryObject extends ACoreObject {
         return group;
     }
 
-    public GroupEntity getGroup(UUID id) {
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+    public GroupEntity getGroup(String name) {
+        if (StringUtils.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
 
-        GroupEntity account = this.entityManager.find(GroupEntity.class, id);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<GroupEntity> criteriaQuery = criteriaBuilder.createQuery(GroupEntity.class);
+        Root<GroupEntity> root = criteriaQuery.from(GroupEntity.class);
+        criteriaQuery.select(root);
+        criteriaQuery.where(criteriaBuilder.equal(root.get("Name"), name));
+        TypedQuery<GroupEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
+        List<GroupEntity> groups = typedQuery.getResultList();
 
-        if (ObjectUtils.isAnyNull(account)) {
+        if (groups.isEmpty()) {
             throw new StatusNotExistedException();
         }
 
-        return account;
+        GroupEntity group = groups.get(0);
+
+        return group;
     }
 
     public void add(AccountEntity account) {

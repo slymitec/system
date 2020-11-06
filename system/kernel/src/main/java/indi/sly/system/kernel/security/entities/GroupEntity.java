@@ -18,11 +18,11 @@ public class GroupEntity {
     @Column(length = 256, name = "Name", nullable = true)
     protected String name;
 
-    public UUID getId() {
+    public UUID getID() {
         return this.id;
     }
 
-    public void setId(UUID id) {
+    public void setID(UUID id) {
         this.id = id;
     }
 

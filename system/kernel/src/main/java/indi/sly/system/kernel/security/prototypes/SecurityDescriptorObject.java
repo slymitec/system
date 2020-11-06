@@ -9,12 +9,17 @@ import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.security.SecurityDescriptorSummaryDefinition;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SecurityDescriptorObject extends ABytesProcessObject {
     public SecurityDescriptorObject() {
         this.parents = new ArrayList<>();

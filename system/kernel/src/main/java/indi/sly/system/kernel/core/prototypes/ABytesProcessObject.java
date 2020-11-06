@@ -13,26 +13,13 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class ABytesProcessObject extends ACoreObject {
+public abstract class ABytesProcessObject extends ACoreProcessObject {
     private Provider<byte[]> funcRead;
     private Consumer<byte[]> funcWrite;
-    private Consumer<Long> funcLock;
 
     public final void setSource(Provider<byte[]> funcRead, Consumer<byte[]> funcWrite) {
         this.funcRead = funcRead;
         this.funcWrite = funcWrite;
-    }
-
-    public final void setLock(Consumer<Long> funcLock) {
-        this.funcLock = funcLock;
-    }
-
-    protected final void lock(long lockType) {
-        if (ObjectUtils.isAnyNull(this.funcLock)) {
-            throw new StatusNotSupportedException();
-        }
-
-        this.funcLock.accept(lockType);
     }
 
     protected final void init() {

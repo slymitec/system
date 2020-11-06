@@ -14,5 +14,4 @@ public interface AuditTypes {
     long READPERMISSIONDESCRIPTOR = 1 << 12L;
     long CHANGEPERMISSIONDESCRIPTOR = 1 << 14L;
     long DELETECHILD = 1 << 16L;
-    long FULLCONTROL = 0x5555555555555555L;
 }

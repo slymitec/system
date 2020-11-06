@@ -69,9 +69,9 @@ public class SecurityTokenManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AccountGroupRepositoryObject GroupGroupRepository = memoryManager.getAccountGroupRepository();
+        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
-        GroupEntity group = GroupGroupRepository.getGroup(groupID);
+        GroupEntity group = accountGroupRepository.getGroup(groupID);
 
         return this.accountGroupObjectFactory.buildGroup(group);
     }
@@ -82,9 +82,9 @@ public class SecurityTokenManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AccountGroupRepositoryObject GroupGroupRepository = memoryManager.getAccountGroupRepository();
+        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
-        GroupEntity group = GroupGroupRepository.getGroup(groupName);
+        GroupEntity group = accountGroupRepository.getGroup(groupName);
 
         return this.accountGroupObjectFactory.buildGroup(group);
     }
@@ -95,7 +95,7 @@ public class SecurityTokenManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AccountGroupRepositoryObject GroupGroupRepository = memoryManager.getAccountGroupRepository();
+        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
         AccountEntity account = new AccountEntity();
         account.setID(UUID.randomUUID());
@@ -103,11 +103,11 @@ public class SecurityTokenManager extends AManager {
         account.setPassword(accountPassword);
 
         try {
-            GroupGroupRepository.getAccount(accountName);
+            accountGroupRepository.getAccount(accountName);
 
             throw new StatusAlreadyExistedException();
         } catch (StatusNotExistedException exception) {
-            GroupGroupRepository.add(account);
+            accountGroupRepository.add(account);
         }
 
         return this.accountGroupObjectFactory.buildAccount(account);
@@ -119,20 +119,44 @@ public class SecurityTokenManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AccountGroupRepositoryObject GroupGroupRepository = memoryManager.getAccountGroupRepository();
+        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
         GroupEntity group = new GroupEntity();
         group.setID(UUID.randomUUID());
         group.setName(groupName);
 
         try {
-            GroupGroupRepository.getGroup(groupName);
+            accountGroupRepository.getGroup(groupName);
 
             throw new StatusAlreadyExistedException();
         } catch (StatusNotExistedException exception) {
-            GroupGroupRepository.add(group);
+            accountGroupRepository.add(group);
         }
 
         return this.accountGroupObjectFactory.buildGroup(group);
+    }
+
+    public void deleteAccount(UUID accountID) {
+        if (UUIDUtils.isAnyNullOrEmpty(accountID)) {
+            throw new ConditionParametersException();
+        }
+
+        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+
+        AccountEntity account = accountGroupRepository.getAccount(accountID);
+        accountGroupRepository.delete(account);
+    }
+
+    public void deleteGroup(UUID groupID) {
+        if (UUIDUtils.isAnyNullOrEmpty(groupID)) {
+            throw new ConditionParametersException();
+        }
+
+        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+
+        GroupEntity group = accountGroupRepository.getGroup(groupID);
+        accountGroupRepository.delete(group);
     }
 }

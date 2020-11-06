@@ -77,7 +77,7 @@ public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
     private final Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]> writeContent;
 
     @Override
-    public void postProcess(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
         processorRegister.getOpens().add(this.open);
         processorRegister.getCreateChildAndOpens().add(this.createChildAndOpen);
         processorRegister.getReadContents().add(this.readContent);

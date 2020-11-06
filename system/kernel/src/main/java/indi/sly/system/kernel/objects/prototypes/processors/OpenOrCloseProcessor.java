@@ -70,7 +70,7 @@ public class OpenOrCloseProcessor extends ACoreObject implements IInfoObjectProc
     private final Consumer3<InfoEntity, TypeObject, StatusDefinition> close;
 
     @Override
-    public void postProcess(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
         processorRegister.getOpens().add(this.open);
         processorRegister.getCloses().add(this.close);
     }

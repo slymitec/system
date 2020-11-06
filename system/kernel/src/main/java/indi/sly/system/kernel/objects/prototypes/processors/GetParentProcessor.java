@@ -36,7 +36,7 @@ public class GetParentProcessor extends ACoreObject implements IInfoObjectProces
     private final Function<InfoObject, UUID> parent;
 
     @Override
-    public void postProcess(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
         processorRegister.setParent(this.parent);
     }
 

@@ -259,7 +259,7 @@ public class SecurityDescriptorProcessor extends ACoreObject implements IInfoObj
     private final Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]> writeContent;
 
     @Override
-    public void postProcess(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
         if (ObjectUtils.allNotNull(info)) {
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
             TypeObject type = typeManager.get(info.getType());

@@ -4,5 +4,5 @@ import indi.sly.system.kernel.processes.entities.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.ProcessObjectProcessorRegister;
 
 public interface IProcessObjectProcessor {
-    void postProcess(ProcessEntity process, ProcessObjectProcessorRegister processorRegister);
+    void process(ProcessEntity process, ProcessObjectProcessorRegister processorRegister);
 }

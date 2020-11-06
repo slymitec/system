@@ -159,7 +159,7 @@ public class ProcessProcessor extends ACoreObject implements IInfoObjectProcesso
     private final Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]> writeContent;
 
     @Override
-    public void postProcess(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
         processorRegister.getDumps().add(this.dump);
         processorRegister.getOpens().add(this.open);
         processorRegister.getCloses().add(this.close);

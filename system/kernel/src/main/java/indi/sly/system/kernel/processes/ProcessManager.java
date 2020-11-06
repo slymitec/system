@@ -5,17 +5,13 @@ import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.StartupTypes;
-import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObjectFactoryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.processes.shadows.ShadowKernelModeObject;
-import indi.sly.system.kernel.processes.threads.ThreadLifeCycleObject;
 import indi.sly.system.kernel.security.prototypes.PrivilegeTypes;
-import org.aspectj.runtime.internal.cflowstack.ThreadStackImpl11;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -73,6 +69,11 @@ public class ProcessManager extends AManager {
         }
 
         return process;
+    }
+
+    public ProcessObject createProcess() {
+        //...
+        return null;
     }
 
 

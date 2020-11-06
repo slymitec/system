@@ -28,7 +28,7 @@ public class GetProcessProcessor extends ACoreObject implements IProcessObjectPr
     }
 
     @Override
-    public void postProcess(ProcessEntity process, ProcessObjectProcessorRegister processorRegister) {
+    public void process(ProcessEntity process, ProcessObjectProcessorRegister processorRegister) {
         processorRegister.setProcess(this.process);
     }
 }

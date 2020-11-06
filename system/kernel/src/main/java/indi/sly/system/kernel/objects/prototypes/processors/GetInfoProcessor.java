@@ -31,7 +31,7 @@ public class GetInfoProcessor extends ACoreObject implements IInfoObjectProcesso
     private final Function3<InfoEntity, UUID, UUID, StatusDefinition> info;
 
     @Override
-    public void postProcess(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
         processorRegister.setInfo(this.info);
     }
 }

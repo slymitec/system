@@ -30,7 +30,7 @@ public class ProcessMemberGetAndSetProcessor extends ACoreObject implements IPro
     }
 
     @Override
-    public void postProcess(ProcessEntity process, ProcessObjectProcessorRegister processorRegister) {
+    public void process(ProcessEntity process, ProcessObjectProcessorRegister processorRegister) {
         processorRegister.getReadProcessHandleTables().add(this.readProcessHandleTable);
         processorRegister.getWriteProcessHandleTables().add(this.writeProcessHandleTable);
         processorRegister.getReadProcessStatistics().add(this.readProcessStatistics);

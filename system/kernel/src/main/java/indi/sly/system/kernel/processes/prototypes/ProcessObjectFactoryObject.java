@@ -30,8 +30,8 @@ public class ProcessObjectFactoryObject extends ACoreObject {
 
     public ProcessObject buildProcessObject(ProcessEntity process) {
         ProcessObjectProcessorRegister processObjectProcessorRegister = new ProcessObjectProcessorRegister();
-        for (IProcessObjectProcessor pair : this.processObjectProcessors) {
-            pair.postProcess(process, processObjectProcessorRegister);
+        for (IProcessObjectProcessor processObjectProcessor : this.processObjectProcessors) {
+            processObjectProcessor.process(process, processObjectProcessorRegister);
         }
 
         ProcessObject processObject = this.factoryManager.create(ProcessObject.class);

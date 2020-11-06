@@ -43,7 +43,7 @@ public class DumpProcessor extends ACoreObject implements IInfoObjectProcessor {
     private final Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, StatusDefinition> dump;
 
     @Override
-    public void postProcess(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
         processorRegister.getDumps().add(this.dump);
     }
 

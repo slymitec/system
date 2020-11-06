@@ -45,7 +45,7 @@ public class InfoObjectFactoryObject extends ACoreObject {
 
         InfoObjectProcessorRegister processorRegister = new InfoObjectProcessorRegister();
         for (IInfoObjectProcessor pair : this.infoObjectProcessors) {
-            pair.postProcess(infoEntity, processorRegister);
+            pair.process(infoEntity, processorRegister);
         }
 
         StatusOpenDefinition statusOpen = new StatusOpenDefinition();
@@ -66,8 +66,8 @@ public class InfoObjectFactoryObject extends ACoreObject {
 
     public InfoObject buildInfoObject(InfoEntity info, StatusOpenDefinition statusOpen, InfoObject parentInfo) {
         InfoObjectProcessorRegister infoObjectProcessorRegister = new InfoObjectProcessorRegister();
-        for (IInfoObjectProcessor pair : this.infoObjectProcessors) {
-            pair.postProcess(info, infoObjectProcessorRegister);
+        for (IInfoObjectProcessor infoObjectProcessor : this.infoObjectProcessors) {
+            infoObjectProcessor.process(info, infoObjectProcessorRegister);
         }
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);

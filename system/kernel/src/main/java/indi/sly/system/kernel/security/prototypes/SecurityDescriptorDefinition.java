@@ -15,9 +15,9 @@ public class SecurityDescriptorDefinition implements IDeepCloneable<SecurityDesc
     private static final long serialVersionUID = 1L;
 
     private boolean inherit;
-    private Set<UUID> owners;
-    private Map<UUID, Long> accessControl;
-    private Set<UUID> roles;
+    private final Set<UUID> owners;
+    private final Map<UUID, Long> accessControl;
+    private final Set<UUID> roles;
     private long auditTypes;
 
     public SecurityDescriptorDefinition() {

@@ -2,6 +2,7 @@ package indi.sly.system.kernel.core;
 
 import indi.sly.system.common.exceptions.AKernelException;
 import indi.sly.system.common.exceptions.ConditionParametersException;
+import indi.sly.system.common.exceptions.StatusNotSupportedException;
 import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.functions.Provider;
 import indi.sly.system.common.utility.ObjectUtils;
@@ -67,11 +68,13 @@ public class FactoryManager extends AManager {
                         coreObject = constructor.newInstance();
                     }
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException e3) {
+                    coreObject = new SpringObjenesis().newInstance(clazz);
                 }
             }
         }
+        
         if (ObjectUtils.isAnyNull(coreObject)) {
-            coreObject = new SpringObjenesis().newInstance(clazz);
+            throw new StatusNotSupportedException();
         }
 
         coreObject.setFactoryManager(this);

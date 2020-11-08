@@ -1,11 +1,8 @@
 package indi.sly.system.kernel.core.prototypes;
 
 
-import indi.sly.system.common.exceptions.StatusNotSupportedException;
 import indi.sly.system.common.functions.Consumer;
 import indi.sly.system.common.functions.Provider;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

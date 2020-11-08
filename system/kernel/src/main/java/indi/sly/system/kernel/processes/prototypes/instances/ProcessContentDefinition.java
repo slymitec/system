@@ -17,11 +17,11 @@ public class ProcessContentDefinition implements ISerializable {
         this.token = new ProcessTokenDefinition();
     }
 
-    private CommunicationDefinition communication;
-    private ProcessHandleTableDefinition handleTable;
-    private StatusDefintion status;
-    private StatisticsDefinition statistics;
-    private ProcessTokenDefinition token;
+    private final CommunicationDefinition communication;
+    private final ProcessHandleTableDefinition handleTable;
+    private final StatusDefintion status;
+    private final StatisticsDefinition statistics;
+    private final ProcessTokenDefinition token;
 
     public CommunicationDefinition getCommunication() {
         return this.communication;

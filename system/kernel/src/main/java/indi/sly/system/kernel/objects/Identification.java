@@ -93,7 +93,9 @@ public final class Identification implements IDeepCloneable<Identification>, ISe
         Identification newObject = new Identification();
 
         newObject.id = this.id == null ? null : new byte[this.id.length];
-        System.arraycopy(this.id, 0, newObject.id, 0, this.id.length);
+        if (ObjectUtils.allNotNull(this.id)) {
+            System.arraycopy(this.id, 0, newObject.id, 0, this.id.length);
+        }
 
         newObject.type = this.type;
 

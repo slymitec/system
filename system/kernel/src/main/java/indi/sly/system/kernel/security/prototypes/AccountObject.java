@@ -2,9 +2,7 @@ package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.core.prototypes.ACoreProcessObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.AccountGroupRepositoryObject;

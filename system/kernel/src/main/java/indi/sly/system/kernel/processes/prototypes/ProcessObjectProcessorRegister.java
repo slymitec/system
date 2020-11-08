@@ -1,9 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.functions.*;
-import indi.sly.system.kernel.objects.entities.InfoEntity;
-import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
-import indi.sly.system.kernel.objects.types.TypeObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
 
 import java.util.ArrayList;

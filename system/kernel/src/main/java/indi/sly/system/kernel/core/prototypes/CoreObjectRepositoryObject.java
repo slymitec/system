@@ -71,13 +71,13 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 coreObjects.put(pair.getKey(), pair.getValue());
             }
         } else if (spaceType == SpaceTypes.ALL) {
-            coreObjects = new HashMap<>();
-
-            coreObjects.putAll(this.getKernelSpace().getCoreObjects());
+            coreObjects = new HashMap<>(this.getKernelSpace().getCoreObjects());
 
             for (Entry<UUID, InfoObject> pair : this.getUserSpace().getKernelObjects().entrySet()) {
                 coreObjects.put(pair.getKey(), pair.getValue());
             }
+        } else {
+            throw new ConditionParametersException();
         }
 
         return new HashSet<>(coreObjects.values());

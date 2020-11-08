@@ -3,9 +3,7 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.NumberUtils;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.objects.Identification;
-import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
 import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
 
 import java.io.IOException;

@@ -8,7 +8,7 @@ import indi.sly.system.common.functions.Provider;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.SpringUtils;
 import indi.sly.system.kernel.core.boot.StartupTypes;
-import indi.sly.system.kernel.core.date.DateTimeObject;
+import indi.sly.system.kernel.core.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.enviroment.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.core.enviroment.UserSpace;

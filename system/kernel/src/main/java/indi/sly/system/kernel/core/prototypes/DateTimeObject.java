@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.core.date;
+package indi.sly.system.kernel.core.prototypes;
 
 import java.util.Date;
 

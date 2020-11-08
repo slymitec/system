@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.functions.*;
-import indi.sly.system.kernel.core.date.DateTimeObject;
-import indi.sly.system.kernel.core.date.DateTimeTypes;
+import indi.sly.system.kernel.core.prototypes.DateTimeObject;
+import indi.sly.system.kernel.core.prototypes.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.objects.entities.InfoEntity;

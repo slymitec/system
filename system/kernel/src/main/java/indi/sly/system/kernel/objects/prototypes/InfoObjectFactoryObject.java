@@ -100,7 +100,12 @@ public class InfoObjectFactoryObject extends ACoreObject {
         return infoObject;
     }
 
-    public DumpObject buildDumpObject(DumpDefinition dumpDefinition) {
+    public DumpObject buildDumpObject(DumpDefinition dump) {
+        DumpObject dumpObject = this.factoryManager.create(DumpObject.class);
+
+        //
+
+
         return null;
     }
 }

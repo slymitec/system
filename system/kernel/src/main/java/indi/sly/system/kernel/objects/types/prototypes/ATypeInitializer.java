@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.objects.types;
+package indi.sly.system.kernel.objects.types.prototypes;
 
 import java.util.Set;
 import java.util.UUID;
@@ -13,7 +13,7 @@ import indi.sly.system.common.functions.Consumer;
 import indi.sly.system.common.functions.Provider;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.AInfoRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;

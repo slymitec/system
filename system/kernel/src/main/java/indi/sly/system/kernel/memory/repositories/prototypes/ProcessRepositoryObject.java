@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.memory.repositories;
+package indi.sly.system.kernel.memory.repositories.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.StatusAlreadyExistedException;

@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.memory.repositories;
+package indi.sly.system.kernel.memory.repositories.prototypes;
 
 import java.util.List;
 import java.util.UUID;

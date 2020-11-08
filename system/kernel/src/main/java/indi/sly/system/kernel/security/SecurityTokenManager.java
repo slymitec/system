@@ -8,7 +8,7 @@ import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.StartupTypes;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.AccountGroupRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
 import indi.sly.system.kernel.security.entities.AccountEntity;
 import indi.sly.system.kernel.security.entities.GroupEntity;
 import indi.sly.system.kernel.security.prototypes.AccountGroupObjectFactoryObject;

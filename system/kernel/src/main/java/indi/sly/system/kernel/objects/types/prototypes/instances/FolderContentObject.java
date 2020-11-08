@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.objects.types.instances;
+package indi.sly.system.kernel.objects.types.prototypes.instances;
 
 import javax.inject.Named;
 

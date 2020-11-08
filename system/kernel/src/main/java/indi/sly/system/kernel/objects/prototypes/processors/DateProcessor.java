@@ -5,14 +5,14 @@ import indi.sly.system.common.functions.Function4;
 import indi.sly.system.common.functions.Function6;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
-import indi.sly.system.kernel.core.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.prototypes.DateTimeTypes;
+import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
+import indi.sly.system.kernel.core.date.prototypes.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
 import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
-import indi.sly.system.kernel.objects.types.TypeObject;
+import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

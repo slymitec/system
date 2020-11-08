@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.objects.types.instances;
+package indi.sly.system.kernel.objects.types.prototypes.instances;
 
 import indi.sly.system.common.exceptions.StatusAlreadyExistedException;
 import indi.sly.system.common.exceptions.StatusNotExistedException;
@@ -7,14 +7,14 @@ import indi.sly.system.common.exceptions.StatusNotSupportedException;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.AInfoRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoRelationEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
-import indi.sly.system.kernel.objects.types.ATypeInitializer;
+import indi.sly.system.kernel.objects.types.prototypes.ATypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.DumpDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

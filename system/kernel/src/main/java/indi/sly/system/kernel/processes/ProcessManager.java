@@ -6,7 +6,7 @@ import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.StartupTypes;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.ProcessRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObjectFactoryObject;

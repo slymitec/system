@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.objects.types;
+package indi.sly.system.kernel.objects.types.prototypes;
 
 public class TypeCounterDefinition {
     protected int totalOccupiedCount;

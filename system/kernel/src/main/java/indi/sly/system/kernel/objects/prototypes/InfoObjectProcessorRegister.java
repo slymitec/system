@@ -7,7 +7,7 @@ import indi.sly.system.common.functions.*;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
-import indi.sly.system.kernel.objects.types.TypeObject;
+import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 
 public class InfoObjectProcessorRegister {

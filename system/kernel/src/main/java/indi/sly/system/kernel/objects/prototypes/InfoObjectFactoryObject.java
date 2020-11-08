@@ -8,7 +8,7 @@ import javax.inject.Named;
 
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.AInfoRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -19,7 +19,7 @@ import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.processors.IInfoObjectProcessor;
-import indi.sly.system.kernel.objects.types.TypeObject;
+import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)

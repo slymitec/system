@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.objects.types;
+package indi.sly.system.kernel.objects.types.prototypes;
 
 public interface TypeInitializerAttributeTypes {
     long CAN_BE_SENT_AND_INHERITED = 1L << 1;

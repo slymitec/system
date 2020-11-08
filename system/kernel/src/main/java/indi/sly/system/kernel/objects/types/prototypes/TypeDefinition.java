@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.objects.types;
+package indi.sly.system.kernel.objects.types.prototypes;
 
 import java.util.HashSet;
 import java.util.Set;

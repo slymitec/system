@@ -6,15 +6,15 @@ import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
-import indi.sly.system.kernel.memory.caches.InfoObjectCacheObject;
+import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
 import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
 import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinitionOpenAttributeTypes;
-import indi.sly.system.kernel.objects.types.TypeInitializerAttributeTypes;
-import indi.sly.system.kernel.objects.types.TypeObject;
+import indi.sly.system.kernel.objects.types.prototypes.TypeInitializerAttributeTypes;
+import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

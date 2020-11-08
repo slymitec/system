@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.memory.caches;
+package indi.sly.system.kernel.memory.caches.prototypes;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,16 +22,16 @@ import indi.sly.system.kernel.objects.prototypes.InfoObject;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoObjectCacheObject extends ACoreObject {
-    private Map<UUID, InfoObjectCacheDefinition> getKernelObjectCaches(long spaceType) {
+    private Map<UUID, InfoObjectCacheDefinition> getInfoObjectCaches(long spaceType) {
         if (spaceType == SpaceTypes.KERNEL) {
-            return this.factoryManager.getKernelSpace().getCachedKernelObjectDefinitions();
+            return this.factoryManager.getKernelSpace().getCachedInfoObjectDefinitions();
         } else if (spaceType == SpaceTypes.USER) {
-            return this.factoryManager.getUserSpace().getCachedKernelObjectDefinitions();
+            return this.factoryManager.getUserSpace().getCachedInfoObjectDefinitions();
         } else {
             Map<UUID, InfoObjectCacheDefinition> kernelObjectCache = new HashMap<>();
 
-            kernelObjectCache.putAll(this.factoryManager.getKernelSpace().getCachedKernelObjectDefinitions());
-            kernelObjectCache.putAll(this.factoryManager.getUserSpace().getCachedKernelObjectDefinitions());
+            kernelObjectCache.putAll(this.factoryManager.getKernelSpace().getCachedInfoObjectDefinitions());
+            kernelObjectCache.putAll(this.factoryManager.getUserSpace().getCachedInfoObjectDefinitions());
 
             return kernelObjectCache;
         }
@@ -44,7 +44,7 @@ public class InfoObjectCacheObject extends ACoreObject {
         try {
             lock.lock();
 
-            InfoObjectCacheDefinition kernelObjectCache = this.getKernelObjectCaches(spaceType).getOrDefault(id, null);
+            InfoObjectCacheDefinition kernelObjectCache = this.getInfoObjectCaches(spaceType).getOrDefault(id, null);
 
             InfoObject infoObject = null;
 
@@ -65,13 +65,13 @@ public class InfoObjectCacheObject extends ACoreObject {
         try {
             lock.lock();
 
-            Map<UUID, InfoObjectCacheDefinition> kernelObjectCaches = this.getKernelObjectCaches(spaceType);
+            Map<UUID, InfoObjectCacheDefinition> kernelObjectCaches = this.getInfoObjectCaches(spaceType);
             if (!kernelObjectCaches.containsKey(infoObject.getID())) {
                 InfoObjectCacheDefinition kernelObjectCache = new InfoObjectCacheDefinition();
                 kernelObjectCache.setId(infoObject.getID());
                 kernelObjectCache.setType(infoObject.getType());
 
-                this.getKernelObjectCaches(spaceType).put(kernelObjectCache.getId(), kernelObjectCache);
+                this.getInfoObjectCaches(spaceType).put(kernelObjectCache.getId(), kernelObjectCache);
                 coreObjectRepository.addByID(spaceType, kernelObjectCache.getId(), infoObject);
             }
         } finally {
@@ -86,7 +86,7 @@ public class InfoObjectCacheObject extends ACoreObject {
         try {
             lock.lock();
 
-            Map<UUID, InfoObjectCacheDefinition> kernelObjectCaches = this.getKernelObjectCaches(spaceType);
+            Map<UUID, InfoObjectCacheDefinition> kernelObjectCaches = this.getInfoObjectCaches(spaceType);
             if (kernelObjectCaches.containsKey(id)) {
                 kernelObjectCaches.remove(id);
 
@@ -98,7 +98,7 @@ public class InfoObjectCacheObject extends ACoreObject {
     }
 
     public Map<UUID, InfoObjectCacheDefinition> list(long spaceType) {
-        return Collections.unmodifiableMap(this.getKernelObjectCaches(spaceType));
+        return Collections.unmodifiableMap(this.getInfoObjectCaches(spaceType));
     }
 
     public InfoObject getIfExisted(long spaceType, UUID id) {

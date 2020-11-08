@@ -19,12 +19,12 @@ import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.StartupTypes;
 import indi.sly.system.kernel.core.enviroment.KernelConfiguration;
-import indi.sly.system.kernel.objects.types.ATypeInitializer;
-import indi.sly.system.kernel.objects.types.TypeDefinition;
-import indi.sly.system.kernel.objects.types.TypeInitializerAttributeTypes;
-import indi.sly.system.kernel.objects.types.TypeObject;
-import indi.sly.system.kernel.objects.types.instances.FolderTypeInitializer;
-import indi.sly.system.kernel.objects.types.instances.NamelessFolderTypeInitializer;
+import indi.sly.system.kernel.objects.types.prototypes.ATypeInitializer;
+import indi.sly.system.kernel.objects.types.prototypes.TypeDefinition;
+import indi.sly.system.kernel.objects.types.prototypes.TypeInitializerAttributeTypes;
+import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
+import indi.sly.system.kernel.objects.types.prototypes.instances.FolderTypeInitializer;
+import indi.sly.system.kernel.objects.types.prototypes.instances.NamelessFolderTypeInitializer;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)

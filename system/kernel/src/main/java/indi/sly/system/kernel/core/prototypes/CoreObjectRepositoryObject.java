@@ -8,7 +8,6 @@ import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.enviroment.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.core.enviroment.UserSpace;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -46,9 +45,9 @@ public class CoreObjectRepositoryObject extends ACoreObject {
             }
         } else if (spaceType == SpaceTypes.USER) {
             if (lockType == LockTypes.READ) {
-                lock = this.getUserSpace().getKernelObjectLock().readLock();
+                lock = this.getUserSpace().getInfoObjectLock().readLock();
             } else if (lockType == LockTypes.WRITE) {
-                lock = this.getUserSpace().getKernelObjectLock().writeLock();
+                lock = this.getUserSpace().getInfoObjectLock().writeLock();
             }
         }
 
@@ -67,13 +66,13 @@ public class CoreObjectRepositoryObject extends ACoreObject {
         } else if (spaceType == SpaceTypes.USER) {
             coreObjects = new HashMap<>();
 
-            for (Entry<UUID, InfoObject> pair : this.getUserSpace().getKernelObjects().entrySet()) {
+            for (Entry<UUID, InfoObject> pair : this.getUserSpace().getInfoObjects().entrySet()) {
                 coreObjects.put(pair.getKey(), pair.getValue());
             }
         } else if (spaceType == SpaceTypes.ALL) {
             coreObjects = new HashMap<>(this.getKernelSpace().getCoreObjects());
 
-            for (Entry<UUID, InfoObject> pair : this.getUserSpace().getKernelObjects().entrySet()) {
+            for (Entry<UUID, InfoObject> pair : this.getUserSpace().getInfoObjects().entrySet()) {
                 coreObjects.put(pair.getKey(), pair.getValue());
             }
         } else {
@@ -162,7 +161,7 @@ public class CoreObjectRepositoryObject extends ACoreObject {
 
             try {
                 lock.lock();
-                Map<UUID, InfoObject> coreObjects = this.getUserSpace().getKernelObjects();
+                Map<UUID, InfoObject> coreObjects = this.getUserSpace().getInfoObjects();
 
                 InfoObject coreObject = coreObjects.getOrDefault(id, null);
                 if (ObjectUtils.isAnyNull(coreObject)) {
@@ -376,7 +375,7 @@ public class CoreObjectRepositoryObject extends ACoreObject {
             try {
                 lock.lock();
 
-                Map<UUID, InfoObject> coreObjects = this.getUserSpace().getKernelObjects();
+                Map<UUID, InfoObject> coreObjects = this.getUserSpace().getInfoObjects();
 
                 if (coreObjects.containsKey(id)) {
                     throw new StatusAlreadyExistedException();
@@ -477,7 +476,7 @@ public class CoreObjectRepositoryObject extends ACoreObject {
             try {
                 lock.lock();
 
-                Map<UUID, InfoObject> coreObjects = this.getUserSpace().getKernelObjects();
+                Map<UUID, InfoObject> coreObjects = this.getUserSpace().getInfoObjects();
 
                 InfoObject coreObject = coreObjects.getOrDefault(id, null);
                 if (ObjectUtils.isAnyNull(coreObject) || coreObject.getClass() != clazz) {
@@ -594,7 +593,7 @@ public class CoreObjectRepositoryObject extends ACoreObject {
             try {
                 lock.lock();
 
-                Map<UUID, InfoObject> coreObjects = this.getUserSpace().getKernelObjects();
+                Map<UUID, InfoObject> coreObjects = this.getUserSpace().getInfoObjects();
 
                 this.getByID(spaceType, clazz, id);
 

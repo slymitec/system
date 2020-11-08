@@ -6,7 +6,7 @@ import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.caches.InfoObjectCacheObject;
+import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;

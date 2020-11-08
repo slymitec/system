@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.processes.threads;
+package indi.sly.system.kernel.processes.prototypes;
 
 public class ThreadContextDefinition {
     private String command;

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope;
 import indi.sly.system.common.functions.Function3;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.AInfoRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
 import indi.sly.system.kernel.objects.prototypes.StatusDefinition;

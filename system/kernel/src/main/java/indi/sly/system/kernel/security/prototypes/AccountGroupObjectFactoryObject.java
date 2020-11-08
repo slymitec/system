@@ -2,7 +2,7 @@ package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.AccountGroupRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
 import indi.sly.system.kernel.security.entities.AccountEntity;
 import indi.sly.system.kernel.security.entities.GroupEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

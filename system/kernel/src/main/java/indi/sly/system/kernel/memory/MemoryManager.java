@@ -5,11 +5,11 @@ import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.StartupTypes;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
-import indi.sly.system.kernel.memory.caches.InfoObjectCacheObject;
-import indi.sly.system.kernel.memory.repositories.AInfoRepositoryObject;
-import indi.sly.system.kernel.memory.repositories.AccountGroupRepositoryObject;
-import indi.sly.system.kernel.memory.repositories.DatabaseInfoRepositoryObject;
-import indi.sly.system.kernel.memory.repositories.ProcessRepositoryObject;
+import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.DatabaseInfoRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

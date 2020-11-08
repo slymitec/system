@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.core.prototypes;
+package indi.sly.system.kernel.core.date.prototypes;
 
 public interface DateTimeTypes {
     long ACCESS = 1L;

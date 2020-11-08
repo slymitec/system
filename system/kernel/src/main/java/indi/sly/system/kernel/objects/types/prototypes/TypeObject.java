@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.objects.types;
+package indi.sly.system.kernel.objects.types.prototypes;
 
 import java.util.Collections;
 import java.util.Set;

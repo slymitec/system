@@ -12,7 +12,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
-import indi.sly.system.kernel.memory.caches.InfoObjectCacheDefinition;
+import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheDefinition;
 
 @Named
 @Singleton
@@ -24,7 +24,7 @@ public class KernelSpace {
         this.namedCoreObjectIDs = new ConcurrentHashMap<>();
         this.classedCoreObjectIDs = new ConcurrentHashMap<>();
         this.objectTypes = new ConcurrentSkipListSet<>();
-        this.cachedKernelObjectDefinitions = new ConcurrentHashMap<>();
+        this.cachedInfoObjectDefinitions = new ConcurrentHashMap<>();
     }
 
     private final KernelConfiguration configuration;
@@ -33,7 +33,7 @@ public class KernelSpace {
     private final Map<String, UUID> namedCoreObjectIDs;
     private final Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs;
     private final Set<UUID> objectTypes;
-    private final Map<UUID, InfoObjectCacheDefinition> cachedKernelObjectDefinitions;
+    private final Map<UUID, InfoObjectCacheDefinition> cachedInfoObjectDefinitions;
 
     public KernelConfiguration getConfiguration() {
         return configuration;
@@ -59,7 +59,7 @@ public class KernelSpace {
         return this.objectTypes;
     }
 
-    public Map<UUID, InfoObjectCacheDefinition> getCachedKernelObjectDefinitions() {
-        return this.cachedKernelObjectDefinitions;
+    public Map<UUID, InfoObjectCacheDefinition> getCachedInfoObjectDefinitions() {
+        return this.cachedInfoObjectDefinitions;
     }
 }

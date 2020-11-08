@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 import indi.sly.system.common.functions.Function;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.ProcessRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.ProcessObjectProcessorRegister;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

@@ -8,7 +8,7 @@ import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
 import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
 import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
-import indi.sly.system.kernel.objects.types.TypeObject;
+import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.objects.prototypes.DumpDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;

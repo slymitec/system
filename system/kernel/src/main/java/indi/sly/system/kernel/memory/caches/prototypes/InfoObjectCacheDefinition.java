@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.memory.caches;
+package indi.sly.system.kernel.memory.caches.prototypes;
 
 import java.util.Date;
 import java.util.Map;

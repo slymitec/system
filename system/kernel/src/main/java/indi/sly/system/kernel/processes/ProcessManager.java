@@ -5,12 +5,14 @@ import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.StartupTypes;
+import indi.sly.system.kernel.core.enviroment.UserSpace;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObjectFactoryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
+import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.kernel.security.prototypes.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -26,7 +28,13 @@ public class ProcessManager extends AManager {
     @Override
     public void startup(long startupTypes) {
         if (startupTypes == StartupTypes.STEP_INIT) {
+            this.factoryManager.setUserSpaceContainer(() -> {
+                ThreadObject thread = this.getCurrentThread();
 
+                UserSpace userSpace = thread.getUserSpace();
+
+                return userSpace;
+            });
         } else if (startupTypes == StartupTypes.STEP_KERNEL) {
             this.processObjectFactory = this.factoryManager.create(ProcessObjectFactoryObject.class);
             this.processObjectFactory.initProcessObjectFactory();
@@ -73,6 +81,10 @@ public class ProcessManager extends AManager {
 
     public ProcessObject createProcess() {
         //...
+        return null;
+    }
+
+    public ThreadObject getCurrentThread() {
         return null;
     }
 

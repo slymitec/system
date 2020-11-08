@@ -91,7 +91,9 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
         List<GroupObject> groups = account.getGroups();
 
         List<UUID> accountGroupIDs = new ArrayList<>();
-        groups.forEach(group -> accountGroupIDs.add(group.getID()));
+        for (GroupObject group : groups) {
+            accountGroupIDs.add(group.getID());
+        }
         accountGroupIDs.add(account.getID());
 
         this.init();

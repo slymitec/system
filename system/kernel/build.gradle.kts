@@ -16,10 +16,14 @@ dependencies {
     }
 }
 
+tasks.bootJar {
+    enabled = false
+}
+
 tasks.jar {
     enabled = true
 }
 
-tasks.bootJar {
-    enabled = false
+tasks.test {
+    useJUnitPlatform()
 }

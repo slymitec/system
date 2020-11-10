@@ -28,10 +28,6 @@ dependencies {
     }
 }
 
-tasks.compileJava {
-    options.release.set(11)
-}
-
 tasks.test {
     useJUnitPlatform()
 }

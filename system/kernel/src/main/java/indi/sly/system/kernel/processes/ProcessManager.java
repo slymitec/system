@@ -88,6 +88,12 @@ public class ProcessManager extends AManager {
         return null;
     }
 
+    public ThreadObject createCurrentThreads() {
+        return null;
+    }
+
+
+
 
 //    public ShadowKernelModeObject shadowKernelMode() {
 //        ShadowKernelModeObject shadowKernelMode = this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, ShadowKernelModeObject.class, this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_SHADOW_SHADOWKERNEMODE_ID);

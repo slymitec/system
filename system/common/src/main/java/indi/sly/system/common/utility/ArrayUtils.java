@@ -1,6 +1,6 @@
 package indi.sly.system.common.utility;
 
-public class ArrayUtils {
+public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
     public static byte[] copyBytes(byte[] original) {
         if (ObjectUtils.isAnyNull(original)) {
             return null;

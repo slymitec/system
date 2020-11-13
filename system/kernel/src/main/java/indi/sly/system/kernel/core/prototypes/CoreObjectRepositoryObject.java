@@ -94,10 +94,14 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 lock.lock();
 
                 UUID id = this.getIDByClass(spaceType, clazz);
+                T coreObject = this.getByID(spaceType, clazz, id);
 
-                return this.getByID(spaceType, clazz, id);
-            } finally {
                 lock.unlock();
+
+                return coreObject;
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -119,10 +123,14 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 lock.lock();
 
                 UUID id = this.getIDByName(spaceType, name);
+                T coreObject = this.getByID(spaceType, clazz, id);
 
-                return this.getByID(spaceType, clazz, id);
-            } finally {
                 lock.unlock();
+
+                return coreObject;
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -143,6 +151,7 @@ public class CoreObjectRepositoryObject extends ACoreObject {
 
             try {
                 lock.lock();
+
                 Map<UUID, ACoreObject> coreObjects = this.getKernelSpace().getCoreObjects();
 
                 ACoreObject coreObject = coreObjects.getOrDefault(id, null);
@@ -152,15 +161,19 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                     throw new StatusRelationshipErrorException();
                 }
 
-                return (T) coreObject;
-            } finally {
                 lock.unlock();
+
+                return (T) coreObject;
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else if (spaceType == SpaceTypes.USER) {
             Lock lock = this.getLock(spaceType, LockTypes.READ);
 
             try {
                 lock.lock();
+
                 Map<UUID, InfoObject> coreObjects = this.getUserSpace().getInfoObjects();
 
                 InfoObject coreObject = coreObjects.getOrDefault(id, null);
@@ -170,9 +183,12 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                     throw new StatusRelationshipErrorException();
                 }
 
-                return (T) coreObject;
-            } finally {
                 lock.unlock();
+
+                return (T) coreObject;
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new ConditionParametersException();
@@ -197,9 +213,12 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                     throw new StatusNotExistedException();
                 }
 
-                return id;
-            } finally {
                 lock.unlock();
+
+                return id;
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -216,6 +235,7 @@ public class CoreObjectRepositoryObject extends ACoreObject {
 
             try {
                 lock.lock();
+
                 Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs = this.getKernelSpace().getClassedCoreObjectIDs();
 
                 UUID id = classedCoreObjectIDs.getOrDefault(clazz, null);
@@ -223,9 +243,12 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                     throw new StatusNotExistedException();
                 }
 
-                return id;
-            } finally {
                 lock.unlock();
+
+                return id;
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -242,6 +265,7 @@ public class CoreObjectRepositoryObject extends ACoreObject {
 
             try {
                 lock.lock();
+
                 Set<ACoreObject> allCoreObjects = this.getAll(spaceType);
                 Set<ACoreObject> allCompoundCoreObjects = new HashSet<>();
 
@@ -255,9 +279,12 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                     }
                 }
 
-                return allCompoundCoreObjects;
-            } finally {
                 lock.unlock();
+
+                return allCompoundCoreObjects;
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -299,8 +326,11 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 classedCoreObjectIDs.put(clazz, id);
 
                 coreObjects.put(id, coreObject);
-            } finally {
+
                 lock.unlock();
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -335,8 +365,11 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 namedCoreObjectIDs.put(name, id);
 
                 coreObjects.put(id, coreObject);
-            } finally {
+
                 lock.unlock();
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -366,8 +399,11 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 }
 
                 coreObjects.put(id, coreObject);
-            } finally {
+
                 lock.unlock();
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else if (spaceType == SpaceTypes.USER) {
             Lock lock = this.getLock(spaceType, LockTypes.WRITE);
@@ -386,8 +422,11 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 }
 
                 coreObjects.put(id, (InfoObject) coreObject);
-            } finally {
+
                 lock.unlock();
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -408,10 +447,14 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs = this.getKernelSpace().getClassedCoreObjectIDs();
 
                 UUID id = classedCoreObjectIDs.getOrDefault(clazz, null);
+                boolean isContain = this.containByID(spaceType, clazz, id);
 
-                return this.containByID(spaceType, clazz, id);
-            } finally {
                 lock.unlock();
+
+                return isContain;
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -435,10 +478,14 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 Map<String, UUID> namedCoreObjectIDs = this.getKernelSpace().getNamedCoreObjectIDs();
 
                 UUID id = namedCoreObjectIDs.getOrDefault(name, null);
+                boolean isContain = this.containByID(spaceType, clazz, id);
 
-                return this.containByID(spaceType, clazz, id);
-            } finally {
                 lock.unlock();
+
+                return isContain;
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -462,13 +509,19 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 Map<UUID, ACoreObject> coreObjects = this.getKernelSpace().getCoreObjects();
 
                 ACoreObject coreObject = coreObjects.getOrDefault(id, null);
+                boolean isContain;
                 if (ObjectUtils.isAnyNull(coreObject) || coreObject.getClass() != clazz) {
-                    return false;
+                    isContain = false;
                 } else {
-                    return true;
+                    isContain = true;
                 }
-            } finally {
+
                 lock.unlock();
+
+                return isContain;
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else if (spaceType == SpaceTypes.USER) {
             Lock lock = this.getLock(spaceType, LockTypes.WRITE);
@@ -479,13 +532,19 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 Map<UUID, InfoObject> coreObjects = this.getUserSpace().getInfoObjects();
 
                 InfoObject coreObject = coreObjects.getOrDefault(id, null);
+                boolean isContain;
                 if (ObjectUtils.isAnyNull(coreObject) || coreObject.getClass() != clazz) {
-                    return false;
+                    isContain = false;
                 } else {
-                    return true;
+                    isContain = true;
                 }
-            } finally {
+
                 lock.unlock();
+
+                return isContain;
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -507,8 +566,11 @@ public class CoreObjectRepositoryObject extends ACoreObject {
 
                 coreObjects.remove(id);
                 classedCoreObjectIDs.remove(clazz);
-            } finally {
+
                 lock.unlock();
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -541,8 +603,11 @@ public class CoreObjectRepositoryObject extends ACoreObject {
 
                 coreObjects.remove(id);
                 namedCoreObjectIDs.remove(name);
-            } finally {
+
                 lock.unlock();
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();
@@ -584,8 +649,11 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 this.getByID(spaceType, clazz, id);
 
                 coreObjects.remove(id);
-            } finally {
+
                 lock.unlock();
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else if (spaceType == SpaceTypes.USER) {
             Lock lock = this.getLock(spaceType, LockTypes.WRITE);
@@ -598,8 +666,11 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 this.getByID(spaceType, clazz, id);
 
                 coreObjects.remove(id);
-            } finally {
+
                 lock.unlock();
+            } catch (Exception e) {
+                lock.unlock();
+                throw e;
             }
         } else {
             throw new StatusNotSupportedException();

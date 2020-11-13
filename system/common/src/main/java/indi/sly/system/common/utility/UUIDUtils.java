@@ -40,10 +40,6 @@ public class UUIDUtils {
         return false;
     }
 
-    public static String transString(UUID value) {
-        return StringUtils.replace(value.toString(), "-", "");
-    }
-
     public static UUID readFormBytes(byte[] value) throws StatusDisabilityException {
         if (ObjectUtils.isAnyNull(value) || value.length != 16) {
             throw new ConditionParametersException();

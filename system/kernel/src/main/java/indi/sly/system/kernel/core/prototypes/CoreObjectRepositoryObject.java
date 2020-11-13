@@ -621,4 +621,3 @@ public class CoreObjectRepositoryObject extends ACoreObject {
         }
     }
 }
-

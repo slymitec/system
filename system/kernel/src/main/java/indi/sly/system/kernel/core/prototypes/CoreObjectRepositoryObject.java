@@ -59,7 +59,7 @@ public class CoreObjectRepositoryObject extends ACoreObject {
     }
 
     public Set<ACoreObject> getAll(long spaceType) {
-        Map<UUID, ACoreObject> coreObjects = null;
+        Map<UUID, ACoreObject> coreObjects;
 
         if (spaceType == SpaceTypes.KERNEL) {
             coreObjects = this.getKernelSpace().getCoreObjects();

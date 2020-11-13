@@ -17,7 +17,8 @@ public class AccountEntity {
     @Column(length = 256, name = "password", nullable = true)
     protected String password;
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "KernelAccountsGroups", joinColumns = {@JoinColumn(name = "AccountID")}, inverseJoinColumns = {@JoinColumn(name = "GroupID")})
+    @JoinTable(name = "KernelAccountsGroups", joinColumns = {@JoinColumn(name = "AccountID")}, inverseJoinColumns =
+            {@JoinColumn(name = "GroupID")})
     protected List<GroupEntity> groups;
 
     public UUID getID() {

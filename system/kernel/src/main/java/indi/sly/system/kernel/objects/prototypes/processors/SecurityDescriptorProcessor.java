@@ -42,7 +42,9 @@ public class SecurityDescriptorProcessor extends ACoreObject implements IInfoObj
             securityDescriptor.setLock((lockType) -> type.getTypeInitializer().lockProcedure(info, lockType));
 
             if (!UUIDUtils.isAnyNullOrEmpty(status.getParentID())) {
-                InfoObjectCacheObject infoCacheObject = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
+                InfoObjectCacheObject infoCacheObject =
+                        this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                                InfoObjectCacheObject.class);
 
                 InfoObject parentInfo = infoCacheObject.getIfExisted(SpaceTypes.ALL, status.getParentID());
 
@@ -183,7 +185,8 @@ public class SecurityDescriptorProcessor extends ACoreObject implements IInfoObj
                     securityDescriptor.checkAccessControlType(LogicalUtils.or(AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW, AccessControlTypes.DELETECHILD_ALLOW));
                 }
                 if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(LogicalUtils.or(AuditTypes.CREATECHILD_WRITEDATA, AuditTypes.DELETECHILD));
+                    securityDescriptor.writeAudit(LogicalUtils.or(AuditTypes.CREATECHILD_WRITEDATA,
+                            AuditTypes.DELETECHILD));
                 }
             }
         };
@@ -249,9 +252,11 @@ public class SecurityDescriptorProcessor extends ACoreObject implements IInfoObj
     private final Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, StatusDefinition> dump;
     private final Function6<UUID, UUID, InfoEntity, TypeObject, StatusDefinition, Long, Object[]> open;
     private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, UUID, Identification> createChildAndOpen;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification, StatusOpenDefinition> getOrRebuildChild;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification,
+            StatusOpenDefinition> getOrRebuildChild;
     private final Consumer4<InfoEntity, TypeObject, StatusDefinition, Identification> deleteChild;
-    private final Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject, StatusDefinition, Predicate<InfoSummaryDefinition>> queryChild;
+    private final Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject,
+            StatusDefinition, Predicate<InfoSummaryDefinition>> queryChild;
     private final Consumer5<InfoEntity, TypeObject, StatusDefinition, Identification, Identification> renameChild;
     private final Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, StatusDefinition> readProperties;
     private final Consumer4<InfoEntity, TypeObject, StatusDefinition, Map<String, String>> writeProperties;

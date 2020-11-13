@@ -77,7 +77,8 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
     }
 
     private boolean isAccessControlType(long accessControlType) {
-        if (accessControlType == AccessControlTypes.NULL || LogicalUtils.isAnyExist(accessControlType, AccessControlTypes.FULLCONTROL_DENY)) {
+        if (accessControlType == AccessControlTypes.NULL || LogicalUtils.isAnyExist(accessControlType,
+                AccessControlTypes.FULLCONTROL_DENY)) {
             throw new ConditionParametersException();
         }
         if (!this.permission) {
@@ -109,7 +110,8 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
 
             for (Map.Entry<UUID, Long> pair : securityDescriptor.getAccessControl().entrySet()) {
                 if (accessControl.containsKey(pair.getKey())) {
-                    accessControl.put(pair.getKey(), LogicalUtils.or(accessControl.get(pair.getKey()), pair.getValue()));
+                    accessControl.put(pair.getKey(), LogicalUtils.or(accessControl.get(pair.getKey()),
+                            pair.getValue()));
                 } else {
                     accessControl.put(pair.getKey(), pair.getValue());
                 }

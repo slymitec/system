@@ -21,7 +21,8 @@ import java.util.Date;
 public class DumpProcessor extends ACoreObject implements IInfoObjectProcessor {
     public DumpProcessor() {
         this.dump = (dump, info, type, status) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, DateTimeObject.class);
+            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                    DateTimeObject.class);
             Date nowDateTime = dateTime.getCurrentDateTime();
 
             dump.getDate().put(DateTimeTypes.CREATE, nowDateTime);

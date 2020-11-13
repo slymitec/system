@@ -132,9 +132,11 @@ public class ConditionCheckProcessor extends ACoreObject implements IInfoObjectP
     private final Function6<UUID, UUID, InfoEntity, TypeObject, StatusDefinition, Long, Object[]> open;
     private final Consumer3<InfoEntity, TypeObject, StatusDefinition> close;
     private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, UUID, Identification> createChildAndOpen;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification, StatusOpenDefinition> getOrRebuildChild;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification,
+            StatusOpenDefinition> getOrRebuildChild;
     private final Consumer4<InfoEntity, TypeObject, StatusDefinition, Identification> deleteChild;
-    private final Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject, StatusDefinition, Predicate<InfoSummaryDefinition>> queryChild;
+    private final Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject,
+            StatusDefinition, Predicate<InfoSummaryDefinition>> queryChild;
     private final Consumer5<InfoEntity, TypeObject, StatusDefinition, Identification, Identification> renameChild;
     private final Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, StatusDefinition> readProperties;
     private final Consumer4<InfoEntity, TypeObject, StatusDefinition, Map<String, String>> writeProperties;

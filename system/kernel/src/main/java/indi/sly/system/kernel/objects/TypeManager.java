@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.inject.Named;
 
+import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -38,15 +39,22 @@ public class TypeManager extends AManager {
             Set<UUID> childTypes = new HashSet<>();
             childTypes.add(UUIDUtils.getEmpty());
 
-            this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_NAME,
-                    LogicalUtils.or(TypeInitializerAttributeTypes.CAN_BE_SENT_AND_INHERITED, TypeInitializerAttributeTypes.CAN_BE_SHARED_READ, TypeInitializerAttributeTypes.HAS_AUDIT,
-                            TypeInitializerAttributeTypes.HAS_CHILD, TypeInitializerAttributeTypes.HAS_CONTENT, TypeInitializerAttributeTypes.HAS_PERMISSION,
+            this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
+                    kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_NAME,
+                    LogicalUtils.or(TypeInitializerAttributeTypes.CAN_BE_SENT_AND_INHERITED,
+                            TypeInitializerAttributeTypes.CAN_BE_SHARED_READ, TypeInitializerAttributeTypes.HAS_AUDIT,
+                            TypeInitializerAttributeTypes.HAS_CHILD, TypeInitializerAttributeTypes.HAS_CONTENT,
+                            TypeInitializerAttributeTypes.HAS_PERMISSION,
                             TypeInitializerAttributeTypes.HAS_PROPERTIES),
                     childTypes, this.factoryManager.create(FolderTypeInitializer.class));
 
-            this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_NAME,
-                    LogicalUtils.or(TypeInitializerAttributeTypes.CAN_BE_SENT_AND_INHERITED, TypeInitializerAttributeTypes.CAN_BE_SHARED_READ, TypeInitializerAttributeTypes.CHILD_IS_NAMELESS,
-                            TypeInitializerAttributeTypes.HAS_AUDIT, TypeInitializerAttributeTypes.HAS_CHILD, TypeInitializerAttributeTypes.HAS_CONTENT,
+            this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+                    kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_NAME,
+                    LogicalUtils.or(TypeInitializerAttributeTypes.CAN_BE_SENT_AND_INHERITED,
+                            TypeInitializerAttributeTypes.CAN_BE_SHARED_READ,
+                            TypeInitializerAttributeTypes.CHILD_IS_NAMELESS,
+                            TypeInitializerAttributeTypes.HAS_AUDIT, TypeInitializerAttributeTypes.HAS_CHILD,
+                            TypeInitializerAttributeTypes.HAS_CONTENT,
                             TypeInitializerAttributeTypes.HAS_PERMISSION, TypeInitializerAttributeTypes.HAS_PROPERTIES),
                     childTypes, this.factoryManager.create(NamelessFolderTypeInitializer.class));
         }
@@ -54,30 +62,30 @@ public class TypeManager extends AManager {
 
     public TypeObject get(UUID typeID) {
         if (UUIDUtils.isAnyNullOrEmpty(typeID)) {
-            throw new NullPointerException();
+            throw new ConditionParametersException();
         }
 
-        TypeObject type = this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, TypeObject.class, typeID);
+        TypeObject type = this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, TypeObject.class,
+                typeID);
 
         return type;
     }
 
     public TypeObject getIDByName(String typeName) {
         if (StringUtils.isNameIllegal(typeName)) {
-            throw new NullPointerException();
+            throw new ConditionParametersException();
         }
 
-        TypeObject type = this.factoryManager.getCoreObjectRepository().getByName(SpaceTypes.KERNEL, TypeObject.class, "Objects_Types_" + typeName);
+        TypeObject type = this.factoryManager.getCoreObjectRepository().getByName(SpaceTypes.KERNEL, TypeObject.class
+                , "Objects_Types_" + typeName);
 
         return type;
     }
 
-    public synchronized TypeObject create(UUID typeID, String typeName, long attribute, Set<UUID> childTypes, ATypeInitializer typeInitializer) {
-        if (ObjectUtils.isAnyNull(typeID, childTypes, typeInitializer)) {
-            throw new NullPointerException();
-        }
-        if (StringUtils.isNameIllegal(typeName)) {
-            throw new NullPointerException();
+    public synchronized TypeObject create(UUID typeID, String typeName, long attribute, Set<UUID> childTypes,
+                                          ATypeInitializer typeInitializer) {
+        if (ObjectUtils.isAnyNull(typeID, childTypes, typeInitializer) || StringUtils.isNameIllegal(typeName)) {
+            throw new ConditionParametersException();
         }
 
         TypeDefinition typeDefinition = new TypeDefinition();
@@ -98,7 +106,8 @@ public class TypeManager extends AManager {
             throw new StatusAlreadyExistedException();
         }
 
-        this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL, typeID, "Objects_Types_" + typeName, typeObject);
+        this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL, typeID, "Objects_Types_" + typeName,
+                typeObject);
         objectTypes.add(typeID);
 
         typeInitializer.install();
@@ -108,7 +117,7 @@ public class TypeManager extends AManager {
 
     public synchronized void delete(UUID typeID) {
         if (ObjectUtils.isAnyNull(typeID)) {
-            throw new NullPointerException();
+            throw new ConditionParametersException();
         }
 
         Set<UUID> objectTypes = this.factoryManager.getKernelSpace().getObjectTypes();

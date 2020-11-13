@@ -93,10 +93,10 @@ public class ProcessManager extends AManager {
     }
 
 
-
-
 //    public ShadowKernelModeObject shadowKernelMode() {
-//        ShadowKernelModeObject shadowKernelMode = this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, ShadowKernelModeObject.class, this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_SHADOW_SHADOWKERNEMODE_ID);
+//        ShadowKernelModeObject shadowKernelMode = this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes
+//        .KERNEL, ShadowKernelModeObject.class, this.factoryManager.getKernelSpace().getConfiguration()
+//        .PROCESSES_SHADOW_SHADOWKERNEMODE_ID);
 //
 //        return shadowKernelMode;
 //    }

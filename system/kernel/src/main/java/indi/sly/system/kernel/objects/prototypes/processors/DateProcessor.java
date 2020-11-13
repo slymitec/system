@@ -27,7 +27,8 @@ import java.util.UUID;
 public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
     public DateProcessor() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, DateTimeObject.class);
+            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                    DateTimeObject.class);
             Date nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Date> date = ObjectUtils.transferFromByteArray(info.getDate());
@@ -38,7 +39,8 @@ public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
         };
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, DateTimeObject.class);
+            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                    DateTimeObject.class);
             Date nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Date> date = new HashMap<>();
@@ -51,7 +53,8 @@ public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
         };
 
         this.readContent = (content, info, type, status) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, DateTimeObject.class);
+            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                    DateTimeObject.class);
             Date nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Date> date = ObjectUtils.transferFromByteArray(info.getDate());
@@ -62,7 +65,8 @@ public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
         };
 
         this.writeContent = (info, type, status, content) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, DateTimeObject.class);
+            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                    DateTimeObject.class);
             Date nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Date> date = ObjectUtils.transferFromByteArray(info.getDate());

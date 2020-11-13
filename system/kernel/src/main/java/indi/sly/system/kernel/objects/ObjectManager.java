@@ -27,10 +27,9 @@ public class ObjectManager extends AManager {
             InfoObjectFactoryObject infoObjectfactory = this.factoryManager.create(InfoObjectFactoryObject.class);
             infoObjectfactory.initInfoObjectFactory();
 
-            InfoObject rootInfo = this.factoryManager.create(InfoObject.class);
-            infoObjectfactory.buildRootInfoObject(rootInfo);
-
-            this.factoryManager.getCoreObjectRepository().addByID(SpaceTypes.KERNEL, this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID, rootInfo);
+            InfoObject rootInfo = infoObjectfactory.buildRootInfoObject();
+            this.factoryManager.getCoreObjectRepository().addByID(SpaceTypes.KERNEL,
+                    this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID, rootInfo);
         }
     }
 
@@ -39,7 +38,8 @@ public class ObjectManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        InfoObject info = this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, InfoObject.class, this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
+        InfoObject info = this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, InfoObject.class,
+                this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
         for (Identification identification : identifications) {
             info = info.getChild(identification);
         }

@@ -19,7 +19,9 @@ public class ProcessObjectFactoryObject extends ACoreObject {
     public void initProcessObjectFactory() {
         this.processObjectProcessors = new ConcurrentSkipListSet<>();
 
-        Set<ACoreObject> coreObjects = this.factoryManager.getCoreObjectRepository().getByImplementInterface(SpaceTypes.KERNEL, IProcessObjectProcessor.class);
+        Set<ACoreObject> coreObjects =
+                this.factoryManager.getCoreObjectRepository().getByImplementInterface(SpaceTypes.KERNEL,
+                        IProcessObjectProcessor.class);
 
         for (ACoreObject pair : coreObjects) {
             if (pair instanceof IProcessObjectProcessor) {

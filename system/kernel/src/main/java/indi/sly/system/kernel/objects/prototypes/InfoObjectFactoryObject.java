@@ -38,7 +38,7 @@ public class InfoObjectFactoryObject extends ACoreObject {
         }
     }
 
-    public void buildRootInfoObject(InfoObject infoObject) {
+    public InfoObject buildRootInfoObject() {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID);
         InfoEntity infoEntity = infoRepository.get(this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
@@ -53,11 +53,14 @@ public class InfoObjectFactoryObject extends ACoreObject {
         StatusDefinition status = new StatusDefinition();
         status.setOpen(statusOpen);
 
-        infoObject.factory = this;
+        InfoObject infoObject = this.factoryManager.create(InfoObject.class);
+
         infoObject.processorRegister = processorRegister;
         infoObject.id = this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID;
         infoObject.poolID = this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID;
         infoObject.status = status;
+
+        return infoObject;
     }
 
     public InfoObject buildInfoObject(InfoEntity info, InfoObject parentInfo) {

@@ -42,7 +42,8 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
 
     public synchronized InfoObject getInfo(UUID handle) {
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                DateTimeObject.class);
         Date nowDateTime = dateTime.getCurrentDateTime();
 
         InfoObject info = null;
@@ -65,7 +66,8 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
     }
 
     public synchronized UUID addInfo(StatusDefinition status) {
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                DateTimeObject.class);
         Date nowDateTime = dateTime.getCurrentDateTime();
 
         UUID handle = UUIDUtils.createRandom();

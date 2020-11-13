@@ -27,7 +27,8 @@ public class GetParentProcessor extends ACoreObject implements IInfoObjectProces
                 throw new StatusNotExistedException();
             }
 
-            InfoObjectCacheObject infoObjectCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
+            InfoObjectCacheObject infoObjectCache =
+                    this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
 
             return infoObjectCache.getIfExisted(SpaceTypes.ALL, id);
         };

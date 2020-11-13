@@ -142,7 +142,8 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        Function3<SecurityDescriptorObject, InfoEntity, TypeObject, StatusDefinition> func = this.processorRegister.getSecurityDescriptor();
+        Function3<SecurityDescriptorObject, InfoEntity, TypeObject, StatusDefinition> func =
+                this.processorRegister.getSecurityDescriptor();
 
         if (ObjectUtils.isAnyNull(func)) {
             throw new StatusNotSupportedException();
@@ -157,7 +158,8 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, StatusDefinition>> funcs = this.processorRegister.getDumps();
+        List<Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, StatusDefinition>> funcs =
+                this.processorRegister.getDumps();
 
         DumpDefinition dump = new DumpDefinition();
 
@@ -178,7 +180,8 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function6<UUID, UUID, InfoEntity, TypeObject, StatusDefinition, Long, Object[]>> funcs = this.processorRegister.getOpens();
+        List<Function6<UUID, UUID, InfoEntity, TypeObject, StatusDefinition, Long, Object[]>> funcs =
+                this.processorRegister.getOpens();
 
         UUID handle = UUIDUtils.getEmpty();
 
@@ -228,7 +231,8 @@ public class InfoObject extends ACoreObject {
         return !UUIDUtils.isAnyNullOrEmpty(this.status.getHandle());
     }
 
-    public synchronized InfoObject createChildAndOpen(UUID type, Identification identification, long openAttribute, Object... arguments) {
+    public synchronized InfoObject createChildAndOpen(UUID type, Identification identification, long openAttribute,
+                                                      Object... arguments) {
         if (!UUIDUtils.isAnyNullOrEmpty(this.status.getHandle()) || ObjectUtils.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
@@ -245,7 +249,8 @@ public class InfoObject extends ACoreObject {
 
         InfoEntity childInfo = null;
 
-        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, UUID, Identification> pair : funcs) {
+        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, UUID, Identification> pair :
+                funcs) {
             childInfo = pair.apply(childInfo, info, typeObject, this.status, type, identification);
         }
 
@@ -253,7 +258,8 @@ public class InfoObject extends ACoreObject {
             throw new StatusUnexpectedException();
         }
 
-        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
+        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                InfoObjectCacheObject.class);
 
         InfoObject childInfoObject = this.factory.buildInfoObject(childInfo, this);
 
@@ -278,11 +284,13 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification, StatusOpenDefinition>> funcs = this.processorRegister.getGetOrRebuildChilds();
+        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification,
+                StatusOpenDefinition>> funcs = this.processorRegister.getGetOrRebuildChilds();
 
         InfoEntity childInfo = null;
 
-        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification, StatusOpenDefinition> pair : funcs) {
+        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification,
+                StatusOpenDefinition> pair : funcs) {
             childInfo = pair.apply(childInfo, info, type, this.status, identification, statusOpen);
         }
 
@@ -290,7 +298,8 @@ public class InfoObject extends ACoreObject {
             throw new StatusUnexpectedException();
         }
 
-        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
+        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                InfoObjectCacheObject.class);
 
         InfoObject childCachedInfo = kernelCache.getIfExisted(SpaceTypes.ALL, childInfo.getID());
         if (ObjectUtils.allNotNull(childCachedInfo)) {
@@ -315,13 +324,15 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer4<InfoEntity, TypeObject, StatusDefinition, Identification>> funcs = this.processorRegister.getDeleteChilds();
+        List<Consumer4<InfoEntity, TypeObject, StatusDefinition, Identification>> funcs =
+                this.processorRegister.getDeleteChilds();
 
         for (Consumer4<InfoEntity, TypeObject, StatusDefinition, Identification> pair : funcs) {
             pair.accept(info, type, this.status, identification);
         }
 
-        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
+        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                InfoObjectCacheObject.class);
         kernelCache.delete(SpaceTypes.ALL, childInfoObject.getID());
     }
 
@@ -335,12 +346,14 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject, StatusDefinition, Predicate<InfoSummaryDefinition>>> funcs = this.processorRegister
+        List<Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject,
+                StatusDefinition, Predicate<InfoSummaryDefinition>>> funcs = this.processorRegister
                 .getQueryChilds();
 
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
-        for (Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject, StatusDefinition, Predicate<InfoSummaryDefinition>> pair : funcs) {
+        for (Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject,
+                StatusDefinition, Predicate<InfoSummaryDefinition>> pair : funcs) {
             infoSummaries = pair.apply(infoSummaries, info, type, this.status, wildcard);
         }
 
@@ -357,7 +370,8 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer5<InfoEntity, TypeObject, StatusDefinition, Identification, Identification>> funcs = this.processorRegister.getRenameChilds();
+        List<Consumer5<InfoEntity, TypeObject, StatusDefinition, Identification, Identification>> funcs =
+                this.processorRegister.getRenameChilds();
 
         for (Consumer5<InfoEntity, TypeObject, StatusDefinition, Identification, Identification> pair : funcs) {
             pair.accept(info, type, this.status, oldIdentification, newIdentification);
@@ -370,11 +384,13 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, StatusDefinition>> funcs = this.processorRegister.getReadProperties();
+        List<Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, StatusDefinition>> funcs =
+                this.processorRegister.getReadProperties();
 
         Map<String, String> properties = new HashMap<>();
 
-        for (Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, StatusDefinition> pair : funcs) {
+        for (Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, StatusDefinition> pair :
+                funcs) {
             properties = pair.apply(properties, info, type, this.status);
         }
 
@@ -391,7 +407,8 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer4<InfoEntity, TypeObject, StatusDefinition, Map<String, String>>> funcs = this.processorRegister.getWriteProperties();
+        List<Consumer4<InfoEntity, TypeObject, StatusDefinition, Map<String, String>>> funcs =
+                this.processorRegister.getWriteProperties();
 
         for (Consumer4<InfoEntity, TypeObject, StatusDefinition, Map<String, String>> pair : funcs) {
             pair.accept(info, type, this.status, properties);
@@ -405,7 +422,8 @@ public class InfoObject extends ACoreObject {
         TypeObject type = typeManager.get(this.getType());
 
         AInfoContentObject content = type.getTypeInitializer().getContentProcedure(info, () -> {
-            List<Function4<byte[], byte[], InfoEntity, TypeObject, StatusDefinition>> funcs = this.processorRegister.getReadContents();
+            List<Function4<byte[], byte[], InfoEntity, TypeObject, StatusDefinition>> funcs =
+                    this.processorRegister.getReadContents();
 
             byte[] contentSource = null;
 
@@ -415,7 +433,8 @@ public class InfoObject extends ACoreObject {
 
             return contentSource;
         }, (byte[] contentSource) -> {
-            List<Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]>> funcs = this.processorRegister.getWriteContents();
+            List<Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]>> funcs =
+                    this.processorRegister.getWriteContents();
 
             for (Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]> pair : funcs) {
                 pair.accept(info, type, status, contentSource);

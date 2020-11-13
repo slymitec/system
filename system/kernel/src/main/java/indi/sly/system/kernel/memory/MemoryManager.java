@@ -22,11 +22,16 @@ public class MemoryManager extends AManager {
     @Override
     public void startup(long startupTypes) {
         if (startupTypes == StartupTypes.STEP_INIT) {
-            this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL, this.factoryManager.create(InfoObjectCacheObject.class));
-            this.factoryManager.getCoreObjectRepository().addByID(SpaceTypes.KERNEL, this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID, this.factoryManager.create(DatabaseInfoRepositoryObject.class));
+            this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL,
+                    this.factoryManager.create(InfoObjectCacheObject.class));
+            this.factoryManager.getCoreObjectRepository().addByID(SpaceTypes.KERNEL,
+                    this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID,
+                    this.factoryManager.create(DatabaseInfoRepositoryObject.class));
 
-            this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL, this.factoryManager.create(ProcessRepositoryObject.class));
-            this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL, this.factoryManager.create(AccountGroupRepositoryObject.class));
+            this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL,
+                    this.factoryManager.create(ProcessRepositoryObject.class));
+            this.factoryManager.getCoreObjectRepository().add(SpaceTypes.KERNEL,
+                    this.factoryManager.create(AccountGroupRepositoryObject.class));
         } else if (startupTypes == StartupTypes.STEP_KERNEL) {
         }
     }
@@ -36,7 +41,8 @@ public class MemoryManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        return this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, AInfoRepositoryObject.class, id);
+        return this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, AInfoRepositoryObject.class,
+                id);
     }
 
     public ProcessRepositoryObject getProcessRepository() {

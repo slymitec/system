@@ -13,10 +13,10 @@ public class InfoObjectCacheDefinition {
     private UUID id;
     private UUID type;
     private long space;
-    private final Map<Long, Date> date;
+    private final Map<Long, Long> date;
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(UUID id) {
@@ -24,7 +24,7 @@ public class InfoObjectCacheDefinition {
     }
 
     public UUID getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(UUID type) {
@@ -32,14 +32,14 @@ public class InfoObjectCacheDefinition {
     }
 
     public long getSpace() {
-        return space;
+        return this.space;
     }
 
     public void setSpace(long space) {
         this.space = space;
     }
 
-    public Map<Long, Date> getDate() {
-        return date;
+    public Map<Long, Long> getDate() {
+        return this.date;
     }
 }

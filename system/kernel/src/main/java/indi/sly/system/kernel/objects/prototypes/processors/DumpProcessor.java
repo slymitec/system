@@ -23,7 +23,7 @@ public class DumpProcessor extends ACoreObject implements IInfoObjectProcessor {
         this.dump = (dump, info, type, status) -> {
             DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
                     DateTimeObject.class);
-            Date nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrentDateTime();
 
             dump.getDate().put(DateTimeTypes.CREATE, nowDateTime);
 

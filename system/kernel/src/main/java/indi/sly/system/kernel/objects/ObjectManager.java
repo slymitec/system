@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.inject.Named;
 
+import indi.sly.system.kernel.core.enviroment.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
+import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
 import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -28,8 +30,9 @@ public class ObjectManager extends AManager {
             infoObjectfactory.initInfoObjectFactory();
 
             InfoObject rootInfo = infoObjectfactory.buildRootInfoObject();
-            this.factoryManager.getCoreObjectRepository().addByID(SpaceTypes.KERNEL,
-                    this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID, rootInfo);
+            InfoObjectCacheObject infoObjectCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                    InfoObjectCacheObject.class);
+            infoObjectCache.add(SpaceTypes.KERNEL, rootInfo);
         }
     }
 
@@ -38,8 +41,12 @@ public class ObjectManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        InfoObject info = this.factoryManager.getCoreObjectRepository().getByID(SpaceTypes.KERNEL, InfoObject.class,
+        InfoObjectCacheObject infoObjectCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                InfoObjectCacheObject.class);
+
+        InfoObject info = infoObjectCache.getIfExisted(SpaceTypes.KERNEL,
                 this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
+
         for (Identification identification : identifications) {
             info = info.getChild(identification);
         }

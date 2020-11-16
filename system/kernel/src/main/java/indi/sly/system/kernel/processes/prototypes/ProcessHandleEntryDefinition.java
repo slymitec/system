@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public class ProcessHandleEntryDefinition implements ISerializable {
-    private final Map<Long, Date> date;
+    private final Map<Long, Long> date;
     private final List<Identification> identifications;
     private StatusOpenDefinition open;
 
@@ -22,7 +22,7 @@ public class ProcessHandleEntryDefinition implements ISerializable {
         this.identifications = new ArrayList<>();
     }
 
-    public Map<Long, Date> getDate() {
+    public Map<Long, Long> getDate() {
         return this.date;
     }
 
@@ -45,7 +45,7 @@ public class ProcessHandleEntryDefinition implements ISerializable {
 
         valueInteger = NumberUtils.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.date.put(NumberUtils.readExternalLong(in), new Date(NumberUtils.readExternalLong(in)));
+            this.date.put(NumberUtils.readExternalLong(in), NumberUtils.readExternalLong(in));
         }
         valueInteger = NumberUtils.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
@@ -56,9 +56,9 @@ public class ProcessHandleEntryDefinition implements ISerializable {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        for (Entry<Long, Date> pair : this.date.entrySet()) {
+        for (Entry<Long, Long> pair : this.date.entrySet()) {
             NumberUtils.writeExternalLong(out, pair.getKey());
-            NumberUtils.writeExternalLong(out, pair.getValue().getTime());
+            NumberUtils.writeExternalLong(out, pair.getValue());
         }
         NumberUtils.writeExternalInteger(out, this.identifications.size());
         for (Identification pair : this.identifications) {

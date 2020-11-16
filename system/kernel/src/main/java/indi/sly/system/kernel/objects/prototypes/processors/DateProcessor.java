@@ -29,9 +29,9 @@ public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
                     DateTimeObject.class);
-            Date nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrentDateTime();
 
-            Map<Long, Date> date = ObjectUtils.transferFromByteArray(info.getDate());
+            Map<Long, Long> date = ObjectUtils.transferFromByteArray(info.getDate());
             date.put(DateTimeTypes.ACCESS, nowDateTime);
             info.setDate(ObjectUtils.transferToByteArray(date));
 
@@ -41,9 +41,9 @@ public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
             DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
                     DateTimeObject.class);
-            Date nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrentDateTime();
 
-            Map<Long, Date> date = new HashMap<>();
+            Map<Long, Long> date = new HashMap<>();
             date.put(DateTimeTypes.CREATE, nowDateTime);
             date.put(DateTimeTypes.MODIFIED, nowDateTime);
             date.put(DateTimeTypes.ACCESS, nowDateTime);
@@ -55,9 +55,9 @@ public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
         this.readContent = (content, info, type, status) -> {
             DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
                     DateTimeObject.class);
-            Date nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrentDateTime();
 
-            Map<Long, Date> date = ObjectUtils.transferFromByteArray(info.getDate());
+            Map<Long, Long> date = ObjectUtils.transferFromByteArray(info.getDate());
             date.put(DateTimeTypes.ACCESS, nowDateTime);
             info.setDate(ObjectUtils.transferToByteArray(date));
 
@@ -67,9 +67,9 @@ public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
         this.writeContent = (info, type, status, content) -> {
             DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
                     DateTimeObject.class);
-            Date nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrentDateTime();
 
-            Map<Long, Date> date = ObjectUtils.transferFromByteArray(info.getDate());
+            Map<Long, Long> date = ObjectUtils.transferFromByteArray(info.getDate());
             date.put(DateTimeTypes.MODIFIED, nowDateTime);
             info.setDate(ObjectUtils.transferToByteArray(date));
         };

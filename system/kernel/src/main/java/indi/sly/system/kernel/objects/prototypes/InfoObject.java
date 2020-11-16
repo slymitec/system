@@ -128,10 +128,10 @@ public class InfoObject extends ACoreObject {
         }
     }
 
-    public synchronized Map<Long, Date> getDate() {
+    public synchronized Map<Long, Long> getDate() {
         InfoEntity info = this.getInfo();
 
-        Map<Long, Date> date = ObjectUtils.transferFromByteArray(info.getDate());
+        Map<Long, Long> date = ObjectUtils.transferFromByteArray(info.getDate());
 
         return Collections.unmodifiableMap(date);
     }
@@ -298,16 +298,16 @@ public class InfoObject extends ACoreObject {
             throw new StatusUnexpectedException();
         }
 
-        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+        InfoObjectCacheObject infoObjectCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
                 InfoObjectCacheObject.class);
 
-        InfoObject childCachedInfo = kernelCache.getIfExisted(SpaceTypes.ALL, childInfo.getID());
+        InfoObject childCachedInfo = infoObjectCache.getIfExisted(SpaceTypes.ALL, childInfo.getID());
         if (ObjectUtils.allNotNull(childCachedInfo)) {
             return childCachedInfo;
         } else {
             InfoObject childInfoObject = this.factory.buildInfoObject(childInfo, statusOpen, this);
 
-            kernelCache.add(SpaceTypes.USER, childInfoObject);
+            infoObjectCache.add(SpaceTypes.USER, childInfoObject);
 
             return childInfoObject;
         }

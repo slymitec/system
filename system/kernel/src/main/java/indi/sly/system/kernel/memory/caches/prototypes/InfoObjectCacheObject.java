@@ -1,14 +1,13 @@
 package indi.sly.system.kernel.memory.caches.prototypes;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 
 import javax.inject.Named;
 
 import indi.sly.system.common.types.LockTypes;
+import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
+import indi.sly.system.kernel.core.date.prototypes.DateTimeTypes;
 import indi.sly.system.kernel.core.prototypes.CoreObjectRepositoryObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -40,11 +39,14 @@ public class InfoObjectCacheObject extends ACoreObject {
     private InfoObject getIfExistedBySpaceType(long spaceType, UUID id) {
         CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
         Lock lock = coreObjectRepository.getLock(spaceType, LockTypes.READ);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                DateTimeObject.class);
 
         try {
             lock.lock();
 
             InfoObjectCacheDefinition kernelObjectCache = this.getInfoObjectCaches(spaceType).getOrDefault(id, null);
+            kernelObjectCache.getDate().put(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());
 
             InfoObject infoObject = null;
 
@@ -61,6 +63,8 @@ public class InfoObjectCacheObject extends ACoreObject {
     private void addBySpaceType(long spaceType, InfoObject infoObject) {
         CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
         Lock lock = coreObjectRepository.getLock(spaceType, LockTypes.WRITE);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                DateTimeObject.class);
 
         try {
             lock.lock();
@@ -70,27 +74,11 @@ public class InfoObjectCacheObject extends ACoreObject {
                 InfoObjectCacheDefinition kernelObjectCache = new InfoObjectCacheDefinition();
                 kernelObjectCache.setId(infoObject.getID());
                 kernelObjectCache.setType(infoObject.getType());
+                kernelObjectCache.getDate().put(DateTimeTypes.CREATE, dateTime.getCurrentDateTime());
+                kernelObjectCache.getDate().put(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());
 
                 this.getInfoObjectCaches(spaceType).put(kernelObjectCache.getId(), kernelObjectCache);
                 coreObjectRepository.addByID(spaceType, kernelObjectCache.getId(), infoObject);
-            }
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    private void deleteBySpaceType(long spaceType, UUID id) {
-        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
-        Lock lock = coreObjectRepository.getLock(spaceType, LockTypes.WRITE);
-
-        try {
-            lock.lock();
-
-            Map<UUID, InfoObjectCacheDefinition> kernelObjectCaches = this.getInfoObjectCaches(spaceType);
-            if (kernelObjectCaches.containsKey(id)) {
-                kernelObjectCaches.remove(id);
-
-                coreObjectRepository.deleteByID(spaceType, InfoObject.class, id);
             }
         } finally {
             lock.unlock();
@@ -129,6 +117,39 @@ public class InfoObjectCacheObject extends ACoreObject {
         }
         if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.USER)) {
             this.deleteBySpaceType(SpaceTypes.USER, id);
+        }
+    }
+
+    private void deleteBySpaceType(long spaceType, UUID id) {
+        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
+        Lock lock = coreObjectRepository.getLock(spaceType, LockTypes.WRITE);
+
+        try {
+            lock.lock();
+
+            Map<UUID, InfoObjectCacheDefinition> kernelObjectCaches = this.getInfoObjectCaches(spaceType);
+            if (kernelObjectCaches.containsKey(id)) {
+                kernelObjectCaches.remove(id);
+
+                coreObjectRepository.deleteByID(spaceType, InfoObject.class, id);
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void cleanIfExpired() {
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                DateTimeObject.class);
+        long expiredTime =
+                this.factoryManager.getKernelSpace().getConfiguration().MEMORY_CACHES_USERSPACE_INFOOBJECT_EXPIRED_TIME;
+
+        Map<UUID, InfoObjectCacheDefinition> infoObjectCaches = this.getInfoObjectCaches(SpaceTypes.USER);
+
+        for (Map.Entry<UUID, InfoObjectCacheDefinition> infoObjectCache : infoObjectCaches.entrySet()) {
+            if (dateTime.getCurrentDateTime() - infoObjectCache.getValue().getDate().get(DateTimeTypes.ACCESS) > expiredTime) {
+                this.deleteBySpaceType(SpaceTypes.USER, infoObjectCache.getKey());
+            }
         }
     }
 }

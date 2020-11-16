@@ -5,7 +5,7 @@ import indi.sly.system.kernel.objects.Identification;
 import java.util.*;
 
 public class DumpDefinition {
-    private final Map<Long, Date> date;
+    private final Map<Long, Long> date;
     private UUID processID;
     private UUID accountID;
     private final List<Identification> identifications;
@@ -16,7 +16,7 @@ public class DumpDefinition {
         this.identifications = new ArrayList<>();
     }
 
-    public Map<Long, Date> getDate() {
+    public Map<Long, Long> getDate() {
         return this.date;
     }
 

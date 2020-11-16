@@ -6,6 +6,7 @@ import indi.sly.system.common.utility.UUIDUtils;
 
 public class KernelConfiguration {
     public final UUID MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID = UUIDUtils.getEmpty();
+    public final long MEMORY_CACHES_USERSPACE_INFOOBJECT_EXPIRED_TIME = 0l;
 
     public final UUID OBJECTS_PROTOTYPE_ROOT_ID = UUIDUtils.getEmpty();
     public final UUID OBJECTS_TYPES_INSTANCE_FOLDER_ID = UUIDUtils.getEmpty();

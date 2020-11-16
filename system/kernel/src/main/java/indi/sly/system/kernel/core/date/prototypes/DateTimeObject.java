@@ -5,7 +5,7 @@ import java.util.Date;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 
 public class DateTimeObject extends ACoreObject {
-    public Date getCurrentDateTime() {
-        return new Date();
+    public long getCurrentDateTime() {
+        return System.currentTimeMillis();
     }
 }

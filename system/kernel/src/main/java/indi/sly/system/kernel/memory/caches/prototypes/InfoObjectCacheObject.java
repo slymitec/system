@@ -120,6 +120,23 @@ public class InfoObjectCacheObject extends ACoreObject {
         }
     }
 
+    public void deleteIfExpired(long spaceType) {
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                DateTimeObject.class);
+        long expiredTime =
+                this.factoryManager.getKernelSpace().getConfiguration().MEMORY_CACHES_USERSPACE_INFOOBJECT_EXPIRED_TIME;
+
+        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.USER)) {
+            Map<UUID, InfoObjectCacheDefinition> infoObjectCaches = this.getInfoObjectCaches(SpaceTypes.USER);
+
+            for (Map.Entry<UUID, InfoObjectCacheDefinition> infoObjectCache : infoObjectCaches.entrySet()) {
+                if (dateTime.getCurrentDateTime() - infoObjectCache.getValue().getDate().get(DateTimeTypes.ACCESS) > expiredTime) {
+                    this.deleteBySpaceType(SpaceTypes.USER, infoObjectCache.getKey());
+                }
+            }
+        }
+    }
+
     private void deleteBySpaceType(long spaceType, UUID id) {
         CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
         Lock lock = coreObjectRepository.getLock(spaceType, LockTypes.WRITE);
@@ -135,21 +152,6 @@ public class InfoObjectCacheObject extends ACoreObject {
             }
         } finally {
             lock.unlock();
-        }
-    }
-
-    public void cleanIfExpired() {
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                DateTimeObject.class);
-        long expiredTime =
-                this.factoryManager.getKernelSpace().getConfiguration().MEMORY_CACHES_USERSPACE_INFOOBJECT_EXPIRED_TIME;
-
-        Map<UUID, InfoObjectCacheDefinition> infoObjectCaches = this.getInfoObjectCaches(SpaceTypes.USER);
-
-        for (Map.Entry<UUID, InfoObjectCacheDefinition> infoObjectCache : infoObjectCaches.entrySet()) {
-            if (dateTime.getCurrentDateTime() - infoObjectCache.getValue().getDate().get(DateTimeTypes.ACCESS) > expiredTime) {
-                this.deleteBySpaceType(SpaceTypes.USER, infoObjectCache.getKey());
-            }
         }
     }
 }

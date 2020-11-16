@@ -2,6 +2,7 @@ package indi.sly.system.kernel.objects.prototypes;
 
 import indi.sly.system.common.exceptions.*;
 import indi.sly.system.common.functions.*;
+import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
@@ -12,6 +13,10 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
+import indi.sly.system.kernel.security.prototypes.PrivilegeTypes;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -111,6 +116,71 @@ public class InfoObject extends ACoreObject {
         InfoObject parent = this.getParent();
         if (ObjectUtils.allNotNull(parent)) {
             parent.free();
+        }
+    }
+
+    public synchronized boolean isCached(long spaceType) {
+        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
+        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                InfoObjectCacheObject.class);
+
+        InfoObject infoObject = kernelCache.getIfExisted(spaceType, this.id);
+
+        if (ObjectUtils.allNotNull(infoObject)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized void cache(long spaceType) {
+        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject currentProcess = processManager.getCurrentProcess();
+        ProcessTokenObject currentProcessToken = currentProcess.getToken();
+
+        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                InfoObjectCacheObject.class);
+
+        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
+            if (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
+                throw new ConditionPermissionsException();
+            }
+
+            kernelCache.add(SpaceTypes.KERNEL, this);
+        }
+        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.USER)) {
+            kernelCache.add(SpaceTypes.USER, this);
+        }
+    }
+
+    public synchronized void uncache(long spaceType) {
+        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject currentProcess = processManager.getCurrentProcess();
+        ProcessTokenObject currentProcessToken = currentProcess.getToken();
+
+        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                InfoObjectCacheObject.class);
+
+        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
+            if (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
+                throw new ConditionPermissionsException();
+            }
+
+            kernelCache.delete(SpaceTypes.KERNEL, this.id);
+        }
+        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.USER)) {
+            kernelCache.delete(SpaceTypes.USER, this.id);
         }
     }
 
@@ -258,12 +328,7 @@ public class InfoObject extends ACoreObject {
             throw new StatusUnexpectedException();
         }
 
-        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                InfoObjectCacheObject.class);
-
         InfoObject childInfoObject = this.factory.buildInfoObject(childInfo, this);
-
-        kernelCache.add(SpaceTypes.USER, childInfoObject);
 
         childInfoObject.open(openAttribute, arguments);
 
@@ -306,8 +371,6 @@ public class InfoObject extends ACoreObject {
             return childCachedInfo;
         } else {
             InfoObject childInfoObject = this.factory.buildInfoObject(childInfo, statusOpen, this);
-
-            infoObjectCache.add(SpaceTypes.USER, childInfoObject);
 
             return childInfoObject;
         }

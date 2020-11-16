@@ -8,4 +8,7 @@ public class DateTimeObject extends ACoreObject {
     public long getCurrentDateTime() {
         return System.currentTimeMillis();
     }
+
+    //设置时区
+    //设置时间
 }

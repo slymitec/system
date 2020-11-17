@@ -4,10 +4,9 @@ import java.util.List;
 
 import javax.inject.Named;
 
-import indi.sly.system.kernel.core.enviroment.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
-import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -54,7 +53,7 @@ public class ObjectManager extends AManager {
         return info;
     }
 
-    public InfoObject rebuild(List<Identification> identifications, StatusOpenDefinition open) {
+    public InfoObject rebuild(List<Identification> identifications, InfoObjectStatusOpenDefinition open) {
         if (ObjectUtils.isAnyNull(identifications, open)) {
             throw new ConditionParametersException();
         }

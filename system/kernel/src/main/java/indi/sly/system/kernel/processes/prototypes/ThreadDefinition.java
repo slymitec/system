@@ -8,12 +8,14 @@ import java.util.UUID;
 
 public class ThreadDefinition {
     public ThreadDefinition() {
+        this.userSpace = new UserSpace();
         this.context = new ThreadContextDefinition();
+
     }
 
     private UUID id;
     private UUID processID;
-    private Map<Long, Date> date;
+    private Map<Long, Long> date;
     private UserSpace userSpace;
     private final ThreadContextDefinition context;
 
@@ -33,12 +35,8 @@ public class ThreadDefinition {
         this.processID = processID;
     }
 
-    public Map<Long, Date> getDate() {
+    public Map<Long, Long> getDate() {
         return this.date;
-    }
-
-    public void setDate(Map<Long, Date> date) {
-        this.date = date;
     }
 
     public UserSpace getUserSpace() {

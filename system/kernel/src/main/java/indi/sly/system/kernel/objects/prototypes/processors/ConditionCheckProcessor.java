@@ -10,9 +10,9 @@ import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
-import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
-import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
-import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinitionOpenAttributeTypes;
+import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusOpenDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusOpenDefinitionOpenAttributeTypes;
 import indi.sly.system.kernel.objects.types.prototypes.TypeInitializerAttributeTypes;
 import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -29,13 +29,13 @@ import java.util.function.Predicate;
 public class ConditionCheckProcessor extends ACoreObject implements IInfoObjectProcessor {
     public ConditionCheckProcessor() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
-            if (status.getOpen().getAttribute() != StatusOpenDefinitionOpenAttributeTypes.CLOSE || status.getOpen().getAttribute() == openAttribute) {
+            if (status.getOpen().getAttribute() != InfoObjectStatusOpenDefinitionOpenAttributeTypes.CLOSE || status.getOpen().getAttribute() == openAttribute) {
                 throw new StatusAlreadyFinishedException();
             }
-            if (openAttribute == StatusOpenDefinitionOpenAttributeTypes.CLOSE
-                    || (openAttribute == StatusOpenDefinitionOpenAttributeTypes.OPEN_ONLYREAD && info.getOpened() > 0
+            if (openAttribute == InfoObjectStatusOpenDefinitionOpenAttributeTypes.CLOSE
+                    || (openAttribute == InfoObjectStatusOpenDefinitionOpenAttributeTypes.OPEN_ONLYREAD && info.getOpened() > 0
                     && !type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.CAN_BE_SHARED_READ))
-                    || (openAttribute == StatusOpenDefinitionOpenAttributeTypes.OPEN_SHARED_WRITE && !type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.CAN_BE_SHARED_WRITE))) {
+                    || (openAttribute == InfoObjectStatusOpenDefinitionOpenAttributeTypes.OPEN_SHARED_WRITE && !type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.CAN_BE_SHARED_WRITE))) {
                 throw new StatusNotSupportedException();
             }
 
@@ -43,7 +43,7 @@ public class ConditionCheckProcessor extends ACoreObject implements IInfoObjectP
         };
 
         this.close = (info, type, status) -> {
-            if (status.getOpen().getAttribute() == StatusOpenDefinitionOpenAttributeTypes.CLOSE) {
+            if (status.getOpen().getAttribute() == InfoObjectStatusOpenDefinitionOpenAttributeTypes.CLOSE) {
                 throw new StatusAlreadyFinishedException();
             }
         };
@@ -112,7 +112,7 @@ public class ConditionCheckProcessor extends ACoreObject implements IInfoObjectP
             if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_CONTENT)) {
                 throw new StatusNotSupportedException();
             }
-            if (status.getOpen().getAttribute() == StatusOpenDefinitionOpenAttributeTypes.CLOSE) {
+            if (status.getOpen().getAttribute() == InfoObjectStatusOpenDefinitionOpenAttributeTypes.CLOSE) {
                 throw new StatusRelationshipErrorException();
             }
 
@@ -123,25 +123,25 @@ public class ConditionCheckProcessor extends ACoreObject implements IInfoObjectP
             if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_CONTENT)) {
                 throw new StatusNotSupportedException();
             }
-            if (status.getOpen().getAttribute() == StatusOpenDefinitionOpenAttributeTypes.CLOSE) {
+            if (status.getOpen().getAttribute() == InfoObjectStatusOpenDefinitionOpenAttributeTypes.CLOSE) {
                 throw new StatusRelationshipErrorException();
             }
         };
     }
 
-    private final Function6<UUID, UUID, InfoEntity, TypeObject, StatusDefinition, Long, Object[]> open;
-    private final Consumer3<InfoEntity, TypeObject, StatusDefinition> close;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, UUID, Identification> createChildAndOpen;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification,
-            StatusOpenDefinition> getOrRebuildChild;
-    private final Consumer4<InfoEntity, TypeObject, StatusDefinition, Identification> deleteChild;
+    private final Function6<UUID, UUID, InfoEntity, TypeObject, InfoObjectStatusDefinition, Long, Object[]> open;
+    private final Consumer3<InfoEntity, TypeObject, InfoObjectStatusDefinition> close;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoObjectStatusDefinition, UUID, Identification> createChildAndOpen;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoObjectStatusDefinition, Identification,
+            InfoObjectStatusOpenDefinition> getOrRebuildChild;
+    private final Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, Identification> deleteChild;
     private final Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject,
-            StatusDefinition, Predicate<InfoSummaryDefinition>> queryChild;
-    private final Consumer5<InfoEntity, TypeObject, StatusDefinition, Identification, Identification> renameChild;
-    private final Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, StatusDefinition> readProperties;
-    private final Consumer4<InfoEntity, TypeObject, StatusDefinition, Map<String, String>> writeProperties;
-    private final Function4<byte[], byte[], InfoEntity, TypeObject, StatusDefinition> readContent;
-    private final Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]> writeContent;
+            InfoObjectStatusDefinition, Predicate<InfoSummaryDefinition>> queryChild;
+    private final Consumer5<InfoEntity, TypeObject, InfoObjectStatusDefinition, Identification, Identification> renameChild;
+    private final Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, InfoObjectStatusDefinition> readProperties;
+    private final Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, Map<String, String>> writeProperties;
+    private final Function4<byte[], byte[], InfoEntity, TypeObject, InfoObjectStatusDefinition> readContent;
+    private final Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, byte[]> writeContent;
 
     @Override
     public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {

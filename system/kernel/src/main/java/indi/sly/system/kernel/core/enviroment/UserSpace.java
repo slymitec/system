@@ -6,16 +6,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import javax.inject.Named;
-
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-
 import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 
-@Named
-@Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserSpace {
     public UserSpace() {
         this.infoObjectLock = new ReentrantReadWriteLock();

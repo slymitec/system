@@ -33,7 +33,7 @@ public class InfoObject extends ACoreObject {
 
     protected UUID id;
     protected UUID poolID;
-    protected StatusDefinition status;
+    protected InfoObjectStatusDefinition status;
 
     public UUID getID() {
         if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
@@ -212,7 +212,7 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        Function3<SecurityDescriptorObject, InfoEntity, TypeObject, StatusDefinition> func =
+        Function3<SecurityDescriptorObject, InfoEntity, TypeObject, InfoObjectStatusDefinition> func =
                 this.processorRegister.getSecurityDescriptor();
 
         if (ObjectUtils.isAnyNull(func)) {
@@ -228,12 +228,12 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, StatusDefinition>> funcs =
+        List<Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, InfoObjectStatusDefinition>> funcs =
                 this.processorRegister.getDumps();
 
         DumpDefinition dump = new DumpDefinition();
 
-        for (Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, StatusDefinition> pair : funcs) {
+        for (Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, InfoObjectStatusDefinition> pair : funcs) {
             dump = pair.apply(dump, info, type, this.status);
         }
 
@@ -250,12 +250,12 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function6<UUID, UUID, InfoEntity, TypeObject, StatusDefinition, Long, Object[]>> funcs =
+        List<Function6<UUID, UUID, InfoEntity, TypeObject, InfoObjectStatusDefinition, Long, Object[]>> funcs =
                 this.processorRegister.getOpens();
 
         UUID handle = UUIDUtils.getEmpty();
 
-        for (Function6<UUID, UUID, InfoEntity, TypeObject, StatusDefinition, Long, Object[]> pair : funcs) {
+        for (Function6<UUID, UUID, InfoEntity, TypeObject, InfoObjectStatusDefinition, Long, Object[]> pair : funcs) {
             handle = pair.apply(handle, info, type, this.status, openAttribute, arguments);
             if (ObjectUtils.isAnyNull(handle)) {
                 throw new StatusUnexpectedException();
@@ -283,9 +283,9 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer3<InfoEntity, TypeObject, StatusDefinition>> funcs = this.processorRegister.getCloses();
+        List<Consumer3<InfoEntity, TypeObject, InfoObjectStatusDefinition>> funcs = this.processorRegister.getCloses();
 
-        for (Consumer3<InfoEntity, TypeObject, StatusDefinition> pair : funcs) {
+        for (Consumer3<InfoEntity, TypeObject, InfoObjectStatusDefinition> pair : funcs) {
             pair.accept(info, type, this.status);
         }
 
@@ -315,11 +315,11 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject typeObject = typeManager.get(this.getType());
 
-        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, UUID, Identification>> funcs = this.processorRegister.getCreateChildAndOpens();
+        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoObjectStatusDefinition, UUID, Identification>> funcs = this.processorRegister.getCreateChildAndOpens();
 
         InfoEntity childInfo = null;
 
-        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, UUID, Identification> pair :
+        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoObjectStatusDefinition, UUID, Identification> pair :
                 funcs) {
             childInfo = pair.apply(childInfo, info, typeObject, this.status, type, identification);
         }
@@ -339,7 +339,7 @@ public class InfoObject extends ACoreObject {
         return this.rebuildChild(identification, null);
     }
 
-    public synchronized InfoObject rebuildChild(Identification identification, StatusOpenDefinition statusOpen) {
+    public synchronized InfoObject rebuildChild(Identification identification, InfoObjectStatusOpenDefinition statusOpen) {
         if (ObjectUtils.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
@@ -349,13 +349,13 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification,
-                StatusOpenDefinition>> funcs = this.processorRegister.getGetOrRebuildChilds();
+        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoObjectStatusDefinition, Identification,
+                InfoObjectStatusOpenDefinition>> funcs = this.processorRegister.getGetOrRebuildChilds();
 
         InfoEntity childInfo = null;
 
-        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification,
-                StatusOpenDefinition> pair : funcs) {
+        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoObjectStatusDefinition, Identification,
+                InfoObjectStatusOpenDefinition> pair : funcs) {
             childInfo = pair.apply(childInfo, info, type, this.status, identification, statusOpen);
         }
 
@@ -372,6 +372,8 @@ public class InfoObject extends ACoreObject {
         } else {
             InfoObject childInfoObject = this.factory.buildInfoObject(childInfo, statusOpen, this);
 
+            childInfoObject.cache(SpaceTypes.USER);
+
             return childInfoObject;
         }
     }
@@ -387,16 +389,14 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer4<InfoEntity, TypeObject, StatusDefinition, Identification>> funcs =
+        List<Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, Identification>> funcs =
                 this.processorRegister.getDeleteChilds();
 
-        for (Consumer4<InfoEntity, TypeObject, StatusDefinition, Identification> pair : funcs) {
+        for (Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, Identification> pair : funcs) {
             pair.accept(info, type, this.status, identification);
         }
 
-        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                InfoObjectCacheObject.class);
-        kernelCache.delete(SpaceTypes.ALL, childInfoObject.getID());
+        childInfoObject.uncache(SpaceTypes.ALL);
     }
 
     public synchronized Set<InfoSummaryDefinition> queryChild(Predicate<InfoSummaryDefinition> wildcard) {
@@ -410,13 +410,13 @@ public class InfoObject extends ACoreObject {
         TypeObject type = typeManager.get(this.getType());
 
         List<Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject,
-                StatusDefinition, Predicate<InfoSummaryDefinition>>> funcs = this.processorRegister
+                InfoObjectStatusDefinition, Predicate<InfoSummaryDefinition>>> funcs = this.processorRegister
                 .getQueryChilds();
 
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
         for (Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject,
-                StatusDefinition, Predicate<InfoSummaryDefinition>> pair : funcs) {
+                InfoObjectStatusDefinition, Predicate<InfoSummaryDefinition>> pair : funcs) {
             infoSummaries = pair.apply(infoSummaries, info, type, this.status, wildcard);
         }
 
@@ -433,10 +433,10 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer5<InfoEntity, TypeObject, StatusDefinition, Identification, Identification>> funcs =
+        List<Consumer5<InfoEntity, TypeObject, InfoObjectStatusDefinition, Identification, Identification>> funcs =
                 this.processorRegister.getRenameChilds();
 
-        for (Consumer5<InfoEntity, TypeObject, StatusDefinition, Identification, Identification> pair : funcs) {
+        for (Consumer5<InfoEntity, TypeObject, InfoObjectStatusDefinition, Identification, Identification> pair : funcs) {
             pair.accept(info, type, this.status, oldIdentification, newIdentification);
         }
     }
@@ -447,12 +447,12 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, StatusDefinition>> funcs =
+        List<Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, InfoObjectStatusDefinition>> funcs =
                 this.processorRegister.getReadProperties();
 
         Map<String, String> properties = new HashMap<>();
 
-        for (Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, StatusDefinition> pair :
+        for (Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, InfoObjectStatusDefinition> pair :
                 funcs) {
             properties = pair.apply(properties, info, type, this.status);
         }
@@ -470,10 +470,10 @@ public class InfoObject extends ACoreObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer4<InfoEntity, TypeObject, StatusDefinition, Map<String, String>>> funcs =
+        List<Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, Map<String, String>>> funcs =
                 this.processorRegister.getWriteProperties();
 
-        for (Consumer4<InfoEntity, TypeObject, StatusDefinition, Map<String, String>> pair : funcs) {
+        for (Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, Map<String, String>> pair : funcs) {
             pair.accept(info, type, this.status, properties);
         }
     }
@@ -485,21 +485,21 @@ public class InfoObject extends ACoreObject {
         TypeObject type = typeManager.get(this.getType());
 
         AInfoContentObject content = type.getTypeInitializer().getContentProcedure(info, () -> {
-            List<Function4<byte[], byte[], InfoEntity, TypeObject, StatusDefinition>> funcs =
+            List<Function4<byte[], byte[], InfoEntity, TypeObject, InfoObjectStatusDefinition>> funcs =
                     this.processorRegister.getReadContents();
 
             byte[] contentSource = null;
 
-            for (Function4<byte[], byte[], InfoEntity, TypeObject, StatusDefinition> pair : funcs) {
+            for (Function4<byte[], byte[], InfoEntity, TypeObject, InfoObjectStatusDefinition> pair : funcs) {
                 contentSource = pair.apply(contentSource, info, type, status);
             }
 
             return contentSource;
         }, (byte[] contentSource) -> {
-            List<Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]>> funcs =
+            List<Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, byte[]>> funcs =
                     this.processorRegister.getWriteContents();
 
-            for (Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]> pair : funcs) {
+            for (Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, byte[]> pair : funcs) {
                 pair.accept(info, type, status, contentSource);
             }
         }, this.status.getOpen());

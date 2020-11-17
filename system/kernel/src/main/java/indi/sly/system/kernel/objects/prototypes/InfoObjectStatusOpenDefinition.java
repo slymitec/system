@@ -8,7 +8,7 @@ import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.NumberUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 
-public class StatusOpenDefinition implements ISerializable {
+public class InfoObjectStatusOpenDefinition implements ISerializable {
     private long attribute;
     private ISerializable context;
 

@@ -18,7 +18,7 @@ import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusOpenDefinition;
 import indi.sly.system.kernel.objects.prototypes.DumpDefinition;
 
 @Named
@@ -45,9 +45,9 @@ public abstract class ATypeInitializer extends ACoreObject {
 
     public abstract void dumpProcedure(InfoEntity info, DumpDefinition dump);
 
-    public abstract void openProcedure(InfoEntity info, StatusOpenDefinition statusOpen, long openAttribute, Object... arguments);
+    public abstract void openProcedure(InfoEntity info, InfoObjectStatusOpenDefinition statusOpen, long openAttribute, Object... arguments);
 
-    public abstract void closeProcedure(InfoEntity info, StatusOpenDefinition statusOpen);
+    public abstract void closeProcedure(InfoEntity info, InfoObjectStatusOpenDefinition statusOpen);
 
     public abstract void createChildProcedure(InfoEntity info, InfoEntity childInfo);
 
@@ -59,9 +59,9 @@ public abstract class ATypeInitializer extends ACoreObject {
 
     public abstract void deleteChildProcedure(InfoEntity info, Identification identification);
 
-    protected abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, StatusOpenDefinition statusOpen);
+    protected abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoObjectStatusOpenDefinition statusOpen);
 
-    public final AInfoContentObject getContentProcedure(InfoEntity info, Provider<byte[]> funcRead, Consumer<byte[]> funcWrite, StatusOpenDefinition statusOpen) {
+    public final AInfoContentObject getContentProcedure(InfoEntity info, Provider<byte[]> funcRead, Consumer<byte[]> funcWrite, InfoObjectStatusOpenDefinition statusOpen) {
         AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, statusOpen));
 
         content.setSource(funcRead, funcWrite);
@@ -71,9 +71,9 @@ public abstract class ATypeInitializer extends ACoreObject {
         return content;
     }
 
-    public final AInfoContentObject getContentProcedure(InfoEntity info, StatusOpenDefinition statusOpen) {
+    public final AInfoContentObject getContentProcedure(InfoEntity info, InfoObjectStatusOpenDefinition statusOpen) {
         return this.getContentProcedure(info, info::getContent, info::setContent, statusOpen);
     }
 
-    public abstract void refreshPropertiesProcedure(InfoEntity info, StatusOpenDefinition statusOpen);
+    public abstract void refreshPropertiesProcedure(InfoEntity info, InfoObjectStatusOpenDefinition statusOpen);
 }

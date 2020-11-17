@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes;
 
-public interface StatusOpenDefinitionOpenAttributeTypes {
+public interface InfoObjectStatusOpenDefinitionOpenAttributeTypes {
     long CLOSE = 0L;
     long OPEN_ONLYREAD = 1L;
     long OPEN_EXCLUSIVE = 2L;

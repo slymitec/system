@@ -9,7 +9,7 @@ public class DumpDefinition {
     private UUID processID;
     private UUID accountID;
     private final List<Identification> identifications;
-    private StatusOpenDefinition open;
+    private InfoObjectStatusOpenDefinition open;
 
     public DumpDefinition() {
         this.date = new HashMap<>();
@@ -40,11 +40,11 @@ public class DumpDefinition {
         return this.identifications;
     }
 
-    public StatusOpenDefinition getOpen() {
+    public InfoObjectStatusOpenDefinition getOpen() {
         return this.open;
     }
 
-    public void setOpen(StatusOpenDefinition open) {
+    public void setOpen(InfoObjectStatusOpenDefinition open) {
         this.open = open;
     }
 }

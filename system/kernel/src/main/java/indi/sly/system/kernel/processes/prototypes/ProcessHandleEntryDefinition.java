@@ -4,7 +4,7 @@ import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.NumberUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.objects.Identification;
-import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusOpenDefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -15,7 +15,7 @@ import java.util.Map.Entry;
 public class ProcessHandleEntryDefinition implements ISerializable {
     private final Map<Long, Long> date;
     private final List<Identification> identifications;
-    private StatusOpenDefinition open;
+    private InfoObjectStatusOpenDefinition open;
 
     public ProcessHandleEntryDefinition() {
         this.date = new HashMap<>();
@@ -31,11 +31,11 @@ public class ProcessHandleEntryDefinition implements ISerializable {
         return this.identifications;
     }
 
-    public StatusOpenDefinition getOpen() {
+    public InfoObjectStatusOpenDefinition getOpen() {
         return open;
     }
 
-    public void setOpen(StatusOpenDefinition open) {
+    public void setOpen(InfoObjectStatusOpenDefinition open) {
         this.open = open;
     }
 

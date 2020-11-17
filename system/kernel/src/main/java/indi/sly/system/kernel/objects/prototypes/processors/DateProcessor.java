@@ -11,13 +11,12 @@ import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
-import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusDefinition;
 import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -75,10 +74,10 @@ public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
         };
     }
 
-    private final Function6<UUID, UUID, InfoEntity, TypeObject, StatusDefinition, Long, Object[]> open;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, UUID, Identification> createChildAndOpen;
-    private final Function4<byte[], byte[], InfoEntity, TypeObject, StatusDefinition> readContent;
-    private final Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]> writeContent;
+    private final Function6<UUID, UUID, InfoEntity, TypeObject, InfoObjectStatusDefinition, Long, Object[]> open;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoObjectStatusDefinition, UUID, Identification> createChildAndOpen;
+    private final Function4<byte[], byte[], InfoEntity, TypeObject, InfoObjectStatusDefinition> readContent;
+    private final Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, byte[]> writeContent;
 
     @Override
     public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {

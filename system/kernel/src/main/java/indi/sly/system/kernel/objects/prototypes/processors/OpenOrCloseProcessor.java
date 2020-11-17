@@ -11,8 +11,8 @@ import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
-import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
-import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinitionOpenAttributeTypes;
+import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusOpenDefinitionOpenAttributeTypes;
 import indi.sly.system.kernel.objects.types.prototypes.TypeInitializerAttributeTypes;
 import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -39,7 +39,7 @@ public class OpenOrCloseProcessor extends ACoreObject implements IInfoObjectProc
         };
 
         this.close = (info, type, status) -> {
-            status.getOpen().setAttribute(StatusOpenDefinitionOpenAttributeTypes.CLOSE);
+            status.getOpen().setAttribute(InfoObjectStatusOpenDefinitionOpenAttributeTypes.CLOSE);
 
             if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.DONOT_USE_TYPE_COUNT)) {
                 type.minusTotalOccupiedCount();
@@ -66,8 +66,8 @@ public class OpenOrCloseProcessor extends ACoreObject implements IInfoObjectProc
         };
     }
 
-    private final Function6<UUID, UUID, InfoEntity, TypeObject, StatusDefinition, Long, Object[]> open;
-    private final Consumer3<InfoEntity, TypeObject, StatusDefinition> close;
+    private final Function6<UUID, UUID, InfoEntity, TypeObject, InfoObjectStatusDefinition, Long, Object[]> open;
+    private final Consumer3<InfoEntity, TypeObject, InfoObjectStatusDefinition> close;
 
     @Override
     public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {

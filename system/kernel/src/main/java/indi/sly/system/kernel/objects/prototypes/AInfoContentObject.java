@@ -9,9 +9,9 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class AInfoContentObject extends ABytesProcessObject {
-    protected StatusOpenDefinition statusOpen;
+    protected InfoObjectStatusOpenDefinition statusOpen;
 
-    public void setStatusOpen(StatusOpenDefinition statusOpen) {
+    public void setStatusOpen(InfoObjectStatusOpenDefinition statusOpen) {
         this.statusOpen = statusOpen;
     }
 }

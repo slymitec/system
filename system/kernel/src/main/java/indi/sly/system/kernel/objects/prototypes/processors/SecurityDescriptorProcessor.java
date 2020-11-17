@@ -14,8 +14,8 @@ import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
-import indi.sly.system.kernel.objects.prototypes.StatusDefinition;
-import indi.sly.system.kernel.objects.prototypes.StatusOpenDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusOpenDefinition;
 import indi.sly.system.kernel.objects.types.prototypes.TypeInitializerAttributeTypes;
 import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -248,20 +248,20 @@ public class SecurityDescriptorProcessor extends ACoreObject implements IInfoObj
         };
     }
 
-    private final Function3<SecurityDescriptorObject, InfoEntity, TypeObject, StatusDefinition> securityDescriptor;
-    private final Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, StatusDefinition> dump;
-    private final Function6<UUID, UUID, InfoEntity, TypeObject, StatusDefinition, Long, Object[]> open;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, UUID, Identification> createChildAndOpen;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, StatusDefinition, Identification,
-            StatusOpenDefinition> getOrRebuildChild;
-    private final Consumer4<InfoEntity, TypeObject, StatusDefinition, Identification> deleteChild;
+    private final Function3<SecurityDescriptorObject, InfoEntity, TypeObject, InfoObjectStatusDefinition> securityDescriptor;
+    private final Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, InfoObjectStatusDefinition> dump;
+    private final Function6<UUID, UUID, InfoEntity, TypeObject, InfoObjectStatusDefinition, Long, Object[]> open;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoObjectStatusDefinition, UUID, Identification> createChildAndOpen;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoObjectStatusDefinition, Identification,
+            InfoObjectStatusOpenDefinition> getOrRebuildChild;
+    private final Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, Identification> deleteChild;
     private final Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject,
-            StatusDefinition, Predicate<InfoSummaryDefinition>> queryChild;
-    private final Consumer5<InfoEntity, TypeObject, StatusDefinition, Identification, Identification> renameChild;
-    private final Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, StatusDefinition> readProperties;
-    private final Consumer4<InfoEntity, TypeObject, StatusDefinition, Map<String, String>> writeProperties;
-    private final Function4<byte[], byte[], InfoEntity, TypeObject, StatusDefinition> readContent;
-    private final Consumer4<InfoEntity, TypeObject, StatusDefinition, byte[]> writeContent;
+            InfoObjectStatusDefinition, Predicate<InfoSummaryDefinition>> queryChild;
+    private final Consumer5<InfoEntity, TypeObject, InfoObjectStatusDefinition, Identification, Identification> renameChild;
+    private final Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, InfoObjectStatusDefinition> readProperties;
+    private final Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, Map<String, String>> writeProperties;
+    private final Function4<byte[], byte[], InfoEntity, TypeObject, InfoObjectStatusDefinition> readContent;
+    private final Consumer4<InfoEntity, TypeObject, InfoObjectStatusDefinition, byte[]> writeContent;
 
     @Override
     public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {

@@ -10,7 +10,7 @@ import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoStatusDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -65,7 +65,7 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
         return info;
     }
 
-    public synchronized UUID addInfo(InfoObjectStatusDefinition status) {
+    public synchronized UUID addInfo(InfoStatusDefinition status) {
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();

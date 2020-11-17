@@ -8,7 +8,7 @@ import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.DumpDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
-import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -33,7 +33,7 @@ public class DumpProcessor extends ACoreObject implements IInfoObjectProcessor {
         };
     }
 
-    private final Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, InfoObjectStatusDefinition> dump;
+    private final Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, InfoStatusDefinition> dump;
 
     @Override
     public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {

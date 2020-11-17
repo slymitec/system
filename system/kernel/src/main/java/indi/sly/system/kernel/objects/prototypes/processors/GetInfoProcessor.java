@@ -13,7 +13,7 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
-import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoStatusDefinition;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -28,7 +28,7 @@ public class GetInfoProcessor extends ACoreObject implements IInfoObjectProcesso
         };
     }
 
-    private final Function3<InfoEntity, UUID, UUID, InfoObjectStatusDefinition> info;
+    private final Function3<InfoEntity, UUID, UUID, InfoStatusDefinition> info;
 
     @Override
     public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {

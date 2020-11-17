@@ -13,15 +13,15 @@ import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.objects.Identification;
 
-public class InfoObjectStatusDefinition implements ISerializable {
+public class InfoStatusDefinition implements ISerializable {
     private final List<Identification> identifications;
     private UUID parentID;
     private UUID handle;
-    private InfoObjectStatusOpenDefinition open;
+    private InfoStatusOpenDefinition open;
 
-    public InfoObjectStatusDefinition() {
+    public InfoStatusDefinition() {
         this.identifications = new ArrayList<>();
-        this.open = new InfoObjectStatusOpenDefinition();
+        this.open = new InfoStatusOpenDefinition();
     }
 
     public List<Identification> getIdentifications() {
@@ -45,11 +45,11 @@ public class InfoObjectStatusDefinition implements ISerializable {
         this.handle = handle;
     }
 
-    public InfoObjectStatusOpenDefinition getOpen() {
+    public InfoStatusOpenDefinition getOpen() {
         return open;
     }
 
-    public void setOpen(InfoObjectStatusOpenDefinition open) {
+    public void setOpen(InfoStatusOpenDefinition open) {
         this.open = open;
     }
 

@@ -6,7 +6,7 @@ import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.objects.prototypes.InfoObjectStatusOpenDefinition;
+import indi.sly.system.kernel.objects.prototypes.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.types.prototypes.ATypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.DumpDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -53,11 +53,11 @@ public class ProcessTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public void openProcedure(InfoEntity info, InfoObjectStatusOpenDefinition statusOpen, long openAttribute, Object... arguments) {
+    public void openProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen, long openAttribute, Object... arguments) {
     }
 
     @Override
-    public void closeProcedure(InfoEntity info, InfoObjectStatusOpenDefinition statusOpen) {
+    public void closeProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen) {
     }
 
     @Override
@@ -86,11 +86,11 @@ public class ProcessTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    protected Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoObjectStatusOpenDefinition statusOpen) {
+    protected Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen) {
         return ProcessContentObject.class;
     }
 
     @Override
-    public void refreshPropertiesProcedure(InfoEntity info, InfoObjectStatusOpenDefinition statusOpen) {
+    public void refreshPropertiesProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen) {
     }
 }

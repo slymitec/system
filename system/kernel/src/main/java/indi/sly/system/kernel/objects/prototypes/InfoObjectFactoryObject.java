@@ -48,9 +48,9 @@ public class InfoObjectFactoryObject extends ACoreObject {
             pair.process(infoEntity, processorRegister);
         }
 
-        InfoObjectStatusOpenDefinition statusOpen = new InfoObjectStatusOpenDefinition();
-        statusOpen.setAttribute(InfoObjectStatusOpenDefinitionOpenAttributeTypes.CLOSE);
-        InfoObjectStatusDefinition status = new InfoObjectStatusDefinition();
+        InfoStatusOpenDefinition statusOpen = new InfoStatusOpenDefinition();
+        statusOpen.setAttribute(InfoStatusOpenDefinitionOpenAttributeTypes.CLOSE);
+        InfoStatusDefinition status = new InfoStatusDefinition();
         status.setOpen(statusOpen);
 
         InfoObject infoObject = this.factoryManager.create(InfoObject.class);
@@ -67,7 +67,7 @@ public class InfoObjectFactoryObject extends ACoreObject {
         return this.buildInfoObject(info, null, parentInfo);
     }
 
-    public InfoObject buildInfoObject(InfoEntity info, InfoObjectStatusOpenDefinition statusOpen, InfoObject parentInfo) {
+    public InfoObject buildInfoObject(InfoEntity info, InfoStatusOpenDefinition statusOpen, InfoObject parentInfo) {
         InfoObjectProcessorRegister infoObjectProcessorRegister = new InfoObjectProcessorRegister();
         for (IInfoObjectProcessor infoObjectProcessor : this.infoObjectProcessors) {
             infoObjectProcessor.process(info, infoObjectProcessorRegister);
@@ -77,10 +77,10 @@ public class InfoObjectFactoryObject extends ACoreObject {
         TypeObject type = typeManager.get(info.getType());
         UUID poolID = type.getTypeInitializer().getPoolID(info.getID(), info.getType());
 
-        InfoObjectStatusDefinition status = new InfoObjectStatusDefinition();
+        InfoStatusDefinition status = new InfoStatusDefinition();
         if (ObjectUtils.isAnyNull(statusOpen)) {
-            statusOpen = new InfoObjectStatusOpenDefinition();
-            statusOpen.setAttribute(InfoObjectStatusOpenDefinitionOpenAttributeTypes.CLOSE);
+            statusOpen = new InfoStatusOpenDefinition();
+            statusOpen.setAttribute(InfoStatusOpenDefinitionOpenAttributeTypes.CLOSE);
         }
         status.setOpen(statusOpen);
         status.setParentID(parentInfo.getID());

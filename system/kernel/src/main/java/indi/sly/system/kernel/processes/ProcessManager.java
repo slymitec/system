@@ -2,6 +2,8 @@ package indi.sly.system.kernel.processes;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.ConditionPermissionsException;
+import indi.sly.system.common.exceptions.StatusNotReadyException;
+import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.StartupTypes;
@@ -28,13 +30,6 @@ public class ProcessManager extends AManager {
     @Override
     public void startup(long startupTypes) {
         if (startupTypes == StartupTypes.STEP_INIT) {
-            this.factoryManager.setUserSpaceContainer(() -> {
-                ThreadObject thread = this.getCurrentThread();
-
-                UserSpace userSpace = thread.getUserSpace();
-
-                return userSpace;
-            });
         } else if (startupTypes == StartupTypes.STEP_KERNEL) {
             this.processObjectFactory = this.factoryManager.create(ProcessObjectFactoryObject.class);
             this.processObjectFactory.initProcessObjectFactory();
@@ -60,10 +55,11 @@ public class ProcessManager extends AManager {
 
 
     public ProcessObject getCurrentProcess() {
-        //Thread...
-        UUID processID = UUIDUtils.createRandom();
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-        return this.getTargetProcess(processID);
+        ThreadObject thread = threadManager.getCurrentThread();
+
+        return this.getTargetProcess(thread.getProcessID());
     }
 
     public ProcessObject getProcess(UUID processID) {
@@ -81,14 +77,6 @@ public class ProcessManager extends AManager {
 
     public ProcessObject createProcess() {
         //...
-        return null;
-    }
-
-    public ThreadObject getCurrentThread() {
-        return null;
-    }
-
-    public ThreadObject createCurrentThreads() {
         return null;
     }
 

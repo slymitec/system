@@ -17,6 +17,9 @@ import indi.sly.system.kernel.core.prototypes.CoreObjectRepositoryObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.ThreadManager;
+import indi.sly.system.kernel.security.SecurityTokenManager;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.objenesis.SpringObjenesis;
@@ -33,12 +36,20 @@ public class FactoryManager extends AManager {
         if (startupTypes == StartupTypes.STEP_INIT) {
             this.factoryManager = this;
 
+            UserSpace bootUserSpace = new UserSpace();
+            this.factoryManager.setUserSpaceContainer(() -> {
+                return bootUserSpace;
+            });
+
             this.coreObjectRepository = this.create(CoreObjectRepositoryObject.class);
 
             this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(FactoryManager.class));
             this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(MemoryManager.class));
+            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(ProcessManager.class));
+            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(ThreadManager.class));
             this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(TypeManager.class));
             this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(ObjectManager.class));
+            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(SecurityTokenManager.class));
             // ...
             this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(DateTimeObject.class));
             this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(CoreObjectRepositoryObject.class));
@@ -72,7 +83,7 @@ public class FactoryManager extends AManager {
                 }
             }
         }
-        
+
         if (ObjectUtils.isAnyNull(coreObject)) {
             throw new StatusNotSupportedException();
         }

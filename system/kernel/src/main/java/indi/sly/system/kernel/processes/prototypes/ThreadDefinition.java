@@ -14,8 +14,8 @@ public class ThreadDefinition {
 
     private UUID id;
     private UUID processID;
-    private final ThreadStatusDefinition status;
     private final UserSpace userSpace;
+    private final ThreadStatusDefinition status;
     private final ThreadContextDefinition context;
 
     public UUID getID() {
@@ -36,6 +36,10 @@ public class ThreadDefinition {
 
     public UserSpace getUserSpace() {
         return this.userSpace;
+    }
+
+    public ThreadStatusDefinition getStatus() {
+        return this.status;
     }
 
     public ThreadContextDefinition getContext() {

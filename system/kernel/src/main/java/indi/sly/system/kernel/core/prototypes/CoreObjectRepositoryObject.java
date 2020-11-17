@@ -79,7 +79,7 @@ public class CoreObjectRepositoryObject extends ACoreObject {
             throw new ConditionParametersException();
         }
 
-        return new HashSet<>(coreObjects.values());
+        return Collections.unmodifiableSet(new HashSet<>(coreObjects.values()));
     }
 
     public <T extends ACoreObject> T get(long spaceType, Class<T> clazz) {
@@ -221,7 +221,8 @@ public class CoreObjectRepositoryObject extends ACoreObject {
             try {
                 lock.lock();
 
-                Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs = this.getKernelSpace().getClassedCoreObjectIDs();
+                Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs =
+                        this.getKernelSpace().getClassedCoreObjectIDs();
 
                 UUID id = classedCoreObjectIDs.getOrDefault(clazz, null);
                 if (UUIDUtils.isAnyNullOrEmpty(id)) {
@@ -297,7 +298,8 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 id = UUIDUtils.createRandom();
                 Class<? extends ACoreObject> clazz = coreObject.getClass();
 
-                Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs = this.getKernelSpace().getClassedCoreObjectIDs();
+                Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs =
+                        this.getKernelSpace().getClassedCoreObjectIDs();
 
                 if (classedCoreObjectIDs.containsKey(clazz)) {
                     throw new StatusAlreadyExistedException();
@@ -411,7 +413,8 @@ public class CoreObjectRepositoryObject extends ACoreObject {
             try {
                 lock.lock();
 
-                Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs = this.getKernelSpace().getClassedCoreObjectIDs();
+                Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs =
+                        this.getKernelSpace().getClassedCoreObjectIDs();
 
                 UUID id = classedCoreObjectIDs.getOrDefault(clazz, null);
                 boolean isContain = this.containByID(spaceType, clazz, id);
@@ -514,7 +517,8 @@ public class CoreObjectRepositoryObject extends ACoreObject {
             try {
                 lock.lock();
 
-                Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs = this.getKernelSpace().getClassedCoreObjectIDs();
+                Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs =
+                        this.getKernelSpace().getClassedCoreObjectIDs();
                 Map<UUID, ACoreObject> coreObjects = this.getKernelSpace().getCoreObjects();
 
                 UUID id = this.getIDByClass(spaceType, clazz);
@@ -579,7 +583,8 @@ public class CoreObjectRepositoryObject extends ACoreObject {
                 lock.lock();
 
                 Map<String, UUID> namedCoreObjectIDs = this.getKernelSpace().getNamedCoreObjectIDs();
-                Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs = this.getKernelSpace().getClassedCoreObjectIDs();
+                Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs =
+                        this.getKernelSpace().getClassedCoreObjectIDs();
 
                 for (Entry<String, UUID> pair : namedCoreObjectIDs.entrySet()) {
                     if (pair.getValue() == id) {

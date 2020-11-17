@@ -8,7 +8,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
+import indi.sly.system.kernel.processes.prototypes.ThreadObject;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
+import javax.inject.Named;
+
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserSpace {
     public UserSpace() {
         this.infoObjectLock = new ReentrantReadWriteLock();
@@ -30,5 +37,15 @@ public class UserSpace {
 
     public Map<UUID, InfoObject> getInfoObjects() {
         return infoObjects;
+    }
+
+    private ThreadObject thread;
+
+    public ThreadObject getThread() {
+        return this.thread;
+    }
+
+    public void setThread(ThreadObject thread) {
+        this.thread = thread;
     }
 }

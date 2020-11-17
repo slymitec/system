@@ -119,24 +119,7 @@ public class InfoObject extends ACoreObject {
         }
     }
 
-    public synchronized boolean isCached(long spaceType) {
-        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
-            throw new ConditionContextException();
-        }
-
-        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                InfoObjectCacheObject.class);
-
-        InfoObject infoObject = kernelCache.getIfExisted(spaceType, this.id);
-
-        if (ObjectUtils.allNotNull(infoObject)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public synchronized void cache(long spaceType) {
+    private synchronized void cache(long spaceType) {
         if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
@@ -160,7 +143,7 @@ public class InfoObject extends ACoreObject {
         }
     }
 
-    public synchronized void uncache(long spaceType) {
+    private synchronized void uncache(long spaceType) {
         if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }

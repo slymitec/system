@@ -11,10 +11,7 @@ import indi.sly.system.kernel.core.enviroment.UserSpace;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessObjectFactoryObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.processes.prototypes.ThreadObject;
+import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.security.prototypes.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -76,6 +73,22 @@ public class ProcessManager extends AManager {
     }
 
     public ProcessObject createProcess() {
+        ProcessObject currentProcess = this.getCurrentProcess();
+
+        ProcessEntity process = new ProcessEntity();
+        process.setID(UUID.randomUUID());
+        process.setParentProcessID(currentProcess.getID());
+        process.setSessionID(currentProcess.getSessionID());
+        ProcessHandleTableDefinition processHandleTable =new ProcessHandleTableDefinition();
+        process.setHandleTable(ObjectUtils.transferToByteArray(processHandleTable));
+        ProcessStatisticsDefinition processStatistics = new ProcessStatisticsDefinition();
+        process.setStatistics(ObjectUtils.transferToByteArray(processStatistics));
+        ProcessTokenDefinition processToken = new ProcessTokenDefinition();
+        process.setToken(ObjectUtils.transferToByteArray(processToken));
+
+
+
+
         //...
         return null;
     }

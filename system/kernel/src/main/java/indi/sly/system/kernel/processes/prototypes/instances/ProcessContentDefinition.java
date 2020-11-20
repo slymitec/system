@@ -13,13 +13,13 @@ public class ProcessContentDefinition implements ISerializable {
         this.handleTable = new ProcessHandleTableDefinition();
         this.communication = new CommunicationDefinition();
         this.statistics = new StatisticsDefinition();
-        this.status = new StatusDefintion();
+        this.status = new ProcessStatusDefintion();
         this.token = new ProcessTokenDefinition();
     }
 
     private final CommunicationDefinition communication;
     private final ProcessHandleTableDefinition handleTable;
-    private final StatusDefintion status;
+    private final ProcessStatusDefintion status;
     private final StatisticsDefinition statistics;
     private final ProcessTokenDefinition token;
 
@@ -31,7 +31,7 @@ public class ProcessContentDefinition implements ISerializable {
         return this.handleTable;
     }
 
-    public StatusDefintion getStatus() {
+    public ProcessStatusDefintion getStatus() {
         return this.status;
     }
 

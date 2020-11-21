@@ -1,9 +1,10 @@
 plugins {
     java
     war
-    id("io.spring.dependency-management") version ("1.0.10.RELEASE")
     id("org.springframework.boot") version ("2.4.0")
 }
+
+apply(plugin = "io.spring.dependency-management")
 
 allprojects {
     group = "indi.sly.system"
@@ -30,6 +31,11 @@ dependencies {
 
 tasks.bootJar {
     enabled = true
+    mainClass.set("indi.sly.system.boot.SystemBoot")
+}
+
+tasks.compileJava {
+    options.encoding = "UTF-8"
 }
 
 tasks.jar {

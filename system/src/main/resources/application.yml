@@ -1,0 +1,31 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  banner:
+    location: classpath:logo.txt
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: "jdbc:sqlserver://;database=SlySystem;server=ShenLiyangHome"
+    username: "sa"
+    password: "s34+l510*y24"
+  task:
+    execution:
+      pool:
+        core-size: 16
+        keep-alive: 4s
+
+  jpa:
+    database: SQL_SERVER
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+

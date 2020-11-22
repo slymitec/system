@@ -38,7 +38,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setInfoCreate(this.processStatistics.getInfoCreate() + value);
+        this.processStatistics.offsetInfoCreate(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -58,7 +58,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setInfoGet(this.processStatistics.getInfoGet() + value);
+        this.processStatistics.offsetInfoGet(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -78,7 +78,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setInfoQuery(this.processStatistics.getInfoQuery() + value);
+        this.processStatistics.offsetInfoQuery(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -98,7 +98,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setInfoDelete(this.processStatistics.getInfoDelete() + value);
+        this.processStatistics.offsetInfoDelete(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -118,7 +118,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setInfoDump(this.processStatistics.getInfoDump() + value);
+        this.processStatistics.offsetInfoDump(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -138,7 +138,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setInfoOpen(this.processStatistics.getInfoOpen() + value);
+        this.processStatistics.offsetInfoOpen(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -158,7 +158,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setInfoClose(this.processStatistics.getInfoClose() + value);
+        this.processStatistics.offsetInfoClose(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -178,7 +178,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setInfoRead(this.processStatistics.getInfoRead() + value);
+        this.processStatistics.offsetInfoRead(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -198,7 +198,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setInfoWrite(this.processStatistics.getInfoWrite() + value);
+        this.processStatistics.offsetInfoWrite(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -218,7 +218,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setSharedReadCount(this.processStatistics.getSharedReadCount() + value);
+        this.processStatistics.offsetSharedReadCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -238,7 +238,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setSharedReadBytes(this.processStatistics.getSharedReadBytes() + value);
+        this.processStatistics.offsetSharedReadBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -258,7 +258,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setSharedWriteCount(this.processStatistics.getSharedWriteCount() + value);
+        this.processStatistics.offsetSharedWriteCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -278,7 +278,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setSharedWriteBytes(this.processStatistics.getSharedWriteBytes() + value);
+        this.processStatistics.offsetSharedWriteBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -298,7 +298,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setPipeReadCount(this.processStatistics.getPipeReadCount() + value);
+        this.processStatistics.offsetPipeReadCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -318,7 +318,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setPipeReadBytes(this.processStatistics.getPipeReadBytes() + value);
+        this.processStatistics.offsetPipeReadBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -338,7 +338,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setPipeWriteCount(this.processStatistics.getPipeWriteCount() + value);
+        this.processStatistics.offsetPipeWriteCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -358,7 +358,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setPipeWriteBytes(this.processStatistics.getPipeWriteBytes() + value);
+        this.processStatistics.offsetPipeWriteBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -378,7 +378,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setPortReadCount(this.processStatistics.getPortReadCount() + value);
+        this.processStatistics.offsetPortReadCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -398,7 +398,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setPortReadBytes(this.processStatistics.getPortReadBytes() + value);
+        this.processStatistics.offsetPortReadBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -418,7 +418,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setPortWriteCount(this.processStatistics.getPortWriteCount() + value);
+        this.processStatistics.offsetPortWriteCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -438,7 +438,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setPortWriteBytes(this.processStatistics.getPortWriteBytes() + value);
+        this.processStatistics.offsetPortWriteBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -458,7 +458,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setSignalReadCount(this.processStatistics.getSignalReadCount() + value);
+        this.processStatistics.offsetSignalReadCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -478,7 +478,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setSignalWriteCount(this.processStatistics.getSignalWriteCount() + value);
+        this.processStatistics.offsetSignalWriteCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -498,7 +498,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setIoCreate(this.processStatistics.getIoCreate() + value);
+        this.processStatistics.offsetIoCreate(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -518,7 +518,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setIoStatus(this.processStatistics.getIoStatus() + value);
+        this.processStatistics.offsetIoStatus(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -538,7 +538,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setIoReadCount(this.processStatistics.getIoReadCount() + value);
+        this.processStatistics.offsetIoReadCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -558,7 +558,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setIoReadBytes(this.processStatistics.getIoReadBytes() + value);
+        this.processStatistics.offsetIoReadBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -578,7 +578,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setIoWriteCount(this.processStatistics.getIoWriteCount() + value);
+        this.processStatistics.offsetIoWriteCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -598,7 +598,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.setIoWriteBytes(this.processStatistics.getIoWriteBytes() + value);
+        this.processStatistics.offsetIoWriteBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);

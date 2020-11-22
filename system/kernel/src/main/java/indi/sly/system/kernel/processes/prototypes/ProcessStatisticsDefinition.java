@@ -20,7 +20,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     private long infoWrite;
 
     public long getInfoCreate() {
-        return infoCreate;
+        return this.infoCreate;
+    }
+
+    public void offsetInfoCreate(long offset) {
+        this.infoCreate = this.infoCreate + offset;
     }
 
     public void setInfoCreate(long infoCreate) {
@@ -28,7 +32,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getInfoGet() {
-        return infoGet;
+        return this.infoGet;
+    }
+
+    public void offsetInfoGet(long offset) {
+        this.infoGet = this.infoGet + offset;
     }
 
     public void setInfoGet(long infoGet) {
@@ -36,7 +44,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getInfoQuery() {
-        return infoQuery;
+        return this.infoQuery;
+    }
+
+    public void offsetInfoQuery(long offset) {
+        this.infoQuery = this.infoQuery + offset;
     }
 
     public void setInfoQuery(long infoQuery) {
@@ -44,7 +56,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getInfoDelete() {
-        return infoDelete;
+        return this.infoDelete;
+    }
+
+    public void offsetInfoDelete(long offset) {
+        this.infoDelete = this.infoDelete + offset;
     }
 
     public void setInfoDelete(long infoDelete) {
@@ -52,7 +68,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getInfoDump() {
-        return infoDump;
+        return this.infoDump;
+    }
+
+    public void offsetInfoDump(long offset) {
+        this.infoDump = this.infoDump + offset;
     }
 
     public void setInfoDump(long infoDump) {
@@ -60,7 +80,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getInfoOpen() {
-        return infoOpen;
+        return this.infoOpen;
+    }
+
+    public void offsetInfoOpen(long offset) {
+        this.infoOpen = this.infoOpen + offset;
     }
 
     public void setInfoOpen(long infoOpen) {
@@ -68,7 +92,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getInfoClose() {
-        return infoClose;
+        return this.infoClose;
+    }
+
+    public void offsetInfoClose(long offset) {
+        this.infoClose = this.infoClose + offset;
     }
 
     public void setInfoClose(long infoClose) {
@@ -76,7 +104,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getInfoRead() {
-        return infoRead;
+        return this.infoRead;
+    }
+
+    public void offsetInfoRead(long offset) {
+        this.infoRead = this.infoRead + offset;
     }
 
     public void setInfoRead(long infoRead) {
@@ -84,7 +116,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getInfoWrite() {
-        return infoWrite;
+        return this.infoWrite;
+    }
+
+    public void offsetInfoWrite(long offset) {
+        this.infoWrite = this.infoWrite + offset;
     }
 
     public void setInfoWrite(long infoWrite) {
@@ -110,12 +146,20 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         return this.sharedReadCount;
     }
 
+    public void offsetSharedReadCount(long offset) {
+        this.sharedReadCount = this.sharedReadCount + offset;
+    }
+
     public void setSharedReadCount(long sharedReadCount) {
         this.sharedReadCount = sharedReadCount;
     }
 
     public long getSharedReadBytes() {
         return this.sharedReadBytes;
+    }
+
+    public void offsetSharedReadBytes(long offset) {
+        this.sharedReadBytes = this.sharedReadBytes + offset;
     }
 
     public void setSharedReadBytes(long sharedReadBytes) {
@@ -126,12 +170,20 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         return this.sharedWriteCount;
     }
 
+    public void offsetSharedWriteCount(long offset) {
+        this.sharedWriteCount = this.sharedWriteCount + offset;
+    }
+
     public void setSharedWriteCount(long sharedWriteCount) {
         this.sharedWriteCount = sharedWriteCount;
     }
 
     public long getSharedWriteBytes() {
         return this.sharedWriteBytes;
+    }
+
+    public void offsetSharedWriteBytes(long offset) {
+        this.sharedWriteBytes = this.sharedWriteBytes + offset;
     }
 
     public void setSharedWriteBytes(long sharedWriteBytes) {
@@ -142,12 +194,20 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         return this.pipeReadCount;
     }
 
+    public void offsetPipeReadCount(long offset) {
+        this.pipeReadCount = this.pipeReadCount + offset;
+    }
+
     public void setPipeReadCount(long pipeReadCount) {
         this.pipeReadCount = pipeReadCount;
     }
 
     public long getPipeReadBytes() {
         return this.pipeReadBytes;
+    }
+
+    public void offsetPipeReadBytes(long offset) {
+        this.pipeReadBytes = this.pipeReadBytes + offset;
     }
 
     public void setPipeReadBytes(long pipeReadBytes) {
@@ -158,12 +218,20 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         return this.pipeWriteCount;
     }
 
+    public void offsetPipeWriteCount(long offset) {
+        this.pipeWriteCount = this.pipeWriteCount + offset;
+    }
+
     public void setPipeWriteCount(long pipeWriteCount) {
         this.pipeWriteCount = pipeWriteCount;
     }
 
     public long getPipeWriteBytes() {
         return this.pipeWriteBytes;
+    }
+
+    public void offsetPipeWriteBytes(long offset) {
+        this.pipeWriteBytes = this.pipeWriteBytes + offset;
     }
 
     public void setPipeWriteBytes(long pipeWriteBytes) {
@@ -174,12 +242,20 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         return this.portReadCount;
     }
 
+    public void offsetPortReadCount(long offset) {
+        this.portReadCount = this.portReadCount + offset;
+    }
+
     public void setPortReadCount(long portReadCount) {
         this.portReadCount = portReadCount;
     }
 
     public long getPortReadBytes() {
         return this.portReadBytes;
+    }
+
+    public void offsetPortReadBytes(long offset) {
+        this.portReadBytes = this.portReadBytes + offset;
     }
 
     public void setPortReadBytes(long portReadBytes) {
@@ -190,12 +266,20 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         return this.portWriteCount;
     }
 
+    public void offsetPortWriteCount(long offset) {
+        this.portWriteCount = this.portWriteCount + offset;
+    }
+
     public void setPortWriteCount(long portWriteCount) {
         this.portWriteCount = portWriteCount;
     }
 
     public long getPortWriteBytes() {
         return this.portWriteBytes;
+    }
+
+    public void offsetPortWriteBytes(long offset) {
+        this.portWriteBytes = this.portWriteBytes + offset;
     }
 
     public void setPortWriteBytes(long portWriteBytes) {
@@ -206,12 +290,20 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         return this.signalReadCount;
     }
 
+    public void offsetSignalReadCount(long offset) {
+        this.signalReadCount = this.signalReadCount + offset;
+    }
+
     public void setSignalReadCount(long signalReadCount) {
         this.signalReadCount = signalReadCount;
     }
 
     public long getSignalWriteCount() {
         return this.signalWriteCount;
+    }
+
+    public void offsetSignalWriteCount(long offset) {
+        this.signalWriteCount = this.signalWriteCount + offset;
     }
 
     public void setSignalWriteCount(long signalWriteCount) {
@@ -226,7 +318,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     private long ioWriteBytes;
 
     public long getIoCreate() {
-        return ioCreate;
+        return this.ioCreate;
+    }
+
+    public void offsetIoCreate(long offset) {
+        this.ioCreate = this.ioCreate + offset;
     }
 
     public void setIoCreate(long ioCreate) {
@@ -234,7 +330,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getIoStatus() {
-        return ioStatus;
+        return this.ioStatus;
+    }
+
+    public void offsetIoStatus(long offset) {
+        this.ioStatus = this.ioStatus + offset;
     }
 
     public void setIoStatus(long ioStatus) {
@@ -242,7 +342,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getIoReadCount() {
-        return ioReadCount;
+        return this.ioReadCount;
+    }
+
+    public void offsetIoReadCount(long offset) {
+        this.ioReadCount = this.ioReadCount + offset;
     }
 
     public void setIoReadCount(long ioReadCount) {
@@ -250,7 +354,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getIoReadBytes() {
-        return ioReadBytes;
+        return this.ioReadBytes;
+    }
+
+    public void offsetIoReadBytes(long offset) {
+        this.ioReadBytes = this.ioReadBytes + offset;
     }
 
     public void setIoReadBytes(long ioReadBytes) {
@@ -258,7 +366,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getIoWriteCount() {
-        return ioWriteCount;
+        return this.ioWriteCount;
+    }
+
+    public void offsetIoWriteCount(long offset) {
+        this.ioWriteCount = this.ioWriteCount + offset;
     }
 
     public void setIoWriteCount(long ioWriteCount) {
@@ -266,7 +378,11 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     }
 
     public long getIoWriteBytes() {
-        return ioWriteBytes;
+        return this.ioWriteBytes;
+    }
+
+    public void offsetIoWriteBytes(long offset) {
+        this.ioWriteBytes = this.ioWriteBytes + offset;
     }
 
     public void setIoWriteBytes(long ioWriteBytes) {

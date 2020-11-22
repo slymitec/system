@@ -8,17 +8,18 @@ import java.util.Map.Entry;
 
 import indi.sly.system.common.exceptions.StatusAlreadyExistedException;
 import indi.sly.system.common.exceptions.StatusNotExistedException;
+import indi.sly.system.common.support.IDeepCloneable;
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.NumberUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 
-public class ProcessHandleTableDefinition implements ISerializable {
-    private final Map<UUID, ProcessHandleEntryDefinition> handleTable;
-
+public class ProcessHandleTableDefinition implements ISerializable<ProcessHandleTableDefinition> {
     public ProcessHandleTableDefinition() {
         this.handleTable = new Hashtable<>();
     }
+
+    private final Map<UUID, ProcessHandleEntryDefinition> handleTable;
 
     public int size() {
         return this.handleTable.size();
@@ -60,6 +61,33 @@ public class ProcessHandleTableDefinition implements ISerializable {
 
     public Set<UUID> list() {
         return Collections.unmodifiableSet(this.handleTable.keySet());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProcessHandleTableDefinition that = (ProcessHandleTableDefinition) o;
+        return handleTable.equals(that.handleTable);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(handleTable);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return this.deepClone();
+    }
+
+    @Override
+    public ProcessHandleTableDefinition deepClone() {
+        ProcessHandleTableDefinition processHandleTable = new ProcessHandleTableDefinition();
+
+        processHandleTable.handleTable.putAll(this.handleTable);
+
+        return processHandleTable;
     }
 
     @Override

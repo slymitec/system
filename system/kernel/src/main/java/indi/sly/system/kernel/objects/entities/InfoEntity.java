@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.objects.entities;
 
-import indi.sly.system.common.support.IDeepCloneable;
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.*;
 
@@ -14,7 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "KernelInfos")
-public class InfoEntity implements IDeepCloneable<InfoEntity>, ISerializable {
+public class InfoEntity implements ISerializable<InfoEntity> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -139,6 +138,28 @@ public class InfoEntity implements IDeepCloneable<InfoEntity>, ISerializable {
     }
 
     @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return this.deepClone();
+    }
+
+    @Override
+    public InfoEntity deepClone() {
+        InfoEntity info = new InfoEntity();
+
+        info.id = this.id;
+        info.type = this.type;
+        info.occupied = this.occupied;
+        info.opened = this.opened;
+        info.name = this.name;
+        info.date = ArrayUtils.copyBytes(this.date);
+        info.securityDescriptor = ArrayUtils.copyBytes(this.securityDescriptor);
+        info.properties = ArrayUtils.copyBytes(this.properties);
+        info.content = ArrayUtils.copyBytes(this.content);
+
+        return info;
+    }
+
+    @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         this.id = UUIDUtils.readExternal(in);
         this.type = UUIDUtils.readExternal(in);
@@ -162,27 +183,5 @@ public class InfoEntity implements IDeepCloneable<InfoEntity>, ISerializable {
         NumberUtils.writeExternalBytes(out, this.securityDescriptor);
         NumberUtils.writeExternalBytes(out, this.properties);
         NumberUtils.writeExternalBytes(out, this.content);
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
-    public InfoEntity deepClone() {
-        InfoEntity info = new InfoEntity();
-
-        info.id = this.id;
-        info.type = this.type;
-        info.occupied = this.occupied;
-        info.opened = this.opened;
-        info.name = this.name;
-        info.date = ArrayUtils.copyBytes(this.date);
-        info.securityDescriptor = ArrayUtils.copyBytes(this.securityDescriptor);
-        info.properties = ArrayUtils.copyBytes(this.properties);
-        info.content = ArrayUtils.copyBytes(this.content);
-
-        return info;
     }
 }

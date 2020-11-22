@@ -7,7 +7,7 @@ import java.io.ObjectOutput;
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.NumberUtils;
 
-public class StatisticsDefinition implements ISerializable {
+public class StatisticsDefinition implements ISerializable<StatisticsDefinition> {
     private long infoCreate;
     private long infoGet;
     private long infoQuery;
@@ -241,5 +241,10 @@ public class StatisticsDefinition implements ISerializable {
         NumberUtils.writeExternalLong(out, this.ioWriteCount);
         NumberUtils.writeExternalLong(out, this.ioWriteBytes);
         NumberUtils.writeExternalLong(out, this.ioException);
+    }
+
+    @Override
+    public StatisticsDefinition deepClone() {
+        return null;
     }
 }

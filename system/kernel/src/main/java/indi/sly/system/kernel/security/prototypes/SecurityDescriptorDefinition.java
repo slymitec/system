@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.security.prototypes;
 
-import indi.sly.system.common.support.IDeepCloneable;
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.NumberUtils;
 import indi.sly.system.common.utility.UUIDUtils;
@@ -11,7 +10,7 @@ import java.io.ObjectOutput;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class SecurityDescriptorDefinition implements IDeepCloneable<SecurityDescriptorDefinition>, ISerializable {
+public class SecurityDescriptorDefinition implements ISerializable<SecurityDescriptorDefinition> {
     private static final long serialVersionUID = 1L;
 
     private boolean inherit;
@@ -93,9 +92,9 @@ public class SecurityDescriptorDefinition implements IDeepCloneable<SecurityDesc
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        int valueInteger;
-
         this.inherit = NumberUtils.readExternalBoolean(in);
+
+        int valueInteger;
 
         valueInteger = NumberUtils.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {

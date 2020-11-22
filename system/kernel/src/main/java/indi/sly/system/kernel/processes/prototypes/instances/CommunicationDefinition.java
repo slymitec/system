@@ -6,9 +6,10 @@ import indi.sly.system.common.utility.UUIDUtils;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Objects;
 import java.util.UUID;
 
-public class CommunicationDefinition implements ISerializable {
+public class CommunicationDefinition implements ISerializable<CommunicationDefinition> {
     private UUID fromDebug;
     private UUID fromException;
     private UUID toDebug;
@@ -44,6 +45,32 @@ public class CommunicationDefinition implements ISerializable {
 
     public void setToException(UUID toException) {
         this.toException = toException;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CommunicationDefinition that = (CommunicationDefinition) o;
+        return Objects.equals(fromDebug, that.fromDebug) &&
+                Objects.equals(fromException, that.fromException) &&
+                Objects.equals(toDebug, that.toDebug) &&
+                Objects.equals(toException, that.toException);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fromDebug, fromException, toDebug, toException);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return this.deepClone();
+    }
+
+    @Override
+    public CommunicationDefinition deepClone() {
+        return null;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.objects.entities;
 
-import indi.sly.system.common.support.IDeepCloneable;
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
@@ -14,7 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "KernelInfoRelations")
-public class InfoRelationEntity implements IDeepCloneable<InfoRelationEntity>, ISerializable {
+public class InfoRelationEntity implements ISerializable<InfoRelationEntity> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -79,22 +78,6 @@ public class InfoRelationEntity implements IDeepCloneable<InfoRelationEntity>, I
     }
 
     @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.id = UUIDUtils.readExternal(in);
-        this.parentID = UUIDUtils.readExternal(in);
-        this.type = UUIDUtils.readExternal(in);
-        this.name = StringUtils.readExternal(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.id);
-        UUIDUtils.writeExternal(out, this.parentID);
-        UUIDUtils.writeExternal(out, this.type);
-        StringUtils.writeExternal(out, this.name);
-    }
-
-    @Override
     protected Object clone() throws CloneNotSupportedException {
         return this.deepClone();
     }
@@ -109,5 +92,21 @@ public class InfoRelationEntity implements IDeepCloneable<InfoRelationEntity>, I
         infoRelation.name = this.name;
 
         return infoRelation;
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        this.id = UUIDUtils.readExternal(in);
+        this.parentID = UUIDUtils.readExternal(in);
+        this.type = UUIDUtils.readExternal(in);
+        this.name = StringUtils.readExternal(in);
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        UUIDUtils.writeExternal(out, this.id);
+        UUIDUtils.writeExternal(out, this.parentID);
+        UUIDUtils.writeExternal(out, this.type);
+        StringUtils.writeExternal(out, this.name);
     }
 }

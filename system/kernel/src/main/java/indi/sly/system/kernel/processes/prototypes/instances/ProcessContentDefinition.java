@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-public class ProcessContentDefinition implements ISerializable {
+public class ProcessContentDefinition implements ISerializable<ProcessContentDefinition> {
     public ProcessContentDefinition() {
         this.handleTable = new ProcessHandleTableDefinition();
         this.communication = new CommunicationDefinition();
@@ -43,6 +43,15 @@ public class ProcessContentDefinition implements ISerializable {
         return this.token;
     }
 
+    @Override
+    public Object clone() {
+        return this.deepClone();
+    }
+
+    @Override
+    public ProcessContentDefinition deepClone() {
+        return null;
+    }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -51,4 +60,5 @@ public class ProcessContentDefinition implements ISerializable {
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
     }
+
 }

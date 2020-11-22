@@ -12,7 +12,7 @@ import java.io.ObjectOutput;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class ProcessHandleEntryDefinition implements ISerializable {
+public class ProcessHandleEntryDefinition implements ISerializable<ProcessHandleEntryDefinition> {
     private final Map<Long, Long> date;
     private final List<Identification> identifications;
     private InfoStatusOpenDefinition open;
@@ -26,7 +26,6 @@ public class ProcessHandleEntryDefinition implements ISerializable {
         return this.date;
     }
 
-
     public List<Identification> getIdentifications() {
         return this.identifications;
     }
@@ -37,6 +36,37 @@ public class ProcessHandleEntryDefinition implements ISerializable {
 
     public void setOpen(InfoStatusOpenDefinition open) {
         this.open = open;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProcessHandleEntryDefinition that = (ProcessHandleEntryDefinition) o;
+        return date.equals(that.date) &&
+                identifications.equals(that.identifications) &&
+                Objects.equals(open, that.open);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, identifications, open);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return this.deepClone();
+    }
+
+    @Override
+    public ProcessHandleEntryDefinition deepClone() {
+        ProcessHandleEntryDefinition processHandleEntry = new ProcessHandleEntryDefinition();
+
+        processHandleEntry.date.putAll(this.date);
+        processHandleEntry.identifications.addAll(this.identifications);
+        processHandleEntry.open = this.open.deepClone();
+
+        return processHandleEntry;
     }
 
     @Override

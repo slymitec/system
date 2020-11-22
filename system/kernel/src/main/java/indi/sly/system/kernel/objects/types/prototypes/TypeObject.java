@@ -48,13 +48,13 @@ public class TypeObject extends ACoreObject {
 
     public void addTotalOccupiedCount() {
         synchronized (this.type) {
-            this.type.getCounter().setTotalOccupiedCount(this.type.getCounter().getTotalOccupiedCount() + 1);
+            this.type.getCounter().offsetTotalOccupiedCount(1);
         }
     }
 
     public void minusTotalOccupiedCount() {
         synchronized (this.type) {
-            this.type.getCounter().setTotalOccupiedCount(this.type.getCounter().getTotalOccupiedCount() - 1);
+            this.type.getCounter().offsetTotalOccupiedCount(-1);
         }
     }
 }

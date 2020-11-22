@@ -6,8 +6,9 @@ import indi.sly.system.common.utility.NumberUtils;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Objects;
 
-public class ProcessStatisticsDefinition implements ISerializable {
+public class ProcessStatisticsDefinition implements ISerializable<ProcessStatisticsDefinition> {
     private long infoCreate;
     private long infoGet;
     private long infoQuery;
@@ -270,6 +271,95 @@ public class ProcessStatisticsDefinition implements ISerializable {
 
     public void setIoWriteBytes(long ioWriteBytes) {
         this.ioWriteBytes = ioWriteBytes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProcessStatisticsDefinition that = (ProcessStatisticsDefinition) o;
+        return infoCreate == that.infoCreate &&
+                infoGet == that.infoGet &&
+                infoQuery == that.infoQuery &&
+                infoDelete == that.infoDelete &&
+                infoDump == that.infoDump &&
+                infoOpen == that.infoOpen &&
+                infoClose == that.infoClose &&
+                infoRead == that.infoRead &&
+                infoWrite == that.infoWrite &&
+                sharedReadCount == that.sharedReadCount &&
+                sharedReadBytes == that.sharedReadBytes &&
+                sharedWriteCount == that.sharedWriteCount &&
+                sharedWriteBytes == that.sharedWriteBytes &&
+                pipeReadCount == that.pipeReadCount &&
+                pipeReadBytes == that.pipeReadBytes &&
+                pipeWriteCount == that.pipeWriteCount &&
+                pipeWriteBytes == that.pipeWriteBytes &&
+                portReadCount == that.portReadCount &&
+                portReadBytes == that.portReadBytes &&
+                portWriteCount == that.portWriteCount &&
+                portWriteBytes == that.portWriteBytes &&
+                signalReadCount == that.signalReadCount &&
+                signalWriteCount == that.signalWriteCount &&
+                ioCreate == that.ioCreate &&
+                ioStatus == that.ioStatus &&
+                ioReadCount == that.ioReadCount &&
+                ioReadBytes == that.ioReadBytes &&
+                ioWriteCount == that.ioWriteCount &&
+                ioWriteBytes == that.ioWriteBytes;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(infoCreate, infoGet, infoQuery, infoDelete, infoDump, infoOpen, infoClose, infoRead,
+                infoWrite, sharedReadCount, sharedReadBytes, sharedWriteCount, sharedWriteBytes, pipeReadCount,
+                pipeReadBytes, pipeWriteCount, pipeWriteBytes, portReadCount, portReadBytes, portWriteCount,
+                portWriteBytes, signalReadCount, signalWriteCount, ioCreate, ioStatus, ioReadCount, ioReadBytes,
+                ioWriteCount, ioWriteBytes);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return this.deepClone();
+    }
+
+    @Override
+    public ProcessStatisticsDefinition deepClone() {
+        ProcessStatisticsDefinition processStatistics = new ProcessStatisticsDefinition();
+
+        processStatistics.infoCreate = this.infoCreate;
+        processStatistics.infoGet = this.infoGet;
+        processStatistics.infoQuery = this.infoQuery;
+        processStatistics.infoDelete = this.infoDelete;
+        processStatistics.infoDump = this.infoDump;
+        processStatistics.infoOpen = this.infoOpen;
+        processStatistics.infoClose = this.infoClose;
+        processStatistics.infoRead = this.infoRead;
+        processStatistics.infoWrite = this.infoWrite;
+
+        processStatistics.sharedReadCount = this.sharedReadCount;
+        processStatistics.sharedReadBytes = this.sharedReadBytes;
+        processStatistics.sharedWriteCount = this.sharedWriteCount;
+        processStatistics.sharedWriteBytes = this.sharedWriteBytes;
+        processStatistics.pipeReadCount = this.pipeReadCount;
+        processStatistics.pipeReadBytes = this.pipeReadBytes;
+        processStatistics.pipeWriteCount = this.pipeWriteCount;
+        processStatistics.pipeWriteBytes = this.pipeWriteBytes;
+        processStatistics.portReadCount = this.portReadCount;
+        processStatistics.portReadBytes = this.portReadBytes;
+        processStatistics.portWriteCount = this.portWriteCount;
+        processStatistics.portWriteBytes = this.portWriteBytes;
+        processStatistics.signalReadCount = this.signalReadCount;
+        processStatistics.signalWriteCount = this.signalWriteCount;
+
+        processStatistics.ioCreate = this.ioCreate;
+        processStatistics.ioStatus = this.ioStatus;
+        processStatistics.ioReadCount = this.ioReadCount;
+        processStatistics.ioReadBytes = this.ioReadBytes;
+        processStatistics.ioWriteCount = this.ioWriteCount;
+        processStatistics.ioWriteBytes = this.ioWriteBytes;
+
+        return processStatistics;
     }
 
     @Override

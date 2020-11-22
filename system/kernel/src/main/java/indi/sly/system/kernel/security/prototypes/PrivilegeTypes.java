@@ -2,8 +2,9 @@ package indi.sly.system.kernel.security.prototypes;
 
 public interface PrivilegeTypes {
     long NULL = 0;
+    long FULL = -1L;
 
-    long CORE_MODIFY_PRIVILEGES = -1L;
+    long CORE_MODIFY_PRIVILEGES = PrivilegeTypes.FULL;
     long CORE_MODIFY_DATETIME = 1L;
     long MEMORY_CACHE_MODIFYKERNELSPACECACHE = 1L << 2;
     long OBJECTS_ACCESS_INFOOBJECTS = 1L << 3;

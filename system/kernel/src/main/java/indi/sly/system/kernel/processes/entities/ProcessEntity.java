@@ -19,18 +19,18 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "KernelProcesses")
-public class ProcessEntity implements IDeepCloneable<ProcessEntity>, ISerializable {
+public class ProcessEntity implements ISerializable<ProcessEntity> {
     private static final long serialVersionUID = 1L;
 
     @Id
     @Column(columnDefinition = "uniqueidentifier", name = "ID", nullable = false, updatable = false)
     protected UUID id;
     @Column(name = "Status", nullable = false)
-    private long status;
+    protected long status;
     @Column(columnDefinition = "uniqueidentifier", name = "ParentProcessID", nullable = true)
-    private UUID parentProcessID;
+    protected UUID parentProcessID;
     @Column(columnDefinition = "uniqueidentifier", name = "SessionID", nullable = true)
-    private UUID sessionID;
+    protected UUID sessionID;
     @Column(length = 4096, name = "Communication", nullable = false)
     protected byte[] communication;
     @Column(length = 4096, name = "HandleTable", nullable = false)
@@ -129,6 +129,26 @@ public class ProcessEntity implements IDeepCloneable<ProcessEntity>, ISerializab
         return result;
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return this.deepClone();
+    }
+
+    @Override
+    public ProcessEntity deepClone() {
+        ProcessEntity process = new ProcessEntity();
+
+        process.id = this.id;
+        process.status = this.status;
+        process.parentProcessID = this.parentProcessID;
+        process.sessionID = this.sessionID;
+        process.communication = ArrayUtils.copyBytes(this.communication);
+        process.handleTable = ArrayUtils.copyBytes(this.handleTable);
+        process.statistics = ArrayUtils.copyBytes(this.statistics);
+        process.token = ArrayUtils.copyBytes(this.token);
+
+        return process;
+    }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -152,26 +172,5 @@ public class ProcessEntity implements IDeepCloneable<ProcessEntity>, ISerializab
         NumberUtils.writeExternalBytes(out, this.handleTable);
         NumberUtils.writeExternalBytes(out, this.statistics);
         NumberUtils.writeExternalBytes(out, this.token);
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
-    public ProcessEntity deepClone() {
-        ProcessEntity process = new ProcessEntity();
-
-        process.id = this.id;
-        process.status = this.status;
-        process.parentProcessID = this.parentProcessID;
-        process.sessionID = this.sessionID;
-        process.communication = ArrayUtils.copyBytes(this.communication);
-        process.handleTable = ArrayUtils.copyBytes(this.handleTable);
-        process.statistics = ArrayUtils.copyBytes(this.statistics);
-        process.token = ArrayUtils.copyBytes(this.token);
-
-        return process;
     }
 }

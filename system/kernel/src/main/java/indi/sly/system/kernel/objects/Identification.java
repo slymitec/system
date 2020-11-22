@@ -15,7 +15,7 @@ import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 
-public final class Identification implements IDeepCloneable<Identification>, ISerializable {
+public final class Identification implements ISerializable<Identification> {
     private byte[] id;
     private Class<?> type;
 

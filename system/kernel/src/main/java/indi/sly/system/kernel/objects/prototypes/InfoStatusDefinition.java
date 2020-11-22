@@ -5,6 +5,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import indi.sly.system.common.support.ISerializable;
@@ -51,6 +52,39 @@ public class InfoStatusDefinition implements ISerializable {
 
     public void setOpen(InfoStatusOpenDefinition open) {
         this.open = open;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InfoStatusDefinition that = (InfoStatusDefinition) o;
+        return identifications.equals(that.identifications) &&
+                Objects.equals(parentID, that.parentID) &&
+                Objects.equals(handle, that.handle) &&
+                open.equals(that.open);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(identifications, parentID, handle, open);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return this.deepClone();
+    }
+
+    @Override
+    public InfoStatusDefinition deepClone() {
+        InfoStatusDefinition infoStatus = new InfoStatusDefinition();
+
+        infoStatus.identifications.addAll(this.identifications);
+        infoStatus.parentID = this.parentID;
+        infoStatus.handle = this.handle;
+        infoStatus.open = this.open.deepClone();
+
+        return infoStatus;
     }
 
     @Override

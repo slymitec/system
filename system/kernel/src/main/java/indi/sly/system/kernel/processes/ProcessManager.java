@@ -61,7 +61,11 @@ public class ProcessManager extends AManager {
 
     public ProcessObject getProcess(UUID processID) {
         ProcessObject currentProcess = this.getCurrentProcess();
+        if (currentProcess.getID().equals(processID)) {
+            return currentProcess;
+        }
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
+
         ProcessObject process = this.getTargetProcess(processID);
         ProcessTokenObject processToken = process.getToken();
 
@@ -79,14 +83,12 @@ public class ProcessManager extends AManager {
         process.setID(UUID.randomUUID());
         process.setParentProcessID(currentProcess.getID());
         process.setSessionID(currentProcess.getSessionID());
-        ProcessHandleTableDefinition processHandleTable =new ProcessHandleTableDefinition();
+        ProcessHandleTableDefinition processHandleTable = new ProcessHandleTableDefinition();
         process.setHandleTable(ObjectUtils.transferToByteArray(processHandleTable));
         ProcessStatisticsDefinition processStatistics = new ProcessStatisticsDefinition();
         process.setStatistics(ObjectUtils.transferToByteArray(processStatistics));
         ProcessTokenDefinition processToken = new ProcessTokenDefinition();
         process.setToken(ObjectUtils.transferToByteArray(processToken));
-
-
 
 
         //...

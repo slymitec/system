@@ -19,11 +19,13 @@ public class ProcessContextDefinition implements ISerializable<ProcessContextDef
     public ProcessContextDefinition() {
         this.environmentVariable = new HashMap<>();
         this.workFolder = new ArrayList<>();
+        this.parameters = new HashMap<>();
         this.appContext = new AppContextDefinition();
     }
 
     private final Map<String, String> environmentVariable;
     private final List<Identification> workFolder;
+    private final Map<String, String> parameters;
     private AppContextDefinition appContext;
 
     public Map<String, String> getEnvironmentVariable() {
@@ -33,6 +35,12 @@ public class ProcessContextDefinition implements ISerializable<ProcessContextDef
     public List<Identification> getWorkFolder() {
         return this.workFolder;
     }
+
+    public Map<String, String> getParameters() {
+        return this.parameters;
+    }
+
+    //
 
     public AppContextDefinition getAppContext() {
         return this.appContext;
@@ -53,6 +61,7 @@ public class ProcessContextDefinition implements ISerializable<ProcessContextDef
 
         processContext.environmentVariable.putAll(this.environmentVariable);
         processContext.workFolder.addAll(this.workFolder);
+        processContext.parameters.putAll(this.parameters);
         processContext.appContext = this.appContext.deepClone();
 
         return processContext;
@@ -72,6 +81,11 @@ public class ProcessContextDefinition implements ISerializable<ProcessContextDef
             this.workFolder.add(ObjectUtils.readExternal(in));
         }
 
+        valueInteger = NumberUtils.readExternalInteger(in);
+        for (int i = 0; i < valueInteger; i++) {
+            this.parameters.put(StringUtils.readExternal(in), StringUtils.readExternal(in));
+        }
+
         this.appContext = ObjectUtils.readExternal(in);
     }
 
@@ -86,6 +100,12 @@ public class ProcessContextDefinition implements ISerializable<ProcessContextDef
         NumberUtils.writeExternalInteger(out, this.workFolder.size());
         for (Identification pair : this.workFolder) {
             ObjectUtils.writeExternal(out, pair);
+        }
+
+        NumberUtils.writeExternalInteger(out, this.parameters.size());
+        for (Map.Entry<String, String> pair : this.parameters.entrySet()) {
+            StringUtils.writeExternal(out, pair.getKey());
+            StringUtils.writeExternal(out, pair.getValue());
         }
 
         ObjectUtils.writeExternal(out, this.appContext);

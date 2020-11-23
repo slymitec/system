@@ -26,17 +26,17 @@ public class ProcessContextObject extends ABytesProcessObject {
 
     private ProcessContextDefinition processContext;
 
-    public Map<String, String> getEnvironmentVariable() {
-        this.init();
-
-        return processContext.getEnvironmentVariable();
-    }
-
-    public List<Identification> getWorkFolder() {
-        this.init();
-
-        return processContext.getWorkFolder();
-    }
+//    public Map<String, String> getEnvironmentVariable() {
+//        this.init();
+//
+//        return processContext.getEnvironmentVariable();
+//    }
+//
+//    public List<Identification> getWorkFolder() {
+//        this.init();
+//
+//        return processContext.getWorkFolder();
+//    }
 
     //need object
     public AppContextDefinition getAppContext() {

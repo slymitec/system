@@ -30,9 +30,7 @@ public class StatusCheckProcessor extends ACoreObject implements IProcessObjectP
     private final Consumer2<ProcessEntity, byte[]> writeProcessToken;
 
     public StatusCheckProcessor() {
-        this.readProcessStatus = (status, process) -> {
-            return status;
-        };
+        this.readProcessStatus = (status, process) -> status;
         this.writeProcessStatus = (process, status) -> {
             if (!LogicalUtils.isAnyEqual(status, ProcessStatusTypes.INITIALIZATION,
                     ProcessStatusTypes.RUNNING, ProcessStatusTypes.INTERRUPTED, ProcessStatusTypes.DIED)) {

@@ -46,6 +46,126 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.NONE);
     }
 
+    public long getStatusCumulation() {
+        this.init();
+
+        return this.processStatistics.getStatusCumulation();
+    }
+
+    public void addStatusCumulation(long value) {
+        if (value < 0) {
+            throw new ConditionParametersException();
+        }
+
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        this.processStatistics.offsetStatusCumulation(value);
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
+    }
+
+    public long getThreadCumulation() {
+        this.init();
+
+        return this.processStatistics.getThreadCumulation();
+    }
+
+    public void addThreadCumulation(long value) {
+        if (value < 0) {
+            throw new ConditionParametersException();
+        }
+
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        this.processStatistics.offsetThreadCumulation(value);
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
+    }
+
+    public long getPipeCumulation() {
+        this.init();
+
+        return this.processStatistics.getPipeCumulation();
+    }
+
+    public void addPipeCumulation(long value) {
+        if (value < 0) {
+            throw new ConditionParametersException();
+        }
+
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        this.processStatistics.offsetPipeCumulation(value);
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
+    }
+
+    public long getPortCumulation() {
+        this.init();
+
+        return this.processStatistics.getPortCumulation();
+    }
+
+    public void addPortCumulation(long value) {
+        if (value < 0) {
+            throw new ConditionParametersException();
+        }
+
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        this.processStatistics.offsetPortCumulation(value);
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
+    }
+
+    public long getSignalCumulation() {
+        this.init();
+
+        return this.processStatistics.getSignalCumulation();
+    }
+
+    public void addSignalCumulation(long value) {
+        if (value < 0) {
+            throw new ConditionParametersException();
+        }
+
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        this.processStatistics.offsetSignalCumulation(value);
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
+    }
+
+    public long getHandleCumulation() {
+        this.init();
+
+        return this.processStatistics.getHandleCumulation();
+    }
+
+    public void addHandleCumulation(long value) {
+        if (value < 0) {
+            throw new ConditionParametersException();
+        }
+
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        this.processStatistics.offsetHandleCumulation(value);
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
+    }
+
     public long getInfoCreate() {
         this.init();
 

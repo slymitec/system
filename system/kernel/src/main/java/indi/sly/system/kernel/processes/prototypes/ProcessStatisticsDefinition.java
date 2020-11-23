@@ -21,6 +21,85 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         return this.date;
     }
 
+    private long statusCumulation;
+    private long threadCumulation;
+    private long pipeCumulation;
+    private long portCumulation;
+    private long signalCumulation;
+    private long handleCumulation;
+
+    public long getStatusCumulation() {
+        return this.statusCumulation;
+    }
+
+    public void offsetStatusCumulation(long offset) {
+        this.statusCumulation = this.statusCumulation + offset;
+    }
+
+    public void setStatusCumulation(long statusCumulation) {
+        this.statusCumulation = statusCumulation;
+    }
+
+    public long getThreadCumulation() {
+        return this.threadCumulation;
+    }
+
+    public void offsetThreadCumulation(long offset) {
+        this.threadCumulation = this.threadCumulation + offset;
+    }
+
+    public void setThreadCumulation(long threadCumulation) {
+        this.threadCumulation = threadCumulation;
+    }
+
+    public long getPipeCumulation() {
+        return this.pipeCumulation;
+    }
+
+    public void offsetPipeCumulation(long offset) {
+        this.pipeCumulation = this.pipeCumulation + offset;
+    }
+
+    public void setPipeCumulation(long pipeCumulation) {
+        this.pipeCumulation = pipeCumulation;
+    }
+
+    public long getPortCumulation() {
+        return this.portCumulation;
+    }
+
+    public void offsetPortCumulation(long offset) {
+        this.portCumulation = this.portCumulation + offset;
+    }
+
+    public void setPortCumulation(long portCumulation) {
+        this.portCumulation = portCumulation;
+    }
+
+    public long getSignalCumulation() {
+        return this.signalCumulation;
+    }
+
+    public void offsetSignalCumulation(long offset) {
+        this.signalCumulation = this.signalCumulation + offset;
+    }
+
+    public void setSignalCumulation(long signalCumulation) {
+        this.signalCumulation = signalCumulation;
+    }
+
+    public long getHandleCumulation() {
+        return this.handleCumulation;
+    }
+
+    public void offsetHandleCumulation(long offset) {
+        this.handleCumulation = this.handleCumulation + offset;
+    }
+
+    public void setHandleCumulation(long handleCumulation) {
+        this.handleCumulation = handleCumulation;
+    }
+
     private long infoCreate;
     private long infoGet;
     private long infoQuery;

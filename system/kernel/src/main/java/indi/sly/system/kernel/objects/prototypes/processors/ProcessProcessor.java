@@ -51,6 +51,7 @@ public class ProcessProcessor extends ACoreObject implements IInfoObjectProcesso
             handle = processHandleTable.addInfo(status);
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
+            processStatistics.addHandleCumulation(1);
             processStatistics.addInfoOpen(1);
 
             return handle;
@@ -148,7 +149,8 @@ public class ProcessProcessor extends ACoreObject implements IInfoObjectProcesso
     private final Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, InfoStatusDefinition> dump;
     private final Function6<UUID, UUID, InfoEntity, TypeObject, InfoStatusDefinition, Long, Object[]> open;
     private final Consumer3<InfoEntity, TypeObject, InfoStatusDefinition> close;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID, Identification> createChildAndOpen;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID,
+            Identification> createChildAndOpen;
     private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, Identification,
             InfoStatusOpenDefinition> getOrRebuildChild;
     private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Identification> deleteChild;

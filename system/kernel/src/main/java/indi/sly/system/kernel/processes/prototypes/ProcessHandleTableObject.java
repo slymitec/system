@@ -40,6 +40,12 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
         return Collections.unmodifiableMap(processHandleEntry.getDate());
     }
 
+    public synchronized Set<UUID> list() {
+        this.init();
+
+        return this.processHandleTable.list();
+    }
+
     public synchronized InfoObject getInfo(UUID handle) {
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,

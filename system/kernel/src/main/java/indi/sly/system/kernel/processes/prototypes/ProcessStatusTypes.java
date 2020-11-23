@@ -1,9 +1,11 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 public interface ProcessStatusTypes {
-    long INITIALIZATION = 0l;
-    long RUNNING = 1L;
-    long INTERRUPTED = 2L;
-    long DIED = 3L;
+    long NULL = 0L;
+    long INITIALIZATION = 1l;
+    long RUNNING = 2L;
+    long INTERRUPTED = 3L;
+    long DIED = 4L;
+    long ZOMBIE = 5L;
 
 }

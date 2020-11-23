@@ -29,7 +29,9 @@ public class InfoObjectFactoryObject extends ACoreObject {
     public void initInfoObjectFactory() {
         this.infoObjectProcessors = new ConcurrentSkipListSet<>();
 
-        Set<ACoreObject> coreObjects = this.factoryManager.getCoreObjectRepository().getByImplementInterface(SpaceTypes.KERNEL, IInfoObjectProcessor.class);
+        Set<ACoreObject> coreObjects =
+                this.factoryManager.getCoreObjectRepository().getByImplementInterface(SpaceTypes.KERNEL,
+                        IInfoObjectProcessor.class);
 
         for (ACoreObject pair : coreObjects) {
             if (pair instanceof IInfoObjectProcessor) {
@@ -40,8 +42,10 @@ public class InfoObjectFactoryObject extends ACoreObject {
 
     public InfoObject buildRootInfoObject() {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID);
-        InfoEntity infoEntity = infoRepository.get(this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
+        AInfoRepositoryObject infoRepository =
+                memoryManager.getInfoRepository(this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID);
+        InfoEntity infoEntity =
+                infoRepository.get(this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
 
         InfoObjectProcessorRegister processorRegister = new InfoObjectProcessorRegister();
         for (IInfoObjectProcessor pair : this.infoObjectProcessors) {
@@ -55,9 +59,11 @@ public class InfoObjectFactoryObject extends ACoreObject {
 
         InfoObject infoObject = this.factoryManager.create(InfoObject.class);
 
+        infoObject.factory = this;
         infoObject.processorRegister = processorRegister;
         infoObject.id = this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID;
-        infoObject.poolID = this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID;
+        infoObject.poolID =
+                this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID;
         infoObject.status = status;
 
         return infoObject;
@@ -95,6 +101,7 @@ public class InfoObjectFactoryObject extends ACoreObject {
 
         InfoObject infoObject = this.factoryManager.create(InfoObject.class);
 
+        infoObject.factory = this;
         infoObject.processorRegister = infoObjectProcessorRegister;
         infoObject.id = info.getID();
         infoObject.poolID = poolID;

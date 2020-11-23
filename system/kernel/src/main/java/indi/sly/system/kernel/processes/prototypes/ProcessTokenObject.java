@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.ConditionPermissionsException;
+import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.ObjectUtils;
@@ -55,6 +56,10 @@ public class ProcessTokenObject extends ABytesProcessObject {
     }
 
     public void inheritAccountID() {
+        if (this.process.getStatus().get() != ProcessStatusTypes.INITIALIZATION) {
+            throw new StatusRelationshipErrorException();
+        }
+
         this.lock(LockTypes.WRITE);
         this.init();
 
@@ -85,6 +90,10 @@ public class ProcessTokenObject extends ABytesProcessObject {
     }
 
     public void inheritPrivilegeTypes() {
+        if (this.process.getStatus().get() != ProcessStatusTypes.INITIALIZATION) {
+            throw new StatusRelationshipErrorException();
+        }
+
         this.lock(LockTypes.WRITE);
         this.init();
 
@@ -95,6 +104,10 @@ public class ProcessTokenObject extends ABytesProcessObject {
     }
 
     public void inheritPrivilegeTypes(long privilegeTypes) {
+        if (this.process.getStatus().get() != ProcessStatusTypes.INITIALIZATION) {
+            throw new StatusRelationshipErrorException();
+        }
+
         this.lock(LockTypes.WRITE);
         this.init();
 
@@ -126,6 +139,10 @@ public class ProcessTokenObject extends ABytesProcessObject {
     }
 
     public void inheritRoleTypes() {
+        if (this.process.getStatus().get() != ProcessStatusTypes.INITIALIZATION) {
+            throw new StatusRelationshipErrorException();
+        }
+
         this.lock(LockTypes.WRITE);
         this.init();
 
@@ -138,6 +155,10 @@ public class ProcessTokenObject extends ABytesProcessObject {
     public void inheritRoleTypes(Set<UUID> roles) {
         if (ObjectUtils.isAnyNull(roles)) {
             throw new ConditionParametersException();
+        }
+
+        if (this.process.getStatus().get() != ProcessStatusTypes.INITIALIZATION) {
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockTypes.WRITE);

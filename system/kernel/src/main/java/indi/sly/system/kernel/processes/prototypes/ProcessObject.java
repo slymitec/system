@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionContextException;
+import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.functions.Consumer2;
 import indi.sly.system.common.functions.Function2;
 import indi.sly.system.common.utility.UUIDUtils;
@@ -48,9 +49,78 @@ public class ProcessObject extends ACoreObject {
 
         ProcessStatusObject processStatus = this.factoryManager.create(ProcessStatusObject.class);
 
-        processStatus.setPorcess(process);
+        this.processorRegister.getReadProcessStatuses();
+
+        processStatus.processorRegister = this.processorRegister;
+        processStatus.setProcess(process);
+        processStatus.setProcessObject(this);
 
         return processStatus;
+    }
+
+    public synchronized ProcessCommunicationObject getCommunication() {
+        ProcessEntity process = this.getProcess();
+
+        ProcessCommunicationObject processCommunication = this.factoryManager.create(ProcessCommunicationObject.class);
+
+        processCommunication.setSource(() -> {
+            List<Function2<byte[], byte[], ProcessEntity>> funcs =
+                    this.processorRegister.getReadProcessCommunications();
+
+            byte[] source = null;
+
+            for (Function2<byte[], byte[], ProcessEntity> pair : funcs) {
+                source = pair.apply(source, process);
+            }
+
+            return source;
+        }, (byte[] source) -> {
+            List<Consumer2<ProcessEntity, byte[]>> funcs = this.processorRegister.getWriteProcessCommunications();
+
+            for (Consumer2<ProcessEntity, byte[]> pair : funcs) {
+                pair.accept(process, source);
+            }
+        });
+        processCommunication.setLock((lockType) -> {
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+            processRepository.lock(process, lockType);
+        });
+
+        return processCommunication;
+    }
+
+    public synchronized ProcessContextObject getContext() {
+        ProcessEntity process = this.getProcess();
+
+        ProcessContextObject processContext = this.factoryManager.create(ProcessContextObject.class);
+
+        processContext.setSource(() -> {
+            List<Function2<byte[], byte[], ProcessEntity>> funcs = this.processorRegister.getReadProcessContexts();
+
+            byte[] source = null;
+
+            for (Function2<byte[], byte[], ProcessEntity> pair : funcs) {
+                source = pair.apply(source, process);
+            }
+
+            return source;
+        }, (byte[] source) -> {
+            List<Consumer2<ProcessEntity, byte[]>> funcs = this.processorRegister.getWriteProcessContexts();
+
+            for (Consumer2<ProcessEntity, byte[]> pair : funcs) {
+                pair.accept(process, source);
+            }
+        });
+        processContext.setLock((lockType) -> {
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+            processRepository.lock(process, lockType);
+        });
+
+        return processContext;
     }
 
     public synchronized ProcessHandleTableObject getHandleTable() {

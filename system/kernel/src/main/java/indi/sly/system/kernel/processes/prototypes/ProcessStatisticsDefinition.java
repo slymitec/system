@@ -6,9 +6,21 @@ import indi.sly.system.common.utility.NumberUtils;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ProcessStatisticsDefinition implements ISerializable<ProcessStatisticsDefinition> {
+    public ProcessStatisticsDefinition() {
+        this.date = new HashMap<>();
+    }
+
+    private Map<Long, Long> date;
+
+    public Map<Long, Long> getDate() {
+        return this.date;
+    }
+
     private long infoCreate;
     private long infoGet;
     private long infoQuery;
@@ -422,13 +434,14 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
                 ioReadCount == that.ioReadCount &&
                 ioReadBytes == that.ioReadBytes &&
                 ioWriteCount == that.ioWriteCount &&
-                ioWriteBytes == that.ioWriteBytes;
+                ioWriteBytes == that.ioWriteBytes &&
+                date.equals(that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(infoCreate, infoGet, infoQuery, infoDelete, infoDump, infoOpen, infoClose, infoRead,
-                infoWrite, sharedReadCount, sharedReadBytes, sharedWriteCount, sharedWriteBytes, pipeReadCount,
+        return Objects.hash(date, infoCreate, infoGet, infoQuery, infoDelete, infoDump, infoOpen, infoClose, infoRead
+                , infoWrite, sharedReadCount, sharedReadBytes, sharedWriteCount, sharedWriteBytes, pipeReadCount,
                 pipeReadBytes, pipeWriteCount, pipeWriteBytes, portReadCount, portReadBytes, portWriteCount,
                 portWriteBytes, signalReadCount, signalWriteCount, ioCreate, ioStatus, ioReadCount, ioReadBytes,
                 ioWriteCount, ioWriteBytes);
@@ -442,6 +455,8 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     @Override
     public ProcessStatisticsDefinition deepClone() {
         ProcessStatisticsDefinition processStatistics = new ProcessStatisticsDefinition();
+
+        processStatistics.date.putAll(this.date);
 
         processStatistics.infoCreate = this.infoCreate;
         processStatistics.infoGet = this.infoGet;
@@ -480,6 +495,13 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
 
     @Override
     public void readExternal(ObjectInput in) throws IOException {
+        int valueInteger;
+
+        valueInteger = NumberUtils.readExternalInteger(in);
+        for (int i = 0; i < valueInteger; i++) {
+            this.date.put(NumberUtils.readExternalLong(in), NumberUtils.readExternalLong(in));
+        }
+
         this.infoCreate = NumberUtils.readExternalLong(in);
         this.infoGet = NumberUtils.readExternalLong(in);
         this.infoQuery = NumberUtils.readExternalLong(in);
@@ -515,6 +537,12 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        NumberUtils.writeExternalInteger(out, this.date.size());
+        for (Map.Entry<Long, Long> pair : this.date.entrySet()) {
+            NumberUtils.writeExternalLong(out, pair.getKey());
+            NumberUtils.writeExternalLong(out, pair.getValue());
+        }
+
         NumberUtils.writeExternalLong(out, this.infoCreate);
         NumberUtils.writeExternalLong(out, this.infoGet);
         NumberUtils.writeExternalLong(out, this.infoQuery);

@@ -33,6 +33,8 @@ public class ProcessEntity implements ISerializable<ProcessEntity> {
     protected UUID sessionID;
     @Column(length = 4096, name = "Communication", nullable = false)
     protected byte[] communication;
+    @Column(length = 4096, name = "Context", nullable = false)
+    protected byte[] context;
     @Column(length = 4096, name = "HandleTable", nullable = false)
     protected byte[] handleTable;
     @Column(length = 4096, name = "Statistics", nullable = false)
@@ -80,6 +82,14 @@ public class ProcessEntity implements ISerializable<ProcessEntity> {
         this.communication = communication;
     }
 
+    public byte[] getContext() {
+        return this.context;
+    }
+
+    public void setContext(byte[] context) {
+        this.context = context;
+    }
+
     public byte[] getHandleTable() {
         return this.handleTable;
     }
@@ -114,6 +124,7 @@ public class ProcessEntity implements ISerializable<ProcessEntity> {
                 Objects.equals(parentProcessID, that.parentProcessID) &&
                 Objects.equals(sessionID, that.sessionID) &&
                 Arrays.equals(communication, that.communication) &&
+                Arrays.equals(context, that.context) &&
                 Arrays.equals(handleTable, that.handleTable) &&
                 Arrays.equals(statistics, that.statistics) &&
                 Arrays.equals(token, that.token);
@@ -123,6 +134,7 @@ public class ProcessEntity implements ISerializable<ProcessEntity> {
     public int hashCode() {
         int result = Objects.hash(id, status, parentProcessID, sessionID);
         result = 31 * result + Arrays.hashCode(communication);
+        result = 31 * result + Arrays.hashCode(context);
         result = 31 * result + Arrays.hashCode(handleTable);
         result = 31 * result + Arrays.hashCode(statistics);
         result = 31 * result + Arrays.hashCode(token);
@@ -143,6 +155,7 @@ public class ProcessEntity implements ISerializable<ProcessEntity> {
         process.parentProcessID = this.parentProcessID;
         process.sessionID = this.sessionID;
         process.communication = ArrayUtils.copyBytes(this.communication);
+        process.context = ArrayUtils.copyBytes(this.context);
         process.handleTable = ArrayUtils.copyBytes(this.handleTable);
         process.statistics = ArrayUtils.copyBytes(this.statistics);
         process.token = ArrayUtils.copyBytes(this.token);
@@ -157,6 +170,7 @@ public class ProcessEntity implements ISerializable<ProcessEntity> {
         this.parentProcessID = UUIDUtils.readExternal(in);
         this.sessionID = UUIDUtils.readExternal(in);
         this.communication = NumberUtils.readExternalBytes(in);
+        this.context = NumberUtils.readExternalBytes(in);
         this.handleTable = NumberUtils.readExternalBytes(in);
         this.statistics = NumberUtils.readExternalBytes(in);
         this.token = NumberUtils.readExternalBytes(in);
@@ -169,6 +183,7 @@ public class ProcessEntity implements ISerializable<ProcessEntity> {
         UUIDUtils.writeExternal(out, this.parentProcessID);
         UUIDUtils.writeExternal(out, this.sessionID);
         NumberUtils.writeExternalBytes(out, this.communication);
+        NumberUtils.writeExternalBytes(out, this.context);
         NumberUtils.writeExternalBytes(out, this.handleTable);
         NumberUtils.writeExternalBytes(out, this.statistics);
         NumberUtils.writeExternalBytes(out, this.token);

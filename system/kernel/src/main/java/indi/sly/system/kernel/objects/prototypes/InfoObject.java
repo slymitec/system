@@ -350,15 +350,12 @@ public class InfoObject extends ACoreObject {
                 InfoObjectCacheObject.class);
 
         InfoObject childCachedInfo = infoObjectCache.getIfExisted(SpaceTypes.ALL, childInfo.getID());
-        if (ObjectUtils.allNotNull(childCachedInfo)) {
-            return childCachedInfo;
-        } else {
-            InfoObject childInfoObject = this.factory.buildInfoObject(childInfo, statusOpen, this);
+        if (ObjectUtils.isAnyNull(childCachedInfo)) {
+            childCachedInfo = this.factory.buildInfoObject(childInfo, statusOpen, this);
 
-            childInfoObject.cache(SpaceTypes.USER);
-
-            return childInfoObject;
+            childCachedInfo.cache(SpaceTypes.USER);
         }
+        return childCachedInfo;
     }
 
     public synchronized void deleteChild(Identification identification) {
@@ -367,7 +364,7 @@ public class InfoObject extends ACoreObject {
         }
 
         InfoEntity info = this.getInfo();
-        InfoObject childInfoObject = this.getChild(identification);
+        InfoObject childInfo = this.getChild(identification);
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -379,7 +376,7 @@ public class InfoObject extends ACoreObject {
             pair.accept(info, type, this.status, identification);
         }
 
-        childInfoObject.uncache(SpaceTypes.ALL);
+        childInfo.uncache(SpaceTypes.ALL);
     }
 
     public synchronized Set<InfoSummaryDefinition> queryChild(Predicate<InfoSummaryDefinition> wildcard) {

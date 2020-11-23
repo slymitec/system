@@ -24,6 +24,28 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
 
     private ProcessStatisticsDefinition processStatistics;
 
+    public long getDate(long dataTimeType) {
+        this.init();
+
+        Long value = this.processStatistics.getDate().getOrDefault(dataTimeType, null);
+
+        if (ObjectUtils.isAnyNull(value)) {
+            throw new ConditionParametersException();
+        }
+
+        return value.longValue();
+    }
+
+    public void setDate(long dataTimeType, long value) {
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        this.processStatistics.getDate().put(dataTimeType, value);
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
+    }
+
     public long getInfoCreate() {
         this.init();
 

@@ -1,5 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
+import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
+import indi.sly.system.kernel.core.date.prototypes.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
@@ -31,15 +33,30 @@ public class ProcessObjectFactoryObject extends ACoreObject {
     }
 
     public ProcessObject buildProcessObject(ProcessEntity process) {
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                DateTimeObject.class);
+
         ProcessObjectProcessorRegister processObjectProcessorRegister = new ProcessObjectProcessorRegister();
         for (IProcessObjectProcessor processObjectProcessor : this.processObjectProcessors) {
             processObjectProcessor.process(process, processObjectProcessorRegister);
         }
 
         ProcessObject processObject = this.factoryManager.create(ProcessObject.class);
+
+        processObject.factory = this;
         processObject.processorRegister = processObjectProcessorRegister;
         processObject.id = process.getID();
+        ProcessStatisticsObject processStatistics = processObject.getStatistics();
+        processStatistics.setDate(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());
 
         return processObject;
+    }
+
+    public ProcessBuilderObject createProcessBuilder() {
+        ProcessBuilderObject processBuilder = this.factoryManager.create(ProcessBuilderObject.class);
+
+        processBuilder.setProcessObjectFactory(this);
+
+        return processBuilder;
     }
 }

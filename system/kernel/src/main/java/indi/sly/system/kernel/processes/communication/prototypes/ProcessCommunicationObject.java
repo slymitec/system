@@ -13,14 +13,14 @@ import indi.sly.system.kernel.objects.prototypes.InfoStatusOpenAttributeTypes;
 import indi.sly.system.kernel.processes.communication.prototypes.instances.SignalContentObject;
 import indi.sly.system.kernel.processes.communication.prototypes.instances.SignalEntryDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
+import indi.sly.system.kernel.security.prototypes.AccessControlTypes;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -36,6 +36,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
     }
 
     private ProcessCommunicationDefinition processCommunication;
+    private ProcessObject process;
+
+    public void setProcess(ProcessObject process) {
+        this.process = process;
+    }
 
     public UUID getSignalID() {
         this.init();
@@ -50,8 +55,9 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
             throw new StatusAlreadyFinishedException();
         }
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        ProcessTokenObject processToken = this.process.getToken();
 
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         List<Identification> identifications = new ArrayList<>();
         identifications.add(new Identification("Signals"));
@@ -60,14 +66,44 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
         InfoObject signal = signals.createChildAndOpen(UUID.randomUUID(), new Identification(UUIDUtils.createRandom()),
                 InfoStatusOpenAttributeTypes.OPEN_ONLYREAD);
-        signal.close();
         SecurityDescriptorObject securityDescriptor = signal.getSecurityDescriptor();
-        //securityDescriptor
+        Map<UUID, Long> accessControl = new HashMap<>();
+        accessControl.put(processToken.getAccountID(), AccessControlTypes.FULLCONTROL_ALLOW);
+        accessControl.put(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID,
+                AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
+        securityDescriptor.setAccessControlTypes(accessControl);
+        signal.close();
 
         this.lock(LockTypes.WRITE);
         this.init();
 
         this.processCommunication.setSignalID(signals.getID());
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
+    }
+
+    public void killSignals() {
+        this.init();
+
+        if (!UUIDUtils.isAnyNullOrEmpty(this.processCommunication.getSignalID())) {
+            throw new StatusAlreadyFinishedException();
+        }
+
+        UUID signalID = this.processCommunication.getSignalID();
+
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
+        List<Identification> identifications = new ArrayList<>();
+        identifications.add(new Identification("Signals"));
+
+        InfoObject signals = objectManager.get(identifications);
+        signals.deleteChild(new Identification(signalID));
+
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        this.processCommunication.setSignalID(null);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -100,9 +136,9 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
             throw new ConditionParametersException();
         }
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
         UUID signalID = targetProcess.getCommunication().getSignalID();
+
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         List<Identification> identifications = new ArrayList<>();
         identifications.add(new Identification("Signals"));

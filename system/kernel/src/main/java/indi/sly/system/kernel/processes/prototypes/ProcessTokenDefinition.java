@@ -17,7 +17,7 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
 
     private UUID accountID;
     private long privilegeTypes;
-    private final Map<Long, Long> limits;
+    private final Map<Long, Integer> limits;
     private final Set<UUID> roles;
 
     public UUID getAccountID() {
@@ -40,7 +40,7 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
         return this.roles;
     }
 
-    public Map<Long, Long> getLimits() {
+    public Map<Long, Integer> getLimits() {
         return this.limits;
     }
 
@@ -86,7 +86,7 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
 
         valueInteger = NumberUtils.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.limits.put(NumberUtils.readExternalLong(in), NumberUtils.readExternalLong(in));
+            this.limits.put(NumberUtils.readExternalLong(in), NumberUtils.readExternalInteger(in));
         }
 
         valueInteger = NumberUtils.readExternalInteger(in);
@@ -101,9 +101,9 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
         NumberUtils.writeExternalLong(out, this.privilegeTypes);
 
         NumberUtils.writeExternalInteger(out, this.limits.size());
-        for (Map.Entry<Long, Long> pair : this.limits.entrySet()) {
+        for (Map.Entry<Long, Integer> pair : this.limits.entrySet()) {
             NumberUtils.writeExternalLong(out, pair.getKey());
-            NumberUtils.writeExternalLong(out, pair.getValue());
+            NumberUtils.writeExternalInteger(out, pair.getValue());
         }
 
         NumberUtils.writeExternalInteger(out, this.roles.size());

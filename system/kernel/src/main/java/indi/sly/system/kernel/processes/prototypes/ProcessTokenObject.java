@@ -141,7 +141,7 @@ public class ProcessTokenObject extends ABytesProcessObject {
         this.lock(LockTypes.NONE);
     }
 
-    public Map<Long, Long> getLimits() {
+    public Map<Long, Integer> getLimits() {
         this.init();
 
         return Collections.unmodifiableMap(this.processToken.getLimits());
@@ -155,7 +155,7 @@ public class ProcessTokenObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        Map<Long, Long> processTokenLimits = this.getLimits();
+        Map<Long, Integer> processTokenLimits = this.getLimits();
         processTokenLimits.clear();
         processTokenLimits.putAll(this.getAndCheckParentProcessToken().getLimits());
 
@@ -163,7 +163,7 @@ public class ProcessTokenObject extends ABytesProcessObject {
         this.lock(LockTypes.NONE);
     }
 
-    public void setLimits(Map<Long, Long> limits) {
+    public void setLimits(Map<Long, Integer> limits) {
         if (ObjectUtils.isAnyNull(limits)) {
             throw new ConditionParametersException();
         }
@@ -179,7 +179,7 @@ public class ProcessTokenObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        Map<Long, Long> processTokenLimits = this.getLimits();
+        Map<Long, Integer> processTokenLimits = this.getLimits();
         processTokenLimits.clear();
         processTokenLimits.putAll(limits);
 

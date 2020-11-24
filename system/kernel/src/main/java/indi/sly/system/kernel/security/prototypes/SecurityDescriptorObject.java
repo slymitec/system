@@ -149,7 +149,9 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
     public List<SecurityDescriptorSummaryDefinition> getAccessControlType() {
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS) && !this.securityDescriptor.getOwners().contains(processToken.getAccountID()) && !this.isAccessControlType(AccessControlTypes.READPERMISSIONDESCRIPTOR_ALLOW)) {
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.securityDescriptor.getOwners().contains(processToken.getAccountID())
+                && !this.isAccessControlType(AccessControlTypes.READPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
         }
 
@@ -173,7 +175,9 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
     public void setInherit(boolean inherit) {
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS) && !this.securityDescriptor.getOwners().contains(processToken.getAccountID()) && !this.isAccessControlType(AccessControlTypes.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.securityDescriptor.getOwners().contains(processToken.getAccountID())
+                && !this.isAccessControlType(AccessControlTypes.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
         }
 
@@ -193,7 +197,9 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS) && !this.securityDescriptor.getOwners().contains(processToken.getAccountID()) && !this.isAccessControlType(AccessControlTypes.TAKEONWERSHIP_ALLOW)) {
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.securityDescriptor.getOwners().contains(processToken.getAccountID())
+                && !this.isAccessControlType(AccessControlTypes.TAKEONWERSHIP_ALLOW)) {
             throw new ConditionPermissionsException();
         }
 
@@ -214,7 +220,9 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS) && !this.securityDescriptor.getOwners().contains(processToken.getAccountID()) && !this.isAccessControlType(AccessControlTypes.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.securityDescriptor.getOwners().contains(processToken.getAccountID())
+                && !this.isAccessControlType(AccessControlTypes.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
         }
 
@@ -237,7 +245,8 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
 
         this.init();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS) && !this.securityDescriptor.getRoles().contains(roleType)) {
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.securityDescriptor.getRoles().contains(roleType)) {
             throw new ConditionPermissionsException();
         }
     }
@@ -245,7 +254,8 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
     public Set<UUID> getRoleTypes() {
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS) && !this.securityDescriptor.getOwners().contains(processToken.getAccountID())) {
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.securityDescriptor.getOwners().contains(processToken.getAccountID())) {
             throw new ConditionPermissionsException();
         }
 
@@ -257,7 +267,8 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
     public void setRoleTypes(List<UUID> roleTypes) {
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS) && !this.securityDescriptor.getOwners().contains(processToken.getAccountID())) {
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.securityDescriptor.getOwners().contains(processToken.getAccountID())) {
             throw new ConditionPermissionsException();
         }
 
@@ -287,7 +298,8 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
     public long getAuditTypes() {
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS) && !this.securityDescriptor.getOwners().contains(processToken.getAccountID())) {
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.securityDescriptor.getOwners().contains(processToken.getAccountID())) {
             throw new ConditionPermissionsException();
         }
 
@@ -299,7 +311,8 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
     public void setAuditTypes(long auditTypes) {
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS) && !this.securityDescriptor.getOwners().contains(processToken.getAccountID())) {
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.securityDescriptor.getOwners().contains(processToken.getAccountID())) {
             throw new ConditionPermissionsException();
         }
 

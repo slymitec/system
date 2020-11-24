@@ -87,6 +87,7 @@ public class ProcessObject extends ACoreObject {
 
             processRepository.lock(process, lockType);
         });
+        processCommunication.setProcess(this);
 
         return processCommunication;
     }

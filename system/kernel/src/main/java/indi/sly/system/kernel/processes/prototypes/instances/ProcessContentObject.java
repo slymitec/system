@@ -31,7 +31,6 @@ public class ProcessContentObject extends AInfoContentObject {
     private CommunicationDefinition port;
     private UUID sessionID;
     private StatisticsDefinition statistics;
-
     private ProcessTokenDefinition token;
 
     public UUID getParentProcessID() {

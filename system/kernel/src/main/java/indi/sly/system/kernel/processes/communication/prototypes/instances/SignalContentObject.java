@@ -51,7 +51,6 @@ public class SignalContentObject extends AInfoContentObject {
         return signalEntries;
     }
 
-
     public void send(long key, long value) {
         if (this.signals.size() >= this.signals.getMaxSignalsCount()) {
             throw new StatusInsufficientResourcesException();

@@ -16,7 +16,10 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -32,6 +35,16 @@ public class PortContentObject extends AInfoContentObject {
     }
 
     private PortDefinition port;
+
+    public Set<UUID> getSourceProcessIDs() {
+        this.init();
+
+        return Collections.unmodifiableSet(this.port.getSourceProcessIDs());
+    }
+
+    public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {
+
+    }
 
     public byte[] receive() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);

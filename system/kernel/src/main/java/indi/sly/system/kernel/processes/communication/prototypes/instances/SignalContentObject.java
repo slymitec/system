@@ -14,28 +14,41 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SignalContentObject extends AInfoContentObject {
     @Override
     protected void read(byte[] source) {
-        this.signals = ObjectUtils.transferFromByteArray(source);
+        this.signal = ObjectUtils.transferFromByteArray(source);
     }
 
     @Override
     protected byte[] write() {
-        return ObjectUtils.transferToByteArray(this.signals);
+        return ObjectUtils.transferToByteArray(this.signal);
     }
 
-    private SignalDefinition signals;
+    private SignalDefinition signal;
+
+    public Set<UUID> getSourceProcessIDs() {
+        this.init();
+
+        return Collections.unmodifiableSet(this.signal.getSourceProcessIDs());
+    }
+
+    public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {
+
+    }
 
     public List<SignalEntryDefinition> receive() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrentProcess();
 
-        if (!this.signals.getProcessID().equals(process.getID())) {
+        if (!this.signal.getProcessID().equals(process.getID())) {
             throw new ConditionPermissionsException();
         }
 
@@ -46,7 +59,7 @@ public class SignalContentObject extends AInfoContentObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        List<SignalEntryDefinition> signalEntries = this.signals.pollAll();
+        List<SignalEntryDefinition> signalEntries = this.signal.pollAll();
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -59,13 +72,13 @@ public class SignalContentObject extends AInfoContentObject {
     }
 
     public void send(long key, long value) {
-        if (this.signals.size() >= this.signals.getLimit()) {
+        if (this.signal.size() >= this.signal.getLimit()) {
             throw new StatusInsufficientResourcesException();
         }
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrentProcess();
 
-        if (!this.signals.getProcessID().equals(process.getID()) && this.signals.getSourceProcessIDs().contains(process.getID())) {
+        if (!this.signal.getProcessID().equals(process.getID()) && this.signal.getSourceProcessIDs().contains(process.getID())) {
             throw new ConditionPermissionsException();
         }
 
@@ -83,7 +96,7 @@ public class SignalContentObject extends AInfoContentObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.signals.add(signalEntry);
+        this.signal.add(signalEntry);
 
         this.fresh();
         this.lock(LockTypes.NONE);

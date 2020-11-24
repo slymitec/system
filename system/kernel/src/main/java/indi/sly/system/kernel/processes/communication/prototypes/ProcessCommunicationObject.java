@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.processes.prototypes;
+package indi.sly.system.kernel.processes.communication.prototypes;
 
 import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

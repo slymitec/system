@@ -1,13 +1,13 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionContextException;
-import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.functions.Consumer2;
 import indi.sly.system.common.functions.Function2;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
+import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

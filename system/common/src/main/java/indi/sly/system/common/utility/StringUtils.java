@@ -39,20 +39,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return false;
     }
 
-    public static String wildcardEscape(String value) {
-        if (StringUtils.isAnyNullOrEmpty(value)) {
-            throw new NullPointerException();
-        }
-
-        value = replace(value, "%", "/%");
-        value = replace(value, "_", "/_");
-        value = replace(value, "[", "[%]");
-        value = replace(value, "]", "[%]");
-        value = replace(value, "%", "[%]");
-
-        return value;
-    }
-
     public static String readFormBytes(byte[] value) {
         if (ObjectUtils.isAnyNull(value)) {
             throw new NullPointerException();

@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.communication.prototypes.instances;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.support.ISerializable;
+import indi.sly.system.common.utility.ArrayUtils;
 import indi.sly.system.common.utility.NumberUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
@@ -11,15 +12,15 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class SignalDefinition implements ISerializable<SignalDefinition> {
-    public SignalDefinition() {
+public class PortDefinition implements ISerializable<PortDefinition> {
+    public PortDefinition() {
         this.sourceProcessIDs = new HashSet<>();
-        this.signalEntries = new ArrayList<>();
+        this.value = ArrayUtils.EMPTY_BYTES;
     }
 
     private UUID processID;
     private final Set<UUID> sourceProcessIDs;
-    private final List<SignalEntryDefinition> signalEntries;
+    private byte[] value;
     private int limit;
 
     public UUID getProcessID() {
@@ -34,6 +35,22 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
         return this.sourceProcessIDs;
     }
 
+    public int size() {
+        return this.value.length;
+    }
+
+    public byte[] getValue() {
+        return this.value;
+    }
+
+    public void setValue(byte[] value) {
+        if (ObjectUtils.isAnyNull(value)) {
+            this.value = ArrayUtils.EMPTY_BYTES;
+        } else {
+            this.value = value;
+        }
+    }
+
     public int getLimit() {
         return this.limit;
     }
@@ -42,44 +59,22 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
         this.limit = limit;
     }
 
-    public int size() {
-        return this.signalEntries.size();
-    }
-
-    public boolean isEmpty() {
-        return this.signalEntries.isEmpty();
-    }
-
-    public List<SignalEntryDefinition> pollAll() {
-        List<SignalEntryDefinition> resultSignalEntries = new ArrayList<>(this.signalEntries);
-
-        this.signalEntries.clear();
-
-        return Collections.unmodifiableList(resultSignalEntries);
-    }
-
-    public void add(SignalEntryDefinition signalEntry) {
-        if (ObjectUtils.isAnyNull(signalEntry)) {
-            throw new ConditionParametersException();
-        }
-
-        this.signalEntries.add(signalEntry);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SignalDefinition that = (SignalDefinition) o;
+        PortDefinition that = (PortDefinition) o;
         return limit == that.limit &&
                 Objects.equals(processID, that.processID) &&
                 sourceProcessIDs.equals(that.sourceProcessIDs) &&
-                signalEntries.equals(that.signalEntries);
+                Arrays.equals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(processID, sourceProcessIDs, signalEntries, limit);
+        int result = Objects.hash(processID, sourceProcessIDs, limit);
+        result = 31 * result + Arrays.hashCode(value);
+        return result;
     }
 
     @Override
@@ -88,14 +83,12 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
     }
 
     @Override
-    public SignalDefinition deepClone() {
-        SignalDefinition signal = new SignalDefinition();
+    public PortDefinition deepClone() {
+        PortDefinition signal = new PortDefinition();
 
         signal.processID = this.processID;
         signal.sourceProcessIDs.addAll(this.sourceProcessIDs);
-        for (SignalEntryDefinition signalEntry : this.signalEntries) {
-            signal.signalEntries.add(signalEntry.deepClone());
-        }
+        signal.value = ArrayUtils.copyBytes(this.value);
         signal.limit = this.limit;
 
         return signal;
@@ -112,11 +105,7 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
             this.sourceProcessIDs.add(UUIDUtils.readExternal(in));
         }
 
-        valueInteger = NumberUtils.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.signalEntries.add(ObjectUtils.readExternal(in));
-        }
-
+        this.value = NumberUtils.readExternalBytes(in);
         this.limit = NumberUtils.readExternalInteger(in);
     }
 
@@ -129,11 +118,7 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
             UUIDUtils.writeExternal(out, pair);
         }
 
-        NumberUtils.writeExternalInteger(out, this.signalEntries.size());
-        for (SignalEntryDefinition pair : this.signalEntries) {
-            ObjectUtils.writeExternal(out, pair);
-        }
-
+        NumberUtils.writeExternalBytes(out, this.value);
         NumberUtils.writeExternalLong(out, this.limit);
     }
 }

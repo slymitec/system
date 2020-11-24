@@ -1,6 +1,5 @@
 package indi.sly.system.common.utility;
 
-import indi.sly.system.common.exceptions.StatusNotExistedException;
 import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.exceptions.StatusUnexpectedException;
 import indi.sly.system.common.support.ISerializable;

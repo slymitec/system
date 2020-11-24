@@ -1,8 +1,10 @@
 package indi.sly.system.kernel.processes.communication.prototypes.instances;
 
+import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.exceptions.StatusInsufficientResourcesException;
 import indi.sly.system.common.types.LockTypes;
+import indi.sly.system.common.utility.ArrayUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeTypes;
@@ -18,72 +20,59 @@ import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SignalContentObject extends AInfoContentObject {
+public class PortContentObject extends AInfoContentObject {
     @Override
     protected void read(byte[] source) {
-        this.signals = ObjectUtils.transferFromByteArray(source);
+        this.port = ObjectUtils.transferFromByteArray(source);
     }
 
     @Override
     protected byte[] write() {
-        return ObjectUtils.transferToByteArray(this.signals);
+        return ObjectUtils.transferToByteArray(this.port);
     }
 
-    private SignalDefinition signals;
+    private PortDefinition port;
 
-    public List<SignalEntryDefinition> receive() {
+    public byte[] receive() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrentProcess();
 
-        if (!this.signals.getProcessID().equals(process.getID())) {
+        if (!this.port.getProcessID().equals(process.getID())) {
             throw new ConditionPermissionsException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                DateTimeObject.class);
-        long nowDateTime = dateTime.getCurrentDateTime();
 
         this.lock(LockTypes.WRITE);
         this.init();
 
-        List<SignalEntryDefinition> signalEntries = this.signals.pollAll();
+        byte[] value = this.port.getValue();
+        this.port.setValue(ArrayUtils.EMPTY_BYTES);
 
         this.fresh();
         this.lock(LockTypes.NONE);
 
-        for (SignalEntryDefinition signalEntry : signalEntries) {
-            signalEntry.getDate().put(DateTimeTypes.ACCESS, nowDateTime);
-        }
-
-        return signalEntries;
+        return value;
     }
 
-    public void send(long key, long value) {
-        if (this.signals.size() >= this.signals.getLimit()) {
+    public void send(byte[] value) {
+        if (ObjectUtils.isAnyNull(value)) {
+            throw new ConditionParametersException();
+        }
+
+        if (this.port.size() + value.length >= this.port.getLimit()) {
             throw new StatusInsufficientResourcesException();
         }
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrentProcess();
 
-        if (!this.signals.getProcessID().equals(process.getID()) && this.signals.getSourceProcessIDs().contains(process.getID())) {
+        if (!this.port.getProcessID().equals(process.getID()) && this.port.getSourceProcessIDs().contains(process.getID())) {
             throw new ConditionPermissionsException();
         }
-
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                DateTimeObject.class);
-        long nowDateTime = dateTime.getCurrentDateTime();
-
-        SignalEntryDefinition signalEntry = new SignalEntryDefinition();
-        signalEntry.setSource(process.getID());
-        signalEntry.setKey(key);
-        signalEntry.setValue(value);
-        signalEntry.getDate().put(DateTimeTypes.CREATE, nowDateTime);
-        signalEntry.getDate().put(DateTimeTypes.ACCESS, nowDateTime);
 
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.signals.add(signalEntry);
+        this.port.setValue(ArrayUtils.combineBytes(this.port.getValue(), value));
 
         this.fresh();
         this.lock(LockTypes.NONE);

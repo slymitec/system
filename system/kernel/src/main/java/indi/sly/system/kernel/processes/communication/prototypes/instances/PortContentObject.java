@@ -41,7 +41,6 @@ public class PortContentObject extends AInfoContentObject {
             throw new ConditionPermissionsException();
         }
 
-
         this.lock(LockTypes.WRITE);
         this.init();
 

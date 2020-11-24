@@ -139,10 +139,8 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
         InfoObject port = objectManager.get(identifications);
         port.open(InfoStatusOpenAttributeTypes.OPEN_ONLYREAD);
-
         PortContentObject portContent = (PortContentObject) port.getContent();
         Set<UUID> sourceProcessIDs = portContent.getSourceProcessIDs();
-
         port.close();
 
         return sourceProcessIDs;
@@ -163,10 +161,8 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
         InfoObject port = objectManager.get(identifications);
         port.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
-
         PortContentObject portContent = (PortContentObject) port.getContent();
         portContent.setSourceProcessIDs(sourceProcessIDs);
-
         port.close();
     }
 
@@ -188,10 +184,8 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
         InfoObject port = objectManager.get(identifications);
         port.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
-
         PortContentObject portContent = (PortContentObject) port.getContent();
         byte[] value = portContent.receive();
-
         port.close();
 
         return value;
@@ -210,10 +204,8 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
         InfoObject port = objectManager.get(identifications);
         port.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
-
         PortContentObject portContent = (PortContentObject) port.getContent();
         portContent.send(value);
-
         port.close();
     }
 
@@ -303,11 +295,9 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         identifications.add(new Identification(signalID));
 
         InfoObject signal = objectManager.get(identifications);
-        signal.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
-
+        signal.open(InfoStatusOpenAttributeTypes.OPEN_ONLYREAD);
         SignalContentObject signalContent = (SignalContentObject) signal.getContent();
         Set<UUID> sourceProcessIDs = signalContent.getSourceProcessIDs();
-
         signal.close();
 
         return sourceProcessIDs;
@@ -330,10 +320,8 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
         InfoObject signal = objectManager.get(identifications);
         signal.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
-
         SignalContentObject signalContent = (SignalContentObject) signal.getContent();
         signalContent.setSourceProcessIDs(sourceProcessIDs);
-
         signal.close();
     }
 
@@ -350,10 +338,8 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
         InfoObject signal = objectManager.get(identifications);
         signal.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
-
         SignalContentObject signalContent = (SignalContentObject) signal.getContent();
         List<SignalEntryDefinition> signalEntries = signalContent.receive();
-
         signal.close();
 
         return signalEntries;
@@ -374,10 +360,8 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
         InfoObject signal = objectManager.get(identifications);
         signal.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
-
         SignalContentObject signalContent = (SignalContentObject) signal.getContent();
         signalContent.send(key, value);
-
         signal.close();
     }
 }

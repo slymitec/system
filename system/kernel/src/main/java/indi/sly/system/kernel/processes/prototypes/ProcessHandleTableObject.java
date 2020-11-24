@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.exceptions.AKernelException;
+import indi.sly.system.common.exceptions.StatusInsufficientResourcesException;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
@@ -31,6 +32,11 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
     }
 
     private ProcessHandleTableDefinition processHandleTable;
+    private ProcessObject process;
+
+    public void setProcess(ProcessObject process) {
+        this.process = process;
+    }
 
     public Map<Long, Long> getDate(UUID handle) {
         this.init();
@@ -72,6 +78,11 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
     }
 
     public synchronized UUID addInfo(InfoStatusDefinition status) {
+        ProcessTokenObject processToken = this.process.getToken();
+        if (this.processHandleTable.size() >= processToken.getLimits().get(ProcessTokenLimitTypes.HANDLE_MAX)) {
+            throw new StatusInsufficientResourcesException();
+        }
+
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();

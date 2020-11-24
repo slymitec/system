@@ -1,19 +1,18 @@
 package indi.sly.system.kernel.security;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.StatusAlreadyExistedException;
-import indi.sly.system.common.exceptions.StatusNotExistedException;
+import indi.sly.system.common.exceptions.*;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.StartupTypes;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.entities.AccountEntity;
 import indi.sly.system.kernel.security.entities.GroupEntity;
-import indi.sly.system.kernel.security.prototypes.AccountGroupObjectFactoryObject;
-import indi.sly.system.kernel.security.prototypes.AccountObject;
-import indi.sly.system.kernel.security.prototypes.GroupObject;
+import indi.sly.system.kernel.security.prototypes.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -35,6 +34,29 @@ public class SecurityTokenManager extends AManager {
 
     @Override
     public void shutdown() {
+    }
+
+    public AccountAuthorizationObject authorize(String accountName) {
+        return this.authorize(accountName, null);
+    }
+
+    public AccountAuthorizationObject authorize(String accountName, String accountPassword) {
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrentProcess();
+        ProcessTokenObject processToken = process.getToken();
+
+        AccountObject account = this.getAccount(accountName);
+
+        AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
+
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)
+                && !StringUtils.equals(account.getPassword(), accountPassword)) {
+            throw new ConditionRefuseException();
+        }
+
+        accountAuthorization.setSource(account);
+
+        return accountAuthorization;
     }
 
     public AccountObject getAccount(UUID accountID) {
@@ -94,6 +116,15 @@ public class SecurityTokenManager extends AManager {
             throw new ConditionParametersException();
         }
 
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrentProcess();
+        ProcessTokenObject processToken = process.getToken();
+
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+            throw new ConditionPermissionsException();
+        }
+
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
@@ -116,6 +147,15 @@ public class SecurityTokenManager extends AManager {
     public GroupObject createGroup(String groupName) {
         if (StringUtils.isNameIllegal(groupName)) {
             throw new ConditionParametersException();
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrentProcess();
+        ProcessTokenObject processToken = process.getToken();
+
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+            throw new ConditionPermissionsException();
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
@@ -141,6 +181,15 @@ public class SecurityTokenManager extends AManager {
             throw new ConditionParametersException();
         }
 
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrentProcess();
+        ProcessTokenObject processToken = process.getToken();
+
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+            throw new ConditionPermissionsException();
+        }
+
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
@@ -151,6 +200,15 @@ public class SecurityTokenManager extends AManager {
     public void deleteGroup(UUID groupID) {
         if (UUIDUtils.isAnyNullOrEmpty(groupID)) {
             throw new ConditionParametersException();
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrentProcess();
+        ProcessTokenObject processToken = process.getToken();
+
+        if (!processToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+            throw new ConditionPermissionsException();
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);

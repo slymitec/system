@@ -5,7 +5,6 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-import indi.sly.system.common.support.IDeepCloneable;
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.NumberUtils;
 import indi.sly.system.common.utility.UUIDUtils;
@@ -13,11 +12,13 @@ import indi.sly.system.common.utility.UUIDUtils;
 public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinition> {
     public ProcessTokenDefinition() {
         this.roles = new HashSet<>();
+        this.limits = new HashMap<>();
     }
 
     private UUID accountID;
     private long privilegeTypes;
-    private Set<UUID> roles;
+    private final Map<Long, Long> limits;
+    private final Set<UUID> roles;
 
     public UUID getAccountID() {
         return this.accountID;
@@ -39,8 +40,8 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
         return this.roles;
     }
 
-    public void setRoles(Set<UUID> roles) {
-        this.roles = roles;
+    public Map<Long, Long> getLimits() {
+        return this.limits;
     }
 
     @Override
@@ -50,12 +51,13 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
         ProcessTokenDefinition that = (ProcessTokenDefinition) o;
         return privilegeTypes == that.privilegeTypes &&
                 Objects.equals(accountID, that.accountID) &&
+                limits.equals(that.limits) &&
                 roles.equals(that.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountID, privilegeTypes, roles);
+        return Objects.hash(accountID, privilegeTypes, limits, roles);
     }
 
     @Override
@@ -69,6 +71,7 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
 
         processToken.accountID = this.accountID;
         processToken.privilegeTypes = this.privilegeTypes;
+        processToken.limits.putAll(this.limits);
         processToken.roles.addAll(this.roles);
 
         return processToken;
@@ -83,6 +86,11 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
 
         valueInteger = NumberUtils.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
+            this.limits.put(NumberUtils.readExternalLong(in), NumberUtils.readExternalLong(in));
+        }
+
+        valueInteger = NumberUtils.readExternalInteger(in);
+        for (int i = 0; i < valueInteger; i++) {
             this.roles.add(UUIDUtils.readExternal(in));
         }
     }
@@ -91,6 +99,12 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
     public void writeExternal(ObjectOutput out) throws IOException {
         UUIDUtils.writeExternal(out, this.accountID);
         NumberUtils.writeExternalLong(out, this.privilegeTypes);
+
+        NumberUtils.writeExternalInteger(out, this.limits.size());
+        for (Map.Entry<Long, Long> pair : this.limits.entrySet()) {
+            NumberUtils.writeExternalLong(out, pair.getKey());
+            NumberUtils.writeExternalLong(out, pair.getValue());
+        }
 
         NumberUtils.writeExternalInteger(out, this.roles.size());
         for (UUID pair : this.roles) {

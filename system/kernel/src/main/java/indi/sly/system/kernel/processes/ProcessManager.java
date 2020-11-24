@@ -7,11 +7,15 @@ import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.StartupTypes;
+import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
+import indi.sly.system.kernel.core.date.prototypes.DateTimeTypes;
+import indi.sly.system.kernel.core.enviroment.SpaceTypes;
 import indi.sly.system.kernel.core.enviroment.UserSpace;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.*;
+import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -46,8 +50,16 @@ public class ProcessManager extends AManager {
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
         ProcessEntity process = processRepository.get(processID);
+        ProcessObject processObject = this.processObjectFactory.buildProcessObject(process);
 
-        return this.processObjectFactory.buildProcessObject(process);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                DateTimeObject.class);
+        long nowDateTime = dateTime.getCurrentDateTime();
+
+        ProcessStatisticsObject processStatistics = processObject.getStatistics();
+        processStatistics.setDate(DateTimeTypes.ACCESS, nowDateTime);
+
+        return processObject;
     }
 
 
@@ -60,6 +72,14 @@ public class ProcessManager extends AManager {
     }
 
     public ProcessObject getProcess(UUID processID) {
+        return this.getProcess(processID, null);
+    }
+
+    public ProcessObject getProcess(UUID processID, AccountAuthorizationObject accountAuthorization) {
+        if (UUIDUtils.isAnyNullOrEmpty(processID)) {
+            throw new ConditionParametersException();
+        }
+
         ProcessObject currentProcess = this.getCurrentProcess();
         if (currentProcess.getID().equals(processID)) {
             return currentProcess;
@@ -69,7 +89,10 @@ public class ProcessManager extends AManager {
         ProcessObject process = this.getTargetProcess(processID);
         ProcessTokenObject processToken = process.getToken();
 
-        if (!currentProcessToken.getAccountID().equals(processToken.getAccountID()) && !currentProcessToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_RUN_APP_WITH_ANOTHER_ACCOUNT)) {
+        if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
+                && (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)
+                && !(ObjectUtils.allNotNull(accountAuthorization)
+                && accountAuthorization.checkAndGetAccountID().equals(processToken.getAccountID())))) {
             throw new ConditionPermissionsException();
         }
 

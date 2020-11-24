@@ -73,7 +73,6 @@ public class AccountObject extends ACoreProcessObject {
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        SecurityTokenManager securityTokenManager = this.factoryManager.getManager(SecurityTokenManager.class);
 
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();

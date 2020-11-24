@@ -151,6 +151,7 @@ public class ProcessObject extends ACoreObject {
 
             processRepository.lock(process, lockType);
         });
+        processHandleTable.setProcess(this);
 
         return processHandleTable;
     }

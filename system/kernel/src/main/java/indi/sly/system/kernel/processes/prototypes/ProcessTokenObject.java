@@ -8,14 +8,13 @@ import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -69,10 +68,16 @@ public class ProcessTokenObject extends ABytesProcessObject {
         this.lock(LockTypes.NONE);
     }
 
-    public void setAccountID(UUID accountID) {
-        if (!this.isPrivilegeTypes(PrivilegeTypes.PROCESSES_RUN_APP_WITH_ANOTHER_ACCOUNT)) {
-            throw new ConditionPermissionsException();
+    public void setAccountID(AccountAuthorizationObject accountAuthorization) {
+        if (ObjectUtils.isAnyNull(accountAuthorization)) {
+            throw new ConditionParametersException();
         }
+
+        if (this.process.getStatus().get() != ProcessStatusTypes.INITIALIZATION) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        UUID accountID = accountAuthorization.checkAndGetAccountID();
 
         this.lock(LockTypes.WRITE);
         this.init();
@@ -123,6 +128,10 @@ public class ProcessTokenObject extends ABytesProcessObject {
             throw new ConditionPermissionsException();
         }
 
+        if (this.process.getStatus().get() != ProcessStatusTypes.INITIALIZATION) {
+            throw new StatusRelationshipErrorException();
+        }
+
         this.lock(LockTypes.WRITE);
         this.init();
 
@@ -132,10 +141,56 @@ public class ProcessTokenObject extends ABytesProcessObject {
         this.lock(LockTypes.NONE);
     }
 
+    public Map<Long, Long> getLimits() {
+        this.init();
+
+        return Collections.unmodifiableMap(this.processToken.getLimits());
+    }
+
+    public void inheritLimits() {
+        if (this.process.getStatus().get() != ProcessStatusTypes.INITIALIZATION) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        Map<Long, Long> processTokenLimits = this.getLimits();
+        processTokenLimits.clear();
+        processTokenLimits.putAll(this.getAndCheckParentProcessToken().getLimits());
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
+    }
+
+    public void setLimits(Map<Long, Long> limits) {
+        if (ObjectUtils.isAnyNull(limits)) {
+            throw new ConditionParametersException();
+        }
+
+        if (!this.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
+            throw new ConditionPermissionsException();
+        }
+
+        if (this.process.getStatus().get() != ProcessStatusTypes.INITIALIZATION) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        Map<Long, Long> processTokenLimits = this.getLimits();
+        processTokenLimits.clear();
+        processTokenLimits.putAll(limits);
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
+    }
+
     public Set<UUID> getRoles() {
         this.init();
 
-        return processToken.getRoles();
+        return this.processToken.getRoles();
     }
 
     public void inheritRoleTypes() {
@@ -146,7 +201,9 @@ public class ProcessTokenObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processToken.setRoles(new HashSet<>(this.getAndCheckParentProcessToken().getRoles()));
+        Set<UUID> processTokenRoles = this.processToken.getRoles();
+        processTokenRoles.clear();
+        processTokenRoles.addAll(this.getAndCheckParentProcessToken().getRoles());
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -173,7 +230,9 @@ public class ProcessTokenObject extends ABytesProcessObject {
             }
         }
 
-        this.processToken.setRoles(childRoles);
+        Set<UUID> processTokenRoles = this.processToken.getRoles();
+        processTokenRoles.clear();
+        processTokenRoles.addAll(childRoles);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -184,10 +243,16 @@ public class ProcessTokenObject extends ABytesProcessObject {
             throw new ConditionParametersException();
         }
 
+        if (this.process.getStatus().get() != ProcessStatusTypes.INITIALIZATION) {
+            throw new StatusRelationshipErrorException();
+        }
+
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processToken.setRoles(roles);
+        Set<UUID> processTokenRoles = this.processToken.getRoles();
+        processTokenRoles.clear();
+        processTokenRoles.addAll(roles);
 
         this.fresh();
         this.lock(LockTypes.NONE);

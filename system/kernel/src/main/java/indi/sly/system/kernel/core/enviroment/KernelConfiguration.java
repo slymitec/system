@@ -20,4 +20,6 @@ public class KernelConfiguration {
 
     public UUID PROCESSES_SHADOW_SHADOWKERNEMODE_ID
             = UUIDUtils.getFormLongs(4327463367325207662L, -5421948031898080267L);
+
+    public final long SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME = 65536l;
 }

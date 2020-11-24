@@ -53,7 +53,7 @@ public class InfoObjectFactoryObject extends ACoreObject {
         }
 
         InfoStatusOpenDefinition statusOpen = new InfoStatusOpenDefinition();
-        statusOpen.setAttribute(InfoStatusOpenDefinitionOpenAttributeTypes.CLOSE);
+        statusOpen.setAttribute(InfoStatusOpenAttributeTypes.CLOSE);
         InfoStatusDefinition status = new InfoStatusDefinition();
         status.setOpen(statusOpen);
 
@@ -86,7 +86,7 @@ public class InfoObjectFactoryObject extends ACoreObject {
         InfoStatusDefinition status = new InfoStatusDefinition();
         if (ObjectUtils.isAnyNull(statusOpen)) {
             statusOpen = new InfoStatusOpenDefinition();
-            statusOpen.setAttribute(InfoStatusOpenDefinitionOpenAttributeTypes.CLOSE);
+            statusOpen.setAttribute(InfoStatusOpenAttributeTypes.CLOSE);
         }
         status.setOpen(statusOpen);
         status.setParentID(parentInfo.getID());

@@ -31,9 +31,7 @@ public class SignalContentObject extends AInfoContentObject {
 
     private SignalDefinition signals;
 
-    //自己能建读写删，别人能写
-
-    public List<SignalEntryDefinition> get() {
+    public List<SignalEntryDefinition> receive() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrentProcess();
 
@@ -54,7 +52,7 @@ public class SignalContentObject extends AInfoContentObject {
     }
 
 
-    public void send(long value) {
+    public void send(long key, long value) {
         if (this.signals.size() >= this.signals.getMaxSignalsCount()) {
             throw new StatusInsufficientResourcesException();
         }
@@ -71,8 +69,8 @@ public class SignalContentObject extends AInfoContentObject {
 
         SignalEntryDefinition signalEntry = new SignalEntryDefinition();
         signalEntry.setSource(process.getID());
+        signalEntry.setKey(key);
         signalEntry.setValue(value);
-        signalEntry.setStatus(SignalStatuesTypes.UNREAD);
         signalEntry.getDate().put(DateTimeTypes.CREATE, nowDateTime);
         signalEntry.getDate().put(DateTimeTypes.ACCESS, nowDateTime);
 
@@ -84,7 +82,4 @@ public class SignalContentObject extends AInfoContentObject {
         this.fresh();
         this.lock(LockTypes.NONE);
     }
-
-
-    //....
 }

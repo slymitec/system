@@ -12,7 +12,7 @@ import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
 import indi.sly.system.kernel.objects.prototypes.InfoStatusDefinition;
-import indi.sly.system.kernel.objects.prototypes.InfoStatusOpenDefinitionOpenAttributeTypes;
+import indi.sly.system.kernel.objects.prototypes.InfoStatusOpenAttributeTypes;
 import indi.sly.system.kernel.objects.types.prototypes.TypeInitializerAttributeTypes;
 import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -39,7 +39,7 @@ public class OpenOrCloseProcessor extends ACoreObject implements IInfoObjectProc
         };
 
         this.close = (info, type, status) -> {
-            status.getOpen().setAttribute(InfoStatusOpenDefinitionOpenAttributeTypes.CLOSE);
+            status.getOpen().setAttribute(InfoStatusOpenAttributeTypes.CLOSE);
 
             if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.DONOT_USE_TYPE_COUNT)) {
                 type.minusTotalOccupiedCount();

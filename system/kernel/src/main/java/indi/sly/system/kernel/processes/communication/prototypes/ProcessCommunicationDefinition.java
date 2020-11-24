@@ -12,7 +12,6 @@ public class ProcessCommunicationDefinition implements ISerializable<ProcessComm
     public ProcessCommunicationDefinition() {
         this.pipeIDs = new HashSet<>();
         this.portIDs = new HashSet<>();
-
     }
 
     private byte[] shared;

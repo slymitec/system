@@ -45,7 +45,7 @@ public class SignalTypeInitializer extends ATypeInitializer {
         SignalDefinition signal = new SignalDefinition();
 
         signal.setProcessID(process.getID());
-        signal.setMaxSignalsCount(processToken.getLimits().get(ProcessTokenLimitTypes.SIGNAL_MAX));
+        signal.setLimit(processToken.getLimits().get(ProcessTokenLimitTypes.SIGNAL_MAX));
 
         info.setContent(ObjectUtils.transferToByteArray(signal));
     }

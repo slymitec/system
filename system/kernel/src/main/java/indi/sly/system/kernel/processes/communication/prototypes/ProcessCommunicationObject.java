@@ -42,13 +42,32 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         this.process = process;
     }
 
+    //pipes
+
+
+    //ports
+
+    public Set<UUID> getPortIDs() {
+        return processCommunication.getPortIDs();
+    }
+
+    public UUID createPort() {
+        return null;
+    }
+
+    public void deletePort(UUID portID) {
+
+    }
+
+    //
+
     public UUID getSignalID() {
         this.init();
 
         return this.processCommunication.getSignalID();
     }
 
-    public void initSignals() {
+    public void createSignals() {
         this.init();
 
         if (!UUIDUtils.isAnyNullOrEmpty(this.processCommunication.getSignalID())) {
@@ -83,7 +102,7 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         this.lock(LockTypes.NONE);
     }
 
-    public void killSignals() {
+    public void deleteSignals() {
         this.init();
 
         if (!UUIDUtils.isAnyNullOrEmpty(this.processCommunication.getSignalID())) {

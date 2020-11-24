@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.processes.communication.prototypes.instances;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.StatusInsufficientResourcesException;
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.NumberUtils;
 import indi.sly.system.common.utility.ObjectUtils;
@@ -21,7 +20,7 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
     private UUID processID;
     private final Set<UUID> sourceProcessIDs;
     private final List<SignalEntryDefinition> signalEntries;
-    private int maxSignalsCount;
+    private int limit;
 
     public UUID getProcessID() {
         return this.processID;
@@ -35,12 +34,12 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
         return this.sourceProcessIDs;
     }
 
-    public int getMaxSignalsCount() {
-        return this.maxSignalsCount;
+    public int getLimit() {
+        return this.limit;
     }
 
-    public void setMaxSignalsCount(int maxSignalsCount) {
-        this.maxSignalsCount = maxSignalsCount;
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 
     public int size() {
@@ -72,7 +71,7 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SignalDefinition that = (SignalDefinition) o;
-        return maxSignalsCount == that.maxSignalsCount &&
+        return limit == that.limit &&
                 Objects.equals(processID, that.processID) &&
                 sourceProcessIDs.equals(that.sourceProcessIDs) &&
                 signalEntries.equals(that.signalEntries);
@@ -80,7 +79,7 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(processID, sourceProcessIDs, signalEntries, maxSignalsCount);
+        return Objects.hash(processID, sourceProcessIDs, signalEntries, limit);
     }
 
     @Override
@@ -97,7 +96,7 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
         for (SignalEntryDefinition signalEntry : this.signalEntries) {
             signal.signalEntries.add(signalEntry.deepClone());
         }
-        signal.maxSignalsCount = this.maxSignalsCount;
+        signal.limit = this.limit;
 
         return signal;
     }
@@ -118,7 +117,7 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
             this.signalEntries.add(ObjectUtils.readExternal(in));
         }
 
-        this.maxSignalsCount = NumberUtils.readExternalInteger(in);
+        this.limit = NumberUtils.readExternalInteger(in);
     }
 
     @Override
@@ -135,6 +134,6 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
             ObjectUtils.writeExternal(out, pair);
         }
 
-        NumberUtils.writeExternalLong(out, this.maxSignalsCount);
+        NumberUtils.writeExternalLong(out, this.limit);
     }
 }

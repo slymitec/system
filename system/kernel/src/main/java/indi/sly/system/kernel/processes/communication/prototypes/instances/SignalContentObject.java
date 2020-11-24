@@ -52,7 +52,7 @@ public class SignalContentObject extends AInfoContentObject {
     }
 
     public void send(long key, long value) {
-        if (this.signals.size() >= this.signals.getMaxSignalsCount()) {
+        if (this.signals.size() >= this.signals.getLimit()) {
             throw new StatusInsufficientResourcesException();
         }
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);

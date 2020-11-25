@@ -46,7 +46,7 @@ public class PortTypeInitializer extends ATypeInitializer {
         PortDefinition port = new PortDefinition();
 
         port.setProcessID(process.getID());
-        port.setLimit(processToken.getLimits().get(ProcessTokenLimitTypes.PORT_MAX));
+        port.setLimit(processToken.getLimits().get(ProcessTokenLimitTypes.PORT_LENGTH_MAX));
 
         info.setContent(ObjectUtils.transferToByteArray(port));
     }

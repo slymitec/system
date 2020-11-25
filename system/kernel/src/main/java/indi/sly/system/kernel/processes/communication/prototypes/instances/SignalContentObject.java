@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.communication.prototypes.instances;
 
+import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.exceptions.StatusInsufficientResourcesException;
 import indi.sly.system.common.types.LockTypes;
@@ -41,7 +42,20 @@ public class SignalContentObject extends AInfoContentObject {
     }
 
     public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {
+        if (ObjectUtils.isAnyNull(sourceProcessIDs)) {
+            throw new ConditionParametersException();
+        }
 
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrentProcess();
+
+        if (!this.signal.getProcessID().equals(process.getID())) {
+            throw new ConditionPermissionsException();
+        }
+
+        Set<UUID> signalSourceProcessIDs = this.signal.getSourceProcessIDs();
+        signalSourceProcessIDs.clear();
+        signalSourceProcessIDs.addAll(sourceProcessIDs);
     }
 
     public List<SignalEntryDefinition> receive() {
@@ -75,6 +89,7 @@ public class SignalContentObject extends AInfoContentObject {
         if (this.signal.size() >= this.signal.getLimit()) {
             throw new StatusInsufficientResourcesException();
         }
+
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrentProcess();
 

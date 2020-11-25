@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.communication.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
+import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.exceptions.StatusAlreadyFinishedException;
 import indi.sly.system.common.exceptions.StatusNotExistedException;
 import indi.sly.system.common.types.LockTypes;
@@ -15,6 +16,7 @@ import indi.sly.system.kernel.processes.communication.prototypes.instances.PortC
 import indi.sly.system.kernel.processes.communication.prototypes.instances.SignalContentObject;
 import indi.sly.system.kernel.processes.communication.prototypes.instances.SignalEntryDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenLimitTypes;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.prototypes.AccessControlTypes;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
@@ -44,7 +46,22 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         this.process = process;
     }
 
-    //pipes
+    public byte[] getShared() {
+        return this.processCommunication.getShared();
+    }
+
+    public void setShared(byte[] shared) {
+        if (ObjectUtils.isAnyNull(shared)) {
+            throw new ConditionParametersException();
+        }
+
+        ProcessTokenObject processToken = this.process.getToken();
+        if (shared.length > processToken.getLimits().get(ProcessTokenLimitTypes.SHARED_LENGTH_MAX)) {
+            throw new ConditionPermissionsException();
+        }
+
+        this.processCommunication.setShared(shared);
+    }
 
     public Set<UUID> getPortIDs() {
         this.init();
@@ -59,11 +76,10 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
         this.init();
 
-        if (!UUIDUtils.isAnyNullOrEmpty(this.processCommunication.getSignalID())) {
-            throw new StatusAlreadyFinishedException();
-        }
-
         ProcessTokenObject processToken = this.process.getToken();
+        if (this.processCommunication.getPortIDs().size() > processToken.getLimits().get(ProcessTokenLimitTypes.PORT_COUNT_MAX)) {
+            throw new ConditionPermissionsException();
+        }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -165,7 +181,6 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         portContent.setSourceProcessIDs(sourceProcessIDs);
         port.close();
     }
-
 
     public byte[] receivePort(UUID portID) {
         if (ObjectUtils.isAnyNull(portID)) {

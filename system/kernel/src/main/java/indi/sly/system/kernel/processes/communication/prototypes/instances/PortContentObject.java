@@ -43,7 +43,20 @@ public class PortContentObject extends AInfoContentObject {
     }
 
     public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {
+        if (ObjectUtils.isAnyNull(sourceProcessIDs)) {
+            throw new ConditionParametersException();
+        }
 
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrentProcess();
+
+        if (!this.port.getProcessID().equals(process.getID())) {
+            throw new ConditionPermissionsException();
+        }
+
+        Set<UUID> portSourceProcessIDs = this.port.getSourceProcessIDs();
+        portSourceProcessIDs.clear();
+        portSourceProcessIDs.addAll(sourceProcessIDs);
     }
 
     public byte[] receive() {
@@ -74,6 +87,7 @@ public class PortContentObject extends AInfoContentObject {
         if (this.port.size() + value.length >= this.port.getLimit()) {
             throw new StatusInsufficientResourcesException();
         }
+
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrentProcess();
 

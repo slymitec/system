@@ -10,6 +10,7 @@ import java.util.*;
 
 public class ProcessCommunicationDefinition implements ISerializable<ProcessCommunicationDefinition> {
     public ProcessCommunicationDefinition() {
+        this.shared = ArrayUtils.EMPTY_BYTES;
         this.pipeIDs = new HashSet<>();
         this.portIDs = new HashSet<>();
     }

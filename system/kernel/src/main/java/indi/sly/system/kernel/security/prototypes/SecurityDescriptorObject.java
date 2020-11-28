@@ -85,24 +85,24 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
             throw new StatusNotSupportedException();
         }
 
-        SecurityTokenManager securityTokenManager = this.factoryManager.getManager(SecurityTokenManager.class);
-
         ProcessTokenObject processToken = this.getCurrentProcessToken();
-        AccountObject account = securityTokenManager.getAccount(processToken.getAccountID());
-        List<GroupObject> groups = account.getGroups();
 
-        List<UUID> accountGroupIDs = new ArrayList<>();
-        for (GroupObject group : groups) {
-            accountGroupIDs.add(group.getID());
+        if (processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)) {
+            return true;
         }
-        accountGroupIDs.add(account.getID());
+
+        List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
+        for (SecurityDescriptorObject pair : this.parents) {
+            pair.init();
+
+            securityDescriptors.add(pair.securityDescriptor);
+        }
 
         this.init();
 
-        Map<UUID, Long> accessControl = new HashMap<>();
-        List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
-        this.parents.forEach(securityDescriptor -> securityDescriptors.add(securityDescriptor.securityDescriptor));
         securityDescriptors.add(this.securityDescriptor);
+
+        Map<UUID, Long> accessControl = new HashMap<>();
         for (SecurityDescriptorDefinition securityDescriptor : securityDescriptors) {
             if (!securityDescriptor.isInherit()) {
                 accessControl.clear();
@@ -117,6 +117,16 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
                 }
             }
         }
+
+        SecurityTokenManager securityTokenManager = this.factoryManager.getManager(SecurityTokenManager.class);
+
+        AccountObject account = securityTokenManager.getAccount(processToken.getAccountID());
+        List<GroupObject> groups = account.getGroups();
+        List<UUID> accountGroupIDs = new ArrayList<>();
+        for (GroupObject group : groups) {
+            accountGroupIDs.add(group.getID());
+        }
+        accountGroupIDs.add(account.getID());
 
         boolean allow = false;
 
@@ -147,6 +157,10 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
     }
 
     public List<SecurityDescriptorSummaryDefinition> getAccessControlType() {
+        if (!this.permission) {
+            throw new StatusNotSupportedException();
+        }
+
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
         if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
@@ -156,13 +170,19 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
         }
 
         List<SecurityDescriptorSummaryDefinition> securityDescriptorSummaries = new ArrayList<>();
-        this.parents.forEach(securityDescriptor -> {
+
+        for (SecurityDescriptorObject pair : this.parents) {
+            pair.init();
+
             SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
-            securityDescriptorSummary.getIdentifications().addAll(securityDescriptor.identifications);
-            securityDescriptorSummary.setInherit(securityDescriptor.securityDescriptor.isInherit());
-            securityDescriptorSummary.getAccessControl().putAll(securityDescriptor.securityDescriptor.getAccessControl());
+            securityDescriptorSummary.getIdentifications().addAll(pair.identifications);
+            securityDescriptorSummary.setInherit(pair.securityDescriptor.isInherit());
+            securityDescriptorSummary.getAccessControl().putAll(pair.securityDescriptor.getAccessControl());
             securityDescriptorSummaries.add(securityDescriptorSummary);
-        });
+        }
+
+        this.init();
+
         SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
         securityDescriptorSummary.getIdentifications().addAll(this.identifications);
         securityDescriptorSummary.setInherit(this.securityDescriptor.isInherit());
@@ -173,6 +193,10 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
     }
 
     public void setInherit(boolean inherit) {
+        if (!this.permission) {
+            throw new StatusNotSupportedException();
+        }
+
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
         if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
@@ -193,6 +217,9 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
     public void setOwners(List<UUID> owners) {
         if (ObjectUtils.isAnyNull(owners) || owners.isEmpty()) {
             throw new ConditionParametersException();
+        }
+        if (!this.permission) {
+            throw new StatusNotSupportedException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
@@ -217,6 +244,9 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
         if (ObjectUtils.isAnyNull(accessControl)) {
             throw new ConditionParametersException();
         }
+        if (!this.permission) {
+            throw new StatusNotSupportedException();
+        }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
@@ -229,8 +259,48 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
+        Map<UUID, Long> resultAccessControl;
+        if (this.securityDescriptor.isInherit()) {
+            List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
+            for (SecurityDescriptorObject pair : this.parents) {
+                pair.init();
+
+                securityDescriptors.add(pair.securityDescriptor);
+            }
+
+            Map<UUID, Long> parentAccessControl = new HashMap<>();
+            for (SecurityDescriptorDefinition securityDescriptor : securityDescriptors) {
+                if (!securityDescriptor.isInherit()) {
+                    parentAccessControl.clear();
+                }
+
+                for (Map.Entry<UUID, Long> pair : securityDescriptor.getAccessControl().entrySet()) {
+                    if (parentAccessControl.containsKey(pair.getKey())) {
+                        parentAccessControl.put(pair.getKey(), LogicalUtils.or(parentAccessControl.get(pair.getKey()),
+                                pair.getValue()));
+                    } else {
+                        parentAccessControl.put(pair.getKey(), pair.getValue());
+                    }
+                }
+            }
+
+            resultAccessControl = new HashMap<>();
+
+            for (Map.Entry<UUID, Long> pair : accessControl.entrySet()) {
+                Long parentAccessControlValue = parentAccessControl.getOrDefault(pair.getKey(), null);
+                if (ObjectUtils.isAnyNull(parentAccessControlValue)) {
+                    resultAccessControl.put(pair.getKey(), pair.getValue());
+                } else {
+                    resultAccessControl.put(pair.getKey(), LogicalUtils.and(pair.getValue(),
+                            ~(parentAccessControlValue.longValue())));
+                }
+            }
+        } else {
+            resultAccessControl = accessControl;
+        }
+
         this.securityDescriptor.getAccessControl().clear();
-        this.securityDescriptor.getAccessControl().putAll(accessControl);
+        this.securityDescriptor.getAccessControl().putAll(resultAccessControl);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -292,10 +362,18 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
         }
 
         throw new StatusNotSupportedException();
-        //...
+
+        /* Write in FileSystem:
+            /Files/Users/{Account Name}/Workspace/Archives/Logs/{LogID : String}.log
+            {LogID : String} is String not UUID
+        */
     }
 
     public long getAuditTypes() {
+        if (!this.audit) {
+            throw new StatusNotSupportedException();
+        }
+
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
         if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
@@ -309,6 +387,10 @@ public class SecurityDescriptorObject extends ABytesProcessObject {
     }
 
     public void setAuditTypes(long auditTypes) {
+        if (!this.audit) {
+            throw new StatusNotSupportedException();
+        }
+
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
         if (!processToken.isPrivilegeTypes(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)

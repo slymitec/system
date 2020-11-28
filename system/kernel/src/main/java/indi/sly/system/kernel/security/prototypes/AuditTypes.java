@@ -3,8 +3,6 @@ package indi.sly.system.kernel.security.prototypes;
 public interface AuditTypes {
     long NULL = 0L;
 
-    /* System Objects: 0~31, Application: 32~63 */
-
     long LISTCHILD_READDATA = 1;
     long TRAVERSE_EXECUTE = 1 << 2L;
     long CREATECHILD_WRITEDATA = 1 << 4L;

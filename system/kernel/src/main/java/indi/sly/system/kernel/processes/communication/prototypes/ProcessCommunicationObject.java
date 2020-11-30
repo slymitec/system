@@ -20,6 +20,7 @@ import indi.sly.system.kernel.processes.types.ProcessTokenLimitTypes;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.types.AccessControlTypes;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
+import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -52,7 +53,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
         this.init();
@@ -66,7 +71,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
         ProcessTokenObject processToken = this.process.getToken();
@@ -89,7 +98,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
@@ -139,13 +152,53 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         return portID;
     }
 
+    public void deleteAllPort() {
+        if (!this.process.isCurrent()) {
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
+        }
+
+        try {
+            this.lock(LockTypes.WRITE);
+            this.init();
+
+            Set<UUID> processCommunicationPortIDs = this.processCommunication.getPortIDs();
+
+            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
+            for (UUID processCommunicationPortID : processCommunicationPortIDs) {
+                List<Identification> identifications = new ArrayList<>();
+                identifications.add(new Identification("Ports"));
+
+                InfoObject ports = objectManager.get(identifications);
+                ports.deleteChild(new Identification(processCommunicationPortID));
+
+                processCommunicationPortIDs.remove(processCommunicationPortID);
+            }
+
+            this.fresh();
+            this.lock(LockTypes.NONE);
+        } catch (AKernelException exception) {
+            throw exception;
+        } finally {
+            this.lock(LockTypes.NONE);
+        }
+    }
+
     public void deletePort(UUID portID) {
         if (ObjectUtils.isAnyNull(portID)) {
             throw new ConditionParametersException();
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
         try {
@@ -156,10 +209,6 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
             if (processCommunicationPortIDs.contains(portID)) {
                 throw new StatusNotExistedException();
             }
-            processCommunicationPortIDs.remove(portID);
-
-            this.fresh();
-            this.lock(LockTypes.NONE);
 
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -168,6 +217,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
             InfoObject ports = objectManager.get(identifications);
             ports.deleteChild(new Identification(portID));
+
+            processCommunicationPortIDs.remove(portID);
+
+            this.fresh();
+            this.lock(LockTypes.NONE);
         } catch (AKernelException exception) {
             throw exception;
         } finally {
@@ -181,7 +235,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
         this.init();
@@ -207,7 +265,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
         this.init();
@@ -231,7 +293,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
         this.init();
@@ -283,7 +349,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
         try {
@@ -331,7 +401,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
     public void deleteSignal() {
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
         try {
@@ -365,7 +439,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
     public Set<UUID> getSignalSourceProcessIDs() {
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
         this.init();
@@ -389,7 +467,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
     public void setSignalSourceProcessIDs(Set<UUID> sourceProcessIDs) {
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
         if (ObjectUtils.isAnyNull(sourceProcessIDs)) {
@@ -415,7 +497,11 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
     public List<SignalEntryDefinition> receiveSignals() {
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
         this.init();

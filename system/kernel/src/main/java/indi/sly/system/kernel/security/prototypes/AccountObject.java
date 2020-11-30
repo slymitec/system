@@ -2,8 +2,9 @@ package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.ConditionPermissionsException;
+import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreProcessObject;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -24,43 +25,41 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AccountObject extends ACoreProcessObject {
-    private AccountEntity account;
-
-    @Override
-    protected void init() {
-    }
-
-    @Override
-    protected void fresh() {
-    }
-
-    public void setAccount(AccountEntity account) {
-        this.account = account;
-    }
-
+public class AccountObject extends AValueProcessObject<AccountEntity> {
     public UUID getID() {
-        return this.account.getID();
+        this.init();
+
+        return this.value.getID();
     }
 
     public String getName() {
-        return this.account.getName();
+        this.init();
+
+        return this.value.getName();
     }
 
     public String getPassword() {
-        return account.getPassword();
+        return this.value.getPassword();
     }
 
     public void setPassword(String password) {
-        this.account.setPassword(password);
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        this.value.setPassword(password);
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
     }
 
     public List<GroupObject> getGroups() {
         SecurityTokenManager securityTokenManager = this.factoryManager.getManager(SecurityTokenManager.class);
 
+        this.init();
+
         List<GroupObject> groups = new ArrayList<>();
 
-        for (GroupEntity group : this.account.getGroups()) {
+        for (GroupEntity group : this.value.getGroups()) {
             groups.add(securityTokenManager.getGroup(group.getID()));
         }
 
@@ -82,16 +81,22 @@ public class AccountObject extends ACoreProcessObject {
             throw new ConditionPermissionsException();
         }
 
+        this.lock(LockTypes.WRITE);
+        this.init();
+
         AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
-        if (ObjectUtils.isAnyNull(this.account.getGroups())) {
-            this.account.setGroups(new ArrayList<>());
+        if (ObjectUtils.isAnyNull(this.value.getGroups())) {
+            this.value.setGroups(new ArrayList<>());
         } else {
-            this.account.getGroups().clear();
+            this.value.getGroups().clear();
         }
 
         for (GroupObject group : groups) {
-            this.account.getGroups().add(accountGroupRepository.getGroup(group.getID()));
+            this.value.getGroups().add(accountGroupRepository.getGroup(group.getID()));
         }
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
     }
 }

@@ -22,9 +22,14 @@ public class ProcessContextObject extends ABytesProcessObject {
         return ObjectUtils.transferToByteArray(this.processContext);
     }
 
+    private ProcessObject process;
     private ProcessContextDefinition processContext;
 
-//    public Map<String, String> getEnvironmentVariable() {
+    public void setProcess(ProcessObject process) {
+        this.process = process;
+    }
+
+    //    public Map<String, String> getEnvironmentVariable() {
 //        this.init();
 //
 //        return processContext.getEnvironmentVariable();

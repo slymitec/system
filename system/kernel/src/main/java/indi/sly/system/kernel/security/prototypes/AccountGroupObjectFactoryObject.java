@@ -16,7 +16,8 @@ public class AccountGroupObjectFactoryObject extends ACoreObject {
     public AccountObject buildAccount(AccountEntity account) {
         AccountObject accountObject = this.factoryManager.create(AccountObject.class);
 
-        accountObject.setAccount(account);
+        accountObject.setSource(() -> account, (AccountEntity source) -> {
+        });
         accountObject.setLock((lockType) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
@@ -30,7 +31,8 @@ public class AccountGroupObjectFactoryObject extends ACoreObject {
     public GroupObject buildGroup(GroupEntity group) {
         GroupObject groupObject = this.factoryManager.create(GroupObject.class);
 
-        groupObject.setGroup(group);
+        groupObject.setSource(() -> group, (GroupEntity source) -> {
+        });
         groupObject.setLock((lockType) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();

@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.security.prototypes;
 
-import indi.sly.system.kernel.core.prototypes.ACoreProcessObject;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.security.entities.GroupEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -10,26 +10,16 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GroupObject extends ACoreProcessObject {
-    private GroupEntity group;
-
-    @Override
-    protected void init() {
-    }
-
-    @Override
-    protected void fresh() {
-    }
-
-    public void setGroup(GroupEntity group) {
-        this.group = group;
-    }
-
+public class GroupObject extends AValueProcessObject<GroupEntity> {
     public UUID getID() {
-        return this.group.getID();
+        this.init();
+
+        return this.value.getID();
     }
 
     public String getName() {
-        return this.group.getName();
+        this.init();
+
+        return this.value.getName();
     }
 }

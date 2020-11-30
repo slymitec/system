@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionContextException;
+import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.functions.Consumer2;
 import indi.sly.system.common.functions.Function2;
@@ -63,22 +64,15 @@ public class ProcessObject extends ACoreObject {
         this.processorRegister.getReadProcessStatuses();
 
         processStatus.processorRegister = this.processorRegister;
-        processStatus.setProcess(process);
-        processStatus.setProcessObject(this);
+        processStatus.setSource(() -> process, (ProcessEntity source) -> {
+        }, () -> this, (ProcessObject source) -> {
+        });
 
         return processStatus;
     }
 
     public synchronized ProcessCommunicationObject getCommunication() {
         ProcessEntity process = this.getProcess();
-
-        if (!this.isCurrent()) {
-            ProcessTokenObject processToken = this.getToken();
-
-            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new StatusRelationshipErrorException();
-            }
-        }
 
         ProcessCommunicationObject processCommunication = this.factoryManager.create(ProcessCommunicationObject.class);
 
@@ -139,6 +133,7 @@ public class ProcessObject extends ACoreObject {
 
             processRepository.lock(process, lockType);
         });
+        processContext.setProcess(this);
 
         return processContext;
     }

@@ -74,4 +74,18 @@ public class LogicalUtils {
 
         return false;
     }
+
+    public static boolean allNotEqual(long value, long... values) {
+        if (ObjectUtils.isAnyNull(values) || values.length == 0) {
+            return true;
+        }
+
+        for (long pair : values) {
+            if (value == pair) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

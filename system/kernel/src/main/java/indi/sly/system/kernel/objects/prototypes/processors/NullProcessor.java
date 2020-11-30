@@ -6,10 +6,10 @@ import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
-import indi.sly.system.kernel.objects.prototypes.InfoStatusDefinition;
-import indi.sly.system.kernel.objects.prototypes.InfoStatusOpenDefinition;
-import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
-import indi.sly.system.kernel.objects.prototypes.DumpDefinition;
+import indi.sly.system.kernel.objects.definitions.InfoStatusDefinition;
+import indi.sly.system.kernel.objects.definitions.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
+import indi.sly.system.kernel.objects.definitions.DumpDefinition;
 
 import java.util.Map;
 import java.util.Set;

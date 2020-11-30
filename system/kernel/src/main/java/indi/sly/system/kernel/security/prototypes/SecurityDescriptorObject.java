@@ -14,6 +14,10 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.SecurityTokenManager;
+import indi.sly.system.kernel.security.definitions.SecurityDescriptorDefinition;
+import indi.sly.system.kernel.security.definitions.SecurityDescriptorSummaryDefinition;
+import indi.sly.system.kernel.security.types.AccessControlTypes;
+import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

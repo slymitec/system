@@ -4,7 +4,7 @@ import indi.sly.system.common.exceptions.*;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
-import indi.sly.system.kernel.core.boot.StartupTypes;
+import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -13,6 +13,7 @@ import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.entities.AccountEntity;
 import indi.sly.system.kernel.security.entities.GroupEntity;
 import indi.sly.system.kernel.security.prototypes.*;
+import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

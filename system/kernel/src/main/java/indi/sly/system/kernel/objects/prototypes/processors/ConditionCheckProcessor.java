@@ -10,11 +10,11 @@ import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
-import indi.sly.system.kernel.objects.prototypes.InfoStatusDefinition;
-import indi.sly.system.kernel.objects.prototypes.InfoStatusOpenDefinition;
-import indi.sly.system.kernel.objects.prototypes.InfoStatusOpenAttributeTypes;
-import indi.sly.system.kernel.objects.types.prototypes.TypeInitializerAttributeTypes;
-import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
+import indi.sly.system.kernel.objects.definitions.InfoStatusDefinition;
+import indi.sly.system.kernel.objects.definitions.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.types.InfoStatusOpenAttributeTypes;
+import indi.sly.system.kernel.objects.infotypes.prototypes.types.TypeInitializerAttributeTypes;
+import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

@@ -6,9 +6,13 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 import javax.inject.Named;
 
-import indi.sly.system.kernel.core.enviroment.SpaceTypes;
+import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
+import indi.sly.system.kernel.objects.definitions.DumpDefinition;
+import indi.sly.system.kernel.objects.definitions.InfoStatusDefinition;
+import indi.sly.system.kernel.objects.definitions.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.types.InfoStatusOpenAttributeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -19,7 +23,7 @@ import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.processors.IInfoObjectProcessor;
-import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
+import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)

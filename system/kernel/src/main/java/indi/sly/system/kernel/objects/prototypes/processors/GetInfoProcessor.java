@@ -13,7 +13,7 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.entities.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
-import indi.sly.system.kernel.objects.prototypes.InfoStatusDefinition;
+import indi.sly.system.kernel.objects.definitions.InfoStatusDefinition;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)

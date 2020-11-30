@@ -1,14 +1,17 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionContextException;
+import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.functions.Consumer2;
 import indi.sly.system.common.functions.Function2;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
+import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
+import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -30,6 +33,14 @@ public class ProcessObject extends ACoreObject {
         }
 
         return this.id;
+    }
+
+    public boolean isCurrent() {
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+
+        ThreadObject thread = threadManager.getCurrentThread();
+
+        return this.id.equals(thread.getProcessID());
     }
 
     private synchronized ProcessEntity getProcess() {
@@ -60,6 +71,14 @@ public class ProcessObject extends ACoreObject {
 
     public synchronized ProcessCommunicationObject getCommunication() {
         ProcessEntity process = this.getProcess();
+
+        if (!this.isCurrent()) {
+            ProcessTokenObject processToken = this.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new StatusRelationshipErrorException();
+            }
+        }
 
         ProcessCommunicationObject processCommunication = this.factoryManager.create(ProcessCommunicationObject.class);
 

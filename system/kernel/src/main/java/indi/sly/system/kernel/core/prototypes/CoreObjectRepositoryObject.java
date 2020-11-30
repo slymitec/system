@@ -6,7 +6,7 @@ import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.enviroment.KernelSpace;
-import indi.sly.system.kernel.core.enviroment.SpaceTypes;
+import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.core.enviroment.UserSpace;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

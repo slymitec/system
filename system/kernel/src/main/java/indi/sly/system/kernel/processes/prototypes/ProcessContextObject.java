@@ -2,14 +2,12 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
-import indi.sly.system.kernel.objects.Identification;
-import indi.sly.system.kernel.sessions.prototypes.AppContextDefinition;
+import indi.sly.system.kernel.processes.definitions.ProcessContextDefinition;
+import indi.sly.system.kernel.sessions.definitions.AppContextDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.List;
-import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -48,6 +46,6 @@ public class ProcessContextObject extends ABytesProcessObject {
     public void setAppContext(AppContextDefinition appContext) {
         this.init();
 
-        processContext.setAppContext(appContext);
+        //processContext.setAppContext(appContext);
     }
 }

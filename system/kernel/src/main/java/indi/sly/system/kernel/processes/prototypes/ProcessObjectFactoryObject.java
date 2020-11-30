@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.prototypes.DateTimeTypes;
-import indi.sly.system.kernel.core.enviroment.SpaceTypes;
+import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.processors.IProcessObjectProcessor;

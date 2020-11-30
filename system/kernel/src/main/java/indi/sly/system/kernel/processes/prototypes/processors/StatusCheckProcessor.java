@@ -7,7 +7,7 @@ import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.ProcessObjectProcessorRegister;
-import indi.sly.system.kernel.processes.prototypes.ProcessStatusTypes;
+import indi.sly.system.kernel.processes.types.ProcessStatusTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

@@ -7,7 +7,7 @@ import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.prototypes.PrivilegeTypes;
+import indi.sly.system.kernel.security.types.PrivilegeTypes;
 
 public class DateTimeObject extends ACoreObject {
     public DateTimeObject() {

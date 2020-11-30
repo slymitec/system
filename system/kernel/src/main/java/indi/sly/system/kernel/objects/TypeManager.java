@@ -8,7 +8,7 @@ import java.util.UUID;
 import javax.inject.Named;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.kernel.core.enviroment.SpaceTypes;
+import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -18,14 +18,14 @@ import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
-import indi.sly.system.kernel.core.boot.StartupTypes;
+import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.core.enviroment.KernelConfiguration;
-import indi.sly.system.kernel.objects.types.prototypes.ATypeInitializer;
-import indi.sly.system.kernel.objects.types.prototypes.TypeDefinition;
-import indi.sly.system.kernel.objects.types.prototypes.TypeInitializerAttributeTypes;
-import indi.sly.system.kernel.objects.types.prototypes.TypeObject;
-import indi.sly.system.kernel.objects.types.prototypes.instances.FolderTypeInitializer;
-import indi.sly.system.kernel.objects.types.prototypes.instances.NamelessFolderTypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.definitions.TypeDefinition;
+import indi.sly.system.kernel.objects.infotypes.prototypes.types.TypeInitializerAttributeTypes;
+import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
+import indi.sly.system.kernel.objects.instances.prototypes.FolderTypeInitializer;
+import indi.sly.system.kernel.objects.instances.prototypes.NamelessFolderTypeInitializer;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)

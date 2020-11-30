@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.core;
 
-import indi.sly.system.kernel.core.boot.IStartupRegister;
+import indi.sly.system.kernel.core.boot.prototypes.IStartupRegister;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

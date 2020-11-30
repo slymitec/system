@@ -4,16 +4,16 @@ import java.util.List;
 
 import javax.inject.Named;
 
-import indi.sly.system.kernel.core.enviroment.SpaceTypes;
+import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
-import indi.sly.system.kernel.objects.prototypes.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.definitions.InfoStatusOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.core.AManager;
-import indi.sly.system.kernel.core.boot.StartupTypes;
+import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectFactoryObject;
 

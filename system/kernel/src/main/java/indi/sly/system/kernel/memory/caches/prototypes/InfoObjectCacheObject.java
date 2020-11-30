@@ -7,15 +7,16 @@ import javax.inject.Named;
 
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.prototypes.DateTimeTypes;
+import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.prototypes.CoreObjectRepositoryObject;
+import indi.sly.system.kernel.memory.caches.definition.InfoObjectCacheDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
-import indi.sly.system.kernel.core.enviroment.SpaceTypes;
+import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 
 @Named

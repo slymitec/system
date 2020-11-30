@@ -1,15 +1,20 @@
 package indi.sly.system.kernel.processes.prototypes;
 
+import indi.sly.system.common.exceptions.AKernelException;
+import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
-import indi.sly.system.common.functions.Consumer;
 import indi.sly.system.common.functions.Consumer2;
-import indi.sly.system.common.functions.Function;
 import indi.sly.system.common.functions.Function2;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.common.types.LockTypes;
+import indi.sly.system.common.utility.LogicalUtils;
+import indi.sly.system.kernel.core.prototypes.ACoreProcessObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
-import indi.sly.system.kernel.processes.prototypes.instances.ProcessTypeInitializer;
+import indi.sly.system.kernel.processes.types.ProcessStatusTypes;
+import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -20,7 +25,15 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessStatusObject extends ACoreObject {
+public class ProcessStatusObject extends ACoreProcessObject {
+    @Override
+    protected void init() {
+    }
+
+    @Override
+    protected void fresh() {
+    }
+
     protected ProcessObjectProcessorRegister processorRegister;
     private ProcessEntity process;
     private ProcessObject processObject;
@@ -45,21 +58,32 @@ public class ProcessStatusObject extends ACoreObject {
         return status;
     }
 
-    public void interrupt() {
-        if (this.process.getStatus() != ProcessStatusTypes.RUNNING) {
+    public void initialize() {
+        if (LogicalUtils.allNotEqual(this.processObject.getStatus().get(), ProcessStatusTypes.NULL)) {
             throw new StatusRelationshipErrorException();
+        }
+        if (this.processObject.isCurrent()) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject parentProcess = processManager.getCurrentProcess();
+
+        if (!parentProcess.getID().equals(this.process.getParentProcessID())) {
+            throw new ConditionPermissionsException();
         }
 
         List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
         for (Consumer2<ProcessEntity, Long> pair : funcs) {
-            pair.accept(this.process, ProcessStatusTypes.INTERRUPTED);
+            pair.accept(this.process, ProcessStatusTypes.INITIALIZATION);
         }
     }
 
-    public void resume() {
-        if (this.process.getStatus() != ProcessStatusTypes.INITIALIZATION
-                && this.process.getStatus() != ProcessStatusTypes.INTERRUPTED) {
+    public void run() {
+        if (LogicalUtils.allNotEqual(this.processObject.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
+                ProcessStatusTypes.INTERRUPTED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -70,29 +94,92 @@ public class ProcessStatusObject extends ACoreObject {
         }
     }
 
-    public void stop() {
-        if (this.process.getStatus() != ProcessStatusTypes.RUNNING
-                && this.process.getStatus() != ProcessStatusTypes.INTERRUPTED) {
+    public void interrupt() {
+        if (LogicalUtils.allNotEqual(this.processObject.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
+                ProcessStatusTypes.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
         List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
         for (Consumer2<ProcessEntity, Long> pair : funcs) {
-            pair.accept(this.process, ProcessStatusTypes.DIED);
+            pair.accept(this.process, ProcessStatusTypes.INTERRUPTED);
+        }
+    }
+
+    public void die() {
+        if (LogicalUtils.allNotEqual(this.processObject.getStatus().get(), ProcessStatusTypes.RUNNING,
+                ProcessStatusTypes.INTERRUPTED, ProcessStatusTypes.DIED)) {
+            throw new StatusRelationshipErrorException();
         }
 
+        List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
-        //释放资源（跨进程通信、句柄等）
+        try {
+            this.lock(LockTypes.WRITE);
+            this.init();
+
+            for (Consumer2<ProcessEntity, Long> pair : funcs) {
+                pair.accept(this.process, ProcessStatusTypes.DIED);
+            }
+
+            this.fresh();
+        } catch (AKernelException exception) {
+            throw exception;
+        } finally {
+            this.lock(LockTypes.NONE);
+        }
+
+        if (!this.processObject.isCurrent()) {
+            ProcessTokenObject processToken = this.processObject.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                return;
+            }
+        }
+
+        ProcessCommunicationObject processCommunication = this.processObject.getCommunication();
+        Set<UUID> processCommunicationPortIDs = processCommunication.getPortIDs();
+        for (UUID processCommunicationPortID : processCommunicationPortIDs) {
+            processCommunication.deletePort(processCommunicationPortID);
+        }
+        processCommunication.deleteSignal();
 
         ProcessHandleTableObject handleTable = this.processObject.getHandleTable();
         Set<UUID> handles = handleTable.list();
         for (UUID handle : handles) {
             handleTable.getInfo(handle).close();
         }
+    }
 
-        for (Consumer2<ProcessEntity, Long> pair : funcs) {
-            pair.accept(this.process, ProcessStatusTypes.ZOMBIE);
+    public void zombie() {
+        if (LogicalUtils.allNotEqual(this.processObject.getStatus().get(), ProcessStatusTypes.DIED)) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        if (!this.processObject.isCurrent()) {
+            ProcessTokenObject processToken = this.processObject.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
+        }
+
+        List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
+
+        try {
+            this.lock(LockTypes.WRITE);
+            this.init();
+
+            for (Consumer2<ProcessEntity, Long> pair : funcs) {
+                pair.accept(this.process, ProcessStatusTypes.ZOMBIE);
+            }
+
+            this.fresh();
+        } catch (AKernelException exception) {
+            throw exception;
+        } finally {
+            this.lock(LockTypes.NONE);
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);

@@ -1,0 +1,8 @@
+package indi.sly.system.kernel.objects.types;
+
+public interface InfoStatusOpenAttributeTypes {
+    long CLOSE = 0L;
+    long OPEN_ONLYREAD = 1L;
+    long OPEN_EXCLUSIVE = 2L;
+    long OPEN_SHARED_WRITE = 3L;
+}

@@ -2,21 +2,22 @@ package indi.sly.system.kernel.processes;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.exceptions.StatusNotReadyException;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
-import indi.sly.system.kernel.core.boot.StartupTypes;
+import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.prototypes.DateTimeTypes;
-import indi.sly.system.kernel.core.enviroment.SpaceTypes;
-import indi.sly.system.kernel.core.enviroment.UserSpace;
+import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
+import indi.sly.system.kernel.processes.definitions.ProcessHandleTableDefinition;
+import indi.sly.system.kernel.processes.definitions.ProcessStatisticsDefinition;
+import indi.sly.system.kernel.processes.definitions.ProcessTokenDefinition;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
-import indi.sly.system.kernel.security.prototypes.PrivilegeTypes;
+import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

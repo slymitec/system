@@ -80,33 +80,6 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
         return this.processHandleTable.list();
     }
 
-    public synchronized InfoObject getInfo(UUID handle) {
-        this.checkStatusAndCurrentPermission();
-
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                DateTimeObject.class);
-        long nowDateTime = dateTime.getCurrentDateTime();
-
-        InfoObject info = null;
-        try {
-            this.lock(LockTypes.WRITE);
-            this.init();
-
-            ProcessHandleEntryDefinition processHandleEntry = this.processHandleTable.get(handle);
-            processHandleEntry.getDate().put(DateTimeTypes.ACCESS, nowDateTime);
-            info = objectManager.rebuild(processHandleEntry.getIdentifications(), processHandleEntry.getOpen());
-
-            this.fresh();
-        } catch (AKernelException exception) {
-            throw exception;
-        } finally {
-            this.lock(LockTypes.NONE);
-        }
-
-        return info;
-    }
-
     public synchronized void inheritHandle(UUID handle) {
         if (UUIDUtils.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();
@@ -139,15 +112,40 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
             this.processHandleTable.add(handle, processHandleEntry);
 
             parentProcessHandleTable.fresh();
-            parentProcessHandleTable.lock(LockTypes.NONE);
             this.fresh();
         } catch (AKernelException exception) {
             throw exception;
         } finally {
             parentProcessHandleTable.lock(LockTypes.NONE);
-
             this.lock(LockTypes.NONE);
         }
+    }
+
+    public synchronized InfoObject getInfo(UUID handle) {
+        this.checkStatusAndCurrentPermission();
+
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                DateTimeObject.class);
+        long nowDateTime = dateTime.getCurrentDateTime();
+
+        InfoObject info = null;
+        try {
+            this.lock(LockTypes.WRITE);
+            this.init();
+
+            ProcessHandleEntryDefinition processHandleEntry = this.processHandleTable.get(handle);
+            processHandleEntry.getDate().put(DateTimeTypes.ACCESS, nowDateTime);
+            info = objectManager.rebuild(processHandleEntry.getIdentifications(), processHandleEntry.getOpen());
+
+            this.fresh();
+        } catch (AKernelException exception) {
+            throw exception;
+        } finally {
+            this.lock(LockTypes.NONE);
+        }
+
+        return info;
     }
 
     public synchronized UUID addInfo(InfoStatusDefinition status) {
@@ -181,7 +179,6 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
         } finally {
             this.lock(LockTypes.NONE);
         }
-
 
         return handle;
     }

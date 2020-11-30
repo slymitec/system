@@ -45,12 +45,43 @@ public class AccountAuthorizationObject extends ACoreObject {
         return Collections.unmodifiableMap(this.date);
     }
 
+    public boolean isAccountIDLegal() {
+        if (UUIDUtils.isAnyNullOrEmpty(this.accountID)) {
+            return false;
+        }
+
+        SecurityTokenManager securityTokenManager = this.factoryManager.getManager(SecurityTokenManager.class);
+
+        AccountObject account;
+        try {
+            account = securityTokenManager.getAccount(this.accountID);
+        } catch (AKernelException e) {
+            return false;
+        }
+        if (!StringUtils.equals(account.getPassword(), this.password)) {
+            return false;
+        }
+
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+                DateTimeObject.class);
+        long nowDateTime = dateTime.getCurrentDateTime();
+        long expiredTime =
+                this.factoryManager.getKernelSpace().getConfiguration().SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME;
+
+        if (nowDateTime - this.date.get(DateTimeTypes.CREATE) > expiredTime) {
+            return false;
+        }
+
+        return true;
+    }
+
     public UUID checkAndGetAccountID() {
         if (UUIDUtils.isAnyNullOrEmpty(this.accountID)) {
             throw new StatusExpiredException();
         }
 
         SecurityTokenManager securityTokenManager = this.factoryManager.getManager(SecurityTokenManager.class);
+
         AccountObject account;
         try {
             account = securityTokenManager.getAccount(this.accountID);

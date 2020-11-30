@@ -59,10 +59,8 @@ public class ProcessStatusObject extends ACoreProcessObject {
     }
 
     public void initialize() {
-        if (LogicalUtils.allNotEqual(this.processObject.getStatus().get(), ProcessStatusTypes.NULL)) {
-            throw new StatusRelationshipErrorException();
-        }
-        if (this.processObject.isCurrent()) {
+        if (LogicalUtils.allNotEqual(this.processObject.getStatus().get(), ProcessStatusTypes.NULL)
+                || this.processObject.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 

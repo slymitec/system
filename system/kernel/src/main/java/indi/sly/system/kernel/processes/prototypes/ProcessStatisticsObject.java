@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
+import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
@@ -65,7 +65,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -89,7 +89,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -113,7 +113,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -137,7 +137,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -161,7 +161,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -185,7 +185,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -209,7 +209,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -233,7 +233,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -257,7 +257,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -281,7 +281,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -305,7 +305,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -329,7 +329,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -353,7 +353,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -377,7 +377,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -401,7 +401,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -425,7 +425,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -449,7 +449,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -473,7 +473,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -497,7 +497,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -521,7 +521,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -545,7 +545,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -569,7 +569,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -593,7 +593,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -617,7 +617,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -641,7 +641,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -665,7 +665,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -689,7 +689,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -713,7 +713,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -737,7 +737,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -761,7 +761,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -785,7 +785,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -809,7 +809,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -833,7 +833,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -857,7 +857,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);
@@ -881,7 +881,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         }
 
         if (!this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockTypes.WRITE);

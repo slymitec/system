@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.core.prototypes;
 
-
+import indi.sly.system.common.exceptions.AKernelException;
 import indi.sly.system.common.functions.Consumer;
 import indi.sly.system.common.functions.Provider;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

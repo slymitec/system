@@ -1,10 +1,8 @@
 package indi.sly.system.kernel.processes.communication.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.exceptions.StatusAlreadyFinishedException;
-import indi.sly.system.common.exceptions.StatusNotExistedException;
+import indi.sly.system.common.exceptions.*;
 import indi.sly.system.common.types.LockTypes;
+import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
@@ -17,6 +15,7 @@ import indi.sly.system.kernel.processes.communication.instances.prototypes.PortC
 import indi.sly.system.kernel.processes.communication.instances.prototypes.SignalContentObject;
 import indi.sly.system.kernel.processes.communication.instances.definitions.SignalEntryDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.types.ProcessStatusTypes;
 import indi.sly.system.kernel.processes.types.ProcessTokenLimitTypes;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.types.AccessControlTypes;
@@ -48,12 +47,26 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
     }
 
     public byte[] getShared() {
+        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.RUNNING)) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        if (!this.process.isCurrent()) {
+            throw new ConditionPermissionsException();
+        }
+
+        this.init();
+
         return this.processCommunication.getShared();
     }
 
     public void setShared(byte[] shared) {
         if (ObjectUtils.isAnyNull(shared)) {
             throw new ConditionParametersException();
+        }
+
+        if (!this.process.isCurrent()) {
+            throw new ConditionPermissionsException();
         }
 
         ProcessTokenObject processToken = this.process.getToken();
@@ -75,42 +88,53 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
             throw new ConditionParametersException();
         }
 
-        this.init();
-
-        ProcessTokenObject processToken = this.process.getToken();
-        if (this.processCommunication.getPortIDs().size() > processToken.getLimits().get(ProcessTokenLimitTypes.PORT_COUNT_MAX)) {
+        if (!this.process.isCurrent()) {
             throw new ConditionPermissionsException();
         }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        List<Identification> identifications = new ArrayList<>();
-        identifications.add(new Identification("Ports"));
+        UUID portID = null;
 
-        InfoObject ports = objectManager.get(identifications);
+        try {
+            this.lock(LockTypes.WRITE);
+            this.init();
 
-        UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_PORT_ID;
+            ProcessTokenObject processToken = this.process.getToken();
+            if (this.processCommunication.getPortIDs().size() > processToken.getLimits().get(ProcessTokenLimitTypes.PORT_COUNT_MAX)) {
+                throw new ConditionPermissionsException();
+            }
 
-        InfoObject port = ports.createChildAndOpen(UUID.randomUUID(), new Identification(typeID),
-                InfoStatusOpenAttributeTypes.OPEN_EXCLUSIVE);
-        SecurityDescriptorObject securityDescriptor = port.getSecurityDescriptor();
-        Map<UUID, Long> accessControl = new HashMap<>();
-        accessControl.put(processToken.getAccountID(), AccessControlTypes.FULLCONTROL_ALLOW);
-        accessControl.put(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID,
-                AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
-        securityDescriptor.setAccessControlTypes(accessControl);
-        PortContentObject portContent = (PortContentObject) port.getContent();
-        portContent.setSourceProcessIDs(sourceProcessIDs);
-        port.close();
+            List<Identification> identifications = new ArrayList<>();
+            identifications.add(new Identification("Ports"));
 
-        UUID portID = port.getID();
+            InfoObject ports = objectManager.get(identifications);
 
-        this.lock(LockTypes.WRITE);
+            UUID typeID =
+                    this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_PORT_ID;
 
-        this.processCommunication.getPortIDs().add(portID);
+            InfoObject port = ports.createChildAndOpen(UUID.randomUUID(), new Identification(typeID),
+                    InfoStatusOpenAttributeTypes.OPEN_EXCLUSIVE);
+            SecurityDescriptorObject securityDescriptor = port.getSecurityDescriptor();
+            Map<UUID, Long> accessControl = new HashMap<>();
+            accessControl.put(processToken.getAccountID(), AccessControlTypes.FULLCONTROL_ALLOW);
+            accessControl.put(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID,
+                    AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
+            securityDescriptor.setAccessControlTypes(accessControl);
+            PortContentObject portContent = (PortContentObject) port.getContent();
+            portContent.setSourceProcessIDs(sourceProcessIDs);
+            port.close();
 
-        this.fresh();
-        this.lock(LockTypes.NONE);
+            portID = port.getID();
+
+            this.processCommunication.getPortIDs().add(portID);
+
+            this.fresh();
+        } catch (AKernelException exception) {
+            throw exception;
+        } finally {
+            this.lock(LockTypes.NONE);
+        }
 
         return portID;
     }
@@ -120,30 +144,44 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
             throw new ConditionParametersException();
         }
 
-        this.lock(LockTypes.WRITE);
-        this.init();
-
-        Set<UUID> processCommunicationPortIDs = this.processCommunication.getPortIDs();
-        if (processCommunicationPortIDs.contains(portID)) {
-            throw new StatusNotExistedException();
+        if (!this.process.isCurrent()) {
+            throw new ConditionPermissionsException();
         }
-        processCommunicationPortIDs.remove(portID);
 
-        this.fresh();
-        this.lock(LockTypes.NONE);
+        try {
+            this.lock(LockTypes.WRITE);
+            this.init();
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+            Set<UUID> processCommunicationPortIDs = this.processCommunication.getPortIDs();
+            if (processCommunicationPortIDs.contains(portID)) {
+                throw new StatusNotExistedException();
+            }
+            processCommunicationPortIDs.remove(portID);
 
-        List<Identification> identifications = new ArrayList<>();
-        identifications.add(new Identification("Ports"));
+            this.fresh();
+            this.lock(LockTypes.NONE);
 
-        InfoObject ports = objectManager.get(identifications);
-        ports.deleteChild(new Identification(portID));
+            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
+            List<Identification> identifications = new ArrayList<>();
+            identifications.add(new Identification("Ports"));
+
+            InfoObject ports = objectManager.get(identifications);
+            ports.deleteChild(new Identification(portID));
+        } catch (AKernelException exception) {
+            throw exception;
+        } finally {
+            this.lock(LockTypes.NONE);
+        }
     }
 
     public Set<UUID> getPortSourceProcessIDs(UUID portID) {
         if (ObjectUtils.isAnyNull(portID)) {
             throw new ConditionParametersException();
+        }
+
+        if (!this.process.isCurrent()) {
+            throw new ConditionPermissionsException();
         }
 
         this.init();
@@ -168,6 +206,10 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
             throw new ConditionParametersException();
         }
 
+        if (!this.process.isCurrent()) {
+            throw new ConditionPermissionsException();
+        }
+
         this.init();
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
@@ -186,6 +228,10 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
     public byte[] receivePort(UUID portID) {
         if (ObjectUtils.isAnyNull(portID)) {
             throw new ConditionParametersException();
+        }
+
+        if (!this.process.isCurrent()) {
+            throw new ConditionPermissionsException();
         }
 
         this.init();
@@ -236,70 +282,92 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
             throw new ConditionParametersException();
         }
 
-        this.init();
-
-        if (!UUIDUtils.isAnyNullOrEmpty(this.processCommunication.getSignalID())) {
-            throw new StatusAlreadyFinishedException();
+        if (!this.process.isCurrent()) {
+            throw new ConditionPermissionsException();
         }
 
-        ProcessTokenObject processToken = this.process.getToken();
+        try {
+            this.lock(LockTypes.WRITE);
+            this.init();
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+            if (!UUIDUtils.isAnyNullOrEmpty(this.processCommunication.getSignalID())) {
+                throw new StatusAlreadyFinishedException();
+            }
 
-        List<Identification> identifications = new ArrayList<>();
-        identifications.add(new Identification("Signals"));
+            ProcessTokenObject processToken = this.process.getToken();
 
-        InfoObject signals = objectManager.get(identifications);
+            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        UUID typeID =
-                this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID;
+            List<Identification> identifications = new ArrayList<>();
+            identifications.add(new Identification("Signals"));
 
-        InfoObject signal = signals.createChildAndOpen(UUID.randomUUID(), new Identification(typeID),
-                InfoStatusOpenAttributeTypes.OPEN_EXCLUSIVE);
-        SecurityDescriptorObject securityDescriptor = signal.getSecurityDescriptor();
-        Map<UUID, Long> accessControl = new HashMap<>();
-        accessControl.put(processToken.getAccountID(), AccessControlTypes.FULLCONTROL_ALLOW);
-        accessControl.put(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID,
-                AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
-        securityDescriptor.setAccessControlTypes(accessControl);
-        SignalContentObject signalContent = (SignalContentObject) signal.getContent();
-        signalContent.setSourceProcessIDs(sourceProcessIDs);
-        signal.close();
+            InfoObject signals = objectManager.get(identifications);
 
-        this.lock(LockTypes.WRITE);
+            UUID typeID =
+                    this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID;
 
-        this.processCommunication.setSignalID(signals.getID());
+            InfoObject signal = signals.createChildAndOpen(UUID.randomUUID(), new Identification(typeID),
+                    InfoStatusOpenAttributeTypes.OPEN_EXCLUSIVE);
+            SecurityDescriptorObject securityDescriptor = signal.getSecurityDescriptor();
+            Map<UUID, Long> accessControl = new HashMap<>();
+            accessControl.put(processToken.getAccountID(), AccessControlTypes.FULLCONTROL_ALLOW);
+            accessControl.put(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID,
+                    AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
+            securityDescriptor.setAccessControlTypes(accessControl);
+            SignalContentObject signalContent = (SignalContentObject) signal.getContent();
+            signalContent.setSourceProcessIDs(sourceProcessIDs);
+            signal.close();
 
-        this.fresh();
-        this.lock(LockTypes.NONE);
+            this.processCommunication.setSignalID(signals.getID());
+
+            this.fresh();
+            this.lock(LockTypes.NONE);
+        } catch (AKernelException exception) {
+            throw exception;
+        } finally {
+            this.lock(LockTypes.NONE);
+        }
     }
 
     public void deleteSignal() {
-        this.init();
-
-        if (!UUIDUtils.isAnyNullOrEmpty(this.processCommunication.getSignalID())) {
-            throw new StatusAlreadyFinishedException();
+        if (!this.process.isCurrent()) {
+            throw new ConditionPermissionsException();
         }
 
-        UUID signalID = this.processCommunication.getSignalID();
+        try {
+            this.lock(LockTypes.WRITE);
+            this.init();
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+            if (!UUIDUtils.isAnyNullOrEmpty(this.processCommunication.getSignalID())) {
+                throw new StatusAlreadyFinishedException();
+            }
 
-        List<Identification> identifications = new ArrayList<>();
-        identifications.add(new Identification("Signals"));
+            UUID signalID = this.processCommunication.getSignalID();
 
-        InfoObject signals = objectManager.get(identifications);
-        signals.deleteChild(new Identification(signalID));
+            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        this.lock(LockTypes.WRITE);
+            List<Identification> identifications = new ArrayList<>();
+            identifications.add(new Identification("Signals"));
 
-        this.processCommunication.setSignalID(null);
+            InfoObject signals = objectManager.get(identifications);
+            signals.deleteChild(new Identification(signalID));
 
-        this.fresh();
-        this.lock(LockTypes.NONE);
+            this.processCommunication.setSignalID(null);
+
+            this.fresh();
+            this.lock(LockTypes.NONE);
+        } catch (AKernelException exception) {
+            throw exception;
+        } finally {
+            this.lock(LockTypes.NONE);
+        }
     }
 
     public Set<UUID> getSignalSourceProcessIDs() {
+        if (!this.process.isCurrent()) {
+            throw new ConditionPermissionsException();
+        }
+
         this.init();
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
@@ -320,6 +388,10 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
     }
 
     public void setSignalSourceProcessIDs(Set<UUID> sourceProcessIDs) {
+        if (!this.process.isCurrent()) {
+            throw new ConditionPermissionsException();
+        }
+
         if (ObjectUtils.isAnyNull(sourceProcessIDs)) {
             throw new ConditionParametersException();
         }
@@ -342,6 +414,10 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
     }
 
     public List<SignalEntryDefinition> receiveSignals() {
+        if (!this.process.isCurrent()) {
+            throw new ConditionPermissionsException();
+        }
+
         this.init();
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);

@@ -7,7 +7,7 @@ import indi.sly.system.common.functions.Consumer2;
 import indi.sly.system.common.functions.Function2;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.LogicalUtils;
-import indi.sly.system.kernel.core.prototypes.AValueProcessObject2;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -25,8 +25,14 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessStatusObject extends AValueProcessObject2<ProcessEntity, ProcessObject> {
+public class ProcessStatusObject extends AValueProcessObject<ProcessEntity> {
     protected ProcessObjectProcessorRegister processorRegister;
+
+    private ProcessObject process;
+
+    public void setProcess(ProcessObject process) {
+        this.process = process;
+    }
 
     public long get() {
         Long status = ProcessStatusTypes.NULL;
@@ -34,17 +40,15 @@ public class ProcessStatusObject extends AValueProcessObject2<ProcessEntity, Pro
         List<Function2<Long, Long, ProcessEntity>> funcs = this.processorRegister.getReadProcessStatuses();
 
         for (Function2<Long, Long, ProcessEntity> pair : funcs) {
-            status = pair.apply(status, this.value1);
+            status = pair.apply(status, this.value);
         }
 
         return status;
     }
 
     public void initialize() {
-        this.init();
-
-        if (LogicalUtils.allNotEqual(this.value2.getStatus().get(), ProcessStatusTypes.NULL)
-                || this.value2.isCurrent()) {
+        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.NULL)
+                || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -52,68 +56,64 @@ public class ProcessStatusObject extends AValueProcessObject2<ProcessEntity, Pro
 
         ProcessObject parentProcess = processManager.getCurrentProcess();
 
-        if (!parentProcess.getID().equals(this.value1.getParentProcessID())) {
+        this.init();
+
+        if (!parentProcess.getID().equals(this.value.getParentProcessID())) {
             throw new ConditionPermissionsException();
         }
 
         List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
         for (Consumer2<ProcessEntity, Long> pair : funcs) {
-            pair.accept(this.value1, ProcessStatusTypes.INITIALIZATION);
+            pair.accept(this.value, ProcessStatusTypes.INITIALIZATION);
         }
     }
 
     public void run() {
-        this.init();
-
-        if (LogicalUtils.allNotEqual(this.value2.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
+        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
                 ProcessStatusTypes.INTERRUPTED)) {
             throw new StatusRelationshipErrorException();
         }
 
+        this.init();
+
         List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
         for (Consumer2<ProcessEntity, Long> pair : funcs) {
-            pair.accept(this.value1, ProcessStatusTypes.RUNNING);
+            pair.accept(this.value, ProcessStatusTypes.RUNNING);
         }
     }
 
     public void interrupt() {
-        this.init();
-
-        if (LogicalUtils.allNotEqual(this.value2.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
+        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
                 ProcessStatusTypes.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
+        this.init();
+
         List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
         for (Consumer2<ProcessEntity, Long> pair : funcs) {
-            pair.accept(this.value1, ProcessStatusTypes.INTERRUPTED);
+            pair.accept(this.value, ProcessStatusTypes.INTERRUPTED);
         }
     }
 
     public void die() {
-        ProcessCommunicationObject processCommunication = null;
-        ProcessHandleTableObject handleTable = null;
+        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.RUNNING,
+                ProcessStatusTypes.INTERRUPTED, ProcessStatusTypes.DIED)) {
+            throw new StatusRelationshipErrorException();
+        }
 
         try {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            if (LogicalUtils.allNotEqual(this.value2.getStatus().get(), ProcessStatusTypes.RUNNING,
-                    ProcessStatusTypes.INTERRUPTED, ProcessStatusTypes.DIED)) {
-                throw new StatusRelationshipErrorException();
-            }
-
             List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
             for (Consumer2<ProcessEntity, Long> pair : funcs) {
-                pair.accept(this.value1, ProcessStatusTypes.DIED);
+                pair.accept(this.value, ProcessStatusTypes.DIED);
             }
-
-            processCommunication = this.value2.getCommunication();
-            handleTable = this.value2.getHandleTable();
 
             this.fresh();
         } catch (AKernelException exception) {
@@ -122,17 +122,19 @@ public class ProcessStatusObject extends AValueProcessObject2<ProcessEntity, Pro
             this.lock(LockTypes.NONE);
         }
 
-        if (!this.value2.isCurrent()) {
-            ProcessTokenObject processToken = this.value2.getToken();
+        if (!this.process.isCurrent()) {
+            ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 return;
             }
         }
 
+        ProcessCommunicationObject processCommunication = this.process.getCommunication();
         processCommunication.deleteAllPort();
         processCommunication.deleteSignal();
 
+        ProcessHandleTableObject handleTable = this.process.getHandleTable();
         Set<UUID> handles = handleTable.list();
         for (UUID handle : handles) {
             handleTable.getInfo(handle).close();
@@ -140,26 +142,26 @@ public class ProcessStatusObject extends AValueProcessObject2<ProcessEntity, Pro
     }
 
     public void zombie() {
+        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.DIED)) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        if (!this.process.isCurrent()) {
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                throw new ConditionPermissionsException();
+            }
+        }
+
         try {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            if (LogicalUtils.allNotEqual(this.value2.getStatus().get(), ProcessStatusTypes.DIED)) {
-                throw new StatusRelationshipErrorException();
-            }
-
-            if (!this.value2.isCurrent()) {
-                ProcessTokenObject processToken = this.value2.getToken();
-
-                if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                    throw new ConditionPermissionsException();
-                }
-            }
-
             List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
             for (Consumer2<ProcessEntity, Long> pair : funcs) {
-                pair.accept(this.value1, ProcessStatusTypes.ZOMBIE);
+                pair.accept(this.value, ProcessStatusTypes.ZOMBIE);
             }
 
             this.fresh();
@@ -171,6 +173,6 @@ public class ProcessStatusObject extends AValueProcessObject2<ProcessEntity, Pro
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
-        processRepository.delete(this.value1);
+        processRepository.delete(this.value);
     }
 }

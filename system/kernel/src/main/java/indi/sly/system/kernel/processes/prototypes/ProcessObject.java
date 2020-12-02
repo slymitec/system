@@ -1,8 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionContextException;
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.functions.Consumer2;
 import indi.sly.system.common.functions.Function2;
 import indi.sly.system.common.utility.UUIDUtils;
@@ -12,7 +10,6 @@ import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryOb
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.entities.ProcessEntity;
-import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -23,7 +20,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessObject extends ACoreObject {
-    protected ProcessObjectFactoryObject factory;
+    protected ProcessObjectBuilderObject factory;
     protected ProcessObjectProcessorRegister processorRegister;
 
     protected UUID id;
@@ -65,8 +62,8 @@ public class ProcessObject extends ACoreObject {
 
         processStatus.processorRegister = this.processorRegister;
         processStatus.setSource(() -> process, (ProcessEntity source) -> {
-        }, () -> this, (ProcessObject source) -> {
         });
+        processStatus.setProcess(this);
 
         return processStatus;
     }

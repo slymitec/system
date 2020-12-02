@@ -26,8 +26,4 @@ public class ThreadObject extends ACoreObject {
         return thread.getProcessID();
     }
 
-    public UserSpace getUserSpace() {
-        return this.thread.getUserSpace();
-    }
-
 }

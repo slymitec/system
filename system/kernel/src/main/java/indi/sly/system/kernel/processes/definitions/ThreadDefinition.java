@@ -1,21 +1,16 @@
 package indi.sly.system.kernel.processes.definitions;
 
-import indi.sly.system.kernel.core.enviroment.UserSpace;
-
 import java.util.UUID;
 
 public class ThreadDefinition {
     public ThreadDefinition() {
-        this.userSpace = new UserSpace();
-        this.status = new ThreadStatusDefinition();
+        this.status = new ThreadStatisticsDefinition();
         this.context = new ThreadContextDefinition();
-
     }
 
     private UUID id;
     private UUID processID;
-    private final UserSpace userSpace;
-    private final ThreadStatusDefinition status;
+    private final ThreadStatisticsDefinition status;
     private final ThreadContextDefinition context;
 
     public UUID getID() {
@@ -34,11 +29,7 @@ public class ThreadDefinition {
         this.processID = processID;
     }
 
-    public UserSpace getUserSpace() {
-        return this.userSpace;
-    }
-
-    public ThreadStatusDefinition getStatus() {
+    public ThreadStatisticsDefinition getStatus() {
         return this.status;
     }
 

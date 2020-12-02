@@ -23,10 +23,6 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
 
     private long statusCumulation;
     private long threadCumulation;
-    private long pipeCumulation;
-    private long portCumulation;
-    private long signalCumulation;
-    private long handleCumulation;
 
     public long getStatusCumulation() {
         return this.statusCumulation;
@@ -50,54 +46,6 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
 
     public void setThreadCumulation(long threadCumulation) {
         this.threadCumulation = threadCumulation;
-    }
-
-    public long getPipeCumulation() {
-        return this.pipeCumulation;
-    }
-
-    public void offsetPipeCumulation(long offset) {
-        this.pipeCumulation = this.pipeCumulation + offset;
-    }
-
-    public void setPipeCumulation(long pipeCumulation) {
-        this.pipeCumulation = pipeCumulation;
-    }
-
-    public long getPortCumulation() {
-        return this.portCumulation;
-    }
-
-    public void offsetPortCumulation(long offset) {
-        this.portCumulation = this.portCumulation + offset;
-    }
-
-    public void setPortCumulation(long portCumulation) {
-        this.portCumulation = portCumulation;
-    }
-
-    public long getSignalCumulation() {
-        return this.signalCumulation;
-    }
-
-    public void offsetSignalCumulation(long offset) {
-        this.signalCumulation = this.signalCumulation + offset;
-    }
-
-    public void setSignalCumulation(long signalCumulation) {
-        this.signalCumulation = signalCumulation;
-    }
-
-    public long getHandleCumulation() {
-        return this.handleCumulation;
-    }
-
-    public void offsetHandleCumulation(long offset) {
-        this.handleCumulation = this.handleCumulation + offset;
-    }
-
-    public void setHandleCumulation(long handleCumulation) {
-        this.handleCumulation = handleCumulation;
     }
 
     private long infoCreate;
@@ -222,10 +170,7 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     private long sharedReadBytes;
     private long sharedWriteCount;
     private long sharedWriteBytes;
-    private long pipeReadCount;
-    private long pipeReadBytes;
-    private long pipeWriteCount;
-    private long pipeWriteBytes;
+    private long portCount;
     private long portReadCount;
     private long portReadBytes;
     private long portWriteCount;
@@ -281,52 +226,16 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         this.sharedWriteBytes = sharedWriteBytes;
     }
 
-    public long getPipeReadCount() {
-        return this.pipeReadCount;
+    public long getPortCount() {
+        return this.portCount;
     }
 
-    public void offsetPipeReadCount(long offset) {
-        this.pipeReadCount = this.pipeReadCount + offset;
+    public void offsetPortCount(long offset) {
+        this.portCount = this.portCount + offset;
     }
 
-    public void setPipeReadCount(long pipeReadCount) {
-        this.pipeReadCount = pipeReadCount;
-    }
-
-    public long getPipeReadBytes() {
-        return this.pipeReadBytes;
-    }
-
-    public void offsetPipeReadBytes(long offset) {
-        this.pipeReadBytes = this.pipeReadBytes + offset;
-    }
-
-    public void setPipeReadBytes(long pipeReadBytes) {
-        this.pipeReadBytes = pipeReadBytes;
-    }
-
-    public long getPipeWriteCount() {
-        return this.pipeWriteCount;
-    }
-
-    public void offsetPipeWriteCount(long offset) {
-        this.pipeWriteCount = this.pipeWriteCount + offset;
-    }
-
-    public void setPipeWriteCount(long pipeWriteCount) {
-        this.pipeWriteCount = pipeWriteCount;
-    }
-
-    public long getPipeWriteBytes() {
-        return this.pipeWriteBytes;
-    }
-
-    public void offsetPipeWriteBytes(long offset) {
-        this.pipeWriteBytes = this.pipeWriteBytes + offset;
-    }
-
-    public void setPipeWriteBytes(long pipeWriteBytes) {
-        this.pipeWriteBytes = pipeWriteBytes;
+    public void setPortCount(long portCount) {
+        this.portCount = portCount;
     }
 
     public long getPortReadCount() {
@@ -485,50 +394,16 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProcessStatisticsDefinition that = (ProcessStatisticsDefinition) o;
-        return infoCreate == that.infoCreate &&
-                infoGet == that.infoGet &&
-                infoQuery == that.infoQuery &&
-                infoDelete == that.infoDelete &&
-                infoDump == that.infoDump &&
-                infoOpen == that.infoOpen &&
-                infoClose == that.infoClose &&
-                infoRead == that.infoRead &&
-                infoWrite == that.infoWrite &&
-                sharedReadCount == that.sharedReadCount &&
-                sharedReadBytes == that.sharedReadBytes &&
-                sharedWriteCount == that.sharedWriteCount &&
-                sharedWriteBytes == that.sharedWriteBytes &&
-                pipeReadCount == that.pipeReadCount &&
-                pipeReadBytes == that.pipeReadBytes &&
-                pipeWriteCount == that.pipeWriteCount &&
-                pipeWriteBytes == that.pipeWriteBytes &&
-                portReadCount == that.portReadCount &&
-                portReadBytes == that.portReadBytes &&
-                portWriteCount == that.portWriteCount &&
-                portWriteBytes == that.portWriteBytes &&
-                signalReadCount == that.signalReadCount &&
-                signalWriteCount == that.signalWriteCount &&
-                ioCreate == that.ioCreate &&
-                ioStatus == that.ioStatus &&
-                ioReadCount == that.ioReadCount &&
-                ioReadBytes == that.ioReadBytes &&
-                ioWriteCount == that.ioWriteCount &&
-                ioWriteBytes == that.ioWriteBytes &&
-                date.equals(that.date);
+        return statusCumulation == that.statusCumulation && threadCumulation == that.threadCumulation && infoCreate == that.infoCreate && infoGet == that.infoGet && infoQuery == that.infoQuery && infoDelete == that.infoDelete && infoDump == that.infoDump && infoOpen == that.infoOpen && infoClose == that.infoClose && infoRead == that.infoRead && infoWrite == that.infoWrite && sharedReadCount == that.sharedReadCount && sharedReadBytes == that.sharedReadBytes && sharedWriteCount == that.sharedWriteCount && sharedWriteBytes == that.sharedWriteBytes && portCount == that.portCount && portReadCount == that.portReadCount && portReadBytes == that.portReadBytes && portWriteCount == that.portWriteCount && portWriteBytes == that.portWriteBytes && signalReadCount == that.signalReadCount && signalWriteCount == that.signalWriteCount && ioCreate == that.ioCreate && ioStatus == that.ioStatus && ioReadCount == that.ioReadCount && ioReadBytes == that.ioReadBytes && ioWriteCount == that.ioWriteCount && ioWriteBytes == that.ioWriteBytes && date.equals(that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, infoCreate, infoGet, infoQuery, infoDelete, infoDump, infoOpen, infoClose, infoRead
-                , infoWrite, sharedReadCount, sharedReadBytes, sharedWriteCount, sharedWriteBytes, pipeReadCount,
-                pipeReadBytes, pipeWriteCount, pipeWriteBytes, portReadCount, portReadBytes, portWriteCount,
+        return Objects.hash(date, statusCumulation, threadCumulation, infoCreate, infoGet, infoQuery, infoDelete,
+                infoDump, infoOpen, infoClose, infoRead, infoWrite, sharedReadCount, sharedReadBytes,
+                sharedWriteCount, sharedWriteBytes, portCount, portReadCount, portReadBytes, portWriteCount,
                 portWriteBytes, signalReadCount, signalWriteCount, ioCreate, ioStatus, ioReadCount, ioReadBytes,
                 ioWriteCount, ioWriteBytes);
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
     }
 
     @Override
@@ -536,6 +411,9 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         ProcessStatisticsDefinition processStatistics = new ProcessStatisticsDefinition();
 
         processStatistics.date.putAll(this.date);
+
+        processStatistics.statusCumulation = this.infoCreate;
+        processStatistics.threadCumulation = this.threadCumulation;
 
         processStatistics.infoCreate = this.infoCreate;
         processStatistics.infoGet = this.infoGet;
@@ -551,10 +429,7 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         processStatistics.sharedReadBytes = this.sharedReadBytes;
         processStatistics.sharedWriteCount = this.sharedWriteCount;
         processStatistics.sharedWriteBytes = this.sharedWriteBytes;
-        processStatistics.pipeReadCount = this.pipeReadCount;
-        processStatistics.pipeReadBytes = this.pipeReadBytes;
-        processStatistics.pipeWriteCount = this.pipeWriteCount;
-        processStatistics.pipeWriteBytes = this.pipeWriteBytes;
+        processStatistics.portCount = this.portCount;
         processStatistics.portReadCount = this.portReadCount;
         processStatistics.portReadBytes = this.portReadBytes;
         processStatistics.portWriteCount = this.portWriteCount;
@@ -581,6 +456,9 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
             this.date.put(NumberUtils.readExternalLong(in), NumberUtils.readExternalLong(in));
         }
 
+        this.statusCumulation = NumberUtils.readExternalLong(in);
+        this.threadCumulation = NumberUtils.readExternalLong(in);
+
         this.infoCreate = NumberUtils.readExternalLong(in);
         this.infoGet = NumberUtils.readExternalLong(in);
         this.infoQuery = NumberUtils.readExternalLong(in);
@@ -595,10 +473,7 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         this.sharedReadBytes = NumberUtils.readExternalLong(in);
         this.sharedWriteCount = NumberUtils.readExternalLong(in);
         this.sharedWriteBytes = NumberUtils.readExternalLong(in);
-        this.pipeReadCount = NumberUtils.readExternalLong(in);
-        this.pipeReadBytes = NumberUtils.readExternalLong(in);
-        this.pipeWriteCount = NumberUtils.readExternalLong(in);
-        this.pipeWriteBytes = NumberUtils.readExternalLong(in);
+        this.portCount = NumberUtils.readExternalLong(in);
         this.portReadCount = NumberUtils.readExternalLong(in);
         this.portReadBytes = NumberUtils.readExternalLong(in);
         this.portWriteCount = NumberUtils.readExternalLong(in);
@@ -622,6 +497,9 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
             NumberUtils.writeExternalLong(out, pair.getValue());
         }
 
+        NumberUtils.writeExternalLong(out, this.statusCumulation);
+        NumberUtils.writeExternalLong(out, this.threadCumulation);
+
         NumberUtils.writeExternalLong(out, this.infoCreate);
         NumberUtils.writeExternalLong(out, this.infoGet);
         NumberUtils.writeExternalLong(out, this.infoQuery);
@@ -636,10 +514,7 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
         NumberUtils.writeExternalLong(out, this.sharedReadBytes);
         NumberUtils.writeExternalLong(out, this.sharedWriteCount);
         NumberUtils.writeExternalLong(out, this.sharedWriteBytes);
-        NumberUtils.writeExternalLong(out, this.pipeReadCount);
-        NumberUtils.writeExternalLong(out, this.pipeReadBytes);
-        NumberUtils.writeExternalLong(out, this.pipeWriteCount);
-        NumberUtils.writeExternalLong(out, this.pipeWriteBytes);
+        NumberUtils.writeExternalLong(out, this.portCount);
         NumberUtils.writeExternalLong(out, this.portReadCount);
         NumberUtils.writeExternalLong(out, this.portReadBytes);
         NumberUtils.writeExternalLong(out, this.portWriteCount);

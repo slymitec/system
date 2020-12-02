@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.definitions;
 
+import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.NumberUtils;
 import indi.sly.system.common.utility.ObjectUtils;
@@ -29,6 +30,14 @@ public class ProcessContextDefinition implements ISerializable<ProcessContextDef
 
     public AppContextDefinition getAppContext() {
         return this.appContext;
+    }
+
+    public void setAppContext(AppContextDefinition appContext) {
+        if (ObjectUtils.isAnyNull(appContext)) {
+            throw new ConditionParametersException();
+        }
+
+        this.appContext = appContext;
     }
 
     public Map<String, String> getEnvironmentVariable() {

@@ -15,6 +15,7 @@ import indi.sly.system.kernel.processes.communication.instances.prototypes.PortC
 import indi.sly.system.kernel.processes.communication.instances.prototypes.SignalContentObject;
 import indi.sly.system.kernel.processes.communication.instances.definitions.SignalEntryDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
 import indi.sly.system.kernel.processes.types.ProcessStatusTypes;
 import indi.sly.system.kernel.processes.types.ProcessTokenLimitTypes;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
@@ -62,7 +63,13 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
 
         this.init();
 
-        return this.processCommunication.getShared();
+        byte[] processCommunicationShared = this.processCommunication.getShared();
+
+        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        processStatistics.addSharedReadCount(1);
+        processStatistics.addSharedReadBytes(processCommunicationShared.length);
+
+        return processCommunicationShared;
     }
 
     public void setShared(byte[] shared) {
@@ -84,6 +91,10 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         }
 
         this.processCommunication.setShared(shared);
+
+        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        processStatistics.addSharedWriteCount(1);
+        processStatistics.addSharedWriteBytes(shared.length);
     }
 
     public Set<UUID> getPortIDs() {
@@ -148,6 +159,9 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         } finally {
             this.lock(LockTypes.NONE);
         }
+
+        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        processStatistics.addPortCount(1);
 
         return portID;
     }
@@ -316,6 +330,10 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         byte[] value = portContent.receive();
         port.close();
 
+        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        processStatistics.addPortReadCount(1);
+        processStatistics.addPortReadBytes(value.length);
+
         return value;
     }
 
@@ -335,6 +353,10 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         PortContentObject portContent = (PortContentObject) port.getContent();
         portContent.send(value);
         port.close();
+
+        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        processStatistics.addPortWriteCount(1);
+        processStatistics.addPortWriteBytes(value.length);
     }
 
     public UUID getSignalID() {
@@ -520,6 +542,9 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         List<SignalEntryDefinition> signalEntries = signalContent.receive();
         signal.close();
 
+        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        processStatistics.addSignalReadCount(signalEntries.size());
+
         return signalEntries;
     }
 
@@ -541,5 +566,8 @@ public class ProcessCommunicationObject extends ABytesProcessObject {
         SignalContentObject signalContent = (SignalContentObject) signal.getContent();
         signalContent.send(key, value);
         signal.close();
+
+        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        processStatistics.addSignalWriteCount(1);
     }
 }

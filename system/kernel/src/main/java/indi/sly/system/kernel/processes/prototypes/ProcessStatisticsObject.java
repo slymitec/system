@@ -101,102 +101,6 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.NONE);
     }
 
-    public long getPipeCumulation() {
-        this.init();
-
-        return this.processStatistics.getPipeCumulation();
-    }
-
-    public void addPipeCumulation(long value) {
-        if (value < 0) {
-            throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
-        }
-
-        this.lock(LockTypes.WRITE);
-        this.init();
-
-        this.processStatistics.offsetPipeCumulation(value);
-
-        this.fresh();
-        this.lock(LockTypes.NONE);
-    }
-
-    public long getPortCumulation() {
-        this.init();
-
-        return this.processStatistics.getPortCumulation();
-    }
-
-    public void addPortCumulation(long value) {
-        if (value < 0) {
-            throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
-        }
-
-        this.lock(LockTypes.WRITE);
-        this.init();
-
-        this.processStatistics.offsetPortCumulation(value);
-
-        this.fresh();
-        this.lock(LockTypes.NONE);
-    }
-
-    public long getSignalCumulation() {
-        this.init();
-
-        return this.processStatistics.getSignalCumulation();
-    }
-
-    public void addSignalCumulation(long value) {
-        if (value < 0) {
-            throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
-        }
-
-        this.lock(LockTypes.WRITE);
-        this.init();
-
-        this.processStatistics.offsetSignalCumulation(value);
-
-        this.fresh();
-        this.lock(LockTypes.NONE);
-    }
-
-    public long getHandleCumulation() {
-        this.init();
-
-        return this.processStatistics.getHandleCumulation();
-    }
-
-    public void addHandleCumulation(long value) {
-        if (value < 0) {
-            throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
-        }
-
-        this.lock(LockTypes.WRITE);
-        this.init();
-
-        this.processStatistics.offsetHandleCumulation(value);
-
-        this.fresh();
-        this.lock(LockTypes.NONE);
-    }
-
     public long getInfoCreate() {
         this.init();
 
@@ -509,13 +413,13 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.NONE);
     }
 
-    public long getPipeReadCount() {
+    public long getPortCount() {
         this.init();
 
-        return this.processStatistics.getPipeReadCount();
+        return this.processStatistics.getPortCount();
     }
 
-    public void addPipeReadCount(long value) {
+    public void addPortCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
@@ -527,79 +431,7 @@ public class ProcessStatisticsObject extends ABytesProcessObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetPipeReadCount(value);
-
-        this.fresh();
-        this.lock(LockTypes.NONE);
-    }
-
-    public long getPipeReadBytes() {
-        this.init();
-
-        return this.processStatistics.getPipeReadBytes();
-    }
-
-    public void addPipeReadBytes(long value) {
-        if (value < 0) {
-            throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
-        }
-
-        this.lock(LockTypes.WRITE);
-        this.init();
-
-        this.processStatistics.offsetPipeReadBytes(value);
-
-        this.fresh();
-        this.lock(LockTypes.NONE);
-    }
-
-    public long getPipeWriteCount() {
-        this.init();
-
-        return this.processStatistics.getPipeWriteCount();
-    }
-
-    public void addPipeWriteCount(long value) {
-        if (value < 0) {
-            throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
-        }
-
-        this.lock(LockTypes.WRITE);
-        this.init();
-
-        this.processStatistics.offsetPipeWriteCount(value);
-
-        this.fresh();
-        this.lock(LockTypes.NONE);
-    }
-
-    public long getPipeWriteBytes() {
-        this.init();
-
-        return this.processStatistics.getPipeWriteBytes();
-    }
-
-    public void addPipeWriteBytes(long value) {
-        if (value < 0) {
-            throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
-        }
-
-        this.lock(LockTypes.WRITE);
-        this.init();
-
-        this.processStatistics.offsetPipeWriteBytes(value);
+        this.processStatistics.offsetPortCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);

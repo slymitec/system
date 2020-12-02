@@ -14,21 +14,21 @@ import java.util.UUID;
 
 public class AppContextDefinition implements ISerializable<AppContextDefinition> {
     public AppContextDefinition() {
-        this.parameters = new HashMap<>();
+        this.configurations = new HashMap<>();
     }
 
-    private UUID id;
+    private UUID processID;
     private String name;
     private long supportedSession;
     private String serverURL;
-    private final Map<String, String> parameters;
+    private final Map<String, String> configurations;
 
-    public UUID getID() {
-        return this.id;
+    public UUID getProcessID() {
+        return this.processID;
     }
 
-    public void setID(UUID id) {
-        this.id = id;
+    public void setProcessID(UUID id) {
+        this.processID = id;
     }
 
     public String getName() {
@@ -55,8 +55,8 @@ public class AppContextDefinition implements ISerializable<AppContextDefinition>
         this.serverURL = serverURL;
     }
 
-    public Map<String, String> getParameters() {
-        return this.parameters;
+    public Map<String, String> getConfigurations() {
+        return this.configurations;
     }
 
     @Override
@@ -68,18 +68,18 @@ public class AppContextDefinition implements ISerializable<AppContextDefinition>
     public AppContextDefinition deepClone() {
         AppContextDefinition appContext = new AppContextDefinition();
 
-        appContext.id = this.id;
+        appContext.processID = this.processID;
         appContext.name = this.name;
         appContext.supportedSession = this.supportedSession;
         appContext.serverURL = this.serverURL;
-        appContext.parameters.putAll(this.parameters);
+        appContext.configurations.putAll(this.configurations);
 
         return appContext;
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.id = UUIDUtils.readExternal(in);
+        this.processID = UUIDUtils.readExternal(in);
         this.name = StringUtils.readExternal(in);
         this.supportedSession = NumberUtils.readExternalLong(in);
         this.serverURL = StringUtils.readExternal(in);
@@ -88,19 +88,19 @@ public class AppContextDefinition implements ISerializable<AppContextDefinition>
 
         valueInteger = NumberUtils.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.parameters.put(StringUtils.readExternal(in), StringUtils.readExternal(in));
+            this.configurations.put(StringUtils.readExternal(in), StringUtils.readExternal(in));
         }
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.id);
+        UUIDUtils.writeExternal(out, this.processID);
         StringUtils.writeExternal(out, this.name);
         NumberUtils.writeExternalLong(out, this.supportedSession);
         StringUtils.writeExternal(out, this.serverURL);
 
-        NumberUtils.writeExternalInteger(out, this.parameters.size());
-        for (Map.Entry<String, String> pair : this.parameters.entrySet()) {
+        NumberUtils.writeExternalInteger(out, this.configurations.size());
+        for (Map.Entry<String, String> pair : this.configurations.entrySet()) {
             StringUtils.writeExternal(out, pair.getKey());
             StringUtils.writeExternal(out, pair.getValue());
         }

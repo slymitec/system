@@ -51,7 +51,6 @@ public class ProcessProcessor extends ACoreObject implements IInfoObjectProcesso
             handle = processHandleTable.addInfo(status);
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
-            processStatistics.addHandleCumulation(1);
             processStatistics.addInfoOpen(1);
 
             return handle;

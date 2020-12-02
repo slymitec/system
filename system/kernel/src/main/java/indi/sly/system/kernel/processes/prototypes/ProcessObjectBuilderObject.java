@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessObjectFactoryObject extends ACoreObject {
+public class ProcessObjectBuilderObject extends ACoreObject {
     protected Set<IProcessObjectProcessor> processObjectProcessors;
 
     public void initProcessObjectFactory() {
@@ -55,7 +55,7 @@ public class ProcessObjectFactoryObject extends ACoreObject {
     public ProcessBuilderObject createProcessBuilder() {
         ProcessBuilderObject processBuilder = this.factoryManager.create(ProcessBuilderObject.class);
 
-        processBuilder.setProcessObjectFactory(this);
+        processBuilder.setProcessObjectBuilder(this);
 
         return processBuilder;
     }

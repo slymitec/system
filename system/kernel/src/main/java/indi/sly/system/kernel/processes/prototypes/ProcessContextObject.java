@@ -62,10 +62,6 @@ public class ProcessContextObject extends ABytesProcessObject {
             throw new ConditionPermissionsException();
         }
 
-        if (!appContext.getProcessID().equals(this.process.getID())) {
-            appContext.setProcessID(this.process.getID());
-        }
-
         try {
             this.lock(LockTypes.WRITE);
             this.init();

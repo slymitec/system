@@ -84,14 +84,14 @@ public class InfoRelationEntity implements ISerializable<InfoRelationEntity> {
 
     @Override
     public InfoRelationEntity deepClone() {
-        InfoRelationEntity infoRelation = new InfoRelationEntity();
+        InfoRelationEntity entity = new InfoRelationEntity();
 
-        infoRelation.id = this.id;
-        infoRelation.parentID = this.parentID;
-        infoRelation.type = this.type;
-        infoRelation.name = this.name;
+        entity.id = this.id;
+        entity.parentID = this.parentID;
+        entity.type = this.type;
+        entity.name = this.name;
 
-        return infoRelation;
+        return entity;
     }
 
     @Override

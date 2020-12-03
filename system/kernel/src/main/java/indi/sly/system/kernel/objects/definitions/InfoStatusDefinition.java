@@ -77,14 +77,14 @@ public class InfoStatusDefinition implements ISerializable {
 
     @Override
     public InfoStatusDefinition deepClone() {
-        InfoStatusDefinition infoStatus = new InfoStatusDefinition();
+        InfoStatusDefinition definition = new InfoStatusDefinition();
 
-        infoStatus.identifications.addAll(this.identifications);
-        infoStatus.parentID = this.parentID;
-        infoStatus.handle = this.handle;
-        infoStatus.open = this.open.deepClone();
+        definition.identifications.addAll(this.identifications);
+        definition.parentID = this.parentID;
+        definition.handle = this.handle;
+        definition.open = this.open.deepClone();
 
-        return infoStatus;
+        return definition;
     }
 
     @Override

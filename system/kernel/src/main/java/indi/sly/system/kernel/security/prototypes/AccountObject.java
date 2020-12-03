@@ -99,4 +99,22 @@ public class AccountObject extends AValueProcessObject<AccountEntity> {
         this.fresh();
         this.lock(LockTypes.NONE);
     }
+
+    public AccountGroupTokenObject getToken() {
+        this.init();
+
+        AccountGroupTokenObject accountGroupToken = this.factoryManager.create(AccountGroupTokenObject.class);
+
+        accountGroupToken.setSource(() -> this.value.getToken(), (byte[] source) -> {
+            this.value.setToken(source);
+        });
+        accountGroupToken.setLock((lockType) -> {
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+
+            accountGroupRepository.lock(this.value, lockType);
+        });
+
+        return accountGroupToken;
+    }
 }

@@ -67,15 +67,15 @@ public class ProcessContextDefinition implements ISerializable<ProcessContextDef
 
     @Override
     public ProcessContextDefinition deepClone() {
-        ProcessContextDefinition processContext = new ProcessContextDefinition();
+        ProcessContextDefinition definition = new ProcessContextDefinition();
 
-        processContext.appContext = this.appContext.deepClone();
-        processContext.environmentVariable.putAll(this.environmentVariable);
-        processContext.parameters.putAll(this.parameters);
-        processContext.sessionID = this.sessionID;
-        processContext.workFolder.addAll(this.workFolder);
+        definition.appContext = this.appContext.deepClone();
+        definition.environmentVariable.putAll(this.environmentVariable);
+        definition.parameters.putAll(this.parameters);
+        definition.sessionID = this.sessionID;
+        definition.workFolder.addAll(this.workFolder);
 
-        return processContext;
+        return definition;
     }
 
     @Override

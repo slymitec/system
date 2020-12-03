@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.objects.infotypes.prototypes.definitions;
+package indi.sly.system.kernel.objects.infotypes.definitions;
 
 import indi.sly.system.kernel.objects.infotypes.prototypes.ATypeInitializer;
 

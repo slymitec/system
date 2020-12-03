@@ -144,19 +144,19 @@ public class InfoEntity implements ISerializable<InfoEntity> {
 
     @Override
     public InfoEntity deepClone() {
-        InfoEntity info = new InfoEntity();
+        InfoEntity entity = new InfoEntity();
 
-        info.id = this.id;
-        info.type = this.type;
-        info.occupied = this.occupied;
-        info.opened = this.opened;
-        info.name = this.name;
-        info.date = ArrayUtils.copyBytes(this.date);
-        info.securityDescriptor = ArrayUtils.copyBytes(this.securityDescriptor);
-        info.properties = ArrayUtils.copyBytes(this.properties);
-        info.content = ArrayUtils.copyBytes(this.content);
+        entity.id = this.id;
+        entity.type = this.type;
+        entity.occupied = this.occupied;
+        entity.opened = this.opened;
+        entity.name = this.name;
+        entity.date = ArrayUtils.copyBytes(this.date);
+        entity.securityDescriptor = ArrayUtils.copyBytes(this.securityDescriptor);
+        entity.properties = ArrayUtils.copyBytes(this.properties);
+        entity.content = ArrayUtils.copyBytes(this.content);
 
-        return info;
+        return entity;
     }
 
     @Override

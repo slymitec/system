@@ -60,13 +60,13 @@ public class ProcessHandleEntryDefinition implements ISerializable<ProcessHandle
 
     @Override
     public ProcessHandleEntryDefinition deepClone() {
-        ProcessHandleEntryDefinition processHandleEntry = new ProcessHandleEntryDefinition();
+        ProcessHandleEntryDefinition definition = new ProcessHandleEntryDefinition();
 
-        processHandleEntry.date.putAll(this.date);
-        processHandleEntry.identifications.addAll(this.identifications);
-        processHandleEntry.open = this.open.deepClone();
+        definition.date.putAll(this.date);
+        definition.identifications.addAll(this.identifications);
+        definition.open = this.open.deepClone();
 
-        return processHandleEntry;
+        return definition;
     }
 
     @Override
@@ -90,10 +90,12 @@ public class ProcessHandleEntryDefinition implements ISerializable<ProcessHandle
             NumberUtils.writeExternalLong(out, pair.getKey());
             NumberUtils.writeExternalLong(out, pair.getValue());
         }
+
         NumberUtils.writeExternalInteger(out, this.identifications.size());
         for (Identification pair : this.identifications) {
             ObjectUtils.writeExternal(out, pair);
         }
+
         ObjectUtils.writeExternal(out, this.open);
     }
 }

@@ -80,15 +80,15 @@ public class SecurityDescriptorDefinition implements ISerializable<SecurityDescr
 
     @Override
     public SecurityDescriptorDefinition deepClone() {
-        SecurityDescriptorDefinition securityDescriptor = new SecurityDescriptorDefinition();
+        SecurityDescriptorDefinition definition = new SecurityDescriptorDefinition();
 
-        securityDescriptor.inherit = this.inherit;
-        securityDescriptor.owners.addAll(this.owners);
-        securityDescriptor.accessControl.putAll(this.accessControl);
-        securityDescriptor.roles.addAll(this.roles);
-        securityDescriptor.auditTypes = this.auditTypes;
+        definition.inherit = this.inherit;
+        definition.owners.addAll(this.owners);
+        definition.accessControl.putAll(this.accessControl);
+        definition.roles.addAll(this.roles);
+        definition.auditTypes = this.auditTypes;
 
-        return securityDescriptor;
+        return definition;
     }
 
     @Override

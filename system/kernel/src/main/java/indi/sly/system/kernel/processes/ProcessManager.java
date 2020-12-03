@@ -93,7 +93,7 @@ public class ProcessManager extends AManager {
         if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
                 && (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)
                 && !(ObjectUtils.allNotNull(accountAuthorization)
-                && accountAuthorization.checkAndGetAccountID().equals(processToken.getAccountID())))) {
+                && accountAuthorization.checkAndGetResult().getAccountID().equals(processToken.getAccountID())))) {
             throw new ConditionPermissionsException();
         }
 

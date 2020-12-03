@@ -50,12 +50,12 @@ public class InfoStatusOpenDefinition implements ISerializable<InfoStatusOpenDef
 
     @Override
     public InfoStatusOpenDefinition deepClone() {
-        InfoStatusOpenDefinition infoStatusOpen = new InfoStatusOpenDefinition();
+        InfoStatusOpenDefinition definition = new InfoStatusOpenDefinition();
 
-        infoStatusOpen.attribute = this.attribute;
-        infoStatusOpen.context = this.context;
+        definition.attribute = this.attribute;
+        definition.context = this.context;
 
-        return infoStatusOpen;
+        return definition;
     }
 
     @Override

@@ -13,7 +13,7 @@ import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
 import indi.sly.system.kernel.objects.definitions.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.definitions.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.types.InfoStatusOpenAttributeTypes;
-import indi.sly.system.kernel.objects.infotypes.prototypes.types.TypeInitializerAttributeTypes;
+import indi.sly.system.kernel.objects.infotypes.types.TypeInitializerAttributeTypes;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

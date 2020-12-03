@@ -10,6 +10,8 @@ import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.definitions.ProcessTokenDefinition;
 import indi.sly.system.kernel.processes.types.ProcessStatusTypes;
+import indi.sly.system.kernel.security.definitions.AccountAuthorizationResultDefinition;
+import indi.sly.system.kernel.security.definitions.AccountGroupTokenDefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -50,6 +52,32 @@ public class ProcessTokenObject extends ABytesProcessObject {
         return currentProcess.getToken();
     }
 
+    public void setAccountAuthorization(AccountAuthorizationObject accountAuthorization) {
+        if (ObjectUtils.isAnyNull(accountAuthorization)) {
+            throw new ConditionParametersException();
+        }
+
+        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION)
+                || this.process.isCurrent()) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        AccountAuthorizationResultDefinition accountAuthorizationResult = accountAuthorization.checkAndGetResult();
+
+        this.lock(LockTypes.WRITE);
+        this.init();
+
+        this.processToken.setAccountID(accountAuthorizationResult.getAccountID());
+        AccountGroupTokenDefinition accountAuthorizationResultToken = accountAuthorizationResult.getToken();
+        this.processToken.setPrivilegeTypes(accountAuthorizationResultToken.getPrivilegeTypes());
+        Map<Long, Integer> processTokenLimits = this.processToken.getLimits();
+        processTokenLimits.clear();
+        processTokenLimits.putAll(accountAuthorizationResultToken.getLimits());
+
+        this.fresh();
+        this.lock(LockTypes.NONE);
+    }
+
     public UUID getAccountID() {
         this.init();
 
@@ -66,27 +94,6 @@ public class ProcessTokenObject extends ABytesProcessObject {
         this.init();
 
         this.processToken.setAccountID(this.getAndCheckParentProcessToken().getAccountID());
-
-        this.fresh();
-        this.lock(LockTypes.NONE);
-    }
-
-    public void setAccountID(AccountAuthorizationObject accountAuthorization) {
-        if (ObjectUtils.isAnyNull(accountAuthorization)) {
-            throw new ConditionParametersException();
-        }
-
-        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION)
-                || this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
-        }
-
-        UUID accountID = accountAuthorization.checkAndGetAccountID();
-
-        this.lock(LockTypes.WRITE);
-        this.init();
-
-        this.processToken.setAccountID(accountID);
 
         this.fresh();
         this.lock(LockTypes.NONE);

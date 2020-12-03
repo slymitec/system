@@ -82,11 +82,11 @@ public class ProcessHandleTableDefinition implements ISerializable<ProcessHandle
 
     @Override
     public ProcessHandleTableDefinition deepClone() {
-        ProcessHandleTableDefinition processHandleTable = new ProcessHandleTableDefinition();
+        ProcessHandleTableDefinition definition = new ProcessHandleTableDefinition();
 
-        processHandleTable.handleTable.putAll(this.handleTable);
+        definition.handleTable.putAll(this.handleTable);
 
-        return processHandleTable;
+        return definition;
     }
 
     @Override

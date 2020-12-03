@@ -1,22 +1,13 @@
-package indi.sly.system.kernel.processes.definitions;
+package indi.sly.system.kernel.sessions.instances.definitions;
 
 import indi.sly.system.common.support.ISerializable;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.HashMap;
-import java.util.Map;
 
-public class ThreadStatisticsDefinition implements ISerializable<ThreadStatisticsDefinition> {
-    public ThreadStatisticsDefinition() {
-        this.date = new HashMap<>();
-    }
-
-    private Map<Long, Long> date;
-
-    public Map<Long, Long> getDate() {
-        return this.date;
+public class ClientDefinition implements ISerializable<ClientDefinition> {
+    public ClientDefinition() {
     }
 
     @Override
@@ -25,8 +16,10 @@ public class ThreadStatisticsDefinition implements ISerializable<ThreadStatistic
     }
 
     @Override
-    public ThreadStatisticsDefinition deepClone() {
-        return null;
+    public ClientDefinition deepClone() {
+        ClientDefinition definition = new ClientDefinition();
+
+        return definition;
     }
 
     @Override

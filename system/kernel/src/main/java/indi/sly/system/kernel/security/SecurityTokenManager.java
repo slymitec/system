@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.security;
 
 import indi.sly.system.common.exceptions.*;
+import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
@@ -10,6 +11,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupReposit
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
+import indi.sly.system.kernel.security.definitions.AccountGroupTokenDefinition;
 import indi.sly.system.kernel.security.entities.AccountEntity;
 import indi.sly.system.kernel.security.entities.GroupEntity;
 import indi.sly.system.kernel.security.prototypes.*;
@@ -133,6 +135,7 @@ public class SecurityTokenManager extends AManager {
         account.setID(UUID.randomUUID());
         account.setName(accountName);
         account.setPassword(accountPassword);
+        account.setToken(ObjectUtils.transferToByteArray(new AccountGroupTokenDefinition()));
 
         try {
             accountGroupRepository.getAccount(accountName);
@@ -165,6 +168,7 @@ public class SecurityTokenManager extends AManager {
         GroupEntity group = new GroupEntity();
         group.setID(UUID.randomUUID());
         group.setName(groupName);
+        group.setToken(ObjectUtils.transferToByteArray(new AccountGroupTokenDefinition()));
 
         try {
             accountGroupRepository.getGroup(groupName);

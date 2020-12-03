@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
+import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
@@ -9,11 +10,11 @@ import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
-import indi.sly.system.kernel.objects.ObjectManager;
-import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
+import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.communication.definitions.ProcessCommunicationDefinition;
+import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.definitions.ProcessBuilderDefinition;
 import indi.sly.system.kernel.processes.definitions.ProcessHandleTableDefinition;
 import indi.sly.system.kernel.processes.definitions.ProcessStatisticsDefinition;
@@ -26,6 +27,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Named
@@ -61,7 +65,7 @@ public class ProcessBuilderObject extends ACoreObject {
     }
 
 
-    public ProcessBuilderObject setAccount(AccountAuthorizationObject accountAuthorization) {
+    public ProcessBuilderObject setAccountAuthorization(AccountAuthorizationObject accountAuthorization) {
         if (ObjectUtils.isAnyNull(accountAuthorization)) {
             throw new ConditionParametersException();
         }
@@ -71,13 +75,51 @@ public class ProcessBuilderObject extends ACoreObject {
         return this;
     }
 
-    //setLimits
-    //setRoleTypes
+    public ProcessBuilderObject setPrivilegeTypes(long privilegeTypes) {
+        ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
+        if (!parentProcessToken.isPrivilegeTypes(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+            throw new ConditionPermissionsException();
+        }
 
-//        processContext.setEnvironmentVariable(null);
-//        processContext.setParameters(null);
+        this.processBuilder.setPrivilegeTypes(privilegeTypes);
+
+        return this;
+    }
+
+    public ProcessBuilderObject setLimits(Map<Long, Integer> limits) {
+        if (ObjectUtils.isAnyNull(limits)) {
+            throw new ConditionParametersException();
+        }
+
+        ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
+        if (!parentProcessToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
+            throw new ConditionPermissionsException();
+        }
+
+        this.processBuilder.setLimits(limits);
+
+        return this;
+    }
+
+    public ProcessBuilderObject setEnvironmentVariable(Map<String, String> environmentVariable) {
+        this.processBuilder.setEnvironmentVariable(environmentVariable);
+
+        return this;
+    }
+
+    public ProcessBuilderObject setParameters(Map<String, String> parameters) {
+        this.processBuilder.setParameters(parameters);
+
+        return this;
+    }
+
+    public ProcessBuilderObject setWorkFolder(List<Identification> workFolder) {
+        this.processBuilder.setWorkFolder(workFolder);
+
+        return this;
+    }
+
 //        processContext.setSessionID(null);
-//        processContext.setWorkFolder(null);
 
     private void parse() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
@@ -90,6 +132,7 @@ public class ProcessBuilderObject extends ACoreObject {
         //content.???
 
         //...
+        this.processBuilder.setAppContext(null);
     }
 
     private void create() {
@@ -127,24 +170,59 @@ public class ProcessBuilderObject extends ACoreObject {
         processStatistics.setDate(DateTimeTypes.ACCESS, nowDateTime);
 
         ProcessTokenObject processToken = this.process.getToken();
-        processToken.inheritAccountID();
-        processToken.setAccountID(null);
-        processToken.inheritPrivilegeTypes();
-        processToken.inheritPrivilegeTypes(PrivilegeTypes.NULL);
-        processToken.inheritLimits();
-        processToken.setLimits(null);
-        processToken.inheritRoleTypes();
-        processToken.setRoleTypes(null);
+        AccountAuthorizationObject accountAuthorization = this.processBuilder.getAccountAuthorization();
+        if (ObjectUtils.allNotNull(accountAuthorization)) {
+            processToken.setAccountAuthorization(accountAuthorization);
+        } else {
+            processToken.inheritAccountID();
+
+            if (this.processBuilder.getPrivilegeTypes() != PrivilegeTypes.NULL) {
+                processToken.inheritPrivilegeTypes(this.processBuilder.getPrivilegeTypes());
+            } else {
+                processToken.inheritPrivilegeTypes();
+            }
+            if (ObjectUtils.allNotNull(this.processBuilder.getLimits())) {
+                processToken.setLimits(this.processBuilder.getLimits());
+            } else {
+                processToken.inheritLimits();
+            }
+        }
+        if (ObjectUtils.isAnyNull(this.processBuilder.getAppContext().getRoles())) {
+            processToken.inheritRoleTypes();
+        } else {
+            processToken.setRoleTypes(this.processBuilder.getAppContext().getRoles());
+        }
 
         ProcessHandleTableObject processHandleTable = this.process.getHandleTable();
         processHandleTable.inheritHandle(this.processBuilder.getFileHandle());
 
         ProcessContextObject processContext = this.process.getContext();
-        processContext.setAppContext(null);
-        processContext.setEnvironmentVariable(null);
-        processContext.setParameters(null);
-        processContext.setSessionID(null);
-        processContext.setWorkFolder(null);
+        ProcessContextObject parentProcessContext = this.parentProcess.getContext();
+
+        if (ObjectUtils.allNotNull(this.processBuilder.getAppContext())) {
+            processContext.setAppContext(this.processBuilder.getAppContext());
+        }
+        if (ObjectUtils.allNotNull(this.processBuilder.getEnvironmentVariable())) {
+            processContext.setEnvironmentVariable(this.processBuilder.getEnvironmentVariable());
+        } else {
+            processContext.setEnvironmentVariable(this.parentProcess.getContext().getEnvironmentVariable());
+        }
+        if (ObjectUtils.allNotNull(this.processBuilder.getParameters())) {
+            processContext.setParameters(this.processBuilder.getParameters());
+        }
+        if (!UUIDUtils.isAnyNullOrEmpty(this.processBuilder.getSessionID())) {
+            processContext.setSessionID(this.processBuilder.getSessionID());
+        } else {
+            UUID parentProcessContextSessionID = parentProcessContext.getSessionID();
+            if (!UUIDUtils.isAnyNullOrEmpty(parentProcessContextSessionID)) {
+                processContext.setSessionID(parentProcessContextSessionID);
+            }
+        }
+        if (ObjectUtils.allNotNull(this.processBuilder.getWorkFolder())) {
+            processContext.setWorkFolder(this.processBuilder.getWorkFolder());
+        } else {
+            processContext.setWorkFolder(parentProcessContext.getWorkFolder());
+        }
 
         //加入 Session 会话列表
     }
@@ -155,5 +233,17 @@ public class ProcessBuilderObject extends ACoreObject {
         this.configuration();
 
         return this.process;
+    }
+
+    public void initialize() {
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrentProcess();
+
+        ProcessCommunicationObject processCommunication = process.getCommunication();
+        processCommunication.createSignal(new HashSet<>());
+
+        ProcessStatusObject processStatus = process.getStatus();
+        processStatus.run();
     }
 }

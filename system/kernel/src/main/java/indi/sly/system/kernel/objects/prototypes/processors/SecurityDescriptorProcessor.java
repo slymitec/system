@@ -16,7 +16,7 @@ import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
 import indi.sly.system.kernel.objects.definitions.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.definitions.InfoStatusOpenDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.types.TypeInitializerAttributeTypes;
+import indi.sly.system.kernel.objects.infotypes.types.TypeInitializerAttributeTypes;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.objects.definitions.DumpDefinition;

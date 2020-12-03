@@ -2,6 +2,7 @@ package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.exceptions.AKernelException;
 import indi.sly.system.common.exceptions.StatusExpiredException;
+import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
@@ -9,14 +10,13 @@ import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.security.SecurityTokenManager;
+import indi.sly.system.kernel.security.definitions.AccountAuthorizationResultDefinition;
+import indi.sly.system.kernel.security.definitions.AccountGroupTokenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -75,7 +75,7 @@ public class AccountAuthorizationObject extends ACoreObject {
         return true;
     }
 
-    public UUID checkAndGetAccountID() {
+    public AccountAuthorizationResultDefinition checkAndGetResult() {
         if (UUIDUtils.isAnyNullOrEmpty(this.accountID)) {
             throw new StatusExpiredException();
         }
@@ -104,6 +104,29 @@ public class AccountAuthorizationObject extends ACoreObject {
 
         this.date.put(DateTimeTypes.ACCESS, nowDateTime);
 
-        return this.accountID;
+        AccountAuthorizationResultDefinition accountAuthorization = new AccountAuthorizationResultDefinition();
+        AccountGroupTokenDefinition accountAuthorizationToken = accountAuthorization.getToken();
+        Map<Long, Integer> accountAuthorizationTokenLimits = accountAuthorizationToken.getLimits();
+
+        accountAuthorization.setAccountID(account.getID());
+
+        List<AccountGroupTokenObject> accountGroupTokens = new ArrayList<>();
+        List<GroupObject> groups = account.getGroups();
+        for (GroupObject group : groups) {
+            accountGroupTokens.add(group.getToken());
+        }
+        accountGroupTokens.add(account.getToken());
+
+        for (AccountGroupTokenObject accountGroupToken : accountGroupTokens) {
+            accountAuthorizationToken.setPrivilegeTypes(LogicalUtils.or(accountAuthorizationToken.getPrivilegeTypes()
+                    , accountGroupToken.getPrivilegeTypes()));
+
+            for (Map.Entry<Long, Integer> pair : accountGroupToken.getLimits().entrySet()) {
+                int value = accountAuthorizationTokenLimits.getOrDefault(pair.getKey(), Integer.MAX_VALUE);
+                accountAuthorizationTokenLimits.put(pair.getKey(), Integer.min(value, pair.getValue()));
+            }
+        }
+
+        return accountAuthorization;
     }
 }

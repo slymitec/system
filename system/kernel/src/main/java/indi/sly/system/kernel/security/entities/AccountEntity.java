@@ -1,19 +1,13 @@
 package indi.sly.system.kernel.security.entities;
 
 import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.utility.*;
 
 import javax.persistence.*;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "KernelAccounts")
@@ -35,6 +29,8 @@ public class AccountEntity implements ISerializable<AccountEntity> {
     @JoinTable(name = "KernelAccountsGroups", joinColumns = {@JoinColumn(name = "AccountID")}, inverseJoinColumns =
             {@JoinColumn(name = "GroupID")})
     protected List<GroupEntity> groups;
+    @Column(length = 4096, name = "Token", nullable = false)
+    protected byte[] token;
 
     public UUID getID() {
         return this.id;
@@ -68,20 +64,27 @@ public class AccountEntity implements ISerializable<AccountEntity> {
         this.groups = groups;
     }
 
+    public byte[] getToken() {
+        return this.token;
+    }
+
+    public void setToken(byte[] token) {
+        this.token = token;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccountEntity that = (AccountEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(password, that.password) &&
-                Objects.equals(groups, that.groups);
+        return id.equals(that.id) && name.equals(that.name) && password.equals(that.password) && groups.equals(that.groups) && Arrays.equals(token, that.token);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, password, groups);
+        int result = Objects.hash(id, name, password, groups);
+        result = 31 * result + Arrays.hashCode(token);
+        return result;
     }
 
     @Override
@@ -97,6 +100,7 @@ public class AccountEntity implements ISerializable<AccountEntity> {
         account.name = this.name;
         account.password = this.password;
         account.groups = this.groups;
+        account.token = ArrayUtils.copyBytes(this.token);
 
         return account;
     }
@@ -113,6 +117,8 @@ public class AccountEntity implements ISerializable<AccountEntity> {
         for (int i = 0; i < valueInteger; i++) {
             this.groups.add(ObjectUtils.readExternal(in));
         }
+
+        this.token = NumberUtils.readExternalBytes(in);
     }
 
     @Override
@@ -125,5 +131,7 @@ public class AccountEntity implements ISerializable<AccountEntity> {
         for (GroupEntity pair : this.groups) {
             ObjectUtils.writeExternal(out, pair);
         }
+
+        NumberUtils.writeExternalBytes(out, this.token);
     }
 }

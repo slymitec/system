@@ -1,32 +1,22 @@
-package indi.sly.system.kernel.processes.definitions;
+package indi.sly.system.kernel.security.definitions;
+
+import indi.sly.system.common.support.ISerializable;
+import indi.sly.system.common.utility.NumberUtils;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.UUIDUtils;
-
-public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinition> {
-    public ProcessTokenDefinition() {
-        this.roles = new HashSet<>();
+public class AccountGroupTokenDefinition implements ISerializable<AccountGroupTokenDefinition> {
+    public AccountGroupTokenDefinition() {
         this.limits = new HashMap<>();
     }
 
-    private UUID accountID;
     private long privilegeTypes;
     private final Map<Long, Integer> limits;
-    private final Set<UUID> roles;
-
-    public UUID getAccountID() {
-        return this.accountID;
-    }
-
-    public void setAccountID(UUID accountID) {
-        this.accountID = accountID;
-    }
 
     public long getPrivilegeTypes() {
         return this.privilegeTypes;
@@ -34,10 +24,6 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
 
     public void setPrivilegeTypes(long privilegeTypes) {
         this.privilegeTypes = privilegeTypes;
-    }
-
-    public Set<UUID> getRoles() {
-        return this.roles;
     }
 
     public Map<Long, Integer> getLimits() {
@@ -48,16 +34,13 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProcessTokenDefinition that = (ProcessTokenDefinition) o;
-        return privilegeTypes == that.privilegeTypes &&
-                Objects.equals(accountID, that.accountID) &&
-                limits.equals(that.limits) &&
-                roles.equals(that.roles);
+        AccountGroupTokenDefinition that = (AccountGroupTokenDefinition) o;
+        return privilegeTypes == that.privilegeTypes && limits.equals(that.limits);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountID, privilegeTypes, limits, roles);
+        return Objects.hash(privilegeTypes, limits);
     }
 
     @Override
@@ -66,20 +49,17 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
     }
 
     @Override
-    public ProcessTokenDefinition deepClone() {
-        ProcessTokenDefinition definition = new ProcessTokenDefinition();
+    public AccountGroupTokenDefinition deepClone() {
+        AccountGroupTokenDefinition definition = new AccountGroupTokenDefinition();
 
-        definition.accountID = this.accountID;
         definition.privilegeTypes = this.privilegeTypes;
         definition.limits.putAll(this.limits);
-        definition.roles.addAll(this.roles);
 
         return definition;
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.accountID = UUIDUtils.readExternal(in);
         this.privilegeTypes = NumberUtils.readExternalLong(in);
 
         int valueInteger;
@@ -88,27 +68,16 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
         for (int i = 0; i < valueInteger; i++) {
             this.limits.put(NumberUtils.readExternalLong(in), NumberUtils.readExternalInteger(in));
         }
-
-        valueInteger = NumberUtils.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.roles.add(UUIDUtils.readExternal(in));
-        }
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.accountID);
         NumberUtils.writeExternalLong(out, this.privilegeTypes);
 
         NumberUtils.writeExternalInteger(out, this.limits.size());
         for (Map.Entry<Long, Integer> pair : this.limits.entrySet()) {
             NumberUtils.writeExternalLong(out, pair.getKey());
             NumberUtils.writeExternalInteger(out, pair.getValue());
-        }
-
-        NumberUtils.writeExternalInteger(out, this.roles.size());
-        for (UUID pair : this.roles) {
-            UUIDUtils.writeExternal(out, pair);
         }
     }
 }

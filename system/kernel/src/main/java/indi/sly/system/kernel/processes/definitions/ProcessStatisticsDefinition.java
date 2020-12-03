@@ -408,43 +408,43 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
 
     @Override
     public ProcessStatisticsDefinition deepClone() {
-        ProcessStatisticsDefinition processStatistics = new ProcessStatisticsDefinition();
+        ProcessStatisticsDefinition definition = new ProcessStatisticsDefinition();
 
-        processStatistics.date.putAll(this.date);
+        definition.date.putAll(this.date);
 
-        processStatistics.statusCumulation = this.infoCreate;
-        processStatistics.threadCumulation = this.threadCumulation;
+        definition.statusCumulation = this.infoCreate;
+        definition.threadCumulation = this.threadCumulation;
 
-        processStatistics.infoCreate = this.infoCreate;
-        processStatistics.infoGet = this.infoGet;
-        processStatistics.infoQuery = this.infoQuery;
-        processStatistics.infoDelete = this.infoDelete;
-        processStatistics.infoDump = this.infoDump;
-        processStatistics.infoOpen = this.infoOpen;
-        processStatistics.infoClose = this.infoClose;
-        processStatistics.infoRead = this.infoRead;
-        processStatistics.infoWrite = this.infoWrite;
+        definition.infoCreate = this.infoCreate;
+        definition.infoGet = this.infoGet;
+        definition.infoQuery = this.infoQuery;
+        definition.infoDelete = this.infoDelete;
+        definition.infoDump = this.infoDump;
+        definition.infoOpen = this.infoOpen;
+        definition.infoClose = this.infoClose;
+        definition.infoRead = this.infoRead;
+        definition.infoWrite = this.infoWrite;
 
-        processStatistics.sharedReadCount = this.sharedReadCount;
-        processStatistics.sharedReadBytes = this.sharedReadBytes;
-        processStatistics.sharedWriteCount = this.sharedWriteCount;
-        processStatistics.sharedWriteBytes = this.sharedWriteBytes;
-        processStatistics.portCount = this.portCount;
-        processStatistics.portReadCount = this.portReadCount;
-        processStatistics.portReadBytes = this.portReadBytes;
-        processStatistics.portWriteCount = this.portWriteCount;
-        processStatistics.portWriteBytes = this.portWriteBytes;
-        processStatistics.signalReadCount = this.signalReadCount;
-        processStatistics.signalWriteCount = this.signalWriteCount;
+        definition.sharedReadCount = this.sharedReadCount;
+        definition.sharedReadBytes = this.sharedReadBytes;
+        definition.sharedWriteCount = this.sharedWriteCount;
+        definition.sharedWriteBytes = this.sharedWriteBytes;
+        definition.portCount = this.portCount;
+        definition.portReadCount = this.portReadCount;
+        definition.portReadBytes = this.portReadBytes;
+        definition.portWriteCount = this.portWriteCount;
+        definition.portWriteBytes = this.portWriteBytes;
+        definition.signalReadCount = this.signalReadCount;
+        definition.signalWriteCount = this.signalWriteCount;
 
-        processStatistics.ioCreate = this.ioCreate;
-        processStatistics.ioStatus = this.ioStatus;
-        processStatistics.ioReadCount = this.ioReadCount;
-        processStatistics.ioReadBytes = this.ioReadBytes;
-        processStatistics.ioWriteCount = this.ioWriteCount;
-        processStatistics.ioWriteBytes = this.ioWriteBytes;
+        definition.ioCreate = this.ioCreate;
+        definition.ioStatus = this.ioStatus;
+        definition.ioReadCount = this.ioReadCount;
+        definition.ioReadBytes = this.ioReadBytes;
+        definition.ioWriteCount = this.ioWriteCount;
+        definition.ioWriteBytes = this.ioWriteBytes;
 
-        return processStatistics;
+        return definition;
     }
 
     @Override

@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Scope;
 
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -27,17 +27,17 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoObjectFactoryObject extends ACoreObject {
+public class InfoFactoryObject extends ACorePrototype {
     protected Set<IInfoObjectProcessor> infoObjectProcessors;
 
     public void initInfoObjectFactory() {
         this.infoObjectProcessors = new ConcurrentSkipListSet<>();
 
-        Set<ACoreObject> coreObjects =
-                this.factoryManager.getCoreObjectRepository().getByImplementInterface(SpaceTypes.KERNEL,
+        Set<ACorePrototype> coreObjects =
+                this.factoryManager.getCoreRepository().getByImplementInterface(SpaceTypes.KERNEL,
                         IInfoObjectProcessor.class);
 
-        for (ACoreObject pair : coreObjects) {
+        for (ACorePrototype pair : coreObjects) {
             if (pair instanceof IInfoObjectProcessor) {
                 infoObjectProcessors.add((IInfoObjectProcessor) pair);
             }

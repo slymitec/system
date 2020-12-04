@@ -5,10 +5,10 @@ import java.util.Set;
 import java.util.UUID;
 
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
 
-public class TypeObject extends ACoreObject {
+public class TypeObject extends ACorePrototype {
     private TypeDefinition type;
 
     public void setType(TypeDefinition type) {

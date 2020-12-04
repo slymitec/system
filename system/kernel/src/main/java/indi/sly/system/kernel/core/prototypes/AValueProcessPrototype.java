@@ -9,26 +9,31 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class ABytesProcessObject extends ACoreProcessObject {
-    private Provider<byte[]> funcRead;
-    private Consumer<byte[]> funcWrite;
+public abstract class AValueProcessPrototype<T> extends ACoreProcessPrototype {
+    private Provider<T> funcRead;
+    private Consumer<T> funcWrite;
+    protected T value;
 
-    public final void setSource(Provider<byte[]> funcRead, Consumer<byte[]> funcWrite) {
+    public final void setSource(Provider<T> funcRead, Consumer<T> funcWrite) {
         this.funcRead = funcRead;
         this.funcWrite = funcWrite;
     }
 
     protected final void init() {
-        byte[] value = this.funcRead.acquire();
+        T value = this.funcRead.acquire();
         this.read(value);
     }
 
     protected final void fresh() {
-        byte[] value = this.write();
+        T value = this.write();
         this.funcWrite.accept(value);
     }
 
-    protected abstract void read(byte[] source);
+    protected void read(T source) {
+        this.value = source;
+    }
 
-    protected abstract byte[] write();
+    protected T write() {
+        return this.value;
+    }
 }

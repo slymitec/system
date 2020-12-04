@@ -4,9 +4,9 @@ import indi.sly.system.common.functions.Consumer3;
 import indi.sly.system.common.functions.Function6;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
-import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
+import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class OpenOrCloseProcessor extends ACoreObject implements IInfoObjectProcessor {
+public class OpenOrCloseProcessor extends ACorePrototype implements IInfoObjectProcessor {
     public OpenOrCloseProcessor() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             status.getOpen().setAttribute(openAttribute);
@@ -57,9 +57,9 @@ public class OpenOrCloseProcessor extends ACoreObject implements IInfoObjectProc
                         identification = new Identification(info.getID());
                     }
 
-                    InfoObjectCacheObject infoCacheObject = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
+                    InfoCacheObject infoObject = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL, InfoCacheObject.class);
 
-                    InfoObject parentInfo = infoCacheObject.getIfExisted(SpaceTypes.ALL, status.getParentID());
+                    InfoObject parentInfo = infoObject.getIfExisted(SpaceTypes.ALL, status.getParentID());
                     parentInfo.deleteChild(identification);
                 }
             }

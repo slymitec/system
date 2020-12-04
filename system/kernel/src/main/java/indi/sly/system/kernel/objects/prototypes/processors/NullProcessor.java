@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.functions.*;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 
 //@Named
 //@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class NullProcessor extends ACoreObject implements IInfoObjectProcessor {
+public class NullProcessor extends ACorePrototype implements IInfoObjectProcessor {
     public NullProcessor() {
         this.dump = (dump, info, type, status) -> dump;
 

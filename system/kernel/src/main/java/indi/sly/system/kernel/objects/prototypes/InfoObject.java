@@ -5,9 +5,9 @@ import indi.sly.system.common.functions.*;
 import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
-import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
+import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
@@ -30,8 +30,8 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoObject extends ACoreObject {
-    protected InfoObjectFactoryObject factory;
+public class InfoObject extends ACorePrototype {
+    protected InfoFactoryObject factory;
     protected InfoObjectProcessorRegister processorRegister;
 
     protected UUID id;
@@ -131,8 +131,8 @@ public class InfoObject extends ACoreObject {
         ProcessObject currentProcess = processManager.getCurrentProcess();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                InfoObjectCacheObject.class);
+        InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+                InfoCacheObject.class);
 
         if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
             if (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
@@ -155,8 +155,8 @@ public class InfoObject extends ACoreObject {
         ProcessObject currentProcess = processManager.getCurrentProcess();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-        InfoObjectCacheObject kernelCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                InfoObjectCacheObject.class);
+        InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+                InfoCacheObject.class);
 
         if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
             if (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
@@ -349,10 +349,10 @@ public class InfoObject extends ACoreObject {
             throw new StatusUnexpectedException();
         }
 
-        InfoObjectCacheObject infoObjectCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                InfoObjectCacheObject.class);
+        InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+                InfoCacheObject.class);
 
-        InfoObject childCachedInfo = infoObjectCache.getIfExisted(SpaceTypes.ALL, childInfo.getID());
+        InfoObject childCachedInfo = infoCache.getIfExisted(SpaceTypes.ALL, childInfo.getID());
         if (ObjectUtils.isAnyNull(childCachedInfo)) {
             childCachedInfo = this.factory.buildInfoObject(childInfo, statusOpen, this);
 

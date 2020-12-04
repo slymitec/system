@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.processors.IProcessObjectProcessor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -15,17 +15,17 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessObjectBuilderObject extends ACoreObject {
+public class ProcessObjectBuilderObject extends ACorePrototype {
     protected Set<IProcessObjectProcessor> processObjectProcessors;
 
     public void initProcessObjectFactory() {
         this.processObjectProcessors = new ConcurrentSkipListSet<>();
 
-        Set<ACoreObject> coreObjects =
-                this.factoryManager.getCoreObjectRepository().getByImplementInterface(SpaceTypes.KERNEL,
+        Set<ACorePrototype> coreObjects =
+                this.factoryManager.getCoreRepository().getByImplementInterface(SpaceTypes.KERNEL,
                         IProcessObjectProcessor.class);
 
-        for (ACoreObject pair : coreObjects) {
+        for (ACorePrototype pair : coreObjects) {
             if (pair instanceof IProcessObjectProcessor) {
                 processObjectProcessors.add((IProcessObjectProcessor) pair);
             }
@@ -33,7 +33,7 @@ public class ProcessObjectBuilderObject extends ACoreObject {
     }
 
     public ProcessObject buildProcessObject(ProcessEntity process) {
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
 
         ProcessObjectProcessorRegister processObjectProcessorRegister = new ProcessObjectProcessorRegister();

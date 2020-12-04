@@ -6,7 +6,7 @@ import indi.sly.system.common.functions.*;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.Identification;
@@ -28,7 +28,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TypeInitializerProcessor extends ACoreObject implements IInfoObjectProcessor {
+public class TypeInitializerProcessor extends ACorePrototype implements IInfoObjectProcessor {
     public TypeInitializerProcessor() {
         this.dump = (dump, info, type, status) -> {
             type.getTypeInitializer().dumpProcedure(info, dump);

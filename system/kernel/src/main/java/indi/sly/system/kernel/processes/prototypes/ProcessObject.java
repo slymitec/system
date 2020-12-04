@@ -4,7 +4,7 @@ import indi.sly.system.common.exceptions.ConditionContextException;
 import indi.sly.system.common.functions.Consumer2;
 import indi.sly.system.common.functions.Function2;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ThreadManager;
@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessObject extends ACoreObject {
+public class ProcessObject extends ACorePrototype {
     protected ProcessObjectBuilderObject factory;
     protected ProcessObjectProcessorRegister processorRegister;
 

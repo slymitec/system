@@ -6,7 +6,7 @@ import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
+import indi.sly.system.kernel.core.prototypes.ABytesProcessPrototype;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessContextDefinition;
@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessContextObject extends ABytesProcessObject {
+public class ProcessContextObject extends ABytesProcessPrototype {
     @Override
     protected void read(byte[] source) {
         this.processContext = ObjectUtils.transferFromByteArray(source);

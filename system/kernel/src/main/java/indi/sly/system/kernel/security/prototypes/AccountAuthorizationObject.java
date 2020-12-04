@@ -8,7 +8,7 @@ import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.security.SecurityTokenManager;
 import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
 import indi.sly.system.kernel.security.values.AccountGroupTokenDefinition;
@@ -20,7 +20,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AccountAuthorizationObject extends ACoreObject {
+public class AccountAuthorizationObject extends ACorePrototype {
     public AccountAuthorizationObject() {
         this.date = new HashMap<>();
     }
@@ -33,7 +33,7 @@ public class AccountAuthorizationObject extends ACoreObject {
         this.accountID = account.getID();
         this.password = account.getPassword();
 
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -62,7 +62,7 @@ public class AccountAuthorizationObject extends ACoreObject {
             return false;
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
         long expiredTime =
@@ -92,7 +92,7 @@ public class AccountAuthorizationObject extends ACoreObject {
             throw new StatusExpiredException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
         long expiredTime =

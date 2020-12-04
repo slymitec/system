@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.security.prototypes;
 
-import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
 import indi.sly.system.kernel.security.values.GroupEntity;
@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GroupObject extends AValueProcessObject<GroupEntity> {
+public class GroupObject extends AValueProcessPrototype<GroupEntity> {
     public UUID getID() {
         this.init();
 

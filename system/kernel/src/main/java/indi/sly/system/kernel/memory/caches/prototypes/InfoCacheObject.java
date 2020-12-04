@@ -8,27 +8,27 @@ import javax.inject.Named;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
-import indi.sly.system.kernel.core.prototypes.CoreObjectRepositoryObject;
-import indi.sly.system.kernel.memory.caches.values.InfoObjectCacheDefinition;
+import indi.sly.system.kernel.core.prototypes.CoreRepositoryObject;
+import indi.sly.system.kernel.memory.caches.values.InfoCacheDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoObjectCacheObject extends ACoreObject {
-    private Map<UUID, InfoObjectCacheDefinition> getInfoObjectCaches(long spaceType) {
+public class InfoCacheObject extends ACorePrototype {
+    private Map<UUID, InfoCacheDefinition> getInfoCaches(long spaceType) {
         if (spaceType == SpaceTypes.KERNEL) {
             return this.factoryManager.getKernelSpace().getCachedInfoObjectDefinitions();
         } else if (spaceType == SpaceTypes.USER) {
             return this.factoryManager.getUserSpace().getCachedInfoObjectDefinitions();
         } else {
-            Map<UUID, InfoObjectCacheDefinition> kernelObjectCache = new HashMap<>();
+            Map<UUID, InfoCacheDefinition> kernelObjectCache = new HashMap<>();
 
             kernelObjectCache.putAll(this.factoryManager.getKernelSpace().getCachedInfoObjectDefinitions());
             kernelObjectCache.putAll(this.factoryManager.getUserSpace().getCachedInfoObjectDefinitions());
@@ -38,15 +38,15 @@ public class InfoObjectCacheObject extends ACoreObject {
     }
 
     private InfoObject getIfExistedBySpaceType(long spaceType, UUID id) {
-        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
+        CoreRepositoryObject coreObjectRepository = this.factoryManager.getCoreRepository();
         Lock lock = coreObjectRepository.getLock(spaceType, LockTypes.READ);
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
 
         try {
             lock.lock();
 
-            InfoObjectCacheDefinition kernelObjectCache = this.getInfoObjectCaches(spaceType).getOrDefault(id, null);
+            InfoCacheDefinition kernelObjectCache = this.getInfoCaches(spaceType).getOrDefault(id, null);
             kernelObjectCache.getDate().put(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());
 
             InfoObject infoObject = null;
@@ -62,23 +62,23 @@ public class InfoObjectCacheObject extends ACoreObject {
     }
 
     private void addBySpaceType(long spaceType, InfoObject infoObject) {
-        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
+        CoreRepositoryObject coreObjectRepository = this.factoryManager.getCoreRepository();
         Lock lock = coreObjectRepository.getLock(spaceType, LockTypes.WRITE);
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
 
         try {
             lock.lock();
 
-            Map<UUID, InfoObjectCacheDefinition> kernelObjectCaches = this.getInfoObjectCaches(spaceType);
+            Map<UUID, InfoCacheDefinition> kernelObjectCaches = this.getInfoCaches(spaceType);
             if (!kernelObjectCaches.containsKey(infoObject.getID())) {
-                InfoObjectCacheDefinition kernelObjectCache = new InfoObjectCacheDefinition();
+                InfoCacheDefinition kernelObjectCache = new InfoCacheDefinition();
                 kernelObjectCache.setId(infoObject.getID());
                 kernelObjectCache.setType(infoObject.getType());
                 kernelObjectCache.getDate().put(DateTimeTypes.CREATE, dateTime.getCurrentDateTime());
                 kernelObjectCache.getDate().put(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());
 
-                this.getInfoObjectCaches(spaceType).put(kernelObjectCache.getId(), kernelObjectCache);
+                this.getInfoCaches(spaceType).put(kernelObjectCache.getId(), kernelObjectCache);
                 coreObjectRepository.addByID(spaceType, kernelObjectCache.getId(), infoObject);
             }
         } finally {
@@ -86,8 +86,8 @@ public class InfoObjectCacheObject extends ACoreObject {
         }
     }
 
-    public Map<UUID, InfoObjectCacheDefinition> list(long spaceType) {
-        return Collections.unmodifiableMap(this.getInfoObjectCaches(spaceType));
+    public Map<UUID, InfoCacheDefinition> list(long spaceType) {
+        return Collections.unmodifiableMap(this.getInfoCaches(spaceType));
     }
 
     public InfoObject getIfExisted(long spaceType, UUID id) {
@@ -122,15 +122,15 @@ public class InfoObjectCacheObject extends ACoreObject {
     }
 
     public void deleteIfExpired(long spaceType) {
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
         long expiredTime =
                 this.factoryManager.getKernelSpace().getConfiguration().MEMORY_CACHES_USERSPACE_INFOOBJECT_EXPIRED_TIME;
 
         if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.USER)) {
-            Map<UUID, InfoObjectCacheDefinition> infoObjectCaches = this.getInfoObjectCaches(SpaceTypes.USER);
+            Map<UUID, InfoCacheDefinition> infoObjectCaches = this.getInfoCaches(SpaceTypes.USER);
 
-            for (Map.Entry<UUID, InfoObjectCacheDefinition> infoObjectCache : infoObjectCaches.entrySet()) {
+            for (Map.Entry<UUID, InfoCacheDefinition> infoObjectCache : infoObjectCaches.entrySet()) {
                 if (dateTime.getCurrentDateTime() - infoObjectCache.getValue().getDate().get(DateTimeTypes.ACCESS) > expiredTime) {
                     this.deleteBySpaceType(SpaceTypes.USER, infoObjectCache.getKey());
                 }
@@ -139,13 +139,13 @@ public class InfoObjectCacheObject extends ACoreObject {
     }
 
     private void deleteBySpaceType(long spaceType, UUID id) {
-        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
+        CoreRepositoryObject coreObjectRepository = this.factoryManager.getCoreRepository();
         Lock lock = coreObjectRepository.getLock(spaceType, LockTypes.WRITE);
 
         try {
             lock.lock();
 
-            Map<UUID, InfoObjectCacheDefinition> kernelObjectCaches = this.getInfoObjectCaches(spaceType);
+            Map<UUID, InfoCacheDefinition> kernelObjectCaches = this.getInfoCaches(spaceType);
             if (kernelObjectCaches.containsKey(id)) {
                 kernelObjectCaches.remove(id);
 

@@ -5,9 +5,9 @@ import indi.sly.system.common.functions.*;
 import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
-import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
+import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -36,7 +36,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SecurityDescriptorProcessor extends ACoreObject implements IInfoObjectProcessor {
+public class SecurityDescriptorProcessor extends ACorePrototype implements IInfoObjectProcessor {
     public SecurityDescriptorProcessor() {
         this.securityDescriptor = (info, type, status) -> {
             SecurityDescriptorObject securityDescriptor = this.factoryManager.create(SecurityDescriptorObject.class);
@@ -45,11 +45,10 @@ public class SecurityDescriptorProcessor extends ACoreObject implements IInfoObj
             securityDescriptor.setLock((lockType) -> type.getTypeInitializer().lockProcedure(info, lockType));
 
             if (!UUIDUtils.isAnyNullOrEmpty(status.getParentID())) {
-                InfoObjectCacheObject infoCacheObject =
-                        this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                                InfoObjectCacheObject.class);
+                InfoCacheObject infoObject = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+                        InfoCacheObject.class);
 
-                InfoObject parentInfo = infoCacheObject.getIfExisted(SpaceTypes.ALL, status.getParentID());
+                InfoObject parentInfo = infoObject.getIfExisted(SpaceTypes.ALL, status.getParentID());
 
                 try {
                     securityDescriptor.setParentSecurityDescriptor(parentInfo.getSecurityDescriptor());
@@ -254,7 +253,8 @@ public class SecurityDescriptorProcessor extends ACoreObject implements IInfoObj
     private final Function3<SecurityDescriptorObject, InfoEntity, TypeObject, InfoStatusDefinition> securityDescriptor;
     private final Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, InfoStatusDefinition> dump;
     private final Function6<UUID, UUID, InfoEntity, TypeObject, InfoStatusDefinition, Long, Object[]> open;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID, Identification> createChildAndOpen;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID,
+            Identification> createChildAndOpen;
     private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, Identification,
             InfoStatusOpenDefinition> getOrRebuildChild;
     private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Identification> deleteChild;

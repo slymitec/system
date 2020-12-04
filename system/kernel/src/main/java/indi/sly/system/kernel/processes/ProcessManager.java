@@ -53,7 +53,7 @@ public class ProcessManager extends AManager {
         ProcessEntity process = processRepository.get(processID);
         ProcessObject processObject = this.processObjectFactory.buildProcessObject(process);
 
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 

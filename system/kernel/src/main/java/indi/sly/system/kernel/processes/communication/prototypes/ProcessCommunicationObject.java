@@ -5,7 +5,7 @@ import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
+import indi.sly.system.kernel.core.prototypes.ABytesProcessPrototype;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -30,7 +30,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCommunicationObject extends ABytesProcessObject {
+public class ProcessCommunicationObject extends ABytesProcessPrototype {
     @Override
     protected void read(byte[] source) {
         this.processCommunication = ObjectUtils.transferFromByteArray(source);

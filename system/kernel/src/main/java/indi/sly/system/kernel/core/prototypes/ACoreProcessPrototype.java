@@ -11,7 +11,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class ACoreProcessObject extends ACoreObject {
+public abstract class ACoreProcessPrototype extends ACorePrototype {
     private Consumer<Long> funcLock;
 
     public final void setLock(Consumer<Long> funcLock) {

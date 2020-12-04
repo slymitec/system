@@ -3,11 +3,11 @@ package indi.sly.system.kernel.memory.repositories.prototypes;
 import java.util.List;
 import java.util.UUID;
 
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoRelationEntity;
 
-public abstract class AInfoRepositoryObject extends ACoreObject {
+public abstract class AInfoRepositoryObject extends ACorePrototype {
     public abstract boolean contain(UUID id);
 
     public abstract InfoEntity get(UUID id);

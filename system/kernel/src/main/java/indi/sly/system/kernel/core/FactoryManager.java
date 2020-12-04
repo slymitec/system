@@ -12,8 +12,8 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.enviroment.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.core.enviroment.UserSpace;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
-import indi.sly.system.kernel.core.prototypes.CoreObjectRepositoryObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
+import indi.sly.system.kernel.core.prototypes.CoreRepositoryObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
@@ -41,25 +41,25 @@ public class FactoryManager extends AManager {
                 return bootUserSpace;
             });
 
-            this.coreObjectRepository = this.create(CoreObjectRepositoryObject.class);
+            this.coreRepository = this.create(CoreRepositoryObject.class);
 
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(FactoryManager.class));
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(MemoryManager.class));
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(ProcessManager.class));
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(ThreadManager.class));
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(TypeManager.class));
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(ObjectManager.class));
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(SecurityTokenManager.class));
+            this.coreRepository.add(SpaceTypes.KERNEL, this.create(FactoryManager.class));
+            this.coreRepository.add(SpaceTypes.KERNEL, this.create(MemoryManager.class));
+            this.coreRepository.add(SpaceTypes.KERNEL, this.create(ProcessManager.class));
+            this.coreRepository.add(SpaceTypes.KERNEL, this.create(ThreadManager.class));
+            this.coreRepository.add(SpaceTypes.KERNEL, this.create(TypeManager.class));
+            this.coreRepository.add(SpaceTypes.KERNEL, this.create(ObjectManager.class));
+            this.coreRepository.add(SpaceTypes.KERNEL, this.create(SecurityTokenManager.class));
             // ...
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(DateTimeObject.class));
-            this.coreObjectRepository.add(SpaceTypes.KERNEL, this.create(CoreObjectRepositoryObject.class));
+            this.coreRepository.add(SpaceTypes.KERNEL, this.create(DateTimeObject.class));
+            this.coreRepository.add(SpaceTypes.KERNEL, this.create(CoreRepositoryObject.class));
         } else if (startupTypes == StartupTypes.STEP_KERNEL) {
         }
     }
 
-    private CoreObjectRepositoryObject coreObjectRepository;
+    private CoreRepositoryObject coreRepository;
 
-    public <T extends ACoreObject> T create(Class<T> clazz) {
+    public <T extends ACorePrototype> T create(Class<T> clazz) {
         if (ObjectUtils.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
@@ -93,13 +93,13 @@ public class FactoryManager extends AManager {
         return coreObject;
     }
 
-    public CoreObjectRepositoryObject getCoreObjectRepository() {
-        return this.coreObjectRepository;
+    public CoreRepositoryObject getCoreRepository() {
+        return this.coreRepository;
     }
 
     @SuppressWarnings("unchecked")
     public <T extends AManager> T getManager(Class<T> clazz) {
-        T coreObject = this.coreObjectRepository.get(SpaceTypes.KERNEL, clazz);
+        T coreObject = this.coreRepository.get(SpaceTypes.KERNEL, clazz);
         if (!(coreObject instanceof AManager)) {
             throw new StatusRelationshipErrorException();
         }

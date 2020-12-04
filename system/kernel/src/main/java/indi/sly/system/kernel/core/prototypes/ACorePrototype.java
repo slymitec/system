@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Scope;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class ACoreObject {
+public abstract class ACorePrototype {
     protected FactoryManager factoryManager;
 
     public final synchronized void setFactoryManager(FactoryManager factoryManager) {

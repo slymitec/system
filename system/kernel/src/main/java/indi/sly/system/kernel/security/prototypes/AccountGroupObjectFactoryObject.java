@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.security.prototypes;
 
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
 import indi.sly.system.kernel.security.values.AccountEntity;
@@ -12,7 +12,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AccountGroupObjectFactoryObject extends ACoreObject {
+public class AccountGroupObjectFactoryObject extends ACorePrototype {
     public AccountObject buildAccount(AccountEntity account) {
         AccountObject accountObject = this.factoryManager.create(AccountObject.class);
 

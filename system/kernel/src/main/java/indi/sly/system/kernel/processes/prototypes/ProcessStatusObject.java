@@ -7,7 +7,7 @@ import indi.sly.system.common.functions.Consumer2;
 import indi.sly.system.common.functions.Function2;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.LogicalUtils;
-import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessStatusObject extends AValueProcessObject<ProcessEntity> {
+public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     protected ProcessObjectProcessorRegister processorRegister;
 
     private ProcessObject process;

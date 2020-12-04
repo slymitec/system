@@ -3,10 +3,10 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 import indi.sly.system.common.exceptions.StatusNotExistedException;
 import indi.sly.system.common.functions.Function;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
+import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GetParentProcessor extends ACoreObject implements IInfoObjectProcessor {
+public class GetParentProcessor extends ACorePrototype implements IInfoObjectProcessor {
     public GetParentProcessor() {
         this.parent = (id) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
@@ -27,10 +27,10 @@ public class GetParentProcessor extends ACoreObject implements IInfoObjectProces
                 throw new StatusNotExistedException();
             }
 
-            InfoObjectCacheObject infoObjectCache =
-                    this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL, InfoObjectCacheObject.class);
+            InfoCacheObject infoCache =
+                    this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL, InfoCacheObject.class);
 
-            return infoObjectCache.getIfExisted(SpaceTypes.ALL, id);
+            return infoCache.getIfExisted(SpaceTypes.ALL, id);
         };
     }
 

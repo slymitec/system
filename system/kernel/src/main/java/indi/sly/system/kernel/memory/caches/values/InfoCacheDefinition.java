@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class InfoObjectCacheDefinition {
-    public InfoObjectCacheDefinition() {
+public class InfoCacheDefinition {
+    public InfoCacheDefinition() {
         this.date = new ConcurrentHashMap<>();
     }
 

@@ -9,7 +9,7 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.objects.ObjectManager;
-import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
+import indi.sly.system.kernel.core.prototypes.ABytesProcessPrototype;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -26,7 +26,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessHandleTableObject extends ABytesProcessObject {
+public class ProcessHandleTableObject extends ABytesProcessPrototype {
     @Override
     protected void read(byte[] source) {
         this.processHandleTable = ObjectUtils.transferFromByteArray(source);
@@ -125,7 +125,7 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
         this.checkStatusAndCurrentPermission();
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -156,7 +156,7 @@ public class ProcessHandleTableObject extends ABytesProcessObject {
             throw new StatusInsufficientResourcesException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 

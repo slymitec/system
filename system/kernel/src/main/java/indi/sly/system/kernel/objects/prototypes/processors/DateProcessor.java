@@ -4,7 +4,7 @@ import indi.sly.system.common.functions.Consumer4;
 import indi.sly.system.common.functions.Function4;
 import indi.sly.system.common.functions.Function6;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
@@ -23,10 +23,10 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
+public class DateProcessor extends ACorePrototype implements IInfoObjectProcessor {
     public DateProcessor() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+            DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -38,7 +38,7 @@ public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
         };
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+            DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -52,7 +52,7 @@ public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
         };
 
         this.readContent = (content, info, type, status) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+            DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -64,7 +64,7 @@ public class DateProcessor extends ACoreObject implements IInfoObjectProcessor {
         };
 
         this.writeContent = (info, type, status, content) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
+            DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 

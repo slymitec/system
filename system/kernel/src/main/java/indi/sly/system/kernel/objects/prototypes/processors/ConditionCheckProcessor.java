@@ -5,7 +5,7 @@ import indi.sly.system.common.exceptions.StatusNotSupportedException;
 import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.functions.*;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ConditionCheckProcessor extends ACoreObject implements IInfoObjectProcessor {
+public class ConditionCheckProcessor extends ACorePrototype implements IInfoObjectProcessor {
     public ConditionCheckProcessor() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             if (status.getOpen().getAttribute() != InfoStatusOpenAttributeTypes.CLOSE) {

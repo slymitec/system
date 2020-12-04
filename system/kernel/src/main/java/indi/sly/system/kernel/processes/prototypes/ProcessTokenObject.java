@@ -6,7 +6,7 @@ import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
+import indi.sly.system.kernel.core.prototypes.ABytesProcessPrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
 import indi.sly.system.kernel.processes.types.ProcessStatusTypes;
@@ -22,7 +22,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessTokenObject extends ABytesProcessObject {
+public class ProcessTokenObject extends ABytesProcessPrototype {
     @Override
     protected void read(byte[] source) {
         this.processToken = ObjectUtils.transferFromByteArray(source);

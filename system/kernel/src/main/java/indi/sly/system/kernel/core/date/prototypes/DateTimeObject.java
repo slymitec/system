@@ -3,13 +3,13 @@ package indi.sly.system.kernel.core.date.prototypes;
 import java.time.Clock;
 
 import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
 
-public class DateTimeObject extends ACoreObject {
+public class DateTimeObject extends ACorePrototype {
     public DateTimeObject() {
         this.clock = Clock.systemUTC();
         this.offset = 0;

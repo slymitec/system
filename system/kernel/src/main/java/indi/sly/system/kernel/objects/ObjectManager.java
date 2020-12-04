@@ -5,7 +5,7 @@ import java.util.List;
 import javax.inject.Named;
 
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
-import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
+import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -15,7 +15,7 @@ import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.prototypes.InfoObjectFactoryObject;
+import indi.sly.system.kernel.objects.prototypes.InfoFactoryObject;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -25,13 +25,13 @@ public class ObjectManager extends AManager {
         if (startupTypes == StartupTypes.STEP_INIT) {
 
         } else if (startupTypes == StartupTypes.STEP_KERNEL) {
-            InfoObjectFactoryObject infoObjectfactory = this.factoryManager.create(InfoObjectFactoryObject.class);
-            infoObjectfactory.initInfoObjectFactory();
+            InfoFactoryObject infoFactory = this.factoryManager.create(InfoFactoryObject.class);
+            infoFactory.initInfoObjectFactory();
 
-            InfoObject rootInfo = infoObjectfactory.buildRootInfoObject();
-            InfoObjectCacheObject infoObjectCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                    InfoObjectCacheObject.class);
-            infoObjectCache.add(SpaceTypes.KERNEL, rootInfo);
+            InfoObject rootInfo = infoFactory.buildRootInfoObject();
+            InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+                    InfoCacheObject.class);
+            infoCache.add(SpaceTypes.KERNEL, rootInfo);
         }
     }
 
@@ -40,10 +40,10 @@ public class ObjectManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        InfoObjectCacheObject infoObjectCache = this.factoryManager.getCoreObjectRepository().get(SpaceTypes.KERNEL,
-                InfoObjectCacheObject.class);
+        InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+                InfoCacheObject.class);
 
-        InfoObject info = infoObjectCache.getIfExisted(SpaceTypes.KERNEL,
+        InfoObject info = infoCache.getIfExisted(SpaceTypes.KERNEL,
                 this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
 
         for (Identification identification : identifications) {

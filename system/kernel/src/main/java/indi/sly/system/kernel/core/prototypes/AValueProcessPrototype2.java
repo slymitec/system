@@ -9,7 +9,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class AValueProcessObject2<T1, T2> extends ACoreProcessObject {
+public abstract class AValueProcessPrototype2<T1, T2> extends ACoreProcessPrototype {
     private Provider<T1> funcRead1;
     private Consumer<T1> funcWrite1;
     private Provider<T2> funcRead2;

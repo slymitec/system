@@ -11,8 +11,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
-import indi.sly.system.kernel.memory.caches.values.InfoObjectCacheDefinition;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
+import indi.sly.system.kernel.memory.caches.values.InfoCacheDefinition;
 
 @Named
 @Singleton
@@ -29,11 +29,11 @@ public class KernelSpace {
 
     private final KernelConfiguration configuration;
     private final ReadWriteLock coreObjectLock;
-    private final Map<UUID, ACoreObject> coreObjects;
+    private final Map<UUID, ACorePrototype> coreObjects;
     private final Map<String, UUID> namedCoreObjectIDs;
-    private final Map<Class<? extends ACoreObject>, UUID> classedCoreObjectIDs;
+    private final Map<Class<? extends ACorePrototype>, UUID> classedCoreObjectIDs;
     private final Set<UUID> objectTypes;
-    private final Map<UUID, InfoObjectCacheDefinition> cachedInfoObjectDefinitions;
+    private final Map<UUID, InfoCacheDefinition> cachedInfoObjectDefinitions;
 
     public KernelConfiguration getConfiguration() {
         return configuration;
@@ -43,7 +43,7 @@ public class KernelSpace {
         return this.coreObjectLock;
     }
 
-    public Map<UUID, ACoreObject> getCoreObjects() {
+    public Map<UUID, ACorePrototype> getCoreObjects() {
         return this.coreObjects;
     }
 
@@ -51,7 +51,7 @@ public class KernelSpace {
         return this.namedCoreObjectIDs;
     }
 
-    public Map<Class<? extends ACoreObject>, UUID> getClassedCoreObjectIDs() {
+    public Map<Class<? extends ACorePrototype>, UUID> getClassedCoreObjectIDs() {
         return classedCoreObjectIDs;
     }
 
@@ -59,7 +59,7 @@ public class KernelSpace {
         return this.objectTypes;
     }
 
-    public Map<UUID, InfoObjectCacheDefinition> getCachedInfoObjectDefinitions() {
+    public Map<UUID, InfoCacheDefinition> getCachedInfoObjectDefinitions() {
         return this.cachedInfoObjectDefinitions;
     }
 }

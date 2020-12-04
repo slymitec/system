@@ -8,7 +8,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import indi.sly.system.common.functions.Function3;
-import indi.sly.system.kernel.core.prototypes.ACoreObject;
+import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -17,7 +17,7 @@ import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GetInfoProcessor extends ACoreObject implements IInfoObjectProcessor {
+public class GetInfoProcessor extends ACorePrototype implements IInfoObjectProcessor {
     public GetInfoProcessor() {
         this.info = (repositoryID, id, status) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);

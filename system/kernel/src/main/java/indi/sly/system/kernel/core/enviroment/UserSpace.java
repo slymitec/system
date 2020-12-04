@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import indi.sly.system.kernel.memory.caches.values.InfoObjectCacheDefinition;
+import indi.sly.system.kernel.memory.caches.values.InfoCacheDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -24,14 +24,14 @@ public class UserSpace {
     }
 
     private final ReadWriteLock infoObjectLock;
-    private final Map<UUID, InfoObjectCacheDefinition> cachedInfoObjectDefinitions;
+    private final Map<UUID, InfoCacheDefinition> cachedInfoObjectDefinitions;
     private final Map<UUID, InfoObject> infoObjects;
 
     public ReadWriteLock getInfoObjectLock() {
         return this.infoObjectLock;
     }
 
-    public Map<UUID, InfoObjectCacheDefinition> getCachedInfoObjectDefinitions() {
+    public Map<UUID, InfoCacheDefinition> getCachedInfoObjectDefinitions() {
         return cachedInfoObjectDefinitions;
     }
 

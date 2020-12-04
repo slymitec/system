@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class ProcessBuilderDefinition {
+public class CreateProcessDefinition {
     private UUID fileHandle;
 
     private AccountAuthorizationObject accountAuthorization;

@@ -52,11 +52,11 @@ public class ProcessFactory extends ACorePrototype {
         return processObject;
     }
 
-    public ProcessBuilderObject createProcessBuilder() {
-        ProcessBuilderObject processBuilder = this.factoryManager.create(ProcessBuilderObject.class);
+    public CreateProcessBuilder createProcessBuilder() {
+        CreateProcessBuilder createProcessBuilder = this.factoryManager.create(CreateProcessBuilder.class);
 
-        processBuilder.setProcessObjectBuilder(this);
+        createProcessBuilder.setProcessObjectBuilder(this);
 
-        return processBuilder;
+        return createProcessBuilder;
     }
 }

@@ -30,7 +30,7 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 public class InfoFactory extends ACorePrototype {
     protected Set<IInfoObjectProcessor> infoObjectProcessors;
 
-    public void initInfoObjectFactory() {
+    public void init() {
         this.infoObjectProcessors = new ConcurrentSkipListSet<>();
 
         Set<ACorePrototype> corePrototypes =

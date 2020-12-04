@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 public class ProcessFactory extends ACorePrototype {
     protected Set<IProcessProcessor> processProcessors;
 
-    public void initProcessObjectFactory() {
+    public void init() {
         this.processProcessors = new ConcurrentSkipListSet<>();
 
         Set<ACorePrototype> corePrototypes =

@@ -26,7 +26,7 @@ public class ObjectManager extends AManager {
 
         } else if (startupTypes == StartupTypes.STEP_KERNEL) {
             InfoFactory infoFactory = this.factoryManager.create(InfoFactory.class);
-            infoFactory.initInfoObjectFactory();
+            infoFactory.init();
 
             InfoObject rootInfo = infoFactory.buildRootInfoObject();
             InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,

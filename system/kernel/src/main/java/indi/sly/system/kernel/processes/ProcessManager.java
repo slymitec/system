@@ -34,7 +34,7 @@ public class ProcessManager extends AManager {
         if (startupTypes == StartupTypes.STEP_INIT) {
         } else if (startupTypes == StartupTypes.STEP_KERNEL) {
             this.processFactory = this.factoryManager.create(ProcessFactory.class);
-            this.processFactory.initProcessObjectFactory();
+            this.processFactory.init();
         }
     }
 

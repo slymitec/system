@@ -64,33 +64,33 @@ public class FactoryManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        T coreObject = null;
+        T corePrototype = null;
         try {
-            coreObject = SpringUtils.getApplicationContext().getBean(clazz);
+            corePrototype = SpringUtils.getApplicationContext().getBean(clazz);
         } catch (AKernelException e) {
             Constructor<T> constructor = null;
             try {
                 constructor = clazz.getDeclaredConstructor();
-                coreObject = constructor.newInstance();
+                corePrototype = constructor.newInstance();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e2) {
                 try {
                     if (ObjectUtils.allNotNull(constructor) && constructor.trySetAccessible()) {
                         constructor.setAccessible(true);
-                        coreObject = constructor.newInstance();
+                        corePrototype = constructor.newInstance();
                     }
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException e3) {
-                    coreObject = new SpringObjenesis().newInstance(clazz);
+                    corePrototype = new SpringObjenesis().newInstance(clazz);
                 }
             }
         }
 
-        if (ObjectUtils.isAnyNull(coreObject)) {
+        if (ObjectUtils.isAnyNull(corePrototype)) {
             throw new StatusNotSupportedException();
         }
 
-        coreObject.setFactoryManager(this);
+        corePrototype.setFactoryManager(this);
 
-        return coreObject;
+        return corePrototype;
     }
 
     public CoreRepositoryObject getCoreRepository() {
@@ -99,11 +99,11 @@ public class FactoryManager extends AManager {
 
     @SuppressWarnings("unchecked")
     public <T extends AManager> T getManager(Class<T> clazz) {
-        T coreObject = this.coreRepository.get(SpaceTypes.KERNEL, clazz);
-        if (!(coreObject instanceof AManager)) {
+        T corePrototype = this.coreRepository.get(SpaceTypes.KERNEL, clazz);
+        if (!(corePrototype instanceof AManager)) {
             throw new StatusRelationshipErrorException();
         }
-        return coreObject;
+        return corePrototype;
     }
 
     public KernelSpace getKernelSpace() {

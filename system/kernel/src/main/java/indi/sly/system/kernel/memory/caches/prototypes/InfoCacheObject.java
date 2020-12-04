@@ -24,13 +24,13 @@ import indi.sly.system.kernel.objects.prototypes.InfoObject;
 public class InfoCacheObject extends ACorePrototype {
     private Map<UUID, InfoCacheDefinition> getInfoCaches(long spaceType) {
         if (spaceType == SpaceTypes.KERNEL) {
-            return this.factoryManager.getKernelSpace().getCachedInfoObjectDefinitions();
+            return this.factoryManager.getKernelSpace().getInfoCaches();
         } else if (spaceType == SpaceTypes.USER) {
             return this.factoryManager.getUserSpace().getCachedInfoObjectDefinitions();
         } else {
             Map<UUID, InfoCacheDefinition> kernelObjectCache = new HashMap<>();
 
-            kernelObjectCache.putAll(this.factoryManager.getKernelSpace().getCachedInfoObjectDefinitions());
+            kernelObjectCache.putAll(this.factoryManager.getKernelSpace().getInfoCaches());
             kernelObjectCache.putAll(this.factoryManager.getUserSpace().getCachedInfoObjectDefinitions());
 
             return kernelObjectCache;
@@ -38,8 +38,8 @@ public class InfoCacheObject extends ACorePrototype {
     }
 
     private InfoObject getIfExistedBySpaceType(long spaceType, UUID id) {
-        CoreRepositoryObject coreObjectRepository = this.factoryManager.getCoreRepository();
-        Lock lock = coreObjectRepository.getLock(spaceType, LockTypes.READ);
+        CoreRepositoryObject coreRepository = this.factoryManager.getCoreRepository();
+        Lock lock = coreRepository.getLock(spaceType, LockTypes.READ);
         DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
 
@@ -52,7 +52,7 @@ public class InfoCacheObject extends ACorePrototype {
             InfoObject infoObject = null;
 
             if (ObjectUtils.allNotNull(kernelObjectCache)) {
-                infoObject = coreObjectRepository.getByID(spaceType, InfoObject.class, id);
+                infoObject = coreRepository.getByID(spaceType, InfoObject.class, id);
             }
 
             return infoObject;
@@ -62,8 +62,8 @@ public class InfoCacheObject extends ACorePrototype {
     }
 
     private void addBySpaceType(long spaceType, InfoObject infoObject) {
-        CoreRepositoryObject coreObjectRepository = this.factoryManager.getCoreRepository();
-        Lock lock = coreObjectRepository.getLock(spaceType, LockTypes.WRITE);
+        CoreRepositoryObject coreRepository = this.factoryManager.getCoreRepository();
+        Lock lock = coreRepository.getLock(spaceType, LockTypes.WRITE);
         DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);
 
@@ -79,7 +79,7 @@ public class InfoCacheObject extends ACorePrototype {
                 kernelObjectCache.getDate().put(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());
 
                 this.getInfoCaches(spaceType).put(kernelObjectCache.getId(), kernelObjectCache);
-                coreObjectRepository.addByID(spaceType, kernelObjectCache.getId(), infoObject);
+                coreRepository.addByID(spaceType, kernelObjectCache.getId(), infoObject);
             }
         } finally {
             lock.unlock();
@@ -139,8 +139,8 @@ public class InfoCacheObject extends ACorePrototype {
     }
 
     private void deleteBySpaceType(long spaceType, UUID id) {
-        CoreRepositoryObject coreObjectRepository = this.factoryManager.getCoreRepository();
-        Lock lock = coreObjectRepository.getLock(spaceType, LockTypes.WRITE);
+        CoreRepositoryObject coreRepository = this.factoryManager.getCoreRepository();
+        Lock lock = coreRepository.getLock(spaceType, LockTypes.WRITE);
 
         try {
             lock.lock();
@@ -149,7 +149,7 @@ public class InfoCacheObject extends ACorePrototype {
             if (kernelObjectCaches.containsKey(id)) {
                 kernelObjectCaches.remove(id);
 
-                coreObjectRepository.deleteByID(spaceType, InfoObject.class, id);
+                coreRepository.deleteByID(spaceType, InfoObject.class, id);
             }
         } finally {
             lock.unlock();

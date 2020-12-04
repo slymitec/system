@@ -100,7 +100,7 @@ public class TypeManager extends AManager {
         TypeObject typeObject = this.factoryManager.create(TypeObject.class);
         typeObject.setType(typeDefinition);
 
-        Set<UUID> objectTypes = this.factoryManager.getKernelSpace().getObjectTypes();
+        Set<UUID> objectTypes = this.factoryManager.getKernelSpace().getPrototypeTypes();
 
         if (objectTypes.contains(typeID)) {
             throw new StatusAlreadyExistedException();
@@ -120,7 +120,7 @@ public class TypeManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        Set<UUID> objectTypes = this.factoryManager.getKernelSpace().getObjectTypes();
+        Set<UUID> objectTypes = this.factoryManager.getKernelSpace().getPrototypeTypes();
 
         TypeObject type = this.get(typeID);
 
@@ -131,7 +131,7 @@ public class TypeManager extends AManager {
     }
 
     public Set<UUID> list() {
-        Set<UUID> objectTypes = this.factoryManager.getKernelSpace().getObjectTypes();
+        Set<UUID> objectTypes = this.factoryManager.getKernelSpace().getPrototypeTypes();
 
         return Collections.unmodifiableSet(objectTypes);
     }

@@ -21,11 +21,11 @@ public class ProcessFactory extends ACorePrototype {
     public void initProcessObjectFactory() {
         this.processProcessors = new ConcurrentSkipListSet<>();
 
-        Set<ACorePrototype> coreObjects =
+        Set<ACorePrototype> corePrototypes =
                 this.factoryManager.getCoreRepository().getByImplementInterface(SpaceTypes.KERNEL,
                         IProcessProcessor.class);
 
-        for (ACorePrototype pair : coreObjects) {
+        for (ACorePrototype pair : corePrototypes) {
             if (pair instanceof IProcessProcessor) {
                 processProcessors.add((IProcessProcessor) pair);
             }

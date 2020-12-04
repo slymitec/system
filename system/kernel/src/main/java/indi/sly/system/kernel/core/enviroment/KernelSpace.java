@@ -19,47 +19,47 @@ import indi.sly.system.kernel.memory.caches.values.InfoCacheDefinition;
 public class KernelSpace {
     public KernelSpace() {
         this.configuration = new KernelConfiguration();
-        this.coreObjectLock = new ReentrantReadWriteLock();
-        this.coreObjects = new ConcurrentHashMap<>();
-        this.namedCoreObjectIDs = new ConcurrentHashMap<>();
-        this.classedCoreObjectIDs = new ConcurrentHashMap<>();
-        this.objectTypes = new ConcurrentSkipListSet<>();
-        this.cachedInfoObjectDefinitions = new ConcurrentHashMap<>();
+        this.corePrototypeLock = new ReentrantReadWriteLock();
+        this.corePrototypes = new ConcurrentHashMap<>();
+        this.namedCorePrototypeIDs = new ConcurrentHashMap<>();
+        this.classedCorePrototypeIDs = new ConcurrentHashMap<>();
+        this.prototypeTypes = new ConcurrentSkipListSet<>();
+        this.infoCaches = new ConcurrentHashMap<>();
     }
 
     private final KernelConfiguration configuration;
-    private final ReadWriteLock coreObjectLock;
-    private final Map<UUID, ACorePrototype> coreObjects;
-    private final Map<String, UUID> namedCoreObjectIDs;
-    private final Map<Class<? extends ACorePrototype>, UUID> classedCoreObjectIDs;
-    private final Set<UUID> objectTypes;
-    private final Map<UUID, InfoCacheDefinition> cachedInfoObjectDefinitions;
+    private final ReadWriteLock corePrototypeLock;
+    private final Map<UUID, ACorePrototype> corePrototypes;
+    private final Map<String, UUID> namedCorePrototypeIDs;
+    private final Map<Class<? extends ACorePrototype>, UUID> classedCorePrototypeIDs;
+    private final Set<UUID> prototypeTypes;
+    private final Map<UUID, InfoCacheDefinition> infoCaches;
 
     public KernelConfiguration getConfiguration() {
         return configuration;
     }
 
-    public ReadWriteLock getCoreObjectLock() {
-        return this.coreObjectLock;
+    public ReadWriteLock getCorePrototypeLock() {
+        return this.corePrototypeLock;
     }
 
-    public Map<UUID, ACorePrototype> getCoreObjects() {
-        return this.coreObjects;
+    public Map<UUID, ACorePrototype> getCorePrototypes() {
+        return this.corePrototypes;
     }
 
-    public Map<String, UUID> getNamedCoreObjectIDs() {
-        return this.namedCoreObjectIDs;
+    public Map<String, UUID> getNamedCorePrototypeIDs() {
+        return this.namedCorePrototypeIDs;
     }
 
-    public Map<Class<? extends ACorePrototype>, UUID> getClassedCoreObjectIDs() {
-        return classedCoreObjectIDs;
+    public Map<Class<? extends ACorePrototype>, UUID> getClassedCorePrototypeIDs() {
+        return classedCorePrototypeIDs;
     }
 
-    public Set<UUID> getObjectTypes() {
-        return this.objectTypes;
+    public Set<UUID> getPrototypeTypes() {
+        return this.prototypeTypes;
     }
 
-    public Map<UUID, InfoCacheDefinition> getCachedInfoObjectDefinitions() {
-        return this.cachedInfoObjectDefinitions;
+    public Map<UUID, InfoCacheDefinition> getInfoCaches() {
+        return this.infoCaches;
     }
 }

@@ -33,11 +33,11 @@ public class InfoFactory extends ACorePrototype {
     public void initInfoObjectFactory() {
         this.infoObjectProcessors = new ConcurrentSkipListSet<>();
 
-        Set<ACorePrototype> coreObjects =
+        Set<ACorePrototype> corePrototypes =
                 this.factoryManager.getCoreRepository().getByImplementInterface(SpaceTypes.KERNEL,
                         IInfoObjectProcessor.class);
 
-        for (ACorePrototype pair : coreObjects) {
+        for (ACorePrototype pair : corePrototypes) {
             if (pair instanceof IInfoObjectProcessor) {
                 infoObjectProcessors.add((IInfoObjectProcessor) pair);
             }

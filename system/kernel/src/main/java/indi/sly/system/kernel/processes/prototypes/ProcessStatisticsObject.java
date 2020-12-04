@@ -5,7 +5,7 @@ import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
-import indi.sly.system.kernel.processes.definitions.ProcessStatisticsDefinition;
+import indi.sly.system.kernel.processes.values.ProcessStatisticsDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

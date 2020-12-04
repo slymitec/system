@@ -21,7 +21,7 @@ import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.core.enviroment.KernelConfiguration;
 import indi.sly.system.kernel.objects.infotypes.prototypes.ATypeInitializer;
-import indi.sly.system.kernel.objects.infotypes.definitions.TypeDefinition;
+import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
 import indi.sly.system.kernel.objects.infotypes.types.TypeInitializerAttributeTypes;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.instances.prototypes.FolderTypeInitializer;

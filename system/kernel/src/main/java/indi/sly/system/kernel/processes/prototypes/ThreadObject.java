@@ -1,8 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.kernel.core.enviroment.UserSpace;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
-import indi.sly.system.kernel.processes.definitions.ThreadDefinition;
+import indi.sly.system.kernel.processes.values.ThreadDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

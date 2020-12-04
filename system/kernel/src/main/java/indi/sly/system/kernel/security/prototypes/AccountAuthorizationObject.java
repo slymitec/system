@@ -10,8 +10,8 @@ import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.security.SecurityTokenManager;
-import indi.sly.system.kernel.security.definitions.AccountAuthorizationResultDefinition;
-import indi.sly.system.kernel.security.definitions.AccountGroupTokenDefinition;
+import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
+import indi.sly.system.kernel.security.values.AccountGroupTokenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

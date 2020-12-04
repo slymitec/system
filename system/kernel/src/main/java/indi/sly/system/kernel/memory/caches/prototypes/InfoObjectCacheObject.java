@@ -9,7 +9,7 @@ import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.prototypes.CoreObjectRepositoryObject;
-import indi.sly.system.kernel.memory.caches.definition.InfoObjectCacheDefinition;
+import indi.sly.system.kernel.memory.caches.values.InfoObjectCacheDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

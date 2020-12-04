@@ -7,7 +7,7 @@ import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
-import indi.sly.system.kernel.objects.entities.InfoEntity;
+import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

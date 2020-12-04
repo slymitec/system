@@ -9,7 +9,7 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
-import indi.sly.system.kernel.processes.entities.ProcessEntity;
+import indi.sly.system.kernel.processes.values.ProcessEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

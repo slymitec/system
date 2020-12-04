@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.processes.zzz.instances;
 
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.processes.definitions.ProcessHandleTableDefinition;
-import indi.sly.system.kernel.processes.definitions.ProcessTokenDefinition;
+import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
+import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

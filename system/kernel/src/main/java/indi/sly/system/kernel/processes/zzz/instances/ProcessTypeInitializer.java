@@ -3,12 +3,12 @@ package indi.sly.system.kernel.processes.zzz.instances;
 import indi.sly.system.common.exceptions.StatusNotSupportedException;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.objects.Identification;
-import indi.sly.system.kernel.objects.entities.InfoEntity;
-import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
+import indi.sly.system.kernel.objects.values.InfoEntity;
+import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.objects.definitions.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.ATypeInitializer;
-import indi.sly.system.kernel.objects.definitions.DumpDefinition;
+import indi.sly.system.kernel.objects.values.DumpDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

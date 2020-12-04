@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import indi.sly.system.kernel.memory.caches.definition.InfoObjectCacheDefinition;
+import indi.sly.system.kernel.memory.caches.values.InfoObjectCacheDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

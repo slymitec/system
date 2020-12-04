@@ -6,7 +6,7 @@ import javax.inject.Named;
 
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoObjectCacheObject;
-import indi.sly.system.kernel.objects.definitions.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

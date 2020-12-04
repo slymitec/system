@@ -11,9 +11,9 @@ import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupReposit
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.definitions.AccountGroupTokenDefinition;
-import indi.sly.system.kernel.security.entities.AccountEntity;
-import indi.sly.system.kernel.security.entities.GroupEntity;
+import indi.sly.system.kernel.security.values.AccountGroupTokenDefinition;
+import indi.sly.system.kernel.security.values.AccountEntity;
+import indi.sly.system.kernel.security.values.GroupEntity;
 import indi.sly.system.kernel.security.prototypes.*;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

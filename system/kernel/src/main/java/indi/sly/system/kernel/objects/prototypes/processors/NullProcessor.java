@@ -3,13 +3,13 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 import indi.sly.system.common.functions.*;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
 import indi.sly.system.kernel.objects.Identification;
-import indi.sly.system.kernel.objects.entities.InfoEntity;
-import indi.sly.system.kernel.objects.entities.InfoSummaryDefinition;
+import indi.sly.system.kernel.objects.values.InfoEntity;
+import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
-import indi.sly.system.kernel.objects.definitions.InfoStatusDefinition;
-import indi.sly.system.kernel.objects.definitions.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
+import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
-import indi.sly.system.kernel.objects.definitions.DumpDefinition;
+import indi.sly.system.kernel.objects.values.DumpDefinition;
 
 import java.util.Map;
 import java.util.Set;

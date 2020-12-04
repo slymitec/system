@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.functions.*;
-import indi.sly.system.kernel.processes.entities.ProcessEntity;
+import indi.sly.system.kernel.processes.values.ProcessEntity;
 
 import java.util.ArrayList;
 import java.util.List;

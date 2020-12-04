@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes;
 
 import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
-import indi.sly.system.kernel.objects.definitions.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

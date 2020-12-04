@@ -8,7 +8,7 @@ import indi.sly.system.common.utility.ArrayUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.communication.instances.definitions.PortDefinition;
+import indi.sly.system.kernel.processes.communication.instances.values.PortDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

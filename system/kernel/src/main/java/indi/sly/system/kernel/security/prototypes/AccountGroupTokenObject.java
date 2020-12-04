@@ -8,7 +8,7 @@ import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.definitions.AccountGroupTokenDefinition;
+import indi.sly.system.kernel.security.values.AccountGroupTokenDefinition;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
 
 import java.util.Map;

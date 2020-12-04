@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.processes.zzz.instances;
 
 import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.kernel.processes.definitions.ProcessHandleTableDefinition;
-import indi.sly.system.kernel.processes.definitions.ProcessTokenDefinition;
+import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
+import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;

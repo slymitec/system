@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
-import indi.sly.system.kernel.objects.entities.InfoEntity;
-import indi.sly.system.kernel.objects.entities.InfoRelationEntity;
+import indi.sly.system.kernel.objects.values.InfoEntity;
+import indi.sly.system.kernel.objects.values.InfoRelationEntity;
 
 public abstract class AInfoRepositoryObject extends ACoreObject {
     public abstract boolean contain(UUID id);

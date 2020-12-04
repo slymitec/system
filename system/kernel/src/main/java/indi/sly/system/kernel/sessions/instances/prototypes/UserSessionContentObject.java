@@ -11,11 +11,10 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
-import indi.sly.system.kernel.sessions.instances.definitions.ClientDefinition;
-import indi.sly.system.kernel.sessions.instances.definitions.UserSessionDefinition;
+import indi.sly.system.kernel.sessions.instances.values.ClientDefinition;
+import indi.sly.system.kernel.sessions.instances.values.UserSessionDefinition;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 

@@ -8,8 +8,8 @@ import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.prototypes.ACoreObject;
-import indi.sly.system.kernel.security.entities.AccountEntity;
-import indi.sly.system.kernel.security.entities.GroupEntity;
+import indi.sly.system.kernel.security.values.AccountEntity;
+import indi.sly.system.kernel.security.values.GroupEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

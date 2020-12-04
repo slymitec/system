@@ -6,8 +6,8 @@ import indi.sly.system.common.exceptions.StatusNotExistedException;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.objects.entities.InfoEntity;
-import indi.sly.system.kernel.objects.entities.InfoRelationEntity;
+import indi.sly.system.kernel.objects.values.InfoEntity;
+import indi.sly.system.kernel.objects.values.InfoRelationEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

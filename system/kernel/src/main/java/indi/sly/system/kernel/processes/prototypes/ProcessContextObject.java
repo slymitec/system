@@ -9,8 +9,8 @@ import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.prototypes.ABytesProcessObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.definitions.ProcessContextDefinition;
-import indi.sly.system.kernel.sessions.definitions.AppContextDefinition;
+import indi.sly.system.kernel.processes.values.ProcessContextDefinition;
+import indi.sly.system.kernel.sessions.values.AppContextDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

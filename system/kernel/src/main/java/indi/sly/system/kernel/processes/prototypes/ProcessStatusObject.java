@@ -12,7 +12,7 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
-import indi.sly.system.kernel.processes.entities.ProcessEntity;
+import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.types.ProcessStatusTypes;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

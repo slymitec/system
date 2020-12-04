@@ -4,7 +4,7 @@ import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.ConditionPermissionsException;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.core.prototypes.ABytesProcessPrototype;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
@@ -13,7 +13,7 @@ import indi.sly.system.kernel.security.types.PrivilegeTypes;
 
 import java.util.Map;
 
-public class AccountGroupTokenObject extends ABytesProcessPrototype<AccountGroupTokenDefinition> {
+public class AccountGroupTokenObject extends ABytesValueProcessPrototype<AccountGroupTokenDefinition> {
     public long getPrivilegeTypes() {
         this.init();
 

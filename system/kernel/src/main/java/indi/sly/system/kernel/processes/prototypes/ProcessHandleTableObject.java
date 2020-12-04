@@ -3,12 +3,11 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.exceptions.*;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.LogicalUtils;
-import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
-import indi.sly.system.kernel.core.prototypes.ABytesProcessPrototype;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
@@ -26,7 +25,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessHandleTableObject extends ABytesProcessPrototype<ProcessHandleTableDefinition> {
+public class ProcessHandleTableObject extends ABytesValueProcessPrototype<ProcessHandleTableDefinition> {
     private ProcessObject process;
 
     public void setProcess(ProcessObject process) {

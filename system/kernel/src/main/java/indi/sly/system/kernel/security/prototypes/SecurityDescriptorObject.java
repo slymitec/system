@@ -8,7 +8,7 @@ import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.LogicalUtils;
 import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.kernel.core.prototypes.ABytesProcessPrototype;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -26,7 +26,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SecurityDescriptorObject extends ABytesProcessPrototype<SecurityDescriptorDefinition> {
+public class SecurityDescriptorObject extends ABytesValueProcessPrototype<SecurityDescriptorDefinition> {
     public SecurityDescriptorObject() {
         this.parents = new ArrayList<>();
         this.identifications = new ArrayList<>();

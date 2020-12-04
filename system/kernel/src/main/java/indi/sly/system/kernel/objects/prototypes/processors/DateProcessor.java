@@ -10,7 +10,7 @@ import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
+import indi.sly.system.kernel.objects.prototypes.InfoProcessorRegister;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -80,11 +80,10 @@ public class DateProcessor extends ACorePrototype implements IInfoObjectProcesso
     private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, byte[]> writeContent;
 
     @Override
-    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoProcessorRegister processorRegister) {
         processorRegister.getOpens().add(this.open);
         processorRegister.getCreateChildAndOpens().add(this.createChildAndOpen);
         processorRegister.getReadContents().add(this.readContent);
         processorRegister.getWriteContents().add(this.writeContent);
     }
-
 }

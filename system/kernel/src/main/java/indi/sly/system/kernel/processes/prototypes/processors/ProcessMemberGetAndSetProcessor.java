@@ -4,7 +4,7 @@ import indi.sly.system.common.functions.Consumer2;
 import indi.sly.system.common.functions.Function2;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
-import indi.sly.system.kernel.processes.prototypes.ProcessObjectProcessorRegister;
+import indi.sly.system.kernel.processes.prototypes.ProcessProcessorRegister;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -12,7 +12,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessMemberGetAndSetProcessor extends ACorePrototype implements IProcessObjectProcessor {
+public class ProcessMemberGetAndSetProcessor extends ACorePrototype implements IProcessProcessor {
     private final Function2<Long, Long, ProcessEntity> readProcessStatus;
     private final Consumer2<ProcessEntity, Long> writeProcessStatus;
     private final Function2<byte[], byte[], ProcessEntity> readProcessCommunication;
@@ -47,7 +47,7 @@ public class ProcessMemberGetAndSetProcessor extends ACorePrototype implements I
     }
 
     @Override
-    public void process(ProcessEntity process, ProcessObjectProcessorRegister processorRegister) {
+    public void process(ProcessEntity process, ProcessProcessorRegister processorRegister) {
         processorRegister.getReadProcessStatuses().add(this.readProcessStatus);
         processorRegister.getWriteProcessStatuses().add(this.writeProcessStatus);
 

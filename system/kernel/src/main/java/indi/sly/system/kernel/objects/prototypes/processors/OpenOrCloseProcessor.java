@@ -10,7 +10,7 @@ import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
+import indi.sly.system.kernel.objects.prototypes.InfoProcessorRegister;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.types.InfoStatusOpenAttributeTypes;
 import indi.sly.system.kernel.objects.infotypes.types.TypeInitializerAttributeTypes;
@@ -70,7 +70,7 @@ public class OpenOrCloseProcessor extends ACorePrototype implements IInfoObjectP
     private final Consumer3<InfoEntity, TypeObject, InfoStatusDefinition> close;
 
     @Override
-    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoProcessorRegister processorRegister) {
         processorRegister.getOpens().add(this.open);
         processorRegister.getCloses().add(this.close);
     }

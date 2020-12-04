@@ -13,7 +13,7 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
+import indi.sly.system.kernel.objects.prototypes.InfoProcessorRegister;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.infotypes.types.TypeInitializerAttributeTypes;
@@ -267,7 +267,7 @@ public class SecurityDescriptorProcessor extends ACorePrototype implements IInfo
     private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, byte[]> writeContent;
 
     @Override
-    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoProcessorRegister processorRegister) {
         if (ObjectUtils.allNotNull(info)) {
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
             TypeObject type = typeManager.get(info.getType());

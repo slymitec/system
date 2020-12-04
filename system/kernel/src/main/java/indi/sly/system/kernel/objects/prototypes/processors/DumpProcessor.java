@@ -7,7 +7,7 @@ import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
-import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
+import indi.sly.system.kernel.objects.prototypes.InfoProcessorRegister;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -36,8 +36,7 @@ public class DumpProcessor extends ACorePrototype implements IInfoObjectProcesso
     private final Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, InfoStatusDefinition> dump;
 
     @Override
-    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoProcessorRegister processorRegister) {
         processorRegister.getDumps().add(this.dump);
     }
-
 }

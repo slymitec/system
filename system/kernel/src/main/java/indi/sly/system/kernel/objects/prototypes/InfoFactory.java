@@ -27,7 +27,7 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoFactoryObject extends ACorePrototype {
+public class InfoFactory extends ACorePrototype {
     protected Set<IInfoObjectProcessor> infoObjectProcessors;
 
     public void initInfoObjectFactory() {
@@ -51,7 +51,7 @@ public class InfoFactoryObject extends ACorePrototype {
         InfoEntity infoEntity =
                 infoRepository.get(this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
 
-        InfoObjectProcessorRegister processorRegister = new InfoObjectProcessorRegister();
+        InfoProcessorRegister processorRegister = new InfoProcessorRegister();
         for (IInfoObjectProcessor pair : this.infoObjectProcessors) {
             pair.process(infoEntity, processorRegister);
         }
@@ -78,9 +78,9 @@ public class InfoFactoryObject extends ACorePrototype {
     }
 
     public InfoObject buildInfoObject(InfoEntity info, InfoStatusOpenDefinition statusOpen, InfoObject parentInfo) {
-        InfoObjectProcessorRegister infoObjectProcessorRegister = new InfoObjectProcessorRegister();
+        InfoProcessorRegister infoProcessorRegister = new InfoProcessorRegister();
         for (IInfoObjectProcessor infoObjectProcessor : this.infoObjectProcessors) {
-            infoObjectProcessor.process(info, infoObjectProcessorRegister);
+            infoObjectProcessor.process(info, infoProcessorRegister);
         }
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
@@ -106,7 +106,7 @@ public class InfoFactoryObject extends ACorePrototype {
         InfoObject infoObject = this.factoryManager.create(InfoObject.class);
 
         infoObject.factory = this;
-        infoObject.processorRegister = infoObjectProcessorRegister;
+        infoObject.processorRegister = infoProcessorRegister;
         infoObject.id = info.getID();
         infoObject.poolID = poolID;
         infoObject.status = status;

@@ -9,7 +9,7 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
+import indi.sly.system.kernel.objects.prototypes.InfoProcessorRegister;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -37,8 +37,7 @@ public class GetParentProcessor extends ACorePrototype implements IInfoObjectPro
     private final Function<InfoObject, UUID> parent;
 
     @Override
-    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoProcessorRegister processorRegister) {
         processorRegister.setParent(this.parent);
     }
-
 }

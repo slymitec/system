@@ -13,8 +13,8 @@ import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 
-public class InfoObjectProcessorRegister {
-    public InfoObjectProcessorRegister() {
+public class InfoProcessorRegister {
+    public InfoProcessorRegister() {
         this.dumps = new ArrayList<>();
         this.opens = new ArrayList<>();
         this.closes = new ArrayList<>();

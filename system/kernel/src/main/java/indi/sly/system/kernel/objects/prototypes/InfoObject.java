@@ -31,8 +31,8 @@ import java.util.function.Predicate;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoObject extends ACorePrototype {
-    protected InfoFactoryObject factory;
-    protected InfoObjectProcessorRegister processorRegister;
+    protected InfoFactory factory;
+    protected InfoProcessorRegister processorRegister;
 
     protected UUID id;
     protected UUID poolID;

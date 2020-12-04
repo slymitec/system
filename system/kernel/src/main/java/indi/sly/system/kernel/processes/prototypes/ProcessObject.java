@@ -20,8 +20,8 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessObject extends ACorePrototype {
-    protected ProcessObjectBuilderObject factory;
-    protected ProcessObjectProcessorRegister processorRegister;
+    protected ProcessFactory factory;
+    protected ProcessProcessorRegister processorRegister;
 
     protected UUID id;
 

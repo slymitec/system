@@ -15,7 +15,7 @@ import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.prototypes.InfoFactoryObject;
+import indi.sly.system.kernel.objects.prototypes.InfoFactory;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -25,7 +25,7 @@ public class ObjectManager extends AManager {
         if (startupTypes == StartupTypes.STEP_INIT) {
 
         } else if (startupTypes == StartupTypes.STEP_KERNEL) {
-            InfoFactoryObject infoFactory = this.factoryManager.create(InfoFactoryObject.class);
+            InfoFactory infoFactory = this.factoryManager.create(InfoFactory.class);
             infoFactory.initInfoObjectFactory();
 
             InfoObject rootInfo = infoFactory.buildRootInfoObject();

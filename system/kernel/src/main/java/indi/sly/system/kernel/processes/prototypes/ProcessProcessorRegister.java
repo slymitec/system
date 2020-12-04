@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ProcessObjectProcessorRegister {
-    public ProcessObjectProcessorRegister() {
+public class ProcessProcessorRegister {
+    public ProcessProcessorRegister() {
         this.readProcessStatuses = new ArrayList<>();
         this.writeProcessStatuses = new ArrayList<>();
         this.readProcessCommunications = new ArrayList<>();

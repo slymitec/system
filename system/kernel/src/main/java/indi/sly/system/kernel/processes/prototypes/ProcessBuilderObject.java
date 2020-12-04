@@ -39,13 +39,13 @@ public class ProcessBuilderObject extends ACorePrototype {
         this.processBuilder = new ProcessBuilderDefinition();
     }
 
-    private ProcessObjectBuilderObject processObjectBuilder;
+    private ProcessFactory processFactory;
     private ProcessBuilderDefinition processBuilder;
     private ProcessObject process;
     private ProcessObject parentProcess;
 
-    public void setProcessObjectBuilder(ProcessObjectBuilderObject processObjectBuilder) {
-        this.processObjectBuilder = processObjectBuilder;
+    public void setProcessObjectBuilder(ProcessFactory processFactory) {
+        this.processFactory = processFactory;
     }
 
     public void setParentProcess(ProcessObject parentProcess) {
@@ -154,7 +154,7 @@ public class ProcessBuilderObject extends ACorePrototype {
 
         processRepository.add(process);
 
-        this.process = this.processObjectBuilder.buildProcessObject(process);
+        this.process = this.processFactory.buildProcessObject(process);
     }
 
     private void configuration() {

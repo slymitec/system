@@ -26,7 +26,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
-    protected ProcessObjectProcessorRegister processorRegister;
+    protected ProcessProcessorRegister processorRegister;
 
     private ProcessObject process;
 

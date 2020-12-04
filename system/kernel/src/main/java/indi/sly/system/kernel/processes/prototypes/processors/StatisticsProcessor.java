@@ -13,7 +13,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class StatisticsProcessor extends ACorePrototype implements IProcessObjectProcessor {
+public class StatisticsProcessor extends ACorePrototype implements IProcessProcessor {
     private final Function2<Long, Long, ProcessEntity> readProcessStatus;
     private final Consumer2<ProcessEntity, Long> writeProcessStatus;
 
@@ -28,7 +28,7 @@ public class StatisticsProcessor extends ACorePrototype implements IProcessObjec
     }
 
     @Override
-    public void process(ProcessEntity process, ProcessObjectProcessorRegister processorRegister) {
+    public void process(ProcessEntity process, ProcessProcessorRegister processorRegister) {
         processorRegister.getReadProcessStatuses().add(readProcessStatus);
         processorRegister.getWriteProcessStatuses().add(writeProcessStatus);
     }

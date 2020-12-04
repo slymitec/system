@@ -5,7 +5,7 @@ import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.objects.Identification;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
-import indi.sly.system.kernel.objects.prototypes.InfoObjectProcessorRegister;
+import indi.sly.system.kernel.objects.prototypes.InfoProcessorRegister;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
@@ -162,7 +162,7 @@ public class ProcessProcessor extends ACorePrototype implements IInfoObjectProce
     private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, byte[]> writeContent;
 
     @Override
-    public void process(InfoEntity info, InfoObjectProcessorRegister processorRegister) {
+    public void process(InfoEntity info, InfoProcessorRegister processorRegister) {
         processorRegister.getDumps().add(this.dump);
         processorRegister.getOpens().add(this.open);
         processorRegister.getCloses().add(this.close);
@@ -176,5 +176,4 @@ public class ProcessProcessor extends ACorePrototype implements IInfoObjectProce
         processorRegister.getReadContents().add(this.readContent);
         processorRegister.getWriteContents().add(this.writeContent);
     }
-
 }

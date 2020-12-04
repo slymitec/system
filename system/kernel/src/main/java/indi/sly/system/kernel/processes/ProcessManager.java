@@ -27,14 +27,14 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessManager extends AManager {
-    private ProcessObjectBuilderObject processObjectFactory;
+    private ProcessFactory processFactory;
 
     @Override
     public void startup(long startupTypes) {
         if (startupTypes == StartupTypes.STEP_INIT) {
         } else if (startupTypes == StartupTypes.STEP_KERNEL) {
-            this.processObjectFactory = this.factoryManager.create(ProcessObjectBuilderObject.class);
-            this.processObjectFactory.initProcessObjectFactory();
+            this.processFactory = this.factoryManager.create(ProcessFactory.class);
+            this.processFactory.initProcessObjectFactory();
         }
     }
 
@@ -51,7 +51,7 @@ public class ProcessManager extends AManager {
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
         ProcessEntity process = processRepository.get(processID);
-        ProcessObject processObject = this.processObjectFactory.buildProcessObject(process);
+        ProcessObject processObject = this.processFactory.buildProcessObject(process);
 
         DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 DateTimeObject.class);

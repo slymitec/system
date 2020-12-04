@@ -13,6 +13,7 @@ import indi.sly.system.kernel.core.enviroment.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.core.enviroment.UserSpace;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
+import indi.sly.system.kernel.core.prototypes.CorePrototypeBuilder;
 import indi.sly.system.kernel.core.prototypes.CoreRepositoryObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -20,6 +21,7 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.SecurityTokenManager;
+import indi.sly.system.kernel.sessions.SessionManager;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.objenesis.SpringObjenesis;
@@ -41,8 +43,10 @@ public class FactoryManager extends AManager {
                 return bootUserSpace;
             });
 
-            this.coreRepository = this.create(CoreRepositoryObject.class);
+            this.corePrototype = new CorePrototypeBuilder();
+            this.corePrototype.setFactoryManager(this);
 
+            this.coreRepository = this.create(CoreRepositoryObject.class);
             this.coreRepository.add(SpaceTypes.KERNEL, this.create(FactoryManager.class));
             this.coreRepository.add(SpaceTypes.KERNEL, this.create(MemoryManager.class));
             this.coreRepository.add(SpaceTypes.KERNEL, this.create(ProcessManager.class));
@@ -50,6 +54,7 @@ public class FactoryManager extends AManager {
             this.coreRepository.add(SpaceTypes.KERNEL, this.create(TypeManager.class));
             this.coreRepository.add(SpaceTypes.KERNEL, this.create(ObjectManager.class));
             this.coreRepository.add(SpaceTypes.KERNEL, this.create(SecurityTokenManager.class));
+            this.coreRepository.add(SpaceTypes.KERNEL, this.create(SessionManager.class));
             // ...
             this.coreRepository.add(SpaceTypes.KERNEL, this.create(DateTimeObject.class));
             this.coreRepository.add(SpaceTypes.KERNEL, this.create(CoreRepositoryObject.class));
@@ -57,40 +62,11 @@ public class FactoryManager extends AManager {
         }
     }
 
+    private CorePrototypeBuilder corePrototype;
     private CoreRepositoryObject coreRepository;
 
     public <T extends ACorePrototype> T create(Class<T> clazz) {
-        if (ObjectUtils.isAnyNull(clazz)) {
-            throw new ConditionParametersException();
-        }
-
-        T corePrototype = null;
-        try {
-            corePrototype = SpringUtils.getApplicationContext().getBean(clazz);
-        } catch (AKernelException e) {
-            Constructor<T> constructor = null;
-            try {
-                constructor = clazz.getDeclaredConstructor();
-                corePrototype = constructor.newInstance();
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e2) {
-                try {
-                    if (ObjectUtils.allNotNull(constructor) && constructor.trySetAccessible()) {
-                        constructor.setAccessible(true);
-                        corePrototype = constructor.newInstance();
-                    }
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e3) {
-                    corePrototype = new SpringObjenesis().newInstance(clazz);
-                }
-            }
-        }
-
-        if (ObjectUtils.isAnyNull(corePrototype)) {
-            throw new StatusNotSupportedException();
-        }
-
-        corePrototype.setFactoryManager(this);
-
-        return corePrototype;
+        return this.corePrototype.create(clazz);
     }
 
     public CoreRepositoryObject getCoreRepository() {

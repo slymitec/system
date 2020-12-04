@@ -11,10 +11,4 @@ import org.springframework.context.annotation.Scope;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class ACorePrototype {
     protected FactoryManager factoryManager;
-
-    public final synchronized void setFactoryManager(FactoryManager factoryManager) {
-        if (ObjectUtils.allNotNull(this.factoryManager)) {
-            this.factoryManager = factoryManager;
-        }
-    }
 }

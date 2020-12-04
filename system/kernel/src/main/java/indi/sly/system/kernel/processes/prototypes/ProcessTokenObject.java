@@ -22,19 +22,8 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessTokenObject extends ABytesProcessPrototype {
-    @Override
-    protected void read(byte[] source) {
-        this.processToken = ObjectUtils.transferFromByteArray(source);
-    }
-
-    @Override
-    protected byte[] write() {
-        return ObjectUtils.transferToByteArray(this.processToken);
-    }
-
+public class ProcessTokenObject extends ABytesProcessPrototype<ProcessTokenDefinition> {
     private ProcessObject process;
-    private ProcessTokenDefinition processToken;
 
     public void setProcess(ProcessObject process) {
         this.process = process;
@@ -67,10 +56,10 @@ public class ProcessTokenObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processToken.setAccountID(accountAuthorizationResult.getAccountID());
+        this.value.setAccountID(accountAuthorizationResult.getAccountID());
         AccountGroupTokenDefinition accountAuthorizationResultToken = accountAuthorizationResult.getToken();
-        this.processToken.setPrivilegeTypes(accountAuthorizationResultToken.getPrivilegeTypes());
-        Map<Long, Integer> processTokenLimits = this.processToken.getLimits();
+        this.value.setPrivilegeTypes(accountAuthorizationResultToken.getPrivilegeTypes());
+        Map<Long, Integer> processTokenLimits = this.value.getLimits();
         processTokenLimits.clear();
         processTokenLimits.putAll(accountAuthorizationResultToken.getLimits());
 
@@ -81,7 +70,7 @@ public class ProcessTokenObject extends ABytesProcessPrototype {
     public UUID getAccountID() {
         this.init();
 
-        return this.processToken.getAccountID();
+        return this.value.getAccountID();
     }
 
     public void inheritAccountID() {
@@ -93,7 +82,7 @@ public class ProcessTokenObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processToken.setAccountID(this.getAndCheckParentProcessToken().getAccountID());
+        this.value.setAccountID(this.getAndCheckParentProcessToken().getAccountID());
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -102,7 +91,7 @@ public class ProcessTokenObject extends ABytesProcessPrototype {
     public long getPrivilegeTypes() {
         this.init();
 
-        return this.processToken.getPrivilegeTypes();
+        return this.value.getPrivilegeTypes();
     }
 
     public void inheritPrivilegeTypes() {
@@ -114,7 +103,7 @@ public class ProcessTokenObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processToken.setPrivilegeTypes(this.getAndCheckParentProcessToken().getPrivilegeTypes());
+        this.value.setPrivilegeTypes(this.getAndCheckParentProcessToken().getPrivilegeTypes());
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -129,7 +118,7 @@ public class ProcessTokenObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processToken.setPrivilegeTypes(LogicalUtils.and(privilegeTypes,
+        this.value.setPrivilegeTypes(LogicalUtils.and(privilegeTypes,
                 this.getAndCheckParentProcessToken().getPrivilegeTypes()));
 
         this.fresh();
@@ -157,7 +146,7 @@ public class ProcessTokenObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processToken.setPrivilegeTypes(privilegeTypes);
+        this.value.setPrivilegeTypes(privilegeTypes);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -166,7 +155,7 @@ public class ProcessTokenObject extends ABytesProcessPrototype {
     public Map<Long, Integer> getLimits() {
         this.init();
 
-        return Collections.unmodifiableMap(this.processToken.getLimits());
+        return Collections.unmodifiableMap(this.value.getLimits());
     }
 
     public void inheritLimits() {
@@ -222,7 +211,7 @@ public class ProcessTokenObject extends ABytesProcessPrototype {
     public Set<UUID> getRoles() {
         this.init();
 
-        return this.processToken.getRoles();
+        return this.value.getRoles();
     }
 
     public void inheritRoleTypes() {
@@ -234,7 +223,7 @@ public class ProcessTokenObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        Set<UUID> processTokenRoles = this.processToken.getRoles();
+        Set<UUID> processTokenRoles = this.value.getRoles();
         processTokenRoles.clear();
         processTokenRoles.addAll(this.getAndCheckParentProcessToken().getRoles());
 
@@ -264,7 +253,7 @@ public class ProcessTokenObject extends ABytesProcessPrototype {
             }
         }
 
-        Set<UUID> processTokenRoles = this.processToken.getRoles();
+        Set<UUID> processTokenRoles = this.value.getRoles();
         processTokenRoles.clear();
         processTokenRoles.addAll(childRoles);
 
@@ -287,7 +276,7 @@ public class ProcessTokenObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        Set<UUID> processTokenRoles = this.processToken.getRoles();
+        Set<UUID> processTokenRoles = this.value.getRoles();
         processTokenRoles.clear();
         processTokenRoles.addAll(roles);
 

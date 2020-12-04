@@ -21,19 +21,8 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessContextObject extends ABytesProcessPrototype {
-    @Override
-    protected void read(byte[] source) {
-        this.processContext = ObjectUtils.transferFromByteArray(source);
-    }
-
-    @Override
-    protected byte[] write() {
-        return ObjectUtils.transferToByteArray(this.processContext);
-    }
-
+public class ProcessContextObject extends ABytesProcessPrototype<ProcessContextDefinition> {
     private ProcessObject process;
-    private ProcessContextDefinition processContext;
 
     public void setProcess(ProcessObject process) {
         this.process = process;
@@ -42,7 +31,7 @@ public class ProcessContextObject extends ABytesProcessPrototype {
     public AppContextDefinition getAppContext() {
         this.init();
 
-        return processContext.getAppContext();
+        return this.value.getAppContext();
     }
 
     public void setAppContext(AppContextDefinition appContext) {
@@ -66,7 +55,7 @@ public class ProcessContextObject extends ABytesProcessPrototype {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            this.processContext.setAppContext(appContext);
+            this.value.setAppContext(appContext);
 
             this.fresh();
         } catch (AKernelException exception) {
@@ -83,7 +72,7 @@ public class ProcessContextObject extends ABytesProcessPrototype {
 
         this.init();
 
-        return this.processContext.getEnvironmentVariable();
+        return this.value.getEnvironmentVariable();
     }
 
     public void setEnvironmentVariable(Map<String, String> environmentVariable) {
@@ -99,7 +88,7 @@ public class ProcessContextObject extends ABytesProcessPrototype {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            Map<String, String> processContextEnvironmentVariable = this.processContext.getEnvironmentVariable();
+            Map<String, String> processContextEnvironmentVariable = this.value.getEnvironmentVariable();
             processContextEnvironmentVariable.clear();
             processContextEnvironmentVariable.putAll(environmentVariable);
 
@@ -114,7 +103,7 @@ public class ProcessContextObject extends ABytesProcessPrototype {
     public Map<String, String> getParameters() {
         this.init();
 
-        return processContext.getParameters();
+        return this.value.getParameters();
     }
 
     public void setParameters(Map<String, String> parameters) {
@@ -138,7 +127,7 @@ public class ProcessContextObject extends ABytesProcessPrototype {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            Map<String, String> processContextParameters = this.processContext.getParameters();
+            Map<String, String> processContextParameters = this.value.getParameters();
             processContextParameters.clear();
             processContextParameters.putAll(parameters);
 
@@ -153,7 +142,7 @@ public class ProcessContextObject extends ABytesProcessPrototype {
     public UUID getSessionID() {
         this.init();
 
-        return processContext.getSessionID();
+        return this.value.getSessionID();
     }
 
     public void setSessionID(UUID sessionID) {
@@ -177,7 +166,7 @@ public class ProcessContextObject extends ABytesProcessPrototype {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            this.processContext.setSessionID(sessionID);
+            this.value.setSessionID(sessionID);
 
             this.fresh();
         } catch (AKernelException exception) {
@@ -190,7 +179,7 @@ public class ProcessContextObject extends ABytesProcessPrototype {
     public List<Identification> getWorkFolder() {
         this.init();
 
-        return processContext.getWorkFolder();
+        return this.value.getWorkFolder();
     }
 
     public void setWorkFolder(List<Identification> workFolder) {
@@ -214,7 +203,7 @@ public class ProcessContextObject extends ABytesProcessPrototype {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            List<Identification> processContextWorkFolder = this.processContext.getWorkFolder();
+            List<Identification> processContextWorkFolder = this.value.getWorkFolder();
             processContextWorkFolder.clear();
             processContextWorkFolder.addAll(workFolder);
 

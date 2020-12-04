@@ -8,8 +8,8 @@ import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
-import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.core.prototypes.ABytesProcessPrototype;
+import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -26,18 +26,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessHandleTableObject extends ABytesProcessPrototype {
-    @Override
-    protected void read(byte[] source) {
-        this.processHandleTable = ObjectUtils.transferFromByteArray(source);
-    }
-
-    @Override
-    protected byte[] write() {
-        return ObjectUtils.transferToByteArray(this.processHandleTable);
-    }
-
-    private ProcessHandleTableDefinition processHandleTable;
+public class ProcessHandleTableObject extends ABytesProcessPrototype<ProcessHandleTableDefinition> {
     private ProcessObject process;
 
     public void setProcess(ProcessObject process) {
@@ -67,7 +56,7 @@ public class ProcessHandleTableObject extends ABytesProcessPrototype {
 
         this.init();
 
-        ProcessHandleEntryDefinition processHandleEntry = this.processHandleTable.get(handle);
+        ProcessHandleEntryDefinition processHandleEntry = this.value.get(handle);
 
         return Collections.unmodifiableMap(processHandleEntry.getDate());
     }
@@ -77,7 +66,7 @@ public class ProcessHandleTableObject extends ABytesProcessPrototype {
 
         this.init();
 
-        return this.processHandleTable.list();
+        return this.value.list();
     }
 
     public synchronized void inheritHandle(UUID handle) {
@@ -106,10 +95,9 @@ public class ProcessHandleTableObject extends ABytesProcessPrototype {
             parentProcessHandleTable.lock(LockTypes.WRITE);
             parentProcessHandleTable.init();
 
-            ProcessHandleEntryDefinition processHandleEntry =
-                    parentProcessHandleTable.processHandleTable.get(handle);
-            parentProcessHandleTable.processHandleTable.delete(handle);
-            this.processHandleTable.add(handle, processHandleEntry);
+            ProcessHandleEntryDefinition processHandleEntry = parentProcessHandleTable.value.get(handle);
+            parentProcessHandleTable.value.delete(handle);
+            this.value.add(handle, processHandleEntry);
 
             parentProcessHandleTable.fresh();
             this.fresh();
@@ -134,7 +122,7 @@ public class ProcessHandleTableObject extends ABytesProcessPrototype {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            ProcessHandleEntryDefinition processHandleEntry = this.processHandleTable.get(handle);
+            ProcessHandleEntryDefinition processHandleEntry = this.value.get(handle);
             processHandleEntry.getDate().put(DateTimeTypes.ACCESS, nowDateTime);
             info = objectManager.rebuild(processHandleEntry.getIdentifications(), processHandleEntry.getOpen());
 
@@ -152,7 +140,7 @@ public class ProcessHandleTableObject extends ABytesProcessPrototype {
         this.checkStatusAndCurrentPermission();
 
         ProcessTokenObject processToken = this.process.getToken();
-        if (this.processHandleTable.size() >= processToken.getLimits().get(ProcessTokenLimitTypes.HANDLE_MAX)) {
+        if (this.value.size() >= processToken.getLimits().get(ProcessTokenLimitTypes.HANDLE_MAX)) {
             throw new StatusInsufficientResourcesException();
         }
 
@@ -171,7 +159,7 @@ public class ProcessHandleTableObject extends ABytesProcessPrototype {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            this.processHandleTable.add(handle, processHandleEntry);
+            this.value.add(handle, processHandleEntry);
 
             this.fresh();
         } catch (AKernelException exception) {
@@ -190,7 +178,7 @@ public class ProcessHandleTableObject extends ABytesProcessPrototype {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            this.processHandleTable.delete(handle);
+            this.value.delete(handle);
 
             this.fresh();
         } catch (AKernelException exception) {

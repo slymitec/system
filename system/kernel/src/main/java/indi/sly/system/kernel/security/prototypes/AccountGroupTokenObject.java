@@ -13,23 +13,11 @@ import indi.sly.system.kernel.security.types.PrivilegeTypes;
 
 import java.util.Map;
 
-public class AccountGroupTokenObject extends ABytesProcessPrototype {
-
-    @Override
-    protected void read(byte[] source) {
-        this.accountGroupToken = ObjectUtils.transferFromByteArray(source);
-    }
-
-    @Override
-    protected byte[] write() {
-        return ObjectUtils.transferToByteArray(this.accountGroupToken);
-    }
-
-    private AccountGroupTokenDefinition accountGroupToken;
-
+public class AccountGroupTokenObject extends ABytesProcessPrototype<AccountGroupTokenDefinition> {
     public long getPrivilegeTypes() {
         this.init();
-        return accountGroupToken.getPrivilegeTypes();
+
+        return this.value.getPrivilegeTypes();
     }
 
     public void setPrivilegeTypes(long privilegeTypes) {
@@ -45,14 +33,14 @@ public class AccountGroupTokenObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.accountGroupToken.setPrivilegeTypes(privilegeTypes);
+        this.value.setPrivilegeTypes(privilegeTypes);
 
         this.fresh();
         this.lock(LockTypes.NONE);
     }
 
     public Map<Long, Integer> getLimits() {
-        return this.accountGroupToken.getLimits();
+        return this.value.getLimits();
     }
 
     public void setLimits(Map<Long, Integer> limits) {
@@ -72,7 +60,7 @@ public class AccountGroupTokenObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        Map<Long, Integer> accountGroupTokenLimits = this.accountGroupToken.getLimits();
+        Map<Long, Integer> accountGroupTokenLimits = this.value.getLimits();
         accountGroupTokenLimits.clear();
         accountGroupTokenLimits.putAll(limits);
 

@@ -30,18 +30,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCommunicationObject extends ABytesProcessPrototype {
-    @Override
-    protected void read(byte[] source) {
-        this.processCommunication = ObjectUtils.transferFromByteArray(source);
-    }
-
-    @Override
-    protected byte[] write() {
-        return ObjectUtils.transferToByteArray(this.processCommunication);
-    }
-
-    private ProcessCommunicationDefinition processCommunication;
+public class ProcessCommunicationObject extends ABytesProcessPrototype<ProcessCommunicationDefinition> {
     private ProcessObject process;
 
     public void setProcess(ProcessObject process) {
@@ -63,7 +52,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
 
         this.init();
 
-        byte[] processCommunicationShared = this.processCommunication.getShared();
+        byte[] processCommunicationShared = this.value.getShared();
 
         ProcessStatisticsObject processStatistics = this.process.getStatistics();
         processStatistics.addSharedReadCount(1);
@@ -90,7 +79,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
             throw new ConditionPermissionsException();
         }
 
-        this.processCommunication.setShared(shared);
+        this.value.setShared(shared);
 
         ProcessStatisticsObject processStatistics = this.process.getStatistics();
         processStatistics.addSharedWriteCount(1);
@@ -100,7 +89,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
     public Set<UUID> getPortIDs() {
         this.init();
 
-        return Collections.unmodifiableSet(this.processCommunication.getPortIDs());
+        return Collections.unmodifiableSet(this.value.getPortIDs());
     }
 
     public UUID createPort(Set<UUID> sourceProcessIDs) {
@@ -125,7 +114,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
             this.init();
 
             ProcessTokenObject processToken = this.process.getToken();
-            if (this.processCommunication.getPortIDs().size() > processToken.getLimits().get(ProcessTokenLimitTypes.PORT_COUNT_MAX)) {
+            if (this.value.getPortIDs().size() > processToken.getLimits().get(ProcessTokenLimitTypes.PORT_COUNT_MAX)) {
                 throw new ConditionPermissionsException();
             }
 
@@ -151,7 +140,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
 
             portID = port.getID();
 
-            this.processCommunication.getPortIDs().add(portID);
+            this.value.getPortIDs().add(portID);
 
             this.fresh();
         } catch (AKernelException exception) {
@@ -179,7 +168,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            Set<UUID> processCommunicationPortIDs = this.processCommunication.getPortIDs();
+            Set<UUID> processCommunicationPortIDs = this.value.getPortIDs();
 
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -219,7 +208,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            Set<UUID> processCommunicationPortIDs = this.processCommunication.getPortIDs();
+            Set<UUID> processCommunicationPortIDs = this.value.getPortIDs();
             if (processCommunicationPortIDs.contains(portID)) {
                 throw new StatusNotExistedException();
             }
@@ -318,7 +307,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        UUID signalID = this.processCommunication.getSignalID();
+        UUID signalID = this.value.getSignalID();
 
         List<Identification> identifications = new ArrayList<>();
         identifications.add(new Identification("Ports"));
@@ -362,7 +351,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
     public UUID getSignalID() {
         this.init();
 
-        return this.processCommunication.getSignalID();
+        return this.value.getSignalID();
     }
 
     public void createSignal(Set<UUID> sourceProcessIDs) {
@@ -382,7 +371,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            if (!UUIDUtils.isAnyNullOrEmpty(this.processCommunication.getSignalID())) {
+            if (!UUIDUtils.isAnyNullOrEmpty(this.value.getSignalID())) {
                 throw new StatusAlreadyFinishedException();
             }
 
@@ -410,7 +399,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
             signalContent.setSourceProcessIDs(sourceProcessIDs);
             signal.close();
 
-            this.processCommunication.setSignalID(signals.getID());
+            this.value.setSignalID(signals.getID());
 
             this.fresh();
             this.lock(LockTypes.NONE);
@@ -434,11 +423,11 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
             this.lock(LockTypes.WRITE);
             this.init();
 
-            if (!UUIDUtils.isAnyNullOrEmpty(this.processCommunication.getSignalID())) {
+            if (!UUIDUtils.isAnyNullOrEmpty(this.value.getSignalID())) {
                 throw new StatusAlreadyFinishedException();
             }
 
-            UUID signalID = this.processCommunication.getSignalID();
+            UUID signalID = this.value.getSignalID();
 
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -448,7 +437,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
             InfoObject signals = objectManager.get(identifications);
             signals.deleteChild(new Identification(signalID));
 
-            this.processCommunication.setSignalID(null);
+            this.value.setSignalID(null);
 
             this.fresh();
             this.lock(LockTypes.NONE);
@@ -472,7 +461,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        UUID signalID = this.processCommunication.getSignalID();
+        UUID signalID = this.value.getSignalID();
 
         List<Identification> identifications = new ArrayList<>();
         identifications.add(new Identification("Signals"));
@@ -504,7 +493,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        UUID signalID = this.processCommunication.getSignalID();
+        UUID signalID = this.value.getSignalID();
 
         List<Identification> identifications = new ArrayList<>();
         identifications.add(new Identification("Signals"));
@@ -530,7 +519,7 @@ public class ProcessCommunicationObject extends ABytesProcessPrototype {
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        UUID signalID = this.processCommunication.getSignalID();
+        UUID signalID = this.value.getSignalID();
 
         List<Identification> identifications = new ArrayList<>();
         identifications.add(new Identification("Signals"));

@@ -13,19 +13,8 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessStatisticsObject extends ABytesProcessPrototype {
-    @Override
-    protected void read(byte[] source) {
-        this.processStatistics = ObjectUtils.transferFromByteArray(source);
-    }
-
-    @Override
-    protected byte[] write() {
-        return ObjectUtils.transferToByteArray(this.processStatistics);
-    }
-
+public class ProcessStatisticsObject extends ABytesProcessPrototype<ProcessStatisticsDefinition> {
     private ProcessObject process;
-    private ProcessStatisticsDefinition processStatistics;
 
     public void setProcess(ProcessObject process) {
         this.process = process;
@@ -34,7 +23,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getDate(long dataTimeType) {
         this.init();
 
-        Long value = this.processStatistics.getDate().getOrDefault(dataTimeType, null);
+        Long value = this.value.getDate().getOrDefault(dataTimeType, null);
 
         if (ObjectUtils.isAnyNull(value)) {
             throw new ConditionParametersException();
@@ -47,7 +36,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.getDate().put(dataTimeType, value);
+        this.value.getDate().put(dataTimeType, value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -56,7 +45,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getStatusCumulation() {
         this.init();
 
-        return this.processStatistics.getStatusCumulation();
+        return this.value.getStatusCumulation();
     }
 
     public void addStatusCumulation(long value) {
@@ -71,7 +60,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetStatusCumulation(value);
+        this.value.offsetStatusCumulation(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -80,7 +69,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getThreadCumulation() {
         this.init();
 
-        return this.processStatistics.getThreadCumulation();
+        return this.value.getThreadCumulation();
     }
 
     public void addThreadCumulation(long value) {
@@ -95,7 +84,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetThreadCumulation(value);
+        this.value.offsetThreadCumulation(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -104,7 +93,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getInfoCreate() {
         this.init();
 
-        return this.processStatistics.getInfoCreate();
+        return this.value.getInfoCreate();
     }
 
     public void addInfoCreate(long value) {
@@ -119,7 +108,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetInfoCreate(value);
+        this.value.offsetInfoCreate(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -128,7 +117,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getInfoGet() {
         this.init();
 
-        return this.processStatistics.getInfoGet();
+        return this.value.getInfoGet();
     }
 
     public void addInfoGet(long value) {
@@ -143,7 +132,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetInfoGet(value);
+        this.value.offsetInfoGet(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -152,7 +141,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getInfoQuery() {
         this.init();
 
-        return this.processStatistics.getInfoQuery();
+        return this.value.getInfoQuery();
     }
 
     public void addInfoQuery(long value) {
@@ -167,7 +156,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetInfoQuery(value);
+        this.value.offsetInfoQuery(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -176,7 +165,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getInfoDelete() {
         this.init();
 
-        return this.processStatistics.getInfoDelete();
+        return this.value.getInfoDelete();
     }
 
     public void addInfoDelete(long value) {
@@ -191,7 +180,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetInfoDelete(value);
+        this.value.offsetInfoDelete(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -200,7 +189,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getInfoDump() {
         this.init();
 
-        return this.processStatistics.getInfoDump();
+        return this.value.getInfoDump();
     }
 
     public void addInfoDump(long value) {
@@ -215,7 +204,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetInfoDump(value);
+        this.value.offsetInfoDump(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -224,7 +213,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getInfoOpen() {
         this.init();
 
-        return this.processStatistics.getInfoOpen();
+        return this.value.getInfoOpen();
     }
 
     public void addInfoOpen(long value) {
@@ -239,7 +228,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetInfoOpen(value);
+        this.value.offsetInfoOpen(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -248,7 +237,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getInfoClose() {
         this.init();
 
-        return this.processStatistics.getInfoClose();
+        return this.value.getInfoClose();
     }
 
     public void addInfoClose(long value) {
@@ -263,7 +252,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetInfoClose(value);
+        this.value.offsetInfoClose(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -272,7 +261,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getInfoRead() {
         this.init();
 
-        return this.processStatistics.getInfoRead();
+        return this.value.getInfoRead();
     }
 
     public void addInfoRead(long value) {
@@ -287,7 +276,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetInfoRead(value);
+        this.value.offsetInfoRead(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -296,7 +285,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getInfoWrite() {
         this.init();
 
-        return this.processStatistics.getInfoWrite();
+        return this.value.getInfoWrite();
     }
 
     public void addInfoWrite(long value) {
@@ -311,7 +300,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetInfoWrite(value);
+        this.value.offsetInfoWrite(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -320,7 +309,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getSharedReadCount() {
         this.init();
 
-        return this.processStatistics.getSharedReadCount();
+        return this.value.getSharedReadCount();
     }
 
     public void addSharedReadCount(long value) {
@@ -335,7 +324,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetSharedReadCount(value);
+        this.value.offsetSharedReadCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -344,7 +333,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getSharedReadBytes() {
         this.init();
 
-        return this.processStatistics.getSharedReadBytes();
+        return this.value.getSharedReadBytes();
     }
 
     public void addSharedReadBytes(long value) {
@@ -359,7 +348,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetSharedReadBytes(value);
+        this.value.offsetSharedReadBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -368,7 +357,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getSharedWriteCount() {
         this.init();
 
-        return this.processStatistics.getSharedWriteCount();
+        return this.value.getSharedWriteCount();
     }
 
     public void addSharedWriteCount(long value) {
@@ -383,7 +372,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetSharedWriteCount(value);
+        this.value.offsetSharedWriteCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -392,7 +381,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getSharedWriteBytes() {
         this.init();
 
-        return this.processStatistics.getSharedWriteBytes();
+        return this.value.getSharedWriteBytes();
     }
 
     public void addSharedWriteBytes(long value) {
@@ -407,7 +396,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetSharedWriteBytes(value);
+        this.value.offsetSharedWriteBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -416,7 +405,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getPortCount() {
         this.init();
 
-        return this.processStatistics.getPortCount();
+        return this.value.getPortCount();
     }
 
     public void addPortCount(long value) {
@@ -431,7 +420,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetPortCount(value);
+        this.value.offsetPortCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -440,7 +429,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getPortReadCount() {
         this.init();
 
-        return this.processStatistics.getPortReadCount();
+        return this.value.getPortReadCount();
     }
 
     public void addPortReadCount(long value) {
@@ -455,7 +444,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetPortReadCount(value);
+        this.value.offsetPortReadCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -464,7 +453,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getPortReadBytes() {
         this.init();
 
-        return this.processStatistics.getPortReadBytes();
+        return this.value.getPortReadBytes();
     }
 
     public void addPortReadBytes(long value) {
@@ -479,7 +468,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetPortReadBytes(value);
+        this.value.offsetPortReadBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -488,7 +477,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getPortWriteCount() {
         this.init();
 
-        return this.processStatistics.getPortWriteCount();
+        return this.value.getPortWriteCount();
     }
 
     public void addPortWriteCount(long value) {
@@ -503,7 +492,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetPortWriteCount(value);
+        this.value.offsetPortWriteCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -512,7 +501,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getPortWriteBytes() {
         this.init();
 
-        return this.processStatistics.getPortWriteBytes();
+        return this.value.getPortWriteBytes();
     }
 
     public void addPortWriteBytes(long value) {
@@ -527,7 +516,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetPortWriteBytes(value);
+        this.value.offsetPortWriteBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -536,7 +525,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getSignalReadCount() {
         this.init();
 
-        return this.processStatistics.getSignalReadCount();
+        return this.value.getSignalReadCount();
     }
 
     public void addSignalReadCount(long value) {
@@ -551,7 +540,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetSignalReadCount(value);
+        this.value.offsetSignalReadCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -560,7 +549,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getSignalWriteCount() {
         this.init();
 
-        return this.processStatistics.getSignalWriteCount();
+        return this.value.getSignalWriteCount();
     }
 
     public void addSignalWriteCount(long value) {
@@ -575,7 +564,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetSignalWriteCount(value);
+        this.value.offsetSignalWriteCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -584,7 +573,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getIoCreate() {
         this.init();
 
-        return this.processStatistics.getIoCreate();
+        return this.value.getIoCreate();
     }
 
     public void addIoCreate(long value) {
@@ -599,7 +588,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetIoCreate(value);
+        this.value.offsetIoCreate(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -608,7 +597,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getIoStatus() {
         this.init();
 
-        return this.processStatistics.getIoStatus();
+        return this.value.getIoStatus();
     }
 
     public void addIoStatus(long value) {
@@ -623,7 +612,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetIoStatus(value);
+        this.value.offsetIoStatus(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -632,7 +621,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getIoReadCount() {
         this.init();
 
-        return this.processStatistics.getIoReadCount();
+        return this.value.getIoReadCount();
     }
 
     public void addIoReadCount(long value) {
@@ -647,7 +636,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetIoReadCount(value);
+        this.value.offsetIoReadCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -656,7 +645,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getIoReadBytes() {
         this.init();
 
-        return this.processStatistics.getIoReadBytes();
+        return this.value.getIoReadBytes();
     }
 
     public void addIoReadBytes(long value) {
@@ -671,7 +660,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetIoReadBytes(value);
+        this.value.offsetIoReadBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -680,7 +669,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getIoWriteCount() {
         this.init();
 
-        return this.processStatistics.getIoWriteCount();
+        return this.value.getIoWriteCount();
     }
 
     public void addIoWriteCount(long value) {
@@ -695,7 +684,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetIoWriteCount(value);
+        this.value.offsetIoWriteCount(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -704,7 +693,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
     public long getIoWriteBytes() {
         this.init();
 
-        return this.processStatistics.getIoWriteBytes();
+        return this.value.getIoWriteBytes();
     }
 
     public void addIoWriteBytes(long value) {
@@ -719,7 +708,7 @@ public class ProcessStatisticsObject extends ABytesProcessPrototype {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.processStatistics.offsetIoWriteBytes(value);
+        this.value.offsetIoWriteBytes(value);
 
         this.fresh();
         this.lock(LockTypes.NONE);

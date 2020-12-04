@@ -13,7 +13,7 @@ public abstract class ACorePrototype {
     protected FactoryManager factoryManager;
 
     public final synchronized void setFactoryManager(FactoryManager factoryManager) {
-        if (ObjectUtils.isAnyNull(this.factoryManager)) {
+        if (ObjectUtils.allNotNull(this.factoryManager)) {
             this.factoryManager = factoryManager;
         }
     }

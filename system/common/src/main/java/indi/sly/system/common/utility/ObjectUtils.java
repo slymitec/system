@@ -38,15 +38,6 @@ public class ObjectUtils extends org.apache.commons.lang3.ObjectUtils {
         }
     }
 
-    public static <T> boolean containObject(Class<T> requiredType) {
-        String[] objectNames = SpringUtils.getApplicationContext().getBeanNamesForType(requiredType);
-        if (objectNames.length == 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public static byte[] transferToByteArray(Object object) {
         if (ObjectUtils.isAnyNull(object)) {
             return null;

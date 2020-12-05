@@ -1,11 +1,7 @@
 package indi.sly.system.kernel.core;
 
-import indi.sly.system.common.exceptions.AKernelException;
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.StatusNotSupportedException;
 import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
 import indi.sly.system.common.functions.Provider;
-import indi.sly.system.common.utility.ObjectUtils;
 import indi.sly.system.common.utility.SpringUtils;
 import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
@@ -24,11 +20,8 @@ import indi.sly.system.kernel.security.SecurityTokenManager;
 import indi.sly.system.kernel.sessions.SessionManager;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.objenesis.SpringObjenesis;
 
 import javax.inject.Named;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -83,7 +76,7 @@ public class FactoryManager extends AManager {
     }
 
     public KernelSpace getKernelSpace() {
-        return SpringUtils.getApplicationContext().getBean(KernelSpace.class);
+        return SpringUtils.getInstance(KernelSpace.class);
     }
 
     private Provider<UserSpace> userSpaceContainer;

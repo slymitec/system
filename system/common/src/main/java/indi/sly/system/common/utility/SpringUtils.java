@@ -3,11 +3,16 @@ package indi.sly.system.common.utility;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.objenesis.SpringObjenesis;
 
 import javax.inject.Named;
 
 @Named
 public class SpringUtils implements ApplicationContextAware {
+    static {
+        SpringUtils.objenesis = new SpringObjenesis();
+    }
+
     private static ApplicationContext applicationContext;
 
     @Override
@@ -16,7 +21,13 @@ public class SpringUtils implements ApplicationContextAware {
 
     }
 
-    public static ApplicationContext getApplicationContext() {
-        return SpringUtils.applicationContext;
+    public static <T> T getInstance(Class<T> clazz) throws BeansException {
+        return SpringUtils.applicationContext.getBean(clazz);
+    }
+
+    private static SpringObjenesis objenesis;
+
+    public static <T> T createInstance(Class<T> clazz) {
+        return SpringUtils.objenesis.newInstance(clazz);
     }
 }

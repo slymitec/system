@@ -58,8 +58,6 @@ public class ProcessObject extends ACorePrototype {
 
         ProcessStatusObject processStatus = this.factoryManager.create(ProcessStatusObject.class);
 
-        this.processorRegister.getReadProcessStatuses();
-
         processStatus.processorRegister = this.processorRegister;
         processStatus.setSource(() -> process, (ProcessEntity source) -> {
         });

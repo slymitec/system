@@ -116,8 +116,6 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             }
 
             this.fresh();
-        } catch (AKernelException exception) {
-            throw exception;
         } finally {
             this.lock(LockTypes.NONE);
         }
@@ -137,7 +135,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         ProcessHandleTableObject handleTable = this.process.getHandleTable();
         Set<UUID> handles = handleTable.list();
         for (UUID handle : handles) {
-            handleTable.getInfo(handle).close();
+            handleTable.get(handle).close();
         }
     }
 
@@ -165,8 +163,6 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             }
 
             this.fresh();
-        } catch (AKernelException exception) {
-            throw exception;
         } finally {
             this.lock(LockTypes.NONE);
         }

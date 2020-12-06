@@ -11,10 +11,10 @@ import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleInfoObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -47,8 +47,8 @@ public class ProcessProcessor extends ACorePrototype implements IInfoObjectProce
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
             ProcessObject process = processManager.getCurrentProcess();
-            ProcessHandleTableObject processHandleTable = process.getHandleTable();
-            handle = processHandleTable.addInfo(status);
+            ProcessHandleInfoObject processHandleInfo = process.getHandleTable().getInfo(status);
+            handle = processHandleInfo.add();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             processStatistics.addInfoOpen(1);
@@ -60,8 +60,8 @@ public class ProcessProcessor extends ACorePrototype implements IInfoObjectProce
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
             ProcessObject process = processManager.getCurrentProcess();
-            ProcessHandleTableObject processHandleTable = process.getHandleTable();
-            processHandleTable.deleteInfo(status.getHandle());
+            ProcessHandleInfoObject processHandleInfo = process.getHandleTable().getInfo(status);
+            processHandleInfo.delete();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             processStatistics.addInfoClose(1);

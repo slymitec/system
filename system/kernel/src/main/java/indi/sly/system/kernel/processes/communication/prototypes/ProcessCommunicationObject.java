@@ -143,8 +143,6 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             this.value.getPortIDs().add(portID);
 
             this.fresh();
-        } catch (AKernelException exception) {
-            throw exception;
         } finally {
             this.lock(LockTypes.NONE);
         }
@@ -184,8 +182,6 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
             this.fresh();
             this.lock(LockTypes.NONE);
-        } catch (AKernelException exception) {
-            throw exception;
         } finally {
             this.lock(LockTypes.NONE);
         }
@@ -225,8 +221,6 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
             this.fresh();
             this.lock(LockTypes.NONE);
-        } catch (AKernelException exception) {
-            throw exception;
         } finally {
             this.lock(LockTypes.NONE);
         }
@@ -403,8 +397,6 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
             this.fresh();
             this.lock(LockTypes.NONE);
-        } catch (AKernelException exception) {
-            throw exception;
         } finally {
             this.lock(LockTypes.NONE);
         }
@@ -441,8 +433,6 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
             this.fresh();
             this.lock(LockTypes.NONE);
-        } catch (AKernelException exception) {
-            throw exception;
         } finally {
             this.lock(LockTypes.NONE);
         }

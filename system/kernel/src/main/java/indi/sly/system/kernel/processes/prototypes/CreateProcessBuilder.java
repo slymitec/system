@@ -126,7 +126,7 @@ public class CreateProcessBuilder extends ACorePrototype {
 
         ProcessObject process = processManager.getCurrentProcess();
         ProcessHandleTableObject processHandleTable = process.getHandleTable();
-        InfoObject info = processHandleTable.getInfo(this.createProcess.getFileHandle());
+        InfoObject info = processHandleTable.get(this.createProcess.getFileHandle());
 
         //FileContentObject content = info.getContent();
         //content.???
@@ -194,7 +194,7 @@ public class CreateProcessBuilder extends ACorePrototype {
         }
 
         ProcessHandleTableObject processHandleTable = this.process.getHandleTable();
-        processHandleTable.inheritHandle(this.createProcess.getFileHandle());
+        processHandleTable.inherit(this.createProcess.getFileHandle());
 
         ProcessContextObject processContext = this.process.getContext();
         ProcessContextObject parentProcessContext = this.parentProcess.getContext();

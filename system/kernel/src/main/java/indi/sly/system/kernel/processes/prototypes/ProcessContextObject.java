@@ -58,8 +58,6 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             this.value.setAppContext(appContext);
 
             this.fresh();
-        } catch (AKernelException exception) {
-            throw exception;
         } finally {
             this.lock(LockTypes.NONE);
         }
@@ -93,8 +91,6 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             processContextEnvironmentVariable.putAll(environmentVariable);
 
             this.fresh();
-        } catch (AKernelException exception) {
-            throw exception;
         } finally {
             this.lock(LockTypes.NONE);
         }
@@ -132,8 +128,6 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             processContextParameters.putAll(parameters);
 
             this.fresh();
-        } catch (AKernelException exception) {
-            throw exception;
         } finally {
             this.lock(LockTypes.NONE);
         }
@@ -169,8 +163,6 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             this.value.setSessionID(sessionID);
 
             this.fresh();
-        } catch (AKernelException exception) {
-            throw exception;
         } finally {
             this.lock(LockTypes.NONE);
         }
@@ -208,8 +200,6 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             processContextWorkFolder.addAll(workFolder);
 
             this.fresh();
-        } catch (AKernelException exception) {
-            throw exception;
         } finally {
             this.lock(LockTypes.NONE);
         }

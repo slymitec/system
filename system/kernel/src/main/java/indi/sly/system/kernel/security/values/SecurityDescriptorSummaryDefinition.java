@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.security.values;
 
-import indi.sly.system.kernel.objects.Identification;
+import indi.sly.system.common.values.Identification;
 
 import java.util.*;
 

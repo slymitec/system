@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.communication.instances.prototypes;
 
 import indi.sly.system.common.exceptions.StatusNotSupportedException;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.objects.Identification;
+import indi.sly.system.common.values.Identification;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;

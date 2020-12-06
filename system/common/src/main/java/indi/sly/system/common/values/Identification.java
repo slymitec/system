@@ -1,13 +1,13 @@
-package indi.sly.system.kernel.objects;
+package indi.sly.system.common.values;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.support.IDeepCloneable;
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.ClassUtils;
 import indi.sly.system.common.utility.NumberUtils;
@@ -51,30 +51,17 @@ public final class Identification implements ISerializable<Identification> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Identification other = (Identification) obj;
-        if (type == null) {
-            if (other.type != null)
-                return false;
-        } else if (!type.equals(other.type))
-            return false;
-        if (!Arrays.equals(id, other.id))
-            return false;
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Identification that = (Identification) o;
+        return Arrays.equals(id, that.id) && type.equals(that.type);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        result = prime * result + Arrays.hashCode(id);
+        int result = Objects.hash(type);
+        result = 31 * result + Arrays.hashCode(id);
         return result;
     }
 
@@ -90,16 +77,16 @@ public final class Identification implements ISerializable<Identification> {
 
     @Override
     public Identification deepClone() {
-        Identification newObject = new Identification();
+        Identification definition = new Identification();
 
-        newObject.id = this.id == null ? null : new byte[this.id.length];
+        definition.id = this.id == null ? null : new byte[this.id.length];
         if (ObjectUtils.allNotNull(this.id)) {
-            System.arraycopy(this.id, 0, newObject.id, 0, this.id.length);
+            System.arraycopy(this.id, 0, definition.id, 0, this.id.length);
         }
 
-        newObject.type = this.type;
+        definition.type = this.type;
 
-        return newObject;
+        return definition;
     }
 
     @Override

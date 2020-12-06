@@ -2,7 +2,7 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.functions.*;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
-import indi.sly.system.kernel.objects.Identification;
+import indi.sly.system.common.values.Identification;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoProcessorRegister;

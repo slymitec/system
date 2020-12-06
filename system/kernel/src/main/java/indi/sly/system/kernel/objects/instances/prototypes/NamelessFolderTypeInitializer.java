@@ -8,7 +8,7 @@ import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.kernel.objects.Identification;
+import indi.sly.system.common.values.Identification;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoRelationEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
@@ -46,7 +46,8 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
     @Override
     public void deleteProcedure(InfoEntity info) {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
+                info.getType()));
 
         List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
 
@@ -64,7 +65,8 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public void openProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen, long openAttribute, Object... arguments) {
+    public void openProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen, long openAttribute,
+                              Object... arguments) {
     }
 
     @Override
@@ -78,7 +80,8 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
+                info.getType()));
 
         this.lockProcedure(info, LockTypes.WRITE);
 
@@ -108,7 +111,8 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
+                info.getType()));
 
         UUID childID = UUIDUtils.readFormBytes(identification.getID());
 
@@ -130,7 +134,8 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
     @Override
     public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate<InfoSummaryDefinition> wildcard) {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
+                info.getType()));
 
         this.lockProcedure(info, LockTypes.WRITE);
 
@@ -151,7 +156,8 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public void renameChildProcedure(InfoEntity info, Identification oldIdentification, Identification newIdentification) {
+    public void renameChildProcedure(InfoEntity info, Identification oldIdentification,
+                                     Identification newIdentification) {
         throw new StatusNotSupportedException();
     }
 
@@ -162,7 +168,8 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
+                info.getType()));
 
         this.lockProcedure(info, LockTypes.WRITE);
 
@@ -171,7 +178,7 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
         List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
         for (InfoRelationEntity infoRelation : infoRelations) {
             if (infoRelation.getID().equals(childID)) {
-                infoRelations.remove(infoRelation);
+                entityRepository.deleteRelation(infoRelation);
 
                 this.lockProcedure(info, LockTypes.NONE);
                 return;
@@ -183,7 +190,8 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen) {
+    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info,
+                                                                       InfoStatusOpenDefinition statusOpen) {
         return NamelessFolderContentObject.class;
     }
 

@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.values;
 import indi.sly.system.common.support.ISerializable;
 import indi.sly.system.common.utility.NumberUtils;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.objects.Identification;
+import indi.sly.system.common.values.Identification;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 
 import java.io.IOException;

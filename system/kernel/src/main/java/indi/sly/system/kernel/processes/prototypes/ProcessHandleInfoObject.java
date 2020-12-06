@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.exceptions.AKernelException;
 import indi.sly.system.common.exceptions.StatusInsufficientResourcesException;
+import indi.sly.system.common.exceptions.StatusNotReadyException;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
@@ -33,9 +34,15 @@ public class ProcessHandleInfoObject extends AValueProcessPrototype<ProcessHandl
     }
 
     public synchronized boolean isExist() {
+        UUID handle = this.status.getHandle();
+
+        if (UUIDUtils.isAnyNullOrEmpty(handle)) {
+            throw new StatusNotReadyException();
+        }
+
         this.init();
 
-        return this.value.contain(this.status.getHandle());
+        return this.value.contain(handle);
     }
 
     public synchronized UUID add() {

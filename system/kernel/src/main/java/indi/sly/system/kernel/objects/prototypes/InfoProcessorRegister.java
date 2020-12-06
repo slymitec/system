@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 import indi.sly.system.common.functions.*;
-import indi.sly.system.kernel.objects.Identification;
+import indi.sly.system.common.values.Identification;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;

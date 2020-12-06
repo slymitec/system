@@ -2,7 +2,7 @@ package indi.sly.system.kernel.sessions.instances.prototypes;
 
 import indi.sly.system.common.exceptions.StatusNotSupportedException;
 import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.kernel.objects.Identification;
+import indi.sly.system.common.values.Identification;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;

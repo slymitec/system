@@ -31,6 +31,7 @@ public class UUIDUtils {
         if (values == null || values.length == 0) {
             return true;
         }
+        
         for (UUID pair : values) {
             if (pair == null || pair.equals(UUIDUtils.EMPTY)) {
                 return true;

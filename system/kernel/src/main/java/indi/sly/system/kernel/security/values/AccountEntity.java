@@ -21,7 +21,7 @@ public class AccountEntity implements ISerializable<AccountEntity> {
     @Id
     @Column(columnDefinition = "uniqueidentifier", name = "ID", nullable = false, updatable = false)
     protected UUID id;
-    @Column(length = 256, name = "Name", nullable = true)
+    @Column(length = 256, name = "Name", nullable = false)
     protected String name;
     @Column(length = 256, name = "password", nullable = true)
     protected String password;

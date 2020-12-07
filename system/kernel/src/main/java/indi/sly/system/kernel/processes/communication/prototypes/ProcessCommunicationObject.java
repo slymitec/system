@@ -118,8 +118,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
                 throw new ConditionPermissionsException();
             }
 
-            List<Identification> identifications = new ArrayList<>();
-            identifications.add(new Identification("Ports"));
+            List<Identification> identifications = List.of(new Identification("Ports"));
 
             InfoObject ports = objectManager.get(identifications);
 
@@ -171,8 +170,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
             for (UUID processCommunicationPortID : processCommunicationPortIDs) {
-                List<Identification> identifications = new ArrayList<>();
-                identifications.add(new Identification("Ports"));
+                List<Identification> identifications = List.of(new Identification("Ports"));
 
                 InfoObject ports = objectManager.get(identifications);
                 ports.deleteChild(new Identification(processCommunicationPortID));
@@ -211,8 +209,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-            List<Identification> identifications = new ArrayList<>();
-            identifications.add(new Identification("Ports"));
+            List<Identification> identifications = List.of(new Identification("Ports"));
 
             InfoObject ports = objectManager.get(identifications);
             ports.deleteChild(new Identification(portID));
@@ -243,9 +240,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        List<Identification> identifications = new ArrayList<>();
-        identifications.add(new Identification("Ports"));
-        identifications.add(new Identification(portID));
+        List<Identification> identifications = List.of(new Identification("Ports"), new Identification(portID));
 
         InfoObject port = objectManager.get(identifications);
         port.open(InfoStatusOpenAttributeTypes.OPEN_ONLYREAD);
@@ -273,9 +268,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        List<Identification> identifications = new ArrayList<>();
-        identifications.add(new Identification("Ports"));
-        identifications.add(new Identification(portID));
+        List<Identification> identifications = List.of(new Identification("Ports"), new Identification(portID));
 
         InfoObject port = objectManager.get(identifications);
         port.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
@@ -327,9 +320,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        List<Identification> identifications = new ArrayList<>();
-        identifications.add(new Identification("Ports"));
-        identifications.add(new Identification(portID));
+        List<Identification> identifications = List.of(new Identification("Ports"), new Identification(portID));
 
         InfoObject port = objectManager.get(identifications);
         port.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
@@ -373,8 +364,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-            List<Identification> identifications = new ArrayList<>();
-            identifications.add(new Identification("Signals"));
+            List<Identification> identifications = List.of(new Identification("Signals"));
 
             InfoObject signals = objectManager.get(identifications);
 
@@ -423,8 +413,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-            List<Identification> identifications = new ArrayList<>();
-            identifications.add(new Identification("Signals"));
+            List<Identification> identifications = List.of(new Identification("Signals"));
 
             InfoObject signals = objectManager.get(identifications);
             signals.deleteChild(new Identification(signalID));
@@ -453,9 +442,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
         UUID signalID = this.value.getSignalID();
 
-        List<Identification> identifications = new ArrayList<>();
-        identifications.add(new Identification("Signals"));
-        identifications.add(new Identification(signalID));
+        List<Identification> identifications = List.of(new Identification("Signals"), new Identification(signalID));
 
         InfoObject signal = objectManager.get(identifications);
         signal.open(InfoStatusOpenAttributeTypes.OPEN_ONLYREAD);
@@ -485,9 +472,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
         UUID signalID = this.value.getSignalID();
 
-        List<Identification> identifications = new ArrayList<>();
-        identifications.add(new Identification("Signals"));
-        identifications.add(new Identification(signalID));
+        List<Identification> identifications = List.of(new Identification("Signals"), new Identification(signalID));
 
         InfoObject signal = objectManager.get(identifications);
         signal.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
@@ -511,9 +496,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
         UUID signalID = this.value.getSignalID();
 
-        List<Identification> identifications = new ArrayList<>();
-        identifications.add(new Identification("Signals"));
-        identifications.add(new Identification(signalID));
+        List<Identification> identifications = List.of(new Identification("Signals"), new Identification(signalID));
 
         InfoObject signal = objectManager.get(identifications);
         signal.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
@@ -536,9 +519,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        List<Identification> identifications = new ArrayList<>();
-        identifications.add(new Identification("Signals"));
-        identifications.add(new Identification(signalID));
+        List<Identification> identifications = List.of(new Identification("Signals"), new Identification(signalID));
 
         InfoObject signal = objectManager.get(identifications);
         signal.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);

@@ -9,11 +9,7 @@ import java.util.UUID;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.ClassUtils;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.utility.*;
 
 public final class Identification implements ISerializable<Identification> {
     private byte[] id;
@@ -79,11 +75,7 @@ public final class Identification implements ISerializable<Identification> {
     public Identification deepClone() {
         Identification definition = new Identification();
 
-        definition.id = this.id == null ? null : new byte[this.id.length];
-        if (ObjectUtils.allNotNull(this.id)) {
-            System.arraycopy(this.id, 0, definition.id, 0, this.id.length);
-        }
-
+        definition.id = ArrayUtils.copyBytes(this.id);
         definition.type = this.type;
 
         return definition;

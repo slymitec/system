@@ -2,8 +2,10 @@ package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.exceptions.ConditionParametersException;
 import indi.sly.system.common.exceptions.ConditionPermissionsException;
+import indi.sly.system.common.exceptions.ConditionRefuseException;
 import indi.sly.system.common.types.LockTypes;
 import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
@@ -43,6 +45,15 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
     }
 
     public void setPassword(String password) {
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrentProcess();
+        ProcessTokenObject processToken = process.getToken();
+
+        if (!processToken.getAccountID().equals(this.getID())
+                && !processToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)) {
+            throw new ConditionRefuseException();
+        }
+
         this.lock(LockTypes.WRITE);
         this.init();
 

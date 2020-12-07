@@ -1,8 +1,12 @@
 package indi.sly.system.kernel.core.enviroment;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.kernel.processes.types.ProcessTokenLimitTypes;
 
 public class KernelConfiguration {
     public final UUID MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID
@@ -21,18 +25,21 @@ public class KernelConfiguration {
     public final UUID PROCESSES_COMMUNICATION_INSTANCE_PIPE_ID
             = UUIDUtils.getFormLongs(1916803478875881556l, -6711235423546474736l);
     public final String PROCESSES_COMMUNICATION_INSTANCE_PIPE_NAME = "Pipe";
-
     public final UUID PROCESSES_COMMUNICATION_INSTANCE_PORT_ID
             = UUIDUtils.getFormLongs(-377164119524884257l, -8458654780268794138l);
     public final String PROCESSES_COMMUNICATION_INSTANCE_PORT_NAME = "Port";
-
     public final UUID PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID
             = UUIDUtils.getFormLongs(1995202583338893550l, -6724752038670449403l);
     public final String PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_NAME = "Signal";
-
     public final UUID PROCESSES_COMMUNICATION_INSTANCE_SESSION_ID
             = UUIDUtils.getFormLongs(-6729493064232579129l, -6576183935232554309l);
     public final String PROCESSES_COMMUNICATION_INSTANCE_SESSION_NAME = "Session";
+    public final Map<Long, Integer> PROCESSES_TOKEN_DEFAULT_LIMIT = Map.of(
+            ProcessTokenLimitTypes.HANDLE_MAX, 256,
+            ProcessTokenLimitTypes.SHARED_LENGTH_MAX, 4096,
+            ProcessTokenLimitTypes.PORT_COUNT_MAX, 4,
+            ProcessTokenLimitTypes.PORT_LENGTH_MAX, 4096,
+            ProcessTokenLimitTypes.SIGNAL_LENGTH_MAX, 256);
 
     public final long SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME = 65536l;
     public final UUID SECURITY_ACCOUNT_SYSTEM_ID
@@ -43,5 +50,4 @@ public class KernelConfiguration {
             = UUIDUtils.getFormLongs(-6207449898682267310l, -6401172295543185544l);
     public final UUID SECURITY_GROUP_USERS_ID
             = UUIDUtils.getFormLongs(-7945695043641654534l, -7688533197792195691l);
-
 }

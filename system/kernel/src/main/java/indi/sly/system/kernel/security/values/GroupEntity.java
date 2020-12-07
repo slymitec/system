@@ -25,7 +25,7 @@ public class GroupEntity implements ISerializable<GroupEntity> {
     @Id
     @Column(columnDefinition = "uniqueidentifier", name = "ID", nullable = false, updatable = false)
     protected UUID id;
-    @Column(length = 256, name = "Name", nullable = true)
+    @Column(length = 256, name = "Name", nullable = false)
     protected String name;
     @Column(length = 4096, name = "Token", nullable = false)
     protected byte[] token;

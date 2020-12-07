@@ -6,6 +6,7 @@ import indi.sly.system.common.utility.StringUtils;
 import indi.sly.system.common.utility.UUIDUtils;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.types.StartupTypes;
+import indi.sly.system.kernel.core.enviroment.KernelConfiguration;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -115,7 +116,7 @@ public class SecurityTokenManager extends AManager {
     }
 
     public AccountObject createAccount(String accountName, String accountPassword) {
-        if (StringUtils.isNameIllegal(accountName) || StringUtils.isAnyNullOrEmpty(accountPassword)) {
+        if (StringUtils.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }
 
@@ -135,7 +136,10 @@ public class SecurityTokenManager extends AManager {
         account.setID(UUID.randomUUID());
         account.setName(accountName);
         account.setPassword(accountPassword);
-        account.setToken(ObjectUtils.transferToByteArray(new AccountGroupTokenDefinition()));
+        AccountGroupTokenDefinition accountGroupToken = new AccountGroupTokenDefinition();
+        KernelConfiguration kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+        accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
+        account.setToken(ObjectUtils.transferToByteArray(accountGroupToken));
 
         try {
             accountGroupRepository.getAccount(accountName);
@@ -168,7 +172,10 @@ public class SecurityTokenManager extends AManager {
         GroupEntity group = new GroupEntity();
         group.setID(UUID.randomUUID());
         group.setName(groupName);
-        group.setToken(ObjectUtils.transferToByteArray(new AccountGroupTokenDefinition()));
+        AccountGroupTokenDefinition accountGroupToken = new AccountGroupTokenDefinition();
+        KernelConfiguration kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+        accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
+        group.setToken(ObjectUtils.transferToByteArray(accountGroupToken));
 
         try {
             accountGroupRepository.getGroup(groupName);

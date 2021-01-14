@@ -1,11 +1,11 @@
 package indi.sly.system.kernel.memory.repositories.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.StatusAlreadyExistedException;
-import indi.sly.system.common.exceptions.StatusNotExistedException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
+import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -24,23 +24,23 @@ public class ProcessRepositoryObject extends ACorePrototype {
     private EntityManager entityManager;
 
     public boolean contain(UUID id) {
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
         ProcessEntity process = this.entityManager.find(ProcessEntity.class, id);
 
-        return ObjectUtils.isAnyNull(process);
+        return ObjectUtil.isAnyNull(process);
     }
 
     public ProcessEntity get(UUID id) {
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
         ProcessEntity process = this.entityManager.find(ProcessEntity.class, id);
 
-        if (ObjectUtils.isAnyNull(process)) {
+        if (ObjectUtil.isAnyNull(process)) {
             throw new StatusNotExistedException();
         }
 
@@ -48,7 +48,7 @@ public class ProcessRepositoryObject extends ACorePrototype {
     }
 
     public void add(ProcessEntity process) {
-        if (ObjectUtils.isAnyNull(process)) {
+        if (ObjectUtil.isAnyNull(process)) {
             throw new ConditionParametersException();
         }
 
@@ -60,7 +60,7 @@ public class ProcessRepositoryObject extends ACorePrototype {
     }
 
     public void delete(ProcessEntity process) {
-        if (ObjectUtils.isAnyNull(process)) {
+        if (ObjectUtil.isAnyNull(process)) {
             throw new ConditionParametersException();
         }
 
@@ -72,7 +72,7 @@ public class ProcessRepositoryObject extends ACorePrototype {
     }
 
     public void lock(ProcessEntity process, long lockType) {
-        if (ObjectUtils.isAnyNull(process)) {
+        if (ObjectUtil.isAnyNull(process)) {
             throw new ConditionParametersException();
         }
 

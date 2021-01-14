@@ -1,10 +1,10 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.exceptions.*;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.LogicalUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.*;
+import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
@@ -33,7 +33,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
     }
 
     private void checkStatusAndCurrentPermission() {
-        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.RUNNING,
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.RUNNING,
                 ProcessStatusTypes.DIED)) {
             throw new StatusRelationshipErrorException();
         }
@@ -69,11 +69,11 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
     }
 
     public synchronized void inherit(UUID handle) {
-        if (UUIDUtils.isAnyNullOrEmpty(handle)) {
+        if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION)
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
@@ -132,7 +132,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
     }
 
     public ProcessHandleInfoObject getInfo(InfoStatusDefinition status) {
-        if (ObjectUtils.isAnyNull(status)) {
+        if (ObjectUtil.isAnyNull(status)) {
             throw new ConditionParametersException();
         }
 

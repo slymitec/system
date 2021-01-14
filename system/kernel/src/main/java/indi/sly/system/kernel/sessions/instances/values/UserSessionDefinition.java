@@ -1,16 +1,16 @@
 package indi.sly.system.kernel.sessions.instances.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class UserSessionDefinition implements ISerializable<UserSessionDefinition> {
+public class UserSessionDefinition implements ISerializeCapable<UserSessionDefinition> {
     public UserSessionDefinition() {
         this.processIDs = new HashSet<>();
     }
@@ -80,29 +80,29 @@ public class UserSessionDefinition implements ISerializable<UserSessionDefinitio
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.type = NumberUtils.readExternalLong(in);
-        this.accountID = UUIDUtils.readExternal(in);
+        this.type = NumberUtil.readExternalLong(in);
+        this.accountID = UUIDUtil.readExternal(in);
 
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.processIDs.add(UUIDUtils.readExternal(in));
+            this.processIDs.add(UUIDUtil.readExternal(in));
         }
 
-        this.client = ObjectUtils.readExternal(in);
+        this.client = ObjectUtil.readExternal(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        NumberUtils.writeExternalLong(out, this.type);
-        UUIDUtils.writeExternal(out, this.accountID);
+        NumberUtil.writeExternalLong(out, this.type);
+        UUIDUtil.writeExternal(out, this.accountID);
 
-        NumberUtils.writeExternalInteger(out, this.processIDs.size());
+        NumberUtil.writeExternalInteger(out, this.processIDs.size());
         for (UUID pair : this.processIDs) {
-            UUIDUtils.writeExternal(out, pair);
+            UUIDUtil.writeExternal(out, pair);
         }
 
-        ObjectUtils.writeExternal(out, this.client);
+        ObjectUtil.writeExternal(out, this.client);
     }
 }

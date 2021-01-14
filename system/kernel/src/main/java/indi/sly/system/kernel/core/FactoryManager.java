@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.core;
 
-import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
-import indi.sly.system.common.functions.Provider;
-import indi.sly.system.common.utility.SpringUtils;
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.Provider;
+import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.enviroment.KernelSpace;
@@ -76,7 +76,7 @@ public class FactoryManager extends AManager {
     }
 
     public KernelSpace getKernelSpace() {
-        return SpringUtils.getInstance(KernelSpace.class);
+        return SpringHelper.getInstance(KernelSpace.class);
     }
 
     private Provider<UserSpace> userSpaceContainer;

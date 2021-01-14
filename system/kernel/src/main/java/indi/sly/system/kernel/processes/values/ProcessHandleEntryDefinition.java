@@ -1,9 +1,9 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 
 import java.io.IOException;
@@ -12,9 +12,9 @@ import java.io.ObjectOutput;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class ProcessHandleEntryDefinition implements ISerializable<ProcessHandleEntryDefinition> {
+public class ProcessHandleEntryDefinition implements ISerializeCapable<ProcessHandleEntryDefinition> {
     private final Map<Long, Long> date;
-    private final List<Identification> identifications;
+    private final List<IdentificationDefinition> identifications;
     private InfoStatusOpenDefinition open;
 
     public ProcessHandleEntryDefinition() {
@@ -26,7 +26,7 @@ public class ProcessHandleEntryDefinition implements ISerializable<ProcessHandle
         return this.date;
     }
 
-    public List<Identification> getIdentifications() {
+    public List<IdentificationDefinition> getIdentifications() {
         return this.identifications;
     }
 
@@ -73,29 +73,29 @@ public class ProcessHandleEntryDefinition implements ISerializable<ProcessHandle
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.date.put(NumberUtils.readExternalLong(in), NumberUtils.readExternalLong(in));
+            this.date.put(NumberUtil.readExternalLong(in), NumberUtil.readExternalLong(in));
         }
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.identifications.add(ObjectUtils.readExternal(in));
+            this.identifications.add(ObjectUtil.readExternal(in));
         }
-        this.open = ObjectUtils.readExternal(in);
+        this.open = ObjectUtil.readExternal(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         for (Entry<Long, Long> pair : this.date.entrySet()) {
-            NumberUtils.writeExternalLong(out, pair.getKey());
-            NumberUtils.writeExternalLong(out, pair.getValue());
+            NumberUtil.writeExternalLong(out, pair.getKey());
+            NumberUtil.writeExternalLong(out, pair.getValue());
         }
 
-        NumberUtils.writeExternalInteger(out, this.identifications.size());
-        for (Identification pair : this.identifications) {
-            ObjectUtils.writeExternal(out, pair);
+        NumberUtil.writeExternalInteger(out, this.identifications.size());
+        for (IdentificationDefinition pair : this.identifications) {
+            ObjectUtil.writeExternal(out, pair);
         }
 
-        ObjectUtils.writeExternal(out, this.open);
+        ObjectUtil.writeExternal(out, this.open);
     }
 }

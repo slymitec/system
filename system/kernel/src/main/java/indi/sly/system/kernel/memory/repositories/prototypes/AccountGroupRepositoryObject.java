@@ -1,12 +1,12 @@
 package indi.sly.system.kernel.memory.repositories.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.StatusAlreadyExistedException;
-import indi.sly.system.common.exceptions.StatusNotExistedException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
+import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
@@ -31,33 +31,33 @@ public class AccountGroupRepositoryObject extends ACorePrototype {
     private EntityManager entityManager;
 
     public boolean containAccount(UUID id) {
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
         AccountEntity account = this.entityManager.find(AccountEntity.class, id);
 
-        return ObjectUtils.isAnyNull(account);
+        return ObjectUtil.isAnyNull(account);
     }
 
     public boolean containGroup(UUID id) {
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
         GroupEntity group = this.entityManager.find(GroupEntity.class, id);
 
-        return ObjectUtils.isAnyNull(group);
+        return ObjectUtil.isAnyNull(group);
     }
 
     public AccountEntity getAccount(UUID id) {
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
         AccountEntity account = this.entityManager.find(AccountEntity.class, id);
 
-        if (ObjectUtils.isAnyNull(account)) {
+        if (ObjectUtil.isAnyNull(account)) {
             throw new StatusNotExistedException();
         }
 
@@ -65,7 +65,7 @@ public class AccountGroupRepositoryObject extends ACorePrototype {
     }
 
     public AccountEntity getAccount(String name) {
-        if (StringUtils.isNameIllegal(name)) {
+        if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
 
@@ -87,13 +87,13 @@ public class AccountGroupRepositoryObject extends ACorePrototype {
     }
 
     public GroupEntity getGroup(UUID id) {
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
         GroupEntity group = this.entityManager.find(GroupEntity.class, id);
 
-        if (ObjectUtils.isAnyNull(group)) {
+        if (ObjectUtil.isAnyNull(group)) {
             throw new StatusNotExistedException();
         }
 
@@ -101,7 +101,7 @@ public class AccountGroupRepositoryObject extends ACorePrototype {
     }
 
     public GroupEntity getGroup(String name) {
-        if (StringUtils.isNameIllegal(name)) {
+        if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
 
@@ -123,7 +123,7 @@ public class AccountGroupRepositoryObject extends ACorePrototype {
     }
 
     public void add(AccountEntity account) {
-        if (ObjectUtils.isAnyNull(account)) {
+        if (ObjectUtil.isAnyNull(account)) {
             throw new ConditionParametersException();
         }
 
@@ -135,7 +135,7 @@ public class AccountGroupRepositoryObject extends ACorePrototype {
     }
 
     public void add(GroupEntity group) {
-        if (ObjectUtils.isAnyNull(group)) {
+        if (ObjectUtil.isAnyNull(group)) {
             throw new ConditionParametersException();
         }
 
@@ -147,7 +147,7 @@ public class AccountGroupRepositoryObject extends ACorePrototype {
     }
 
     public void delete(AccountEntity account) {
-        if (ObjectUtils.isAnyNull(account)) {
+        if (ObjectUtil.isAnyNull(account)) {
             throw new ConditionParametersException();
         }
 
@@ -159,7 +159,7 @@ public class AccountGroupRepositoryObject extends ACorePrototype {
     }
 
     public void delete(GroupEntity group) {
-        if (ObjectUtils.isAnyNull(group)) {
+        if (ObjectUtil.isAnyNull(group)) {
             throw new ConditionParametersException();
         }
 
@@ -171,7 +171,7 @@ public class AccountGroupRepositoryObject extends ACorePrototype {
     }
 
     public void lock(AccountEntity account, long lockType) {
-        if (ObjectUtils.isAnyNull(account)) {
+        if (ObjectUtil.isAnyNull(account)) {
             throw new ConditionParametersException();
         }
 
@@ -188,7 +188,7 @@ public class AccountGroupRepositoryObject extends ACorePrototype {
     }
 
     public void lock(GroupEntity group, long lockType) {
-        if (ObjectUtils.isAnyNull(group)) {
+        if (ObjectUtil.isAnyNull(group)) {
             throw new ConditionParametersException();
         }
 

@@ -1,9 +1,9 @@
 package indi.sly.system.kernel.security;
 
-import indi.sly.system.common.exceptions.*;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.*;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.core.enviroment.KernelConfiguration;
@@ -54,7 +54,7 @@ public class SecurityTokenManager extends AManager {
         AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
 
         if (!processToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)
-                && !StringUtils.equals(account.getPassword(), accountPassword)) {
+                && !StringUtil.equals(account.getPassword(), accountPassword)) {
             throw new ConditionRefuseException();
         }
 
@@ -64,7 +64,7 @@ public class SecurityTokenManager extends AManager {
     }
 
     public AccountObject getAccount(UUID accountID) {
-        if (UUIDUtils.isAnyNullOrEmpty(accountID)) {
+        if (ValueUtil.isAnyNullOrEmpty(accountID)) {
             throw new ConditionParametersException();
         }
 
@@ -77,7 +77,7 @@ public class SecurityTokenManager extends AManager {
     }
 
     public AccountObject getAccount(String accountName) {
-        if (StringUtils.isNameIllegal(accountName)) {
+        if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }
 
@@ -90,7 +90,7 @@ public class SecurityTokenManager extends AManager {
     }
 
     public GroupObject getGroup(UUID groupID) {
-        if (UUIDUtils.isAnyNullOrEmpty(groupID)) {
+        if (ValueUtil.isAnyNullOrEmpty(groupID)) {
             throw new ConditionParametersException();
         }
 
@@ -103,7 +103,7 @@ public class SecurityTokenManager extends AManager {
     }
 
     public GroupObject getGroup(String groupName) {
-        if (StringUtils.isNameIllegal(groupName)) {
+        if (StringUtil.isNameIllegal(groupName)) {
             throw new ConditionParametersException();
         }
 
@@ -116,7 +116,7 @@ public class SecurityTokenManager extends AManager {
     }
 
     public AccountObject createAccount(String accountName, String accountPassword) {
-        if (StringUtils.isNameIllegal(accountName)) {
+        if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }
 
@@ -139,7 +139,7 @@ public class SecurityTokenManager extends AManager {
         AccountGroupTokenDefinition accountGroupToken = new AccountGroupTokenDefinition();
         KernelConfiguration kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
         accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
-        account.setToken(ObjectUtils.transferToByteArray(accountGroupToken));
+        account.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
 
         try {
             accountGroupRepository.getAccount(accountName);
@@ -153,7 +153,7 @@ public class SecurityTokenManager extends AManager {
     }
 
     public GroupObject createGroup(String groupName) {
-        if (StringUtils.isNameIllegal(groupName)) {
+        if (StringUtil.isNameIllegal(groupName)) {
             throw new ConditionParametersException();
         }
 
@@ -175,7 +175,7 @@ public class SecurityTokenManager extends AManager {
         AccountGroupTokenDefinition accountGroupToken = new AccountGroupTokenDefinition();
         KernelConfiguration kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
         accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
-        group.setToken(ObjectUtils.transferToByteArray(accountGroupToken));
+        group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
 
         try {
             accountGroupRepository.getGroup(groupName);
@@ -189,7 +189,7 @@ public class SecurityTokenManager extends AManager {
     }
 
     public void deleteAccount(UUID accountID) {
-        if (UUIDUtils.isAnyNullOrEmpty(accountID)) {
+        if (ValueUtil.isAnyNullOrEmpty(accountID)) {
             throw new ConditionParametersException();
         }
 
@@ -210,7 +210,7 @@ public class SecurityTokenManager extends AManager {
     }
 
     public void deleteGroup(UUID groupID) {
-        if (UUIDUtils.isAnyNullOrEmpty(groupID)) {
+        if (ValueUtil.isAnyNullOrEmpty(groupID)) {
             throw new ConditionParametersException();
         }
 

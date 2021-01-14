@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
-import indi.sly.system.common.functions.Consumer2;
-import indi.sly.system.common.functions.Function2;
+import indi.sly.system.common.lang.Consumer2;
+import indi.sly.system.common.lang.Function2;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessEntity;

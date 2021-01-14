@@ -1,9 +1,9 @@
 package indi.sly.system.kernel.processes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
@@ -43,7 +43,7 @@ public class ProcessManager extends AManager {
     }
 
     private ProcessObject getTargetProcess(UUID processID) {
-        if (UUIDUtils.isAnyNullOrEmpty(processID)) {
+        if (ValueUtil.isAnyNullOrEmpty(processID)) {
             throw new ConditionParametersException();
         }
 
@@ -77,7 +77,7 @@ public class ProcessManager extends AManager {
     }
 
     public ProcessObject getProcess(UUID processID, AccountAuthorizationObject accountAuthorization) {
-        if (UUIDUtils.isAnyNullOrEmpty(processID)) {
+        if (ValueUtil.isAnyNullOrEmpty(processID)) {
             throw new ConditionParametersException();
         }
 
@@ -92,7 +92,7 @@ public class ProcessManager extends AManager {
 
         if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
                 && (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)
-                && !(ObjectUtils.allNotNull(accountAuthorization)
+                && !(ObjectUtil.allNotNull(accountAuthorization)
                 && accountAuthorization.checkAndGetResult().getAccountID().equals(processToken.getAccountID())))) {
             throw new ConditionPermissionsException();
         }
@@ -108,11 +108,11 @@ public class ProcessManager extends AManager {
         process.setParentProcessID(currentProcess.getID());
         process.setSessionID(currentProcess.getSessionID());
         ProcessHandleTableDefinition processHandleTable = new ProcessHandleTableDefinition();
-        process.setHandleTable(ObjectUtils.transferToByteArray(processHandleTable));
+        process.setHandleTable(ObjectUtil.transferToByteArray(processHandleTable));
         ProcessStatisticsDefinition processStatistics = new ProcessStatisticsDefinition();
-        process.setStatistics(ObjectUtils.transferToByteArray(processStatistics));
+        process.setStatistics(ObjectUtil.transferToByteArray(processStatistics));
         ProcessTokenDefinition processToken = new ProcessTokenDefinition();
-        process.setToken(ObjectUtils.transferToByteArray(processToken));
+        process.setToken(ObjectUtil.transferToByteArray(processToken));
 
 
         //...

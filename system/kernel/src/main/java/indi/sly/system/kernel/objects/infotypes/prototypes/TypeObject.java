@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
-import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
 
@@ -12,7 +12,7 @@ public class TypeObject extends ACorePrototype {
     private TypeDefinition type;
 
     public void setType(TypeDefinition type) {
-        if (ObjectUtils.isAnyNull(this.type)) {
+        if (ObjectUtil.isAnyNull(this.type)) {
             this.type = type;
         }
     }

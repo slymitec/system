@@ -1,12 +1,12 @@
 package indi.sly.system.kernel.sessions.instances.values;
 
-import indi.sly.system.common.support.ISerializable;
+import indi.sly.system.common.lang.ISerializeCapable;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-public class ClientDefinition implements ISerializable<ClientDefinition> {
+public class ClientDefinition implements ISerializeCapable<ClientDefinition> {
     public ClientDefinition() {
     }
 

@@ -1,14 +1,14 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.functions.Consumer4;
-import indi.sly.system.common.functions.Function4;
-import indi.sly.system.common.functions.Function6;
-import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.lang.Consumer4;
+import indi.sly.system.common.lang.Function4;
+import indi.sly.system.common.lang.Function6;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoProcessorRegister;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
@@ -30,9 +30,9 @@ public class DateProcessor extends ACorePrototype implements IInfoObjectProcesso
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
-            Map<Long, Long> date = ObjectUtils.transferFromByteArray(info.getDate());
+            Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
             date.put(DateTimeTypes.ACCESS, nowDateTime);
-            info.setDate(ObjectUtils.transferToByteArray(date));
+            info.setDate(ObjectUtil.transferToByteArray(date));
 
             return handle;
         };
@@ -46,7 +46,7 @@ public class DateProcessor extends ACorePrototype implements IInfoObjectProcesso
             date.put(DateTimeTypes.CREATE, nowDateTime);
             date.put(DateTimeTypes.MODIFIED, nowDateTime);
             date.put(DateTimeTypes.ACCESS, nowDateTime);
-            childInfo.setDate(ObjectUtils.transferToByteArray(date));
+            childInfo.setDate(ObjectUtil.transferToByteArray(date));
 
             return childInfo;
         };
@@ -56,9 +56,9 @@ public class DateProcessor extends ACorePrototype implements IInfoObjectProcesso
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
-            Map<Long, Long> date = ObjectUtils.transferFromByteArray(info.getDate());
+            Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
             date.put(DateTimeTypes.ACCESS, nowDateTime);
-            info.setDate(ObjectUtils.transferToByteArray(date));
+            info.setDate(ObjectUtil.transferToByteArray(date));
 
             return content;
         };
@@ -68,14 +68,14 @@ public class DateProcessor extends ACorePrototype implements IInfoObjectProcesso
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
-            Map<Long, Long> date = ObjectUtils.transferFromByteArray(info.getDate());
+            Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
             date.put(DateTimeTypes.MODIFIED, nowDateTime);
-            info.setDate(ObjectUtils.transferToByteArray(date));
+            info.setDate(ObjectUtil.transferToByteArray(date));
         };
     }
 
     private final Function6<UUID, UUID, InfoEntity, TypeObject, InfoStatusDefinition, Long, Object[]> open;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID, Identification> createChildAndOpen;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID, IdentificationDefinition> createChildAndOpen;
     private final Function4<byte[], byte[], InfoEntity, TypeObject, InfoStatusDefinition> readContent;
     private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, byte[]> writeContent;
 

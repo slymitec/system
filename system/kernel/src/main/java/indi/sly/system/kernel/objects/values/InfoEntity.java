@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.objects.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.*;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.*;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "KernelInfos")
-public class InfoEntity implements ISerializable<InfoEntity> {
+public class InfoEntity implements ISerializeCapable<InfoEntity> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -151,37 +151,37 @@ public class InfoEntity implements ISerializable<InfoEntity> {
         entity.occupied = this.occupied;
         entity.opened = this.opened;
         entity.name = this.name;
-        entity.date = ArrayUtils.copyBytes(this.date);
-        entity.securityDescriptor = ArrayUtils.copyBytes(this.securityDescriptor);
-        entity.properties = ArrayUtils.copyBytes(this.properties);
-        entity.content = ArrayUtils.copyBytes(this.content);
+        entity.date = ArrayUtil.copyBytes(this.date);
+        entity.securityDescriptor = ArrayUtil.copyBytes(this.securityDescriptor);
+        entity.properties = ArrayUtil.copyBytes(this.properties);
+        entity.content = ArrayUtil.copyBytes(this.content);
 
         return entity;
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.id = UUIDUtils.readExternal(in);
-        this.type = UUIDUtils.readExternal(in);
-        this.occupied = NumberUtils.readExternalLong(in);
-        this.opened = NumberUtils.readExternalLong(in);
-        this.name = StringUtils.readExternal(in);
-        this.date = NumberUtils.readExternalBytes(in);
-        this.securityDescriptor = NumberUtils.readExternalBytes(in);
-        this.properties = NumberUtils.readExternalBytes(in);
-        this.content = NumberUtils.readExternalBytes(in);
+        this.id = UUIDUtil.readExternal(in);
+        this.type = UUIDUtil.readExternal(in);
+        this.occupied = NumberUtil.readExternalLong(in);
+        this.opened = NumberUtil.readExternalLong(in);
+        this.name = StringUtil.readExternal(in);
+        this.date = NumberUtil.readExternalBytes(in);
+        this.securityDescriptor = NumberUtil.readExternalBytes(in);
+        this.properties = NumberUtil.readExternalBytes(in);
+        this.content = NumberUtil.readExternalBytes(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.id);
-        UUIDUtils.writeExternal(out, this.type);
-        NumberUtils.writeExternalLong(out, this.occupied);
-        NumberUtils.writeExternalLong(out, this.opened);
-        StringUtils.writeExternal(out, this.name);
-        NumberUtils.writeExternalBytes(out, this.date);
-        NumberUtils.writeExternalBytes(out, this.securityDescriptor);
-        NumberUtils.writeExternalBytes(out, this.properties);
-        NumberUtils.writeExternalBytes(out, this.content);
+        UUIDUtil.writeExternal(out, this.id);
+        UUIDUtil.writeExternal(out, this.type);
+        NumberUtil.writeExternalLong(out, this.occupied);
+        NumberUtil.writeExternalLong(out, this.opened);
+        StringUtil.writeExternal(out, this.name);
+        NumberUtil.writeExternalBytes(out, this.date);
+        NumberUtil.writeExternalBytes(out, this.securityDescriptor);
+        NumberUtil.writeExternalBytes(out, this.properties);
+        NumberUtil.writeExternalBytes(out, this.content);
     }
 }

@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class ProcessStatisticsDefinition implements ISerializable<ProcessStatisticsDefinition> {
+public class ProcessStatisticsDefinition implements ISerializeCapable<ProcessStatisticsDefinition> {
     public ProcessStatisticsDefinition() {
         this.date = new HashMap<>();
     }
@@ -451,82 +451,82 @@ public class ProcessStatisticsDefinition implements ISerializable<ProcessStatist
     public void readExternal(ObjectInput in) throws IOException {
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.date.put(NumberUtils.readExternalLong(in), NumberUtils.readExternalLong(in));
+            this.date.put(NumberUtil.readExternalLong(in), NumberUtil.readExternalLong(in));
         }
 
-        this.statusCumulation = NumberUtils.readExternalLong(in);
-        this.threadCumulation = NumberUtils.readExternalLong(in);
+        this.statusCumulation = NumberUtil.readExternalLong(in);
+        this.threadCumulation = NumberUtil.readExternalLong(in);
 
-        this.infoCreate = NumberUtils.readExternalLong(in);
-        this.infoGet = NumberUtils.readExternalLong(in);
-        this.infoQuery = NumberUtils.readExternalLong(in);
-        this.infoDelete = NumberUtils.readExternalLong(in);
-        this.infoDump = NumberUtils.readExternalLong(in);
-        this.infoOpen = NumberUtils.readExternalLong(in);
-        this.infoClose = NumberUtils.readExternalLong(in);
-        this.infoRead = NumberUtils.readExternalLong(in);
-        this.infoWrite = NumberUtils.readExternalLong(in);
+        this.infoCreate = NumberUtil.readExternalLong(in);
+        this.infoGet = NumberUtil.readExternalLong(in);
+        this.infoQuery = NumberUtil.readExternalLong(in);
+        this.infoDelete = NumberUtil.readExternalLong(in);
+        this.infoDump = NumberUtil.readExternalLong(in);
+        this.infoOpen = NumberUtil.readExternalLong(in);
+        this.infoClose = NumberUtil.readExternalLong(in);
+        this.infoRead = NumberUtil.readExternalLong(in);
+        this.infoWrite = NumberUtil.readExternalLong(in);
 
-        this.sharedReadCount = NumberUtils.readExternalLong(in);
-        this.sharedReadBytes = NumberUtils.readExternalLong(in);
-        this.sharedWriteCount = NumberUtils.readExternalLong(in);
-        this.sharedWriteBytes = NumberUtils.readExternalLong(in);
-        this.portCount = NumberUtils.readExternalLong(in);
-        this.portReadCount = NumberUtils.readExternalLong(in);
-        this.portReadBytes = NumberUtils.readExternalLong(in);
-        this.portWriteCount = NumberUtils.readExternalLong(in);
-        this.portWriteBytes = NumberUtils.readExternalLong(in);
-        this.signalReadCount = NumberUtils.readExternalLong(in);
-        this.signalWriteCount = NumberUtils.readExternalLong(in);
+        this.sharedReadCount = NumberUtil.readExternalLong(in);
+        this.sharedReadBytes = NumberUtil.readExternalLong(in);
+        this.sharedWriteCount = NumberUtil.readExternalLong(in);
+        this.sharedWriteBytes = NumberUtil.readExternalLong(in);
+        this.portCount = NumberUtil.readExternalLong(in);
+        this.portReadCount = NumberUtil.readExternalLong(in);
+        this.portReadBytes = NumberUtil.readExternalLong(in);
+        this.portWriteCount = NumberUtil.readExternalLong(in);
+        this.portWriteBytes = NumberUtil.readExternalLong(in);
+        this.signalReadCount = NumberUtil.readExternalLong(in);
+        this.signalWriteCount = NumberUtil.readExternalLong(in);
 
-        this.ioCreate = NumberUtils.readExternalLong(in);
-        this.ioStatus = NumberUtils.readExternalLong(in);
-        this.ioReadCount = NumberUtils.readExternalLong(in);
-        this.ioReadBytes = NumberUtils.readExternalLong(in);
-        this.ioWriteCount = NumberUtils.readExternalLong(in);
-        this.ioWriteBytes = NumberUtils.readExternalLong(in);
+        this.ioCreate = NumberUtil.readExternalLong(in);
+        this.ioStatus = NumberUtil.readExternalLong(in);
+        this.ioReadCount = NumberUtil.readExternalLong(in);
+        this.ioReadBytes = NumberUtil.readExternalLong(in);
+        this.ioWriteCount = NumberUtil.readExternalLong(in);
+        this.ioWriteBytes = NumberUtil.readExternalLong(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        NumberUtils.writeExternalInteger(out, this.date.size());
+        NumberUtil.writeExternalInteger(out, this.date.size());
         for (Map.Entry<Long, Long> pair : this.date.entrySet()) {
-            NumberUtils.writeExternalLong(out, pair.getKey());
-            NumberUtils.writeExternalLong(out, pair.getValue());
+            NumberUtil.writeExternalLong(out, pair.getKey());
+            NumberUtil.writeExternalLong(out, pair.getValue());
         }
 
-        NumberUtils.writeExternalLong(out, this.statusCumulation);
-        NumberUtils.writeExternalLong(out, this.threadCumulation);
+        NumberUtil.writeExternalLong(out, this.statusCumulation);
+        NumberUtil.writeExternalLong(out, this.threadCumulation);
 
-        NumberUtils.writeExternalLong(out, this.infoCreate);
-        NumberUtils.writeExternalLong(out, this.infoGet);
-        NumberUtils.writeExternalLong(out, this.infoQuery);
-        NumberUtils.writeExternalLong(out, this.infoDelete);
-        NumberUtils.writeExternalLong(out, this.infoDump);
-        NumberUtils.writeExternalLong(out, this.infoOpen);
-        NumberUtils.writeExternalLong(out, this.infoClose);
-        NumberUtils.writeExternalLong(out, this.infoRead);
-        NumberUtils.writeExternalLong(out, this.infoWrite);
+        NumberUtil.writeExternalLong(out, this.infoCreate);
+        NumberUtil.writeExternalLong(out, this.infoGet);
+        NumberUtil.writeExternalLong(out, this.infoQuery);
+        NumberUtil.writeExternalLong(out, this.infoDelete);
+        NumberUtil.writeExternalLong(out, this.infoDump);
+        NumberUtil.writeExternalLong(out, this.infoOpen);
+        NumberUtil.writeExternalLong(out, this.infoClose);
+        NumberUtil.writeExternalLong(out, this.infoRead);
+        NumberUtil.writeExternalLong(out, this.infoWrite);
 
-        NumberUtils.writeExternalLong(out, this.sharedReadCount);
-        NumberUtils.writeExternalLong(out, this.sharedReadBytes);
-        NumberUtils.writeExternalLong(out, this.sharedWriteCount);
-        NumberUtils.writeExternalLong(out, this.sharedWriteBytes);
-        NumberUtils.writeExternalLong(out, this.portCount);
-        NumberUtils.writeExternalLong(out, this.portReadCount);
-        NumberUtils.writeExternalLong(out, this.portReadBytes);
-        NumberUtils.writeExternalLong(out, this.portWriteCount);
-        NumberUtils.writeExternalLong(out, this.portWriteBytes);
-        NumberUtils.writeExternalLong(out, this.signalReadCount);
-        NumberUtils.writeExternalLong(out, this.signalWriteCount);
+        NumberUtil.writeExternalLong(out, this.sharedReadCount);
+        NumberUtil.writeExternalLong(out, this.sharedReadBytes);
+        NumberUtil.writeExternalLong(out, this.sharedWriteCount);
+        NumberUtil.writeExternalLong(out, this.sharedWriteBytes);
+        NumberUtil.writeExternalLong(out, this.portCount);
+        NumberUtil.writeExternalLong(out, this.portReadCount);
+        NumberUtil.writeExternalLong(out, this.portReadBytes);
+        NumberUtil.writeExternalLong(out, this.portWriteCount);
+        NumberUtil.writeExternalLong(out, this.portWriteBytes);
+        NumberUtil.writeExternalLong(out, this.signalReadCount);
+        NumberUtil.writeExternalLong(out, this.signalWriteCount);
 
-        NumberUtils.writeExternalLong(out, this.ioCreate);
-        NumberUtils.writeExternalLong(out, this.ioStatus);
-        NumberUtils.writeExternalLong(out, this.ioReadCount);
-        NumberUtils.writeExternalLong(out, this.ioReadBytes);
-        NumberUtils.writeExternalLong(out, this.ioWriteCount);
-        NumberUtils.writeExternalLong(out, this.ioWriteBytes);
+        NumberUtil.writeExternalLong(out, this.ioCreate);
+        NumberUtil.writeExternalLong(out, this.ioStatus);
+        NumberUtil.writeExternalLong(out, this.ioReadCount);
+        NumberUtil.writeExternalLong(out, this.ioReadBytes);
+        NumberUtil.writeExternalLong(out, this.ioWriteCount);
+        NumberUtil.writeExternalLong(out, this.ioWriteBytes);
     }
 }

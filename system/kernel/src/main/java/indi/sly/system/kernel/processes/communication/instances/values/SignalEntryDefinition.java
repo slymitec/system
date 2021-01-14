@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.processes.communication.instances.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class SignalEntryDefinition implements ISerializable<SignalEntryDefinition> {
+public class SignalEntryDefinition implements ISerializeCapable<SignalEntryDefinition> {
     public SignalEntryDefinition() {
         this.date = new HashMap<>();
     }
@@ -85,28 +85,28 @@ public class SignalEntryDefinition implements ISerializable<SignalEntryDefinitio
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.source = UUIDUtils.readExternal(in);
-        this.key = NumberUtils.readExternalLong(in);
-        this.value = NumberUtils.readExternalLong(in);
+        this.source = UUIDUtil.readExternal(in);
+        this.key = NumberUtil.readExternalLong(in);
+        this.value = NumberUtil.readExternalLong(in);
 
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.date.put(NumberUtils.readExternalLong(in), NumberUtils.readExternalLong(in));
+            this.date.put(NumberUtil.readExternalLong(in), NumberUtil.readExternalLong(in));
         }
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.source);
-        NumberUtils.writeExternalLong(out, this.key);
-        NumberUtils.writeExternalLong(out, this.value);
+        UUIDUtil.writeExternal(out, this.source);
+        NumberUtil.writeExternalLong(out, this.key);
+        NumberUtil.writeExternalLong(out, this.value);
 
-        NumberUtils.writeExternalInteger(out, this.date.size());
+        NumberUtil.writeExternalInteger(out, this.date.size());
         for (Map.Entry<Long, Long> pair : this.date.entrySet()) {
-            NumberUtils.writeExternalLong(out, pair.getKey());
-            NumberUtils.writeExternalLong(out, pair.getValue());
+            NumberUtil.writeExternalLong(out, pair.getKey());
+            NumberUtil.writeExternalLong(out, pair.getValue());
         }
     }
 }

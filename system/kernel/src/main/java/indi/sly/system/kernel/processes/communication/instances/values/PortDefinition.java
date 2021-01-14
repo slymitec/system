@@ -1,20 +1,20 @@
 package indi.sly.system.kernel.processes.communication.instances.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.ArrayUtils;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.ArrayUtil;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class PortDefinition implements ISerializable<PortDefinition> {
+public class PortDefinition implements ISerializeCapable<PortDefinition> {
     public PortDefinition() {
         this.sourceProcessIDs = new HashSet<>();
-        this.value = ArrayUtils.EMPTY_BYTES;
+        this.value = ArrayUtil.EMPTY_BYTES;
     }
 
     private UUID processID;
@@ -43,8 +43,8 @@ public class PortDefinition implements ISerializable<PortDefinition> {
     }
 
     public void setValue(byte[] value) {
-        if (ObjectUtils.isAnyNull(value)) {
-            this.value = ArrayUtils.EMPTY_BYTES;
+        if (ObjectUtil.isAnyNull(value)) {
+            this.value = ArrayUtil.EMPTY_BYTES;
         } else {
             this.value = value;
         }
@@ -87,7 +87,7 @@ public class PortDefinition implements ISerializable<PortDefinition> {
 
         signal.processID = this.processID;
         signal.sourceProcessIDs.addAll(this.sourceProcessIDs);
-        signal.value = ArrayUtils.copyBytes(this.value);
+        signal.value = ArrayUtil.copyBytes(this.value);
         signal.limit = this.limit;
 
         return signal;
@@ -95,29 +95,29 @@ public class PortDefinition implements ISerializable<PortDefinition> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.processID = UUIDUtils.readExternal(in);
+        this.processID = UUIDUtil.readExternal(in);
 
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.sourceProcessIDs.add(UUIDUtils.readExternal(in));
+            this.sourceProcessIDs.add(UUIDUtil.readExternal(in));
         }
 
-        this.value = NumberUtils.readExternalBytes(in);
-        this.limit = NumberUtils.readExternalInteger(in);
+        this.value = NumberUtil.readExternalBytes(in);
+        this.limit = NumberUtil.readExternalInteger(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.processID);
+        UUIDUtil.writeExternal(out, this.processID);
 
-        NumberUtils.writeExternalInteger(out, this.sourceProcessIDs.size());
+        NumberUtil.writeExternalInteger(out, this.sourceProcessIDs.size());
         for (UUID pair : this.sourceProcessIDs) {
-            UUIDUtils.writeExternal(out, pair);
+            UUIDUtil.writeExternal(out, pair);
         }
 
-        NumberUtils.writeExternalBytes(out, this.value);
-        NumberUtils.writeExternalLong(out, this.limit);
+        NumberUtil.writeExternalBytes(out, this.value);
+        NumberUtil.writeExternalLong(out, this.limit);
     }
 }

@@ -1,9 +1,9 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.ArrayUtils;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.ArrayUtil;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "KernelProcesses")
-public class ProcessEntity implements ISerializable<ProcessEntity> {
+public class ProcessEntity implements ISerializeCapable<ProcessEntity> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -153,38 +153,38 @@ public class ProcessEntity implements ISerializable<ProcessEntity> {
         process.status = this.status;
         process.parentProcessID = this.parentProcessID;
         process.sessionID = this.sessionID;
-        process.communication = ArrayUtils.copyBytes(this.communication);
-        process.context = ArrayUtils.copyBytes(this.context);
-        process.handleTable = ArrayUtils.copyBytes(this.handleTable);
-        process.statistics = ArrayUtils.copyBytes(this.statistics);
-        process.token = ArrayUtils.copyBytes(this.token);
+        process.communication = ArrayUtil.copyBytes(this.communication);
+        process.context = ArrayUtil.copyBytes(this.context);
+        process.handleTable = ArrayUtil.copyBytes(this.handleTable);
+        process.statistics = ArrayUtil.copyBytes(this.statistics);
+        process.token = ArrayUtil.copyBytes(this.token);
 
         return process;
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.id = UUIDUtils.readExternal(in);
-        this.status = NumberUtils.readExternalLong(in);
-        this.parentProcessID = UUIDUtils.readExternal(in);
-        this.sessionID = UUIDUtils.readExternal(in);
-        this.communication = NumberUtils.readExternalBytes(in);
-        this.context = NumberUtils.readExternalBytes(in);
-        this.handleTable = NumberUtils.readExternalBytes(in);
-        this.statistics = NumberUtils.readExternalBytes(in);
-        this.token = NumberUtils.readExternalBytes(in);
+        this.id = UUIDUtil.readExternal(in);
+        this.status = NumberUtil.readExternalLong(in);
+        this.parentProcessID = UUIDUtil.readExternal(in);
+        this.sessionID = UUIDUtil.readExternal(in);
+        this.communication = NumberUtil.readExternalBytes(in);
+        this.context = NumberUtil.readExternalBytes(in);
+        this.handleTable = NumberUtil.readExternalBytes(in);
+        this.statistics = NumberUtil.readExternalBytes(in);
+        this.token = NumberUtil.readExternalBytes(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.id);
-        NumberUtils.writeExternalLong(out, this.status);
-        UUIDUtils.writeExternal(out, this.parentProcessID);
-        UUIDUtils.writeExternal(out, this.sessionID);
-        NumberUtils.writeExternalBytes(out, this.communication);
-        NumberUtils.writeExternalBytes(out, this.context);
-        NumberUtils.writeExternalBytes(out, this.handleTable);
-        NumberUtils.writeExternalBytes(out, this.statistics);
-        NumberUtils.writeExternalBytes(out, this.token);
+        UUIDUtil.writeExternal(out, this.id);
+        NumberUtil.writeExternalLong(out, this.status);
+        UUIDUtil.writeExternal(out, this.parentProcessID);
+        UUIDUtil.writeExternal(out, this.sessionID);
+        NumberUtil.writeExternalBytes(out, this.communication);
+        NumberUtil.writeExternalBytes(out, this.context);
+        NumberUtil.writeExternalBytes(out, this.handleTable);
+        NumberUtil.writeExternalBytes(out, this.statistics);
+        NumberUtil.writeExternalBytes(out, this.token);
     }
 }

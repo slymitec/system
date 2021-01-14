@@ -1,12 +1,12 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.support.ISerializable;
+import indi.sly.system.common.lang.ISerializeCapable;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-public class ThreadContextDefinition implements ISerializable<ThreadContextDefinition> {
+public class ThreadContextDefinition implements ISerializeCapable<ThreadContextDefinition> {
     private String command;
     private int offset;
 

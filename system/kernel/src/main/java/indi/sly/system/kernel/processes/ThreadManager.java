@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes;
 
-import indi.sly.system.common.exceptions.StatusNotReadyException;
-import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.lang.StatusNotReadyException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.enviroment.UserSpace;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
@@ -17,7 +17,7 @@ public class ThreadManager extends AManager {
         UserSpace userSpace = this.factoryManager.getUserSpace();
         ThreadObject thread = userSpace.getThread();
 
-        if (ObjectUtils.isAnyNull(thread)) {
+        if (ObjectUtil.isAnyNull(thread)) {
             throw new StatusNotReadyException();
         }
 

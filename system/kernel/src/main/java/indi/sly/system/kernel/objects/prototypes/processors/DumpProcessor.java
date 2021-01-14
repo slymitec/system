@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.functions.*;
+import indi.sly.system.common.lang.Function4;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;

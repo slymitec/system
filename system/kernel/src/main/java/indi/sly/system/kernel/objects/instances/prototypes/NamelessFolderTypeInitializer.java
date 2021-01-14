@@ -1,14 +1,15 @@
 package indi.sly.system.kernel.objects.instances.prototypes;
 
-import indi.sly.system.common.exceptions.StatusAlreadyExistedException;
-import indi.sly.system.common.exceptions.StatusNotExistedException;
-import indi.sly.system.common.exceptions.StatusNotReadyException;
-import indi.sly.system.common.exceptions.StatusNotSupportedException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
+import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.lang.StatusNotReadyException;
+import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoRelationEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
@@ -75,7 +76,7 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
 
     @Override
     public void createChildProcedure(InfoEntity info, InfoEntity childInfo) {
-        if (UUIDUtils.isAnyNullOrEmpty(childInfo.getID())) {
+        if (ValueUtil.isAnyNullOrEmpty(childInfo.getID())) {
             throw new StatusNotSupportedException();
         }
 
@@ -105,7 +106,7 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, Identification identification) {
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification) {
         if (identification.getType() != String.class) {
             throw new StatusNotSupportedException();
         }
@@ -114,7 +115,7 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
         AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        UUID childID = UUIDUtils.readFormBytes(identification.getID());
+        UUID childID = UUIDUtil.readFormBytes(identification.getID());
 
         List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
         for (InfoRelationEntity infoRelation : infoRelations) {
@@ -156,13 +157,13 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public void renameChildProcedure(InfoEntity info, Identification oldIdentification,
-                                     Identification newIdentification) {
+    public void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification,
+                                     IdentificationDefinition newIdentification) {
         throw new StatusNotSupportedException();
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, Identification identification) {
+    public void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification) {
         if (identification.getType() != String.class) {
             throw new StatusNotSupportedException();
         }
@@ -173,7 +174,7 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
 
         this.lockProcedure(info, LockTypes.WRITE);
 
-        UUID childID = UUIDUtils.readFormBytes(identification.getID());
+        UUID childID = UUIDUtil.readFormBytes(identification.getID());
 
         List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
         for (InfoRelationEntity infoRelation : infoRelations) {

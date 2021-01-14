@@ -1,13 +1,13 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.functions.Consumer3;
-import indi.sly.system.common.functions.Function6;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.Consumer3;
+import indi.sly.system.common.lang.Function6;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.InfoProcessorRegister;
@@ -48,13 +48,13 @@ public class OpenOrCloseProcessor extends ACorePrototype implements IInfoObjectP
             info.setOpened(info.getOpened() - 1);
             info.setOccupied(info.getOccupied() - 1);
 
-            if (!UUIDUtils.isAnyNullOrEmpty(status.getParentID())) {
+            if (!ValueUtil.isAnyNullOrEmpty(status.getParentID())) {
                 if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.TEMPORARY) && info.getOpened() <= 0) {
-                    Identification identification;
-                    if (StringUtils.isNameIllegal(info.getName())) {
-                        identification = new Identification(info.getName());
+                    IdentificationDefinition identification;
+                    if (StringUtil.isNameIllegal(info.getName())) {
+                        identification = new IdentificationDefinition(info.getName());
                     } else {
-                        identification = new Identification(info.getID());
+                        identification = new IdentificationDefinition(info.getID());
                     }
 
                     InfoCacheObject infoObject = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL, InfoCacheObject.class);

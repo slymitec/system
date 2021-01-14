@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.processes.communication.instances.prototypes;
 
-import indi.sly.system.common.exceptions.StatusNotSupportedException;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
@@ -49,7 +49,7 @@ public class PortTypeInitializer extends ATypeInitializer {
         port.setProcessID(process.getID());
         port.setLimit(processToken.getLimits().get(ProcessTokenLimitTypes.PORT_LENGTH_MAX));
 
-        info.setContent(ObjectUtils.transferToByteArray(port));
+        info.setContent(ObjectUtil.transferToByteArray(port));
     }
 
     @Override
@@ -79,7 +79,7 @@ public class PortTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, Identification identification) {
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification) {
         throw new StatusNotSupportedException();
     }
 
@@ -89,13 +89,13 @@ public class PortTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public void renameChildProcedure(InfoEntity info, Identification oldIdentification,
-                                     Identification newIdentification) {
+    public void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification,
+                                     IdentificationDefinition newIdentification) {
         throw new StatusNotSupportedException();
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, Identification identification) {
+    public void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification) {
         throw new StatusNotSupportedException();
     }
 

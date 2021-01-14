@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.objects.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "KernelInfoRelations")
-public class InfoRelationEntity implements ISerializable<InfoRelationEntity> {
+public class InfoRelationEntity implements ISerializeCapable<InfoRelationEntity> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -96,17 +96,17 @@ public class InfoRelationEntity implements ISerializable<InfoRelationEntity> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.id = UUIDUtils.readExternal(in);
-        this.parentID = UUIDUtils.readExternal(in);
-        this.type = UUIDUtils.readExternal(in);
-        this.name = StringUtils.readExternal(in);
+        this.id = UUIDUtil.readExternal(in);
+        this.parentID = UUIDUtil.readExternal(in);
+        this.type = UUIDUtil.readExternal(in);
+        this.name = StringUtil.readExternal(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.id);
-        UUIDUtils.writeExternal(out, this.parentID);
-        UUIDUtils.writeExternal(out, this.type);
-        StringUtils.writeExternal(out, this.name);
+        UUIDUtil.writeExternal(out, this.id);
+        UUIDUtil.writeExternal(out, this.parentID);
+        UUIDUtil.writeExternal(out, this.type);
+        StringUtil.writeExternal(out, this.name);
     }
 }

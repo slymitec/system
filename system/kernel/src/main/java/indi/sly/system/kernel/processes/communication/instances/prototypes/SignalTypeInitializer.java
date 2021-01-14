@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.processes.communication.instances.prototypes;
 
-import indi.sly.system.common.exceptions.StatusNotSupportedException;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
@@ -48,7 +48,7 @@ public class SignalTypeInitializer extends ATypeInitializer {
         signal.setProcessID(process.getID());
         signal.setLimit(processToken.getLimits().get(ProcessTokenLimitTypes.SIGNAL_LENGTH_MAX));
 
-        info.setContent(ObjectUtils.transferToByteArray(signal));
+        info.setContent(ObjectUtil.transferToByteArray(signal));
     }
 
     @Override
@@ -78,7 +78,7 @@ public class SignalTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, Identification identification) {
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification) {
         throw new StatusNotSupportedException();
     }
 
@@ -88,13 +88,13 @@ public class SignalTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public void renameChildProcedure(InfoEntity info, Identification oldIdentification,
-                                     Identification newIdentification) {
+    public void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification,
+                                     IdentificationDefinition newIdentification) {
         throw new StatusNotSupportedException();
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, Identification identification) {
+    public void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification) {
         throw new StatusNotSupportedException();
     }
 

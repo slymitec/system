@@ -1,10 +1,10 @@
 package indi.sly.system.kernel.security.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.ArrayUtils;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.ArrayUtil;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "KernelGroups")
-public class GroupEntity implements ISerializable<GroupEntity> {
+public class GroupEntity implements ISerializeCapable<GroupEntity> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -80,23 +80,23 @@ public class GroupEntity implements ISerializable<GroupEntity> {
 
         group.id = this.id;
         group.name = this.name;
-        group.token = ArrayUtils.copyBytes(this.token);
+        group.token = ArrayUtil.copyBytes(this.token);
 
         return group;
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.id = UUIDUtils.readExternal(in);
-        this.name = StringUtils.readExternal(in);
-        this.token = NumberUtils.readExternalBytes(in);
+        this.id = UUIDUtil.readExternal(in);
+        this.name = StringUtil.readExternal(in);
+        this.token = NumberUtil.readExternalBytes(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.id);
-        StringUtils.writeExternal(out, this.name);
-        NumberUtils.writeExternalBytes(out, this.token);
+        UUIDUtil.writeExternal(out, this.id);
+        StringUtil.writeExternal(out, this.name);
+        NumberUtil.writeExternalBytes(out, this.token);
     }
 }
 

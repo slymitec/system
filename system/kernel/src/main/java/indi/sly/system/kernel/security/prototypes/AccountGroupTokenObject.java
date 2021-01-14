@@ -1,9 +1,9 @@
 package indi.sly.system.kernel.security.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -44,7 +44,7 @@ public class AccountGroupTokenObject extends ABytesValueProcessPrototype<Account
     }
 
     public void setLimits(Map<Long, Integer> limits) {
-        if (ObjectUtils.isAnyNull(limits)) {
+        if (ObjectUtil.isAnyNull(limits)) {
             throw new ConditionParametersException();
         }
 

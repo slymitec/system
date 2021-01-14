@@ -16,10 +16,10 @@ import indi.sly.system.kernel.objects.types.InfoStatusOpenAttributeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.StringUtils;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.processors.IInfoObjectProcessor;
@@ -88,18 +88,18 @@ public class InfoFactory extends ACorePrototype {
         UUID poolID = type.getTypeInitializer().getPoolID(info.getID(), info.getType());
 
         InfoStatusDefinition status = new InfoStatusDefinition();
-        if (ObjectUtils.isAnyNull(statusOpen)) {
+        if (ObjectUtil.isAnyNull(statusOpen)) {
             statusOpen = new InfoStatusOpenDefinition();
             statusOpen.setAttribute(InfoStatusOpenAttributeTypes.CLOSE);
         }
         status.setOpen(statusOpen);
         status.setParentID(parentInfo.getID());
         status.getIdentifications().addAll(parentInfo.status.getIdentifications());
-        Identification identification;
-        if (StringUtils.isNameIllegal(info.getName())) {
-            identification = new Identification(info.getName());
+        IdentificationDefinition identification;
+        if (StringUtil.isNameIllegal(info.getName())) {
+            identification = new IdentificationDefinition(info.getName());
         } else {
-            identification = new Identification(info.getID());
+            identification = new IdentificationDefinition(info.getID());
         }
         status.getIdentifications().add(identification);
 

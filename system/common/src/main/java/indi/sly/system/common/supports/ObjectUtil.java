@@ -1,0 +1,233 @@
+package indi.sly.system.common.supports;
+
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.StatusUnexpectedException;
+import indi.sly.system.common.lang.ISerializeCapable;
+
+import java.io.*;
+import java.util.Optional;
+
+public abstract class ObjectUtil {
+    private static final String TO_STRING_NULL_OBJECT = "null";
+
+    public static boolean isAnyNull(final Object... values) {
+        if (values == null || values.length == 0) {
+            return true;
+        } else {
+            for (Object value : values) {
+                if (value == null) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    public static boolean isAnyNull(final Object value) {
+        if (value == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean allNotNull(final Object... values) {
+        if (values == null || values.length == 0) {
+            return false;
+        } else {
+            for (Object value : values) {
+                if (value == null) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    public static boolean allNotNull(final Object value) {
+        if (value == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static Object unwrapOptional(Object value) {
+        if (value instanceof Optional) {
+            Optional<?> optional = (Optional<?>) value;
+            if (!optional.isPresent()) {
+                return null;
+            }
+            Object result = optional.get();
+            return ObjectUtil.unwrapOptional(result);
+        }
+        return value;
+    }
+
+    public static boolean equals(Object value1, Object value2) {
+        if (value1 == value2) {
+            return true;
+        }
+        if (value1 == null || value2 == null) {
+            return false;
+        }
+        if (value1.equals(value2)) {
+            return true;
+        }
+        if (value1.getClass().isArray() && value2.getClass().isArray()) {
+            if (value1 instanceof Object[] && value2 instanceof Object[]) {
+                return ArrayUtil.equals((Object[]) value1, (Object[]) value2);
+            }
+            if (value1 instanceof boolean[] && value2 instanceof boolean[]) {
+                return ArrayUtil.equals((boolean[]) value1, (boolean[]) value2);
+            }
+            if (value1 instanceof byte[] && value2 instanceof byte[]) {
+                return ArrayUtil.equals((byte[]) value1, (byte[]) value2);
+            }
+            if (value1 instanceof char[] && value2 instanceof char[]) {
+                return ArrayUtil.equals((char[]) value1, (char[]) value2);
+            }
+            if (value1 instanceof double[] && value2 instanceof double[]) {
+                return ArrayUtil.equals((double[]) value1, (double[]) value2);
+            }
+            if (value1 instanceof float[] && value2 instanceof float[]) {
+                return ArrayUtil.equals((float[]) value1, (float[]) value2);
+            }
+            if (value1 instanceof int[] && value2 instanceof int[]) {
+                return ArrayUtil.equals((int[]) value1, (int[]) value2);
+            }
+            if (value1 instanceof long[] && value2 instanceof long[]) {
+                return ArrayUtil.equals((long[]) value1, (long[]) value2);
+            }
+            if (value1 instanceof short[] && value2 instanceof short[]) {
+                return ArrayUtil.equals((short[]) value1, (short[]) value2);
+            }
+        }
+
+        return false;
+    }
+
+    public static int hashCode(Object value) {
+        if (ObjectUtil.isAnyNull(value)) {
+            return 0;
+        }
+
+        if (value.getClass().isArray()) {
+            if (value instanceof Object[]) {
+                return ObjectUtil.hashCode((Object[]) value);
+            }
+            if (value instanceof boolean[]) {
+                return ObjectUtil.hashCode((boolean[]) value);
+            }
+            if (value instanceof byte[]) {
+                return ObjectUtil.hashCode((byte[]) value);
+            }
+            if (value instanceof char[]) {
+                return ObjectUtil.hashCode((char[]) value);
+            }
+            if (value instanceof double[]) {
+                return ObjectUtil.hashCode((double[]) value);
+            }
+            if (value instanceof float[]) {
+                return ObjectUtil.hashCode((float[]) value);
+            }
+            if (value instanceof int[]) {
+                return ObjectUtil.hashCode((int[]) value);
+            }
+            if (value instanceof long[]) {
+                return ObjectUtil.hashCode((long[]) value);
+            }
+            if (value instanceof short[]) {
+                return ObjectUtil.hashCode((short[]) value);
+            }
+        }
+
+        return value.hashCode();
+    }
+
+    public static String toString(Object value) {
+        if (ObjectUtil.isAnyNull(value)) {
+            return ObjectUtil.TO_STRING_NULL_OBJECT;
+        }
+        return value.getClass().getCanonicalName() + "@" + Integer.toHexString(System.identityHashCode(value));
+    }
+
+    public static <T extends ISerializeCapable> T readExternal(ObjectInput in) throws ClassNotFoundException,
+            IOException {
+        if (ObjectUtil.isAnyNull(in)) {
+            throw new NullPointerException();
+        }
+
+        if (NumberUtil.readExternalBoolean(in)) {
+            @SuppressWarnings("unchecked")
+            T value = (T) in.readObject();
+            return value;
+        } else {
+            return null;
+        }
+    }
+
+    public static <T extends ISerializeCapable> void writeExternal(ObjectOutput out, T value) throws IOException {
+        if (ObjectUtil.isAnyNull(out)) {
+            throw new NullPointerException();
+        }
+
+        if (value == null) {
+            NumberUtil.writeExternalBoolean(out, false);
+        } else {
+            NumberUtil.writeExternalBoolean(out, true);
+            out.writeObject(value);
+        }
+    }
+
+    public static byte[] transferToByteArray(Object object) {
+        if (ObjectUtil.isAnyNull(object)) {
+            return null;
+        }
+
+        byte[] stream;
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(object);
+            objectOutputStream.flush();
+            stream = byteArrayOutputStream.toByteArray();
+            objectOutputStream.close();
+            objectOutputStream.close();
+        } catch (IOException ex) {
+            throw new StatusUnexpectedException();
+        }
+
+        return stream;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T transferFromByteArray(byte[] stream) {
+        if (ObjectUtil.isAnyNull(stream)) {
+            return null;
+        }
+
+        Object object;
+
+        try {
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(stream);
+            ObjectInputStream outInputStream = new ObjectInputStream(byteArrayInputStream);
+            object = outInputStream.readObject();
+            outInputStream.close();
+            byteArrayInputStream.close();
+        } catch (IOException | ClassNotFoundException ex) {
+            throw new StatusUnexpectedException();
+        }
+
+        if (ObjectUtil.isAnyNull(object)) {
+            throw new StatusUnexpectedException();
+        }
+
+        try {
+            return (T) object;
+        } catch (ClassCastException e) {
+            throw new StatusRelationshipErrorException();
+        }
+    }
+}

@@ -1,9 +1,9 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionContextException;
-import indi.sly.system.common.functions.Consumer2;
-import indi.sly.system.common.functions.Function2;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ConditionContextException;
+import indi.sly.system.common.lang.Consumer2;
+import indi.sly.system.common.lang.Function2;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
@@ -26,7 +26,7 @@ public class ProcessObject extends ACorePrototype {
     protected UUID id;
 
     public UUID getID() {
-        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
 

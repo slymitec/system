@@ -5,7 +5,7 @@ import java.util.concurrent.locks.Lock;
 
 import javax.inject.Named;
 
-import indi.sly.system.common.types.LockTypes;
+import indi.sly.system.common.values.LockTypes;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.prototypes.CoreRepositoryObject;
@@ -13,8 +13,8 @@ import indi.sly.system.kernel.memory.caches.values.InfoCacheDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import indi.sly.system.common.utility.LogicalUtils;
-import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -51,7 +51,7 @@ public class InfoCacheObject extends ACorePrototype {
 
             InfoObject infoObject = null;
 
-            if (ObjectUtils.allNotNull(kernelObjectCache)) {
+            if (ObjectUtil.allNotNull(kernelObjectCache)) {
                 infoObject = coreRepository.getByID(spaceType, InfoObject.class, id);
             }
 
@@ -93,10 +93,10 @@ public class InfoCacheObject extends ACorePrototype {
     public InfoObject getIfExisted(long spaceType, UUID id) {
         InfoObject infoObject = null;
 
-        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.USER)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.USER)) {
             infoObject = this.getIfExistedBySpaceType(SpaceTypes.USER, id);
         }
-        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
             infoObject = this.getIfExistedBySpaceType(SpaceTypes.KERNEL, id);
         }
 
@@ -104,19 +104,19 @@ public class InfoCacheObject extends ACorePrototype {
     }
 
     public void add(long spaceType, InfoObject infoObject) {
-        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
             this.addBySpaceType(SpaceTypes.KERNEL, infoObject);
         }
-        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.USER)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.USER)) {
             this.addBySpaceType(SpaceTypes.USER, infoObject);
         }
     }
 
     public void delete(long spaceType, UUID id) {
-        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
             this.deleteBySpaceType(SpaceTypes.KERNEL, id);
         }
-        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.USER)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.USER)) {
             this.deleteBySpaceType(SpaceTypes.USER, id);
         }
     }
@@ -127,7 +127,7 @@ public class InfoCacheObject extends ACorePrototype {
         long expiredTime =
                 this.factoryManager.getKernelSpace().getConfiguration().MEMORY_CACHES_USERSPACE_INFOOBJECT_EXPIRED_TIME;
 
-        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.USER)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.USER)) {
             Map<UUID, InfoCacheDefinition> infoObjectCaches = this.getInfoCaches(SpaceTypes.USER);
 
             for (Map.Entry<UUID, InfoCacheDefinition> infoObjectCache : infoObjectCaches.entrySet()) {

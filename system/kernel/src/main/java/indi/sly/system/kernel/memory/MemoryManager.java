@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.memory;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
@@ -37,7 +37,7 @@ public class MemoryManager extends AManager {
     }
 
     public AInfoRepositoryObject getInfoRepository(UUID id) {
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 

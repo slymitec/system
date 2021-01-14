@@ -1,6 +1,8 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.functions.*;
+import indi.sly.system.common.lang.Consumer2;
+import indi.sly.system.common.lang.Function1;
+import indi.sly.system.common.lang.Function2;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class ProcessProcessorRegister {
         this.writeProcessTokens = new ArrayList<>();
     }
 
-    private Function<ProcessEntity, UUID> process;
+    private Function1<ProcessEntity, UUID> process;
     private final List<Function2<Long, Long, ProcessEntity>> readProcessStatuses;
     private final List<Consumer2<ProcessEntity, Long>> writeProcessStatuses;
     private final List<Function2<byte[], byte[], ProcessEntity>> readProcessCommunications;
@@ -37,11 +39,11 @@ public class ProcessProcessorRegister {
     private final List<Function2<byte[], byte[], ProcessEntity>> readProcessTokens;
     private final List<Consumer2<ProcessEntity, byte[]>> writeProcessTokens;
 
-    public Function<ProcessEntity, UUID> getProcess() {
+    public Function1<ProcessEntity, UUID> getProcess() {
         return this.process;
     }
 
-    public void setProcess(Function<ProcessEntity, UUID> process) {
+    public void setProcess(Function1<ProcessEntity, UUID> process) {
         this.process = process;
     }
 

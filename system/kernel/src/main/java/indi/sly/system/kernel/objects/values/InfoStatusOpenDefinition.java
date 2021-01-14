@@ -5,13 +5,13 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.Objects;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 
-public class InfoStatusOpenDefinition implements ISerializable<InfoStatusOpenDefinition> {
+public class InfoStatusOpenDefinition implements ISerializeCapable<InfoStatusOpenDefinition> {
     private long attribute;
-    private ISerializable context;
+    private ISerializeCapable context;
 
     public long getAttribute() {
         return this.attribute;
@@ -21,11 +21,11 @@ public class InfoStatusOpenDefinition implements ISerializable<InfoStatusOpenDef
         this.attribute = openAttribute;
     }
 
-    public ISerializable getContext() {
+    public ISerializeCapable getContext() {
         return this.context;
     }
 
-    public void setContext(ISerializable context) {
+    public void setContext(ISerializeCapable context) {
         this.context = context;
     }
 
@@ -60,13 +60,13 @@ public class InfoStatusOpenDefinition implements ISerializable<InfoStatusOpenDef
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.attribute = NumberUtils.readExternalLong(in);
-        this.context = ObjectUtils.readExternal(in);
+        this.attribute = NumberUtil.readExternalLong(in);
+        this.context = ObjectUtil.readExternal(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        NumberUtils.writeExternalLong(out, this.attribute);
-        ObjectUtils.writeExternal(out, this.context);
+        NumberUtil.writeExternalLong(out, this.attribute);
+        ObjectUtil.writeExternal(out, this.context);
     }
 }

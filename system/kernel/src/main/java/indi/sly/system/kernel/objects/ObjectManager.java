@@ -4,15 +4,15 @@ import java.util.List;
 
 import javax.inject.Named;
 
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -36,8 +36,8 @@ public class ObjectManager extends AManager {
         }
     }
 
-    public InfoObject get(List<Identification> identifications) {
-        if (ObjectUtils.isAnyNull(identifications) || identifications.size() > 256) {
+    public InfoObject get(List<IdentificationDefinition> identifications) {
+        if (ObjectUtil.isAnyNull(identifications) || identifications.size() > 256) {
             throw new ConditionParametersException();
         }
 
@@ -47,15 +47,15 @@ public class ObjectManager extends AManager {
         InfoObject info = infoCache.getIfExisted(SpaceTypes.KERNEL,
                 this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
 
-        for (Identification identification : identifications) {
+        for (IdentificationDefinition identification : identifications) {
             info = info.getChild(identification);
         }
 
         return info;
     }
 
-    public InfoObject rebuild(List<Identification> identifications, InfoStatusOpenDefinition open) {
-        if (ObjectUtils.isAnyNull(identifications, open)) {
+    public InfoObject rebuild(List<IdentificationDefinition> identifications, InfoStatusOpenDefinition open) {
+        if (ObjectUtil.isAnyNull(identifications, open)) {
             throw new ConditionParametersException();
         }
 

@@ -1,16 +1,17 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.communication.values.ProcessCommunicationDefinition;
@@ -55,7 +56,7 @@ public class CreateProcessBuilder extends ACorePrototype {
     //
 
     public CreateProcessBuilder setFileHandle(UUID fileHandle) {
-        if (UUIDUtils.isAnyNullOrEmpty(fileHandle)) {
+        if (ValueUtil.isAnyNullOrEmpty(fileHandle)) {
             throw new ConditionParametersException();
         }
 
@@ -66,7 +67,7 @@ public class CreateProcessBuilder extends ACorePrototype {
 
 
     public CreateProcessBuilder setAccountAuthorization(AccountAuthorizationObject accountAuthorization) {
-        if (ObjectUtils.isAnyNull(accountAuthorization)) {
+        if (ObjectUtil.isAnyNull(accountAuthorization)) {
             throw new ConditionParametersException();
         }
 
@@ -87,7 +88,7 @@ public class CreateProcessBuilder extends ACorePrototype {
     }
 
     public CreateProcessBuilder setLimits(Map<Long, Integer> limits) {
-        if (ObjectUtils.isAnyNull(limits)) {
+        if (ObjectUtil.isAnyNull(limits)) {
             throw new ConditionParametersException();
         }
 
@@ -113,7 +114,7 @@ public class CreateProcessBuilder extends ACorePrototype {
         return this;
     }
 
-    public CreateProcessBuilder setWorkFolder(List<Identification> workFolder) {
+    public CreateProcessBuilder setWorkFolder(List<IdentificationDefinition> workFolder) {
         this.createProcess.setWorkFolder(workFolder);
 
         return this;
@@ -142,15 +143,15 @@ public class CreateProcessBuilder extends ACorePrototype {
 
         ProcessEntity process = new ProcessEntity();
 
-        process.setID(UUIDUtils.createRandom());
+        process.setID(UUIDUtil.createRandom());
         process.setStatus(ProcessStatusTypes.NULL);
         process.setParentProcessID(parentProcess.getID());
-        process.setSessionID(UUIDUtils.getEmpty());
-        process.setCommunication(ObjectUtils.transferToByteArray(new ProcessCommunicationDefinition()));
-        process.setContext(ObjectUtils.transferToByteArray(new ProcessCommunicationDefinition()));
-        process.setHandleTable(ObjectUtils.transferToByteArray(new ProcessHandleTableDefinition()));
-        process.setStatistics(ObjectUtils.transferToByteArray(new ProcessStatisticsDefinition()));
-        process.setToken(ObjectUtils.transferToByteArray(new ProcessTokenDefinition()));
+        process.setSessionID(UUIDUtil.getEmpty());
+        process.setCommunication(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));
+        process.setContext(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));
+        process.setHandleTable(ObjectUtil.transferToByteArray(new ProcessHandleTableDefinition()));
+        process.setStatistics(ObjectUtil.transferToByteArray(new ProcessStatisticsDefinition()));
+        process.setToken(ObjectUtil.transferToByteArray(new ProcessTokenDefinition()));
 
         processRepository.add(process);
 
@@ -171,7 +172,7 @@ public class CreateProcessBuilder extends ACorePrototype {
 
         ProcessTokenObject processToken = this.process.getToken();
         AccountAuthorizationObject accountAuthorization = this.createProcess.getAccountAuthorization();
-        if (ObjectUtils.allNotNull(accountAuthorization)) {
+        if (ObjectUtil.allNotNull(accountAuthorization)) {
             processToken.setAccountAuthorization(accountAuthorization);
         } else {
             processToken.inheritAccountID();
@@ -181,13 +182,13 @@ public class CreateProcessBuilder extends ACorePrototype {
             } else {
                 processToken.inheritPrivilegeTypes();
             }
-            if (ObjectUtils.allNotNull(this.createProcess.getLimits())) {
+            if (ObjectUtil.allNotNull(this.createProcess.getLimits())) {
                 processToken.setLimits(this.createProcess.getLimits());
             } else {
                 processToken.inheritLimits();
             }
         }
-        if (ObjectUtils.isAnyNull(this.createProcess.getAppContext().getRoles())) {
+        if (ObjectUtil.isAnyNull(this.createProcess.getAppContext().getRoles())) {
             processToken.inheritRoleTypes();
         } else {
             processToken.setRoleTypes(this.createProcess.getAppContext().getRoles());
@@ -199,26 +200,26 @@ public class CreateProcessBuilder extends ACorePrototype {
         ProcessContextObject processContext = this.process.getContext();
         ProcessContextObject parentProcessContext = this.parentProcess.getContext();
 
-        if (ObjectUtils.allNotNull(this.createProcess.getAppContext())) {
+        if (ObjectUtil.allNotNull(this.createProcess.getAppContext())) {
             processContext.setAppContext(this.createProcess.getAppContext());
         }
-        if (ObjectUtils.allNotNull(this.createProcess.getEnvironmentVariable())) {
+        if (ObjectUtil.allNotNull(this.createProcess.getEnvironmentVariable())) {
             processContext.setEnvironmentVariable(this.createProcess.getEnvironmentVariable());
         } else {
             processContext.setEnvironmentVariable(this.parentProcess.getContext().getEnvironmentVariable());
         }
-        if (ObjectUtils.allNotNull(this.createProcess.getParameters())) {
+        if (ObjectUtil.allNotNull(this.createProcess.getParameters())) {
             processContext.setParameters(this.createProcess.getParameters());
         }
-        if (!UUIDUtils.isAnyNullOrEmpty(this.createProcess.getSessionID())) {
+        if (!ValueUtil.isAnyNullOrEmpty(this.createProcess.getSessionID())) {
             processContext.setSessionID(this.createProcess.getSessionID());
         } else {
             UUID parentProcessContextSessionID = parentProcessContext.getSessionID();
-            if (!UUIDUtils.isAnyNullOrEmpty(parentProcessContextSessionID)) {
+            if (!ValueUtil.isAnyNullOrEmpty(parentProcessContextSessionID)) {
                 processContext.setSessionID(parentProcessContextSessionID);
             }
         }
-        if (ObjectUtils.allNotNull(this.createProcess.getWorkFolder())) {
+        if (ObjectUtil.allNotNull(this.createProcess.getWorkFolder())) {
             processContext.setWorkFolder(this.createProcess.getWorkFolder());
         } else {
             processContext.setWorkFolder(parentProcessContext.getWorkFolder());

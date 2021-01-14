@@ -1,11 +1,11 @@
 package indi.sly.system.kernel.memory.repositories.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.StatusAlreadyExistedException;
-import indi.sly.system.common.exceptions.StatusNotExistedException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
+import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoRelationEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -30,24 +30,24 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public boolean contain(UUID id) {
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
         InfoEntity info = this.entityManager.find(InfoEntity.class, id);
 
-        return ObjectUtils.isAnyNull(info);
+        return ObjectUtil.isAnyNull(info);
     }
 
     @Override
     public InfoEntity get(UUID id) {
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
         InfoEntity info = this.entityManager.find(InfoEntity.class, id);
 
-        if (ObjectUtils.isAnyNull(info)) {
+        if (ObjectUtil.isAnyNull(info)) {
             throw new StatusNotExistedException();
         }
 
@@ -56,7 +56,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public void add(InfoEntity info) {
-        if (ObjectUtils.isAnyNull(info)) {
+        if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
         }
 
@@ -69,7 +69,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public void delete(InfoEntity info) {
-        if (ObjectUtils.isAnyNull(info)) {
+        if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
         }
 
@@ -82,7 +82,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public void lock(InfoEntity info, long lockType) {
-        if (ObjectUtils.isAnyNull(info)) {
+        if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
         }
 
@@ -105,7 +105,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public List<InfoRelationEntity> listRelation(InfoEntity info) {
-        if (ObjectUtils.isAnyNull(info)) {
+        if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
         }
 
@@ -122,7 +122,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public void addRelation(InfoRelationEntity relation) {
-        if (ObjectUtils.isAnyNull(relation)) {
+        if (ObjectUtil.isAnyNull(relation)) {
             throw new ConditionParametersException();
         }
 
@@ -135,7 +135,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public void deleteRelation(InfoRelationEntity relation) {
-        if (ObjectUtils.isAnyNull(relation)) {
+        if (ObjectUtil.isAnyNull(relation)) {
             throw new ConditionParametersException();
         }
 

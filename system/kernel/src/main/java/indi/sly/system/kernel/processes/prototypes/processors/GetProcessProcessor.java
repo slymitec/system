@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
-import indi.sly.system.common.functions.Function;
+import indi.sly.system.common.lang.Function1;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GetProcessProcessor extends ACorePrototype implements IProcessProcessor {
-    private final Function<ProcessEntity, UUID> process;
+    private final Function1<ProcessEntity, UUID> process;
 
     public GetProcessProcessor() {
         this.process = id -> {

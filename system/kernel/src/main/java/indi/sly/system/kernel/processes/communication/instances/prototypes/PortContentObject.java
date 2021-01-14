@@ -1,11 +1,11 @@
 package indi.sly.system.kernel.processes.communication.instances.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.exceptions.StatusInsufficientResourcesException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.ArrayUtils;
-import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.StatusInsufficientResourcesException;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.ArrayUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.communication.instances.values.PortDefinition;
@@ -23,12 +23,12 @@ import java.util.UUID;
 public class PortContentObject extends AInfoContentObject {
     @Override
     protected void read(byte[] source) {
-        this.port = ObjectUtils.transferFromByteArray(source);
+        this.port = ObjectUtil.transferFromByteArray(source);
     }
 
     @Override
     protected byte[] write() {
-        return ObjectUtils.transferToByteArray(this.port);
+        return ObjectUtil.transferToByteArray(this.port);
     }
 
     private PortDefinition port;
@@ -40,7 +40,7 @@ public class PortContentObject extends AInfoContentObject {
     }
 
     public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {
-        if (ObjectUtils.isAnyNull(sourceProcessIDs)) {
+        if (ObjectUtil.isAnyNull(sourceProcessIDs)) {
             throw new ConditionParametersException();
         }
 
@@ -68,7 +68,7 @@ public class PortContentObject extends AInfoContentObject {
         this.init();
 
         byte[] value = this.port.getValue();
-        this.port.setValue(ArrayUtils.EMPTY_BYTES);
+        this.port.setValue(ArrayUtil.EMPTY_BYTES);
 
         this.fresh();
         this.lock(LockTypes.NONE);
@@ -77,7 +77,7 @@ public class PortContentObject extends AInfoContentObject {
     }
 
     public void send(byte[] value) {
-        if (ObjectUtils.isAnyNull(value)) {
+        if (ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();
         }
 
@@ -95,7 +95,7 @@ public class PortContentObject extends AInfoContentObject {
         this.lock(LockTypes.WRITE);
         this.init();
 
-        this.port.setValue(ArrayUtils.combineBytes(this.port.getValue(), value));
+        this.port.setValue(ArrayUtil.combineBytes(this.port.getValue(), value));
 
         this.fresh();
         this.lock(LockTypes.NONE);

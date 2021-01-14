@@ -6,14 +6,14 @@ import java.io.ObjectOutput;
 import java.util.*;
 import java.util.Map.Entry;
 
-import indi.sly.system.common.exceptions.StatusAlreadyExistedException;
-import indi.sly.system.common.exceptions.StatusNotExistedException;
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
+import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 
-public class ProcessHandleTableDefinition implements ISerializable<ProcessHandleTableDefinition> {
+public class ProcessHandleTableDefinition implements ISerializeCapable<ProcessHandleTableDefinition> {
     public ProcessHandleTableDefinition() {
         this.handleTable = new Hashtable<>();
     }
@@ -35,7 +35,7 @@ public class ProcessHandleTableDefinition implements ISerializable<ProcessHandle
     public ProcessHandleEntryDefinition get(UUID handle) {
         ProcessHandleEntryDefinition handleEntry = this.handleTable.getOrDefault(handle, null);
 
-        if (ObjectUtils.isAnyNull(handleEntry)) {
+        if (ObjectUtil.isAnyNull(handleEntry)) {
             throw new StatusNotExistedException();
         }
 
@@ -53,7 +53,7 @@ public class ProcessHandleTableDefinition implements ISerializable<ProcessHandle
     public void delete(UUID handle) {
         ProcessHandleEntryDefinition handleEntry = this.handleTable.remove(handle);
 
-        if (ObjectUtils.isAnyNull(handleEntry)) {
+        if (ObjectUtil.isAnyNull(handleEntry)) {
             throw new StatusNotExistedException();
         }
     }
@@ -93,18 +93,18 @@ public class ProcessHandleTableDefinition implements ISerializable<ProcessHandle
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.handleTable.put(UUIDUtils.readExternal(in), ObjectUtils.readExternal(in));
+            this.handleTable.put(UUIDUtil.readExternal(in), ObjectUtil.readExternal(in));
         }
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        NumberUtils.writeExternalInteger(out, this.handleTable.size());
+        NumberUtil.writeExternalInteger(out, this.handleTable.size());
         for (Entry<UUID, ProcessHandleEntryDefinition> pair : this.handleTable.entrySet()) {
-            UUIDUtils.writeExternal(out, pair.getKey());
-            ObjectUtils.writeExternal(out, pair.getValue());
+            UUIDUtil.writeExternal(out, pair.getKey());
+            ObjectUtil.writeExternal(out, pair.getValue());
         }
     }
 }

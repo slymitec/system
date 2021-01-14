@@ -1,14 +1,13 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.exceptions.StatusNotSupportedException;
-import indi.sly.system.common.functions.*;
-import indi.sly.system.common.utility.LogicalUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.*;
+import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
@@ -44,7 +43,7 @@ public class SecurityDescriptorProcessor extends ACorePrototype implements IInfo
             securityDescriptor.setSource(info::getSecurityDescriptor, info::setSecurityDescriptor);
             securityDescriptor.setLock((lockType) -> type.getTypeInitializer().lockProcedure(info, lockType));
 
-            if (!UUIDUtils.isAnyNullOrEmpty(status.getParentID())) {
+            if (!ValueUtil.isAnyNullOrEmpty(status.getParentID())) {
                 InfoCacheObject infoObject = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                         InfoCacheObject.class);
 
@@ -128,7 +127,7 @@ public class SecurityDescriptorProcessor extends ACorePrototype implements IInfo
                     securityDescriptor.setInherit(true);
                 }
 
-                childInfo.setSecurityDescriptor(ObjectUtils.transferToByteArray(securityDescriptor));
+                childInfo.setSecurityDescriptor(ObjectUtil.transferToByteArray(securityDescriptor));
             } else {
                 childInfo.setSecurityDescriptor(null);
             }
@@ -184,10 +183,10 @@ public class SecurityDescriptorProcessor extends ACorePrototype implements IInfo
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_PERMISSION)) {
-                    securityDescriptor.checkAccessControlType(LogicalUtils.or(AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW, AccessControlTypes.DELETECHILD_ALLOW));
+                    securityDescriptor.checkAccessControlType(LogicalUtil.or(AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW, AccessControlTypes.DELETECHILD_ALLOW));
                 }
                 if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(LogicalUtils.or(AuditTypes.CREATECHILD_WRITEDATA,
+                    securityDescriptor.writeAudit(LogicalUtil.or(AuditTypes.CREATECHILD_WRITEDATA,
                             AuditTypes.DELETECHILD));
                 }
             }
@@ -254,13 +253,13 @@ public class SecurityDescriptorProcessor extends ACorePrototype implements IInfo
     private final Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, InfoStatusDefinition> dump;
     private final Function6<UUID, UUID, InfoEntity, TypeObject, InfoStatusDefinition, Long, Object[]> open;
     private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID,
-            Identification> createChildAndOpen;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, Identification,
+            IdentificationDefinition> createChildAndOpen;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition,
             InfoStatusOpenDefinition> getOrRebuildChild;
-    private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Identification> deleteChild;
+    private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition> deleteChild;
     private final Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject,
             InfoStatusDefinition, Predicate<InfoSummaryDefinition>> queryChild;
-    private final Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, Identification, Identification> renameChild;
+    private final Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition, IdentificationDefinition> renameChild;
     private final Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, InfoStatusDefinition> readProperties;
     private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Map<String, String>> writeProperties;
     private final Function4<byte[], byte[], InfoEntity, TypeObject, InfoStatusDefinition> readContent;
@@ -268,7 +267,7 @@ public class SecurityDescriptorProcessor extends ACorePrototype implements IInfo
 
     @Override
     public void process(InfoEntity info, InfoProcessorRegister processorRegister) {
-        if (ObjectUtils.allNotNull(info)) {
+        if (ObjectUtil.allNotNull(info)) {
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
             TypeObject type = typeManager.get(info.getType());
 

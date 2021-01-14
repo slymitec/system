@@ -1,15 +1,14 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.exceptions.StatusInsufficientResourcesException;
-import indi.sly.system.common.exceptions.StatusIsUsedException;
-import indi.sly.system.common.functions.*;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.*;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
@@ -45,32 +44,32 @@ public class TypeInitializerProcessor extends ACorePrototype implements IInfoObj
         this.close = (info, type, status) -> type.getTypeInitializer().closeProcedure(info, status.getOpen());
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
-            if (ObjectUtils.isAnyNull(childInfo)) {
+            if (ObjectUtil.isAnyNull(childInfo)) {
                 childInfo = new InfoEntity();
             }
 
-            if (UUIDUtils.isAnyNullOrEmpty(childInfo.getID())) {
+            if (ValueUtil.isAnyNullOrEmpty(childInfo.getID())) {
                 if (identification.getType().equals(UUID.class)) {
-                    childInfo.setID(UUIDUtils.getFromBytes(identification.getID()));
+                    childInfo.setID(UUIDUtil.getFromBytes(identification.getID()));
                 } else if (identification.getType().equals(String.class)) {
-                    childInfo.setID(UUIDUtils.createRandom());
+                    childInfo.setID(UUIDUtil.createRandom());
                 }
             }
-            if (UUIDUtils.isAnyNullOrEmpty(childInfo.getType())) {
+            if (ValueUtil.isAnyNullOrEmpty(childInfo.getType())) {
                 childInfo.setType(childType);
             }
             childInfo.setOccupied(0);
             childInfo.setOpened(0);
-            if (StringUtils.isAnyNullOrEmpty(childInfo.getName())) {
+            if (ValueUtil.isAnyNullOrEmpty(childInfo.getName())) {
                 if (identification.getType().equals(UUID.class)) {
                     childInfo.setName(null);
                 } else if (identification.getType().equals(String.class)) {
-                    childInfo.setName(StringUtils.readFormBytes(identification.getID()));
+                    childInfo.setName(StringUtil.readFormBytes(identification.getID()));
                 }
             }
-            if (ObjectUtils.isAnyNull(childInfo.getProperties())) {
+            if (ObjectUtil.isAnyNull(childInfo.getProperties())) {
                 Map<String, String> childProperties = new HashMap<>();
-                childInfo.setProperties(ObjectUtils.transferToByteArray(childProperties));
+                childInfo.setProperties(ObjectUtil.transferToByteArray(childProperties));
             }
 
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
@@ -136,12 +135,12 @@ public class TypeInitializerProcessor extends ACorePrototype implements IInfoObj
             type.getTypeInitializer().renameChildProcedure(info, oldIdentification, newIdentification);
 
             if (newIdentification.getType().equals(String.class)) {
-                childInfo.setName(StringUtils.readFormBytes(newIdentification.getID()));
+                childInfo.setName(StringUtil.readFormBytes(newIdentification.getID()));
             }
         };
 
         this.readProperties = (properties, info, type, status) -> {
-            Map<String, String> newProperties = ObjectUtils.transferFromByteArray(info.getProperties());
+            Map<String, String> newProperties = ObjectUtil.transferFromByteArray(info.getProperties());
 
             for (Entry<String, String> pair : newProperties.entrySet()) {
                 properties.put(pair.getKey(), pair.getValue());
@@ -157,7 +156,7 @@ public class TypeInitializerProcessor extends ACorePrototype implements IInfoObj
                 newProperties.put(pair.getKey(), pair.getValue());
             }
 
-            byte[] newPropertiesSource = ObjectUtils.transferToByteArray(newProperties);
+            byte[] newPropertiesSource = ObjectUtil.transferToByteArray(newProperties);
 
             if (newPropertiesSource.length > 1024) {
                 throw new StatusInsufficientResourcesException();
@@ -182,11 +181,11 @@ public class TypeInitializerProcessor extends ACorePrototype implements IInfoObj
     private final Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, InfoStatusDefinition> dump;
     private final Function6<UUID, UUID, InfoEntity, TypeObject, InfoStatusDefinition, Long, Object[]> open;
     private final Consumer3<InfoEntity, TypeObject, InfoStatusDefinition> close;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID, Identification> createChildAndOpen;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, Identification, InfoStatusOpenDefinition> getOrRebuildChild;
-    private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Identification> deleteChild;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID, IdentificationDefinition> createChildAndOpen;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition, InfoStatusOpenDefinition> getOrRebuildChild;
+    private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition> deleteChild;
     private final Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject, InfoStatusDefinition, Predicate<InfoSummaryDefinition>> queryChild;
-    private final Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, Identification, Identification> renameChild;
+    private final Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition, IdentificationDefinition> renameChild;
     private final Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, InfoStatusDefinition> readProperties;
     private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Map<String, String>> writeProperties;
     private final Function4<byte[], byte[], InfoEntity, TypeObject, InfoStatusDefinition> readContent;

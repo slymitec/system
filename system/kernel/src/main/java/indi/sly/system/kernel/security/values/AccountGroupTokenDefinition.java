@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.security.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class AccountGroupTokenDefinition implements ISerializable<AccountGroupTokenDefinition> {
+public class AccountGroupTokenDefinition implements ISerializeCapable<AccountGroupTokenDefinition> {
     public AccountGroupTokenDefinition() {
         this.limits = new HashMap<>();
     }
@@ -60,24 +60,24 @@ public class AccountGroupTokenDefinition implements ISerializable<AccountGroupTo
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.privilegeTypes = NumberUtils.readExternalLong(in);
+        this.privilegeTypes = NumberUtil.readExternalLong(in);
 
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.limits.put(NumberUtils.readExternalLong(in), NumberUtils.readExternalInteger(in));
+            this.limits.put(NumberUtil.readExternalLong(in), NumberUtil.readExternalInteger(in));
         }
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        NumberUtils.writeExternalLong(out, this.privilegeTypes);
+        NumberUtil.writeExternalLong(out, this.privilegeTypes);
 
-        NumberUtils.writeExternalInteger(out, this.limits.size());
+        NumberUtil.writeExternalInteger(out, this.limits.size());
         for (Map.Entry<Long, Integer> pair : this.limits.entrySet()) {
-            NumberUtils.writeExternalLong(out, pair.getKey());
-            NumberUtils.writeExternalInteger(out, pair.getValue());
+            NumberUtil.writeExternalLong(out, pair.getKey());
+            NumberUtil.writeExternalInteger(out, pair.getValue());
         }
     }
 }

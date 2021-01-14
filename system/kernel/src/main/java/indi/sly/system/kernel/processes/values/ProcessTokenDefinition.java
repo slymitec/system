@@ -5,11 +5,11 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 
-public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinition> {
+public class ProcessTokenDefinition implements ISerializeCapable<ProcessTokenDefinition> {
     public ProcessTokenDefinition() {
         this.roles = new HashSet<>();
         this.limits = new HashMap<>();
@@ -79,36 +79,36 @@ public class ProcessTokenDefinition implements ISerializable<ProcessTokenDefinit
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.accountID = UUIDUtils.readExternal(in);
-        this.privilegeTypes = NumberUtils.readExternalLong(in);
+        this.accountID = UUIDUtil.readExternal(in);
+        this.privilegeTypes = NumberUtil.readExternalLong(in);
 
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.limits.put(NumberUtils.readExternalLong(in), NumberUtils.readExternalInteger(in));
+            this.limits.put(NumberUtil.readExternalLong(in), NumberUtil.readExternalInteger(in));
         }
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.roles.add(UUIDUtils.readExternal(in));
+            this.roles.add(UUIDUtil.readExternal(in));
         }
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.accountID);
-        NumberUtils.writeExternalLong(out, this.privilegeTypes);
+        UUIDUtil.writeExternal(out, this.accountID);
+        NumberUtil.writeExternalLong(out, this.privilegeTypes);
 
-        NumberUtils.writeExternalInteger(out, this.limits.size());
+        NumberUtil.writeExternalInteger(out, this.limits.size());
         for (Map.Entry<Long, Integer> pair : this.limits.entrySet()) {
-            NumberUtils.writeExternalLong(out, pair.getKey());
-            NumberUtils.writeExternalInteger(out, pair.getValue());
+            NumberUtil.writeExternalLong(out, pair.getKey());
+            NumberUtil.writeExternalInteger(out, pair.getValue());
         }
 
-        NumberUtils.writeExternalInteger(out, this.roles.size());
+        NumberUtil.writeExternalInteger(out, this.roles.size());
         for (UUID pair : this.roles) {
-            UUIDUtils.writeExternal(out, pair);
+            UUIDUtil.writeExternal(out, pair);
         }
     }
 }

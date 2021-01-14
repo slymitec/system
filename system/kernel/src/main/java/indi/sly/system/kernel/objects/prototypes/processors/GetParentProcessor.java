@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.exceptions.StatusNotExistedException;
-import indi.sly.system.common.functions.Function;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.lang.Function1;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.memory.MemoryManager;
@@ -23,7 +23,7 @@ public class GetParentProcessor extends ACorePrototype implements IInfoObjectPro
         this.parent = (id) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
 
-            if (UUIDUtils.isAnyNullOrEmpty(id)) {
+            if (ValueUtil.isAnyNullOrEmpty(id)) {
                 throw new StatusNotExistedException();
             }
 
@@ -34,7 +34,7 @@ public class GetParentProcessor extends ACorePrototype implements IInfoObjectPro
         };
     }
 
-    private final Function<InfoObject, UUID> parent;
+    private final Function1<InfoObject, UUID> parent;
 
     @Override
     public void process(InfoEntity info, InfoProcessorRegister processorRegister) {

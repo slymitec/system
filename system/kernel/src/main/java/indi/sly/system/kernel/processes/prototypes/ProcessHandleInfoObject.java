@@ -1,10 +1,10 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.exceptions.AKernelException;
-import indi.sly.system.common.exceptions.StatusInsufficientResourcesException;
-import indi.sly.system.common.exceptions.StatusNotReadyException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.StatusInsufficientResourcesException;
+import indi.sly.system.common.lang.StatusNotReadyException;
+import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
@@ -36,7 +36,7 @@ public class ProcessHandleInfoObject extends AValueProcessPrototype<ProcessHandl
     public synchronized boolean isExist() {
         UUID handle = this.status.getHandle();
 
-        if (UUIDUtils.isAnyNullOrEmpty(handle)) {
+        if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new StatusNotReadyException();
         }
 
@@ -54,7 +54,7 @@ public class ProcessHandleInfoObject extends AValueProcessPrototype<ProcessHandl
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
-        UUID handle = UUIDUtils.createRandom();
+        UUID handle = UUIDUtil.createRandom();
 
         ProcessHandleEntryDefinition processHandleEntry = new ProcessHandleEntryDefinition();
         processHandleEntry.getIdentifications().addAll(status.getIdentifications());

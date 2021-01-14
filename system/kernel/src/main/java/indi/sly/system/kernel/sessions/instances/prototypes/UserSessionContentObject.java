@@ -1,11 +1,11 @@
 package indi.sly.system.kernel.sessions.instances.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.exceptions.StatusAlreadyExistedException;
-import indi.sly.system.common.exceptions.StatusNotExistedException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
+import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -21,12 +21,12 @@ import java.util.UUID;
 public class UserSessionContentObject extends AInfoContentObject {
     @Override
     protected void read(byte[] source) {
-        this.userSession = ObjectUtils.transferFromByteArray(source);
+        this.userSession = ObjectUtil.transferFromByteArray(source);
     }
 
     @Override
     protected byte[] write() {
-        return ObjectUtils.transferToByteArray(this.userSession);
+        return ObjectUtil.transferToByteArray(this.userSession);
     }
 
     private UserSessionDefinition userSession;
@@ -143,7 +143,7 @@ public class UserSessionContentObject extends AInfoContentObject {
     }
 
     public void setClient(ClientDefinition client) {
-        if (ObjectUtils.isAnyNull(client)) {
+        if (ObjectUtil.isAnyNull(client)) {
             throw new ConditionParametersException();
         }
 

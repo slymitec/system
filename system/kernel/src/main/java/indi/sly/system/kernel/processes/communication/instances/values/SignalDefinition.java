@@ -1,17 +1,17 @@
 package indi.sly.system.kernel.processes.communication.instances.values;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class SignalDefinition implements ISerializable<SignalDefinition> {
+public class SignalDefinition implements ISerializeCapable<SignalDefinition> {
     public SignalDefinition() {
         this.sourceProcessIDs = new HashSet<>();
         this.signalEntries = new ArrayList<>();
@@ -59,7 +59,7 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
     }
 
     public void add(SignalEntryDefinition signalEntry) {
-        if (ObjectUtils.isAnyNull(signalEntry)) {
+        if (ObjectUtil.isAnyNull(signalEntry)) {
             throw new ConditionParametersException();
         }
 
@@ -103,37 +103,37 @@ public class SignalDefinition implements ISerializable<SignalDefinition> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.processID = UUIDUtils.readExternal(in);
+        this.processID = UUIDUtil.readExternal(in);
 
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.sourceProcessIDs.add(UUIDUtils.readExternal(in));
+            this.sourceProcessIDs.add(UUIDUtil.readExternal(in));
         }
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.signalEntries.add(ObjectUtils.readExternal(in));
+            this.signalEntries.add(ObjectUtil.readExternal(in));
         }
 
-        this.limit = NumberUtils.readExternalInteger(in);
+        this.limit = NumberUtil.readExternalInteger(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.processID);
+        UUIDUtil.writeExternal(out, this.processID);
 
-        NumberUtils.writeExternalInteger(out, this.sourceProcessIDs.size());
+        NumberUtil.writeExternalInteger(out, this.sourceProcessIDs.size());
         for (UUID pair : this.sourceProcessIDs) {
-            UUIDUtils.writeExternal(out, pair);
+            UUIDUtil.writeExternal(out, pair);
         }
 
-        NumberUtils.writeExternalInteger(out, this.signalEntries.size());
+        NumberUtil.writeExternalInteger(out, this.signalEntries.size());
         for (SignalEntryDefinition pair : this.signalEntries) {
-            ObjectUtils.writeExternal(out, pair);
+            ObjectUtil.writeExternal(out, pair);
         }
 
-        NumberUtils.writeExternalLong(out, this.limit);
+        NumberUtil.writeExternalLong(out, this.limit);
     }
 }

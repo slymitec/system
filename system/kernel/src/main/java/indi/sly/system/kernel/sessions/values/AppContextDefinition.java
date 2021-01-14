@@ -1,16 +1,16 @@
 package indi.sly.system.kernel.sessions.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class AppContextDefinition implements ISerializable<AppContextDefinition> {
+public class AppContextDefinition implements ISerializeCapable<AppContextDefinition> {
     public AppContextDefinition() {
         this.configurations = new HashMap<>();
         this.roles = new HashSet<>();
@@ -74,38 +74,38 @@ public class AppContextDefinition implements ISerializable<AppContextDefinition>
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.name = StringUtils.readExternal(in);
-        this.supportedSession = NumberUtils.readExternalLong(in);
-        this.serverURL = StringUtils.readExternal(in);
+        this.name = StringUtil.readExternal(in);
+        this.supportedSession = NumberUtil.readExternalLong(in);
+        this.serverURL = StringUtil.readExternal(in);
 
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.configurations.put(StringUtils.readExternal(in), StringUtils.readExternal(in));
+            this.configurations.put(StringUtil.readExternal(in), StringUtil.readExternal(in));
         }
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.roles.add(UUIDUtils.readExternal(in));
+            this.roles.add(UUIDUtil.readExternal(in));
         }
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        StringUtils.writeExternal(out, this.name);
-        NumberUtils.writeExternalLong(out, this.supportedSession);
-        StringUtils.writeExternal(out, this.serverURL);
+        StringUtil.writeExternal(out, this.name);
+        NumberUtil.writeExternalLong(out, this.supportedSession);
+        StringUtil.writeExternal(out, this.serverURL);
 
-        NumberUtils.writeExternalInteger(out, this.configurations.size());
+        NumberUtil.writeExternalInteger(out, this.configurations.size());
         for (Map.Entry<String, String> pair : this.configurations.entrySet()) {
-            StringUtils.writeExternal(out, pair.getKey());
-            StringUtils.writeExternal(out, pair.getValue());
+            StringUtil.writeExternal(out, pair.getKey());
+            StringUtil.writeExternal(out, pair.getValue());
         }
 
-        NumberUtils.writeExternalInteger(out, this.roles.size());
+        NumberUtil.writeExternalInteger(out, this.roles.size());
         for (UUID pair : this.roles) {
-            UUIDUtils.writeExternal(out, pair);
+            UUIDUtil.writeExternal(out, pair);
         }
     }
 }

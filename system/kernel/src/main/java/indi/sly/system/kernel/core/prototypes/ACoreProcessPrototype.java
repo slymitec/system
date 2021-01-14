@@ -1,12 +1,12 @@
 package indi.sly.system.kernel.core.prototypes;
 
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.StatusNotSupportedException;
-import indi.sly.system.common.functions.Consumer;
-import indi.sly.system.common.functions.Consumer0;
-import indi.sly.system.common.functions.Provider;
-import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.lang.Consumer1;
+import indi.sly.system.common.lang.Consumer;
+import indi.sly.system.common.lang.Provider;
+import indi.sly.system.common.supports.ObjectUtil;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -15,14 +15,14 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class ACoreProcessPrototype<T> extends ACorePrototype {
-    private Consumer0 funcInit;
-    private Consumer0 funcFresh;
+    private Consumer funcInit;
+    private Consumer funcFresh;
     private Provider<T> funcRead;
-    private Consumer<T> funcWrite;
-    private Consumer<Long> funcLock;
+    private Consumer1<T> funcWrite;
+    private Consumer1<Long> funcLock;
 
     public final void setParent(ACoreProcessPrototype parentCoreProcess) {
-        if (ObjectUtils.isAnyNull(parentCoreProcess)) {
+        if (ObjectUtil.isAnyNull(parentCoreProcess)) {
             throw new ConditionParametersException();
         }
 
@@ -34,8 +34,8 @@ public abstract class ACoreProcessPrototype<T> extends ACorePrototype {
         };
     }
 
-    public final void setSource(Provider<T> funcRead, Consumer<T> funcWrite) {
-        if (ObjectUtils.isAnyNull(funcRead, funcWrite)) {
+    public final void setSource(Provider<T> funcRead, Consumer1<T> funcWrite) {
+        if (ObjectUtil.isAnyNull(funcRead, funcWrite)) {
             throw new ConditionParametersException();
         }
 
@@ -43,8 +43,8 @@ public abstract class ACoreProcessPrototype<T> extends ACorePrototype {
         this.funcWrite = funcWrite;
     }
 
-    public final void setLock(Consumer<Long> funcLock) {
-        if (ObjectUtils.isAnyNull(funcLock)) {
+    public final void setLock(Consumer1<Long> funcLock) {
+        if (ObjectUtil.isAnyNull(funcLock)) {
             throw new ConditionParametersException();
         }
 
@@ -52,7 +52,7 @@ public abstract class ACoreProcessPrototype<T> extends ACorePrototype {
     }
 
     protected final void lock(long lockType) {
-        if (ObjectUtils.isAnyNull(this.funcLock)) {
+        if (ObjectUtil.isAnyNull(this.funcLock)) {
             throw new StatusNotSupportedException();
         }
 
@@ -63,7 +63,7 @@ public abstract class ACoreProcessPrototype<T> extends ACorePrototype {
         T value = this.funcRead.acquire();
         this.read(value);
 
-        if (ObjectUtils.allNotNull(this.funcInit)) {
+        if (ObjectUtil.allNotNull(this.funcInit)) {
             this.funcInit.accept();
         }
     }
@@ -72,7 +72,7 @@ public abstract class ACoreProcessPrototype<T> extends ACorePrototype {
         T value = this.write();
         this.funcWrite.accept(value);
 
-        if (ObjectUtils.allNotNull(this.funcFresh)) {
+        if (ObjectUtil.allNotNull(this.funcFresh)) {
             this.funcFresh.accept();
         }
     }

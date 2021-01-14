@@ -1,10 +1,11 @@
 package indi.sly.system.kernel.core.prototypes;
 
-import indi.sly.system.common.exceptions.*;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.*;
+import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.enviroment.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.core.enviroment.UserSpace;
@@ -23,7 +24,7 @@ public class CoreRepositoryObject extends ACorePrototype {
     private KernelSpace kernelSpace;
 
     private KernelSpace getKernelSpace() {
-        if (ObjectUtils.isAnyNull(this.kernelSpace)) {
+        if (ObjectUtil.isAnyNull(this.kernelSpace)) {
             this.kernelSpace = this.factoryManager.getKernelSpace();
         }
 
@@ -51,7 +52,7 @@ public class CoreRepositoryObject extends ACorePrototype {
             }
         }
 
-        if (ObjectUtils.isAnyNull(lock)) {
+        if (ObjectUtil.isAnyNull(lock)) {
             throw new StatusNotSupportedException();
         }
 
@@ -83,7 +84,7 @@ public class CoreRepositoryObject extends ACorePrototype {
     }
 
     public <T extends ACorePrototype> T get(long spaceType, Class<T> clazz) {
-        if (ObjectUtils.isAnyNull(clazz)) {
+        if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
 
@@ -106,10 +107,10 @@ public class CoreRepositoryObject extends ACorePrototype {
     }
 
     public <T extends ACorePrototype> T getByName(long spaceType, Class<T> clazz, String name) {
-        if (ObjectUtils.isAnyNull(clazz)) {
+        if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
-        if (StringUtils.isNameIllegal(name)) {
+        if (StringUtil.isNameIllegal(name)) {
             name = clazz.getName();
         }
 
@@ -133,10 +134,10 @@ public class CoreRepositoryObject extends ACorePrototype {
 
     @SuppressWarnings("unchecked")
     public <T extends ACorePrototype> T getByID(long spaceType, Class<T> clazz, UUID id) {
-        if (ObjectUtils.isAnyNull(clazz)) {
+        if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -149,7 +150,7 @@ public class CoreRepositoryObject extends ACorePrototype {
                 Map<UUID, ACorePrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
 
                 ACorePrototype corePrototype = corePrototypes.getOrDefault(id, null);
-                if (ObjectUtils.isAnyNull(corePrototype)) {
+                if (ObjectUtil.isAnyNull(corePrototype)) {
                     throw new StatusNotExistedException();
                 } else if (corePrototype.getClass() != clazz) {
                     throw new StatusRelationshipErrorException();
@@ -168,7 +169,7 @@ public class CoreRepositoryObject extends ACorePrototype {
                 Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfoObjects();
 
                 InfoObject corePrototype = corePrototypes.getOrDefault(id, null);
-                if (ObjectUtils.isAnyNull(corePrototype)) {
+                if (ObjectUtil.isAnyNull(corePrototype)) {
                     throw new StatusNotExistedException();
                 } else if (corePrototype.getClass() != clazz) {
                     throw new StatusRelationshipErrorException();
@@ -184,7 +185,7 @@ public class CoreRepositoryObject extends ACorePrototype {
     }
 
     public <T extends ACorePrototype> UUID getIDByName(long spaceType, String name) {
-        if (StringUtils.isNameIllegal(name)) {
+        if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
 
@@ -197,7 +198,7 @@ public class CoreRepositoryObject extends ACorePrototype {
                 Map<String, UUID> namedCorePrototypeIDs = this.getKernelSpace().getNamedCorePrototypeIDs();
 
                 UUID id = namedCorePrototypeIDs.getOrDefault(name, null);
-                if (UUIDUtils.isAnyNullOrEmpty(id)) {
+                if (ValueUtil.isAnyNullOrEmpty(id)) {
                     throw new StatusNotExistedException();
                 }
 
@@ -211,7 +212,7 @@ public class CoreRepositoryObject extends ACorePrototype {
     }
 
     public <T extends ACorePrototype> UUID getIDByClass(long spaceType, Class<T> clazz) {
-        if (ObjectUtils.isAnyNull(clazz)) {
+        if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
 
@@ -225,7 +226,7 @@ public class CoreRepositoryObject extends ACorePrototype {
                         this.getKernelSpace().getClassedCorePrototypeIDs();
 
                 UUID id = classedCorePrototypeIDs.getOrDefault(clazz, null);
-                if (UUIDUtils.isAnyNullOrEmpty(id)) {
+                if (ValueUtil.isAnyNullOrEmpty(id)) {
                     throw new StatusNotExistedException();
                 }
 
@@ -276,12 +277,12 @@ public class CoreRepositoryObject extends ACorePrototype {
     }
 
     public <T extends ACorePrototype> void add(long spaceType, UUID id, String name, T corePrototype) {
-        if (UUIDUtils.isAnyNullOrEmpty(id) && !StringUtils.isNameIllegal(name)) {
+        if (ValueUtil.isAnyNullOrEmpty(id) && !StringUtil.isNameIllegal(name)) {
             this.addByName(spaceType, name, corePrototype);
-        } else if (!UUIDUtils.isAnyNullOrEmpty(id) && StringUtils.isNameIllegal(name)) {
+        } else if (!ValueUtil.isAnyNullOrEmpty(id) && StringUtil.isNameIllegal(name)) {
             this.addByID(spaceType, id, corePrototype);
         }
-        if (ObjectUtils.isAnyNull(corePrototype)) {
+        if (ObjectUtil.isAnyNull(corePrototype)) {
             throw new ConditionParametersException();
         }
 
@@ -295,7 +296,7 @@ public class CoreRepositoryObject extends ACorePrototype {
 
                 Map<UUID, ACorePrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
 
-                id = UUIDUtils.createRandom();
+                id = UUIDUtil.createRandom();
                 Class<? extends ACorePrototype> clazz = corePrototype.getClass();
 
                 Map<Class<? extends ACorePrototype>, UUID> classedCorePrototypeIDs =
@@ -316,10 +317,10 @@ public class CoreRepositoryObject extends ACorePrototype {
     }
 
     public <T extends ACorePrototype> void addByName(long spaceType, String name, T corePrototype) {
-        if (ObjectUtils.isAnyNull(corePrototype)) {
+        if (ObjectUtil.isAnyNull(corePrototype)) {
             throw new ConditionParametersException();
         }
-        if (StringUtils.isNameIllegal(name)) {
+        if (StringUtil.isNameIllegal(name)) {
             name = corePrototype.getClass().getName();
         }
 
@@ -333,7 +334,7 @@ public class CoreRepositoryObject extends ACorePrototype {
 
                 Map<UUID, ACorePrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
 
-                UUID id = UUIDUtils.createRandom();
+                UUID id = UUIDUtil.createRandom();
 
                 Map<String, UUID> namedCorePrototypeIDs = this.getKernelSpace().getNamedCorePrototypeIDs();
 
@@ -352,10 +353,10 @@ public class CoreRepositoryObject extends ACorePrototype {
     }
 
     public <T extends ACorePrototype> void addByID(long spaceType, UUID id, T corePrototype) {
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
-        if (ObjectUtils.isAnyNull(corePrototype)) {
+        if (ObjectUtil.isAnyNull(corePrototype)) {
             throw new ConditionParametersException();
         }
 
@@ -403,7 +404,7 @@ public class CoreRepositoryObject extends ACorePrototype {
     }
 
     public <T extends ACorePrototype> boolean contain(long spaceType, Class<T> clazz) {
-        if (ObjectUtils.isAnyNull(clazz)) {
+        if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
 
@@ -429,10 +430,10 @@ public class CoreRepositoryObject extends ACorePrototype {
     }
 
     public <T extends ACorePrototype> boolean containByName(long spaceType, Class<T> clazz, String name) {
-        if (ObjectUtils.isAnyNull(clazz)) {
+        if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
-        if (StringUtils.isNameIllegal(name)) {
+        if (StringUtil.isNameIllegal(name)) {
             name = clazz.getName();
         }
 
@@ -457,10 +458,10 @@ public class CoreRepositoryObject extends ACorePrototype {
     }
 
     public <T extends ACorePrototype> boolean containByID(long spaceType, Class<T> clazz, UUID id) {
-        if (ObjectUtils.isAnyNull(clazz)) {
+        if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             return false;
         }
 
@@ -474,7 +475,7 @@ public class CoreRepositoryObject extends ACorePrototype {
 
                 ACorePrototype corePrototype = corePrototypes.getOrDefault(id, null);
                 boolean isContain;
-                if (ObjectUtils.isAnyNull(corePrototype) || corePrototype.getClass() != clazz) {
+                if (ObjectUtil.isAnyNull(corePrototype) || corePrototype.getClass() != clazz) {
                     isContain = false;
                 } else {
                     isContain = true;
@@ -494,7 +495,7 @@ public class CoreRepositoryObject extends ACorePrototype {
 
                 InfoObject corePrototype = corePrototypes.getOrDefault(id, null);
                 boolean isContain;
-                if (ObjectUtils.isAnyNull(corePrototype) || corePrototype.getClass() != clazz) {
+                if (ObjectUtil.isAnyNull(corePrototype) || corePrototype.getClass() != clazz) {
                     isContain = false;
                 } else {
                     isContain = true;
@@ -537,7 +538,7 @@ public class CoreRepositoryObject extends ACorePrototype {
     public <T extends ACorePrototype> void deleteByName(long spaceType, Class<T> clazz, String name) {
         this.containByName(spaceType, clazz, name);
 
-        if (StringUtils.isNameIllegal(name)) {
+        if (StringUtil.isNameIllegal(name)) {
             name = clazz.getName();
         }
 
@@ -550,7 +551,7 @@ public class CoreRepositoryObject extends ACorePrototype {
                 Map<String, UUID> namedCorePrototypeIDs = this.getKernelSpace().getNamedCorePrototypeIDs();
 
                 UUID id = namedCorePrototypeIDs.getOrDefault(name, null);
-                if (UUIDUtils.isAnyNullOrEmpty(id)) {
+                if (ValueUtil.isAnyNullOrEmpty(id)) {
                     throw new StatusNotExistedException();
                 }
 
@@ -569,10 +570,10 @@ public class CoreRepositoryObject extends ACorePrototype {
     }
 
     public <T extends ACorePrototype> void deleteByID(long spaceType, Class<T> clazz, UUID id) {
-        if (ObjectUtils.isAnyNull(clazz)) {
+        if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
-        if (UUIDUtils.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 

@@ -1,10 +1,10 @@
 package indi.sly.system.kernel.processes.communication.instances.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.exceptions.StatusInsufficientResourcesException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.StatusInsufficientResourcesException;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
@@ -27,12 +27,12 @@ import java.util.UUID;
 public class SignalContentObject extends AInfoContentObject {
     @Override
     protected void read(byte[] source) {
-        this.signal = ObjectUtils.transferFromByteArray(source);
+        this.signal = ObjectUtil.transferFromByteArray(source);
     }
 
     @Override
     protected byte[] write() {
-        return ObjectUtils.transferToByteArray(this.signal);
+        return ObjectUtil.transferToByteArray(this.signal);
     }
 
     private SignalDefinition signal;
@@ -44,7 +44,7 @@ public class SignalContentObject extends AInfoContentObject {
     }
 
     public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {
-        if (ObjectUtils.isAnyNull(sourceProcessIDs)) {
+        if (ObjectUtil.isAnyNull(sourceProcessIDs)) {
             throw new ConditionParametersException();
         }
 

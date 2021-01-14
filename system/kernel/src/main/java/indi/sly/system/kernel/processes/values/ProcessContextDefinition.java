@@ -1,12 +1,12 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.sessions.values.AppContextDefinition;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class ProcessContextDefinition implements ISerializable<ProcessContextDefinition> {
+public class ProcessContextDefinition implements ISerializeCapable<ProcessContextDefinition> {
     public ProcessContextDefinition() {
         this.appContext = new AppContextDefinition();
         this.environmentVariable = new HashMap<>();
@@ -26,14 +26,14 @@ public class ProcessContextDefinition implements ISerializable<ProcessContextDef
     private final Map<String, String> environmentVariable;
     private final Map<String, String> parameters;
     private UUID sessionID;
-    private final List<Identification> workFolder;
+    private final List<IdentificationDefinition> workFolder;
 
     public AppContextDefinition getAppContext() {
         return this.appContext;
     }
 
     public void setAppContext(AppContextDefinition appContext) {
-        if (ObjectUtils.isAnyNull(appContext)) {
+        if (ObjectUtil.isAnyNull(appContext)) {
             throw new ConditionParametersException();
         }
 
@@ -56,7 +56,7 @@ public class ProcessContextDefinition implements ISerializable<ProcessContextDef
         this.sessionID = sessionID;
     }
 
-    public List<Identification> getWorkFolder() {
+    public List<IdentificationDefinition> getWorkFolder() {
         return this.workFolder;
     }
 
@@ -80,49 +80,49 @@ public class ProcessContextDefinition implements ISerializable<ProcessContextDef
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.appContext = ObjectUtils.readExternal(in);
+        this.appContext = ObjectUtil.readExternal(in);
 
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.environmentVariable.put(StringUtils.readExternal(in), StringUtils.readExternal(in));
+            this.environmentVariable.put(StringUtil.readExternal(in), StringUtil.readExternal(in));
         }
 
-        this.sessionID = UUIDUtils.readExternal(in);
+        this.sessionID = UUIDUtil.readExternal(in);
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.parameters.put(StringUtils.readExternal(in), StringUtils.readExternal(in));
+            this.parameters.put(StringUtil.readExternal(in), StringUtil.readExternal(in));
         }
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.workFolder.add(ObjectUtils.readExternal(in));
+            this.workFolder.add(ObjectUtil.readExternal(in));
         }
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        ObjectUtils.writeExternal(out, this.appContext);
+        ObjectUtil.writeExternal(out, this.appContext);
 
-        NumberUtils.writeExternalInteger(out, this.environmentVariable.size());
+        NumberUtil.writeExternalInteger(out, this.environmentVariable.size());
         for (Map.Entry<String, String> pair : this.environmentVariable.entrySet()) {
-            StringUtils.writeExternal(out, pair.getKey());
-            StringUtils.writeExternal(out, pair.getValue());
+            StringUtil.writeExternal(out, pair.getKey());
+            StringUtil.writeExternal(out, pair.getValue());
         }
 
-        UUIDUtils.writeExternal(out, this.sessionID);
+        UUIDUtil.writeExternal(out, this.sessionID);
 
-        NumberUtils.writeExternalInteger(out, this.parameters.size());
+        NumberUtil.writeExternalInteger(out, this.parameters.size());
         for (Map.Entry<String, String> pair : this.parameters.entrySet()) {
-            StringUtils.writeExternal(out, pair.getKey());
-            StringUtils.writeExternal(out, pair.getValue());
+            StringUtil.writeExternal(out, pair.getKey());
+            StringUtil.writeExternal(out, pair.getValue());
         }
 
-        NumberUtils.writeExternalInteger(out, this.workFolder.size());
-        for (Identification pair : this.workFolder) {
-            ObjectUtils.writeExternal(out, pair);
+        NumberUtil.writeExternalInteger(out, this.workFolder.size());
+        for (IdentificationDefinition pair : this.workFolder) {
+            ObjectUtil.writeExternal(out, pair);
         }
     }
 }

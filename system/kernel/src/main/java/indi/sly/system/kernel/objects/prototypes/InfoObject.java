@@ -1,14 +1,14 @@
 package indi.sly.system.kernel.objects.prototypes;
 
-import indi.sly.system.common.exceptions.*;
-import indi.sly.system.common.functions.*;
-import indi.sly.system.common.utility.LogicalUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.*;
+import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
@@ -39,7 +39,7 @@ public class InfoObject extends ACorePrototype {
     protected InfoStatusDefinition status;
 
     public UUID getID() {
-        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
 
@@ -47,7 +47,7 @@ public class InfoObject extends ACorePrototype {
     }
 
     public UUID getParentID() {
-        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
 
@@ -55,7 +55,7 @@ public class InfoObject extends ACorePrototype {
     }
 
     public UUID getType() {
-        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
 
@@ -63,7 +63,7 @@ public class InfoObject extends ACorePrototype {
     }
 
     public long getOccupied() {
-        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
 
@@ -71,7 +71,7 @@ public class InfoObject extends ACorePrototype {
     }
 
     public long getOpened() {
-        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
 
@@ -79,7 +79,7 @@ public class InfoObject extends ACorePrototype {
     }
 
     public String getName() {
-        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
 
@@ -87,15 +87,15 @@ public class InfoObject extends ACorePrototype {
     }
 
     public UUID getHandle() {
-        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
 
         return this.status.getHandle();
     }
 
-    public List<Identification> getIdentifications() {
-        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+    public List<IdentificationDefinition> getIdentifications() {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
 
@@ -107,7 +107,7 @@ public class InfoObject extends ACorePrototype {
         info.setOccupied(info.getOccupied() + 1);
 
         InfoObject parent = this.getParent();
-        if (ObjectUtils.allNotNull(parent)) {
+        if (ObjectUtil.allNotNull(parent)) {
             parent.occupy();
         }
     }
@@ -117,13 +117,13 @@ public class InfoObject extends ACorePrototype {
         info.setOccupied(info.getOccupied() - 1);
 
         InfoObject parent = this.getParent();
-        if (ObjectUtils.allNotNull(parent)) {
+        if (ObjectUtil.allNotNull(parent)) {
             parent.free();
         }
     }
 
     private synchronized void cache(long spaceType) {
-        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
 
@@ -134,20 +134,20 @@ public class InfoObject extends ACorePrototype {
         InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 InfoCacheObject.class);
 
-        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
             if (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
                 throw new ConditionPermissionsException();
             }
 
             kernelCache.add(SpaceTypes.KERNEL, this);
         }
-        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.USER)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.USER)) {
             kernelCache.add(SpaceTypes.USER, this);
         }
     }
 
     private synchronized void uncache(long spaceType) {
-        if (UUIDUtils.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
 
@@ -158,14 +158,14 @@ public class InfoObject extends ACorePrototype {
         InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
                 InfoCacheObject.class);
 
-        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
             if (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
                 throw new ConditionPermissionsException();
             }
 
             kernelCache.delete(SpaceTypes.KERNEL, this.id);
         }
-        if (LogicalUtils.isAnyExist(spaceType, SpaceTypes.USER)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.USER)) {
             kernelCache.delete(SpaceTypes.USER, this.id);
         }
     }
@@ -177,7 +177,7 @@ public class InfoObject extends ACorePrototype {
     public synchronized InfoObject getParent() {
         InfoEntity info = this.getInfo();
 
-        if (UUIDUtils.isAnyNullOrEmpty(this.status.getParentID())) {
+        if (ValueUtil.isAnyNullOrEmpty(this.status.getParentID())) {
             return null;
         } else {
             return this.processorRegister.getParent().apply(this.status.getParentID());
@@ -187,7 +187,7 @@ public class InfoObject extends ACorePrototype {
     public synchronized Map<Long, Long> getDate() {
         InfoEntity info = this.getInfo();
 
-        Map<Long, Long> date = ObjectUtils.transferFromByteArray(info.getDate());
+        Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
 
         return Collections.unmodifiableMap(date);
     }
@@ -201,7 +201,7 @@ public class InfoObject extends ACorePrototype {
         Function3<SecurityDescriptorObject, InfoEntity, TypeObject, InfoStatusDefinition> func =
                 this.processorRegister.getSecurityDescriptor();
 
-        if (ObjectUtils.isAnyNull(func)) {
+        if (ObjectUtil.isAnyNull(func)) {
             throw new StatusNotSupportedException();
         }
 
@@ -239,11 +239,11 @@ public class InfoObject extends ACorePrototype {
         List<Function6<UUID, UUID, InfoEntity, TypeObject, InfoStatusDefinition, Long, Object[]>> funcs =
                 this.processorRegister.getOpens();
 
-        UUID handle = UUIDUtils.getEmpty();
+        UUID handle = UUIDUtil.getEmpty();
 
         for (Function6<UUID, UUID, InfoEntity, TypeObject, InfoStatusDefinition, Long, Object[]> pair : funcs) {
             handle = pair.apply(handle, info, type, this.status, openAttribute, arguments);
-            if (ObjectUtils.isAnyNull(handle)) {
+            if (ObjectUtil.isAnyNull(handle)) {
                 throw new StatusUnexpectedException();
             }
         }
@@ -252,7 +252,7 @@ public class InfoObject extends ACorePrototype {
         this.status.setHandle(handle);
 
         InfoObject parentInfo = this.getParent();
-        if (ObjectUtils.allNotNull(parentInfo)) {
+        if (ObjectUtil.allNotNull(parentInfo)) {
             parentInfo.occupy();
         }
 
@@ -278,21 +278,21 @@ public class InfoObject extends ACorePrototype {
         this.status.setHandle(null);
 
         InfoObject parentInfo = this.getParent();
-        if (ObjectUtils.allNotNull(parentInfo)) {
+        if (ObjectUtil.allNotNull(parentInfo)) {
             parentInfo.free();
         }
     }
 
     public synchronized boolean isOpened() {
-        return !UUIDUtils.isAnyNullOrEmpty(this.status.getHandle());
+        return !ValueUtil.isAnyNullOrEmpty(this.status.getHandle());
     }
 
-    public synchronized InfoObject createChildAndOpen(UUID type, Identification identification, long openAttribute,
+    public synchronized InfoObject createChildAndOpen(UUID type, IdentificationDefinition identification, long openAttribute,
                                                       Object... arguments) {
-        if (!UUIDUtils.isAnyNullOrEmpty(this.status.getHandle()) || ObjectUtils.isAnyNull(identification)) {
+        if (!ValueUtil.isAnyNullOrEmpty(this.status.getHandle()) || ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
-        if (ObjectUtils.isAnyNull(arguments)) {
+        if (ObjectUtil.isAnyNull(arguments)) {
             arguments = new Object[0];
         }
 
@@ -301,16 +301,16 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject typeObject = typeManager.get(this.getType());
 
-        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID, Identification>> funcs = this.processorRegister.getCreateChildAndOpens();
+        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID, IdentificationDefinition>> funcs = this.processorRegister.getCreateChildAndOpens();
 
         InfoEntity childInfo = null;
 
-        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID, Identification> pair :
+        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID, IdentificationDefinition> pair :
                 funcs) {
             childInfo = pair.apply(childInfo, info, typeObject, this.status, type, identification);
         }
 
-        if (ObjectUtils.isAnyNull(info)) {
+        if (ObjectUtil.isAnyNull(info)) {
             throw new StatusUnexpectedException();
         }
 
@@ -321,12 +321,12 @@ public class InfoObject extends ACorePrototype {
         return childInfoObject;
     }
 
-    public synchronized InfoObject getChild(Identification identification) {
+    public synchronized InfoObject getChild(IdentificationDefinition identification) {
         return this.rebuildChild(identification, null);
     }
 
-    public synchronized InfoObject rebuildChild(Identification identification, InfoStatusOpenDefinition statusOpen) {
-        if (ObjectUtils.isAnyNull(identification)) {
+    public synchronized InfoObject rebuildChild(IdentificationDefinition identification, InfoStatusOpenDefinition statusOpen) {
+        if (ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
 
@@ -335,17 +335,17 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, Identification,
+        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition,
                 InfoStatusOpenDefinition>> funcs = this.processorRegister.getGetOrRebuildChilds();
 
         InfoEntity childInfo = null;
 
-        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, Identification,
+        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition,
                 InfoStatusOpenDefinition> pair : funcs) {
             childInfo = pair.apply(childInfo, info, type, this.status, identification, statusOpen);
         }
 
-        if (ObjectUtils.isAnyNull(childInfo)) {
+        if (ObjectUtil.isAnyNull(childInfo)) {
             throw new StatusUnexpectedException();
         }
 
@@ -353,7 +353,7 @@ public class InfoObject extends ACorePrototype {
                 InfoCacheObject.class);
 
         InfoObject childCachedInfo = infoCache.getIfExisted(SpaceTypes.ALL, childInfo.getID());
-        if (ObjectUtils.isAnyNull(childCachedInfo)) {
+        if (ObjectUtil.isAnyNull(childCachedInfo)) {
             childCachedInfo = this.factory.buildInfoObject(childInfo, statusOpen, this);
 
             childCachedInfo.cache(SpaceTypes.USER);
@@ -361,8 +361,8 @@ public class InfoObject extends ACorePrototype {
         return childCachedInfo;
     }
 
-    public synchronized void deleteChild(Identification identification) {
-        if (ObjectUtils.isAnyNull(identification)) {
+    public synchronized void deleteChild(IdentificationDefinition identification) {
+        if (ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
 
@@ -372,10 +372,10 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Identification>> funcs =
+        List<Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition>> funcs =
                 this.processorRegister.getDeleteChilds();
 
-        for (Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Identification> pair : funcs) {
+        for (Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition> pair : funcs) {
             pair.accept(info, type, this.status, identification);
         }
 
@@ -383,7 +383,7 @@ public class InfoObject extends ACorePrototype {
     }
 
     public synchronized Set<InfoSummaryDefinition> queryChild(Predicate<InfoSummaryDefinition> wildcard) {
-        if (ObjectUtils.isAnyNull(wildcard)) {
+        if (ObjectUtil.isAnyNull(wildcard)) {
             throw new ConditionParametersException();
         }
 
@@ -406,8 +406,8 @@ public class InfoObject extends ACorePrototype {
         return infoSummaries;
     }
 
-    public synchronized void renameChild(Identification oldIdentification, Identification newIdentification) {
-        if (ObjectUtils.isAnyNull(oldIdentification, newIdentification)) {
+    public synchronized void renameChild(IdentificationDefinition oldIdentification, IdentificationDefinition newIdentification) {
+        if (ObjectUtil.isAnyNull(oldIdentification, newIdentification)) {
             throw new ConditionParametersException();
         }
 
@@ -416,10 +416,10 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, Identification, Identification>> funcs =
+        List<Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition, IdentificationDefinition>> funcs =
                 this.processorRegister.getRenameChilds();
 
-        for (Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, Identification, Identification> pair : funcs) {
+        for (Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition, IdentificationDefinition> pair : funcs) {
             pair.accept(info, type, this.status, oldIdentification, newIdentification);
         }
     }
@@ -444,7 +444,7 @@ public class InfoObject extends ACorePrototype {
     }
 
     public synchronized void writeProperties(Map<String, String> properties) {
-        if (ObjectUtils.isAnyNull(properties)) {
+        if (ObjectUtil.isAnyNull(properties)) {
             throw new ConditionParametersException();
         }
 

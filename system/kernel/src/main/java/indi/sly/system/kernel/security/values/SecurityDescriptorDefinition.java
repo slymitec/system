@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.security.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.security.types.AuditTypes;
 
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.io.ObjectOutput;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class SecurityDescriptorDefinition implements ISerializable<SecurityDescriptorDefinition> {
+public class SecurityDescriptorDefinition implements ISerializeCapable<SecurityDescriptorDefinition> {
     private static final long serialVersionUID = 1L;
 
     private boolean inherit;
@@ -93,48 +93,48 @@ public class SecurityDescriptorDefinition implements ISerializable<SecurityDescr
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.inherit = NumberUtils.readExternalBoolean(in);
+        this.inherit = NumberUtil.readExternalBoolean(in);
 
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.owners.add(UUIDUtils.readExternal(in));
+            this.owners.add(UUIDUtil.readExternal(in));
         }
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.accessControl.put(UUIDUtils.readExternal(in), NumberUtils.readExternalLong(in));
+            this.accessControl.put(UUIDUtil.readExternal(in), NumberUtil.readExternalLong(in));
         }
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.roles.add(UUIDUtils.readExternal(in));
+            this.roles.add(UUIDUtil.readExternal(in));
         }
 
-        this.auditTypes = NumberUtils.readExternalLong(in);
+        this.auditTypes = NumberUtil.readExternalLong(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        NumberUtils.writeExternalBoolean(out, this.inherit);
+        NumberUtil.writeExternalBoolean(out, this.inherit);
 
-        NumberUtils.writeExternalInteger(out, this.owners.size());
+        NumberUtil.writeExternalInteger(out, this.owners.size());
         for (UUID pair : this.owners) {
-            UUIDUtils.writeExternal(out, pair);
+            UUIDUtil.writeExternal(out, pair);
         }
 
-        NumberUtils.writeExternalInteger(out, this.accessControl.size());
+        NumberUtil.writeExternalInteger(out, this.accessControl.size());
         for (Entry<UUID, Long> pair : this.accessControl.entrySet()) {
-            UUIDUtils.writeExternal(out, pair.getKey());
-            NumberUtils.writeExternalLong(out, pair.getValue());
+            UUIDUtil.writeExternal(out, pair.getKey());
+            NumberUtil.writeExternalLong(out, pair.getValue());
         }
 
-        NumberUtils.writeExternalInteger(out, this.roles.size());
+        NumberUtil.writeExternalInteger(out, this.roles.size());
         for (UUID pair : this.roles) {
-            UUIDUtils.writeExternal(out, pair);
+            UUIDUtil.writeExternal(out, pair);
         }
 
-        NumberUtils.writeExternalLong(out, this.auditTypes);
+        NumberUtil.writeExternalLong(out, this.auditTypes);
     }
 }

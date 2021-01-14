@@ -1,12 +1,11 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.exceptions.AKernelException;
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.exceptions.StatusRelationshipErrorException;
-import indi.sly.system.common.functions.Consumer2;
-import indi.sly.system.common.functions.Function2;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.LogicalUtils;
+import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.Consumer2;
+import indi.sly.system.common.lang.Function2;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
@@ -47,7 +46,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     }
 
     public void initialize() {
-        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.NULL)
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.NULL)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
@@ -70,7 +69,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     }
 
     public void run() {
-        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
                 ProcessStatusTypes.INTERRUPTED)) {
             throw new StatusRelationshipErrorException();
         }
@@ -85,7 +84,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     }
 
     public void interrupt() {
-        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
                 ProcessStatusTypes.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
@@ -100,7 +99,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     }
 
     public void die() {
-        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.RUNNING,
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.RUNNING,
                 ProcessStatusTypes.INTERRUPTED, ProcessStatusTypes.DIED)) {
             throw new StatusRelationshipErrorException();
         }
@@ -140,7 +139,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     }
 
     public void zombie() {
-        if (LogicalUtils.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.DIED)) {
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 

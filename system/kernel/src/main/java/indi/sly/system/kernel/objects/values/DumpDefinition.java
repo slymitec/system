@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.objects.values;
 
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 
 import java.util.*;
 
@@ -8,7 +8,7 @@ public class DumpDefinition {
     private final Map<Long, Long> date;
     private UUID processID;
     private UUID accountID;
-    private final List<Identification> identifications;
+    private final List<IdentificationDefinition> identifications;
     private InfoStatusOpenDefinition open;
 
     public DumpDefinition() {
@@ -36,7 +36,7 @@ public class DumpDefinition {
         this.accountID = accountID;
     }
 
-    public List<Identification> getIdentifications() {
+    public List<IdentificationDefinition> getIdentifications() {
         return this.identifications;
     }
 

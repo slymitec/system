@@ -9,12 +9,12 @@ import javax.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import indi.sly.system.common.functions.Consumer;
-import indi.sly.system.common.functions.Provider;
+import indi.sly.system.common.lang.Consumer1;
+import indi.sly.system.common.lang.Provider;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
@@ -51,17 +51,17 @@ public abstract class ATypeInitializer extends ACorePrototype {
 
     public abstract void createChildProcedure(InfoEntity info, InfoEntity childInfo);
 
-    public abstract InfoSummaryDefinition getChildProcedure(InfoEntity info, Identification identification);
+    public abstract InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification);
 
     public abstract Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate<InfoSummaryDefinition> wildcard);
 
-    public abstract void renameChildProcedure(InfoEntity info, Identification oldIdentification, Identification newIdentification);
+    public abstract void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification, IdentificationDefinition newIdentification);
 
-    public abstract void deleteChildProcedure(InfoEntity info, Identification identification);
+    public abstract void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification);
 
     protected abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen);
 
-    public final AInfoContentObject getContentProcedure(InfoEntity info, Provider<byte[]> funcRead, Consumer<byte[]> funcWrite, InfoStatusOpenDefinition statusOpen) {
+    public final AInfoContentObject getContentProcedure(InfoEntity info, Provider<byte[]> funcRead, Consumer1<byte[]> funcWrite, InfoStatusOpenDefinition statusOpen) {
         AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, statusOpen));
 
         content.setSource(funcRead, funcWrite);

@@ -1,12 +1,12 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessContextDefinition;
 import indi.sly.system.kernel.sessions.values.AppContextDefinition;
@@ -34,7 +34,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
     }
 
     public void setAppContext(AppContextDefinition appContext) {
-        if (ObjectUtils.isAnyNull(appContext)) {
+        if (ObjectUtil.isAnyNull(appContext)) {
             throw new ConditionParametersException();
         }
 
@@ -73,7 +73,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
     }
 
     public void setEnvironmentVariable(Map<String, String> environmentVariable) {
-        if (ObjectUtils.isAnyNull(environmentVariable)) {
+        if (ObjectUtil.isAnyNull(environmentVariable)) {
             throw new ConditionParametersException();
         }
 
@@ -102,7 +102,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
     }
 
     public void setParameters(Map<String, String> parameters) {
-        if (ObjectUtils.isAnyNull(parameters)) {
+        if (ObjectUtil.isAnyNull(parameters)) {
             throw new ConditionParametersException();
         }
 
@@ -139,7 +139,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
     }
 
     public void setSessionID(UUID sessionID) {
-        if (UUIDUtils.isAnyNullOrEmpty(sessionID)) {
+        if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
             throw new ConditionParametersException();
         }
 
@@ -167,14 +167,14 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         }
     }
 
-    public List<Identification> getWorkFolder() {
+    public List<IdentificationDefinition> getWorkFolder() {
         this.init();
 
         return this.value.getWorkFolder();
     }
 
-    public void setWorkFolder(List<Identification> workFolder) {
-        if (ObjectUtils.isAnyNull(workFolder)) {
+    public void setWorkFolder(List<IdentificationDefinition> workFolder) {
+        if (ObjectUtil.isAnyNull(workFolder)) {
             throw new ConditionParametersException();
         }
 
@@ -194,7 +194,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             this.lock(LockTypes.WRITE);
             this.init();
 
-            List<Identification> processContextWorkFolder = this.value.getWorkFolder();
+            List<IdentificationDefinition> processContextWorkFolder = this.value.getWorkFolder();
             processContextWorkFolder.clear();
             processContextWorkFolder.addAll(workFolder);
 

@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.core.prototypes;
 
-import indi.sly.system.common.utility.ObjectUtils;
+import indi.sly.system.common.supports.ObjectUtil;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -12,14 +12,14 @@ public abstract class ABytesValueProcessPrototype<T> extends ACoreProcessPrototy
     protected T value;
 
     protected void read(byte[] source) {
-        if (ObjectUtils.isAnyNull(source)) {
+        if (ObjectUtil.isAnyNull(source)) {
             this.value = null;
         } else {
-            this.value = ObjectUtils.transferFromByteArray(source);
+            this.value = ObjectUtil.transferFromByteArray(source);
         }
     }
 
     protected byte[] write() {
-        return ObjectUtils.isAnyNull(this.value) ? null : ObjectUtils.transferToByteArray(this.value);
+        return ObjectUtil.isAnyNull(this.value) ? null : ObjectUtil.transferToByteArray(this.value);
     }
 }

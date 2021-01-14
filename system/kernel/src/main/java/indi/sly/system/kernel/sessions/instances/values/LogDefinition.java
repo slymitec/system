@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.sessions.instances.values;
 
-import indi.sly.system.common.support.ISerializable;
+import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.kernel.processes.values.ProcessContextDefinition;
 import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
 
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class LogDefinition implements ISerializable<LogDefinition> {
+public class LogDefinition implements ISerializeCapable<LogDefinition> {
     public LogDefinition() {
         this.value = new HashMap<>();
     }

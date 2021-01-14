@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.sessions.values.AppContextDefinition;
 
@@ -19,7 +19,7 @@ public class CreateProcessDefinition {
     private Map<String, String> environmentVariable;
     private Map<String, String> parameters;
     private UUID sessionID;
-    private List<Identification> workFolder;
+    private List<IdentificationDefinition> workFolder;
 
     public UUID getFileHandle() {
         return this.fileHandle;
@@ -85,11 +85,11 @@ public class CreateProcessDefinition {
         this.sessionID = sessionID;
     }
 
-    public List<Identification> getWorkFolder() {
+    public List<IdentificationDefinition> getWorkFolder() {
         return this.workFolder;
     }
 
-    public void setWorkFolder(List<Identification> workFolder) {
+    public void setWorkFolder(List<IdentificationDefinition> workFolder) {
         this.workFolder = workFolder;
     }
 }

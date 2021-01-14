@@ -1,15 +1,15 @@
 package indi.sly.system.kernel.security.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.exceptions.StatusInsufficientResourcesException;
-import indi.sly.system.common.exceptions.StatusNotSupportedException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.LogicalUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.StatusInsufficientResourcesException;
+import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
@@ -36,7 +36,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
     protected void read(byte[] source) {
         super.read(source);
 
-        if (ObjectUtils.isAnyNull(this.value)) {
+        if (ObjectUtil.isAnyNull(this.value)) {
             this.value = new SecurityDescriptorDefinition();
         }
     }
@@ -52,7 +52,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         return source;
     }
 
-    private final List<Identification> identifications;
+    private final List<IdentificationDefinition> identifications;
     private final List<SecurityDescriptorObject> parents;
     private boolean permission;
     private boolean audit;
@@ -79,7 +79,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
     }
 
     private boolean isAccessControlType(long accessControlType) {
-        if (accessControlType == AccessControlTypes.NULL || LogicalUtils.isAnyExist(accessControlType,
+        if (accessControlType == AccessControlTypes.NULL || LogicalUtil.isAnyExist(accessControlType,
                 AccessControlTypes.FULLCONTROL_DENY)) {
             throw new ConditionParametersException();
         }
@@ -112,7 +112,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
             for (Map.Entry<UUID, Long> pair : securityDescriptor.getAccessControl().entrySet()) {
                 if (accessControl.containsKey(pair.getKey())) {
-                    accessControl.put(pair.getKey(), LogicalUtils.or(accessControl.get(pair.getKey()),
+                    accessControl.put(pair.getKey(), LogicalUtil.or(accessControl.get(pair.getKey()),
                             pair.getValue()));
                 } else {
                     accessControl.put(pair.getKey(), pair.getValue());
@@ -135,10 +135,10 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         for (UUID id : accountGroupIDs) {
             if (accessControl.containsKey(id)) {
                 long accessControlTypeValue = accessControl.get(id);
-                if (LogicalUtils.isAllExist(accessControlTypeValue, accessControlType)) {
+                if (LogicalUtil.isAllExist(accessControlTypeValue, accessControlType)) {
                     allow = true;
                 }
-                if (LogicalUtils.isAnyExist(accessControlTypeValue, accessControlType << 1)) {
+                if (LogicalUtil.isAnyExist(accessControlTypeValue, accessControlType << 1)) {
                     return false;
                 }
             }
@@ -217,7 +217,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
     }
 
     public void setOwners(List<UUID> owners) {
-        if (ObjectUtils.isAnyNull(owners) || owners.isEmpty()) {
+        if (ObjectUtil.isAnyNull(owners) || owners.isEmpty()) {
             throw new ConditionParametersException();
         }
         if (!this.permission) {
@@ -243,7 +243,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
     }
 
     public void setAccessControlTypes(Map<UUID, Long> accessControl) {
-        if (ObjectUtils.isAnyNull(accessControl)) {
+        if (ObjectUtil.isAnyNull(accessControl)) {
             throw new ConditionParametersException();
         }
         if (!this.permission) {
@@ -278,7 +278,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
                 for (Map.Entry<UUID, Long> pair : securityDescriptor.getAccessControl().entrySet()) {
                     if (parentAccessControl.containsKey(pair.getKey())) {
-                        parentAccessControl.put(pair.getKey(), LogicalUtils.or(parentAccessControl.get(pair.getKey()),
+                        parentAccessControl.put(pair.getKey(), LogicalUtil.or(parentAccessControl.get(pair.getKey()),
                                 pair.getValue()));
                     } else {
                         parentAccessControl.put(pair.getKey(), pair.getValue());
@@ -290,10 +290,10 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
             for (Map.Entry<UUID, Long> pair : accessControl.entrySet()) {
                 Long parentAccessControlValue = parentAccessControl.getOrDefault(pair.getKey(), null);
-                if (ObjectUtils.isAnyNull(parentAccessControlValue)) {
+                if (ObjectUtil.isAnyNull(parentAccessControlValue)) {
                     resultAccessControl.put(pair.getKey(), pair.getValue());
                 } else {
-                    resultAccessControl.put(pair.getKey(), LogicalUtils.and(pair.getValue(),
+                    resultAccessControl.put(pair.getKey(), LogicalUtil.and(pair.getValue(),
                             ~(parentAccessControlValue.longValue())));
                 }
             }
@@ -309,7 +309,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
     }
 
     public void checkRoleTypes(UUID roleType) {
-        if (UUIDUtils.isAnyNullOrEmpty(roleType)) {
+        if (ValueUtil.isAnyNullOrEmpty(roleType)) {
             throw new ConditionParametersException();
         }
 
@@ -359,7 +359,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             throw new StatusNotSupportedException();
         }
 
-        if (LogicalUtils.isNotAllExist(this.value.getAuditTypes(), accessControlType)) {
+        if (LogicalUtil.isNotAllExist(this.value.getAuditTypes(), accessControlType)) {
             return;
         }
 

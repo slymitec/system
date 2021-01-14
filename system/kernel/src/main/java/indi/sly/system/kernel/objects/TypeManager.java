@@ -7,16 +7,13 @@ import java.util.UUID;
 
 import javax.inject.Named;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import indi.sly.system.common.exceptions.StatusAlreadyExistedException;
-import indi.sly.system.common.utility.LogicalUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.types.StartupTypes;
 import indi.sly.system.kernel.core.enviroment.KernelConfiguration;
@@ -37,11 +34,11 @@ public class TypeManager extends AManager {
             KernelConfiguration kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
             Set<UUID> childTypes = new HashSet<>();
-            childTypes.add(UUIDUtils.getEmpty());
+            childTypes.add(UUIDUtil.getEmpty());
 
             this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
                     kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_NAME,
-                    LogicalUtils.or(TypeInitializerAttributeTypes.CAN_BE_SENT_AND_INHERITED,
+                    LogicalUtil.or(TypeInitializerAttributeTypes.CAN_BE_SENT_AND_INHERITED,
                             TypeInitializerAttributeTypes.CAN_BE_SHARED_READ, TypeInitializerAttributeTypes.HAS_AUDIT,
                             TypeInitializerAttributeTypes.HAS_CHILD, TypeInitializerAttributeTypes.HAS_CONTENT,
                             TypeInitializerAttributeTypes.HAS_PERMISSION,
@@ -50,7 +47,7 @@ public class TypeManager extends AManager {
 
             this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                     kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_NAME,
-                    LogicalUtils.or(TypeInitializerAttributeTypes.CAN_BE_SENT_AND_INHERITED,
+                    LogicalUtil.or(TypeInitializerAttributeTypes.CAN_BE_SENT_AND_INHERITED,
                             TypeInitializerAttributeTypes.CAN_BE_SHARED_READ,
                             TypeInitializerAttributeTypes.CHILD_IS_NAMELESS,
                             TypeInitializerAttributeTypes.HAS_AUDIT, TypeInitializerAttributeTypes.HAS_CHILD,
@@ -61,7 +58,7 @@ public class TypeManager extends AManager {
     }
 
     public TypeObject get(UUID typeID) {
-        if (UUIDUtils.isAnyNullOrEmpty(typeID)) {
+        if (ValueUtil.isAnyNullOrEmpty(typeID)) {
             throw new ConditionParametersException();
         }
 
@@ -72,7 +69,7 @@ public class TypeManager extends AManager {
     }
 
     public TypeObject getIDByName(String typeName) {
-        if (StringUtils.isNameIllegal(typeName)) {
+        if (StringUtil.isNameIllegal(typeName)) {
             throw new ConditionParametersException();
         }
 
@@ -84,16 +81,16 @@ public class TypeManager extends AManager {
 
     public synchronized TypeObject create(UUID typeID, String typeName, long attribute, Set<UUID> childTypes,
                                           ATypeInitializer typeInitializer) {
-        if (ObjectUtils.isAnyNull(typeID, childTypes, typeInitializer) || StringUtils.isNameIllegal(typeName)) {
+        if (ObjectUtil.isAnyNull(typeID, childTypes, typeInitializer) || StringUtil.isNameIllegal(typeName)) {
             throw new ConditionParametersException();
         }
 
         TypeDefinition typeDefinition = new TypeDefinition();
-        typeDefinition.setId(UUIDUtils.createRandom());
+        typeDefinition.setId(UUIDUtil.createRandom());
         typeDefinition.setName(typeName);
         typeDefinition.setAttribute(attribute);
         typeDefinition.setTypeInitializer(typeInitializer);
-        if (ObjectUtils.allNotNull(childTypes)) {
+        if (ObjectUtil.allNotNull(childTypes)) {
             typeDefinition.getChildTypes().addAll(childTypes);
         }
 
@@ -116,7 +113,7 @@ public class TypeManager extends AManager {
     }
 
     public synchronized void delete(UUID typeID) {
-        if (ObjectUtils.isAnyNull(typeID)) {
+        if (ObjectUtil.isAnyNull(typeID)) {
             throw new ConditionParametersException();
         }
 

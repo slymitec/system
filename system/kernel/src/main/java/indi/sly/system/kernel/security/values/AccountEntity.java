@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.security.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.*;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.*;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "KernelAccounts")
-public class AccountEntity implements ISerializable<AccountEntity> {
+public class AccountEntity implements ISerializeCapable<AccountEntity> {
     private static final long serialVersionUID = 1L;
 
     public AccountEntity() {
@@ -100,7 +100,7 @@ public class AccountEntity implements ISerializable<AccountEntity> {
         account.name = this.name;
         account.password = this.password;
         account.groups = this.groups;
-        account.token = ArrayUtils.copyBytes(this.token);
+        account.token = ArrayUtil.copyBytes(this.token);
 
         return account;
     }
@@ -109,29 +109,29 @@ public class AccountEntity implements ISerializable<AccountEntity> {
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         int valueInteger;
 
-        this.id = UUIDUtils.readExternal(in);
-        this.name = StringUtils.readExternal(in);
-        this.password = StringUtils.readExternal(in);
+        this.id = UUIDUtil.readExternal(in);
+        this.name = StringUtil.readExternal(in);
+        this.password = StringUtil.readExternal(in);
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.groups.add(ObjectUtils.readExternal(in));
+            this.groups.add(ObjectUtil.readExternal(in));
         }
 
-        this.token = NumberUtils.readExternalBytes(in);
+        this.token = NumberUtil.readExternalBytes(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.id);
-        StringUtils.writeExternal(out, this.name);
-        StringUtils.writeExternal(out, this.password);
+        UUIDUtil.writeExternal(out, this.id);
+        StringUtil.writeExternal(out, this.name);
+        StringUtil.writeExternal(out, this.password);
 
-        NumberUtils.writeExternalInteger(out, this.groups.size());
+        NumberUtil.writeExternalInteger(out, this.groups.size());
         for (GroupEntity pair : this.groups) {
-            ObjectUtils.writeExternal(out, pair);
+            ObjectUtil.writeExternal(out, pair);
         }
 
-        NumberUtils.writeExternalBytes(out, this.token);
+        NumberUtil.writeExternalBytes(out, this.token);
     }
 }

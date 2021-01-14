@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.sessions.instances.prototypes;
 
-import indi.sly.system.common.exceptions.StatusNotSupportedException;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -36,7 +36,7 @@ public class UserSessionTypeInitializer extends ATypeInitializer {
 
     @Override
     public void createProcedure(InfoEntity info) {
-        info.setContent(ObjectUtils.transferToByteArray(new UserSessionDefinition()));
+        info.setContent(ObjectUtil.transferToByteArray(new UserSessionDefinition()));
     }
 
     @Override
@@ -66,7 +66,7 @@ public class UserSessionTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, Identification identification) {
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification) {
         throw new StatusNotSupportedException();
     }
 
@@ -76,13 +76,13 @@ public class UserSessionTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public void renameChildProcedure(InfoEntity info, Identification oldIdentification,
-                                     Identification newIdentification) {
+    public void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification,
+                                     IdentificationDefinition newIdentification) {
         throw new StatusNotSupportedException();
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, Identification identification) {
+    public void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification) {
         throw new StatusNotSupportedException();
     }
 

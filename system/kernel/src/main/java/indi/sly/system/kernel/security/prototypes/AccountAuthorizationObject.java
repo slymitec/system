@@ -1,10 +1,10 @@
 package indi.sly.system.kernel.security.prototypes;
 
-import indi.sly.system.common.exceptions.AKernelException;
-import indi.sly.system.common.exceptions.StatusExpiredException;
-import indi.sly.system.common.utility.LogicalUtils;
-import indi.sly.system.common.utility.StringUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.lang.StatusExpiredException;
+import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
@@ -46,7 +46,7 @@ public class AccountAuthorizationObject extends ACorePrototype {
     }
 
     public boolean isAccountIDLegal() {
-        if (UUIDUtils.isAnyNullOrEmpty(this.accountID)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.accountID)) {
             return false;
         }
 
@@ -58,7 +58,7 @@ public class AccountAuthorizationObject extends ACorePrototype {
         } catch (AKernelException e) {
             return false;
         }
-        if (!StringUtils.equals(account.getPassword(), this.password)) {
+        if (!StringUtil.equals(account.getPassword(), this.password)) {
             return false;
         }
 
@@ -76,7 +76,7 @@ public class AccountAuthorizationObject extends ACorePrototype {
     }
 
     public AccountAuthorizationResultDefinition checkAndGetResult() {
-        if (UUIDUtils.isAnyNullOrEmpty(this.accountID)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.accountID)) {
             throw new StatusExpiredException();
         }
 
@@ -88,7 +88,7 @@ public class AccountAuthorizationObject extends ACorePrototype {
         } catch (AKernelException e) {
             throw new StatusExpiredException();
         }
-        if (!StringUtils.equals(account.getPassword(), this.password)) {
+        if (!StringUtil.equals(account.getPassword(), this.password)) {
             throw new StatusExpiredException();
         }
 
@@ -118,7 +118,7 @@ public class AccountAuthorizationObject extends ACorePrototype {
         accountGroupTokens.add(account.getToken());
 
         for (AccountGroupTokenObject accountGroupToken : accountGroupTokens) {
-            accountAuthorizationToken.setPrivilegeTypes(LogicalUtils.or(accountAuthorizationToken.getPrivilegeTypes()
+            accountAuthorizationToken.setPrivilegeTypes(LogicalUtil.or(accountAuthorizationToken.getPrivilegeTypes()
                     , accountGroupToken.getPrivilegeTypes()));
 
             for (Map.Entry<Long, Integer> pair : accountGroupToken.getLimits().entrySet()) {

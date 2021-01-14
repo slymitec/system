@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.security.values;
 
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 
 import java.util.*;
 
@@ -10,11 +10,11 @@ public class SecurityDescriptorSummaryDefinition {
         this.accessControl = new HashMap<>();
     }
 
-    private final List<Identification> identifications;
+    private final List<IdentificationDefinition> identifications;
     private boolean inherit;
     private final Map<UUID, Long> accessControl;
 
-    public List<Identification> getIdentifications() {
+    public List<IdentificationDefinition> getIdentifications() {
         return this.identifications;
     }
 

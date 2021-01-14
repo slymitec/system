@@ -1,16 +1,16 @@
 package indi.sly.system.kernel.processes.communication.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.*;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.*;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class ProcessCommunicationDefinition implements ISerializable<ProcessCommunicationDefinition> {
+public class ProcessCommunicationDefinition implements ISerializeCapable<ProcessCommunicationDefinition> {
     public ProcessCommunicationDefinition() {
-        this.shared = ArrayUtils.EMPTY_BYTES;
+        this.shared = ArrayUtil.EMPTY_BYTES;
         this.portIDs = new HashSet<>();
     }
 
@@ -63,7 +63,7 @@ public class ProcessCommunicationDefinition implements ISerializable<ProcessComm
     public ProcessCommunicationDefinition deepClone() {
         ProcessCommunicationDefinition definition = new ProcessCommunicationDefinition();
 
-        definition.shared = ArrayUtils.copyBytes(this.shared);
+        definition.shared = ArrayUtil.copyBytes(this.shared);
         definition.portIDs.addAll(this.portIDs);
         definition.signalID = this.signalID;
 
@@ -72,27 +72,27 @@ public class ProcessCommunicationDefinition implements ISerializable<ProcessComm
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.shared = NumberUtils.readExternalBytes(in);
+        this.shared = NumberUtil.readExternalBytes(in);
 
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.portIDs.add(UUIDUtils.readExternal(in));
+            this.portIDs.add(UUIDUtil.readExternal(in));
         }
 
-        this.signalID = UUIDUtils.readExternal(in);
+        this.signalID = UUIDUtil.readExternal(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        NumberUtils.writeExternalBytes(out, this.shared);
+        NumberUtil.writeExternalBytes(out, this.shared);
 
-        NumberUtils.writeExternalInteger(out, this.portIDs.size());
+        NumberUtil.writeExternalInteger(out, this.portIDs.size());
         for (UUID pair : this.portIDs) {
-            UUIDUtils.writeExternal(out, pair);
+            UUIDUtil.writeExternal(out, pair);
         }
 
-        UUIDUtils.writeExternal(out, this.signalID);
+        UUIDUtil.writeExternal(out, this.signalID);
     }
 }

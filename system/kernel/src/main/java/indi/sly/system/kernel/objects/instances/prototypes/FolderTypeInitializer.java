@@ -1,14 +1,14 @@
 package indi.sly.system.kernel.objects.instances.prototypes;
 
-import indi.sly.system.common.exceptions.StatusAlreadyExistedException;
-import indi.sly.system.common.exceptions.StatusNotExistedException;
-import indi.sly.system.common.exceptions.StatusNotReadyException;
-import indi.sly.system.common.exceptions.StatusNotSupportedException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.StringUtils;
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
+import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.lang.StatusNotReadyException;
+import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoRelationEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
@@ -75,7 +75,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
 
     @Override
     public void createChildProcedure(InfoEntity info, InfoEntity childInfo) {
-        if (StringUtils.isNameIllegal(childInfo.getName())) {
+        if (StringUtil.isNameIllegal(childInfo.getName())) {
             throw new StatusNotSupportedException();
         }
 
@@ -105,7 +105,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, Identification identification) {
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification) {
         if (identification.getType() != String.class) {
             throw new StatusNotSupportedException();
         }
@@ -114,7 +114,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
         AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        String childName = StringUtils.readFormBytes(identification.getID());
+        String childName = StringUtil.readFormBytes(identification.getID());
 
         List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
         for (InfoRelationEntity infoRelation : infoRelations) {
@@ -156,8 +156,8 @@ public class FolderTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public void renameChildProcedure(InfoEntity info, Identification oldIdentification,
-                                     Identification newIdentification) {
+    public void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification,
+                                     IdentificationDefinition newIdentification) {
         if (oldIdentification.getType() != String.class || newIdentification.getType() != String.class) {
             throw new StatusNotSupportedException();
         }
@@ -168,8 +168,8 @@ public class FolderTypeInitializer extends ATypeInitializer {
 
         this.lockProcedure(info, LockTypes.WRITE);
 
-        String oldChildName = StringUtils.readFormBytes(oldIdentification.getID());
-        String newChildName = StringUtils.readFormBytes(oldIdentification.getID());
+        String oldChildName = StringUtil.readFormBytes(oldIdentification.getID());
+        String newChildName = StringUtil.readFormBytes(oldIdentification.getID());
 
         List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
         for (InfoRelationEntity infoRelation : infoRelations) {
@@ -186,7 +186,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, Identification identification) {
+    public void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification) {
         if (identification.getType() != String.class) {
             throw new StatusNotSupportedException();
         }
@@ -197,7 +197,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
 
         this.lockProcedure(info, LockTypes.WRITE);
 
-        String childName = StringUtils.readFormBytes(identification.getID());
+        String childName = StringUtil.readFormBytes(identification.getID());
 
         List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
         for (InfoRelationEntity infoRelation : infoRelations) {

@@ -1,15 +1,15 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.UUID;
 
-public class ThreadDefinition implements ISerializable<ThreadDefinition> {
+public class ThreadDefinition implements ISerializeCapable<ThreadDefinition> {
     public ThreadDefinition() {
         this.statistics = new ThreadStatisticsDefinition();
         this.context = new ThreadContextDefinition();
@@ -55,17 +55,17 @@ public class ThreadDefinition implements ISerializable<ThreadDefinition> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.id = UUIDUtils.readExternal(in);
-        this.processID = UUIDUtils.readExternal(in);
-        this.statistics = ObjectUtils.readExternal(in);
-        this.context = ObjectUtils.readExternal(in);
+        this.id = UUIDUtil.readExternal(in);
+        this.processID = UUIDUtil.readExternal(in);
+        this.statistics = ObjectUtil.readExternal(in);
+        this.context = ObjectUtil.readExternal(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtils.writeExternal(out, this.id);
-        UUIDUtils.writeExternal(out, this.processID);
-        ObjectUtils.writeExternal(out, this.statistics);
-        ObjectUtils.writeExternal(out, this.context);
+        UUIDUtil.writeExternal(out, this.id);
+        UUIDUtil.writeExternal(out, this.processID);
+        ObjectUtil.writeExternal(out, this.statistics);
+        ObjectUtil.writeExternal(out, this.context);
     }
 }

@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import indi.sly.system.common.support.ISerializable;
-import indi.sly.system.common.utility.NumberUtils;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.UUIDUtils;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.values.IdentificationDefinition;
 
-public class InfoStatusDefinition implements ISerializable {
-    private final List<Identification> identifications;
+public class InfoStatusDefinition implements ISerializeCapable {
+    private final List<IdentificationDefinition> identifications;
     private UUID parentID;
     private UUID handle;
     private InfoStatusOpenDefinition open;
@@ -25,7 +25,7 @@ public class InfoStatusDefinition implements ISerializable {
         this.open = new InfoStatusOpenDefinition();
     }
 
-    public List<Identification> getIdentifications() {
+    public List<IdentificationDefinition> getIdentifications() {
         return this.identifications;
     }
 
@@ -91,21 +91,21 @@ public class InfoStatusDefinition implements ISerializable {
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         int valueInteger;
 
-        valueInteger = NumberUtils.readExternalInteger(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.identifications.add(ObjectUtils.readExternal(in));
+            this.identifications.add(ObjectUtil.readExternal(in));
         }
-        this.parentID = UUIDUtils.readExternal(in);
-        this.open = ObjectUtils.readExternal(in);
+        this.parentID = UUIDUtil.readExternal(in);
+        this.open = ObjectUtil.readExternal(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        NumberUtils.writeExternalInteger(out, this.identifications.size());
-        for (Identification pair : this.identifications) {
-            ObjectUtils.writeExternal(out, pair);
+        NumberUtil.writeExternalInteger(out, this.identifications.size());
+        for (IdentificationDefinition pair : this.identifications) {
+            ObjectUtil.writeExternal(out, pair);
         }
-        UUIDUtils.writeExternal(out, this.parentID);
-        ObjectUtils.writeExternal(out, this.open);
+        UUIDUtil.writeExternal(out, this.parentID);
+        ObjectUtil.writeExternal(out, this.open);
     }
 }

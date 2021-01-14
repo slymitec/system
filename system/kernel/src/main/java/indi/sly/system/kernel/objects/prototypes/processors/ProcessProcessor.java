@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.functions.*;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
-import indi.sly.system.common.values.Identification;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoProcessorRegister;
@@ -149,13 +149,13 @@ public class ProcessProcessor extends ACorePrototype implements IInfoObjectProce
     private final Function6<UUID, UUID, InfoEntity, TypeObject, InfoStatusDefinition, Long, Object[]> open;
     private final Consumer3<InfoEntity, TypeObject, InfoStatusDefinition> close;
     private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID,
-            Identification> createChildAndOpen;
-    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, Identification,
+            IdentificationDefinition> createChildAndOpen;
+    private final Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition,
             InfoStatusOpenDefinition> getOrRebuildChild;
-    private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Identification> deleteChild;
+    private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition> deleteChild;
     private final Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject,
-            InfoStatusDefinition, Predicate<InfoSummaryDefinition>> queryChild;
-    private final Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, Identification, Identification> renameChild;
+                InfoStatusDefinition, Predicate<InfoSummaryDefinition>> queryChild;
+    private final Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition, IdentificationDefinition> renameChild;
     private final Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, InfoStatusDefinition> readProperties;
     private final Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Map<String, String>> writeProperties;
     private final Function4<byte[], byte[], InfoEntity, TypeObject, InfoStatusDefinition> readContent;

@@ -1,11 +1,10 @@
 package indi.sly.system.kernel.security.prototypes;
 
-import indi.sly.system.common.exceptions.ConditionParametersException;
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
-import indi.sly.system.common.exceptions.ConditionRefuseException;
-import indi.sly.system.common.types.LockTypes;
-import indi.sly.system.common.utility.ObjectUtils;
-import indi.sly.system.common.utility.StringUtils;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
@@ -78,7 +77,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
     }
 
     public void setGroups(List<GroupObject> groups) {
-        if (ObjectUtils.isAnyNull(groups)) {
+        if (ObjectUtil.isAnyNull(groups)) {
             throw new ConditionParametersException();
         }
 
@@ -97,7 +96,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
 
         AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
-        if (ObjectUtils.isAnyNull(this.value.getGroups())) {
+        if (ObjectUtil.isAnyNull(this.value.getGroups())) {
             this.value.setGroups(new ArrayList<>());
         } else {
             this.value.getGroups().clear();

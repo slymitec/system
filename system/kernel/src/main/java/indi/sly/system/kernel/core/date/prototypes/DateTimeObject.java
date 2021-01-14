@@ -2,7 +2,7 @@ package indi.sly.system.kernel.core.date.prototypes;
 
 import java.time.Clock;
 
-import indi.sly.system.common.exceptions.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.kernel.core.prototypes.ACorePrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;

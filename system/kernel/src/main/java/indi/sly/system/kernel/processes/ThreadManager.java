@@ -27,7 +27,7 @@ public class ThreadManager extends AManager {
     public ThreadObject createCurrentThreads() {
         ThreadObject thread = this.factoryManager.create(ThreadObject.class);
 
-        //
+
 
 
         UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();

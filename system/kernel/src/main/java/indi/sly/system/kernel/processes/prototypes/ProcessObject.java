@@ -195,6 +195,7 @@ public class ProcessObject extends APrototype {
 
             processRepository.lock(process, lockType);
         });
+        processStatistics.setProcess(this);
 
         return processStatistics;
     }

@@ -37,6 +37,22 @@ public class ThreadDefinition extends ADefinition<ThreadDefinition> {
         this.processID = processID;
     }
 
+    public ThreadStatisticsDefinition getStatistics() {
+        return this.statistics;
+    }
+
+    public void setStatistics(ThreadStatisticsDefinition statistics) {
+        this.statistics = statistics;
+    }
+
+    public ThreadContextDefinition getContext() {
+        return this.context;
+    }
+
+    public void setContext(ThreadContextDefinition context) {
+        this.context = context;
+    }
+
     @Override
     public Object clone() throws CloneNotSupportedException {
         return this.deepClone();
@@ -48,8 +64,8 @@ public class ThreadDefinition extends ADefinition<ThreadDefinition> {
 
         thread.id = this.id;
         thread.processID = this.processID;
-        thread.statistics = this.statistics;
-        thread.context = this.context;
+        thread.statistics = this.statistics.deepClone();
+        thread.context = this.context.deepClone();
 
         return null;
     }

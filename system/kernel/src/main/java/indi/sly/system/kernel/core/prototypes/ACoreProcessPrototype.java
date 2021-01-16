@@ -52,11 +52,9 @@ public abstract class ACoreProcessPrototype<T> extends APrototype {
     }
 
     protected final void lock(long lockType) {
-        if (ObjectUtil.isAnyNull(this.funcLock)) {
-            throw new StatusNotSupportedException();
+        if (ObjectUtil.allNotNull(this.funcLock)) {
+            this.funcLock.accept(lockType);
         }
-
-        this.funcLock.accept(lockType);
     }
 
     protected final void init() {

@@ -1,6 +1,6 @@
-package indi.sly.system.kernel.processes.types;
+package indi.sly.system.kernel.processes.values;
 
-public interface ProcessStatusTypes {
+public interface ProcessStatusType {
     long NULL = 0L;
     long INITIALIZATION = 1l;
     long RUNNING = 2L;

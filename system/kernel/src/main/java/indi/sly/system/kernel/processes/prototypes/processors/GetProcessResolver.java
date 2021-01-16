@@ -5,7 +5,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
-import indi.sly.system.kernel.processes.prototypes.ProcessProcessorRegister;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -14,10 +14,10 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GetProcessProcessor extends APrototype implements IProcessProcessor {
+public class GetProcessResolver extends APrototype implements IProcessResolver {
     private final Function1<ProcessEntity, UUID> process;
 
-    public GetProcessProcessor() {
+    public GetProcessResolver() {
         this.process = id -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
 
@@ -28,7 +28,7 @@ public class GetProcessProcessor extends APrototype implements IProcessProcessor
     }
 
     @Override
-    public void process(ProcessEntity process, ProcessProcessorRegister processorRegister) {
+    public void process(ProcessEntity process, ProcessProcessorMediator processorRegister) {
         processorRegister.setProcess(this.process);
     }
 }

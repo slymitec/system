@@ -12,7 +12,7 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.ATypeInitializer;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.communication.instances.values.PortDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.processes.types.ProcessTokenLimitTypes;
+import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -47,7 +47,7 @@ public class PortTypeInitializer extends ATypeInitializer {
         PortDefinition port = new PortDefinition();
 
         port.setProcessID(process.getID());
-        port.setLimit(processToken.getLimits().get(ProcessTokenLimitTypes.PORT_LENGTH_MAX));
+        port.setLimit(processToken.getLimits().get(ProcessTokenLimitType.PORT_LENGTH_MAX));
 
         info.setContent(ObjectUtil.transferToByteArray(port));
     }

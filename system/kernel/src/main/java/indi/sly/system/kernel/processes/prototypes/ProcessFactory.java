@@ -4,8 +4,9 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
-import indi.sly.system.kernel.processes.prototypes.processors.IProcessProcessor;
+import indi.sly.system.kernel.processes.prototypes.processors.IProcessResolver;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -16,18 +17,18 @@ import java.util.concurrent.ConcurrentSkipListSet;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessFactory extends APrototype {
-    protected Set<IProcessProcessor> processProcessors;
+    protected Set<IProcessResolver> processProcessors;
 
     public void init() {
         this.processProcessors = new ConcurrentSkipListSet<>();
 
         Set<APrototype> corePrototypes =
                 this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL,
-                        IProcessProcessor.class);
+                        IProcessResolver.class);
 
         for (APrototype pair : corePrototypes) {
-            if (pair instanceof IProcessProcessor) {
-                processProcessors.add((IProcessProcessor) pair);
+            if (pair instanceof IProcessResolver) {
+                processProcessors.add((IProcessResolver) pair);
             }
         }
     }
@@ -36,15 +37,15 @@ public class ProcessFactory extends APrototype {
         DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
 
-        ProcessProcessorRegister processProcessorRegister = new ProcessProcessorRegister();
-        for (IProcessProcessor processObjectProcessor : this.processProcessors) {
-            processObjectProcessor.process(process, processProcessorRegister);
+        ProcessProcessorMediator processProcessorMediator = new ProcessProcessorMediator();
+        for (IProcessResolver processObjectProcessor : this.processProcessors) {
+            processObjectProcessor.process(process, processProcessorMediator);
         }
 
         ProcessObject processObject = this.factoryManager.create(ProcessObject.class);
 
         processObject.factory = this;
-        processObject.processorRegister = processProcessorRegister;
+        processObject.processorRegister = processProcessorMediator;
         processObject.id = process.getID();
         ProcessStatisticsObject processStatistics = processObject.getStatistics();
         processStatistics.setDate(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());

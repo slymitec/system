@@ -10,7 +10,7 @@ import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
-import indi.sly.system.kernel.processes.types.ProcessTokenLimitTypes;
+import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import indi.sly.system.kernel.processes.values.ProcessHandleEntryDefinition;
 import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -46,7 +46,7 @@ public class ProcessHandleInfoObject extends AValueProcessPrototype<ProcessHandl
     }
 
     public synchronized UUID add() {
-        if (this.value.size() >= this.processToken.getLimits().get(ProcessTokenLimitTypes.HANDLE_MAX)) {
+        if (this.value.size() >= this.processToken.getLimits().get(ProcessTokenLimitType.HANDLE_MAX)) {
             throw new StatusInsufficientResourcesException();
         }
 

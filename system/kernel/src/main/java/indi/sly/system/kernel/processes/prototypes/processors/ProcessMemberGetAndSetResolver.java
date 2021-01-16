@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.Consumer2;
 import indi.sly.system.common.lang.Function2;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
-import indi.sly.system.kernel.processes.prototypes.ProcessProcessorRegister;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -12,7 +12,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessMemberGetAndSetProcessor extends APrototype implements IProcessProcessor {
+public class ProcessMemberGetAndSetResolver extends APrototype implements IProcessResolver {
     private final Function2<Long, Long, ProcessEntity> readProcessStatus;
     private final Consumer2<ProcessEntity, Long> writeProcessStatus;
     private final Function2<byte[], byte[], ProcessEntity> readProcessCommunication;
@@ -26,7 +26,7 @@ public class ProcessMemberGetAndSetProcessor extends APrototype implements IProc
     private final Function2<byte[], byte[], ProcessEntity> readProcessToken;
     private final Consumer2<ProcessEntity, byte[]> writeProcessToken;
 
-    public ProcessMemberGetAndSetProcessor() {
+    public ProcessMemberGetAndSetResolver() {
         this.readProcessStatus = (status, process) -> process.getStatus();
         this.writeProcessStatus = ProcessEntity::setStatus;
 
@@ -47,7 +47,7 @@ public class ProcessMemberGetAndSetProcessor extends APrototype implements IProc
     }
 
     @Override
-    public void process(ProcessEntity process, ProcessProcessorRegister processorRegister) {
+    public void process(ProcessEntity process, ProcessProcessorMediator processorRegister) {
         processorRegister.getReadProcessStatuses().add(this.readProcessStatus);
         processorRegister.getWriteProcessStatuses().add(this.writeProcessStatus);
 

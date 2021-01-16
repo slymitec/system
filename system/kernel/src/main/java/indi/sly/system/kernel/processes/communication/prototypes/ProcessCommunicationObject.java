@@ -16,8 +16,8 @@ import indi.sly.system.kernel.processes.communication.instances.prototypes.Signa
 import indi.sly.system.kernel.processes.communication.instances.values.SignalEntryDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
-import indi.sly.system.kernel.processes.types.ProcessStatusTypes;
-import indi.sly.system.kernel.processes.types.ProcessTokenLimitTypes;
+import indi.sly.system.kernel.processes.values.ProcessStatusType;
+import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.types.AccessControlTypes;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
@@ -38,7 +38,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
     }
 
     public byte[] getShared() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.RUNNING)) {
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -75,7 +75,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         }
 
         ProcessTokenObject processToken = this.process.getToken();
-        if (shared.length > processToken.getLimits().get(ProcessTokenLimitTypes.SHARED_LENGTH_MAX)) {
+        if (shared.length > processToken.getLimits().get(ProcessTokenLimitType.SHARED_LENGTH_MAX)) {
             throw new ConditionPermissionsException();
         }
 
@@ -114,7 +114,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             this.init();
 
             ProcessTokenObject processToken = this.process.getToken();
-            if (this.value.getPortIDs().size() > processToken.getLimits().get(ProcessTokenLimitTypes.PORT_COUNT_MAX)) {
+            if (this.value.getPortIDs().size() > processToken.getLimits().get(ProcessTokenLimitType.PORT_COUNT_MAX)) {
                 throw new ConditionPermissionsException();
             }
 

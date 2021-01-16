@@ -19,10 +19,10 @@ import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.ATypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
-import indi.sly.system.kernel.objects.infotypes.types.TypeInitializerAttributeTypes;
+import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
-import indi.sly.system.kernel.objects.instances.prototypes.FolderTypeInitializer;
-import indi.sly.system.kernel.objects.instances.prototypes.NamelessFolderTypeInitializer;
+import indi.sly.system.kernel.objects.instances.prototypes.wrappers.FolderTypeInitializer;
+import indi.sly.system.kernel.objects.instances.prototypes.wrappers.NamelessFolderTypeInitializer;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -38,21 +38,21 @@ public class TypeManager extends AManager {
 
             this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
                     kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_NAME,
-                    LogicalUtil.or(TypeInitializerAttributeTypes.CAN_BE_SENT_AND_INHERITED,
-                            TypeInitializerAttributeTypes.CAN_BE_SHARED_READ, TypeInitializerAttributeTypes.HAS_AUDIT,
-                            TypeInitializerAttributeTypes.HAS_CHILD, TypeInitializerAttributeTypes.HAS_CONTENT,
-                            TypeInitializerAttributeTypes.HAS_PERMISSION,
-                            TypeInitializerAttributeTypes.HAS_PROPERTIES),
+                    LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
+                            TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
+                            TypeInitializerAttributeType.HAS_CHILD, TypeInitializerAttributeType.HAS_CONTENT,
+                            TypeInitializerAttributeType.HAS_PERMISSION,
+                            TypeInitializerAttributeType.HAS_PROPERTIES),
                     childTypes, this.factoryManager.create(FolderTypeInitializer.class));
 
             this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                     kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_NAME,
-                    LogicalUtil.or(TypeInitializerAttributeTypes.CAN_BE_SENT_AND_INHERITED,
-                            TypeInitializerAttributeTypes.CAN_BE_SHARED_READ,
-                            TypeInitializerAttributeTypes.CHILD_IS_NAMELESS,
-                            TypeInitializerAttributeTypes.HAS_AUDIT, TypeInitializerAttributeTypes.HAS_CHILD,
-                            TypeInitializerAttributeTypes.HAS_CONTENT,
-                            TypeInitializerAttributeTypes.HAS_PERMISSION, TypeInitializerAttributeTypes.HAS_PROPERTIES),
+                    LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
+                            TypeInitializerAttributeType.CAN_BE_SHARED_READ,
+                            TypeInitializerAttributeType.CHILD_IS_NAMELESS,
+                            TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CHILD,
+                            TypeInitializerAttributeType.HAS_CONTENT,
+                            TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES),
                     childTypes, this.factoryManager.create(NamelessFolderTypeInitializer.class));
         }
     }

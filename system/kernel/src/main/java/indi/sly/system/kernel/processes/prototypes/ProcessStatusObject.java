@@ -11,8 +11,9 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
-import indi.sly.system.kernel.processes.types.ProcessStatusTypes;
+import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -25,7 +26,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
-    protected ProcessProcessorRegister processorRegister;
+    protected ProcessProcessorMediator processorRegister;
 
     private ProcessObject process;
 
@@ -34,7 +35,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     }
 
     public long get() {
-        Long status = ProcessStatusTypes.NULL;
+        Long status = ProcessStatusType.NULL;
 
         List<Function2<Long, Long, ProcessEntity>> funcs = this.processorRegister.getReadProcessStatuses();
 
@@ -46,7 +47,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     }
 
     public void initialize() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.NULL)
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.NULL)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
@@ -64,13 +65,13 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
         for (Consumer2<ProcessEntity, Long> pair : funcs) {
-            pair.accept(this.value, ProcessStatusTypes.INITIALIZATION);
+            pair.accept(this.value, ProcessStatusType.INITIALIZATION);
         }
     }
 
     public void run() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
-                ProcessStatusTypes.INTERRUPTED)) {
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.INTERRUPTED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -79,13 +80,13 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
         for (Consumer2<ProcessEntity, Long> pair : funcs) {
-            pair.accept(this.value, ProcessStatusTypes.RUNNING);
+            pair.accept(this.value, ProcessStatusType.RUNNING);
         }
     }
 
     public void interrupt() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
-                ProcessStatusTypes.RUNNING)) {
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -94,13 +95,13 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
         for (Consumer2<ProcessEntity, Long> pair : funcs) {
-            pair.accept(this.value, ProcessStatusTypes.INTERRUPTED);
+            pair.accept(this.value, ProcessStatusType.INTERRUPTED);
         }
     }
 
     public void die() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.RUNNING,
-                ProcessStatusTypes.INTERRUPTED, ProcessStatusTypes.DIED)) {
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.RUNNING,
+                ProcessStatusType.INTERRUPTED, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -111,7 +112,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
             for (Consumer2<ProcessEntity, Long> pair : funcs) {
-                pair.accept(this.value, ProcessStatusTypes.DIED);
+                pair.accept(this.value, ProcessStatusType.DIED);
             }
 
             this.fresh();
@@ -139,7 +140,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     }
 
     public void zombie() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.DIED)) {
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -158,7 +159,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
 
             for (Consumer2<ProcessEntity, Long> pair : funcs) {
-                pair.accept(this.value, ProcessStatusTypes.ZOMBIE);
+                pair.accept(this.value, ProcessStatusType.ZOMBIE);
             }
 
             this.fresh();

@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.objects.instances.prototypes;
+package indi.sly.system.kernel.objects.instances.prototypes.wrappers;
 
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
@@ -9,6 +9,7 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.objects.instances.prototypes.FolderContentObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoRelationEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;

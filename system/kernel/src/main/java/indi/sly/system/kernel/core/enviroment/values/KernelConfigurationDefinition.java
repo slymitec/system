@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.values.ADefinition;
-import indi.sly.system.kernel.processes.types.ProcessTokenLimitTypes;
+import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 
 public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefinition> {
     public final UUID MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID
@@ -34,11 +34,11 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
             = UUIDUtil.getFormLongs(-6729493064232579129l, -6576183935232554309l);
     public final String PROCESSES_COMMUNICATION_INSTANCE_SESSION_NAME = "Session";
     public final Map<Long, Integer> PROCESSES_TOKEN_DEFAULT_LIMIT = Map.of(
-            ProcessTokenLimitTypes.HANDLE_MAX, 256,
-            ProcessTokenLimitTypes.SHARED_LENGTH_MAX, 4096,
-            ProcessTokenLimitTypes.PORT_COUNT_MAX, 4,
-            ProcessTokenLimitTypes.PORT_LENGTH_MAX, 4096,
-            ProcessTokenLimitTypes.SIGNAL_LENGTH_MAX, 256);
+            ProcessTokenLimitType.HANDLE_MAX, 256,
+            ProcessTokenLimitType.SHARED_LENGTH_MAX, 4096,
+            ProcessTokenLimitType.PORT_COUNT_MAX, 4,
+            ProcessTokenLimitType.PORT_LENGTH_MAX, 4096,
+            ProcessTokenLimitType.SIGNAL_LENGTH_MAX, 256);
 
     public final long SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME = 65536l;
     public final UUID SECURITY_ACCOUNT_SYSTEM_ID

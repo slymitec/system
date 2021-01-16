@@ -1,6 +1,6 @@
-package indi.sly.system.kernel.processes.types;
+package indi.sly.system.kernel.processes.values;
 
-public interface ProcessTokenLimitTypes {
+public interface ProcessTokenLimitType {
     long HANDLE_MAX = 1L;
     long SHARED_LENGTH_MAX = 2L;
     long PORT_COUNT_MAX = 3L;

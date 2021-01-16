@@ -3,24 +3,17 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
-import indi.sly.system.kernel.objects.infotypes.types.TypeInitializerAttributeTypes;
-import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
+import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -33,9 +26,9 @@ public class ConditionCheckResolver extends APrototype implements IInfoObjectRes
             if (openAttribute == InfoStatusOpenAttributeType.CLOSE
                     || (openAttribute == InfoStatusOpenAttributeType.OPEN_EXCLUSIVE && info.getOpened() > 0)
                     || (openAttribute == InfoStatusOpenAttributeType.OPEN_ONLY_READ && info.getOpened() > 0
-                    && !type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.CAN_BE_SHARED_READ))
+                    && !type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.CAN_BE_SHARED_READ))
                     || (openAttribute == InfoStatusOpenAttributeType.OPEN_SHARED_WRITE
-                    && !type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.CAN_BE_SHARED_WRITE))) {
+                    && !type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.CAN_BE_SHARED_WRITE))) {
                 throw new StatusNotSupportedException();
             }
 
@@ -49,8 +42,8 @@ public class ConditionCheckResolver extends APrototype implements IInfoObjectRes
         };
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_CHILD)
-                    || (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
+            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD)
+                    || (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
             Set<UUID> childTypes = type.getChildTypes();
@@ -62,8 +55,8 @@ public class ConditionCheckResolver extends APrototype implements IInfoObjectRes
         };
 
         this.getOrRebuildChild = (childInfo, info, type, status, identification, statusOpen) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_CHILD)
-                    || (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
+            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD)
+                    || (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
 
@@ -71,14 +64,14 @@ public class ConditionCheckResolver extends APrototype implements IInfoObjectRes
         };
 
         this.deleteChild = (info, type, status, identification) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_CHILD)
-                    || (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
+            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD)
+                    || (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
         };
 
         this.queryChild = (summaryDefinitions, info, type, status, queryChild) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_CHILD)) {
+            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD)) {
                 throw new StatusNotSupportedException();
             }
 
@@ -86,7 +79,7 @@ public class ConditionCheckResolver extends APrototype implements IInfoObjectRes
         };
 
         this.renameChild = (info, type, status, oldIdentification, newIdentification) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_CHILD) || (type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.CHILD_IS_NAMELESS))) {
+            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD) || (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS))) {
                 throw new StatusNotSupportedException();
             }
             if (oldIdentification.getType() == UUID.class || newIdentification.getType() == UUID.class) {
@@ -95,7 +88,7 @@ public class ConditionCheckResolver extends APrototype implements IInfoObjectRes
         };
 
         this.readProperties = (properties, info, type, status) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_PROPERTIES)) {
+            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PROPERTIES)) {
                 throw new StatusNotSupportedException();
             }
 
@@ -103,13 +96,13 @@ public class ConditionCheckResolver extends APrototype implements IInfoObjectRes
         };
 
         this.writeProperties = (info, type, status, properties) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_PROPERTIES)) {
+            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PROPERTIES)) {
                 throw new StatusNotSupportedException();
             }
         };
 
         this.readContent = (content, info, type, status) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_CONTENT)) {
+            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CONTENT)) {
                 throw new StatusNotSupportedException();
             }
             if (status.getOpen().getAttribute() == InfoStatusOpenAttributeType.CLOSE) {
@@ -120,7 +113,7 @@ public class ConditionCheckResolver extends APrototype implements IInfoObjectRes
         };
 
         this.writeContent = (info, type, status, content) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeTypes.HAS_CONTENT)) {
+            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CONTENT)) {
                 throw new StatusNotSupportedException();
             }
             if (status.getOpen().getAttribute() == InfoStatusOpenAttributeType.CLOSE) {

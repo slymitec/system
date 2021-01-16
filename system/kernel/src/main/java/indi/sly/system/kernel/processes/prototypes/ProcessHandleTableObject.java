@@ -15,7 +15,7 @@ import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessHandleEntryDefinition;
 import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
-import indi.sly.system.kernel.processes.types.ProcessStatusTypes;
+import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -33,8 +33,8 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
     }
 
     private void checkStatusAndCurrentPermission() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.RUNNING,
-                ProcessStatusTypes.DIED)) {
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.RUNNING,
+                ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -73,7 +73,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION)
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }

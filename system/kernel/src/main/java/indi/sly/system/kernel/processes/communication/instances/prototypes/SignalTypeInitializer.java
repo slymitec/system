@@ -12,7 +12,7 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.ATypeInitializer;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.communication.instances.values.SignalDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.processes.types.ProcessTokenLimitTypes;
+import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -46,7 +46,7 @@ public class SignalTypeInitializer extends ATypeInitializer {
         SignalDefinition signal = new SignalDefinition();
 
         signal.setProcessID(process.getID());
-        signal.setLimit(processToken.getLimits().get(ProcessTokenLimitTypes.SIGNAL_LENGTH_MAX));
+        signal.setLimit(processToken.getLimits().get(ProcessTokenLimitType.SIGNAL_LENGTH_MAX));
 
         info.setContent(ObjectUtil.transferToByteArray(signal));
     }

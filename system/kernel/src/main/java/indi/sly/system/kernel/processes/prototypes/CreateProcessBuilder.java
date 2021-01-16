@@ -21,7 +21,7 @@ import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatisticsDefinition;
 import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
-import indi.sly.system.kernel.processes.types.ProcessStatusTypes;
+import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -144,7 +144,7 @@ public class CreateProcessBuilder extends APrototype {
         ProcessEntity process = new ProcessEntity();
 
         process.setID(UUIDUtil.createRandom());
-        process.setStatus(ProcessStatusTypes.NULL);
+        process.setStatus(ProcessStatusType.NULL);
         process.setParentProcessID(parentProcess.getID());
         process.setSessionID(UUIDUtil.getEmpty());
         process.setCommunication(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));

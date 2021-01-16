@@ -1,6 +1,6 @@
-package indi.sly.system.kernel.objects.infotypes.types;
+package indi.sly.system.kernel.objects.infotypes.values;
 
-public interface TypeInitializerAttributeTypes {
+public interface TypeInitializerAttributeType {
     long CAN_BE_SENT_AND_INHERITED = 1L << 1;
     long CAN_BE_SHARED_READ = 1L << 2;
     long CAN_BE_SHARED_WRITE = CAN_BE_SHARED_READ | 1L << 3;

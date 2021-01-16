@@ -9,7 +9,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
-import indi.sly.system.kernel.processes.types.ProcessStatusTypes;
+import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
 import indi.sly.system.kernel.security.values.AccountGroupTokenDefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
@@ -46,7 +46,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION)
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
@@ -74,7 +74,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
     }
 
     public void inheritAccountID() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION)
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
@@ -95,7 +95,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
     }
 
     public void inheritPrivilegeTypes() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION)
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
@@ -110,7 +110,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
     }
 
     public void inheritPrivilegeTypes(long privilegeTypes) {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION)
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
@@ -126,8 +126,8 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
     }
 
     public void setPrivilegeTypes(long privilegeTypes) {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
-                ProcessStatusTypes.RUNNING)) {
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -159,7 +159,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
     }
 
     public void inheritLimits() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION)
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
@@ -180,8 +180,8 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
-                ProcessStatusTypes.RUNNING)) {
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -215,7 +215,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
     }
 
     public void inheritRoleTypes() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION)
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
@@ -236,7 +236,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION)
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
@@ -266,8 +266,8 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusTypes.INITIALIZATION,
-                ProcessStatusTypes.RUNNING) || this.process.isCurrent()) {
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.RUNNING) || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 

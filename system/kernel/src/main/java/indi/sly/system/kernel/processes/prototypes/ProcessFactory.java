@@ -2,8 +2,8 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
-import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
-import indi.sly.system.kernel.core.prototypes.ACorePrototype;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.processors.IProcessProcessor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -15,17 +15,17 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessFactory extends ACorePrototype {
+public class ProcessFactory extends APrototype {
     protected Set<IProcessProcessor> processProcessors;
 
     public void init() {
         this.processProcessors = new ConcurrentSkipListSet<>();
 
-        Set<ACorePrototype> corePrototypes =
-                this.factoryManager.getCoreRepository().getByImplementInterface(SpaceTypes.KERNEL,
+        Set<APrototype> corePrototypes =
+                this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL,
                         IProcessProcessor.class);
 
-        for (ACorePrototype pair : corePrototypes) {
+        for (APrototype pair : corePrototypes) {
             if (pair instanceof IProcessProcessor) {
                 processProcessors.add((IProcessProcessor) pair);
             }
@@ -33,7 +33,7 @@ public class ProcessFactory extends ACorePrototype {
     }
 
     public ProcessObject buildProcessObject(ProcessEntity process) {
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
 
         ProcessProcessorRegister processProcessorRegister = new ProcessProcessorRegister();

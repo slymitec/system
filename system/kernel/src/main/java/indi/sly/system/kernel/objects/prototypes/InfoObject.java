@@ -5,11 +5,13 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.kernel.core.prototypes.ACorePrototype;
-import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
+import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.lang.*;
+import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
@@ -30,9 +32,9 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoObject extends ACorePrototype {
+public class InfoObject extends APrototype {
     protected InfoFactory factory;
-    protected InfoProcessorRegister processorRegister;
+    protected InfoProcessorMediator processorRegister;
 
     protected UUID id;
     protected UUID poolID;
@@ -131,18 +133,18 @@ public class InfoObject extends ACorePrototype {
         ProcessObject currentProcess = processManager.getCurrentProcess();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-        InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 InfoCacheObject.class);
 
-        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
             if (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
                 throw new ConditionPermissionsException();
             }
 
-            kernelCache.add(SpaceTypes.KERNEL, this);
+            kernelCache.add(SpaceType.KERNEL, this);
         }
-        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.USER)) {
-            kernelCache.add(SpaceTypes.USER, this);
+        if (LogicalUtil.isAnyExist(spaceType, SpaceType.USER)) {
+            kernelCache.add(SpaceType.USER, this);
         }
     }
 
@@ -155,18 +157,18 @@ public class InfoObject extends ACorePrototype {
         ProcessObject currentProcess = processManager.getCurrentProcess();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-        InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 InfoCacheObject.class);
 
-        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
+        if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
             if (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
                 throw new ConditionPermissionsException();
             }
 
-            kernelCache.delete(SpaceTypes.KERNEL, this.id);
+            kernelCache.delete(SpaceType.KERNEL, this.id);
         }
-        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.USER)) {
-            kernelCache.delete(SpaceTypes.USER, this.id);
+        if (LogicalUtil.isAnyExist(spaceType, SpaceType.USER)) {
+            kernelCache.delete(SpaceType.USER, this.id);
         }
     }
 
@@ -214,8 +216,7 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, InfoStatusDefinition>> funcs =
-                this.processorRegister.getDumps();
+        List<DumpFunction> funcs = this.processorRegister.getDumps();
 
         DumpDefinition dump = new DumpDefinition();
 
@@ -236,8 +237,7 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function6<UUID, UUID, InfoEntity, TypeObject, InfoStatusDefinition, Long, Object[]>> funcs =
-                this.processorRegister.getOpens();
+        List<OpenFunction> funcs = this.processorRegister.getOpens();
 
         UUID handle = UUIDUtil.getEmpty();
 
@@ -269,7 +269,7 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer3<InfoEntity, TypeObject, InfoStatusDefinition>> funcs = this.processorRegister.getCloses();
+        List<CloseConsumer> funcs = this.processorRegister.getCloses();
 
         for (Consumer3<InfoEntity, TypeObject, InfoStatusDefinition> pair : funcs) {
             pair.accept(info, type, this.status);
@@ -287,8 +287,8 @@ public class InfoObject extends ACorePrototype {
         return !ValueUtil.isAnyNullOrEmpty(this.status.getHandle());
     }
 
-    public synchronized InfoObject createChildAndOpen(UUID type, IdentificationDefinition identification, long openAttribute,
-                                                      Object... arguments) {
+    public synchronized InfoObject createChildAndOpen(UUID type, IdentificationDefinition identification,
+                                                      long openAttribute, Object... arguments) {
         if (!ValueUtil.isAnyNullOrEmpty(this.status.getHandle()) || ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
@@ -301,11 +301,12 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject typeObject = typeManager.get(this.getType());
 
-        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID, IdentificationDefinition>> funcs = this.processorRegister.getCreateChildAndOpens();
+        List<CreateChildAndOpenFunction> funcs = this.processorRegister.getCreateChildAndOpens();
 
         InfoEntity childInfo = null;
 
-        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID, IdentificationDefinition> pair :
+        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID,
+                IdentificationDefinition> pair :
                 funcs) {
             childInfo = pair.apply(childInfo, info, typeObject, this.status, type, identification);
         }
@@ -325,7 +326,8 @@ public class InfoObject extends ACorePrototype {
         return this.rebuildChild(identification, null);
     }
 
-    public synchronized InfoObject rebuildChild(IdentificationDefinition identification, InfoStatusOpenDefinition statusOpen) {
+    public synchronized InfoObject rebuildChild(IdentificationDefinition identification,
+                                                InfoStatusOpenDefinition statusOpen) {
         if (ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
@@ -335,8 +337,7 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition,
-                InfoStatusOpenDefinition>> funcs = this.processorRegister.getGetOrRebuildChilds();
+        List<GetOrRebuildChildFunction> funcs = this.processorRegister.getGetOrRebuildChilds();
 
         InfoEntity childInfo = null;
 
@@ -349,14 +350,14 @@ public class InfoObject extends ACorePrototype {
             throw new StatusUnexpectedException();
         }
 
-        InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 InfoCacheObject.class);
 
-        InfoObject childCachedInfo = infoCache.getIfExisted(SpaceTypes.ALL, childInfo.getID());
+        InfoObject childCachedInfo = infoCache.getIfExisted(SpaceType.ALL, childInfo.getID());
         if (ObjectUtil.isAnyNull(childCachedInfo)) {
             childCachedInfo = this.factory.buildInfoObject(childInfo, statusOpen, this);
 
-            childCachedInfo.cache(SpaceTypes.USER);
+            childCachedInfo.cache(SpaceType.USER);
         }
         return childCachedInfo;
     }
@@ -372,14 +373,13 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition>> funcs =
-                this.processorRegister.getDeleteChilds();
+        List<DeleteChildConsumer> funcs = this.processorRegister.getDeleteChilds();
 
         for (Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition> pair : funcs) {
             pair.accept(info, type, this.status, identification);
         }
 
-        childInfo.uncache(SpaceTypes.ALL);
+        childInfo.uncache(SpaceType.ALL);
     }
 
     public synchronized Set<InfoSummaryDefinition> queryChild(Predicate<InfoSummaryDefinition> wildcard) {
@@ -392,9 +392,7 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject,
-                InfoStatusDefinition, Predicate<InfoSummaryDefinition>>> funcs = this.processorRegister
-                .getQueryChilds();
+        List<QueryChildFunction> funcs = this.processorRegister.getQueryChilds();
 
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
@@ -406,7 +404,8 @@ public class InfoObject extends ACorePrototype {
         return infoSummaries;
     }
 
-    public synchronized void renameChild(IdentificationDefinition oldIdentification, IdentificationDefinition newIdentification) {
+    public synchronized void renameChild(IdentificationDefinition oldIdentification,
+                                         IdentificationDefinition newIdentification) {
         if (ObjectUtil.isAnyNull(oldIdentification, newIdentification)) {
             throw new ConditionParametersException();
         }
@@ -416,10 +415,10 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition, IdentificationDefinition>> funcs =
-                this.processorRegister.getRenameChilds();
+        List<RenameChildConsumer> funcs = this.processorRegister.getRenameChilds();
 
-        for (Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition, IdentificationDefinition> pair : funcs) {
+        for (Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition,
+                IdentificationDefinition> pair : funcs) {
             pair.accept(info, type, this.status, oldIdentification, newIdentification);
         }
     }
@@ -430,8 +429,7 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, InfoStatusDefinition>> funcs =
-                this.processorRegister.getReadProperties();
+        List<ReadPropertyFunction> funcs = this.processorRegister.getReadProperties();
 
         Map<String, String> properties = new HashMap<>();
 
@@ -453,8 +451,7 @@ public class InfoObject extends ACorePrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Map<String, String>>> funcs =
-                this.processorRegister.getWriteProperties();
+        List<WritePropertyConsumer> funcs = this.processorRegister.getWriteProperties();
 
         for (Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Map<String, String>> pair : funcs) {
             pair.accept(info, type, this.status, properties);
@@ -468,8 +465,7 @@ public class InfoObject extends ACorePrototype {
         TypeObject type = typeManager.get(this.getType());
 
         AInfoContentObject content = type.getTypeInitializer().getContentProcedure(info, () -> {
-            List<Function4<byte[], byte[], InfoEntity, TypeObject, InfoStatusDefinition>> funcs =
-                    this.processorRegister.getReadContents();
+            List<ReadContentFunction> funcs = this.processorRegister.getReadContents();
 
             byte[] contentSource = null;
 
@@ -479,8 +475,7 @@ public class InfoObject extends ACorePrototype {
 
             return contentSource;
         }, (byte[] contentSource) -> {
-            List<Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, byte[]>> funcs =
-                    this.processorRegister.getWriteContents();
+            List<WriteContentConsumer> funcs = this.processorRegister.getWriteContents();
 
             for (Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, byte[]> pair : funcs) {
                 pair.accept(info, type, status, contentSource);

@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.communication.instances.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
@@ -64,14 +64,14 @@ public class PortContentObject extends AInfoContentObject {
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         byte[] value = this.port.getValue();
         this.port.setValue(ArrayUtil.EMPTY_BYTES);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
 
         return value;
     }
@@ -92,12 +92,12 @@ public class PortContentObject extends AInfoContentObject {
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.port.setValue(ArrayUtil.combineBytes(this.port.getValue(), value));
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 }

@@ -2,12 +2,12 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
-import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -89,9 +89,9 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
         ProcessHandleTableObject parentProcessHandleTable = parentProcess.getHandleTable();
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
-            parentProcessHandleTable.lock(LockTypes.WRITE);
+            parentProcessHandleTable.lock(LockType.WRITE);
             parentProcessHandleTable.init();
 
             ProcessHandleEntryDefinition processHandleEntry = parentProcessHandleTable.value.get(handle);
@@ -101,8 +101,8 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
             parentProcessHandleTable.fresh();
             this.fresh();
         } finally {
-            parentProcessHandleTable.lock(LockTypes.NONE);
-            this.lock(LockTypes.NONE);
+            parentProcessHandleTable.lock(LockType.NONE);
+            this.lock(LockType.NONE);
         }
     }
 
@@ -110,13 +110,13 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
         this.checkStatusAndCurrentPermission();
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
         InfoObject info;
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             ProcessHandleEntryDefinition processHandleEntry = this.value.get(handle);
@@ -125,7 +125,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
 
             this.fresh();
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
 
         return info;

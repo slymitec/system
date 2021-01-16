@@ -3,12 +3,12 @@ package indi.sly.system.kernel.security.prototypes;
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.StatusExpiredException;
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
-import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
-import indi.sly.system.kernel.core.prototypes.ACorePrototype;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.security.SecurityTokenManager;
 import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
 import indi.sly.system.kernel.security.values.AccountGroupTokenDefinition;
@@ -20,7 +20,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AccountAuthorizationObject extends ACorePrototype {
+public class AccountAuthorizationObject extends APrototype {
     public AccountAuthorizationObject() {
         this.date = new HashMap<>();
     }
@@ -33,7 +33,7 @@ public class AccountAuthorizationObject extends ACorePrototype {
         this.accountID = account.getID();
         this.password = account.getPassword();
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -58,11 +58,11 @@ public class AccountAuthorizationObject extends ACorePrototype {
         } catch (AKernelException e) {
             return false;
         }
-        if (!StringUtil.equals(account.getPassword(), this.password)) {
+        if (!ObjectUtil.equals(account.getPassword(), this.password)) {
             return false;
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
         long expiredTime =
@@ -88,11 +88,11 @@ public class AccountAuthorizationObject extends ACorePrototype {
         } catch (AKernelException e) {
             throw new StatusExpiredException();
         }
-        if (!StringUtil.equals(account.getPassword(), this.password)) {
+        if (!ObjectUtil.equals(account.getPassword(), this.password)) {
             throw new StatusExpiredException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
         long expiredTime =

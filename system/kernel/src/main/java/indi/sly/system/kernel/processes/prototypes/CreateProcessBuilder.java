@@ -7,8 +7,8 @@ import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
-import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
-import indi.sly.system.kernel.core.prototypes.ACorePrototype;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.common.values.IdentificationDefinition;
@@ -35,7 +35,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CreateProcessBuilder extends ACorePrototype {
+public class CreateProcessBuilder extends APrototype {
     public CreateProcessBuilder() {
         this.createProcess = new CreateProcessDefinition();
     }
@@ -159,7 +159,7 @@ public class CreateProcessBuilder extends ACorePrototype {
     }
 
     private void configuration() {
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 

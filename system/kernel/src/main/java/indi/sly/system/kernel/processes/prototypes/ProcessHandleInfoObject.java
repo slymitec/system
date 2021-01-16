@@ -3,11 +3,11 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
-import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.processes.types.ProcessTokenLimitTypes;
@@ -50,7 +50,7 @@ public class ProcessHandleInfoObject extends AValueProcessPrototype<ProcessHandl
             throw new StatusInsufficientResourcesException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -62,14 +62,14 @@ public class ProcessHandleInfoObject extends AValueProcessPrototype<ProcessHandl
         processHandleEntry.getDate().put(DateTimeTypes.CREATE, nowDateTime);
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             this.value.add(handle, processHandleEntry);
 
             this.fresh();
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
 
         return handle;
@@ -77,14 +77,14 @@ public class ProcessHandleInfoObject extends AValueProcessPrototype<ProcessHandl
 
     public synchronized void delete() {
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             this.value.delete(this.status.getHandle());
 
             this.fresh();
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
     }
 }

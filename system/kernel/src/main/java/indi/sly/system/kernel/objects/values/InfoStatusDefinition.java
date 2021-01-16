@@ -13,8 +13,9 @@ import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.core.values.ADefinition;
 
-public class InfoStatusDefinition implements ISerializeCapable {
+public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
     private final List<IdentificationDefinition> identifications;
     private UUID parentID;
     private UUID handle;

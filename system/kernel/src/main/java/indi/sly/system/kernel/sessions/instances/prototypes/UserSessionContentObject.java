@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -62,13 +62,13 @@ public class UserSessionContentObject extends AInfoContentObject {
     public void setType(long type) {
         this.checkProcessTokenPrivilege();
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.userSession.setType(type);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public UUID getAccountID() {
@@ -80,13 +80,13 @@ public class UserSessionContentObject extends AInfoContentObject {
     public void setAccountID(UUID accountID) {
         this.checkProcessTokenPrivilege();
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.userSession.setAccountID(accountID);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public Set<UUID> getProcessIDs() {
@@ -107,13 +107,13 @@ public class UserSessionContentObject extends AInfoContentObject {
     public void addProcessID(UUID processID) {
         this.checkProcessTokenAccountID();
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         boolean result = this.userSession.getProcessIDs().add(processID);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
 
         if (!result) {
             throw new StatusAlreadyExistedException();
@@ -123,13 +123,13 @@ public class UserSessionContentObject extends AInfoContentObject {
     public void deleteProcessID(UUID processID) {
         this.checkProcessTokenAccountID();
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         boolean result = this.userSession.getProcessIDs().remove(processID);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
 
         if (!result) {
             throw new StatusNotExistedException();
@@ -149,12 +149,12 @@ public class UserSessionContentObject extends AInfoContentObject {
 
         this.checkProcessTokenPrivilege();
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.userSession.setClient(client);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 }

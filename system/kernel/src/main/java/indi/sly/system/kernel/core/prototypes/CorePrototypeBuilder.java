@@ -17,7 +17,7 @@ public class CorePrototypeBuilder {
         }
     }
 
-    public <T extends ACorePrototype> T create(Class<T> clazz) {
+    public <T extends APrototype> T create(Class<T> clazz) {
         if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }

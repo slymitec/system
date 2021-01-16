@@ -6,40 +6,41 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 import javax.inject.Named;
 
-import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
+import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
-import indi.sly.system.kernel.objects.types.InfoStatusOpenAttributeTypes;
+import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.kernel.core.prototypes.ACorePrototype;
+import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.prototypes.processors.IInfoObjectProcessor;
+import indi.sly.system.kernel.objects.prototypes.processors.IInfoObjectResolver;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoFactory extends ACorePrototype {
-    protected Set<IInfoObjectProcessor> infoObjectProcessors;
+public class InfoFactory extends APrototype {
+    protected Set<IInfoObjectResolver> infoObjectProcessors;
 
     public void init() {
         this.infoObjectProcessors = new ConcurrentSkipListSet<>();
 
-        Set<ACorePrototype> corePrototypes =
-                this.factoryManager.getCoreRepository().getByImplementInterface(SpaceTypes.KERNEL,
-                        IInfoObjectProcessor.class);
+        Set<APrototype> corePrototypes =
+                this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL,
+                        IInfoObjectResolver.class);
 
-        for (ACorePrototype pair : corePrototypes) {
-            if (pair instanceof IInfoObjectProcessor) {
-                infoObjectProcessors.add((IInfoObjectProcessor) pair);
+        for (APrototype pair : corePrototypes) {
+            if (pair instanceof IInfoObjectResolver) {
+                infoObjectProcessors.add((IInfoObjectResolver) pair);
             }
         }
     }
@@ -51,13 +52,13 @@ public class InfoFactory extends ACorePrototype {
         InfoEntity infoEntity =
                 infoRepository.get(this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
 
-        InfoProcessorRegister processorRegister = new InfoProcessorRegister();
-        for (IInfoObjectProcessor pair : this.infoObjectProcessors) {
+        InfoProcessorMediator processorRegister = new InfoProcessorMediator();
+        for (IInfoObjectResolver pair : this.infoObjectProcessors) {
             pair.process(infoEntity, processorRegister);
         }
 
         InfoStatusOpenDefinition statusOpen = new InfoStatusOpenDefinition();
-        statusOpen.setAttribute(InfoStatusOpenAttributeTypes.CLOSE);
+        statusOpen.setAttribute(InfoStatusOpenAttributeType.CLOSE);
         InfoStatusDefinition status = new InfoStatusDefinition();
         status.setOpen(statusOpen);
 
@@ -78,9 +79,9 @@ public class InfoFactory extends ACorePrototype {
     }
 
     public InfoObject buildInfoObject(InfoEntity info, InfoStatusOpenDefinition statusOpen, InfoObject parentInfo) {
-        InfoProcessorRegister infoProcessorRegister = new InfoProcessorRegister();
-        for (IInfoObjectProcessor infoObjectProcessor : this.infoObjectProcessors) {
-            infoObjectProcessor.process(info, infoProcessorRegister);
+        InfoProcessorMediator infoProcessorMediator = new InfoProcessorMediator();
+        for (IInfoObjectResolver infoObjectProcessor : this.infoObjectProcessors) {
+            infoObjectProcessor.process(info, infoProcessorMediator);
         }
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
@@ -90,7 +91,7 @@ public class InfoFactory extends ACorePrototype {
         InfoStatusDefinition status = new InfoStatusDefinition();
         if (ObjectUtil.isAnyNull(statusOpen)) {
             statusOpen = new InfoStatusOpenDefinition();
-            statusOpen.setAttribute(InfoStatusOpenAttributeTypes.CLOSE);
+            statusOpen.setAttribute(InfoStatusOpenAttributeType.CLOSE);
         }
         status.setOpen(statusOpen);
         status.setParentID(parentInfo.getID());
@@ -106,7 +107,7 @@ public class InfoFactory extends ACorePrototype {
         InfoObject infoObject = this.factoryManager.create(InfoObject.class);
 
         infoObject.factory = this;
-        infoObject.processorRegister = infoProcessorRegister;
+        infoObject.processorRegister = infoProcessorMediator;
         infoObject.id = info.getID();
         infoObject.poolID = poolID;
         infoObject.status = status;

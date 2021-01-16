@@ -14,7 +14,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class ACoreProcessPrototype<T> extends ACorePrototype {
+public abstract class ACoreProcessPrototype<T> extends APrototype {
     private Consumer funcInit;
     private Consumer funcFresh;
     private Provider<T> funcRead;

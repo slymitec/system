@@ -3,7 +3,7 @@ package indi.sly.system.kernel.security.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
@@ -53,13 +53,13 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
             throw new ConditionRefuseException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.setPassword(password);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public List<GroupObject> getGroups() {
@@ -91,7 +91,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
@@ -107,7 +107,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
         }
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public AccountGroupTokenObject getToken() {

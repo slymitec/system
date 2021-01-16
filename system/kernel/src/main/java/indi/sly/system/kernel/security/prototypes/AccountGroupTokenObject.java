@@ -2,7 +2,7 @@ package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -30,13 +30,13 @@ public class AccountGroupTokenObject extends ABytesValueProcessPrototype<Account
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.setPrivilegeTypes(privilegeTypes);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public Map<Long, Integer> getLimits() {
@@ -57,7 +57,7 @@ public class AccountGroupTokenObject extends ABytesValueProcessPrototype<Account
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         Map<Long, Integer> accountGroupTokenLimits = this.value.getLimits();
@@ -65,6 +65,6 @@ public class AccountGroupTokenObject extends ABytesValueProcessPrototype<Account
         accountGroupTokenLimits.putAll(limits);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 }

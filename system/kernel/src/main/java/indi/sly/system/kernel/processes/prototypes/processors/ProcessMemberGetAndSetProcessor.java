@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.lang.Consumer2;
 import indi.sly.system.common.lang.Function2;
-import indi.sly.system.kernel.core.prototypes.ACorePrototype;
+import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.ProcessProcessorRegister;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -12,7 +12,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessMemberGetAndSetProcessor extends ACorePrototype implements IProcessProcessor {
+public class ProcessMemberGetAndSetProcessor extends APrototype implements IProcessProcessor {
     private final Function2<Long, Long, ProcessEntity> readProcessStatus;
     private final Consumer2<ProcessEntity, Long> writeProcessStatus;
     private final Function2<byte[], byte[], ProcessEntity> readProcessCommunication;

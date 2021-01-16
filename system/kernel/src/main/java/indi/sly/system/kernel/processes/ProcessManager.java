@@ -5,10 +5,10 @@ import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AManager;
-import indi.sly.system.kernel.core.boot.types.StartupTypes;
+import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
-import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
@@ -31,8 +31,8 @@ public class ProcessManager extends AManager {
 
     @Override
     public void startup(long startupTypes) {
-        if (startupTypes == StartupTypes.STEP_INIT) {
-        } else if (startupTypes == StartupTypes.STEP_KERNEL) {
+        if (startupTypes == StartupType.STEP_INIT) {
+        } else if (startupTypes == StartupType.STEP_KERNEL) {
             this.processFactory = this.factoryManager.create(ProcessFactory.class);
             this.processFactory.init();
         }
@@ -53,7 +53,7 @@ public class ProcessManager extends AManager {
         ProcessEntity process = processRepository.get(processID);
         ProcessObject processObject = this.processFactory.buildProcessObject(process);
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 

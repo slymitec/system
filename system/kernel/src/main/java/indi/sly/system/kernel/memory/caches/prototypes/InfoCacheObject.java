@@ -5,7 +5,7 @@ import java.util.concurrent.locks.Lock;
 
 import javax.inject.Named;
 
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.prototypes.CoreRepositoryObject;
@@ -15,17 +15,17 @@ import org.springframework.context.annotation.Scope;
 
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.ACorePrototype;
-import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
+import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoCacheObject extends ACorePrototype {
+public class InfoCacheObject extends APrototype {
     private Map<UUID, InfoCacheDefinition> getInfoCaches(long spaceType) {
-        if (spaceType == SpaceTypes.KERNEL) {
+        if (spaceType == SpaceType.KERNEL) {
             return this.factoryManager.getKernelSpace().getInfoCaches();
-        } else if (spaceType == SpaceTypes.USER) {
+        } else if (spaceType == SpaceType.USER) {
             return this.factoryManager.getUserSpace().getCachedInfoObjectDefinitions();
         } else {
             Map<UUID, InfoCacheDefinition> kernelObjectCache = new HashMap<>();
@@ -39,8 +39,8 @@ public class InfoCacheObject extends ACorePrototype {
 
     private InfoObject getIfExistedBySpaceType(long spaceType, UUID id) {
         CoreRepositoryObject coreRepository = this.factoryManager.getCoreRepository();
-        Lock lock = coreRepository.getLock(spaceType, LockTypes.READ);
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        Lock lock = coreRepository.getLock(spaceType, LockType.READ);
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
 
         try {
@@ -63,8 +63,8 @@ public class InfoCacheObject extends ACorePrototype {
 
     private void addBySpaceType(long spaceType, InfoObject infoObject) {
         CoreRepositoryObject coreRepository = this.factoryManager.getCoreRepository();
-        Lock lock = coreRepository.getLock(spaceType, LockTypes.WRITE);
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        Lock lock = coreRepository.getLock(spaceType, LockType.WRITE);
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
 
         try {
@@ -93,46 +93,46 @@ public class InfoCacheObject extends ACorePrototype {
     public InfoObject getIfExisted(long spaceType, UUID id) {
         InfoObject infoObject = null;
 
-        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.USER)) {
-            infoObject = this.getIfExistedBySpaceType(SpaceTypes.USER, id);
+        if (LogicalUtil.isAnyExist(spaceType, SpaceType.USER)) {
+            infoObject = this.getIfExistedBySpaceType(SpaceType.USER, id);
         }
-        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
-            infoObject = this.getIfExistedBySpaceType(SpaceTypes.KERNEL, id);
+        if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
+            infoObject = this.getIfExistedBySpaceType(SpaceType.KERNEL, id);
         }
 
         return infoObject;
     }
 
     public void add(long spaceType, InfoObject infoObject) {
-        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
-            this.addBySpaceType(SpaceTypes.KERNEL, infoObject);
+        if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
+            this.addBySpaceType(SpaceType.KERNEL, infoObject);
         }
-        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.USER)) {
-            this.addBySpaceType(SpaceTypes.USER, infoObject);
+        if (LogicalUtil.isAnyExist(spaceType, SpaceType.USER)) {
+            this.addBySpaceType(SpaceType.USER, infoObject);
         }
     }
 
     public void delete(long spaceType, UUID id) {
-        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.KERNEL)) {
-            this.deleteBySpaceType(SpaceTypes.KERNEL, id);
+        if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
+            this.deleteBySpaceType(SpaceType.KERNEL, id);
         }
-        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.USER)) {
-            this.deleteBySpaceType(SpaceTypes.USER, id);
+        if (LogicalUtil.isAnyExist(spaceType, SpaceType.USER)) {
+            this.deleteBySpaceType(SpaceType.USER, id);
         }
     }
 
     public void deleteIfExpired(long spaceType) {
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long expiredTime =
                 this.factoryManager.getKernelSpace().getConfiguration().MEMORY_CACHES_USERSPACE_INFOOBJECT_EXPIRED_TIME;
 
-        if (LogicalUtil.isAnyExist(spaceType, SpaceTypes.USER)) {
-            Map<UUID, InfoCacheDefinition> infoObjectCaches = this.getInfoCaches(SpaceTypes.USER);
+        if (LogicalUtil.isAnyExist(spaceType, SpaceType.USER)) {
+            Map<UUID, InfoCacheDefinition> infoObjectCaches = this.getInfoCaches(SpaceType.USER);
 
             for (Map.Entry<UUID, InfoCacheDefinition> infoObjectCache : infoObjectCaches.entrySet()) {
                 if (dateTime.getCurrentDateTime() - infoObjectCache.getValue().getDate().get(DateTimeTypes.ACCESS) > expiredTime) {
-                    this.deleteBySpaceType(SpaceTypes.USER, infoObjectCache.getKey());
+                    this.deleteBySpaceType(SpaceType.USER, infoObjectCache.getKey());
                 }
             }
         }
@@ -140,7 +140,7 @@ public class InfoCacheObject extends ACorePrototype {
 
     private void deleteBySpaceType(long spaceType, UUID id) {
         CoreRepositoryObject coreRepository = this.factoryManager.getCoreRepository();
-        Lock lock = coreRepository.getLock(spaceType, LockTypes.WRITE);
+        Lock lock = coreRepository.getLock(spaceType, LockType.WRITE);
 
         try {
             lock.lock();

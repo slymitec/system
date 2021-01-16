@@ -2,14 +2,14 @@ package indi.sly.system.kernel.processes.communication.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.types.InfoStatusOpenAttributeTypes;
+import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
 import indi.sly.system.kernel.processes.communication.values.ProcessCommunicationDefinition;
 import indi.sly.system.kernel.processes.communication.instances.prototypes.PortContentObject;
 import indi.sly.system.kernel.processes.communication.instances.prototypes.SignalContentObject;
@@ -110,7 +110,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         UUID portID = null;
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             ProcessTokenObject processToken = this.process.getToken();
@@ -126,7 +126,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
                     this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_PORT_ID;
 
             InfoObject port = ports.createChildAndOpen(UUID.randomUUID(), new IdentificationDefinition(typeID),
-                    InfoStatusOpenAttributeTypes.OPEN_EXCLUSIVE);
+                    InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
             SecurityDescriptorObject securityDescriptor = port.getSecurityDescriptor();
             Map<UUID, Long> accessControl = new HashMap<>();
             accessControl.put(processToken.getAccountID(), AccessControlTypes.FULLCONTROL_ALLOW);
@@ -143,7 +143,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
             this.fresh();
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
 
         ProcessStatisticsObject processStatistics = this.process.getStatistics();
@@ -162,7 +162,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         }
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             Set<UUID> processCommunicationPortIDs = this.value.getPortIDs();
@@ -179,9 +179,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             }
 
             this.fresh();
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
     }
 
@@ -199,7 +199,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         }
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             Set<UUID> processCommunicationPortIDs = this.value.getPortIDs();
@@ -217,9 +217,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             processCommunicationPortIDs.remove(portID);
 
             this.fresh();
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
     }
 
@@ -243,7 +243,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
         InfoObject port = objectManager.get(identifications);
-        port.open(InfoStatusOpenAttributeTypes.OPEN_ONLYREAD);
+        port.open(InfoStatusOpenAttributeType.OPEN_ONLY_READ);
         PortContentObject portContent = (PortContentObject) port.getContent();
         Set<UUID> sourceProcessIDs = portContent.getSourceProcessIDs();
         port.close();
@@ -271,7 +271,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
         InfoObject port = objectManager.get(identifications);
-        port.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
+        port.open(InfoStatusOpenAttributeType.OPEN_SHARED_WRITE);
         PortContentObject portContent = (PortContentObject) port.getContent();
         portContent.setSourceProcessIDs(sourceProcessIDs);
         port.close();
@@ -301,7 +301,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         identifications.add(new IdentificationDefinition(portID));
 
         InfoObject port = objectManager.get(identifications);
-        port.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
+        port.open(InfoStatusOpenAttributeType.OPEN_SHARED_WRITE);
         PortContentObject portContent = (PortContentObject) port.getContent();
         byte[] value = portContent.receive();
         port.close();
@@ -323,7 +323,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
         InfoObject port = objectManager.get(identifications);
-        port.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
+        port.open(InfoStatusOpenAttributeType.OPEN_SHARED_WRITE);
         PortContentObject portContent = (PortContentObject) port.getContent();
         portContent.send(value);
         port.close();
@@ -353,7 +353,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         }
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             if (!ValueUtil.isAnyNullOrEmpty(this.value.getSignalID())) {
@@ -372,7 +372,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
                     this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID;
 
             InfoObject signal = signals.createChildAndOpen(UUID.randomUUID(), new IdentificationDefinition(typeID),
-                    InfoStatusOpenAttributeTypes.OPEN_EXCLUSIVE);
+                    InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
             SecurityDescriptorObject securityDescriptor = signal.getSecurityDescriptor();
             Map<UUID, Long> accessControl = new HashMap<>();
             accessControl.put(processToken.getAccountID(), AccessControlTypes.FULLCONTROL_ALLOW);
@@ -386,9 +386,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             this.value.setSignalID(signals.getID());
 
             this.fresh();
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
     }
 
@@ -402,7 +402,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         }
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             if (!ValueUtil.isAnyNullOrEmpty(this.value.getSignalID())) {
@@ -421,9 +421,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             this.value.setSignalID(null);
 
             this.fresh();
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
     }
 
@@ -445,7 +445,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
         InfoObject signal = objectManager.get(identifications);
-        signal.open(InfoStatusOpenAttributeTypes.OPEN_ONLYREAD);
+        signal.open(InfoStatusOpenAttributeType.OPEN_ONLY_READ);
         SignalContentObject signalContent = (SignalContentObject) signal.getContent();
         Set<UUID> sourceProcessIDs = signalContent.getSourceProcessIDs();
         signal.close();
@@ -475,7 +475,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
         InfoObject signal = objectManager.get(identifications);
-        signal.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
+        signal.open(InfoStatusOpenAttributeType.OPEN_SHARED_WRITE);
         SignalContentObject signalContent = (SignalContentObject) signal.getContent();
         signalContent.setSourceProcessIDs(sourceProcessIDs);
         signal.close();
@@ -499,7 +499,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
         InfoObject signal = objectManager.get(identifications);
-        signal.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
+        signal.open(InfoStatusOpenAttributeType.OPEN_SHARED_WRITE);
         SignalContentObject signalContent = (SignalContentObject) signal.getContent();
         List<SignalEntryDefinition> signalEntries = signalContent.receive();
         signal.close();
@@ -522,7 +522,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
         InfoObject signal = objectManager.get(identifications);
-        signal.open(InfoStatusOpenAttributeTypes.OPEN_SHARED_WRITE);
+        signal.open(InfoStatusOpenAttributeType.OPEN_SHARED_WRITE);
         SignalContentObject signalContent = (SignalContentObject) signal.getContent();
         signalContent.send(key, value);
         signal.close();

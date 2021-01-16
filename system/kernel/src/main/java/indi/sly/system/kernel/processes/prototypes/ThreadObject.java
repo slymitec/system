@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.kernel.core.prototypes.ACorePrototype;
+import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.values.ThreadDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ThreadObject extends ACorePrototype {
+public class ThreadObject extends APrototype {
     public ThreadObject() {
         this.thread = new ThreadDefinition();
     }

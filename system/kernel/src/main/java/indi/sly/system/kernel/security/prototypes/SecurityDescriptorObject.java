@@ -5,7 +5,7 @@ import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
@@ -207,13 +207,13 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.setInherit(inherit);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public void setOwners(List<UUID> owners) {
@@ -232,14 +232,14 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.getOwners().clear();
         this.value.getOwners().addAll(owners);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public void setAccessControlTypes(Map<UUID, Long> accessControl) {
@@ -258,7 +258,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         Map<UUID, Long> resultAccessControl;
@@ -305,7 +305,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         this.value.getAccessControl().putAll(resultAccessControl);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public void checkRoleTypes(UUID roleType) {
@@ -344,14 +344,14 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.getRoles().clear();
         this.value.getRoles().addAll(roleTypes);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public void writeAudit(long accessControlType) {
@@ -400,12 +400,12 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.setAuditTypes(auditTypes);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 }

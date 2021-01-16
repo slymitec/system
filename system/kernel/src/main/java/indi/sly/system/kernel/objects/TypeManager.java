@@ -9,14 +9,14 @@ import javax.inject.Named;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.*;
-import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.kernel.core.AManager;
-import indi.sly.system.kernel.core.boot.types.StartupTypes;
-import indi.sly.system.kernel.core.enviroment.KernelConfiguration;
+import indi.sly.system.kernel.core.boot.values.StartupType;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.ATypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
 import indi.sly.system.kernel.objects.infotypes.types.TypeInitializerAttributeTypes;
@@ -29,9 +29,9 @@ import indi.sly.system.kernel.objects.instances.prototypes.NamelessFolderTypeIni
 public class TypeManager extends AManager {
     @Override
     public void startup(long startupTypes) {
-        if (startupTypes == StartupTypes.STEP_INIT) {
-        } else if (startupTypes == StartupTypes.STEP_KERNEL) {
-            KernelConfiguration kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+        if (startupTypes == StartupType.STEP_INIT) {
+        } else if (startupTypes == StartupType.STEP_KERNEL) {
+            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
             Set<UUID> childTypes = new HashSet<>();
             childTypes.add(UUIDUtil.getEmpty());
@@ -62,7 +62,7 @@ public class TypeManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        TypeObject type = this.factoryManager.getCoreRepository().getByID(SpaceTypes.KERNEL, TypeObject.class,
+        TypeObject type = this.factoryManager.getCoreRepository().getByID(SpaceType.KERNEL, TypeObject.class,
                 typeID);
 
         return type;
@@ -73,7 +73,7 @@ public class TypeManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        TypeObject type = this.factoryManager.getCoreRepository().getByName(SpaceTypes.KERNEL, TypeObject.class
+        TypeObject type = this.factoryManager.getCoreRepository().getByName(SpaceType.KERNEL, TypeObject.class
                 , "Objects_Types_" + typeName);
 
         return type;
@@ -103,7 +103,7 @@ public class TypeManager extends AManager {
             throw new StatusAlreadyExistedException();
         }
 
-        this.factoryManager.getCoreRepository().add(SpaceTypes.KERNEL, typeID, "Objects_Types_" + typeName,
+        this.factoryManager.getCoreRepository().add(SpaceType.KERNEL, typeID, "Objects_Types_" + typeName,
                 typeObject);
         objectTypes.add(typeID);
 
@@ -123,7 +123,7 @@ public class TypeManager extends AManager {
 
         type.getTypeInitializer().uninstall();
 
-        this.factoryManager.getCoreRepository().deleteByID(SpaceTypes.KERNEL, TypeObject.class, typeID);
+        this.factoryManager.getCoreRepository().deleteByID(SpaceType.KERNEL, TypeObject.class, typeID);
         objectTypes.remove(typeID);
     }
 

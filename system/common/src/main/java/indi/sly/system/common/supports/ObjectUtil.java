@@ -114,31 +114,31 @@ public abstract class ObjectUtil {
 
         if (value.getClass().isArray()) {
             if (value instanceof Object[]) {
-                return ObjectUtil.hashCode((Object[]) value);
+                return ArrayUtil.hashCode((Object[]) value);
             }
             if (value instanceof boolean[]) {
-                return ObjectUtil.hashCode((boolean[]) value);
+                return ArrayUtil.hashCode((boolean[]) value);
             }
             if (value instanceof byte[]) {
-                return ObjectUtil.hashCode((byte[]) value);
+                return ArrayUtil.hashCode((byte[]) value);
             }
             if (value instanceof char[]) {
-                return ObjectUtil.hashCode((char[]) value);
+                return ArrayUtil.hashCode((char[]) value);
             }
             if (value instanceof double[]) {
-                return ObjectUtil.hashCode((double[]) value);
+                return ArrayUtil.hashCode((double[]) value);
             }
             if (value instanceof float[]) {
-                return ObjectUtil.hashCode((float[]) value);
+                return ArrayUtil.hashCode((float[]) value);
             }
             if (value instanceof int[]) {
-                return ObjectUtil.hashCode((int[]) value);
+                return ArrayUtil.hashCode((int[]) value);
             }
             if (value instanceof long[]) {
-                return ObjectUtil.hashCode((long[]) value);
+                return ArrayUtil.hashCode((long[]) value);
             }
             if (value instanceof short[]) {
-                return ObjectUtil.hashCode((short[]) value);
+                return ArrayUtil.hashCode((short[]) value);
             }
         }
 
@@ -149,7 +149,7 @@ public abstract class ObjectUtil {
         if (ObjectUtil.isAnyNull(value)) {
             return ObjectUtil.TO_STRING_NULL_OBJECT;
         }
-        return value.getClass().getCanonicalName() + "@" + Integer.toHexString(System.identityHashCode(value));
+        return value.toString();
     }
 
     public static <T extends ISerializeCapable> T readExternal(ObjectInput in) throws ClassNotFoundException,

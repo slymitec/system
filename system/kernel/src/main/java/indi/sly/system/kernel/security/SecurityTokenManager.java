@@ -5,8 +5,8 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AManager;
-import indi.sly.system.kernel.core.boot.types.StartupTypes;
-import indi.sly.system.kernel.core.enviroment.KernelConfiguration;
+import indi.sly.system.kernel.core.boot.values.StartupType;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -30,8 +30,8 @@ public class SecurityTokenManager extends AManager {
 
     @Override
     public void startup(long startupTypes) {
-        if (startupTypes == StartupTypes.STEP_INIT) {
-        } else if (startupTypes == StartupTypes.STEP_KERNEL) {
+        if (startupTypes == StartupType.STEP_INIT) {
+        } else if (startupTypes == StartupType.STEP_KERNEL) {
             this.accountGroupObjectFactory = this.factoryManager.create(AccountGroupObjectFactoryObject.class);
         }
     }
@@ -54,7 +54,7 @@ public class SecurityTokenManager extends AManager {
         AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
 
         if (!processToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)
-                && !StringUtil.equals(account.getPassword(), accountPassword)) {
+                && !ObjectUtil.equals(account.getPassword(), accountPassword)) {
             throw new ConditionRefuseException();
         }
 
@@ -137,7 +137,7 @@ public class SecurityTokenManager extends AManager {
         account.setName(accountName);
         account.setPassword(accountPassword);
         AccountGroupTokenDefinition accountGroupToken = new AccountGroupTokenDefinition();
-        KernelConfiguration kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
         accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
         account.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
 
@@ -173,7 +173,7 @@ public class SecurityTokenManager extends AManager {
         group.setID(UUID.randomUUID());
         group.setName(groupName);
         AccountGroupTokenDefinition accountGroupToken = new AccountGroupTokenDefinition();
-        KernelConfiguration kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
         accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
         group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
 

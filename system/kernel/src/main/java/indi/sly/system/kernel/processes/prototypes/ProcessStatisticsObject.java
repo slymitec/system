@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.processes.values.ProcessStatisticsDefinition;
@@ -33,13 +33,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
     }
 
     public void setDate(long dataTimeType, long value) {
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.getDate().put(dataTimeType, value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getStatusCumulation() {
@@ -57,13 +57,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetStatusCumulation(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getThreadCumulation() {
@@ -81,13 +81,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetThreadCumulation(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getInfoCreate() {
@@ -105,13 +105,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetInfoCreate(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getInfoGet() {
@@ -129,13 +129,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetInfoGet(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getInfoQuery() {
@@ -153,13 +153,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetInfoQuery(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getInfoDelete() {
@@ -177,13 +177,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetInfoDelete(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getInfoDump() {
@@ -201,13 +201,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetInfoDump(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getInfoOpen() {
@@ -225,13 +225,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetInfoOpen(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getInfoClose() {
@@ -249,13 +249,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetInfoClose(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getInfoRead() {
@@ -273,13 +273,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetInfoRead(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getInfoWrite() {
@@ -297,13 +297,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetInfoWrite(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getSharedReadCount() {
@@ -321,13 +321,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetSharedReadCount(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getSharedReadBytes() {
@@ -345,13 +345,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetSharedReadBytes(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getSharedWriteCount() {
@@ -369,13 +369,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetSharedWriteCount(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getSharedWriteBytes() {
@@ -393,13 +393,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetSharedWriteBytes(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getPortCount() {
@@ -417,13 +417,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetPortCount(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getPortReadCount() {
@@ -441,13 +441,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetPortReadCount(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getPortReadBytes() {
@@ -465,13 +465,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetPortReadBytes(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getPortWriteCount() {
@@ -489,13 +489,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetPortWriteCount(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getPortWriteBytes() {
@@ -513,13 +513,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetPortWriteBytes(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getSignalReadCount() {
@@ -537,13 +537,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetSignalReadCount(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getSignalWriteCount() {
@@ -561,13 +561,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetSignalWriteCount(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getIoCreate() {
@@ -585,13 +585,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetIoCreate(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getIoStatus() {
@@ -609,13 +609,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetIoStatus(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getIoReadCount() {
@@ -633,13 +633,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetIoReadCount(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getIoReadBytes() {
@@ -657,13 +657,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetIoReadBytes(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getIoWriteCount() {
@@ -681,13 +681,13 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetIoWriteCount(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getIoWriteBytes() {
@@ -705,12 +705,12 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionPermissionsException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.offsetIoWriteBytes(value);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 }

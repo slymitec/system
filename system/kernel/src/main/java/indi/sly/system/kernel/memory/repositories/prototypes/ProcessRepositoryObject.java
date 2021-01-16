@@ -4,9 +4,9 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.ACorePrototype;
+import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessRepositoryObject extends ACorePrototype {
+public class ProcessRepositoryObject extends APrototype {
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -77,9 +77,9 @@ public class ProcessRepositoryObject extends ACorePrototype {
         }
 
         LockModeType lockModeType;
-        if (lockType == LockTypes.READ) {
+        if (lockType == LockType.READ) {
             lockModeType = LockModeType.PESSIMISTIC_READ;
-        } else if (lockType == LockTypes.WRITE) {
+        } else if (lockType == LockType.WRITE) {
             lockModeType = LockModeType.PESSIMISTIC_WRITE;
         } else {
             lockModeType = LockModeType.NONE;

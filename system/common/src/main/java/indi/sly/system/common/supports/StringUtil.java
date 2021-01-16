@@ -1,20 +1,23 @@
 package indi.sly.system.common.supports;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public abstract class StringUtil extends org.apache.commons.lang3.StringUtils {
+public abstract class StringUtil {
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+    public static final String EMPTY = "";
 
     public static boolean isNameIllegal(CharSequence value) {
         if (ValueUtil.isAnyNullOrEmpty(value)) {
             return true;
         }
-        if (value.length() > 256 || StringUtil.containsAny(value, '/', '\\', ':', '*', '?', '\"', '<', '>', '|') || StringUtil.equalsIgnoreCase(value, ".")
-                || StringUtil.equalsIgnoreCase(value, "..") || (value.length() > 1 && value.charAt(value.length() - 1) == '.')) {
+        if (value.length() > 256 || StringUtils.containsAny(value, '/', '\\', ':', '*', '?', '\"', '<', '>', '|') || StringUtils.equalsIgnoreCase(value, ".")
+                || StringUtils.equalsIgnoreCase(value, "..") || (value.length() > 1 && value.charAt(value.length() - 1) == '.')) {
             return true;
         }
 
@@ -23,7 +26,7 @@ public abstract class StringUtil extends org.apache.commons.lang3.StringUtils {
 
     public static boolean isNameIllegal(CharSequence... values) {
         for (CharSequence value : values) {
-            if (StringUtil.isNameIllegal(values)) {
+            if (StringUtil.isNameIllegal(value)) {
                 return true;
             }
         }
@@ -36,7 +39,7 @@ public abstract class StringUtil extends org.apache.commons.lang3.StringUtils {
             throw new NullPointerException();
         }
 
-        return new String(value, DEFAULT_CHARSET);
+        return new String(value, StringUtil.DEFAULT_CHARSET);
     }
 
     public static byte[] writeToBytes(String value) {
@@ -44,7 +47,7 @@ public abstract class StringUtil extends org.apache.commons.lang3.StringUtils {
             throw new NullPointerException();
         }
 
-        return value.getBytes(DEFAULT_CHARSET);
+        return value.getBytes(StringUtil.DEFAULT_CHARSET);
     }
 
     public static String readExternal(ObjectInput in) throws IOException {

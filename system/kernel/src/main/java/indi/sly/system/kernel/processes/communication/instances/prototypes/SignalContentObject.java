@@ -3,11 +3,11 @@ package indi.sly.system.kernel.processes.communication.instances.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
-import indi.sly.system.kernel.core.enviroment.types.SpaceTypes;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.communication.instances.values.SignalDefinition;
@@ -68,17 +68,17 @@ public class SignalContentObject extends AInfoContentObject {
             throw new ConditionPermissionsException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         List<SignalEntryDefinition> signalEntries = this.signal.pollAll();
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
 
         for (SignalEntryDefinition signalEntry : signalEntries) {
             signalEntry.getDate().put(DateTimeTypes.ACCESS, nowDateTime);
@@ -99,7 +99,7 @@ public class SignalContentObject extends AInfoContentObject {
             throw new ConditionPermissionsException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceTypes.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -110,12 +110,12 @@ public class SignalContentObject extends AInfoContentObject {
         signalEntry.getDate().put(DateTimeTypes.CREATE, nowDateTime);
         signalEntry.getDate().put(DateTimeTypes.ACCESS, nowDateTime);
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.signal.add(signalEntry);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 }

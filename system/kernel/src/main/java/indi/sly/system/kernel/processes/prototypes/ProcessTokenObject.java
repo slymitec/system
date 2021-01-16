@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
@@ -53,7 +53,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
 
         AccountAuthorizationResultDefinition accountAuthorizationResult = accountAuthorization.checkAndGetResult();
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.setAccountID(accountAuthorizationResult.getAccountID());
@@ -64,7 +64,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         processTokenLimits.putAll(accountAuthorizationResultToken.getLimits());
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public UUID getAccountID() {
@@ -79,13 +79,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.setAccountID(this.getAndCheckParentProcessToken().getAccountID());
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public long getPrivilegeTypes() {
@@ -100,13 +100,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.setPrivilegeTypes(this.getAndCheckParentProcessToken().getPrivilegeTypes());
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public void inheritPrivilegeTypes(long privilegeTypes) {
@@ -115,14 +115,14 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.setPrivilegeTypes(LogicalUtil.and(privilegeTypes,
                 this.getAndCheckParentProcessToken().getPrivilegeTypes()));
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public void setPrivilegeTypes(long privilegeTypes) {
@@ -143,13 +143,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
             }
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         this.value.setPrivilegeTypes(privilegeTypes);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public Map<Long, Integer> getLimits() {
@@ -164,7 +164,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         Map<Long, Integer> processTokenLimits = this.getLimits();
@@ -172,7 +172,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         processTokenLimits.putAll(this.getAndCheckParentProcessToken().getLimits());
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public void setLimits(Map<Long, Integer> limits) {
@@ -197,7 +197,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
             }
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         Map<Long, Integer> processTokenLimits = this.getLimits();
@@ -205,7 +205,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         processTokenLimits.putAll(limits);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public Set<UUID> getRoles() {
@@ -220,7 +220,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         Set<UUID> processTokenRoles = this.value.getRoles();
@@ -228,7 +228,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         processTokenRoles.addAll(this.getAndCheckParentProcessToken().getRoles());
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public void inheritRoleTypes(Set<UUID> roles) {
@@ -241,7 +241,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         Set<UUID> parentRoles = this.getAndCheckParentProcessToken().getRoles();
@@ -258,7 +258,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         processTokenRoles.addAll(childRoles);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public void setRoleTypes(Set<UUID> roles) {
@@ -273,7 +273,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
 
         this.getAndCheckParentProcessToken();
 
-        this.lock(LockTypes.WRITE);
+        this.lock(LockType.WRITE);
         this.init();
 
         Set<UUID> processTokenRoles = this.value.getRoles();
@@ -281,7 +281,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         processTokenRoles.addAll(roles);
 
         this.fresh();
-        this.lock(LockTypes.NONE);
+        this.lock(LockType.NONE);
     }
 
     public boolean isPrivilegeTypes(long privilegeTypes) {

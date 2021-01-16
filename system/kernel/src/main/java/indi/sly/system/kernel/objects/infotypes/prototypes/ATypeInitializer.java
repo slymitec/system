@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Scope;
 
 import indi.sly.system.common.lang.Consumer1;
 import indi.sly.system.common.lang.Provider;
-import indi.sly.system.kernel.core.prototypes.ACorePrototype;
+import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.common.values.IdentificationDefinition;
@@ -23,7 +23,7 @@ import indi.sly.system.kernel.objects.values.DumpDefinition;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class ATypeInitializer extends ACorePrototype {
+public abstract class ATypeInitializer extends APrototype {
     public abstract void install();
 
     public abstract void uninstall();

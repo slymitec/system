@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.common.values.IdentificationDefinition;
@@ -51,14 +51,14 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         }
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             this.value.setAppContext(appContext);
 
             this.fresh();
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
     }
 
@@ -82,7 +82,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         }
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             Map<String, String> processContextEnvironmentVariable = this.value.getEnvironmentVariable();
@@ -91,7 +91,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
 
             this.fresh();
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
     }
 
@@ -119,7 +119,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         }
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             Map<String, String> processContextParameters = this.value.getParameters();
@@ -128,7 +128,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
 
             this.fresh();
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
     }
 
@@ -156,14 +156,14 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         }
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             this.value.setSessionID(sessionID);
 
             this.fresh();
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
     }
 
@@ -191,7 +191,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         }
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             List<IdentificationDefinition> processContextWorkFolder = this.value.getWorkFolder();
@@ -200,7 +200,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
 
             this.fresh();
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
     }
 }

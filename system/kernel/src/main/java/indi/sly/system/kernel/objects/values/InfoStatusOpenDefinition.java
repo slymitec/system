@@ -8,8 +8,9 @@ import java.util.Objects;
 import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.kernel.core.values.ADefinition;
 
-public class InfoStatusOpenDefinition implements ISerializeCapable<InfoStatusOpenDefinition> {
+public class InfoStatusOpenDefinition extends ADefinition<InfoStatusOpenDefinition> {
     private long attribute;
     private ISerializeCapable context;
 

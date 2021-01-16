@@ -57,6 +57,12 @@ dependencies {
 tasks.bootJar {
     enabled = true
     mainClass.set("indi.sly.system.boot.SystemBoot")
+    manifest {
+        attributes(
+            "Implementation-Title" to "SLY System",
+            "Implementation-Version" to "1.0.0.0"
+        )
+    }
 }
 
 tasks.compileJava {
@@ -65,6 +71,12 @@ tasks.compileJava {
 
 tasks.jar {
     enabled = true
+    manifest {
+        attributes(
+            "Implementation-Title" to "SLY System",
+            "Implementation-Version" to "1.0.0.0"
+        )
+    }
 }
 
 tasks.test {

@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.objects.values;
 
-import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.*;
+import indi.sly.system.kernel.core.values.AEntity;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "KernelInfos")
-public class InfoEntity implements ISerializeCapable<InfoEntity> {
+public class InfoEntity extends AEntity<InfoEntity> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -43,8 +43,8 @@ public class InfoEntity implements ISerializeCapable<InfoEntity> {
         return this.id;
     }
 
-    public void setID(UUID objectID) {
-        this.id = objectID;
+    public void setID(UUID id) {
+        this.id = id;
     }
 
     public UUID getType() {

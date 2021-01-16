@@ -5,7 +5,7 @@ import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
@@ -84,12 +84,12 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
         AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        this.lockProcedure(info, LockTypes.WRITE);
+        this.lockProcedure(info, LockType.WRITE);
 
         List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
         for (InfoRelationEntity infoRelation : infoRelations) {
             if (infoRelation.getID().equals(childInfo.getID())) {
-                this.lockProcedure(info, LockTypes.NONE);
+                this.lockProcedure(info, LockType.NONE);
                 throw new StatusAlreadyExistedException();
             }
         }
@@ -102,7 +102,7 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
 
         entityRepository.addRelation(infoRelation);
 
-        this.lockProcedure(info, LockTypes.NONE);
+        this.lockProcedure(info, LockType.NONE);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
         AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        this.lockProcedure(info, LockTypes.WRITE);
+        this.lockProcedure(info, LockType.WRITE);
 
         List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
@@ -172,7 +172,7 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
         AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        this.lockProcedure(info, LockTypes.WRITE);
+        this.lockProcedure(info, LockType.WRITE);
 
         UUID childID = UUIDUtil.readFormBytes(identification.getID());
 
@@ -181,12 +181,12 @@ public class NamelessFolderTypeInitializer extends ATypeInitializer {
             if (infoRelation.getID().equals(childID)) {
                 entityRepository.deleteRelation(infoRelation);
 
-                this.lockProcedure(info, LockTypes.NONE);
+                this.lockProcedure(info, LockType.NONE);
                 return;
             }
         }
 
-        this.lockProcedure(info, LockTypes.NONE);
+        this.lockProcedure(info, LockType.NONE);
         throw new StatusNotExistedException();
     }
 

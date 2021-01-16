@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.lang.Consumer2;
 import indi.sly.system.common.lang.Function2;
-import indi.sly.system.kernel.core.prototypes.ACorePrototype;
+import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.*;
@@ -13,7 +13,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class StatisticsProcessor extends ACorePrototype implements IProcessProcessor {
+public class StatisticsProcessor extends APrototype implements IProcessProcessor {
     private final Function2<Long, Long, ProcessEntity> readProcessStatus;
     private final Consumer2<ProcessEntity, Long> writeProcessStatus;
 

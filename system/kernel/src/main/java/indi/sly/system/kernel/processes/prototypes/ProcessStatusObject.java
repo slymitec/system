@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.Consumer2;
 import indi.sly.system.common.lang.Function2;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
@@ -105,7 +105,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         }
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
@@ -116,7 +116,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
 
             this.fresh();
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
 
         if (!this.process.isCurrent()) {
@@ -152,7 +152,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         }
 
         try {
-            this.lock(LockTypes.WRITE);
+            this.lock(LockType.WRITE);
             this.init();
 
             List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
@@ -163,7 +163,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
 
             this.fresh();
         } finally {
-            this.lock(LockTypes.NONE);
+            this.lock(LockType.NONE);
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);

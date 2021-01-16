@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusNotSupportedException;
-import indi.sly.system.common.values.LockTypes;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
@@ -83,12 +83,12 @@ public class FolderTypeInitializer extends ATypeInitializer {
         AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        this.lockProcedure(info, LockTypes.WRITE);
+        this.lockProcedure(info, LockType.WRITE);
 
         List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
         for (InfoRelationEntity infoRelation : infoRelations) {
             if (infoRelation.getName().equals(childInfo.getName())) {
-                this.lockProcedure(info, LockTypes.NONE);
+                this.lockProcedure(info, LockType.NONE);
                 throw new StatusAlreadyExistedException();
             }
         }
@@ -101,7 +101,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
 
         entityRepository.addRelation(infoRelation);
 
-        this.lockProcedure(info, LockTypes.NONE);
+        this.lockProcedure(info, LockType.NONE);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
         AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        this.lockProcedure(info, LockTypes.WRITE);
+        this.lockProcedure(info, LockType.WRITE);
 
         List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
@@ -166,7 +166,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
         AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        this.lockProcedure(info, LockTypes.WRITE);
+        this.lockProcedure(info, LockType.WRITE);
 
         String oldChildName = StringUtil.readFormBytes(oldIdentification.getID());
         String newChildName = StringUtil.readFormBytes(oldIdentification.getID());
@@ -176,12 +176,12 @@ public class FolderTypeInitializer extends ATypeInitializer {
             if (infoRelation.getName().equals(oldChildName)) {
                 infoRelation.setName(newChildName);
 
-                this.lockProcedure(info, LockTypes.NONE);
+                this.lockProcedure(info, LockType.NONE);
                 return;
             }
         }
 
-        this.lockProcedure(info, LockTypes.NONE);
+        this.lockProcedure(info, LockType.NONE);
         throw new StatusNotExistedException();
     }
 
@@ -195,7 +195,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
         AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        this.lockProcedure(info, LockTypes.WRITE);
+        this.lockProcedure(info, LockType.WRITE);
 
         String childName = StringUtil.readFormBytes(identification.getID());
 
@@ -204,12 +204,12 @@ public class FolderTypeInitializer extends ATypeInitializer {
             if (infoRelation.getName().equals(childName)) {
                 entityRepository.deleteRelation(infoRelation);
 
-                this.lockProcedure(info, LockTypes.NONE);
+                this.lockProcedure(info, LockType.NONE);
                 return;
             }
         }
 
-        this.lockProcedure(info, LockTypes.NONE);
+        this.lockProcedure(info, LockType.NONE);
         throw new StatusNotExistedException();
     }
 

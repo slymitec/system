@@ -1,8 +1,10 @@
 package indi.sly.system.kernel.objects.values;
 
+import indi.sly.system.kernel.core.values.ADefinition;
+
 import java.util.UUID;
 
-public class InfoSummaryDefinition {
+public class InfoSummaryDefinition extends ADefinition<InfoSummaryDefinition> {
     private UUID id;
     private UUID type;
     private String name;

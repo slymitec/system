@@ -26,7 +26,7 @@ public class AccountGroupTokenObject extends ABytesValueProcessPrototype<Account
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+        if (!processToken.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
             throw new ConditionPermissionsException();
         }
 
@@ -53,7 +53,7 @@ public class AccountGroupTokenObject extends ABytesValueProcessPrototype<Account
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
+        if (!processToken.isPrivilegeType(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
             throw new ConditionPermissionsException();
         }
 

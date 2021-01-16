@@ -7,7 +7,7 @@ import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.sessions.instances.values.UserSessionDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

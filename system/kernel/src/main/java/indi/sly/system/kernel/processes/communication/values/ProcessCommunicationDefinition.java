@@ -2,13 +2,14 @@ package indi.sly.system.kernel.processes.communication.values;
 
 import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.*;
+import indi.sly.system.kernel.core.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class ProcessCommunicationDefinition implements ISerializeCapable<ProcessCommunicationDefinition> {
+public class ProcessCommunicationDefinition extends ADefinition<ProcessCommunicationDefinition> {
     public ProcessCommunicationDefinition() {
         this.shared = ArrayUtil.EMPTY_BYTES;
         this.portIDs = new HashSet<>();

@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.kernel.core.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -8,7 +9,7 @@ import java.io.ObjectOutput;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ThreadStatisticsDefinition implements ISerializeCapable<ThreadStatisticsDefinition> {
+public class ThreadStatisticsDefinition extends ADefinition<ThreadStatisticsDefinition> {
     public ThreadStatisticsDefinition() {
         this.date = new HashMap<>();
     }

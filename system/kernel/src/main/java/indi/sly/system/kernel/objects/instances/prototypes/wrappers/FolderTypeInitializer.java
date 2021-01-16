@@ -15,7 +15,7 @@ import indi.sly.system.kernel.objects.values.InfoRelationEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

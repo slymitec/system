@@ -37,7 +37,7 @@ public class UserSessionContentObject extends AInfoContentObject {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
+        if (!processToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
             throw new ConditionPermissionsException();
         }
     }

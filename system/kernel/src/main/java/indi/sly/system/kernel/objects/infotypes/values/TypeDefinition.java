@@ -1,12 +1,13 @@
 package indi.sly.system.kernel.objects.infotypes.values;
 
-import indi.sly.system.kernel.objects.infotypes.prototypes.ATypeInitializer;
+import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class TypeDefinition {
+public class TypeDefinition extends ADefinition<TypeDefinition> {
     private UUID id;
     private String name;
     private long attribute;

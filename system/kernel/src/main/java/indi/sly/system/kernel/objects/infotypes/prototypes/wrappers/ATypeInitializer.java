@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.objects.infotypes.prototypes;
+package indi.sly.system.kernel.objects.infotypes.prototypes.wrappers;
 
 import java.util.Set;
 import java.util.UUID;

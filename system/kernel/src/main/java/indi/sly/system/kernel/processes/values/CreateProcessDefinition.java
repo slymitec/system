@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.core.values.ADefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.sessions.values.AppContextDefinition;
 
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class CreateProcessDefinition {
+public class CreateProcessDefinition extends ADefinition<CreateProcessDefinition> {
     private UUID fileHandle;
 
     private AccountAuthorizationObject accountAuthorization;

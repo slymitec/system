@@ -78,7 +78,7 @@ public class CreateProcessBuilder extends APrototype {
 
     public CreateProcessBuilder setPrivilegeTypes(long privilegeTypes) {
         ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
-        if (!parentProcessToken.isPrivilegeTypes(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+        if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
             throw new ConditionPermissionsException();
         }
 
@@ -93,7 +93,7 @@ public class CreateProcessBuilder extends APrototype {
         }
 
         ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
-        if (!parentProcessToken.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
+        if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
             throw new ConditionPermissionsException();
         }
 

@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.processes.communication.instances.prototypes;
+package indi.sly.system.kernel.processes.communication.instances.prototypes.wrappers;
 
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -8,8 +8,9 @@ import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
 import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.communication.instances.prototypes.SignalContentObject;
 import indi.sly.system.kernel.processes.communication.instances.values.SignalDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;

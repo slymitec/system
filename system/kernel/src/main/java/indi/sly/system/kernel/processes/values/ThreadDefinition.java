@@ -3,13 +3,14 @@ package indi.sly.system.kernel.processes.values;
 import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.kernel.core.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.UUID;
 
-public class ThreadDefinition implements ISerializeCapable<ThreadDefinition> {
+public class ThreadDefinition extends ADefinition<ThreadDefinition> {
     public ThreadDefinition() {
         this.statistics = new ThreadStatisticsDefinition();
         this.context = new ThreadContextDefinition();

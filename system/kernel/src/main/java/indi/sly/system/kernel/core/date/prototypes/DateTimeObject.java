@@ -27,7 +27,7 @@ public class DateTimeObject extends APrototype {
         ProcessObject currentProcess = processManager.getCurrentProcess();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-        if (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.CORE_MODIFY_DATETIME)) {
+        if (!currentProcessToken.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_DATETIME)) {
             throw new ConditionPermissionsException();
         }
 

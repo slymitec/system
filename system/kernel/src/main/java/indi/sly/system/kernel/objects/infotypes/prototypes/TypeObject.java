@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
 
 public class TypeObject extends APrototype {

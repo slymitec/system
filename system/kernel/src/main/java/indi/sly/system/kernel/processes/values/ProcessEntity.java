@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.kernel.core.values.AEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +19,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "KernelProcesses")
-public class ProcessEntity implements ISerializeCapable<ProcessEntity> {
+public class ProcessEntity extends AEntity<ProcessEntity> {
     private static final long serialVersionUID = 1L;
 
     @Id

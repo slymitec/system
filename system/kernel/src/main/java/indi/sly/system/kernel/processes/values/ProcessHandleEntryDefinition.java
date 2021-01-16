@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.core.values.ADefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.io.ObjectOutput;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class ProcessHandleEntryDefinition implements ISerializeCapable<ProcessHandleEntryDefinition> {
+public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntryDefinition> {
     private final Map<Long, Long> date;
     private final List<IdentificationDefinition> identifications;
     private InfoStatusOpenDefinition open;

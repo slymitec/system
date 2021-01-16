@@ -132,13 +132,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         }
 
         if (this.process.isCurrent()) {
-            if (!this.isPrivilegeTypes(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+            if (!this.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
                 throw new ConditionPermissionsException();
             }
         } else {
             ProcessTokenObject parentProcessToken = this.getAndCheckParentProcessToken();
 
-            if (!parentProcessToken.isPrivilegeTypes(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+            if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -186,13 +186,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         }
 
         if (this.process.isCurrent()) {
-            if (!this.isPrivilegeTypes(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
+            if (!this.isPrivilegeType(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
                 throw new ConditionPermissionsException();
             }
         } else {
             ProcessTokenObject parentProcessToken = this.getAndCheckParentProcessToken();
 
-            if (!parentProcessToken.isPrivilegeTypes(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+            if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -284,7 +284,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         this.lock(LockType.NONE);
     }
 
-    public boolean isPrivilegeTypes(long privilegeTypes) {
+    public boolean isPrivilegeType(long privilegeTypes) {
         this.init();
 
         return LogicalUtil.isAllExist(this.getPrivilegeTypes(), privilegeTypes);

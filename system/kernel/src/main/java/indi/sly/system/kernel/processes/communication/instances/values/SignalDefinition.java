@@ -5,13 +5,14 @@ import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.kernel.core.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class SignalDefinition implements ISerializeCapable<SignalDefinition> {
+public class SignalDefinition extends ADefinition<SignalDefinition> {
     public SignalDefinition() {
         this.sourceProcessIDs = new HashSet<>();
         this.signalEntries = new ArrayList<>();

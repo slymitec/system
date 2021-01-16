@@ -137,7 +137,7 @@ public class InfoObject extends APrototype {
                 InfoCacheObject.class);
 
         if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
-            if (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
+            if (!currentProcessToken.isPrivilegeType(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
                 throw new ConditionPermissionsException();
             }
 
@@ -161,7 +161,7 @@ public class InfoObject extends APrototype {
                 InfoCacheObject.class);
 
         if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
-            if (!currentProcessToken.isPrivilegeTypes(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
+            if (!currentProcessToken.isPrivilegeType(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
                 throw new ConditionPermissionsException();
             }
 
@@ -200,14 +200,13 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        Function3<SecurityDescriptorObject, InfoEntity, TypeObject, InfoStatusDefinition> func =
-                this.processorRegister.getSecurityDescriptor();
+        SecurityDescriptorFunction resolver = this.processorRegister.getSecurityDescriptor();
 
-        if (ObjectUtil.isAnyNull(func)) {
+        if (ObjectUtil.isAnyNull(resolver)) {
             throw new StatusNotSupportedException();
         }
 
-        return func.apply(info, type, this.status);
+        return resolver.apply(info, type, this.status);
     }
 
     public synchronized DumpObject dump() {
@@ -216,11 +215,11 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<DumpFunction> funcs = this.processorRegister.getDumps();
+        List<DumpFunction> resolvers = this.processorRegister.getDumps();
 
         DumpDefinition dump = new DumpDefinition();
 
-        for (Function4<DumpDefinition, DumpDefinition, InfoEntity, TypeObject, InfoStatusDefinition> pair : funcs) {
+        for (DumpFunction pair : resolvers) {
             dump = pair.apply(dump, info, type, this.status);
         }
 
@@ -237,12 +236,12 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<OpenFunction> funcs = this.processorRegister.getOpens();
+        List<OpenFunction> resolvers = this.processorRegister.getOpens();
 
         UUID handle = UUIDUtil.getEmpty();
 
-        for (Function6<UUID, UUID, InfoEntity, TypeObject, InfoStatusDefinition, Long, Object[]> pair : funcs) {
-            handle = pair.apply(handle, info, type, this.status, openAttribute, arguments);
+        for (OpenFunction resolver : resolvers) {
+            handle = resolver.apply(handle, info, type, this.status, openAttribute, arguments);
             if (ObjectUtil.isAnyNull(handle)) {
                 throw new StatusUnexpectedException();
             }
@@ -269,10 +268,10 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<CloseConsumer> funcs = this.processorRegister.getCloses();
+        List<CloseConsumer> resolvers = this.processorRegister.getCloses();
 
-        for (Consumer3<InfoEntity, TypeObject, InfoStatusDefinition> pair : funcs) {
-            pair.accept(info, type, this.status);
+        for (CloseConsumer resolver : resolvers) {
+            resolver.accept(info, type, this.status);
         }
 
         this.status.setHandle(null);
@@ -301,14 +300,12 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject typeObject = typeManager.get(this.getType());
 
-        List<CreateChildAndOpenFunction> funcs = this.processorRegister.getCreateChildAndOpens();
+        List<CreateChildAndOpenFunction> resolvers = this.processorRegister.getCreateChildAndOpens();
 
         InfoEntity childInfo = null;
 
-        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, UUID,
-                IdentificationDefinition> pair :
-                funcs) {
-            childInfo = pair.apply(childInfo, info, typeObject, this.status, type, identification);
+        for (CreateChildAndOpenFunction resolver : resolvers) {
+            childInfo = resolver.apply(childInfo, info, typeObject, this.status, type, identification);
         }
 
         if (ObjectUtil.isAnyNull(info)) {
@@ -337,13 +334,12 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<GetOrRebuildChildFunction> funcs = this.processorRegister.getGetOrRebuildChilds();
+        List<GetOrRebuildChildFunction> resolvers = this.processorRegister.getGetOrRebuildChilds();
 
         InfoEntity childInfo = null;
 
-        for (Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition,
-                InfoStatusOpenDefinition> pair : funcs) {
-            childInfo = pair.apply(childInfo, info, type, this.status, identification, statusOpen);
+        for (GetOrRebuildChildFunction resolver : resolvers) {
+            childInfo = resolver.apply(childInfo, info, type, this.status, identification, statusOpen);
         }
 
         if (ObjectUtil.isAnyNull(childInfo)) {
@@ -373,10 +369,10 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<DeleteChildConsumer> funcs = this.processorRegister.getDeleteChilds();
+        List<DeleteChildConsumer> resolvers = this.processorRegister.getDeleteChilds();
 
-        for (Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition> pair : funcs) {
-            pair.accept(info, type, this.status, identification);
+        for (DeleteChildConsumer resolver : resolvers) {
+            resolver.accept(info, type, this.status, identification);
         }
 
         childInfo.uncache(SpaceType.ALL);
@@ -392,13 +388,12 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<QueryChildFunction> funcs = this.processorRegister.getQueryChilds();
+        List<QueryChildFunction> resolvers = this.processorRegister.getQueryChilds();
 
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
-        for (Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>, InfoEntity, TypeObject,
-                InfoStatusDefinition, Predicate<InfoSummaryDefinition>> pair : funcs) {
-            infoSummaries = pair.apply(infoSummaries, info, type, this.status, wildcard);
+        for (QueryChildFunction resolver : resolvers) {
+            infoSummaries = resolver.apply(infoSummaries, info, type, this.status, wildcard);
         }
 
         return infoSummaries;
@@ -415,11 +410,10 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<RenameChildConsumer> funcs = this.processorRegister.getRenameChilds();
+        List<RenameChildConsumer> resolvers = this.processorRegister.getRenameChilds();
 
-        for (Consumer5<InfoEntity, TypeObject, InfoStatusDefinition, IdentificationDefinition,
-                IdentificationDefinition> pair : funcs) {
-            pair.accept(info, type, this.status, oldIdentification, newIdentification);
+        for (RenameChildConsumer resolver : resolvers) {
+            resolver.accept(info, type, this.status, oldIdentification, newIdentification);
         }
     }
 
@@ -429,13 +423,12 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<ReadPropertyFunction> funcs = this.processorRegister.getReadProperties();
+        List<ReadPropertyFunction> resolvers = this.processorRegister.getReadProperties();
 
         Map<String, String> properties = new HashMap<>();
 
-        for (Function4<Map<String, String>, Map<String, String>, InfoEntity, TypeObject, InfoStatusDefinition> pair :
-                funcs) {
-            properties = pair.apply(properties, info, type, this.status);
+        for (ReadPropertyFunction resolver : resolvers) {
+            properties = resolver.apply(properties, info, type, this.status);
         }
 
         return Collections.unmodifiableMap(properties);
@@ -451,10 +444,10 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<WritePropertyConsumer> funcs = this.processorRegister.getWriteProperties();
+        List<WritePropertyConsumer> resolvers = this.processorRegister.getWriteProperties();
 
-        for (Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Map<String, String>> pair : funcs) {
-            pair.accept(info, type, this.status, properties);
+        for (WritePropertyConsumer resolver : resolvers) {
+            resolver.accept(info, type, this.status, properties);
         }
     }
 
@@ -465,20 +458,20 @@ public class InfoObject extends APrototype {
         TypeObject type = typeManager.get(this.getType());
 
         AInfoContentObject content = type.getTypeInitializer().getContentProcedure(info, () -> {
-            List<ReadContentFunction> funcs = this.processorRegister.getReadContents();
+            List<ReadContentFunction> resolvers = this.processorRegister.getReadContents();
 
             byte[] contentSource = null;
 
-            for (Function4<byte[], byte[], InfoEntity, TypeObject, InfoStatusDefinition> pair : funcs) {
-                contentSource = pair.apply(contentSource, info, type, status);
+            for (ReadContentFunction resolver : resolvers) {
+                contentSource = resolver.apply(contentSource, info, type, status);
             }
 
             return contentSource;
         }, (byte[] contentSource) -> {
-            List<WriteContentConsumer> funcs = this.processorRegister.getWriteContents();
+            List<WriteContentConsumer> resolvers = this.processorRegister.getWriteContents();
 
-            for (Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, byte[]> pair : funcs) {
-                pair.accept(info, type, status, contentSource);
+            for (WriteContentConsumer resolver : resolvers) {
+                resolver.accept(info, type, status, contentSource);
             }
         }, this.status.getOpen());
 

@@ -1,10 +1,11 @@
 package indi.sly.system.kernel.objects.values;
 
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.core.values.ADefinition;
 
 import java.util.*;
 
-public class DumpDefinition {
+public class DumpDefinition extends ADefinition<DumpDefinition> {
     private final Map<Long, Long> date;
     private UUID processID;
     private UUID accountID;

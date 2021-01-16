@@ -1,8 +1,10 @@
 package indi.sly.system.kernel.objects.infotypes.values;
 
+import indi.sly.system.kernel.core.values.ADefinition;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TypeCounterDefinition {
+public class TypeCounterDefinition extends ADefinition<TypeCounterDefinition> {
     public TypeCounterDefinition() {
         this.totalOccupiedCount = new AtomicInteger();
     }

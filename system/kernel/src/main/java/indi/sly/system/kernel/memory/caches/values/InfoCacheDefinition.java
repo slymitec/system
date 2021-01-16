@@ -1,10 +1,12 @@
 package indi.sly.system.kernel.memory.caches.values;
 
+import indi.sly.system.kernel.core.values.ADefinition;
+
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class InfoCacheDefinition {
+public class InfoCacheDefinition extends ADefinition<InfoCacheDefinition> {
     public InfoCacheDefinition() {
         this.date = new ConcurrentHashMap<>();
     }

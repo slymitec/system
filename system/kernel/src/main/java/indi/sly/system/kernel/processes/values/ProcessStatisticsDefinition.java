@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.kernel.core.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class ProcessStatisticsDefinition implements ISerializeCapable<ProcessStatisticsDefinition> {
+public class ProcessStatisticsDefinition extends ADefinition<ProcessStatisticsDefinition> {
     public ProcessStatisticsDefinition() {
         this.date = new HashMap<>();
     }

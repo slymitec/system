@@ -3,6 +3,7 @@ package indi.sly.system.kernel.processes.communication.instances.values;
 import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.kernel.core.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -12,7 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class SignalEntryDefinition implements ISerializeCapable<SignalEntryDefinition> {
+public class SignalEntryDefinition extends ADefinition<SignalEntryDefinition> {
     public SignalEntryDefinition() {
         this.date = new HashMap<>();
     }

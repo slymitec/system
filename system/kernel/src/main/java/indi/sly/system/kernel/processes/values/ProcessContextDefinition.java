@@ -7,6 +7,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.core.values.ADefinition;
 import indi.sly.system.kernel.sessions.values.AppContextDefinition;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class ProcessContextDefinition implements ISerializeCapable<ProcessContextDefinition> {
+public class ProcessContextDefinition extends ADefinition<ProcessContextDefinition> {
     public ProcessContextDefinition() {
         this.appContext = new AppContextDefinition();
         this.environmentVariable = new HashMap<>();

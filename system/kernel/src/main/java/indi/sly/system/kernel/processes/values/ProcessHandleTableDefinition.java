@@ -12,8 +12,9 @@ import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.kernel.core.values.ADefinition;
 
-public class ProcessHandleTableDefinition implements ISerializeCapable<ProcessHandleTableDefinition> {
+public class ProcessHandleTableDefinition extends ADefinition<ProcessHandleTableDefinition> {
     public ProcessHandleTableDefinition() {
         this.handleTable = new Hashtable<>();
     }

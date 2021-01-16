@@ -5,13 +5,14 @@ import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.kernel.core.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class PortDefinition implements ISerializeCapable<PortDefinition> {
+public class PortDefinition extends ADefinition<PortDefinition> {
     public PortDefinition() {
         this.sourceProcessIDs = new HashSet<>();
         this.value = ArrayUtil.EMPTY_BYTES;

@@ -49,7 +49,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
         ProcessTokenObject processToken = process.getToken();
 
         if (!processToken.getAccountID().equals(this.getID())
-                && !processToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)) {
+                && !processToken.isPrivilegeType(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)) {
             throw new ConditionRefuseException();
         }
 
@@ -87,7 +87,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivilegeTypes(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+        if (!processToken.isPrivilegeType(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
             throw new ConditionPermissionsException();
         }
 

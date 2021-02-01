@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.values.ADefinition;
 
 import java.io.IOException;
@@ -8,42 +8,32 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 public class ThreadContextDefinition extends ADefinition<ThreadContextDefinition> {
-    private String command;
-    private int offset;
-
-    public String getCommand() {
-        return command;
+    public ThreadContextDefinition() {
+        this.run = new ThreadRunDefinition();
     }
 
-    public void setCommand(String command) {
-        this.command = command;
-    }
+    private ThreadRunDefinition run;
 
-    public int getOffset() {
-        return offset;
-    }
-
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
+    public ThreadRunDefinition getRun() {
+        return this.run;
     }
 
     @Override
     public ThreadContextDefinition deepClone() {
-        return null;
+        ThreadContextDefinition definition = new ThreadContextDefinition();
+
+        definition.run = this.run.deepClone();
+
+        return definition;
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-
+        this.run = ObjectUtil.readExternal(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-
+        ObjectUtil.writeExternal(out, this.run);
     }
 }

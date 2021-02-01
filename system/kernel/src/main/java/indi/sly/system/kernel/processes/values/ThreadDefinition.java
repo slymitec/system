@@ -12,6 +12,7 @@ import java.util.UUID;
 
 public class ThreadDefinition extends ADefinition<ThreadDefinition> {
     public ThreadDefinition() {
+        this.id = UUIDUtil.createRandom();
         this.statistics = new ThreadStatisticsDefinition();
         this.context = new ThreadContextDefinition();
     }

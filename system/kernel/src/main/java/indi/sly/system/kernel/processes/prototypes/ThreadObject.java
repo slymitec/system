@@ -1,12 +1,8 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.Consumer2;
-import indi.sly.system.common.lang.Function2;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.values.ProcessEntity;
+import indi.sly.system.kernel.processes.values.ThreadContextDefinition;
 import indi.sly.system.kernel.processes.values.ThreadDefinition;
 import indi.sly.system.kernel.processes.values.ThreadStatisticsDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -32,6 +28,10 @@ public class ThreadObject extends APrototype {
         return this.thread.getProcessID();
     }
 
+    public void setProcessID(UUID id) {
+        this.thread.setProcessID(id);
+    }
+
     public ThreadStatisticsObject getStatistics() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getProcess(this.getProcessID());
@@ -44,5 +44,27 @@ public class ThreadObject extends APrototype {
         threadStatistics.setProcess(process);
 
         return threadStatistics;
+    }
+
+    public ThreadContextObject getContext() {
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getProcess(this.getProcessID());
+
+        ThreadContextObject threadContext = this.factoryManager.create(ThreadContextObject.class);
+
+        threadContext.setSource(() -> this.thread.getContext(), (ThreadContextDefinition source) -> {
+            this.thread.setContext(source);
+        });
+        threadContext.setProcess(process);
+
+        return threadContext;
+    }
+
+    public void start() {
+
+    }
+
+    public void end() {
+
     }
 }

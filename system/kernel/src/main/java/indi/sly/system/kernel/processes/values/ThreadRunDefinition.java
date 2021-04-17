@@ -62,13 +62,13 @@ public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
 
         definition.clazz = this.clazz;
         definition.name = this.name;
-        if (ObjectUtil.allNotNull(this.arguments)) {
+        if (ObjectUtil.notNull(this.arguments)) {
             definition.arguments = new ISerializeCapable[this.arguments.length];
             for (int i = 0; i < this.arguments.length; i++) {
                 definition.arguments[i] = (ISerializeCapable) this.arguments[i].deepClone();
             }
         }
-        if (ObjectUtil.allNotNull(this.results)) {
+        if (ObjectUtil.notNull(this.results)) {
             definition.results = new ISerializeCapable[this.results.length];
             for (int i = 0; i < this.results.length; i++) {
                 definition.results[i] = (ISerializeCapable) this.results[i].deepClone();
@@ -115,7 +115,7 @@ public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
         ClassUtil.writeExternal(out, this.clazz);
         StringUtil.writeExternal(out, this.name);
 
-        if (ObjectUtil.allNotNull(this.arguments)) {
+        if (ObjectUtil.notNull(this.arguments)) {
             NumberUtil.writeExternalInteger(out, this.arguments.length);
 
             for (ISerializeCapable argument : this.arguments) {
@@ -125,7 +125,7 @@ public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
             NumberUtil.writeExternalInteger(out, -1);
         }
 
-        if (ObjectUtil.allNotNull(this.results)) {
+        if (ObjectUtil.notNull(this.results)) {
             NumberUtil.writeExternalInteger(out, this.results.length);
 
             for (ISerializeCapable result : this.results) {

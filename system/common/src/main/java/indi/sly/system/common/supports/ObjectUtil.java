@@ -10,6 +10,23 @@ import java.util.Optional;
 public abstract class ObjectUtil {
     private static final String TO_STRING_NULL_OBJECT = "null";
 
+
+    public static boolean isNull(final Object value) {
+        if (value == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isAnyNull(final Object value) {
+        if (value == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static boolean isAnyNull(final Object... values) {
         if (values == null || values.length == 0) {
             return true;
@@ -23,11 +40,19 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static boolean isAnyNull(final Object value) {
+    public static boolean notNull(final Object value) {
         if (value == null) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static boolean allNotNull(final Object value) {
+        if (value == null) {
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -44,18 +69,10 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static boolean allNotNull(final Object value) {
-        if (value == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public static Object unwrapOptional(Object value) {
         if (value instanceof Optional) {
             Optional<?> optional = (Optional<?>) value;
-            if (!optional.isPresent()) {
+            if (optional.isEmpty()) {
                 return null;
             }
             Object result = optional.get();

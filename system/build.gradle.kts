@@ -1,13 +1,8 @@
 plugins {
     java
     war
-    id("org.springframework.boot") version ("2.4.3")
+    id("org.springframework.boot") version ("2.4.5")
     id("io.spring.dependency-management") version ("1.0.11.RELEASE")
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
 }
 
 allprojects {
@@ -31,17 +26,13 @@ subprojects {
     tasks.jar {
         enabled = true
     }
-
-    tasks.test {
-        useJUnitPlatform()
-    }
 }
 
 dependencies {
     implementation(project(":common"))
     implementation(project(":kernel"))
 
-    implementation("com.microsoft.sqlserver:mssql-jdbc:8.4.1.jre11")
+    implementation("com.microsoft.sqlserver:mssql-jdbc:9.2.1.jre11")
     implementation("javax.inject:javax.inject:1")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-aop")
@@ -66,6 +57,7 @@ tasks.bootJar {
 
 tasks.compileJava {
     options.encoding = "UTF-8"
+    options.release.set(11)
 }
 
 tasks.jar {

@@ -1,11 +1,7 @@
 package indi.sly.system.kernel.core.prototypes;
 
 
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusNotSupportedException;
-import indi.sly.system.common.lang.Consumer1;
-import indi.sly.system.common.lang.Consumer;
-import indi.sly.system.common.lang.Provider;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ObjectUtil;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -15,23 +11,20 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class ACoreProcessPrototype<T> extends APrototype {
-    private Consumer funcInit;
-    private Consumer funcFresh;
+    private Consumer funcParentInit;
+    private Consumer funcParentFresh;
     private Provider<T> funcRead;
     private Consumer1<T> funcWrite;
     private Consumer1<Long> funcLock;
 
-    public final void setParent(ACoreProcessPrototype parentCoreProcess) {
-        if (ObjectUtil.isAnyNull(parentCoreProcess)) {
-            throw new ConditionParametersException();
+    public final void setParent(ACoreProcessPrototype<?> parentCoreProcess) {
+        if (ObjectUtil.allNotNull(parentCoreProcess)) {
+            this.funcParentInit = parentCoreProcess::init;
+            this.funcParentFresh = parentCoreProcess::fresh;
+        } else {
+            this.funcParentInit = null;
+            this.funcParentFresh = null;
         }
-
-        this.funcInit = () -> {
-            parentCoreProcess.init();
-        };
-        this.funcFresh = () -> {
-            parentCoreProcess.fresh();
-        };
     }
 
     public final void setSource(Provider<T> funcRead, Consumer1<T> funcWrite) {
@@ -52,26 +45,38 @@ public abstract class ACoreProcessPrototype<T> extends APrototype {
     }
 
     protected final void lock(long lockType) {
+        if (ObjectUtil.isAnyNull(this.funcRead, this.funcWrite)) {
+            throw new StatusRelationshipErrorException();
+        }
+
         if (ObjectUtil.allNotNull(this.funcLock)) {
             this.funcLock.accept(lockType);
         }
     }
 
     protected final void init() {
+        if (ObjectUtil.isAnyNull(this.funcRead, this.funcWrite)) {
+            throw new StatusRelationshipErrorException();
+        }
+
         T value = this.funcRead.acquire();
         this.read(value);
 
-        if (ObjectUtil.allNotNull(this.funcInit)) {
-            this.funcInit.accept();
+        if (ObjectUtil.allNotNull(this.funcParentInit)) {
+            this.funcParentInit.accept();
         }
     }
 
     protected final void fresh() {
+        if (ObjectUtil.isAnyNull(this.funcRead, this.funcWrite)) {
+            throw new StatusRelationshipErrorException();
+        }
+
         T value = this.write();
         this.funcWrite.accept(value);
 
-        if (ObjectUtil.allNotNull(this.funcFresh)) {
-            this.funcFresh.accept();
+        if (ObjectUtil.allNotNull(this.funcParentFresh)) {
+            this.funcParentFresh.accept();
         }
     }
 

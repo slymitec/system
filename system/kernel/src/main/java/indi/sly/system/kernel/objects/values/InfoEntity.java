@@ -138,11 +138,6 @@ public class InfoEntity extends AEntity<InfoEntity> {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public InfoEntity deepClone() {
         InfoEntity entity = new InfoEntity();
 

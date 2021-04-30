@@ -1,10 +1,9 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 
 import java.io.IOException;

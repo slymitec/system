@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.values;
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.*;
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -12,8 +12,8 @@ import java.io.ObjectOutput;
 public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
     private Class<?> clazz;
     private String name;
-    private ISerializeCapable[] arguments;
-    private ISerializeCapable[] results;
+    private ISerializeCapable<?>[] arguments;
+    private ISerializeCapable<?>[] results;
     private AKernelException exception;
 
     public Class<?> getClazz() {
@@ -36,15 +36,15 @@ public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
         return this.arguments;
     }
 
-    public void setArguments(ISerializeCapable[] arguments) {
+    public void setArguments(ISerializeCapable<?>[] arguments) {
         this.arguments = arguments;
     }
 
-    public ISerializeCapable[] getResults() {
+    public ISerializeCapable<?>[] getResults() {
         return this.results;
     }
 
-    public void setResults(ISerializeCapable[] results) {
+    public void setResults(ISerializeCapable<?>[] results) {
         this.results = results;
     }
 
@@ -65,13 +65,13 @@ public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
         if (ObjectUtil.notNull(this.arguments)) {
             definition.arguments = new ISerializeCapable[this.arguments.length];
             for (int i = 0; i < this.arguments.length; i++) {
-                definition.arguments[i] = (ISerializeCapable) this.arguments[i].deepClone();
+                definition.arguments[i] = (ISerializeCapable<?>) this.arguments[i].deepClone();
             }
         }
         if (ObjectUtil.notNull(this.results)) {
             definition.results = new ISerializeCapable[this.results.length];
             for (int i = 0; i < this.results.length; i++) {
-                definition.results[i] = (ISerializeCapable) this.results[i].deepClone();
+                definition.results[i] = (ISerializeCapable<?>) this.results[i].deepClone();
             }
         }
 
@@ -118,7 +118,7 @@ public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
         if (ObjectUtil.notNull(this.arguments)) {
             NumberUtil.writeExternalInteger(out, this.arguments.length);
 
-            for (ISerializeCapable argument : this.arguments) {
+            for (ISerializeCapable<?> argument : this.arguments) {
                 ObjectUtil.writeExternal(out, argument);
             }
         } else {
@@ -128,7 +128,7 @@ public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
         if (ObjectUtil.notNull(this.results)) {
             NumberUtil.writeExternalInteger(out, this.results.length);
 
-            for (ISerializeCapable result : this.results) {
+            for (ISerializeCapable<?> result : this.results) {
                 ObjectUtil.writeExternal(out, result);
             }
         } else {

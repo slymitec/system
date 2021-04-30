@@ -1,13 +1,12 @@
 package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.kernel.sessions.values.AppContextDefinition;
 
 import java.io.IOException;

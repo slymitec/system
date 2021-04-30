@@ -5,10 +5,9 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 
 public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> {
     public ProcessTokenDefinition() {
@@ -59,11 +58,6 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
     @Override
     public int hashCode() {
         return Objects.hash(accountID, privilegeTypes, limits, roles);
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
     }
 
     @Override

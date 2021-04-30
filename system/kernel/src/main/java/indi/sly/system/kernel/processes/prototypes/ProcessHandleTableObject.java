@@ -143,9 +143,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
         processHandleInfo.setParent(this);
         processHandleInfo.setSource(() -> this.value, (ProcessHandleTableDefinition source) -> {
         });
-        processHandleInfo.setLock((lockType) -> {
-            this.lock(lockType);
-        });
+        processHandleInfo.setLock(this::lock);
         processHandleInfo.setProcessToken(this.process.getToken());
         processHandleInfo.setStatus(status);
 

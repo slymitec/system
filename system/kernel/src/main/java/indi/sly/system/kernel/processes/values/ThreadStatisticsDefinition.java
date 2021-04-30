@@ -1,8 +1,7 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;

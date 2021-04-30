@@ -26,6 +26,10 @@ subprojects {
     tasks.jar {
         enabled = true
     }
+
+    tasks.test {
+        useJUnitPlatform()
+    }
 }
 
 dependencies {

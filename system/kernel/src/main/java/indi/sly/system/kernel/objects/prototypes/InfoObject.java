@@ -475,6 +475,8 @@ public class InfoObject extends APrototype {
             }
         }, this.status.getOpen());
 
+        content.setInfo(this);
+
         return content;
     }
 }

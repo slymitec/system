@@ -1,13 +1,12 @@
-package indi.sly.system.kernel.core.values;
+package indi.sly.system.common.values;
 
 import indi.sly.system.common.lang.ISerializeCapable;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.AObject;
+import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.AObject;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.UUID;
 
 public abstract class AValue<T> extends AObject implements ISerializeCapable<T> {
     public AValue() {
@@ -16,7 +15,15 @@ public abstract class AValue<T> extends AObject implements ISerializeCapable<T> 
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
+        Object value;
+
+        try {
+            value = this.deepClone();
+        } catch (StatusNotSupportedException e) {
+            value = super.clone();
+        }
+
+        return value;
     }
 
     @Override

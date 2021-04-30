@@ -11,7 +11,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.*;
 
-public final class IdentificationDefinition implements ISerializeCapable<IdentificationDefinition> {
+public final class IdentificationDefinition extends ADefinition<IdentificationDefinition> {
     private byte[] id;
     private Class<?> type;
 
@@ -70,11 +70,6 @@ public final class IdentificationDefinition implements ISerializeCapable<Identif
         } else {
             return null;
         }
-    }
-
-    @Override
-    public Object clone() {
-        return this.deepClone();
     }
 
     @Override

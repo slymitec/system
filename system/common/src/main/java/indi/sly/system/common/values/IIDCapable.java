@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.core.values;
+package indi.sly.system.common.values;
 
 import java.util.UUID;
 

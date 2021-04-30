@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.sessions.values.AppContextDefinition;
 

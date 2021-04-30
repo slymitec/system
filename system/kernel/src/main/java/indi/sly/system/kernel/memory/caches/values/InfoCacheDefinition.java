@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.memory.caches.values;
 
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 
 import java.util.Map;
 import java.util.UUID;

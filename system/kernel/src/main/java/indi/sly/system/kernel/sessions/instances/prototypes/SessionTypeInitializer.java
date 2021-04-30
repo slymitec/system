@@ -9,7 +9,7 @@ import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.sessions.instances.values.UserSessionDefinition;
+import indi.sly.system.kernel.sessions.instances.values.SessionDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserSessionTypeInitializer extends ATypeInitializer {
+public class SessionTypeInitializer extends ATypeInitializer {
     @Override
     public void install() {
     }
@@ -36,7 +36,7 @@ public class UserSessionTypeInitializer extends ATypeInitializer {
 
     @Override
     public void createProcedure(InfoEntity info) {
-        info.setContent(ObjectUtil.transferToByteArray(new UserSessionDefinition()));
+        info.setContent(ObjectUtil.transferToByteArray(new SessionDefinition()));
     }
 
     @Override
@@ -89,7 +89,7 @@ public class UserSessionTypeInitializer extends ATypeInitializer {
     @Override
     public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info,
                                                                        InfoStatusOpenDefinition statusOpen) {
-        return UserSessionContentObject.class;
+        return SessionContentObject.class;
     }
 
     @Override

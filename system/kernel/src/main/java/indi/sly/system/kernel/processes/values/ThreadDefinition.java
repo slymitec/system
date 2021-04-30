@@ -1,9 +1,8 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -52,11 +51,6 @@ public class ThreadDefinition extends ADefinition<ThreadDefinition> {
 
     public void setContext(ThreadContextDefinition context) {
         this.context = context;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
     }
 
     @Override

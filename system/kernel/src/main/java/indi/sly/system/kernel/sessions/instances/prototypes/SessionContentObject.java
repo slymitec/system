@@ -12,24 +12,24 @@ import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import indi.sly.system.kernel.sessions.instances.values.ClientDefinition;
-import indi.sly.system.kernel.sessions.instances.values.UserSessionDefinition;
+import indi.sly.system.kernel.sessions.instances.values.SessionDefinition;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
-public class UserSessionContentObject extends AInfoContentObject {
+public class SessionContentObject extends AInfoContentObject {
     @Override
     protected void read(byte[] source) {
-        this.userSession = ObjectUtil.transferFromByteArray(source);
+        this.session = ObjectUtil.transferFromByteArray(source);
     }
 
     @Override
     protected byte[] write() {
-        return ObjectUtil.transferToByteArray(this.userSession);
+        return ObjectUtil.transferToByteArray(this.session);
     }
 
-    private UserSessionDefinition userSession;
+    private SessionDefinition session;
 
     private void checkProcessTokenPrivilege() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
@@ -56,7 +56,7 @@ public class UserSessionContentObject extends AInfoContentObject {
     public long getType() {
         this.init();
 
-        return this.userSession.getType();
+        return this.session.getType();
     }
 
     public void setType(long type) {
@@ -65,7 +65,7 @@ public class UserSessionContentObject extends AInfoContentObject {
         this.lock(LockType.WRITE);
         this.init();
 
-        this.userSession.setType(type);
+        this.session.setType(type);
 
         this.fresh();
         this.lock(LockType.NONE);
@@ -74,7 +74,7 @@ public class UserSessionContentObject extends AInfoContentObject {
     public UUID getAccountID() {
         this.init();
 
-        return this.userSession.getAccountID();
+        return this.session.getAccountID();
     }
 
     public void setAccountID(UUID accountID) {
@@ -83,7 +83,7 @@ public class UserSessionContentObject extends AInfoContentObject {
         this.lock(LockType.WRITE);
         this.init();
 
-        this.userSession.setAccountID(accountID);
+        this.session.setAccountID(accountID);
 
         this.fresh();
         this.lock(LockType.NONE);
@@ -97,11 +97,11 @@ public class UserSessionContentObject extends AInfoContentObject {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.getAccountID().equals(this.userSession.getAccountID())) {
+        if (!processToken.getAccountID().equals(this.session.getAccountID())) {
             throw new ConditionPermissionsException();
         }
 
-        return Collections.unmodifiableSet(this.userSession.getProcessIDs());
+        return Collections.unmodifiableSet(this.session.getProcessIDs());
     }
 
     public void addProcessID(UUID processID) {
@@ -110,7 +110,7 @@ public class UserSessionContentObject extends AInfoContentObject {
         this.lock(LockType.WRITE);
         this.init();
 
-        boolean result = this.userSession.getProcessIDs().add(processID);
+        boolean result = this.session.getProcessIDs().add(processID);
 
         this.fresh();
         this.lock(LockType.NONE);
@@ -126,7 +126,7 @@ public class UserSessionContentObject extends AInfoContentObject {
         this.lock(LockType.WRITE);
         this.init();
 
-        boolean result = this.userSession.getProcessIDs().remove(processID);
+        boolean result = this.session.getProcessIDs().remove(processID);
 
         this.fresh();
         this.lock(LockType.NONE);
@@ -139,7 +139,7 @@ public class UserSessionContentObject extends AInfoContentObject {
     public ClientDefinition getClient() {
         this.init();
 
-        return this.userSession.getClient();
+        return this.session.getClient();
     }
 
     public void setClient(ClientDefinition client) {
@@ -152,7 +152,7 @@ public class UserSessionContentObject extends AInfoContentObject {
         this.lock(LockType.WRITE);
         this.init();
 
-        this.userSession.setClient(client);
+        this.session.setClient(client);
 
         this.fresh();
         this.lock(LockType.NONE);

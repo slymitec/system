@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.objects.values;
 
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 
 import java.util.UUID;
 

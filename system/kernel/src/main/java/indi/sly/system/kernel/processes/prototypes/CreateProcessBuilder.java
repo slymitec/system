@@ -41,7 +41,7 @@ public class CreateProcessBuilder extends APrototype {
     }
 
     private ProcessFactory processFactory;
-    private CreateProcessDefinition createProcess;
+    private final CreateProcessDefinition createProcess;
     private ProcessObject process;
     private ProcessObject parentProcess;
 
@@ -53,19 +53,6 @@ public class CreateProcessBuilder extends APrototype {
         this.parentProcess = parentProcess;
     }
 
-    //
-
-    public CreateProcessBuilder setFileHandle(UUID fileHandle) {
-        if (ValueUtil.isAnyNullOrEmpty(fileHandle)) {
-            throw new ConditionParametersException();
-        }
-
-        this.createProcess.setFileHandle(fileHandle);
-
-        return this;
-    }
-
-
     public CreateProcessBuilder setAccountAuthorization(AccountAuthorizationObject accountAuthorization) {
         if (ObjectUtil.isAnyNull(accountAuthorization)) {
             throw new ConditionParametersException();
@@ -76,13 +63,18 @@ public class CreateProcessBuilder extends APrototype {
         return this;
     }
 
-    public CreateProcessBuilder setPrivilegeTypes(long privilegeTypes) {
-        ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
-        if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
-            throw new ConditionPermissionsException();
+    public CreateProcessBuilder setEnvironmentVariable(Map<String, String> environmentVariable) {
+        this.createProcess.setEnvironmentVariable(environmentVariable);
+
+        return this;
+    }
+
+    public CreateProcessBuilder setFileHandle(UUID fileHandle) {
+        if (ValueUtil.isAnyNullOrEmpty(fileHandle)) {
+            throw new ConditionParametersException();
         }
 
-        this.createProcess.setPrivilegeTypes(privilegeTypes);
+        this.createProcess.setFileHandle(fileHandle);
 
         return this;
     }
@@ -102,14 +94,19 @@ public class CreateProcessBuilder extends APrototype {
         return this;
     }
 
-    public CreateProcessBuilder setEnvironmentVariable(Map<String, String> environmentVariable) {
-        this.createProcess.setEnvironmentVariable(environmentVariable);
+    public CreateProcessBuilder setParameters(Map<String, String> parameters) {
+        this.createProcess.setParameters(parameters);
 
         return this;
     }
 
-    public CreateProcessBuilder setParameters(Map<String, String> parameters) {
-        this.createProcess.setParameters(parameters);
+    public CreateProcessBuilder setPrivilegeTypes(long privilegeTypes) {
+        ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
+        if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+            throw new ConditionPermissionsException();
+        }
+
+        this.createProcess.setPrivilegeTypes(privilegeTypes);
 
         return this;
     }
@@ -119,8 +116,6 @@ public class CreateProcessBuilder extends APrototype {
 
         return this;
     }
-
-//        processContext.setSessionID(null);
 
     private void parse() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);

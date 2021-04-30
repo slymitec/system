@@ -12,7 +12,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.kernel.memory.caches.values.InfoCacheDefinition;
 
 @Named

@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 
 public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefinition> {

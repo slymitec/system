@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 
 public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
     private final List<IdentificationDefinition> identifications;

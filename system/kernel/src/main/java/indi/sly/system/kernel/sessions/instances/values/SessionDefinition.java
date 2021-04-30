@@ -1,17 +1,17 @@
 package indi.sly.system.kernel.sessions.instances.values;
 
-import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class UserSessionDefinition implements ISerializeCapable<UserSessionDefinition> {
-    public UserSessionDefinition() {
+public class SessionDefinition extends ADefinition<SessionDefinition> {
+    public SessionDefinition() {
         this.processIDs = new HashSet<>();
     }
 
@@ -52,7 +52,7 @@ public class UserSessionDefinition implements ISerializeCapable<UserSessionDefin
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserSessionDefinition that = (UserSessionDefinition) o;
+        SessionDefinition that = (SessionDefinition) o;
         return type == that.type && Objects.equals(accountID, that.accountID) && processIDs.equals(that.processIDs) && Objects.equals(client, that.client);
     }
 
@@ -62,13 +62,8 @@ public class UserSessionDefinition implements ISerializeCapable<UserSessionDefin
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
-    public UserSessionDefinition deepClone() {
-        UserSessionDefinition definition = new UserSessionDefinition();
+    public SessionDefinition deepClone() {
+        SessionDefinition definition = new SessionDefinition();
 
         definition.type = this.type;
         definition.accountID = this.accountID;

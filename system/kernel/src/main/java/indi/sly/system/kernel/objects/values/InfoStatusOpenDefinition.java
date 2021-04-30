@@ -8,7 +8,7 @@ import java.util.Objects;
 import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.values.ADefinition;
+import indi.sly.system.common.values.ADefinition;
 
 public class InfoStatusOpenDefinition extends ADefinition<InfoStatusOpenDefinition> {
     private long attribute;
@@ -42,11 +42,6 @@ public class InfoStatusOpenDefinition extends ADefinition<InfoStatusOpenDefiniti
     @Override
     public int hashCode() {
         return Objects.hash(attribute, context);
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
     }
 
     @Override

@@ -142,11 +142,6 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public ProcessEntity deepClone() {
         ProcessEntity process = new ProcessEntity();
 

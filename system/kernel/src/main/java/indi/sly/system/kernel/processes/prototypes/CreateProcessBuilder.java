@@ -24,6 +24,8 @@ import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
+import indi.sly.system.kernel.sessions.SessionManager;
+import indi.sly.system.kernel.sessions.instances.prototypes.SessionContentObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -41,11 +43,11 @@ public class CreateProcessBuilder extends APrototype {
     }
 
     private ProcessFactory processFactory;
+    private ProcessObject parentProcess;
     private final CreateProcessDefinition createProcess;
     private ProcessObject process;
-    private ProcessObject parentProcess;
 
-    public void setProcessObjectBuilder(ProcessFactory processFactory) {
+    public void setProcessFactory(ProcessFactory processFactory) {
         this.processFactory = processFactory;
     }
 
@@ -64,6 +66,10 @@ public class CreateProcessBuilder extends APrototype {
     }
 
     public CreateProcessBuilder setEnvironmentVariable(Map<String, String> environmentVariable) {
+        if (ObjectUtil.isAnyNull(environmentVariable)) {
+            throw new ConditionParametersException();
+        }
+
         this.createProcess.setEnvironmentVariable(environmentVariable);
 
         return this;
@@ -95,6 +101,10 @@ public class CreateProcessBuilder extends APrototype {
     }
 
     public CreateProcessBuilder setParameters(Map<String, String> parameters) {
+        if (ObjectUtil.isAnyNull(parameters)) {
+            throw new ConditionParametersException();
+        }
+
         this.createProcess.setParameters(parameters);
 
         return this;
@@ -111,7 +121,26 @@ public class CreateProcessBuilder extends APrototype {
         return this;
     }
 
+    public CreateProcessBuilder setSessionID(UUID sessionID) {
+        if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
+            throw new ConditionParametersException();
+        }
+
+        ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
+        if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
+            throw new ConditionPermissionsException();
+        }
+
+        this.createProcess.setSessionID(sessionID);
+
+        return this;
+    }
+
     public CreateProcessBuilder setWorkFolder(List<IdentificationDefinition> workFolder) {
+        if (ObjectUtil.isAnyNull(workFolder)) {
+            throw new ConditionParametersException();
+        }
+
         this.createProcess.setWorkFolder(workFolder);
 
         return this;
@@ -220,7 +249,12 @@ public class CreateProcessBuilder extends APrototype {
             processContext.setWorkFolder(parentProcessContext.getWorkFolder());
         }
 
-        //加入 Session 会话列表
+        SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
+        UUID sessionID = ValueUtil.isAnyNullOrEmpty(this.createProcess.getSessionID()) ?
+                this.parentProcess.getSessionID() : this.createProcess.getSessionID();
+        SessionContentObject sessionContent = sessionManager.getAndOpen(sessionID);
+        sessionContent.addProcessID(this.process.getID());
+        sessionManager.close(sessionContent);
     }
 
     public ProcessObject build() {

@@ -12,7 +12,6 @@ import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
-import indi.sly.system.kernel.processes.communication.values.ProcessCommunicationDefinition;
 import indi.sly.system.kernel.processes.values.*;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
@@ -26,14 +25,14 @@ import java.util.*;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessManager extends AManager {
-    private ProcessFactory processFactory;
+    private ProcessFactory factory;
 
     @Override
     public void startup(long startupTypes) {
         if (startupTypes == StartupType.STEP_INIT) {
         } else if (startupTypes == StartupType.STEP_KERNEL) {
-            this.processFactory = this.factoryManager.create(ProcessFactory.class);
-            this.processFactory.init();
+            this.factory = this.factoryManager.create(ProcessFactory.class);
+            this.factory.init();
         }
     }
 
@@ -50,7 +49,7 @@ public class ProcessManager extends AManager {
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
         ProcessEntity process = processRepository.get(processID);
-        ProcessObject processObject = this.processFactory.buildProcessObject(process);
+        ProcessObject processObject = this.factory.buildProcessObject(process);
 
         DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
@@ -105,7 +104,7 @@ public class ProcessManager extends AManager {
                                        long privilegeTypes, List<IdentificationDefinition> workFolder) {
         ProcessObject currentProcess = this.getCurrentProcess();
 
-        CreateProcessBuilder createProcess = this.factoryManager.create(CreateProcessBuilder.class);
+        CreateProcessBuilder createProcess = this.factory.createProcessBuilder();
 
         createProcess.setParentProcess(currentProcess);
         if (ObjectUtil.allNotNull(accountAuthorization)) {

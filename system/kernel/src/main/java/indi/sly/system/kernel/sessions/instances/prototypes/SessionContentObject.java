@@ -42,13 +42,14 @@ public class SessionContentObject extends AInfoContentObject {
         }
     }
 
-    private void checkProcessTokenAccountID() {
+    private void checkProcessTokenAccountIDOrPrivilege() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.getAccountID().equals(this.getAccountID())) {
+        if (!processToken.getAccountID().equals(this.getAccountID()) &&
+                !processToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
             throw new ConditionPermissionsException();
         }
     }
@@ -105,7 +106,7 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public void addProcessID(UUID processID) {
-        this.checkProcessTokenAccountID();
+        this.checkProcessTokenAccountIDOrPrivilege();
 
         this.lock(LockType.WRITE);
         this.init();
@@ -121,7 +122,7 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public void deleteProcessID(UUID processID) {
-        this.checkProcessTokenAccountID();
+        this.checkProcessTokenAccountIDOrPrivilege();
 
         this.lock(LockType.WRITE);
         this.init();
@@ -139,7 +140,7 @@ public class SessionContentObject extends AInfoContentObject {
     public ClientDefinition getClient() {
         this.init();
 
-        return this.session.getClient();
+        return this.session.getClient().deepClone();
     }
 
     public void setClient(ClientDefinition client) {
@@ -152,7 +153,7 @@ public class SessionContentObject extends AInfoContentObject {
         this.lock(LockType.WRITE);
         this.init();
 
-        this.session.setClient(client);
+        this.session.setClient(client.deepClone());
 
         this.fresh();
         this.lock(LockType.NONE);

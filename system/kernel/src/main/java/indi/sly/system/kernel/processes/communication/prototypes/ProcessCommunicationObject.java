@@ -125,7 +125,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             UUID typeID =
                     this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_PORT_ID;
 
-            InfoObject port = ports.createChildAndOpen(UUID.randomUUID(), new IdentificationDefinition(typeID),
+            InfoObject port = ports.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
                     InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
             SecurityDescriptorObject securityDescriptor = port.getSecurityDescriptor();
             Map<UUID, Long> accessControl = new HashMap<>();
@@ -371,7 +371,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             UUID typeID =
                     this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID;
 
-            InfoObject signal = signals.createChildAndOpen(UUID.randomUUID(), new IdentificationDefinition(typeID),
+            InfoObject signal = signals.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
                     InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
             SecurityDescriptorObject securityDescriptor = signal.getSecurityDescriptor();
             Map<UUID, Long> accessControl = new HashMap<>();

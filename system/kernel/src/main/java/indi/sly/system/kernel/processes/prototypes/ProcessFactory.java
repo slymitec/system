@@ -56,7 +56,7 @@ public class ProcessFactory extends APrototype {
     public CreateProcessBuilder createProcessBuilder() {
         CreateProcessBuilder createProcessBuilder = this.factoryManager.create(CreateProcessBuilder.class);
 
-        createProcessBuilder.setProcessObjectBuilder(this);
+        createProcessBuilder.setProcessFactory(this);
 
         return createProcessBuilder;
     }

@@ -30,7 +30,7 @@ public class SessionManager extends AManager {
     public void shutdown() {
     }
 
-    public SessionContentObject get(UUID id) {
+    public SessionContentObject getAndOpen(UUID id) {
         if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
@@ -42,8 +42,41 @@ public class SessionManager extends AManager {
         InfoObject session = objectManager.get(identifications);
         session.open(InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
 
-        SessionContentObject content = (SessionContentObject) session.getContent();
+        return (SessionContentObject) session.getContent();
+    }
 
-        return content;
+    public void close(SessionContentObject sessionContent) {
+        if (ObjectUtil.isAnyNull(sessionContent)) {
+            throw new ConditionParametersException();
+        }
+
+        sessionContent.close();
+    }
+
+    public UUID create() {
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
+        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"));
+
+        InfoObject sessions = objectManager.get(identifications);
+
+        UUID typeID =
+                this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_SESSION_ID;
+
+        InfoObject session = sessions.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
+                InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
+        session.close();
+
+        return session.getID();
+    }
+
+    public void delete(UUID id) {
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
+        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"));
+
+        InfoObject sessions = objectManager.get(identifications);
+
+        sessions.deleteChild(new IdentificationDefinition(id));
     }
 }

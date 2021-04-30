@@ -9,7 +9,7 @@ public class TypeCounterDefinition extends ADefinition<TypeCounterDefinition> {
         this.totalOccupiedCount = new AtomicInteger();
     }
 
-    private AtomicInteger totalOccupiedCount;
+    private final AtomicInteger totalOccupiedCount;
 
     public int getTotalOccupiedCount() {
         return this.totalOccupiedCount.get();

@@ -83,11 +83,6 @@ public class SignalDefinition extends ADefinition<SignalDefinition> {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public SignalDefinition deepClone() {
         SignalDefinition signal = new SignalDefinition();
 

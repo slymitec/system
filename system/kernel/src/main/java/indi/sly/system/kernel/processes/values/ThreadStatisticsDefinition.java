@@ -15,7 +15,7 @@ public class ThreadStatisticsDefinition extends ADefinition<ThreadStatisticsDefi
         this.date = new HashMap<>();
     }
 
-    private Map<Long, Long> date;
+    private final Map<Long, Long> date;
 
     public Map<Long, Long> getDate() {
         return this.date;

@@ -74,11 +74,6 @@ public class SecurityDescriptorDefinition implements ISerializeCapable<SecurityD
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public SecurityDescriptorDefinition deepClone() {
         SecurityDescriptorDefinition definition = new SecurityDescriptorDefinition();
 

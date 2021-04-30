@@ -67,11 +67,6 @@ public class SignalEntryDefinition extends ADefinition<SignalEntryDefinition> {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public SignalEntryDefinition deepClone() {
         SignalEntryDefinition signal = new SignalEntryDefinition();
 

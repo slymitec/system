@@ -31,7 +31,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
             throw new ConditionParametersException();
         }
 
-        return value.longValue();
+        return value;
     }
 
     public void setDate(long dataTimeType, long value) {

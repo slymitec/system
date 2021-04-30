@@ -169,7 +169,7 @@ public abstract class ObjectUtil {
         return value.toString();
     }
 
-    public static <T extends ISerializeCapable> T readExternal(ObjectInput in) throws ClassNotFoundException,
+    public static <T extends ISerializeCapable<?>> T readExternal(ObjectInput in) throws ClassNotFoundException,
             IOException {
         if (ObjectUtil.isAnyNull(in)) {
             throw new NullPointerException();
@@ -184,7 +184,7 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static <T extends ISerializeCapable> void writeExternal(ObjectOutput out, T value) throws IOException {
+    public static <T extends ISerializeCapable<?>> void writeExternal(ObjectOutput out, T value) throws IOException {
         if (ObjectUtil.isAnyNull(out)) {
             throw new NullPointerException();
         }

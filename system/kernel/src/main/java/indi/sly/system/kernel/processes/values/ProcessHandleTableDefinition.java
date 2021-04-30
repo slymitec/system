@@ -76,11 +76,6 @@ public class ProcessHandleTableDefinition extends ADefinition<ProcessHandleTable
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public ProcessHandleTableDefinition deepClone() {
         ProcessHandleTableDefinition definition = new ProcessHandleTableDefinition();
 

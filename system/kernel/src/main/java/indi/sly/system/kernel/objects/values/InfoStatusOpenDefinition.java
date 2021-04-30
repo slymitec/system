@@ -12,7 +12,7 @@ import indi.sly.system.common.values.ADefinition;
 
 public class InfoStatusOpenDefinition extends ADefinition<InfoStatusOpenDefinition> {
     private long attribute;
-    private ISerializeCapable context;
+    private ISerializeCapable<?> context;
 
     public long getAttribute() {
         return this.attribute;
@@ -22,11 +22,11 @@ public class InfoStatusOpenDefinition extends ADefinition<InfoStatusOpenDefiniti
         this.attribute = openAttribute;
     }
 
-    public ISerializeCapable getContext() {
+    public ISerializeCapable<?> getContext() {
         return this.context;
     }
 
-    public void setContext(ISerializeCapable context) {
+    public void setContext(ISerializeCapable<?> context) {
         this.context = context;
     }
 

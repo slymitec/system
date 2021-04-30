@@ -61,11 +61,6 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public ProcessContextDefinition deepClone() {
         ProcessContextDefinition definition = new ProcessContextDefinition();
 

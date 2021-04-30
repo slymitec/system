@@ -18,7 +18,7 @@ public class ThreadObject extends APrototype {
         this.thread = new ThreadDefinition();
     }
 
-    private ThreadDefinition thread;
+    private final ThreadDefinition thread;
 
     public UUID getID() {
         return this.thread.getID();
@@ -38,9 +38,7 @@ public class ThreadObject extends APrototype {
 
         ThreadStatisticsObject threadStatistics = this.factoryManager.create(ThreadStatisticsObject.class);
 
-        threadStatistics.setSource(() -> this.thread.getStatistics(), (ThreadStatisticsDefinition source) -> {
-            this.thread.setStatistics(source);
-        });
+        threadStatistics.setSource(this.thread::getStatistics, this.thread::setStatistics);
         threadStatistics.setProcess(process);
 
         return threadStatistics;
@@ -52,9 +50,7 @@ public class ThreadObject extends APrototype {
 
         ThreadContextObject threadContext = this.factoryManager.create(ThreadContextObject.class);
 
-        threadContext.setSource(() -> this.thread.getContext(), (ThreadContextDefinition source) -> {
-            this.thread.setContext(source);
-        });
+        threadContext.setSource(this.thread::getContext, this.thread::setContext);
         threadContext.setProcess(process);
 
         return threadContext;

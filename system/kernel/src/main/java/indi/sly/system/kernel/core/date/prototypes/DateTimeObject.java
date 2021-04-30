@@ -15,7 +15,7 @@ public class DateTimeObject extends APrototype {
         this.offset = 0;
     }
 
-    private Clock clock;
+    private final Clock clock;
     private long offset;
 
     public long getCurrentDateTime() {

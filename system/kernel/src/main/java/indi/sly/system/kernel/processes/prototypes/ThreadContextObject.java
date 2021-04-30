@@ -51,7 +51,7 @@ public class ThreadContextObject extends AValueProcessPrototype<ThreadContextDef
         return this.value.getRun().getArguments();
     }
 
-    public void setRunArguments(ISerializeCapable[] arguments) {
+    public void setRunArguments(ISerializeCapable<?>[] arguments) {
         this.lock(LockType.WRITE);
         this.init();
 
@@ -61,13 +61,13 @@ public class ThreadContextObject extends AValueProcessPrototype<ThreadContextDef
         this.lock(LockType.NONE);
     }
 
-    public ISerializeCapable[] getRunResults() {
+    public ISerializeCapable<?>[] getRunResults() {
         this.init();
 
         return this.value.getRun().getResults();
     }
 
-    public void setRunResults(ISerializeCapable[] results) {
+    public void setRunResults(ISerializeCapable<?>[] results) {
         this.lock(LockType.WRITE);
         this.init();
 

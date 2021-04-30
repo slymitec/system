@@ -34,15 +34,20 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoObjec
 
             securityDescriptor.setSource(info::getSecurityDescriptor, info::setSecurityDescriptor);
             securityDescriptor.setLock((lockType) -> type.getTypeInitializer().lockProcedure(info, lockType));
+            securityDescriptor.setIdentifications(status.getIdentifications());
 
             if (!ValueUtil.isAnyNullOrEmpty(status.getParentID())) {
-                InfoCacheObject infoObject = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+                InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                         InfoCacheObject.class);
 
-                InfoObject parentInfo = infoObject.getIfExisted(SpaceType.ALL, status.getParentID());
+                InfoObject parentInfo = infoCache.getIfExisted(SpaceType.ALL, status.getParentID());
 
                 try {
-                    securityDescriptor.setParentSecurityDescriptor(parentInfo.getSecurityDescriptor());
+                    SecurityDescriptorObject parentSecurityDescriptor = parentInfo.getSecurityDescriptor();
+
+                    if (ObjectUtil.allNotNull(parentSecurityDescriptor)) {
+                        securityDescriptor.setParentSecurityDescriptor(parentSecurityDescriptor);
+                    }
                 } catch (StatusNotSupportedException ignored) {
                 }
             }
@@ -57,8 +62,6 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoObjec
             } else {
                 securityDescriptor.setAudit(false);
             }
-
-            securityDescriptor.setLock((lockType) -> type.getTypeInitializer().lockProcedure(info, lockType));
 
             return securityDescriptor;
         };

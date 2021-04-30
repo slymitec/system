@@ -71,11 +71,6 @@ public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public InfoStatusDefinition deepClone() {
         InfoStatusDefinition definition = new InfoStatusDefinition();
 

@@ -13,7 +13,7 @@ public abstract class ValueUtil {
         }
 
         if (value instanceof Optional) {
-            return !((Optional<?>) value).isPresent();
+            return ((Optional<?>) value).isEmpty();
         } else if (value instanceof CharSequence) {
             return ((CharSequence) value).length() == 0;
         } else if (value instanceof UUID) {
@@ -36,7 +36,7 @@ public abstract class ValueUtil {
 
         for (Object value : values) {
             if (value instanceof Optional) {
-                return !((Optional<?>) value).isPresent();
+                return ((Optional<?>) value).isEmpty();
             } else if (value instanceof CharSequence) {
                 return ((CharSequence) value).length() == 0;
             } else if (value instanceof UUID) {

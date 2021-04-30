@@ -1,13 +1,13 @@
 package indi.sly.system.kernel.sessions.instances.types;
 
 public interface LogTypes {
-    long NULL = 0l;
+    long NULL = 0L;
 
     // kernel:
     // User:
 
-    long CORE_CONFIGURATION = 1l;
-    long OBJECT_INFOOBJECT = 2l;
-    long PROCESS_TOKEN = 3l;
+    long CORE_CONFIGURATION = 1L;
+    long OBJECT_INFOOBJECT = 2L;
+    long PROCESS_TOKEN = 3L;
 
 }

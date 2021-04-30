@@ -88,11 +88,6 @@ public class AccountEntity implements ISerializeCapable<AccountEntity> {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public AccountEntity deepClone() {
         AccountEntity account = new AccountEntity();
 

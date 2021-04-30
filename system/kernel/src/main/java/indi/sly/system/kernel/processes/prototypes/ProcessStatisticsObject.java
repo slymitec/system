@@ -29,7 +29,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
             throw new ConditionParametersException();
         }
 
-        return value.longValue();
+        return value;
     }
 
     public void setDate(long dataTimeType, long value) {

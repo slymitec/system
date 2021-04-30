@@ -77,11 +77,6 @@ public class PortDefinition extends ADefinition<PortDefinition> {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public PortDefinition deepClone() {
         PortDefinition signal = new PortDefinition();
 

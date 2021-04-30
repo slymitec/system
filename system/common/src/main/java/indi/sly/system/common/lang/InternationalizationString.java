@@ -130,11 +130,6 @@ public final class InternationalizationString implements ISerializeCapable<Inter
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public InternationalizationString deepClone() {
         InternationalizationString definition = new InternationalizationString();
 

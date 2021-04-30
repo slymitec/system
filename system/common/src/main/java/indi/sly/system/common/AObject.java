@@ -9,5 +9,5 @@ public abstract class AObject {
         this.logger = LogFactory.getLog(this.getClass());
     }
 
-    protected Log logger;
+    protected final Log logger;
 }

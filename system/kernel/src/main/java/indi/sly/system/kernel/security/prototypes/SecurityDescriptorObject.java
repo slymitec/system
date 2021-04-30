@@ -1,9 +1,6 @@
 package indi.sly.system.kernel.security.prototypes;
 
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionPermissionsException;
-import indi.sly.system.common.lang.StatusInsufficientResourcesException;
-import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
@@ -29,7 +26,6 @@ import java.util.*;
 public class SecurityDescriptorObject extends ABytesValueProcessPrototype<SecurityDescriptorDefinition> {
     public SecurityDescriptorObject() {
         this.parents = new ArrayList<>();
-        this.identifications = new ArrayList<>();
     }
 
     @Override
@@ -52,12 +48,24 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         return source;
     }
 
-    private final List<IdentificationDefinition> identifications;
+    private List<IdentificationDefinition> identifications;
     private final List<SecurityDescriptorObject> parents;
     private boolean permission;
     private boolean audit;
 
+    public void setIdentifications(List<IdentificationDefinition> identifications) {
+        if (ObjectUtil.isAnyNull(this.identifications)) {
+            throw new ConditionParametersException();
+        }
+
+        this.identifications = identifications;
+    }
+
     public void setParentSecurityDescriptor(SecurityDescriptorObject parentSecurityDescriptor) {
+        if (ObjectUtil.isAnyNull(parentSecurityDescriptor)) {
+            throw new ConditionParametersException();
+        }
+
         this.parents.addAll(parentSecurityDescriptor.parents);
         this.parents.add(parentSecurityDescriptor);
     }
@@ -293,8 +301,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
                 if (ObjectUtil.isAnyNull(parentAccessControlValue)) {
                     resultAccessControl.put(pair.getKey(), pair.getValue());
                 } else {
-                    resultAccessControl.put(pair.getKey(), LogicalUtil.and(pair.getValue(),
-                            ~(parentAccessControlValue.longValue())));
+                    resultAccessControl.put(pair.getKey(), LogicalUtil.and(pair.getValue(), ~(parentAccessControlValue)));
                 }
             }
         } else {

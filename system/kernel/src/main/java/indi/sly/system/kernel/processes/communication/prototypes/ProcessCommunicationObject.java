@@ -107,7 +107,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        UUID portID = null;
+        UUID portID;
 
         try {
             this.lock(LockType.WRITE);

@@ -47,11 +47,11 @@ public class InfoCacheObject extends APrototype {
             lock.lock();
 
             InfoCacheDefinition kernelObjectCache = this.getInfoCaches(spaceType).getOrDefault(id, null);
-            kernelObjectCache.getDate().put(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());
-
             InfoObject infoObject = null;
 
             if (ObjectUtil.allNotNull(kernelObjectCache)) {
+                kernelObjectCache.getDate().put(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());
+
                 infoObject = coreRepository.getByID(spaceType, InfoObject.class, id);
             }
 

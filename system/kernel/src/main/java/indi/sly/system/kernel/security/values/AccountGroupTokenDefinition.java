@@ -44,11 +44,6 @@ public class AccountGroupTokenDefinition implements ISerializeCapable<AccountGro
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public AccountGroupTokenDefinition deepClone() {
         AccountGroupTokenDefinition definition = new AccountGroupTokenDefinition();
 

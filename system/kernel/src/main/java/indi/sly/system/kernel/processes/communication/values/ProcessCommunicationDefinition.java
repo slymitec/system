@@ -55,11 +55,6 @@ public class ProcessCommunicationDefinition extends ADefinition<ProcessCommunica
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public ProcessCommunicationDefinition deepClone() {
         ProcessCommunicationDefinition definition = new ProcessCommunicationDefinition();
 

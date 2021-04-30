@@ -32,9 +32,7 @@ public class FactoryManager extends AManager {
             this.factoryManager = this;
 
             UserSpaceDefinition bootUserSpace = new UserSpaceDefinition();
-            this.factoryManager.setUserSpaceContainer(() -> {
-                return bootUserSpace;
-            });
+            this.factoryManager.setUserSpaceContainer(() -> bootUserSpace);
 
             this.corePrototype = new CorePrototypeBuilder();
             this.corePrototype.setFactoryManager(this);
@@ -68,11 +66,7 @@ public class FactoryManager extends AManager {
 
     @SuppressWarnings("unchecked")
     public <T extends AManager> T getManager(Class<T> clazz) {
-        T corePrototype = this.coreRepository.get(SpaceType.KERNEL, clazz);
-        if (!(corePrototype instanceof AManager)) {
-            throw new StatusRelationshipErrorException();
-        }
-        return corePrototype;
+        return this.coreRepository.get(SpaceType.KERNEL, clazz);
     }
 
     public KernelSpaceDefinition getKernelSpace() {

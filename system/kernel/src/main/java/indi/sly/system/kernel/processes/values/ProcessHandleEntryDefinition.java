@@ -54,11 +54,6 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public ProcessHandleEntryDefinition deepClone() {
         ProcessHandleEntryDefinition definition = new ProcessHandleEntryDefinition();
 

@@ -22,11 +22,6 @@ public class LogDefinition implements ISerializeCapable<LogDefinition> {
     private final Map<String, String> value;
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public LogDefinition deepClone() {
         return null;
     }

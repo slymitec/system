@@ -80,7 +80,7 @@ public class CoreRepositoryObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        return Collections.unmodifiableSet(new HashSet<>(corePrototypes.values()));
+        return Set.copyOf(corePrototypes.values());
     }
 
     public <T extends APrototype> T get(long spaceType, Class<T> clazz) {

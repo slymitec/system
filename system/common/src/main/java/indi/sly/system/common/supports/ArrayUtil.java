@@ -105,8 +105,6 @@ public abstract class ArrayUtil {
             return true;
         } else if (value1 == null || value2 == null) {
             return false;
-        } else if (value1.equals(value2)) {
-            return true;
         } else {
             return Arrays.equals(value1, value2);
         }
@@ -117,8 +115,6 @@ public abstract class ArrayUtil {
             return true;
         } else if (value1 == null || value2 == null) {
             return false;
-        } else if (value1.equals(value2)) {
-            return true;
         } else {
             return Arrays.equals(value1, value2);
         }
@@ -129,8 +125,6 @@ public abstract class ArrayUtil {
             return true;
         } else if (value1 == null || value2 == null) {
             return false;
-        } else if (value1.equals(value2)) {
-            return true;
         } else {
             return Arrays.equals(value1, value2);
         }
@@ -141,8 +135,6 @@ public abstract class ArrayUtil {
             return true;
         } else if (value1 == null || value2 == null) {
             return false;
-        } else if (value1.equals(value2)) {
-            return true;
         } else {
             return Arrays.equals(value1, value2);
         }
@@ -153,8 +145,6 @@ public abstract class ArrayUtil {
             return true;
         } else if (value1 == null || value2 == null) {
             return false;
-        } else if (value1.equals(value2)) {
-            return true;
         } else {
             return Arrays.equals(value1, value2);
         }
@@ -165,8 +155,6 @@ public abstract class ArrayUtil {
             return true;
         } else if (value1 == null || value2 == null) {
             return false;
-        } else if (value1.equals(value2)) {
-            return true;
         } else {
             return Arrays.equals(value1, value2);
         }
@@ -177,8 +165,6 @@ public abstract class ArrayUtil {
             return true;
         } else if (value1 == null || value2 == null) {
             return false;
-        } else if (value1.equals(value2)) {
-            return true;
         } else {
             return Arrays.equals(value1, value2);
         }
@@ -189,8 +175,6 @@ public abstract class ArrayUtil {
             return true;
         } else if (value1 == null || value2 == null) {
             return false;
-        } else if (value1.equals(value2)) {
-            return true;
         } else {
             return Arrays.equals(value1, value2);
         }
@@ -201,8 +185,6 @@ public abstract class ArrayUtil {
             return true;
         } else if (value1 == null || value2 == null) {
             return false;
-        } else if (value1.equals(value2)) {
-            return true;
         } else {
             return Arrays.equals(value1, value2);
         }

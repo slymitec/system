@@ -33,8 +33,7 @@ public class TypeManager extends AManager {
         } else if (startupTypes == StartupType.STEP_KERNEL) {
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
-            Set<UUID> childTypes = new HashSet<>();
-            childTypes.add(UUIDUtil.getEmpty());
+            Set<UUID> childTypes = Set.of(UUIDUtil.getEmpty());
 
             this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
                     kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_NAME,

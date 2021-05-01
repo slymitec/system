@@ -9,7 +9,7 @@ import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessContextDefinition;
-import indi.sly.system.kernel.sessions.values.AppContextDefinition;
+import indi.sly.system.kernel.processes.values.AppContextDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

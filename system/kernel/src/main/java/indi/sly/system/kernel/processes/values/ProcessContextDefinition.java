@@ -7,7 +7,6 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.kernel.sessions.values.AppContextDefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;

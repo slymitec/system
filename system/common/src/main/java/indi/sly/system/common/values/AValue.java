@@ -2,13 +2,13 @@ package indi.sly.system.common.values;
 
 import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.lang.StatusNotSupportedException;
-import indi.sly.system.common.AObject;
+import indi.sly.system.common.ABase;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-public abstract class AValue<T> extends AObject implements ISerializeCapable<T> {
+public abstract class AValue<T> extends ABase implements ISerializeCapable<T> {
     public AValue() {
         super();
     }

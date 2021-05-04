@@ -36,6 +36,10 @@ public class MemoryManager extends AManager {
         }
     }
 
+    @Override
+    public void shutdown() {
+    }
+
     public AInfoRepositoryObject getInfoRepository(UUID id) {
         if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();

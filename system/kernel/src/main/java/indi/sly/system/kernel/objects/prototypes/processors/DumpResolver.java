@@ -33,7 +33,7 @@ public class DumpResolver extends APrototype implements IInfoResolver {
     private final DumpFunction dump;
 
     @Override
-    public void resolve(InfoEntity info, InfoProcessorMediator processorRegister) {
-        processorRegister.getDumps().add(this.dump);
+    public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
+        processorMediator.getDumps().add(this.dump);
     }
 }

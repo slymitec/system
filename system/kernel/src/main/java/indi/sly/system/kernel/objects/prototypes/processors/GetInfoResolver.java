@@ -28,7 +28,7 @@ public class GetInfoResolver extends APrototype implements IInfoResolver {
     private final InfoFunction info;
 
     @Override
-    public void resolve(InfoEntity info, InfoProcessorMediator processorRegister) {
-        processorRegister.setInfo(this.info);
+    public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
+        processorMediator.setInfo(this.info);
     }
 }

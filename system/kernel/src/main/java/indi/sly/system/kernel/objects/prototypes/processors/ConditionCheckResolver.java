@@ -135,18 +135,18 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
     private final WriteContentConsumer writeContent;
 
     @Override
-    public void resolve(InfoEntity info, InfoProcessorMediator processorRegister) {
-        processorRegister.getOpens().add(this.open);
-        processorRegister.getCloses().add(this.close);
-        processorRegister.getCreateChildAndOpens().add(this.createChildAndOpen);
-        processorRegister.getGetOrRebuildChilds().add(this.getOrRebuildChild);
-        processorRegister.getDeleteChilds().add(this.deleteChild);
-        processorRegister.getQueryChilds().add(this.queryChild);
-        processorRegister.getRenameChilds().add(this.renameChild);
-        processorRegister.getReadProperties().add(this.readProperties);
-        processorRegister.getWriteProperties().add(this.writeProperties);
-        processorRegister.getReadContents().add(this.readContent);
-        processorRegister.getWriteContents().add(this.writeContent);
+    public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
+        processorMediator.getOpens().add(this.open);
+        processorMediator.getCloses().add(this.close);
+        processorMediator.getCreateChildAndOpens().add(this.createChildAndOpen);
+        processorMediator.getGetOrRebuildChilds().add(this.getOrRebuildChild);
+        processorMediator.getDeleteChilds().add(this.deleteChild);
+        processorMediator.getQueryChilds().add(this.queryChild);
+        processorMediator.getRenameChilds().add(this.renameChild);
+        processorMediator.getReadProperties().add(this.readProperties);
+        processorMediator.getWriteProperties().add(this.writeProperties);
+        processorMediator.getReadContents().add(this.readContent);
+        processorMediator.getWriteContents().add(this.writeContent);
     }
 
 }

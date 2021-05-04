@@ -74,10 +74,10 @@ public class DateResolver extends APrototype implements IInfoResolver {
     private final WriteContentConsumer writeContent;
 
     @Override
-    public void resolve(InfoEntity info, InfoProcessorMediator processorRegister) {
-        processorRegister.getOpens().add(this.open);
-        processorRegister.getCreateChildAndOpens().add(this.createChildAndOpen);
-        processorRegister.getReadContents().add(this.readContent);
-        processorRegister.getWriteContents().add(this.writeContent);
+    public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
+        processorMediator.getOpens().add(this.open);
+        processorMediator.getCreateChildAndOpens().add(this.createChildAndOpen);
+        processorMediator.getReadContents().add(this.readContent);
+        processorMediator.getWriteContents().add(this.writeContent);
     }
 }

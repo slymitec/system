@@ -28,7 +28,7 @@ public class GetProcessResolver extends APrototype implements IProcessResolver {
     }
 
     @Override
-    public void resolve(ProcessEntity process, ProcessProcessorMediator processorRegister) {
-        processorRegister.setProcess(this.process);
+    public void resolve(ProcessEntity process, ProcessProcessorMediator processorMediator) {
+        processorMediator.setProcess(this.process);
     }
 }

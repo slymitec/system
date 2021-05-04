@@ -47,23 +47,23 @@ public class ProcessMemberGetAndSetResolver extends APrototype implements IProce
     }
 
     @Override
-    public void resolve(ProcessEntity process, ProcessProcessorMediator processorRegister) {
-        processorRegister.getReadProcessStatuses().add(this.readProcessStatus);
-        processorRegister.getWriteProcessStatuses().add(this.writeProcessStatus);
+    public void resolve(ProcessEntity process, ProcessProcessorMediator processorMediator) {
+        processorMediator.getReadProcessStatuses().add(this.readProcessStatus);
+        processorMediator.getWriteProcessStatuses().add(this.writeProcessStatus);
 
-        processorRegister.getReadProcessCommunications().add(this.readProcessCommunication);
-        processorRegister.getWriteProcessCommunications().add(this.writeProcessCommunication);
+        processorMediator.getReadProcessCommunications().add(this.readProcessCommunication);
+        processorMediator.getWriteProcessCommunications().add(this.writeProcessCommunication);
 
-        processorRegister.getReadProcessContexts().add(this.readProcessContext);
-        processorRegister.getWriteProcessContexts().add(this.writeProcessContext);
+        processorMediator.getReadProcessContexts().add(this.readProcessContext);
+        processorMediator.getWriteProcessContexts().add(this.writeProcessContext);
 
-        processorRegister.getReadProcessHandleTables().add(this.readProcessHandleTable);
-        processorRegister.getWriteProcessHandleTables().add(this.writeProcessHandleTable);
+        processorMediator.getReadProcessHandleTables().add(this.readProcessHandleTable);
+        processorMediator.getWriteProcessHandleTables().add(this.writeProcessHandleTable);
 
-        processorRegister.getReadProcessStatistics().add(this.readProcessStatistics);
-        processorRegister.getWriteProcessStatistics().add(this.writeProcessStatistics);
+        processorMediator.getReadProcessStatistics().add(this.readProcessStatistics);
+        processorMediator.getWriteProcessStatistics().add(this.writeProcessStatistics);
 
-        processorRegister.getReadProcessTokens().add(this.readProcessToken);
-        processorRegister.getWriteProcessTokens().add(this.writeProcessToken);
+        processorMediator.getReadProcessTokens().add(this.readProcessToken);
+        processorMediator.getWriteProcessTokens().add(this.writeProcessToken);
     }
 }

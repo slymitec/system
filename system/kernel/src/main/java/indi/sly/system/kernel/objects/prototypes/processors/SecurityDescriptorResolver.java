@@ -258,7 +258,7 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
     private final WriteContentConsumer writeContent;
 
     @Override
-    public void process(InfoEntity info, InfoProcessorMediator processorRegister) {
+    public void resolve(InfoEntity info, InfoProcessorMediator processorRegister) {
         if (ObjectUtil.allNotNull(info)) {
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
             TypeObject type = typeManager.get(info.getType());

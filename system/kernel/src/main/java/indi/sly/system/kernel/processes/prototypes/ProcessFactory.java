@@ -52,7 +52,7 @@ public class ProcessFactory extends APrototype {
     public ProcessObject buildProcess(ProcessEntity process) {
         ProcessProcessorMediator processorMediator = new ProcessProcessorMediator();
         for (IProcessResolver processResolver : this.processResolvers) {
-            processResolver.process(process, processorMediator);
+            processResolver.resolve(process, processorMediator);
         }
 
         return this.buildProcess(processorMediator, process.getID());

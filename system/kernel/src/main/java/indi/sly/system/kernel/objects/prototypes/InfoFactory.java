@@ -64,7 +64,7 @@ public class InfoFactory extends APrototype {
                                  InfoObject parentInfo) {
         InfoProcessorMediator processorMediator = new InfoProcessorMediator();
         for (IInfoResolver infoResolver : this.infoResolvers) {
-            infoResolver.process(info, processorMediator);
+            infoResolver.resolve(info, processorMediator);
         }
 
         InfoStatusDefinition status = new InfoStatusDefinition();

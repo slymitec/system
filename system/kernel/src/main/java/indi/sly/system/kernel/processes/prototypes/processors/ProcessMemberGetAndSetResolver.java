@@ -47,7 +47,7 @@ public class ProcessMemberGetAndSetResolver extends APrototype implements IProce
     }
 
     @Override
-    public void process(ProcessEntity process, ProcessProcessorMediator processorRegister) {
+    public void resolve(ProcessEntity process, ProcessProcessorMediator processorRegister) {
         processorRegister.getReadProcessStatuses().add(this.readProcessStatus);
         processorRegister.getWriteProcessStatuses().add(this.writeProcessStatus);
 

@@ -35,7 +35,7 @@ public class GetParentResolver extends APrototype implements IInfoResolver {
     private final ParentFunction parent;
 
     @Override
-    public void process(InfoEntity info, InfoProcessorMediator processorRegister) {
+    public void resolve(InfoEntity info, InfoProcessorMediator processorRegister) {
         processorRegister.setParent(this.parent);
     }
 }

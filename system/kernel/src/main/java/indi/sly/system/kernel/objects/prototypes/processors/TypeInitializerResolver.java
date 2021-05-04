@@ -190,7 +190,7 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
     private final WriteContentConsumer writeContent;
 
     @Override
-    public void process(InfoEntity info, InfoProcessorMediator processorRegister) {
+    public void resolve(InfoEntity info, InfoProcessorMediator processorRegister) {
         processorRegister.getDumps().add(this.dump);
         processorRegister.getOpens().add(this.open);
         processorRegister.getCloses().add(this.close);

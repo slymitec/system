@@ -29,7 +29,7 @@ public class StatisticsResolver extends APrototype implements IProcessResolver {
     }
 
     @Override
-    public void process(ProcessEntity process, ProcessProcessorMediator processorRegister) {
+    public void resolve(ProcessEntity process, ProcessProcessorMediator processorRegister) {
         processorRegister.getReadProcessStatuses().add(readProcessStatus);
         processorRegister.getWriteProcessStatuses().add(writeProcessStatus);
     }

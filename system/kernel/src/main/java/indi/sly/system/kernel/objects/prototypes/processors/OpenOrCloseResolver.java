@@ -67,7 +67,7 @@ public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
     private final CloseConsumer close;
 
     @Override
-    public void process(InfoEntity info, InfoProcessorMediator processorRegister) {
+    public void resolve(InfoEntity info, InfoProcessorMediator processorRegister) {
         processorRegister.getOpens().add(this.open);
         processorRegister.getCloses().add(this.close);
     }

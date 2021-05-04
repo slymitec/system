@@ -9,15 +9,11 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
-import indi.sly.system.kernel.processes.values.*;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
@@ -76,19 +72,8 @@ public class ProcessManager extends AManager {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
-        ProcessEntity process = processRepository.get(processID);
-        ProcessObject processObject = this.factory.buildProcessObject(process);
-
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
-        long nowDateTime = dateTime.getCurrentDateTime();
-
-        ProcessStatisticsObject processStatistics = processObject.getStatistics();
-        processStatistics.setDate(DateTimeTypes.ACCESS, nowDateTime);
-
-        return processObject;
+        return this.factory.buildProcess(processRepository.get(processID));
     }
-
 
     public ProcessObject getCurrentProcess() {
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);

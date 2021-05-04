@@ -178,7 +178,7 @@ public class CreateProcessBuilder extends APrototype {
 
         processRepository.add(process);
 
-        this.process = this.processFactory.buildProcessObject(process);
+        this.process = this.processFactory.buildProcess(process);
     }
 
     private void configuration() {

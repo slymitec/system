@@ -12,15 +12,16 @@ import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessFactory extends APrototype {
-    protected Set<IProcessResolver> processProcessors;
+    protected Set<IProcessResolver> processResolvers;
 
     public void init() {
-        this.processProcessors = new ConcurrentSkipListSet<>();
+        this.processResolvers = new ConcurrentSkipListSet<>();
 
         Set<APrototype> corePrototypes =
                 this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL,
@@ -28,29 +29,33 @@ public class ProcessFactory extends APrototype {
 
         for (APrototype pair : corePrototypes) {
             if (pair instanceof IProcessResolver) {
-                processProcessors.add((IProcessResolver) pair);
+                processResolvers.add((IProcessResolver) pair);
             }
         }
     }
 
-    public ProcessObject buildProcessObject(ProcessEntity process) {
+    private ProcessObject buildProcess(ProcessProcessorMediator processorMediator, UUID processID) {
         DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
 
-        ProcessProcessorMediator processProcessorMediator = new ProcessProcessorMediator();
-        for (IProcessResolver processObjectProcessor : this.processProcessors) {
-            processObjectProcessor.process(process, processProcessorMediator);
-        }
+        ProcessObject process = this.factoryManager.create(ProcessObject.class);
 
-        ProcessObject processObject = this.factoryManager.create(ProcessObject.class);
-
-        processObject.factory = this;
-        processObject.processorRegister = processProcessorMediator;
-        processObject.id = process.getID();
-        ProcessStatisticsObject processStatistics = processObject.getStatistics();
+        process.factory = this;
+        process.processorRegister = processorMediator;
+        process.id = processID;
+        ProcessStatisticsObject processStatistics = process.getStatistics();
         processStatistics.setDate(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());
 
-        return processObject;
+        return process;
+    }
+
+    public ProcessObject buildProcess(ProcessEntity process) {
+        ProcessProcessorMediator processorMediator = new ProcessProcessorMediator();
+        for (IProcessResolver processResolver : this.processResolvers) {
+            processResolver.process(process, processorMediator);
+        }
+
+        return this.buildProcess(processorMediator, process.getID());
     }
 
     public CreateProcessBuilder createProcessBuilder() {

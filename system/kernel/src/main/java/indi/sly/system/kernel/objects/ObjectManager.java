@@ -29,7 +29,7 @@ public class ObjectManager extends AManager {
             InfoFactory infoFactory = this.factoryManager.create(InfoFactory.class);
             infoFactory.init();
 
-            InfoObject rootInfo = infoFactory.buildRootInfoObject();
+            InfoObject rootInfo = infoFactory.buildRootInfo();
             InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                     InfoCacheObject.class);
             infoCache.add(SpaceType.KERNEL, rootInfo);

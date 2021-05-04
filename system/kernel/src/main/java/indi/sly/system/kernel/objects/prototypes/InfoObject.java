@@ -223,7 +223,7 @@ public class InfoObject extends APrototype {
             dump = pair.apply(dump, info, type, this.status);
         }
 
-        return this.factory.buildDumpObject(dump);
+        return this.factory.buildDump(dump);
     }
 
     public synchronized UUID open(long openAttribute, Object... arguments) {
@@ -312,7 +312,7 @@ public class InfoObject extends APrototype {
             throw new StatusUnexpectedException();
         }
 
-        InfoObject childInfoObject = this.factory.buildInfoObject(childInfo, this);
+        InfoObject childInfoObject = this.factory.buildInfo(childInfo, this);
 
         childInfoObject.open(openAttribute, arguments);
 
@@ -351,7 +351,7 @@ public class InfoObject extends APrototype {
 
         InfoObject childCachedInfo = infoCache.getIfExisted(SpaceType.ALL, childInfo.getID());
         if (ObjectUtil.isAnyNull(childCachedInfo)) {
-            childCachedInfo = this.factory.buildInfoObject(childInfo, statusOpen, this);
+            childCachedInfo = this.factory.buildInfo(childInfo, statusOpen, this);
 
             childCachedInfo.cache(SpaceType.USER);
         }

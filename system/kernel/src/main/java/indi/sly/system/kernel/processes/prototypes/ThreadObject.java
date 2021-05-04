@@ -39,7 +39,7 @@ public class ThreadObject extends APrototype {
         ThreadStatisticsObject threadStatistics = this.factoryManager.create(ThreadStatisticsObject.class);
 
         threadStatistics.setSource(this.thread::getStatistics, this.thread::setStatistics);
-        threadStatistics.setProcess(process);
+        threadStatistics.process = process;
 
         return threadStatistics;
     }
@@ -51,7 +51,7 @@ public class ThreadObject extends APrototype {
         ThreadContextObject threadContext = this.factoryManager.create(ThreadContextObject.class);
 
         threadContext.setSource(this.thread::getContext, this.thread::setContext);
-        threadContext.setProcess(process);
+        threadContext.process = process;
 
         return threadContext;
     }

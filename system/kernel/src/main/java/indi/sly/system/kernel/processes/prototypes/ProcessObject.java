@@ -8,9 +8,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ThreadManager;
-import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
-import indi.sly.system.kernel.processes.sessions.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -59,7 +57,7 @@ public class ProcessObject extends APrototype {
         processStatus.processorRegister = this.processorRegister;
         processStatus.setSource(() -> process, (ProcessEntity source) -> {
         });
-        processStatus.setProcess(this);
+        processStatus.process = this;
 
         return processStatus;
     }
@@ -93,7 +91,7 @@ public class ProcessObject extends APrototype {
 
             processRepository.lock(process, lockType);
         });
-        processCommunication.setProcess(this);
+        processCommunication.process = this;
 
         return processCommunication;
     }
@@ -126,7 +124,7 @@ public class ProcessObject extends APrototype {
 
             processRepository.lock(process, lockType);
         });
-        processContext.setProcess(this);
+        processContext.process = this;
 
         return processContext;
     }
@@ -159,7 +157,7 @@ public class ProcessObject extends APrototype {
 
             processRepository.lock(process, lockType);
         });
-        processHandleTable.setProcess(this);
+        processHandleTable.process = this;
 
         return processHandleTable;
     }
@@ -179,7 +177,7 @@ public class ProcessObject extends APrototype {
 
             processRepository.lock(process, lockType);
         });
-        processSession.setProcess(this);
+        processSession.process = this;
         return processSession;
     }
 
@@ -211,7 +209,7 @@ public class ProcessObject extends APrototype {
 
             processRepository.lock(process, lockType);
         });
-        processStatistics.setProcess(this);
+        processStatistics.process = this;
 
         return processStatistics;
     }
@@ -244,7 +242,7 @@ public class ProcessObject extends APrototype {
 
             processRepository.lock(process, lockType);
         });
-        processToken.setProcess(this);
+        processToken.process = this;
 
         return processToken;
     }

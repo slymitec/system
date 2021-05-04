@@ -14,9 +14,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryOb
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.communication.values.ProcessCommunicationDefinition;
-import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
-import indi.sly.system.kernel.processes.sessions.prototypes.ProcessSessionObject;
+import indi.sly.system.kernel.processes.values.ProcessCommunicationDefinition;
 import indi.sly.system.kernel.processes.values.CreateProcessDefinition;
 import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatisticsDefinition;

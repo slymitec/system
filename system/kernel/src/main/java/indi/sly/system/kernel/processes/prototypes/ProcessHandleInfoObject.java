@@ -22,16 +22,8 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessHandleInfoObject extends AValueProcessPrototype<ProcessHandleTableDefinition> {
-    private ProcessTokenObject processToken;
-    private InfoStatusDefinition status;
-
-    public void setProcessToken(ProcessTokenObject processToken) {
-        this.processToken = processToken;
-    }
-
-    public void setStatus(InfoStatusDefinition status) {
-        this.status = status;
-    }
+    protected ProcessTokenObject processToken;
+    protected InfoStatusDefinition status;
 
     public synchronized boolean isExist() {
         UUID handle = this.status.getHandle();

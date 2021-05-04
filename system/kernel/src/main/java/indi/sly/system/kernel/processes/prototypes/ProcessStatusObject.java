@@ -10,7 +10,6 @@ import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
@@ -28,11 +27,7 @@ import java.util.UUID;
 public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     protected ProcessProcessorMediator processorRegister;
 
-    private ProcessObject process;
-
-    public void setProcess(ProcessObject process) {
-        this.process = process;
-    }
+    protected ProcessObject process;
 
     public long get() {
         Long status = ProcessStatusType.NULL;

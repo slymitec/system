@@ -21,11 +21,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessContextDefinition> {
-    private ProcessObject process;
-
-    public void setProcess(ProcessObject process) {
-        this.process = process;
-    }
+    protected ProcessObject process;
 
     private ProcessObject getParentProcessAndCheckIsCurrent() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);

@@ -23,11 +23,7 @@ import java.util.*;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessTokenDefinition> {
-    private ProcessObject process;
-
-    public void setProcess(ProcessObject process) {
-        this.process = process;
-    }
+    protected ProcessObject process;
 
     private ProcessObject getParentProcessAndCheckIsCurrent() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);

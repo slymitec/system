@@ -26,11 +26,7 @@ import java.util.*;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessHandleTableObject extends ABytesValueProcessPrototype<ProcessHandleTableDefinition> {
-    private ProcessObject process;
-
-    public void setProcess(ProcessObject process) {
-        this.process = process;
-    }
+    protected ProcessObject process;
 
     private void checkStatusAndCurrentPermission() {
         if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.RUNNING,
@@ -144,8 +140,8 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
         processHandleInfo.setSource(() -> this.value, (ProcessHandleTableDefinition source) -> {
         });
         processHandleInfo.setLock(this::lock);
-        processHandleInfo.setProcessToken(this.process.getToken());
-        processHandleInfo.setStatus(status);
+        processHandleInfo.processToken = this.process.getToken();
+        processHandleInfo.status = status;
 
         return processHandleInfo;
     }

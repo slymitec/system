@@ -16,11 +16,7 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatisticsDefinition> {
-    private ProcessObject process;
-
-    public void setProcess(ProcessObject process) {
-        this.process = process;
-    }
+    protected ProcessObject process;
 
     public long getDate(long dataTimeType) {
         this.init();

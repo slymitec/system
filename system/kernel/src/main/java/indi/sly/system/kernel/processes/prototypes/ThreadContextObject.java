@@ -7,11 +7,7 @@ import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.processes.values.ThreadContextDefinition;
 
 public class ThreadContextObject extends AValueProcessPrototype<ThreadContextDefinition> {
-    private ProcessObject process;
-
-    public void setProcess(ProcessObject process) {
-        this.process = process;
-    }
+    protected ProcessObject process;
 
     public Class<?> getRunClass() {
         this.init();

@@ -24,7 +24,6 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
     private AppContextDefinition appContext;
     private final Map<String, String> environmentVariable;
     private final Map<String, String> parameters;
-    private UUID sessionID;
     private final List<IdentificationDefinition> workFolder;
 
     public AppContextDefinition getAppContext() {
@@ -47,14 +46,6 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
         return this.parameters;
     }
 
-    public UUID getSessionID() {
-        return this.sessionID;
-    }
-
-    public void setSessionID(UUID sessionID) {
-        this.sessionID = sessionID;
-    }
-
     public List<IdentificationDefinition> getWorkFolder() {
         return this.workFolder;
     }
@@ -66,7 +57,6 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
         definition.appContext = this.appContext.deepClone();
         definition.environmentVariable.putAll(this.environmentVariable);
         definition.parameters.putAll(this.parameters);
-        definition.sessionID = this.sessionID;
         definition.workFolder.addAll(this.workFolder);
 
         return definition;
@@ -82,8 +72,6 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
         for (int i = 0; i < valueInteger; i++) {
             this.environmentVariable.put(StringUtil.readExternal(in), StringUtil.readExternal(in));
         }
-
-        this.sessionID = UUIDUtil.readExternal(in);
 
         valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
@@ -105,8 +93,6 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
             StringUtil.writeExternal(out, pair.getKey());
             StringUtil.writeExternal(out, pair.getValue());
         }
-
-        UUIDUtil.writeExternal(out, this.sessionID);
 
         NumberUtil.writeExternalInteger(out, this.parameters.size());
         for (Map.Entry<String, String> pair : this.parameters.entrySet()) {

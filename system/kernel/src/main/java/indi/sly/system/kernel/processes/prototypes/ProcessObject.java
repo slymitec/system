@@ -10,6 +10,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryOb
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
+import indi.sly.system.kernel.processes.sessions.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -48,10 +49,6 @@ public class ProcessObject extends APrototype {
 
     public UUID getParentProcessID() {
         return this.getProcess().getParentProcessID();
-    }
-
-    public UUID getSessionID() {
-        return this.getProcess().getSessionID();
     }
 
     public synchronized ProcessStatusObject getStatus() {
@@ -165,6 +162,25 @@ public class ProcessObject extends APrototype {
         processHandleTable.setProcess(this);
 
         return processHandleTable;
+    }
+
+    public synchronized ProcessSessionObject getSession() {
+        ProcessEntity process = this.getProcess();
+
+        ProcessSessionObject processSession = this.factoryManager.create(ProcessSessionObject.class);
+
+        processSession.setSource(() -> {
+            return process;
+        }, (processEntity -> {
+        }));
+        processSession.setLock((lockType) -> {
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+            processRepository.lock(process, lockType);
+        });
+        processSession.setProcess(this);
+        return processSession;
     }
 
     public synchronized ProcessStatisticsObject getStatistics() {

@@ -1,30 +1,23 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.lang.Consumer4;
-import indi.sly.system.common.lang.Function4;
-import indi.sly.system.common.lang.Function6;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class DateResolver extends APrototype implements IInfoObjectResolver {
+public class DateResolver extends APrototype implements IInfoResolver {
     public DateResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,

@@ -2,20 +2,26 @@ package indi.sly.system.kernel.processes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
+import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.processes.values.*;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
+import indi.sly.system.kernel.processes.sessions.instances.prototypes.SessionTypeInitializer;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -33,6 +39,28 @@ public class ProcessManager extends AManager {
         } else if (startupTypes == StartupType.STEP_KERNEL) {
             this.factory = this.factoryManager.create(ProcessFactory.class);
             this.factory.init();
+
+            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+
+            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+
+            Set<UUID> childTypes = Set.of(UUIDUtil.getEmpty());
+
+            typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_ID,
+                    kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_NAME,
+                    LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
+                            TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
+                            TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
+                            TypeInitializerAttributeType.HAS_PROPERTIES),
+                    childTypes, this.factoryManager.create(SessionTypeInitializer.class));
+
+            typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID,
+                    kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_NAME,
+                    LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
+                            TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
+                            TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
+                            TypeInitializerAttributeType.HAS_PROPERTIES),
+                    childTypes, this.factoryManager.create(SessionTypeInitializer.class));
         }
     }
 
@@ -129,12 +157,7 @@ public class ProcessManager extends AManager {
         }
         createProcess.setWorkFolder(workFolder);
 
-        ProcessObject childProcess = createProcess.build();
-
-        ProcessStatusObject status = childProcess.getStatus();
-        status.initialize();
-
-        return childProcess;
+        return createProcess.build();
     }
 
 

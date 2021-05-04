@@ -5,8 +5,8 @@ import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessContextDefinition;
 import indi.sly.system.kernel.processes.values.AppContextDefinition;
@@ -27,6 +27,18 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         this.process = process;
     }
 
+    private ProcessObject getParentProcessAndCheckIsCurrent() {
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject currentProcess = processManager.getCurrentProcess();
+
+        if (!currentProcess.getID().equals(process.getParentProcessID())) {
+            throw new ConditionPermissionsException();
+        }
+
+        return currentProcess;
+    }
+
     public AppContextDefinition getAppContext() {
         this.init();
 
@@ -42,13 +54,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             throw new ConditionPermissionsException();
         }
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject parentProcess = processManager.getCurrentProcess();
-
-        if (!parentProcess.getID().equals(this.process.getParentProcessID())) {
-            throw new ConditionPermissionsException();
-        }
+        this.getParentProcessAndCheckIsCurrent();
 
         try {
             this.lock(LockType.WRITE);
@@ -110,13 +116,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             throw new ConditionPermissionsException();
         }
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject parentProcess = processManager.getCurrentProcess();
-
-        if (!parentProcess.getID().equals(this.process.getParentProcessID())) {
-            throw new ConditionPermissionsException();
-        }
+        this.getParentProcessAndCheckIsCurrent();
 
         try {
             this.lock(LockType.WRITE);
@@ -125,41 +125,6 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             Map<String, String> processContextParameters = this.value.getParameters();
             processContextParameters.clear();
             processContextParameters.putAll(parameters);
-
-            this.fresh();
-        } finally {
-            this.lock(LockType.NONE);
-        }
-    }
-
-    public UUID getSessionID() {
-        this.init();
-
-        return this.value.getSessionID();
-    }
-
-    public void setSessionID(UUID sessionID) {
-        if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
-            throw new ConditionParametersException();
-        }
-
-        if (this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
-        }
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject parentProcess = processManager.getCurrentProcess();
-
-        if (!parentProcess.getID().equals(this.process.getParentProcessID())) {
-            throw new ConditionPermissionsException();
-        }
-
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            this.value.setSessionID(sessionID);
 
             this.fresh();
         } finally {
@@ -182,13 +147,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             throw new ConditionPermissionsException();
         }
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject parentProcess = processManager.getCurrentProcess();
-
-        if (!parentProcess.getID().equals(this.process.getParentProcessID())) {
-            throw new ConditionPermissionsException();
-        }
+        this.getParentProcessAndCheckIsCurrent();
 
         try {
             this.lock(LockType.WRITE);

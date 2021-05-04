@@ -10,7 +10,7 @@ import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.SecurityTokenManager;
+import indi.sly.system.kernel.security.AccountGroupManager;
 import indi.sly.system.kernel.security.values.SecurityDescriptorDefinition;
 import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryDefinition;
 import indi.sly.system.kernel.security.types.AccessControlTypes;
@@ -128,9 +128,9 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             }
         }
 
-        SecurityTokenManager securityTokenManager = this.factoryManager.getManager(SecurityTokenManager.class);
+        AccountGroupManager accountGroupManager = this.factoryManager.getManager(AccountGroupManager.class);
 
-        AccountObject account = securityTokenManager.getAccount(processToken.getAccountID());
+        AccountObject account = accountGroupManager.getAccount(processToken.getAccountID());
         List<GroupObject> groups = account.getGroups();
         List<UUID> accountGroupIDs = new ArrayList<>();
         for (GroupObject group : groups) {

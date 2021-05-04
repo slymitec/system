@@ -20,7 +20,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class OpenOrCloseResolver extends APrototype implements IInfoObjectResolver {
+public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
     public OpenOrCloseResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             status.getOpen().setAttribute(openAttribute);

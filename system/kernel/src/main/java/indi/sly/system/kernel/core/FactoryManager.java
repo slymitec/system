@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.core;
 
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.boot.values.StartupType;
@@ -16,8 +15,8 @@ import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
-import indi.sly.system.kernel.security.SecurityTokenManager;
-import indi.sly.system.kernel.sessions.SessionManager;
+import indi.sly.system.kernel.security.AccountGroupManager;
+import indi.sly.system.kernel.processes.SessionManager;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -44,7 +43,7 @@ public class FactoryManager extends AManager {
             this.coreRepository.add(SpaceType.KERNEL, this.create(ThreadManager.class));
             this.coreRepository.add(SpaceType.KERNEL, this.create(TypeManager.class));
             this.coreRepository.add(SpaceType.KERNEL, this.create(ObjectManager.class));
-            this.coreRepository.add(SpaceType.KERNEL, this.create(SecurityTokenManager.class));
+            this.coreRepository.add(SpaceType.KERNEL, this.create(AccountGroupManager.class));
             this.coreRepository.add(SpaceType.KERNEL, this.create(SessionManager.class));
             // ...
             this.coreRepository.add(SpaceType.KERNEL, this.create(DateTimeObject.class));

@@ -7,7 +7,7 @@ import indi.sly.system.kernel.objects.values.InfoEntity;
 
 //@Named
 //@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class NullResolver extends APrototype implements IInfoObjectResolver {
+public class NullResolver extends APrototype implements IInfoResolver {
     public NullResolver() {
         this.dump = (dump, info, type, status) -> dump;
 

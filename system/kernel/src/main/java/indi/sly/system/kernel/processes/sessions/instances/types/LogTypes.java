@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.sessions.instances.types;
+package indi.sly.system.kernel.processes.sessions.instances.types;
 
 public interface LogTypes {
     long NULL = 0L;

@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.sessions.instances.prototypes;
+package indi.sly.system.kernel.processes.sessions.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
@@ -11,8 +11,8 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
-import indi.sly.system.kernel.sessions.instances.values.ClientDefinition;
-import indi.sly.system.kernel.sessions.instances.values.SessionDefinition;
+import indi.sly.system.kernel.processes.sessions.instances.values.ClientDefinition;
+import indi.sly.system.kernel.processes.sessions.instances.values.SessionDefinition;
 
 import java.util.Collections;
 import java.util.Set;

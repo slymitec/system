@@ -8,27 +8,22 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
-import indi.sly.system.kernel.objects.values.DumpDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TypeInitializerResolver extends APrototype implements IInfoObjectResolver {
+public class TypeInitializerResolver extends APrototype implements IInfoResolver {
     public TypeInitializerResolver() {
         this.dump = (dump, info, type, status) -> {
             type.getTypeInitializer().dumpProcedure(info, dump);

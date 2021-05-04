@@ -9,7 +9,7 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.security.SecurityTokenManager;
+import indi.sly.system.kernel.security.AccountGroupManager;
 import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
 import indi.sly.system.kernel.security.values.AccountGroupTokenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -50,11 +50,11 @@ public class AccountAuthorizationObject extends APrototype {
             return false;
         }
 
-        SecurityTokenManager securityTokenManager = this.factoryManager.getManager(SecurityTokenManager.class);
+        AccountGroupManager accountGroupManager = this.factoryManager.getManager(AccountGroupManager.class);
 
         AccountObject account;
         try {
-            account = securityTokenManager.getAccount(this.accountID);
+            account = accountGroupManager.getAccount(this.accountID);
         } catch (AKernelException e) {
             return false;
         }
@@ -80,11 +80,11 @@ public class AccountAuthorizationObject extends APrototype {
             throw new StatusExpiredException();
         }
 
-        SecurityTokenManager securityTokenManager = this.factoryManager.getManager(SecurityTokenManager.class);
+        AccountGroupManager accountGroupManager = this.factoryManager.getManager(AccountGroupManager.class);
 
         AccountObject account;
         try {
-            account = securityTokenManager.getAccount(this.accountID);
+            account = accountGroupManager.getAccount(this.accountID);
         } catch (AKernelException e) {
             throw new StatusExpiredException();
         }

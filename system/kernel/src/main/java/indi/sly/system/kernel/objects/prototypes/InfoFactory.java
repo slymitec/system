@@ -23,24 +23,24 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.prototypes.processors.IInfoObjectResolver;
+import indi.sly.system.kernel.objects.prototypes.processors.IInfoResolver;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoFactory extends APrototype {
-    protected Set<IInfoObjectResolver> infoObjectProcessors;
+    protected Set<IInfoResolver> infoResolvers;
 
     public void init() {
-        this.infoObjectProcessors = new ConcurrentSkipListSet<>();
+        this.infoResolvers = new ConcurrentSkipListSet<>();
 
         Set<APrototype> corePrototypes =
                 this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL,
-                        IInfoObjectResolver.class);
+                        IInfoResolver.class);
 
         for (APrototype pair : corePrototypes) {
-            if (pair instanceof IInfoObjectResolver) {
-                infoObjectProcessors.add((IInfoObjectResolver) pair);
+            if (pair instanceof IInfoResolver) {
+                infoResolvers.add((IInfoResolver) pair);
             }
         }
     }
@@ -53,7 +53,7 @@ public class InfoFactory extends APrototype {
                 infoRepository.get(this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
 
         InfoProcessorMediator processorRegister = new InfoProcessorMediator();
-        for (IInfoObjectResolver pair : this.infoObjectProcessors) {
+        for (IInfoResolver pair : this.infoResolvers) {
             pair.process(infoEntity, processorRegister);
         }
 
@@ -65,7 +65,7 @@ public class InfoFactory extends APrototype {
         InfoObject infoObject = this.factoryManager.create(InfoObject.class);
 
         infoObject.factory = this;
-        infoObject.processorRegister = processorRegister;
+        infoObject.processorMediator = processorRegister;
         infoObject.id = this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID;
         infoObject.poolID =
                 this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID;
@@ -80,7 +80,7 @@ public class InfoFactory extends APrototype {
 
     public InfoObject buildInfoObject(InfoEntity info, InfoStatusOpenDefinition statusOpen, InfoObject parentInfo) {
         InfoProcessorMediator infoProcessorMediator = new InfoProcessorMediator();
-        for (IInfoObjectResolver infoObjectProcessor : this.infoObjectProcessors) {
+        for (IInfoResolver infoObjectProcessor : this.infoResolvers) {
             infoObjectProcessor.process(info, infoProcessorMediator);
         }
 
@@ -107,7 +107,7 @@ public class InfoFactory extends APrototype {
         InfoObject infoObject = this.factoryManager.create(InfoObject.class);
 
         infoObject.factory = this;
-        infoObject.processorRegister = infoProcessorMediator;
+        infoObject.processorMediator = infoProcessorMediator;
         infoObject.id = info.getID();
         infoObject.poolID = poolID;
         infoObject.status = status;

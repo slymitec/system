@@ -122,8 +122,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
             InfoObject ports = objectManager.get(identifications);
 
-            UUID typeID =
-                    this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_PORT_ID;
+            UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_PORT_ID;
 
             InfoObject port = ports.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
                     InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
@@ -368,8 +367,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
             InfoObject signals = objectManager.get(identifications);
 
-            UUID typeID =
-                    this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID;
+            UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID;
 
             InfoObject signal = signals.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
                     InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
@@ -507,7 +505,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         ProcessStatisticsObject processStatistics = this.process.getStatistics();
         processStatistics.addSignalReadCount(signalEntries.size());
 
-        return signalEntries;
+        return Collections.unmodifiableList(signalEntries);
     }
 
     public void sendSignal(ProcessObject targetProcess, long key, long value) {

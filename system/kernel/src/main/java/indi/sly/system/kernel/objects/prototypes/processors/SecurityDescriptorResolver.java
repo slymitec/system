@@ -27,7 +27,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SecurityDescriptorResolver extends APrototype implements IInfoObjectResolver {
+public class SecurityDescriptorResolver extends APrototype implements IInfoResolver {
     public SecurityDescriptorResolver() {
         this.securityDescriptor = (info, type, status) -> {
             SecurityDescriptorObject securityDescriptor = this.factoryManager.create(SecurityDescriptorObject.class);

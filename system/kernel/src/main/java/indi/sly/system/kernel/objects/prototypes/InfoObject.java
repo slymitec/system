@@ -34,7 +34,7 @@ import java.util.function.Predicate;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoObject extends APrototype {
     protected InfoFactory factory;
-    protected InfoProcessorMediator processorRegister;
+    protected InfoProcessorMediator processorMediator;
 
     protected UUID id;
     protected UUID poolID;
@@ -173,7 +173,7 @@ public class InfoObject extends APrototype {
     }
 
     private synchronized InfoEntity getInfo() {
-        return this.processorRegister.getInfo().apply(this.poolID, this.id, this.status);
+        return this.processorMediator.getInfo().apply(this.poolID, this.id, this.status);
     }
 
     public synchronized InfoObject getParent() {
@@ -182,7 +182,7 @@ public class InfoObject extends APrototype {
         if (ValueUtil.isAnyNullOrEmpty(this.status.getParentID())) {
             return null;
         } else {
-            return this.processorRegister.getParent().apply(this.status.getParentID());
+            return this.processorMediator.getParent().apply(this.status.getParentID());
         }
     }
 
@@ -200,7 +200,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        SecurityDescriptorFunction resolver = this.processorRegister.getSecurityDescriptor();
+        SecurityDescriptorFunction resolver = this.processorMediator.getSecurityDescriptor();
 
         if (ObjectUtil.isAnyNull(resolver)) {
             throw new StatusNotSupportedException();
@@ -215,7 +215,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<DumpFunction> resolvers = this.processorRegister.getDumps();
+        List<DumpFunction> resolvers = this.processorMediator.getDumps();
 
         DumpDefinition dump = new DumpDefinition();
 
@@ -236,7 +236,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<OpenFunction> resolvers = this.processorRegister.getOpens();
+        List<OpenFunction> resolvers = this.processorMediator.getOpens();
 
         UUID handle = UUIDUtil.getEmpty();
 
@@ -268,7 +268,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<CloseConsumer> resolvers = this.processorRegister.getCloses();
+        List<CloseConsumer> resolvers = this.processorMediator.getCloses();
 
         for (CloseConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status);
@@ -300,7 +300,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject typeObject = typeManager.get(this.getType());
 
-        List<CreateChildAndOpenFunction> resolvers = this.processorRegister.getCreateChildAndOpens();
+        List<CreateChildAndOpenFunction> resolvers = this.processorMediator.getCreateChildAndOpens();
 
         InfoEntity childInfo = null;
 
@@ -334,7 +334,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<GetOrRebuildChildFunction> resolvers = this.processorRegister.getGetOrRebuildChilds();
+        List<GetOrRebuildChildFunction> resolvers = this.processorMediator.getGetOrRebuildChilds();
 
         InfoEntity childInfo = null;
 
@@ -369,7 +369,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<DeleteChildConsumer> resolvers = this.processorRegister.getDeleteChilds();
+        List<DeleteChildConsumer> resolvers = this.processorMediator.getDeleteChilds();
 
         for (DeleteChildConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status, identification);
@@ -388,7 +388,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<QueryChildFunction> resolvers = this.processorRegister.getQueryChilds();
+        List<QueryChildFunction> resolvers = this.processorMediator.getQueryChilds();
 
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
@@ -410,7 +410,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<RenameChildConsumer> resolvers = this.processorRegister.getRenameChilds();
+        List<RenameChildConsumer> resolvers = this.processorMediator.getRenameChilds();
 
         for (RenameChildConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status, oldIdentification, newIdentification);
@@ -423,7 +423,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<ReadPropertyFunction> resolvers = this.processorRegister.getReadProperties();
+        List<ReadPropertyFunction> resolvers = this.processorMediator.getReadProperties();
 
         Map<String, String> properties = new HashMap<>();
 
@@ -444,7 +444,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<WritePropertyConsumer> resolvers = this.processorRegister.getWriteProperties();
+        List<WritePropertyConsumer> resolvers = this.processorMediator.getWriteProperties();
 
         for (WritePropertyConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status, properties);
@@ -458,7 +458,7 @@ public class InfoObject extends APrototype {
         TypeObject type = typeManager.get(this.getType());
 
         AInfoContentObject content = type.getTypeInitializer().getContentProcedure(info, () -> {
-            List<ReadContentFunction> resolvers = this.processorRegister.getReadContents();
+            List<ReadContentFunction> resolvers = this.processorMediator.getReadContents();
 
             byte[] contentSource = null;
 
@@ -468,7 +468,7 @@ public class InfoObject extends APrototype {
 
             return contentSource;
         }, (byte[] contentSource) -> {
-            List<WriteContentConsumer> resolvers = this.processorRegister.getWriteContents();
+            List<WriteContentConsumer> resolvers = this.processorMediator.getWriteContents();
 
             for (WriteContentConsumer resolver : resolvers) {
                 resolver.accept(info, type, status, contentSource);

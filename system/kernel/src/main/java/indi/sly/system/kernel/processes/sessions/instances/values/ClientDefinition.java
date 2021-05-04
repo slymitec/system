@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.sessions.instances.values;
+package indi.sly.system.kernel.processes.sessions.instances.values;
 
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.StringUtil;

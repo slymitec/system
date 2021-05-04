@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SecurityTokenManager extends AManager {
+public class AccountGroupManager extends AManager {
     private AccountGroupObjectFactoryObject accountGroupObjectFactory;
 
     @Override
@@ -38,29 +38,6 @@ public class SecurityTokenManager extends AManager {
 
     @Override
     public void shutdown() {
-    }
-
-    public AccountAuthorizationObject authorize(String accountName) {
-        return this.authorize(accountName, null);
-    }
-
-    public AccountAuthorizationObject authorize(String accountName, String accountPassword) {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrentProcess();
-        ProcessTokenObject processToken = process.getToken();
-
-        AccountObject account = this.getAccount(accountName);
-
-        AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
-
-        if (!processToken.isPrivilegeType(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)
-                && !ObjectUtil.equals(account.getPassword(), accountPassword)) {
-            throw new ConditionRefuseException();
-        }
-
-        accountAuthorization.setSource(account);
-
-        return accountAuthorization;
     }
 
     public AccountObject getAccount(UUID accountID) {

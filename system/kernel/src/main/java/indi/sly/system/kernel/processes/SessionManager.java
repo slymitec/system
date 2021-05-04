@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.sessions;
+package indi.sly.system.kernel.processes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
@@ -13,21 +13,17 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
-import indi.sly.system.kernel.objects.instances.prototypes.wrappers.FolderTypeInitializer;
-import indi.sly.system.kernel.objects.lang.OpenAttirbute;
-import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.communication.instances.prototypes.PortContentObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.types.AccessControlTypes;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
-import indi.sly.system.kernel.sessions.instances.prototypes.SessionContentObject;
-import indi.sly.system.kernel.sessions.instances.prototypes.SessionTypeInitializer;
+import indi.sly.system.kernel.processes.sessions.instances.prototypes.SessionContentObject;
+import indi.sly.system.kernel.processes.sessions.instances.prototypes.SessionTypeInitializer;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -66,12 +62,21 @@ public class SessionManager extends AManager {
             throw new ConditionParametersException();
         }
 
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrentProcess();
+        ProcessTokenObject processToken = process.getToken();
+
+        if (!processToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
+            throw new ConditionPermissionsException();
+        }
+
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(id));
 
         InfoObject session = objectManager.get(identifications);
-        session.open(InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
+        session.open(InfoStatusOpenAttributeType.OPEN_SHARED_WRITE);
 
         return (SessionContentObject) session.getContent();
     }
@@ -108,17 +113,22 @@ public class SessionManager extends AManager {
         UUID accountID = accountAuthorization.checkAndGetResult().getAccountID();
 
         InfoObject session = sessions.createChildAndOpen(typeID, new IdentificationDefinition(UUIDUtil.createRandom()),
-                InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
-        SecurityDescriptorObject securityDescriptor = session.getSecurityDescriptor();
-        Map<UUID, Long> accessControl = new HashMap<>();
-        accessControl.put(accountID, AccessControlTypes.FULLCONTROL_ALLOW);
-        securityDescriptor.setAccessControlTypes(accessControl);
+                InfoStatusOpenAttributeType.OPEN_SHARED_WRITE);
         session.close();
 
         return session.getID();
     }
 
     public void delete(UUID id) {
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrentProcess();
+        ProcessTokenObject processToken = process.getToken();
+
+        if (!processToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
+            throw new ConditionPermissionsException();
+        }
+
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"));

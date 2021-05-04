@@ -41,8 +41,7 @@ public class MemoryManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        return this.factoryManager.getCoreRepository().getByID(SpaceType.KERNEL, AInfoRepositoryObject.class,
-                id);
+        return this.factoryManager.getCoreRepository().getByID(SpaceType.KERNEL, AInfoRepositoryObject.class, id);
     }
 
     public ProcessRepositoryObject getProcessRepository() {

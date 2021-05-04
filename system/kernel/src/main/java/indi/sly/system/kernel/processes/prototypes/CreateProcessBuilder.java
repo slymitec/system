@@ -16,6 +16,7 @@ import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.communication.values.ProcessCommunicationDefinition;
 import indi.sly.system.kernel.processes.communication.prototypes.ProcessCommunicationObject;
+import indi.sly.system.kernel.processes.sessions.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.values.CreateProcessDefinition;
 import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatisticsDefinition;
@@ -24,8 +25,6 @@ import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
-import indi.sly.system.kernel.sessions.SessionManager;
-import indi.sly.system.kernel.sessions.instances.prototypes.SessionContentObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -221,6 +220,13 @@ public class CreateProcessBuilder extends APrototype {
         ProcessHandleTableObject processHandleTable = this.process.getHandleTable();
         processHandleTable.inherit(this.createProcess.getFileHandle());
 
+        ProcessSessionObject processSession = this.process.getSession();
+        if (!ValueUtil.isAnyNullOrEmpty(this.createProcess.getSessionID())) {
+            processSession.setID(this.createProcess.getSessionID());
+        } else {
+            processSession.inheritID();
+        }
+
         ProcessContextObject processContext = this.process.getContext();
         ProcessContextObject parentProcessContext = this.parentProcess.getContext();
 
@@ -235,26 +241,16 @@ public class CreateProcessBuilder extends APrototype {
         if (ObjectUtil.allNotNull(this.createProcess.getParameters())) {
             processContext.setParameters(this.createProcess.getParameters());
         }
-        if (!ValueUtil.isAnyNullOrEmpty(this.createProcess.getSessionID())) {
-            processContext.setSessionID(this.createProcess.getSessionID());
-        } else {
-            UUID parentProcessContextSessionID = parentProcessContext.getSessionID();
-            if (!ValueUtil.isAnyNullOrEmpty(parentProcessContextSessionID)) {
-                processContext.setSessionID(parentProcessContextSessionID);
-            }
-        }
         if (ObjectUtil.allNotNull(this.createProcess.getWorkFolder())) {
             processContext.setWorkFolder(this.createProcess.getWorkFolder());
         } else {
             processContext.setWorkFolder(parentProcessContext.getWorkFolder());
         }
 
-        SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
-        UUID sessionID = ValueUtil.isAnyNullOrEmpty(this.createProcess.getSessionID()) ?
-                this.parentProcess.getSessionID() : this.createProcess.getSessionID();
-        SessionContentObject sessionContent = sessionManager.getAndOpen(sessionID);
-        sessionContent.addProcessID(this.process.getID());
-        sessionManager.close(sessionContent);
+        ProcessCommunicationObject processCommunication = process.getCommunication();
+        processCommunication.createSignal(new HashSet<>());
+
+        processStatus.run();
     }
 
     public ProcessObject build() {
@@ -265,15 +261,4 @@ public class CreateProcessBuilder extends APrototype {
         return this.process;
     }
 
-    public void initialize() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrentProcess();
-
-        ProcessCommunicationObject processCommunication = process.getCommunication();
-        processCommunication.createSignal(new HashSet<>());
-
-        ProcessStatusObject processStatus = process.getStatus();
-        processStatus.run();
-    }
 }

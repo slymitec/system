@@ -1,31 +1,20 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.lang.*;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessAndThreadResolver extends APrototype implements IInfoObjectResolver {
+public class ProcessAndThreadResolver extends APrototype implements IInfoResolver {
     public ProcessAndThreadResolver() {
         this.dump = (dump, info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);

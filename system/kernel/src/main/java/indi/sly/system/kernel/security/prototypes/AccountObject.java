@@ -11,7 +11,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupReposit
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.SecurityTokenManager;
+import indi.sly.system.kernel.security.AccountGroupManager;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
 import indi.sly.system.kernel.security.types.PrivilegeTypes;
@@ -63,14 +63,14 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
     }
 
     public List<GroupObject> getGroups() {
-        SecurityTokenManager securityTokenManager = this.factoryManager.getManager(SecurityTokenManager.class);
+        AccountGroupManager accountGroupManager = this.factoryManager.getManager(AccountGroupManager.class);
 
         this.init();
 
         List<GroupObject> groups = new ArrayList<>();
 
         for (GroupEntity group : this.value.getGroups()) {
-            groups.add(securityTokenManager.getGroup(group.getID()));
+            groups.add(accountGroupManager.getGroup(group.getID()));
         }
 
         return Collections.unmodifiableList(groups);

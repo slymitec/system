@@ -1,15 +1,16 @@
-package indi.sly.system.kernel.processes.instances.prototypes;
+package indi.sly.system.kernel.processes.instances.prototypes.wrappers;
 
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.objects.values.DumpDefinition;
+import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoEntity;
+import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.objects.values.DumpDefinition;
-import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
-import indi.sly.system.kernel.processes.instances.values.PortDefinition;
+import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
+import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -20,7 +21,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class PortTypeInitializer extends ATypeInitializer {
+public class SessionTypeInitializer extends ATypeInitializer {
     @Override
     public void install() {
     }
@@ -36,7 +37,7 @@ public class PortTypeInitializer extends ATypeInitializer {
 
     @Override
     public void createProcedure(InfoEntity info) {
-        info.setContent(ObjectUtil.transferToByteArray(new PortDefinition()));
+        info.setContent(ObjectUtil.transferToByteArray(new SessionDefinition()));
     }
 
     @Override
@@ -89,7 +90,7 @@ public class PortTypeInitializer extends ATypeInitializer {
     @Override
     public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info,
                                                                        InfoStatusOpenDefinition statusOpen) {
-        return PortContentObject.class;
+        return SessionContentObject.class;
     }
 
     @Override

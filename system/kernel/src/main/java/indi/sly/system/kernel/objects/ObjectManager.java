@@ -24,7 +24,6 @@ public class ObjectManager extends AManager {
     @Override
     public void startup(long startupTypes) {
         if (startupTypes == StartupType.STEP_INIT) {
-
         } else if (startupTypes == StartupType.STEP_KERNEL) {
             InfoFactory infoFactory = this.factoryManager.create(InfoFactory.class);
             infoFactory.init();
@@ -34,6 +33,10 @@ public class ObjectManager extends AManager {
                     InfoCacheObject.class);
             infoCache.add(SpaceType.KERNEL, rootInfo);
         }
+    }
+
+    @Override
+    public void shutdown() {
     }
 
     public InfoObject get(List<IdentificationDefinition> identifications) {

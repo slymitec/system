@@ -1,6 +1,8 @@
 package indi.sly.system.kernel.core;
 
 import indi.sly.system.common.lang.Provider;
+import indi.sly.system.common.lang.StatusNotReadyException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
@@ -29,6 +31,7 @@ public class FactoryManager extends AManager {
     public void startup(long startupTypes) {
         if (startupTypes == StartupType.STEP_INIT) {
             this.factoryManager = this;
+            this.factoryManager.check();
 
             UserSpaceDefinition bootUserSpace = new UserSpaceDefinition();
             this.factoryManager.setUserSpaceContainer(() -> bootUserSpace);
@@ -52,6 +55,17 @@ public class FactoryManager extends AManager {
         }
     }
 
+    @Override
+    public void shutdown() {
+    }
+
+    @Override
+    public void check() {
+        if (ObjectUtil.isAnyNull(this.factoryManager)) {
+            throw new StatusNotReadyException();
+        }
+    }
+
     private CorePrototypeBuilder corePrototype;
     private CoreRepositoryObject coreRepository;
 
@@ -63,9 +77,12 @@ public class FactoryManager extends AManager {
         return this.coreRepository;
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends AManager> T getManager(Class<T> clazz) {
-        return this.coreRepository.get(SpaceType.KERNEL, clazz);
+        T manager = this.coreRepository.get(SpaceType.KERNEL, clazz);
+
+        manager.check();
+
+        return manager;
     }
 
     public KernelSpaceDefinition getKernelSpace() {

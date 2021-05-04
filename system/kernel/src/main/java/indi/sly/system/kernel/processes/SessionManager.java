@@ -54,11 +54,8 @@ public class SessionManager extends AManager {
     public void shutdown() {
     }
 
-    public SessionContentObject getAndOpen(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
-            throw new ConditionParametersException();
-        }
-
+    @Override
+    public void check() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrentProcess();
@@ -67,10 +64,17 @@ public class SessionManager extends AManager {
         if (!processToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
             throw new ConditionPermissionsException();
         }
+    }
+
+    public SessionContentObject getAndOpen(UUID id) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
+            throw new ConditionParametersException();
+        }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(id));
+        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
+                new IdentificationDefinition(id));
 
         InfoObject session = objectManager.get(identifications);
         session.open(InfoStatusOpenAttributeType.OPEN_SHARED_WRITE);
@@ -91,18 +95,9 @@ public class SessionManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrentProcess();
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
-            throw new ConditionPermissionsException();
-        }
-
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"));
+        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"));
 
         InfoObject sessions = objectManager.get(identifications);
 
@@ -117,18 +112,9 @@ public class SessionManager extends AManager {
     }
 
     public void delete(UUID id) {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrentProcess();
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
-            throw new ConditionPermissionsException();
-        }
-
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"));
+        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"));
 
         InfoObject sessions = objectManager.get(identifications);
 

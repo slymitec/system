@@ -31,29 +31,6 @@ public class SessionContentObject extends AInfoContentObject {
 
     private SessionDefinition session;
 
-    private void checkProcessTokenPrivilege() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrentProcess();
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
-            throw new ConditionPermissionsException();
-        }
-    }
-
-    private void checkProcessTokenAccountIDOrPrivilege() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrentProcess();
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.getAccountID().equals(this.getAccountID()) &&
-                !processToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
-            throw new ConditionPermissionsException();
-        }
-    }
-
     public long getType() {
         this.init();
 
@@ -61,8 +38,6 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public void setType(long type) {
-        this.checkProcessTokenPrivilege();
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -79,8 +54,6 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public void setAccountID(UUID accountID) {
-        this.checkProcessTokenPrivilege();
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -106,8 +79,6 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public void addProcessID(UUID processID) {
-        this.checkProcessTokenAccountIDOrPrivilege();
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -122,8 +93,6 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public void deleteProcessID(UUID processID) {
-        this.checkProcessTokenAccountIDOrPrivilege();
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -147,8 +116,6 @@ public class SessionContentObject extends AInfoContentObject {
         if (ObjectUtil.isAnyNull(client)) {
             throw new ConditionParametersException();
         }
-
-        this.checkProcessTokenPrivilege();
 
         this.lock(LockType.WRITE);
         this.init();

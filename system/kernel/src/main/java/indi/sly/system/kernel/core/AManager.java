@@ -17,4 +17,7 @@ public abstract class AManager extends APrototype implements IStartupCapable {
     @Override
     public void shutdown() {
     }
+
+    public void check() {
+    }
 }

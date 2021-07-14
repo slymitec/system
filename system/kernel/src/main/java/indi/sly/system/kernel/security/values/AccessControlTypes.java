@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.security.types;
+package indi.sly.system.kernel.security.values;
 
 public interface AccessControlTypes {
     long NULL = 0;

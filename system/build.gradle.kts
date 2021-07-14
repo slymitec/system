@@ -1,7 +1,6 @@
 plugins {
     java
-    war
-    id("org.springframework.boot") version ("2.4.5")
+    id("org.springframework.boot") version ("2.5.2")
     id("io.spring.dependency-management") version ("1.0.11.RELEASE")
 }
 
@@ -62,6 +61,11 @@ tasks.bootJar {
 tasks.compileJava {
     options.encoding = "UTF-8"
     options.release.set(11)
+}
+
+tasks.compileTestJava {
+    options.encoding = "UTF-8"
+    options.release.set(16)
 }
 
 tasks.jar {

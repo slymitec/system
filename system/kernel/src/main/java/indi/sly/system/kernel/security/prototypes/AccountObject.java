@@ -14,7 +14,7 @@ import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.AccountGroupManager;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
-import indi.sly.system.kernel.security.types.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

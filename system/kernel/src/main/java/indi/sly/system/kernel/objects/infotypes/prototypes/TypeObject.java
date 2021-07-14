@@ -4,10 +4,12 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
+import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
+import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 
 public class TypeObject extends APrototype {
     private TypeDefinition type;
@@ -27,8 +29,11 @@ public class TypeObject extends APrototype {
     }
 
     public Set<UUID> getChildTypes() {
-        Set<UUID> result = Collections.unmodifiableSet(this.type.getChildTypes());
+        if (!this.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD)) {
+            throw new StatusNotSupportedException();
+        }
 
+        Set<UUID> result = Collections.unmodifiableSet(this.type.getChildTypes());
         return result;
     }
 

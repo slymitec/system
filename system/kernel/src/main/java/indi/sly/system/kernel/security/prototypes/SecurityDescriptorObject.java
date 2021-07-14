@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -11,10 +10,13 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.AccountGroupManager;
+import indi.sly.system.kernel.security.values.AccessControlScopeTypes;
+import indi.sly.system.kernel.security.values.UserTypes;
+import indi.sly.system.kernel.security.values.AccessControlDefinition;
 import indi.sly.system.kernel.security.values.SecurityDescriptorDefinition;
 import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryDefinition;
-import indi.sly.system.kernel.security.types.AccessControlTypes;
-import indi.sly.system.kernel.security.types.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.AccessControlTypes;
+import indi.sly.system.kernel.security.values.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -86,8 +88,8 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         return process.getToken();
     }
 
-    private boolean isAccessControlType(long accessControlType) {
-        if (accessControlType == AccessControlTypes.NULL || LogicalUtil.isAnyExist(accessControlType,
+    private boolean allowAccessControl(long accessControl) {
+        if (accessControl == AccessControlTypes.NULL || LogicalUtil.isAnyExist(accessControl,
                 AccessControlTypes.FULLCONTROL_DENY)) {
             throw new ConditionParametersException();
         }
@@ -112,18 +114,37 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         securityDescriptors.add(this.value);
 
-        Map<UUID, Long> accessControl = new HashMap<>();
-        for (SecurityDescriptorDefinition securityDescriptor : securityDescriptors) {
-            if (!securityDescriptor.isInherit()) {
-                accessControl.clear();
+        Set<AccessControlDefinition> effectiveAccessControls = new HashSet<>();
+        for (int i = 0; i < securityDescriptors.size(); i++) {
+            if (!securityDescriptors.get(i).isInherit()) {
+                effectiveAccessControls.clear();
             }
 
-            for (Map.Entry<UUID, Long> pair : securityDescriptor.getAccessControl().entrySet()) {
-                if (accessControl.containsKey(pair.getKey())) {
-                    accessControl.put(pair.getKey(), LogicalUtil.or(accessControl.get(pair.getKey()),
-                            pair.getValue()));
-                } else {
-                    accessControl.put(pair.getKey(), pair.getValue());
+            for (AccessControlDefinition pair : securityDescriptors.get(i).getAccessControls()) {
+                if (LogicalUtil.isAllExist(AccessControlScopeTypes.THIS, pair.getScope())) {
+                    if (i == securityDescriptors.size() - 1) {
+                        effectiveAccessControls.add(pair);
+                    }
+                }
+                if (LogicalUtil.isAllExist(AccessControlScopeTypes.CHILD_HAS_CHILD, pair.getScope())) {
+                    if (i == securityDescriptors.size() - 2 && securityDescriptors.get(i + 1).isHasChild()) {
+                        effectiveAccessControls.add(pair);
+                    }
+                }
+                if (LogicalUtil.isAllExist(AccessControlScopeTypes.CHILD_HAS_NOT_CHILD, pair.getScope())) {
+                    if (i == securityDescriptors.size() - 2 && !securityDescriptors.get(i + 1).isHasChild()) {
+                        effectiveAccessControls.add(pair);
+                    }
+                }
+                if (LogicalUtil.isAllExist(AccessControlScopeTypes.HIERARCHICAL_HAS_CHILD, pair.getScope())) {
+                    if (i < securityDescriptors.size() - 1 && securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
+                        effectiveAccessControls.add(pair);
+                    }
+                }
+                if (LogicalUtil.isAllExist(AccessControlScopeTypes.HIERARCHICAL_HAS_NOT_CHILD, pair.getScope())) {
+                    if (i < securityDescriptors.size() - 1 && !securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
+                        effectiveAccessControls.add(pair);
+                    }
                 }
             }
         }
@@ -131,23 +152,33 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         AccountGroupManager accountGroupManager = this.factoryManager.getManager(AccountGroupManager.class);
 
         AccountObject account = accountGroupManager.getAccount(processToken.getAccountID());
+        UUID accountID = account.getID();
         List<GroupObject> groups = account.getGroups();
-        List<UUID> accountGroupIDs = new ArrayList<>();
+        List<UUID> groupIDs = new ArrayList<>();
         for (GroupObject group : groups) {
-            accountGroupIDs.add(group.getID());
+            groupIDs.add(group.getID());
         }
-        accountGroupIDs.add(account.getID());
 
         boolean allow = false;
 
-        for (UUID id : accountGroupIDs) {
-            if (accessControl.containsKey(id)) {
-                long accessControlTypeValue = accessControl.get(id);
-                if (LogicalUtil.isAllExist(accessControlTypeValue, accessControlType)) {
-                    allow = true;
+        for (AccessControlDefinition pair : effectiveAccessControls) {
+            if (pair.getType() == UserTypes.GROUP) {
+                if (groupIDs.contains(pair.getId())) {
+                    if (LogicalUtil.isAllExist(accessControl, pair.getValue())) {
+                        allow = true;
+                    }
+                    if (LogicalUtil.isAnyExist(pair.getValue(), accessControl << 1)) {
+                        return false;
+                    }
                 }
-                if (LogicalUtil.isAnyExist(accessControlTypeValue, accessControlType << 1)) {
-                    return false;
+            } else if (pair.getType() == UserTypes.ACCOUNT) {
+                if (accountID.equals(pair.getId())) {
+                    if (LogicalUtil.isAllExist(accessControl, pair.getValue())) {
+                        allow = true;
+                    }
+                    if (LogicalUtil.isAnyExist(pair.getValue(), accessControl << 1)) {
+                        return false;
+                    }
                 }
             }
         }
@@ -155,18 +186,18 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         return allow;
     }
 
-    public void checkAccessControlType(long accessControlType) {
+    public void check(long accessControl) {
         ProcessTokenObject processToken = this.getCurrentProcessToken();
         if (processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)) {
             return;
         }
 
-        if (!this.isAccessControlType(accessControlType)) {
+        if (!this.allowAccessControl(accessControl) || !processToken.getRoles().containsAll(this.getRoles())) {
             throw new ConditionPermissionsException();
         }
     }
 
-    public List<SecurityDescriptorSummaryDefinition> getAccessControlType() {
+    public List<SecurityDescriptorSummaryDefinition> getSummary() {
         if (!this.permission) {
             throw new StatusNotSupportedException();
         }
@@ -175,7 +206,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.isAccessControlType(AccessControlTypes.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                && !this.allowAccessControl(AccessControlTypes.READPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
         }
 
@@ -187,7 +218,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
             securityDescriptorSummary.getIdentifications().addAll(pair.identifications);
             securityDescriptorSummary.setInherit(pair.value.isInherit());
-            securityDescriptorSummary.getAccessControl().putAll(pair.value.getAccessControl());
+            securityDescriptorSummary.getAccessControls().addAll(pair.value.getAccessControls());
             securityDescriptorSummaries.add(securityDescriptorSummary);
         }
 
@@ -196,10 +227,28 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
         securityDescriptorSummary.getIdentifications().addAll(this.identifications);
         securityDescriptorSummary.setInherit(this.value.isInherit());
-        securityDescriptorSummary.getAccessControl().putAll(this.value.getAccessControl());
+        securityDescriptorSummary.getAccessControls().addAll(this.value.getAccessControls());
         securityDescriptorSummaries.add(securityDescriptorSummary);
 
         return securityDescriptorSummaries;
+    }
+
+    public boolean isInherit() {
+        if (!this.permission) {
+            throw new StatusNotSupportedException();
+        }
+
+        ProcessTokenObject processToken = this.getCurrentProcessToken();
+
+        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.value.getOwners().contains(processToken.getAccountID())
+                && !this.allowAccessControl(AccessControlTypes.READPERMISSIONDESCRIPTOR_ALLOW)) {
+            throw new ConditionPermissionsException();
+        }
+
+        this.init();
+
+        return this.value.isInherit();
     }
 
     public void setInherit(boolean inherit) {
@@ -211,7 +260,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.isAccessControlType(AccessControlTypes.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
+                && !this.allowAccessControl(AccessControlTypes.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
         }
 
@@ -224,7 +273,43 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         this.lock(LockType.NONE);
     }
 
-    public void setOwners(List<UUID> owners) {
+    public boolean isHasChild() {
+        if (!this.permission) {
+            throw new StatusNotSupportedException();
+        }
+
+        ProcessTokenObject processToken = this.getCurrentProcessToken();
+
+        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.value.getOwners().contains(processToken.getAccountID())
+                && !this.allowAccessControl(AccessControlTypes.READPERMISSIONDESCRIPTOR_ALLOW)) {
+            throw new ConditionPermissionsException();
+        }
+
+        this.init();
+
+        return this.value.isHasChild();
+    }
+
+    public Set<UUID> getOwners() {
+        if (!this.permission) {
+            throw new StatusNotSupportedException();
+        }
+
+        ProcessTokenObject processToken = this.getCurrentProcessToken();
+
+        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.value.getOwners().contains(processToken.getAccountID())
+                && !this.allowAccessControl(AccessControlTypes.READPERMISSIONDESCRIPTOR_ALLOW)) {
+            throw new ConditionPermissionsException();
+        }
+
+        this.init();
+
+        return Collections.unmodifiableSet(this.value.getOwners());
+    }
+
+    public void setOwners(Set<UUID> owners) {
         if (ObjectUtil.isAnyNull(owners) || owners.isEmpty()) {
             throw new ConditionParametersException();
         }
@@ -236,7 +321,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.isAccessControlType(AccessControlTypes.TAKEONWERSHIP_ALLOW)) {
+                && !this.allowAccessControl(AccessControlTypes.TAKEONWERSHIP_ALLOW)) {
             throw new ConditionPermissionsException();
         }
 
@@ -250,92 +335,45 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         this.lock(LockType.NONE);
     }
 
-    public void setAccessControlTypes(Map<UUID, Long> accessControl) {
-        if (ObjectUtil.isAnyNull(accessControl)) {
+    public void setAccessControls(Set<AccessControlDefinition> accessControls) {
+        if (ObjectUtil.isAnyNull(accessControls)) {
             throw new ConditionParametersException();
         }
         if (!this.permission) {
             throw new StatusNotSupportedException();
         }
 
+        for (AccessControlDefinition accessControl : accessControls) {
+            if (!this.value.isHasChild() && LogicalUtil.isAnyExist(accessControl.getScope(),
+                    LogicalUtil.or(AccessControlScopeTypes.CHILD_HAS_CHILD,
+                            AccessControlScopeTypes.CHILD_HAS_NOT_CHILD,
+                            AccessControlScopeTypes.HIERARCHICAL_HAS_CHILD,
+                            AccessControlScopeTypes.HIERARCHICAL_HAS_NOT_CHILD))) {
+                throw new ConditionParametersException();
+            }
+        }
+
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
         if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.isAccessControlType(AccessControlTypes.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
+                && !this.allowAccessControl(AccessControlTypes.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
         }
 
         this.lock(LockType.WRITE);
         this.init();
 
-        Map<UUID, Long> resultAccessControl;
-        if (this.value.isInherit()) {
-            List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
-            for (SecurityDescriptorObject pair : this.parents) {
-                pair.init();
-
-                securityDescriptors.add(pair.value);
-            }
-
-            Map<UUID, Long> parentAccessControl = new HashMap<>();
-            for (SecurityDescriptorDefinition securityDescriptor : securityDescriptors) {
-                if (!securityDescriptor.isInherit()) {
-                    parentAccessControl.clear();
-                }
-
-                for (Map.Entry<UUID, Long> pair : securityDescriptor.getAccessControl().entrySet()) {
-                    if (parentAccessControl.containsKey(pair.getKey())) {
-                        parentAccessControl.put(pair.getKey(), LogicalUtil.or(parentAccessControl.get(pair.getKey()),
-                                pair.getValue()));
-                    } else {
-                        parentAccessControl.put(pair.getKey(), pair.getValue());
-                    }
-                }
-            }
-
-            resultAccessControl = new HashMap<>();
-
-            for (Map.Entry<UUID, Long> pair : accessControl.entrySet()) {
-                Long parentAccessControlValue = parentAccessControl.getOrDefault(pair.getKey(), null);
-                if (ObjectUtil.isAnyNull(parentAccessControlValue)) {
-                    resultAccessControl.put(pair.getKey(), pair.getValue());
-                } else {
-                    resultAccessControl.put(pair.getKey(), LogicalUtil.and(pair.getValue(), ~(parentAccessControlValue)));
-                }
-            }
-        } else {
-            resultAccessControl = accessControl;
-        }
-
-        this.value.getAccessControl().clear();
-        this.value.getAccessControl().putAll(resultAccessControl);
+        this.value.getAccessControls().clear();
+        this.value.getAccessControls().addAll(accessControls);
 
         this.fresh();
         this.lock(LockType.NONE);
     }
 
-    public void checkRoleTypes(UUID roleType) {
-        if (ValueUtil.isAnyNullOrEmpty(roleType)) {
-            throw new ConditionParametersException();
-        }
-
-        ProcessTokenObject processToken = this.getCurrentProcessToken();
-
-        this.init();
-
-        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getRoles().contains(roleType)) {
-            throw new ConditionPermissionsException();
-        }
-    }
-
-    public Set<UUID> getRoleTypes() {
-        ProcessTokenObject processToken = this.getCurrentProcessToken();
-
-        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getOwners().contains(processToken.getAccountID())) {
-            throw new ConditionPermissionsException();
+    public Set<UUID> getRoles() {
+        if (!this.permission) {
+            throw new StatusNotSupportedException();
         }
 
         this.init();
@@ -343,7 +381,11 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         return Collections.unmodifiableSet(value.getRoles());
     }
 
-    public void setRoleTypes(List<UUID> roleTypes) {
+    public void setRoles(List<UUID> roleTypes) {
+        if (!this.permission) {
+            throw new StatusNotSupportedException();
+        }
+
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
         if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
@@ -361,12 +403,12 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         this.lock(LockType.NONE);
     }
 
-    public void writeAudit(long accessControlType) {
-        if (!this.audit) {
+    public void writeAudit(long accessControl) {
+        if (!this.permission || !this.audit) {
             throw new StatusNotSupportedException();
         }
 
-        if (LogicalUtil.isNotAllExist(this.value.getAuditTypes(), accessControlType)) {
+        if (LogicalUtil.isNotAllExist(this.value.getAudits(), accessControl)) {
             return;
         }
 
@@ -378,8 +420,8 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         */
     }
 
-    public long getAuditTypes() {
-        if (!this.audit) {
+    public long getAudits() {
+        if (!this.permission || !this.audit) {
             throw new StatusNotSupportedException();
         }
 
@@ -392,11 +434,11 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         this.init();
 
-        return value.getAuditTypes();
+        return value.getAudits();
     }
 
-    public void setAuditTypes(long auditTypes) {
-        if (!this.audit) {
+    public void setAudits(long audits) {
+        if (!this.permission || !this.audit) {
             throw new StatusNotSupportedException();
         }
 
@@ -410,7 +452,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.setAuditTypes(auditTypes);
+        this.value.setAudits(audits);
 
         this.fresh();
         this.lock(LockType.NONE);

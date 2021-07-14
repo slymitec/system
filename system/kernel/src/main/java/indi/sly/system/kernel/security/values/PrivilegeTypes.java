@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.security.types;
+package indi.sly.system.kernel.security.values;
 
 public interface PrivilegeTypes {
     long NULL = 0;

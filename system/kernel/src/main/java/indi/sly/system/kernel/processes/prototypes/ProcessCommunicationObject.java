@@ -16,9 +16,12 @@ import indi.sly.system.kernel.processes.instances.prototypes.SignalContentObject
 import indi.sly.system.kernel.processes.instances.values.SignalEntryDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
-import indi.sly.system.kernel.security.types.AccessControlTypes;
+import indi.sly.system.kernel.security.values.AccessControlScopeTypes;
+import indi.sly.system.kernel.security.values.AccessControlTypes;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
-import indi.sly.system.kernel.security.types.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.UserTypes;
+import indi.sly.system.kernel.security.values.AccessControlDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -120,11 +123,20 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             InfoObject port = ports.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
                     InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
             SecurityDescriptorObject securityDescriptor = port.getSecurityDescriptor();
-            Map<UUID, Long> accessControl = new HashMap<>();
-            accessControl.put(processToken.getAccountID(), AccessControlTypes.FULLCONTROL_ALLOW);
-            accessControl.put(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID,
-                    AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
-            securityDescriptor.setAccessControlTypes(accessControl);
+            Set<AccessControlDefinition> accessControls = new HashSet<>();
+            AccessControlDefinition accessControl = new AccessControlDefinition();
+            accessControl.setId(processToken.getAccountID());
+            accessControl.setType(UserTypes.ACCOUNT);
+            accessControl.setScope(AccessControlScopeTypes.THIS);
+            accessControl.setValue(AccessControlTypes.FULLCONTROL_ALLOW);
+            accessControls.add(accessControl);
+            accessControl = new AccessControlDefinition();
+            accessControl.setId(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID);
+            accessControl.setType(UserTypes.GROUP);
+            accessControl.setScope(AccessControlScopeTypes.THIS);
+            accessControl.setValue(AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
+            accessControls.add(accessControl);
+            securityDescriptor.setAccessControls(accessControls);
             PortContentObject portContent = (PortContentObject) port.getContent();
             portContent.setSourceProcessIDs(sourceProcessIDs);
             port.close();
@@ -365,11 +377,20 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             InfoObject signal = signals.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
                     InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
             SecurityDescriptorObject securityDescriptor = signal.getSecurityDescriptor();
-            Map<UUID, Long> accessControl = new HashMap<>();
-            accessControl.put(processToken.getAccountID(), AccessControlTypes.FULLCONTROL_ALLOW);
-            accessControl.put(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID,
-                    AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
-            securityDescriptor.setAccessControlTypes(accessControl);
+            Set<AccessControlDefinition> accessControls = new HashSet<>();
+            AccessControlDefinition accessControl = new AccessControlDefinition();
+            accessControl.setId(processToken.getAccountID());
+            accessControl.setType(UserTypes.ACCOUNT);
+            accessControl.setScope(AccessControlScopeTypes.THIS);
+            accessControl.setValue(AccessControlTypes.FULLCONTROL_ALLOW);
+            accessControls.add(accessControl);
+            accessControl = new AccessControlDefinition();
+            accessControl.setId(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID);
+            accessControl.setType(UserTypes.GROUP);
+            accessControl.setScope(AccessControlScopeTypes.THIS);
+            accessControl.setValue(AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
+            accessControls.add(accessControl);
+            securityDescriptor.setAccessControls(accessControls);
             SignalContentObject signalContent = (SignalContentObject) signal.getContent();
             signalContent.setSourceProcessIDs(sourceProcessIDs);
             signal.close();

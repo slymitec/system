@@ -10,7 +10,6 @@ import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.types.PrivilegeTypes;
 import indi.sly.system.kernel.processes.instances.values.ClientDefinition;
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
 

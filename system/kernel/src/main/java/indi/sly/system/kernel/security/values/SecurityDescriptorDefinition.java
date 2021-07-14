@@ -1,31 +1,38 @@
 package indi.sly.system.kernel.security.values;
 
-import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.kernel.security.types.AuditTypes;
+import indi.sly.system.common.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
-import java.util.Map.Entry;
 
-public class SecurityDescriptorDefinition implements ISerializeCapable<SecurityDescriptorDefinition> {
-    private static final long serialVersionUID = 1L;
-
+public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptorDefinition> {
     private boolean inherit;
+    private boolean hasChild;
     private final Set<UUID> owners;
-    private final Map<UUID, Long> accessControl;
+    private final Set<AccessControlDefinition> accessControls;
     private final Set<UUID> roles;
-    private long auditTypes;
+    private long audits;
 
     public SecurityDescriptorDefinition() {
         this.inherit = true;
+        this.hasChild = false;
         this.owners = new HashSet<>();
-        this.accessControl = new HashMap<>();
+        this.accessControls = new HashSet<>();
         this.roles = new HashSet<>();
-        this.auditTypes = AuditTypes.NULL;
+        this.audits = AuditTypes.NULL;
+    }
+
+    public boolean isHasChild() {
+        return this.hasChild;
+    }
+
+    public void setHasChild(boolean hasChild) {
+        this.hasChild = hasChild;
     }
 
     public boolean isInherit() {
@@ -40,20 +47,20 @@ public class SecurityDescriptorDefinition implements ISerializeCapable<SecurityD
         return this.owners;
     }
 
-    public Map<UUID, Long> getAccessControl() {
-        return this.accessControl;
+    public Set<AccessControlDefinition> getAccessControls() {
+        return this.accessControls;
     }
 
     public Set<UUID> getRoles() {
         return this.roles;
     }
 
-    public long getAuditTypes() {
-        return this.auditTypes;
+    public long getAudits() {
+        return this.audits;
     }
 
-    public void setAuditTypes(long auditTypes) {
-        this.auditTypes = auditTypes;
+    public void setAudits(long audits) {
+        this.audits = audits;
     }
 
     @Override
@@ -62,15 +69,16 @@ public class SecurityDescriptorDefinition implements ISerializeCapable<SecurityD
         if (o == null || getClass() != o.getClass()) return false;
         SecurityDescriptorDefinition that = (SecurityDescriptorDefinition) o;
         return inherit == that.inherit &&
-                auditTypes == that.auditTypes &&
+                hasChild == that.hasChild &&
+                audits == that.audits &&
                 owners.equals(that.owners) &&
-                accessControl.equals(that.accessControl) &&
+                accessControls.equals(that.accessControls) &&
                 roles.equals(that.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(inherit, owners, accessControl, roles, auditTypes);
+        return Objects.hash(inherit, hasChild, owners, accessControls, roles, audits);
     }
 
     @Override
@@ -78,10 +86,11 @@ public class SecurityDescriptorDefinition implements ISerializeCapable<SecurityD
         SecurityDescriptorDefinition definition = new SecurityDescriptorDefinition();
 
         definition.inherit = this.inherit;
+        definition.hasChild = this.hasChild;
         definition.owners.addAll(this.owners);
-        definition.accessControl.putAll(this.accessControl);
+        definition.accessControls.addAll(this.accessControls);
         definition.roles.addAll(this.roles);
-        definition.auditTypes = this.auditTypes;
+        definition.audits = this.audits;
 
         return definition;
     }
@@ -89,6 +98,7 @@ public class SecurityDescriptorDefinition implements ISerializeCapable<SecurityD
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         this.inherit = NumberUtil.readExternalBoolean(in);
+        this.hasChild = NumberUtil.readExternalBoolean(in);
 
         int valueInteger;
 
@@ -99,7 +109,7 @@ public class SecurityDescriptorDefinition implements ISerializeCapable<SecurityD
 
         valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.accessControl.put(UUIDUtil.readExternal(in), NumberUtil.readExternalLong(in));
+            this.accessControls.add(ObjectUtil.readExternal(in));
         }
 
         valueInteger = NumberUtil.readExternalInteger(in);
@@ -107,22 +117,22 @@ public class SecurityDescriptorDefinition implements ISerializeCapable<SecurityD
             this.roles.add(UUIDUtil.readExternal(in));
         }
 
-        this.auditTypes = NumberUtil.readExternalLong(in);
+        this.audits = NumberUtil.readExternalLong(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         NumberUtil.writeExternalBoolean(out, this.inherit);
+        NumberUtil.writeExternalBoolean(out, this.hasChild);
 
         NumberUtil.writeExternalInteger(out, this.owners.size());
         for (UUID pair : this.owners) {
             UUIDUtil.writeExternal(out, pair);
         }
 
-        NumberUtil.writeExternalInteger(out, this.accessControl.size());
-        for (Entry<UUID, Long> pair : this.accessControl.entrySet()) {
-            UUIDUtil.writeExternal(out, pair.getKey());
-            NumberUtil.writeExternalLong(out, pair.getValue());
+        NumberUtil.writeExternalInteger(out, this.accessControls.size());
+        for (AccessControlDefinition pair : this.accessControls) {
+            ObjectUtil.writeExternal(out, pair);
         }
 
         NumberUtil.writeExternalInteger(out, this.roles.size());
@@ -130,6 +140,6 @@ public class SecurityDescriptorDefinition implements ISerializeCapable<SecurityD
             UUIDUtil.writeExternal(out, pair);
         }
 
-        NumberUtil.writeExternalLong(out, this.auditTypes);
+        NumberUtil.writeExternalLong(out, this.audits);
     }
 }

@@ -1,18 +1,19 @@
 package indi.sly.system.kernel.security.values;
 
+import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.common.values.IdentificationDefinition;
 
 import java.util.*;
 
-public class SecurityDescriptorSummaryDefinition {
+public class SecurityDescriptorSummaryDefinition extends ADefinition<SecurityDescriptorSummaryDefinition> {
     public SecurityDescriptorSummaryDefinition() {
         this.identifications = new ArrayList<>();
-        this.accessControl = new HashMap<>();
+        this.accessControls = new HashSet<>();
     }
 
     private final List<IdentificationDefinition> identifications;
     private boolean inherit;
-    private final Map<UUID, Long> accessControl;
+    private final Set<AccessControlDefinition> accessControls;
 
     public List<IdentificationDefinition> getIdentifications() {
         return this.identifications;
@@ -26,7 +27,7 @@ public class SecurityDescriptorSummaryDefinition {
         this.inherit = inherit;
     }
 
-    public Map<UUID, Long> getAccessControl() {
-        return this.accessControl;
+    public Set<AccessControlDefinition> getAccessControls() {
+        return this.accessControls;
     }
 }

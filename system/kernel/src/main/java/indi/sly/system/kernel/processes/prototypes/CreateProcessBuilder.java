@@ -22,7 +22,7 @@ import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
-import indi.sly.system.kernel.security.types.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -39,14 +39,10 @@ public class CreateProcessBuilder extends APrototype {
         this.createProcess = new CreateProcessDefinition();
     }
 
-    private ProcessFactory processFactory;
+    protected ProcessFactory processFactory;
     private ProcessObject parentProcess;
     private final CreateProcessDefinition createProcess;
     private ProcessObject process;
-
-    public void setProcessFactory(ProcessFactory processFactory) {
-        this.processFactory = processFactory;
-    }
 
     public void setParentProcess(ProcessObject parentProcess) {
         this.parentProcess = parentProcess;

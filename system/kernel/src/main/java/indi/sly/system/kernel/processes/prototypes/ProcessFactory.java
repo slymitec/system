@@ -27,9 +27,9 @@ public class ProcessFactory extends APrototype {
                 this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL,
                         IProcessResolver.class);
 
-        for (APrototype pair : corePrototypes) {
-            if (pair instanceof IProcessResolver) {
-                processResolvers.add((IProcessResolver) pair);
+        for (APrototype prototype : corePrototypes) {
+            if (prototype instanceof IProcessResolver) {
+                processResolvers.add((IProcessResolver) prototype);
             }
         }
     }
@@ -61,7 +61,7 @@ public class ProcessFactory extends APrototype {
     public CreateProcessBuilder createProcessBuilder() {
         CreateProcessBuilder createProcessBuilder = this.factoryManager.create(CreateProcessBuilder.class);
 
-        createProcessBuilder.setProcessFactory(this);
+        createProcessBuilder.processFactory = this;
 
         return createProcessBuilder;
     }

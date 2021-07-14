@@ -26,9 +26,9 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
             if (openAttribute == InfoStatusOpenAttributeType.CLOSE
                     || (openAttribute == InfoStatusOpenAttributeType.OPEN_EXCLUSIVE && info.getOpened() > 0)
                     || (openAttribute == InfoStatusOpenAttributeType.OPEN_ONLY_READ && info.getOpened() > 0
-                    && !type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.CAN_BE_SHARED_READ))
+                    && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_SHARED_READ))
                     || (openAttribute == InfoStatusOpenAttributeType.OPEN_SHARED_WRITE
-                    && !type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.CAN_BE_SHARED_WRITE))) {
+                    && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_SHARED_WRITE))) {
                 throw new StatusNotSupportedException();
             }
 
@@ -42,8 +42,8 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
         };
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD)
-                    || (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
+                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
             Set<UUID> childTypes = type.getChildTypes();
@@ -55,8 +55,8 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
         };
 
         this.getOrRebuildChild = (childInfo, info, type, status, identification, statusOpen) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD)
-                    || (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
+                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
 
@@ -64,14 +64,14 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
         };
 
         this.deleteChild = (info, type, status, identification) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD)
-                    || (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
+                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
         };
 
         this.queryChild = (summaryDefinitions, info, type, status, queryChild) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)) {
                 throw new StatusNotSupportedException();
             }
 
@@ -79,7 +79,7 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
         };
 
         this.renameChild = (info, type, status, oldIdentification, newIdentification) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD) || (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS))) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD) || (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS))) {
                 throw new StatusNotSupportedException();
             }
             if (oldIdentification.getType() == UUID.class || newIdentification.getType() == UUID.class) {
@@ -88,7 +88,7 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
         };
 
         this.readProperties = (properties, info, type, status) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PROPERTIES)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PROPERTIES)) {
                 throw new StatusNotSupportedException();
             }
 
@@ -96,13 +96,13 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
         };
 
         this.writeProperties = (info, type, status, properties) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PROPERTIES)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PROPERTIES)) {
                 throw new StatusNotSupportedException();
             }
         };
 
         this.readContent = (content, info, type, status) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CONTENT)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CONTENT)) {
                 throw new StatusNotSupportedException();
             }
             if (status.getOpen().getAttribute() == InfoStatusOpenAttributeType.CLOSE) {
@@ -113,7 +113,7 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
         };
 
         this.writeContent = (info, type, status, content) -> {
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CONTENT)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CONTENT)) {
                 throw new StatusNotSupportedException();
             }
             if (status.getOpen().getAttribute() == InfoStatusOpenAttributeType.CLOSE) {

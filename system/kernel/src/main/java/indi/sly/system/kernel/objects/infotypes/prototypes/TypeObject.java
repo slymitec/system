@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
@@ -29,20 +30,15 @@ public class TypeObject extends APrototype {
     }
 
     public Set<UUID> getChildTypes() {
-        if (!this.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD)) {
+        if (!this.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)) {
             throw new StatusNotSupportedException();
         }
 
-        Set<UUID> result = Collections.unmodifiableSet(this.type.getChildTypes());
-        return result;
+        return Collections.unmodifiableSet(this.type.getChildTypes());
     }
 
-    public boolean isTypeInitializerAttributeExist(long typeInitializerAttribute) {
-        if ((this.type.getAttribute() & typeInitializerAttribute) != 0) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean isTypeInitializerAttributesExist(long typeInitializerAttributes) {
+        return LogicalUtil.isAllExist(this.type.getAttribute(), typeInitializerAttributes);
     }
 
     public ATypeInitializer getTypeInitializer() {

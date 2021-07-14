@@ -25,7 +25,7 @@ public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             status.getOpen().setAttribute(openAttribute);
 
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.DONOT_USE_TYPE_COUNT)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DONOT_USE_TYPE_COUNT)) {
                 type.addTotalOccupiedCount();
             }
 
@@ -38,7 +38,7 @@ public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
         this.close = (info, type, status) -> {
             status.getOpen().setAttribute(InfoStatusOpenAttributeType.CLOSE);
 
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.DONOT_USE_TYPE_COUNT)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DONOT_USE_TYPE_COUNT)) {
                 type.minusTotalOccupiedCount();
             }
 
@@ -46,7 +46,7 @@ public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
             info.setOccupied(info.getOccupied() - 1);
 
             if (!ValueUtil.isAnyNullOrEmpty(status.getParentID())) {
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.TEMPORARY) && info.getOpened() <= 0) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.TEMPORARY) && info.getOpened() <= 0) {
                     IdentificationDefinition identification;
                     if (StringUtil.isNameIllegal(info.getName())) {
                         identification = new IdentificationDefinition(info.getName());

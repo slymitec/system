@@ -14,13 +14,13 @@ import indi.sly.system.kernel.security.values.PrivilegeTypes;
 import java.util.Map;
 
 public class AccountGroupTokenObject extends ABytesValueProcessPrototype<AccountGroupTokenDefinition> {
-    public long getPrivilegeTypes() {
+    public long getPrivileges() {
         this.init();
 
-        return this.value.getPrivilegeTypes();
+        return this.value.getPrivileges();
     }
 
-    public void setPrivilegeTypes(long privilegeTypes) {
+    public void setPrivileges(long privileges) {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrentProcess();
@@ -33,7 +33,7 @@ public class AccountGroupTokenObject extends ABytesValueProcessPrototype<Account
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.setPrivilegeTypes(privilegeTypes);
+        this.value.setPrivileges(privileges);
 
         this.fresh();
         this.lock(LockType.NONE);

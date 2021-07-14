@@ -15,15 +15,15 @@ public class AccountGroupTokenDefinition implements ISerializeCapable<AccountGro
         this.limits = new HashMap<>();
     }
 
-    private long privilegeTypes;
+    private long privileges;
     private final Map<Long, Integer> limits;
 
-    public long getPrivilegeTypes() {
-        return this.privilegeTypes;
+    public long getPrivileges() {
+        return this.privileges;
     }
 
-    public void setPrivilegeTypes(long privilegeTypes) {
-        this.privilegeTypes = privilegeTypes;
+    public void setPrivileges(long privileges) {
+        this.privileges = privileges;
     }
 
     public Map<Long, Integer> getLimits() {
@@ -35,19 +35,19 @@ public class AccountGroupTokenDefinition implements ISerializeCapable<AccountGro
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccountGroupTokenDefinition that = (AccountGroupTokenDefinition) o;
-        return privilegeTypes == that.privilegeTypes && limits.equals(that.limits);
+        return privileges == that.privileges && limits.equals(that.limits);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(privilegeTypes, limits);
+        return Objects.hash(privileges, limits);
     }
 
     @Override
     public AccountGroupTokenDefinition deepClone() {
         AccountGroupTokenDefinition definition = new AccountGroupTokenDefinition();
 
-        definition.privilegeTypes = this.privilegeTypes;
+        definition.privileges = this.privileges;
         definition.limits.putAll(this.limits);
 
         return definition;
@@ -55,7 +55,7 @@ public class AccountGroupTokenDefinition implements ISerializeCapable<AccountGro
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.privilegeTypes = NumberUtil.readExternalLong(in);
+        this.privileges = NumberUtil.readExternalLong(in);
 
         int valueInteger;
 
@@ -67,7 +67,7 @@ public class AccountGroupTokenDefinition implements ISerializeCapable<AccountGro
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        NumberUtil.writeExternalLong(out, this.privilegeTypes);
+        NumberUtil.writeExternalLong(out, this.privileges);
 
         NumberUtil.writeExternalInteger(out, this.limits.size());
         for (Map.Entry<Long, Integer> pair : this.limits.entrySet()) {

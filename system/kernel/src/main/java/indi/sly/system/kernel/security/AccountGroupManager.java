@@ -26,13 +26,13 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AccountGroupManager extends AManager {
-    private AccountGroupObjectFactoryObject accountGroupObjectFactory;
+    private AccountGroupFactory factory;
 
     @Override
     public void startup(long startupTypes) {
         if (startupTypes == StartupType.STEP_INIT) {
         } else if (startupTypes == StartupType.STEP_KERNEL) {
-            this.accountGroupObjectFactory = this.factoryManager.create(AccountGroupObjectFactoryObject.class);
+            this.factory = this.factoryManager.create(AccountGroupFactory.class);
         }
     }
 
@@ -50,7 +50,7 @@ public class AccountGroupManager extends AManager {
 
         AccountEntity account = accountGroupRepository.getAccount(accountID);
 
-        return this.accountGroupObjectFactory.buildAccount(account);
+        return this.factory.buildAccount(account);
     }
 
     public AccountObject getAccount(String accountName) {
@@ -63,7 +63,7 @@ public class AccountGroupManager extends AManager {
 
         AccountEntity account = accountGroupRepository.getAccount(accountName);
 
-        return this.accountGroupObjectFactory.buildAccount(account);
+        return this.factory.buildAccount(account);
     }
 
     public GroupObject getGroup(UUID groupID) {
@@ -76,7 +76,7 @@ public class AccountGroupManager extends AManager {
 
         GroupEntity group = accountGroupRepository.getGroup(groupID);
 
-        return this.accountGroupObjectFactory.buildGroup(group);
+        return this.factory.buildGroup(group);
     }
 
     public GroupObject getGroup(String groupName) {
@@ -89,7 +89,7 @@ public class AccountGroupManager extends AManager {
 
         GroupEntity group = accountGroupRepository.getGroup(groupName);
 
-        return this.accountGroupObjectFactory.buildGroup(group);
+        return this.factory.buildGroup(group);
     }
 
     public AccountObject createAccount(String accountName, String accountPassword) {
@@ -126,7 +126,7 @@ public class AccountGroupManager extends AManager {
             accountGroupRepository.add(account);
         }
 
-        return this.accountGroupObjectFactory.buildAccount(account);
+        return this.factory.buildAccount(account);
     }
 
     public GroupObject createGroup(String groupName) {
@@ -162,7 +162,7 @@ public class AccountGroupManager extends AManager {
             accountGroupRepository.add(group);
         }
 
-        return this.accountGroupObjectFactory.buildGroup(group);
+        return this.factory.buildGroup(group);
     }
 
     public void deleteAccount(UUID accountID) {

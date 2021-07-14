@@ -52,12 +52,12 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 }
             }
 
-            if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 securityDescriptor.setPermission(true);
             } else {
                 securityDescriptor.setPermission(false);
             }
-            if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                 securityDescriptor.setAudit(true);
             } else {
                 securityDescriptor.setAudit(false);
@@ -67,13 +67,13 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
         };
 
         this.dump = (dump, info, type, status) -> {
-            if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.check(AccessControlTypes.LISTCHILD_READDATA_ALLOW);
                 }
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.writeAudit(AuditTypes.LISTCHILD_READDATA);
                 }
             }
@@ -82,13 +82,13 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
         };
 
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
-            if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.check(AccessControlTypes.LISTCHILD_READDATA_ALLOW);
                 }
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.writeAudit(AuditTypes.LISTCHILD_READDATA);
                 }
             }
@@ -97,13 +97,13 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
         };
 
         this.createChildAndOpen = (childInfo, info, type, status, childTypeID, identification) -> {
-            if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.check(AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
                 }
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.writeAudit(AuditTypes.CREATECHILD_WRITEDATA);
                 }
             }
@@ -111,16 +111,16 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
             TypeObject childType = typeManager.get(childTypeID);
 
-            if (childType.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT) || childType.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorDefinition securityDescriptor = new SecurityDescriptorDefinition();
 
-                if (childType.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                if (childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
                     ProcessObject process = processManager.getCurrentProcess();
 
                     securityDescriptor.getOwners().add(process.getToken().getAccountID());
                     securityDescriptor.setInherit(true);
-                    securityDescriptor.setHasChild(childType.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_CHILD));
+                    securityDescriptor.setHasChild(childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD));
                 }
 
                 childInfo.setSecurityDescriptor(ObjectUtil.transferToByteArray(securityDescriptor));
@@ -132,13 +132,13 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
         };
 
         this.getOrRebuildChild = (childInfo, info, type, status, identification, statusOpen) -> {
-            if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.check(AccessControlTypes.TRAVERSE_EXECUTE_ALLOW);
                 }
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.writeAudit(AuditTypes.TRAVERSE_EXECUTE);
                 }
             }
@@ -147,26 +147,26 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
         };
 
         this.deleteChild = (info, type, status, identification) -> {
-            if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.check(AccessControlTypes.DELETECHILD_ALLOW);
                 }
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.writeAudit(AuditTypes.DELETECHILD);
                 }
             }
         };
 
         this.queryChild = (summaryDefinitions, info, type, status, queryChild) -> {
-            if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.check(AccessControlTypes.LISTCHILD_READDATA_ALLOW);
                 }
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.writeAudit(AuditTypes.LISTCHILD_READDATA);
                 }
             }
@@ -175,13 +175,13 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
         };
 
         this.renameChild = (info, type, status, oldIdentification, newIdentification) -> {
-            if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.check(LogicalUtil.or(AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW, AccessControlTypes.DELETECHILD_ALLOW));
                 }
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.writeAudit(LogicalUtil.or(AuditTypes.CREATECHILD_WRITEDATA,
                             AuditTypes.DELETECHILD));
                 }
@@ -189,13 +189,13 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
         };
 
         this.readProperties = (properties, info, type, status) -> {
-            if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.check(AccessControlTypes.READPROPERTIES_ALLOW);
                 }
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.writeAudit(AuditTypes.READPROPERTIES);
                 }
             }
@@ -204,26 +204,26 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
         };
 
         this.writeProperties = (info, type, status, properties) -> {
-            if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.check(AccessControlTypes.WRITEPROPERTIES_ALLOW);
                 }
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.writeAudit(AuditTypes.WRITEPROPERTIES);
                 }
             }
         };
 
         this.readContent = (content, info, type, status) -> {
-            if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.check(AccessControlTypes.LISTCHILD_READDATA_ALLOW);
                 }
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.writeAudit(AuditTypes.LISTCHILD_READDATA);
                 }
             }
@@ -232,13 +232,13 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
         };
 
         this.writeContent = (info, type, status, content) -> {
-            if ((type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) || type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if ((type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.check(AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
                 }
-                if (type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.writeAudit(AuditTypes.CREATECHILD_WRITEDATA);
                 }
             }
@@ -264,7 +264,7 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
             TypeObject type = typeManager.get(info.getType());
 
-            if (!type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_AUDIT) && !type.isTypeInitializerAttributeExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 return;
             }
         }

@@ -26,7 +26,7 @@ public class UserTokenObject extends ABytesValueProcessPrototype<AccountGroupTok
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+        if (!processToken.isPrivileges(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
             throw new ConditionPermissionsException();
         }
 
@@ -53,7 +53,7 @@ public class UserTokenObject extends ABytesValueProcessPrototype<AccountGroupTok
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
+        if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
             throw new ConditionPermissionsException();
         }
 

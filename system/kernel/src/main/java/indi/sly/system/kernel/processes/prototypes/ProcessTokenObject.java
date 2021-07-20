@@ -132,13 +132,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         }
 
         if (this.process.isCurrent()) {
-            if (!this.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+            if (!this.isPrivileges(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
                 throw new ConditionPermissionsException();
             }
         } else {
             ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
 
-            if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+            if (!parentProcessToken.isPrivileges(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -152,8 +152,8 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         this.lock(LockType.NONE);
     }
 
-    public boolean isPrivilegeType(long privilegeTypes) {
-        return LogicalUtil.isAllExist(this.getPrivileges(), privilegeTypes);
+    public boolean isPrivileges(long privileges) {
+        return LogicalUtil.isAllExist(this.getPrivileges(), privileges);
     }
 
     public Map<Long, Integer> getLimits() {
@@ -190,13 +190,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         }
 
         if (this.process.isCurrent()) {
-            if (!this.isPrivilegeType(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
+            if (!this.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
                 throw new ConditionPermissionsException();
             }
         } else {
             ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
 
-            if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+            if (!parentProcessToken.isPrivileges(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -215,7 +215,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
     public Set<UUID> getRoles() {
         this.init();
 
-        return this.value.getRoles();
+        return Collections.unmodifiableSet(this.value.getRoles());
     }
 
     public void setRoles(Set<UUID> roles) {

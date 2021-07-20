@@ -69,7 +69,7 @@ public class ProcessSessionObject extends AValueProcessPrototype<ProcessEntity> 
 
         ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
 
-        if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
+        if (!parentProcessToken.isPrivileges(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
             throw new ConditionPermissionsException();
         }
 

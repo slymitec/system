@@ -99,7 +99,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)) {
+        if (processToken.isPrivileges(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)) {
             return true;
         }
 
@@ -198,7 +198,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
     public void check(long accessControl) {
         ProcessTokenObject processToken = this.getCurrentProcessToken();
-        if (processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)) {
+        if (processToken.isPrivileges(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)) {
             return;
         }
 
@@ -214,7 +214,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
                 && !this.allowAccessControl(AccessControlTypes.READPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
@@ -250,7 +250,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
                 && !this.allowAccessControl(AccessControlTypes.READPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
@@ -268,7 +268,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
                 && !this.allowAccessControl(AccessControlTypes.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
@@ -290,7 +290,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
                 && !this.allowAccessControl(AccessControlTypes.READPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
@@ -308,7 +308,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
                 && !this.allowAccessControl(AccessControlTypes.READPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
@@ -329,7 +329,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
                 && !this.allowAccessControl(AccessControlTypes.TAKEONWERSHIP_ALLOW)) {
             throw new ConditionPermissionsException();
@@ -365,7 +365,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
                 && !this.allowAccessControl(AccessControlTypes.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
@@ -405,7 +405,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())) {
             throw new ConditionPermissionsException();
         }
@@ -422,7 +422,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())) {
             throw new ConditionPermissionsException();
         }

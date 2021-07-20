@@ -40,7 +40,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
             ProcessObject currentProcess = processManager.getCurrentProcess();
             ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-            if (!currentProcessToken.isPrivilegeType(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!currentProcessToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }

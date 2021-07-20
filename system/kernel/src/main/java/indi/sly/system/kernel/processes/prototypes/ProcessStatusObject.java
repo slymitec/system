@@ -118,7 +118,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivilegeType(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 return;
             }
         }
@@ -142,7 +142,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivilegeType(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }

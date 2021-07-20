@@ -137,7 +137,7 @@ public class InfoObject extends APrototype {
                 InfoCacheObject.class);
 
         if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
-            if (!currentProcessToken.isPrivilegeType(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
+            if (!currentProcessToken.isPrivileges(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
                 throw new ConditionPermissionsException();
             }
 
@@ -161,7 +161,7 @@ public class InfoObject extends APrototype {
                 InfoCacheObject.class);
 
         if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
-            if (!currentProcessToken.isPrivilegeType(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
+            if (!currentProcessToken.isPrivileges(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
                 throw new ConditionPermissionsException();
             }
 

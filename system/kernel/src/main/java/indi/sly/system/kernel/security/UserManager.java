@@ -102,7 +102,7 @@ public class UserManager extends AManager {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+        if (!processToken.isPrivileges(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
             throw new ConditionPermissionsException();
         }
 
@@ -139,7 +139,7 @@ public class UserManager extends AManager {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+        if (!processToken.isPrivileges(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
             throw new ConditionPermissionsException();
         }
 
@@ -175,7 +175,7 @@ public class UserManager extends AManager {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+        if (!processToken.isPrivileges(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
             throw new ConditionPermissionsException();
         }
 
@@ -196,7 +196,7 @@ public class UserManager extends AManager {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+        if (!processToken.isPrivileges(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
             throw new ConditionPermissionsException();
         }
 

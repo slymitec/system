@@ -2,11 +2,14 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.StatusNotReadyException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
@@ -14,23 +17,17 @@ import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryOb
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.values.ProcessCommunicationDefinition;
-import indi.sly.system.kernel.processes.values.CreateProcessDefinition;
-import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
-import indi.sly.system.kernel.processes.values.ProcessStatisticsDefinition;
-import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
-import indi.sly.system.kernel.processes.values.ProcessEntity;
-import indi.sly.system.kernel.processes.values.ProcessStatusType;
+import indi.sly.system.kernel.processes.SessionManager;
+import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
+import indi.sly.system.kernel.processes.instances.values.SessionTypes;
+import indi.sly.system.kernel.processes.values.*;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.values.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -84,11 +81,26 @@ public class CreateProcessBuilder extends APrototype {
         }
 
         ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
-        if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
+        if (!parentProcessToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
             throw new ConditionPermissionsException();
         }
 
         this.createProcess.setLimits(limits);
+
+        return this;
+    }
+
+    public CreateProcessBuilder setAdditionalRoles(Set<UUID> roles) {
+        if (ObjectUtil.isAnyNull(roles)) {
+            throw new ConditionParametersException();
+        }
+
+        ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
+        if (!parentProcessToken.isPrivileges(PrivilegeTypes.PROCESSES_ADD_ROLES)) {
+            throw new ConditionPermissionsException();
+        }
+
+        this.createProcess.setAdditionalRoles(roles);
 
         return this;
     }
@@ -105,7 +117,7 @@ public class CreateProcessBuilder extends APrototype {
 
     public CreateProcessBuilder setPrivilegeTypes(long privilegeTypes) {
         ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
-        if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+        if (!parentProcessToken.isPrivileges(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
             throw new ConditionPermissionsException();
         }
 
@@ -120,7 +132,7 @@ public class CreateProcessBuilder extends APrototype {
         }
 
         ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
-        if (!parentProcessToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
+        if (!parentProcessToken.isPrivileges(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
             throw new ConditionPermissionsException();
         }
 
@@ -176,6 +188,14 @@ public class CreateProcessBuilder extends APrototype {
     }
 
     private void configuration() {
+        AppContextDefinition appContext = this.createProcess.getAppContext();
+
+        if (ObjectUtil.isAnyNull(appContext)) {
+            throw new StatusNotReadyException();
+        }
+
+        KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
+
         DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
@@ -205,10 +225,6 @@ public class CreateProcessBuilder extends APrototype {
                 processToken.inheritLimits();
             }
         }
-        if (ObjectUtil.allNotNull(this.createProcess.getRoles())) {
-            //根据Session，可执行文件类别（服务、脚本、程序）来配置Role
-            processToken.setRoles(this.createProcess.getRoles());
-        }
 
         ProcessHandleTableObject processHandleTable = this.process.getHandleTable();
         processHandleTable.inherit(this.createProcess.getFileHandle());
@@ -220,12 +236,35 @@ public class CreateProcessBuilder extends APrototype {
             processSession.inheritID();
         }
 
+        Set<UUID> roles = new HashSet<>(processToken.getRoles());
+        long appContextType = appContext.getType();
+        if (appContextType == AppType.SERVICE) {
+            roles.add(appContext.getID());
+        } else if (appContextType == AppType.BATCH) {
+            roles.add(configuration.SECURITY_ROLE_BATCHES_ID);
+        } else if (appContextType == AppType.EXECUTABLE) {
+            roles.add(configuration.SECURITY_ROLE_EXECUTABLE_ID);
+        }
+        if (ObjectUtil.allNotNull(this.createProcess.getAdditionalRoles())) {
+            roles.addAll(this.createProcess.getAdditionalRoles());
+        }
+        SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
+        SessionContentObject sessionContent = sessionManager.getAndOpen(processSession.getID());
+        long sessionContentType = sessionContent.getType();
+        if (LogicalUtil.isAnyEqual(sessionContentType, SessionTypes.API)) {
+            roles.add(configuration.SECURITY_ROLE_API_ID);
+        } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionTypes.GUI)) {
+            roles.add(configuration.SECURITY_ROLE_GUI_ID);
+        } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionTypes.CLI)) {
+            roles.add(configuration.SECURITY_ROLE_CLI_ID);
+        }
+        sessionContent.close();
+        processToken.setRoles(roles);
+
         ProcessContextObject processContext = this.process.getContext();
         ProcessContextObject parentProcessContext = this.parentProcess.getContext();
 
-        if (ObjectUtil.allNotNull(this.createProcess.getAppContext())) {
-            processContext.setAppContext(this.createProcess.getAppContext());
-        }
+        processContext.setAppContext(appContext);
         if (ObjectUtil.allNotNull(this.createProcess.getEnvironmentVariable())) {
             processContext.setEnvironmentVariable(this.createProcess.getEnvironmentVariable());
         } else {

@@ -43,7 +43,7 @@ public class SecurityAuthorizationManager extends AManager {
 
         AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)
+        if (!processToken.isPrivileges(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)
                 && !ObjectUtil.equals(account.getPassword(), accountPassword)) {
             throw new ConditionRefuseException();
         }

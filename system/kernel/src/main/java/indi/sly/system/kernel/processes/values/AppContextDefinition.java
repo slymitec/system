@@ -15,10 +15,20 @@ public class AppContextDefinition implements ISerializeCapable<AppContextDefinit
         this.configurations = new HashMap<>();
     }
 
+    private UUID id;
     private String name;
+    private long type;
     private long supportedSession;
     private String serverURL;
     private final Map<String, String> configurations;
+
+    public UUID getID() {
+        return this.id;
+    }
+
+    public void setID(UUID id) {
+        this.id = id;
+    }
 
     public String getName() {
         return this.name;
@@ -26,6 +36,14 @@ public class AppContextDefinition implements ISerializeCapable<AppContextDefinit
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getType() {
+        return this.type;
+    }
+
+    public void setType(long type) {
+        this.type = type;
     }
 
     public long getSupportedSession() {
@@ -57,7 +75,9 @@ public class AppContextDefinition implements ISerializeCapable<AppContextDefinit
     public AppContextDefinition deepClone() {
         AppContextDefinition definition = new AppContextDefinition();
 
+        definition.id = this.id;
         definition.name = this.name;
+        definition.type = this.type;
         definition.supportedSession = this.supportedSession;
         definition.serverURL = this.serverURL;
         definition.configurations.putAll(this.configurations);
@@ -67,7 +87,9 @@ public class AppContextDefinition implements ISerializeCapable<AppContextDefinit
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        this.id = UUIDUtil.readExternal(in);
         this.name = StringUtil.readExternal(in);
+        this.type = NumberUtil.readExternalLong(in);
         this.supportedSession = NumberUtil.readExternalLong(in);
         this.serverURL = StringUtil.readExternal(in);
 
@@ -81,7 +103,9 @@ public class AppContextDefinition implements ISerializeCapable<AppContextDefinit
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        UUIDUtil.writeExternal(out, this.id);
         StringUtil.writeExternal(out, this.name);
+        NumberUtil.writeExternalLong(out, this.type);
         NumberUtil.writeExternalLong(out, this.supportedSession);
         StringUtil.writeExternal(out, this.serverURL);
 

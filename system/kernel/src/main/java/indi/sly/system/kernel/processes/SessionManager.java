@@ -13,7 +13,6 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
-import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -62,7 +61,7 @@ public class SessionManager extends AManager {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivilegeType(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
+        if (!processToken.isPrivileges(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
             throw new ConditionPermissionsException();
         }
     }

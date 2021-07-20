@@ -15,7 +15,7 @@ public class CreateProcessDefinition extends ADefinition<CreateProcessDefinition
     private AccountAuthorizationObject accountAuthorization;
     private long privilegeTypes;
     private Map<Long, Integer> limits;
-    private Set<UUID> roles;
+    private Set<UUID> additionalRoles;
 
     private AppContextDefinition appContext;
     private Map<String, String> environmentVariable;
@@ -55,12 +55,12 @@ public class CreateProcessDefinition extends ADefinition<CreateProcessDefinition
         this.limits = limits;
     }
 
-    public Set<UUID> getRoles() {
-        return this.roles;
+    public Set<UUID> getAdditionalRoles() {
+        return this.additionalRoles;
     }
 
-    public void setRoles(Set<UUID> roles) {
-        this.roles = roles;
+    public void setAdditionalRoles(Set<UUID> additionalRoles) {
+        this.additionalRoles = additionalRoles;
     }
 
     public AppContextDefinition getAppContext() {

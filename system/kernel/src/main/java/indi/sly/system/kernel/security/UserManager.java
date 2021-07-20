@@ -96,6 +96,9 @@ public class UserManager extends AManager {
         if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }
+        if (ObjectUtil.isAnyNull(accountPassword)) {
+            accountPassword = StringUtil.EMPTY;
+        }
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 

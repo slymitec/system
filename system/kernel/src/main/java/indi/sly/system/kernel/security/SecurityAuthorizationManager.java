@@ -1,7 +1,9 @@
 package indi.sly.system.kernel.security;
 
+import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -30,10 +32,17 @@ public class SecurityAuthorizationManager extends AManager {
     }
 
     public AccountAuthorizationObject authorize(String accountName) {
-        return this.authorize(accountName, null);
+        return this.authorize(accountName, StringUtil.EMPTY);
     }
 
     public AccountAuthorizationObject authorize(String accountName, String accountPassword) {
+        if (StringUtil.isNameIllegal(accountName)) {
+            throw new ConditionParametersException();
+        }
+        if (ObjectUtil.isAnyNull(accountPassword)) {
+            accountPassword = StringUtil.EMPTY;
+        }
+
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();

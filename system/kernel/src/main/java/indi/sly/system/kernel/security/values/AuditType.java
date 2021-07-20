@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.security.values;
 
-public interface AuditTypes {
+public interface AuditType {
     long NULL = 0L;
 
     long LISTCHILD_READDATA = 1;

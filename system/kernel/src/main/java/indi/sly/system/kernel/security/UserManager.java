@@ -16,7 +16,7 @@ import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinitio
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
 import indi.sly.system.kernel.security.prototypes.*;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -105,7 +105,7 @@ public class UserManager extends AManager {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivileges(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+        if (!processToken.isPrivileges(PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
             throw new ConditionPermissionsException();
         }
 
@@ -142,7 +142,7 @@ public class UserManager extends AManager {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivileges(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+        if (!processToken.isPrivileges(PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
             throw new ConditionPermissionsException();
         }
 
@@ -178,7 +178,7 @@ public class UserManager extends AManager {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivileges(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+        if (!processToken.isPrivileges(PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
             throw new ConditionPermissionsException();
         }
 
@@ -199,7 +199,7 @@ public class UserManager extends AManager {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivileges(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+        if (!processToken.isPrivileges(PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
             throw new ConditionPermissionsException();
         }
 

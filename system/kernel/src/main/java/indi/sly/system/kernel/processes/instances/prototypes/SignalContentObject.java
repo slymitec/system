@@ -6,7 +6,7 @@ import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -81,7 +81,7 @@ public class SignalContentObject extends AInfoContentObject {
         this.lock(LockType.NONE);
 
         for (SignalEntryDefinition signalEntry : signalEntries) {
-            signalEntry.getDate().put(DateTimeTypes.ACCESS, nowDateTime);
+            signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
         }
 
         return signalEntries;
@@ -107,8 +107,8 @@ public class SignalContentObject extends AInfoContentObject {
         signalEntry.setSource(process.getID());
         signalEntry.setKey(key);
         signalEntry.setValue(value);
-        signalEntry.getDate().put(DateTimeTypes.CREATE, nowDateTime);
-        signalEntry.getDate().put(DateTimeTypes.ACCESS, nowDateTime);
+        signalEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
+        signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
         this.lock(LockType.WRITE);
         this.init();

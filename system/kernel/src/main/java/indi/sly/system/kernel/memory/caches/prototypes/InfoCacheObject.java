@@ -7,7 +7,7 @@ import javax.inject.Named;
 
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.CoreRepositoryObject;
 import indi.sly.system.kernel.memory.caches.values.InfoCacheDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -50,7 +50,7 @@ public class InfoCacheObject extends APrototype {
             InfoObject infoObject = null;
 
             if (ObjectUtil.allNotNull(kernelObjectCache)) {
-                kernelObjectCache.getDate().put(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());
+                kernelObjectCache.getDate().put(DateTimeType.ACCESS, dateTime.getCurrentDateTime());
 
                 infoObject = coreRepository.getByID(spaceType, InfoObject.class, id);
             }
@@ -75,8 +75,8 @@ public class InfoCacheObject extends APrototype {
                 InfoCacheDefinition kernelObjectCache = new InfoCacheDefinition();
                 kernelObjectCache.setId(infoObject.getID());
                 kernelObjectCache.setType(infoObject.getType());
-                kernelObjectCache.getDate().put(DateTimeTypes.CREATE, dateTime.getCurrentDateTime());
-                kernelObjectCache.getDate().put(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());
+                kernelObjectCache.getDate().put(DateTimeType.CREATE, dateTime.getCurrentDateTime());
+                kernelObjectCache.getDate().put(DateTimeType.ACCESS, dateTime.getCurrentDateTime());
 
                 this.getInfoCaches(spaceType).put(kernelObjectCache.getId(), kernelObjectCache);
                 coreRepository.addByID(spaceType, kernelObjectCache.getId(), infoObject);
@@ -131,7 +131,7 @@ public class InfoCacheObject extends APrototype {
             Map<UUID, InfoCacheDefinition> infoObjectCaches = this.getInfoCaches(SpaceType.USER);
 
             for (Map.Entry<UUID, InfoCacheDefinition> infoObjectCache : infoObjectCaches.entrySet()) {
-                if (dateTime.getCurrentDateTime() - infoObjectCache.getValue().getDate().get(DateTimeTypes.ACCESS) > expiredTime) {
+                if (dateTime.getCurrentDateTime() - infoObjectCache.getValue().getDate().get(DateTimeType.ACCESS) > expiredTime) {
                     this.deleteBySpaceType(SpaceType.USER, infoObjectCache.getKey());
                 }
             }

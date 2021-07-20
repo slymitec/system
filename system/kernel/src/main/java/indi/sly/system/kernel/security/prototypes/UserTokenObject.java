@@ -9,7 +9,7 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class UserTokenObject extends ABytesValueProcessPrototype<AccountAuthoriz
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivileges(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+        if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
             throw new ConditionPermissionsException();
         }
 
@@ -53,7 +53,7 @@ public class UserTokenObject extends ABytesValueProcessPrototype<AccountAuthoriz
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
+        if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
             throw new ConditionPermissionsException();
         }
 

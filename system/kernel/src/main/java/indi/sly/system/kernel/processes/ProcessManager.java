@@ -16,7 +16,7 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import indi.sly.system.kernel.processes.instances.prototypes.wrappers.SessionTypeInitializer;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -102,7 +102,7 @@ public class ProcessManager extends AManager {
         ProcessTokenObject processToken = process.getToken();
 
         if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
-                && (!currentProcessToken.isPrivileges(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)
+                && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                 && !(ObjectUtil.allNotNull(accountAuthorization)
                 && accountAuthorization.checkAndGetResult().getAccountID().equals(processToken.getAccountID())))) {
             throw new ConditionPermissionsException();
@@ -134,7 +134,7 @@ public class ProcessManager extends AManager {
             parameters = new HashMap<>();
         }
         createProcess.setParameters(parameters);
-        if (privilegeTypes != PrivilegeTypes.NULL) {
+        if (privilegeTypes != PrivilegeType.NULL) {
             createProcess.setPrivilegeTypes(privilegeTypes);
         }
         if (ObjectUtil.isAnyNull(workFolder)) {

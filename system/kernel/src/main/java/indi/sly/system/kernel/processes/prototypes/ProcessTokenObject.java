@@ -13,7 +13,7 @@ import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
 import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -132,13 +132,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         }
 
         if (this.process.isCurrent()) {
-            if (!this.isPrivileges(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+            if (!this.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
                 throw new ConditionPermissionsException();
             }
         } else {
             ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
 
-            if (!parentProcessToken.isPrivileges(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+            if (!parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -190,13 +190,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         }
 
         if (this.process.isCurrent()) {
-            if (!this.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
+            if (!this.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
                 throw new ConditionPermissionsException();
             }
         } else {
             ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
 
-            if (!parentProcessToken.isPrivileges(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+            if (!parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
                 throw new ConditionPermissionsException();
             }
         }

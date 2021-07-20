@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
@@ -51,7 +51,7 @@ public class ProcessHandleInfoObject extends AValueProcessPrototype<ProcessHandl
         ProcessHandleEntryDefinition processHandleEntry = new ProcessHandleEntryDefinition();
         processHandleEntry.getIdentifications().addAll(status.getIdentifications());
         processHandleEntry.setOpen(status.getOpen());
-        processHandleEntry.getDate().put(DateTimeTypes.CREATE, nowDateTime);
+        processHandleEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
 
         try {
             this.lock(LockType.WRITE);

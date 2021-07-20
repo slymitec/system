@@ -4,6 +4,6 @@ import indi.sly.system.common.supports.UUIDUtil;
 
 import java.util.UUID;
 
-public interface RoleTypes {
+public interface RoleType {
     UUID NULL = UUIDUtil.getEmpty();
 }

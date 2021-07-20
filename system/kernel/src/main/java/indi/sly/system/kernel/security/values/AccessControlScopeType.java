@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.security.values;
 
-public interface AccessControlScopeTypes {
+public interface AccessControlScopeType {
     long THIS = 1L; //0
     long CHILD_HAS_CHILD = 1L << 1; //1
     long CHILD_HAS_NOT_CHILD = 1L << 3; //3

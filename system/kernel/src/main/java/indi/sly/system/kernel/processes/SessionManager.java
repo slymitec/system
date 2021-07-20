@@ -18,7 +18,7 @@ import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.instances.prototypes.wrappers.SessionTypeInitializer;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -61,7 +61,7 @@ public class SessionManager extends AManager {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivileges(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
+        if (!processToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USERSESSION)) {
             throw new ConditionPermissionsException();
         }
     }

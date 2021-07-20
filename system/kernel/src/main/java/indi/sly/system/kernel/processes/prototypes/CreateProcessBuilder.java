@@ -5,7 +5,7 @@ import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
@@ -16,13 +16,12 @@ import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.SessionManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
-import indi.sly.system.kernel.processes.instances.values.SessionTypes;
+import indi.sly.system.kernel.processes.instances.values.SessionType;
 import indi.sly.system.kernel.processes.values.*;
-import indi.sly.system.kernel.security.SecurityAuthorizationManager;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.AccountObject;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -81,7 +80,7 @@ public class CreateProcessBuilder extends APrototype {
         }
 
         ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
-        if (!parentProcessToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_LIMITS)) {
+        if (!parentProcessToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
             throw new ConditionPermissionsException();
         }
 
@@ -96,7 +95,7 @@ public class CreateProcessBuilder extends APrototype {
         }
 
         ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
-        if (!parentProcessToken.isPrivileges(PrivilegeTypes.PROCESSES_ADD_ROLES)) {
+        if (!parentProcessToken.isPrivileges(PrivilegeType.PROCESSES_ADD_ROLES)) {
             throw new ConditionPermissionsException();
         }
 
@@ -117,7 +116,7 @@ public class CreateProcessBuilder extends APrototype {
 
     public CreateProcessBuilder setPrivilegeTypes(long privilegeTypes) {
         ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
-        if (!parentProcessToken.isPrivileges(PrivilegeTypes.CORE_MODIFY_PRIVILEGES)) {
+        if (!parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
             throw new ConditionPermissionsException();
         }
 
@@ -132,7 +131,7 @@ public class CreateProcessBuilder extends APrototype {
         }
 
         ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
-        if (!parentProcessToken.isPrivileges(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
+        if (!parentProcessToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USERSESSION)) {
             throw new ConditionPermissionsException();
         }
 
@@ -204,8 +203,8 @@ public class CreateProcessBuilder extends APrototype {
         processStatus.initialize();
 
         ProcessStatisticsObject processStatistics = this.process.getStatistics();
-        processStatistics.setDate(DateTimeTypes.CREATE, nowDateTime);
-        processStatistics.setDate(DateTimeTypes.ACCESS, nowDateTime);
+        processStatistics.setDate(DateTimeType.CREATE, nowDateTime);
+        processStatistics.setDate(DateTimeType.ACCESS, nowDateTime);
 
         ProcessTokenObject processToken = this.process.getToken();
         AccountAuthorizationObject accountAuthorization = this.createProcess.getAccountAuthorization();
@@ -214,7 +213,7 @@ public class CreateProcessBuilder extends APrototype {
         } else {
             processToken.inheritAccountID();
 
-            if (this.createProcess.getPrivilegeTypes() != PrivilegeTypes.NULL) {
+            if (this.createProcess.getPrivilegeTypes() != PrivilegeType.NULL) {
                 processToken.inheritPrivileges(this.createProcess.getPrivilegeTypes());
             } else {
                 processToken.inheritPrivileges();
@@ -253,11 +252,11 @@ public class CreateProcessBuilder extends APrototype {
         SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
         SessionContentObject sessionContent = sessionManager.getAndOpen(processSession.getID());
         long sessionContentType = sessionContent.getType();
-        if (LogicalUtil.isAnyEqual(sessionContentType, SessionTypes.API)) {
+        if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.API)) {
             roles.add(configuration.SECURITY_ROLE_API_ID);
-        } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionTypes.GUI)) {
+        } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.GUI)) {
             roles.add(configuration.SECURITY_ROLE_GUI_ID);
-        } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionTypes.CLI)) {
+        } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.CLI)) {
             roles.add(configuration.SECURITY_ROLE_CLI_ID);
         }
         sessionContent.close();

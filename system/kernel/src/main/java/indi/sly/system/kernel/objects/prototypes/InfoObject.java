@@ -21,7 +21,7 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -137,7 +137,7 @@ public class InfoObject extends APrototype {
                 InfoCacheObject.class);
 
         if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
-            if (!currentProcessToken.isPrivileges(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
+            if (!currentProcessToken.isPrivileges(PrivilegeType.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
                 throw new ConditionPermissionsException();
             }
 
@@ -161,7 +161,7 @@ public class InfoObject extends APrototype {
                 InfoCacheObject.class);
 
         if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
-            if (!currentProcessToken.isPrivileges(PrivilegeTypes.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
+            if (!currentProcessToken.isPrivileges(PrivilegeType.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
                 throw new ConditionPermissionsException();
             }
 

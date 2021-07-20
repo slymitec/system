@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.lang.DumpFunction;
@@ -21,7 +21,7 @@ public class DumpResolver extends APrototype implements IInfoResolver {
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
-            dump.getDate().put(DateTimeTypes.CREATE, nowDateTime);
+            dump.getDate().put(DateTimeType.CREATE, nowDateTime);
 
             dump.getIdentifications().addAll(status.getIdentifications());
             dump.setOpen(status.getOpen());

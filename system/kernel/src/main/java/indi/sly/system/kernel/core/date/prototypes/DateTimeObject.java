@@ -7,7 +7,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 
 public class DateTimeObject extends APrototype {
     public DateTimeObject() {
@@ -27,7 +27,7 @@ public class DateTimeObject extends APrototype {
         ProcessObject currentProcess = processManager.getCurrentProcess();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-        if (!currentProcessToken.isPrivileges(PrivilegeTypes.CORE_MODIFY_DATETIME)) {
+        if (!currentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_DATETIME)) {
             throw new ConditionPermissionsException();
         }
 

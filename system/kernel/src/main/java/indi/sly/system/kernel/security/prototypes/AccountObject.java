@@ -14,7 +14,7 @@ import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -46,7 +46,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
         ProcessTokenObject processToken = process.getToken();
 
         if (!processToken.getAccountID().equals(this.getID())
-                && !processToken.isPrivileges(PrivilegeTypes.SECURITY_DO_WITH_ANY_ACCOUNT)) {
+                && !processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
             throw new ConditionRefuseException();
         }
 
@@ -84,7 +84,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivileges(PrivilegeTypes.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
+        if (!processToken.isPrivileges(PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
             throw new ConditionPermissionsException();
         }
 

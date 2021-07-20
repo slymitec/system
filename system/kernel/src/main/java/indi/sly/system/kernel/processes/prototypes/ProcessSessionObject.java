@@ -8,7 +8,7 @@ import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -69,7 +69,7 @@ public class ProcessSessionObject extends AValueProcessPrototype<ProcessEntity> 
 
         ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
 
-        if (!parentProcessToken.isPrivileges(PrivilegeTypes.SESSION_MODIFY_USERSESSION)) {
+        if (!parentProcessToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USERSESSION)) {
             throw new ConditionPermissionsException();
         }
 

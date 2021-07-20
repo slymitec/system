@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.security.values;
 
-public interface AccessControlTypes {
+public interface AccessControlType {
     long NULL = 0;
 
     /* Kernel: 0~31, User: 32~63 */

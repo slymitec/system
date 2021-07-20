@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
@@ -44,7 +44,7 @@ public class ProcessFactory extends APrototype {
         process.processorRegister = processorMediator;
         process.id = processID;
         ProcessStatisticsObject processStatistics = process.getStatistics();
-        processStatistics.setDate(DateTimeTypes.ACCESS, dateTime.getCurrentDateTime());
+        processStatistics.setDate(DateTimeType.ACCESS, dateTime.getCurrentDateTime());
 
         return process;
     }

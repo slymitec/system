@@ -3,7 +3,7 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
@@ -25,7 +25,7 @@ public class DateResolver extends APrototype implements IInfoResolver {
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
-            date.put(DateTimeTypes.ACCESS, nowDateTime);
+            date.put(DateTimeType.ACCESS, nowDateTime);
             info.setDate(ObjectUtil.transferToByteArray(date));
 
             return handle;
@@ -37,9 +37,9 @@ public class DateResolver extends APrototype implements IInfoResolver {
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = new HashMap<>();
-            date.put(DateTimeTypes.CREATE, nowDateTime);
-            date.put(DateTimeTypes.MODIFIED, nowDateTime);
-            date.put(DateTimeTypes.ACCESS, nowDateTime);
+            date.put(DateTimeType.CREATE, nowDateTime);
+            date.put(DateTimeType.MODIFIED, nowDateTime);
+            date.put(DateTimeType.ACCESS, nowDateTime);
             childInfo.setDate(ObjectUtil.transferToByteArray(date));
 
             return childInfo;
@@ -51,7 +51,7 @@ public class DateResolver extends APrototype implements IInfoResolver {
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
-            date.put(DateTimeTypes.ACCESS, nowDateTime);
+            date.put(DateTimeType.ACCESS, nowDateTime);
             info.setDate(ObjectUtil.transferToByteArray(date));
 
             return content;
@@ -63,7 +63,7 @@ public class DateResolver extends APrototype implements IInfoResolver {
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
-            date.put(DateTimeTypes.MODIFIED, nowDateTime);
+            date.put(DateTimeType.MODIFIED, nowDateTime);
             info.setDate(ObjectUtil.transferToByteArray(date));
         };
     }

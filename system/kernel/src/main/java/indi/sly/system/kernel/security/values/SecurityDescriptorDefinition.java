@@ -22,7 +22,7 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
         this.hasChild = false;
         this.owners = new HashSet<>();
         this.accessControls = new HashSet<>();
-        this.audits = AuditTypes.NULL;
+        this.audits = AuditType.NULL;
     }
 
     public boolean isHasChild() {

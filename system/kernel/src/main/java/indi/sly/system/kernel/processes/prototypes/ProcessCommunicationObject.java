@@ -16,11 +16,11 @@ import indi.sly.system.kernel.processes.instances.prototypes.SignalContentObject
 import indi.sly.system.kernel.processes.instances.values.SignalEntryDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
-import indi.sly.system.kernel.security.values.AccessControlScopeTypes;
-import indi.sly.system.kernel.security.values.AccessControlTypes;
+import indi.sly.system.kernel.security.values.AccessControlScopeType;
+import indi.sly.system.kernel.security.values.AccessControlType;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
-import indi.sly.system.kernel.security.values.UserTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
+import indi.sly.system.kernel.security.values.UserType;
 import indi.sly.system.kernel.security.values.AccessControlDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -41,7 +41,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -65,7 +65,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -96,7 +96,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -126,15 +126,15 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             Set<AccessControlDefinition> accessControls = new HashSet<>();
             AccessControlDefinition accessControl = new AccessControlDefinition();
             accessControl.setId(processToken.getAccountID());
-            accessControl.setType(UserTypes.ACCOUNT);
-            accessControl.setScope(AccessControlScopeTypes.THIS);
-            accessControl.setValue(AccessControlTypes.FULLCONTROL_ALLOW);
+            accessControl.setType(UserType.ACCOUNT);
+            accessControl.setScope(AccessControlScopeType.THIS);
+            accessControl.setValue(AccessControlType.FULLCONTROL_ALLOW);
             accessControls.add(accessControl);
             accessControl = new AccessControlDefinition();
             accessControl.setId(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID);
-            accessControl.setType(UserTypes.GROUP);
-            accessControl.setScope(AccessControlScopeTypes.THIS);
-            accessControl.setValue(AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
+            accessControl.setType(UserType.GROUP);
+            accessControl.setScope(AccessControlScopeType.THIS);
+            accessControl.setValue(AccessControlType.CREATECHILD_WRITEDATA_ALLOW);
             accessControls.add(accessControl);
             securityDescriptor.setAccessControls(accessControls);
             PortContentObject portContent = (PortContentObject) port.getContent();
@@ -160,7 +160,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -197,7 +197,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -235,7 +235,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -263,7 +263,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -289,7 +289,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -351,7 +351,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -380,15 +380,15 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             Set<AccessControlDefinition> accessControls = new HashSet<>();
             AccessControlDefinition accessControl = new AccessControlDefinition();
             accessControl.setId(processToken.getAccountID());
-            accessControl.setType(UserTypes.ACCOUNT);
-            accessControl.setScope(AccessControlScopeTypes.THIS);
-            accessControl.setValue(AccessControlTypes.FULLCONTROL_ALLOW);
+            accessControl.setType(UserType.ACCOUNT);
+            accessControl.setScope(AccessControlScopeType.THIS);
+            accessControl.setValue(AccessControlType.FULLCONTROL_ALLOW);
             accessControls.add(accessControl);
             accessControl = new AccessControlDefinition();
             accessControl.setId(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID);
-            accessControl.setType(UserTypes.GROUP);
-            accessControl.setScope(AccessControlScopeTypes.THIS);
-            accessControl.setValue(AccessControlTypes.CREATECHILD_WRITEDATA_ALLOW);
+            accessControl.setType(UserType.GROUP);
+            accessControl.setScope(AccessControlScopeType.THIS);
+            accessControl.setValue(AccessControlType.CREATECHILD_WRITEDATA_ALLOW);
             accessControls.add(accessControl);
             securityDescriptor.setAccessControls(accessControls);
             SignalContentObject signalContent = (SignalContentObject) signal.getContent();
@@ -408,7 +408,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -443,7 +443,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -469,7 +469,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -497,7 +497,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }

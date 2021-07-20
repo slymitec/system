@@ -6,7 +6,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -16,7 +16,7 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessHandleEntryDefinition;
 import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -40,7 +40,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
             ProcessObject currentProcess = processManager.getCurrentProcess();
             ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-            if (!currentProcessToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!currentProcessToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }
@@ -116,7 +116,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
             this.init();
 
             ProcessHandleEntryDefinition processHandleEntry = this.value.get(handle);
-            processHandleEntry.getDate().put(DateTimeTypes.ACCESS, nowDateTime);
+            processHandleEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
             info = objectManager.rebuild(processHandleEntry.getIdentifications(), processHandleEntry.getOpen());
 
             this.fresh();

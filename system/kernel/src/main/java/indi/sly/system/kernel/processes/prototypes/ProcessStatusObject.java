@@ -13,7 +13,7 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
-import indi.sly.system.kernel.security.values.PrivilegeTypes;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -118,7 +118,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 return;
             }
         }
@@ -142,7 +142,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         if (!this.process.isCurrent()) {
             ProcessTokenObject processToken = this.process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeTypes.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionPermissionsException();
             }
         }

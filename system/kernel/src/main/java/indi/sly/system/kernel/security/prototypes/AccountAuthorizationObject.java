@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.types.DateTimeTypes;
+import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.security.UserManager;
@@ -37,8 +37,8 @@ public class AccountAuthorizationObject extends APrototype {
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
-        this.date.put(DateTimeTypes.CREATE, nowDateTime);
-        this.date.put(DateTimeTypes.ACCESS, nowDateTime);
+        this.date.put(DateTimeType.CREATE, nowDateTime);
+        this.date.put(DateTimeType.ACCESS, nowDateTime);
     }
 
     public Map<Long, Long> getDate() {
@@ -68,7 +68,7 @@ public class AccountAuthorizationObject extends APrototype {
         long expiredTime =
                 this.factoryManager.getKernelSpace().getConfiguration().SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME;
 
-        if (nowDateTime - this.date.get(DateTimeTypes.CREATE) > expiredTime) {
+        if (nowDateTime - this.date.get(DateTimeType.CREATE) > expiredTime) {
             return false;
         }
 
@@ -98,11 +98,11 @@ public class AccountAuthorizationObject extends APrototype {
         long expiredTime =
                 this.factoryManager.getKernelSpace().getConfiguration().SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME;
 
-        if (nowDateTime - this.date.get(DateTimeTypes.CREATE) > expiredTime) {
+        if (nowDateTime - this.date.get(DateTimeType.CREATE) > expiredTime) {
             throw new StatusExpiredException();
         }
 
-        this.date.put(DateTimeTypes.ACCESS, nowDateTime);
+        this.date.put(DateTimeType.ACCESS, nowDateTime);
 
         AccountAuthorizationResultDefinition accountAuthorization = new AccountAuthorizationResultDefinition();
         AccountAuthorizationTokenDefinition accountAuthorizationToken = accountAuthorization.getToken();

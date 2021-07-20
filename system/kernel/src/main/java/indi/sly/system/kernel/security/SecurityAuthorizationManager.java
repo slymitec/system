@@ -38,8 +38,8 @@ public class SecurityAuthorizationManager extends AManager {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        AccountGroupManager accountGroupManager = this.factoryManager.getManager(AccountGroupManager.class);
-        AccountObject account = accountGroupManager.getAccount(accountName);
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+        AccountObject account = userManager.getAccount(accountName);
 
         AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
 

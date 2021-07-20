@@ -8,7 +8,7 @@ import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
@@ -25,14 +25,14 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AccountGroupManager extends AManager {
-    private AccountGroupFactory factory;
+public class UserManager extends AManager {
+    private UserFactory factory;
 
     @Override
     public void startup(long startupTypes) {
         if (startupTypes == StartupType.STEP_INIT) {
         } else if (startupTypes == StartupType.STEP_KERNEL) {
-            this.factory = this.factoryManager.create(AccountGroupFactory.class);
+            this.factory = this.factoryManager.create(UserFactory.class);
         }
     }
 
@@ -46,9 +46,9 @@ public class AccountGroupManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
 
-        AccountEntity account = accountGroupRepository.getAccount(accountID);
+        AccountEntity account = userRepository.getAccount(accountID);
 
         return this.factory.buildAccount(account);
     }
@@ -59,9 +59,9 @@ public class AccountGroupManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
 
-        AccountEntity account = accountGroupRepository.getAccount(accountName);
+        AccountEntity account = userRepository.getAccount(accountName);
 
         return this.factory.buildAccount(account);
     }
@@ -72,9 +72,9 @@ public class AccountGroupManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
 
-        GroupEntity group = accountGroupRepository.getGroup(groupID);
+        GroupEntity group = userRepository.getGroup(groupID);
 
         return this.factory.buildGroup(group);
     }
@@ -85,9 +85,9 @@ public class AccountGroupManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
 
-        GroupEntity group = accountGroupRepository.getGroup(groupName);
+        GroupEntity group = userRepository.getGroup(groupName);
 
         return this.factory.buildGroup(group);
     }
@@ -107,7 +107,7 @@ public class AccountGroupManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
 
         AccountEntity account = new AccountEntity();
         account.setID(UUID.randomUUID());
@@ -119,11 +119,11 @@ public class AccountGroupManager extends AManager {
         account.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
 
         try {
-            accountGroupRepository.getAccount(accountName);
+            userRepository.getAccount(accountName);
 
             throw new StatusAlreadyExistedException();
         } catch (StatusNotExistedException exception) {
-            accountGroupRepository.add(account);
+            userRepository.add(account);
         }
 
         return this.factory.buildAccount(account);
@@ -144,7 +144,7 @@ public class AccountGroupManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
 
         GroupEntity group = new GroupEntity();
         group.setID(UUID.randomUUID());
@@ -155,11 +155,11 @@ public class AccountGroupManager extends AManager {
         group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
 
         try {
-            accountGroupRepository.getGroup(groupName);
+            userRepository.getGroup(groupName);
 
             throw new StatusAlreadyExistedException();
         } catch (StatusNotExistedException exception) {
-            accountGroupRepository.add(group);
+            userRepository.add(group);
         }
 
         return this.factory.buildGroup(group);
@@ -180,10 +180,10 @@ public class AccountGroupManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
 
-        AccountEntity account = accountGroupRepository.getAccount(accountID);
-        accountGroupRepository.delete(account);
+        AccountEntity account = userRepository.getAccount(accountID);
+        userRepository.delete(account);
     }
 
     public void deleteGroup(UUID groupID) {
@@ -201,9 +201,9 @@ public class AccountGroupManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
 
-        GroupEntity group = accountGroupRepository.getGroup(groupID);
-        accountGroupRepository.delete(group);
+        GroupEntity group = userRepository.getGroup(groupID);
+        userRepository.delete(group);
     }
 }

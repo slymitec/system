@@ -2,7 +2,7 @@ package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.security.values.GroupEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -25,15 +25,15 @@ public class GroupObject extends AValueProcessPrototype<GroupEntity> {
         return this.value.getName();
     }
 
-    public AccountGroupTokenObject getToken() {
+    public UserTokenObject getToken() {
         this.init();
 
-        AccountGroupTokenObject accountGroupToken = this.factoryManager.create(AccountGroupTokenObject.class);
+        UserTokenObject accountGroupToken = this.factoryManager.create(UserTokenObject.class);
 
         accountGroupToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
         accountGroupToken.setLock((lockType) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+            UserRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
             accountGroupRepository.lock(this.value, lockType);
         });

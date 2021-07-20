@@ -7,11 +7,11 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.AccountGroupManager;
+import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
 import indi.sly.system.kernel.security.values.PrivilegeTypes;
@@ -63,14 +63,14 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
     }
 
     public List<GroupObject> getGroups() {
-        AccountGroupManager accountGroupManager = this.factoryManager.getManager(AccountGroupManager.class);
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         this.init();
 
         List<GroupObject> groups = new ArrayList<>();
 
         for (GroupEntity group : this.value.getGroups()) {
-            groups.add(accountGroupManager.getGroup(group.getID()));
+            groups.add(userManager.getGroup(group.getID()));
         }
 
         return Collections.unmodifiableList(groups);
@@ -94,7 +94,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
         this.lock(LockType.WRITE);
         this.init();
 
-        AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
         if (ObjectUtil.isAnyNull(this.value.getGroups())) {
             this.value.setGroups(new ArrayList<>());
@@ -110,15 +110,15 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
         this.lock(LockType.NONE);
     }
 
-    public AccountGroupTokenObject getToken() {
+    public UserTokenObject getToken() {
         this.init();
 
-        AccountGroupTokenObject accountGroupToken = this.factoryManager.create(AccountGroupTokenObject.class);
+        UserTokenObject accountGroupToken = this.factoryManager.create(UserTokenObject.class);
 
         accountGroupToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
         accountGroupToken.setLock((lockType) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+            UserRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
             accountGroupRepository.lock(this.value, lockType);
         });

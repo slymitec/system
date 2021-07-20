@@ -7,7 +7,7 @@ import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.memory.repositories.prototypes.DatabaseInfoRepositoryObject;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -31,7 +31,7 @@ public class MemoryManager extends AManager {
             this.factoryManager.getCoreRepository().add(SpaceType.KERNEL,
                     this.factoryManager.create(ProcessRepositoryObject.class));
             this.factoryManager.getCoreRepository().add(SpaceType.KERNEL,
-                    this.factoryManager.create(AccountGroupRepositoryObject.class));
+                    this.factoryManager.create(UserRepositoryObject.class));
         } else if (startupTypes == StartupType.STEP_KERNEL) {
         }
     }
@@ -52,7 +52,7 @@ public class MemoryManager extends AManager {
         return this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, ProcessRepositoryObject.class);
     }
 
-    public AccountGroupRepositoryObject getAccountGroupRepository() {
-        return this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, AccountGroupRepositoryObject.class);
+    public UserRepositoryObject getAccountGroupRepository() {
+        return this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, UserRepositoryObject.class);
     }
 }

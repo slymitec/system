@@ -30,7 +30,7 @@ public class ProcessRepositoryObject extends APrototype {
 
         ProcessEntity process = this.entityManager.find(ProcessEntity.class, id);
 
-        return ObjectUtil.isAnyNull(process);
+        return !ObjectUtil.isAnyNull(process);
     }
 
     public ProcessEntity get(UUID id) {

@@ -6,7 +6,7 @@ import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.AccountGroupRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -16,7 +16,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AccountGroupFactory extends APrototype {
+public class UserFactory extends APrototype {
     private AccountObject buildAccount(Provider<AccountEntity> funcRead, Consumer1<AccountEntity> funcWrite,
                                        Consumer1<Long> funcLock) {
         AccountObject account = this.factoryManager.create(AccountObject.class);
@@ -37,7 +37,7 @@ public class AccountGroupFactory extends APrototype {
         };
         Consumer1<Long> funcLock = (lockType) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+            UserRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
             accountGroupRepository.lock(account, lockType);
         };
@@ -65,7 +65,7 @@ public class AccountGroupFactory extends APrototype {
         };
         Consumer1<Long> funcLock = (lockType) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            AccountGroupRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+            UserRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
 
             accountGroupRepository.lock(group, lockType);
         };

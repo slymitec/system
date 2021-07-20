@@ -13,7 +13,7 @@ import indi.sly.system.kernel.security.values.PrivilegeTypes;
 
 import java.util.Map;
 
-public class AccountGroupTokenObject extends ABytesValueProcessPrototype<AccountGroupTokenDefinition> {
+public class UserTokenObject extends ABytesValueProcessPrototype<AccountGroupTokenDefinition> {
     public long getPrivileges() {
         this.init();
 

@@ -9,7 +9,7 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.security.AccountGroupManager;
+import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
 import indi.sly.system.kernel.security.values.AccountGroupTokenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -50,11 +50,11 @@ public class AccountAuthorizationObject extends APrototype {
             return false;
         }
 
-        AccountGroupManager accountGroupManager = this.factoryManager.getManager(AccountGroupManager.class);
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         AccountObject account;
         try {
-            account = accountGroupManager.getAccount(this.accountID);
+            account = userManager.getAccount(this.accountID);
         } catch (AKernelException e) {
             return false;
         }
@@ -80,11 +80,11 @@ public class AccountAuthorizationObject extends APrototype {
             throw new StatusExpiredException();
         }
 
-        AccountGroupManager accountGroupManager = this.factoryManager.getManager(AccountGroupManager.class);
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         AccountObject account;
         try {
-            account = accountGroupManager.getAccount(this.accountID);
+            account = userManager.getAccount(this.accountID);
         } catch (AKernelException e) {
             throw new StatusExpiredException();
         }
@@ -110,14 +110,14 @@ public class AccountAuthorizationObject extends APrototype {
 
         accountAuthorization.setAccountID(account.getID());
 
-        List<AccountGroupTokenObject> accountGroupTokens = new ArrayList<>();
+        List<UserTokenObject> accountGroupTokens = new ArrayList<>();
         List<GroupObject> groups = account.getGroups();
         for (GroupObject group : groups) {
             accountGroupTokens.add(group.getToken());
         }
         accountGroupTokens.add(account.getToken());
 
-        for (AccountGroupTokenObject accountGroupToken : accountGroupTokens) {
+        for (UserTokenObject accountGroupToken : accountGroupTokens) {
             accountAuthorizationToken.setPrivileges(LogicalUtil.or(accountAuthorizationToken.getPrivileges()
                     , accountGroupToken.getPrivileges()));
 

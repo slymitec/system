@@ -26,7 +26,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AccountGroupRepositoryObject extends APrototype {
+public class UserRepositoryObject extends APrototype {
     @PersistenceContext
     private EntityManager entityManager;
 

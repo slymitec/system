@@ -52,7 +52,7 @@ public class MemoryManager extends AManager {
         return this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, ProcessRepositoryObject.class);
     }
 
-    public UserRepositoryObject getAccountGroupRepository() {
+    public UserRepositoryObject getUserRepository() {
         return this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, UserRepositoryObject.class);
     }
 }

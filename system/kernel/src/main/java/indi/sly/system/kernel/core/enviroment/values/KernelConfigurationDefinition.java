@@ -57,6 +57,8 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
             = UUIDUtil.getFormLongs(-6728325378663890637L, -7846507187846598185L);
     public final UUID SECURITY_ROLE_EXECUTABLE_ID
             = UUIDUtil.getFormLongs(1419971759074265790L, -5615446261138463344L);
+    public final UUID SECURITY_ROLE_EMPTY_PASSWORD_ID
+            = UUIDUtil.getFormLongs(1951212975570568104L, -8968775932760482565L);
     public final UUID SECURITY_ROLE_GUI_ID
             = UUIDUtil.getFormLongs(-1619619213472611191L, -4997309008069038213L);
 }

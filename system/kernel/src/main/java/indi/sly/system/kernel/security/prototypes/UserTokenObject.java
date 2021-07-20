@@ -8,12 +8,12 @@ import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.values.AccountGroupTokenDefinition;
+import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import indi.sly.system.kernel.security.values.PrivilegeTypes;
 
 import java.util.Map;
 
-public class UserTokenObject extends ABytesValueProcessPrototype<AccountGroupTokenDefinition> {
+public class UserTokenObject extends ABytesValueProcessPrototype<AccountAuthorizationTokenDefinition> {
     public long getPrivileges() {
         this.init();
 

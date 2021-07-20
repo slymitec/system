@@ -33,7 +33,7 @@ public class GroupObject extends AValueProcessPrototype<GroupEntity> {
         accountGroupToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
         accountGroupToken.setLock((lockType) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UserRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+            UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
             accountGroupRepository.lock(this.value, lockType);
         });

@@ -11,7 +11,7 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
-import indi.sly.system.kernel.security.values.AccountGroupTokenDefinition;
+import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.values.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -57,7 +57,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         this.init();
 
         this.value.setAccountID(accountAuthorizationResult.getAccountID());
-        AccountGroupTokenDefinition accountAuthorizationResultToken = accountAuthorizationResult.getToken();
+        AccountAuthorizationTokenDefinition accountAuthorizationResultToken = accountAuthorizationResult.getToken();
         this.value.setPrivileges(accountAuthorizationResultToken.getPrivileges());
         Map<Long, Integer> processTokenLimits = this.value.getLimits();
         processTokenLimits.clear();

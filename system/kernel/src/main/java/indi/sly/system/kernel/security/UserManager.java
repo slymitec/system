@@ -12,7 +12,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObjec
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.values.AccountGroupTokenDefinition;
+import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
 import indi.sly.system.kernel.security.prototypes.*;
@@ -46,7 +46,7 @@ public class UserManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         AccountEntity account = userRepository.getAccount(accountID);
 
@@ -59,7 +59,7 @@ public class UserManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         AccountEntity account = userRepository.getAccount(accountName);
 
@@ -72,7 +72,7 @@ public class UserManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         GroupEntity group = userRepository.getGroup(groupID);
 
@@ -85,7 +85,7 @@ public class UserManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         GroupEntity group = userRepository.getGroup(groupName);
 
@@ -107,16 +107,16 @@ public class UserManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         AccountEntity account = new AccountEntity();
         account.setID(UUID.randomUUID());
         account.setName(accountName);
         account.setPassword(accountPassword);
-        AccountGroupTokenDefinition accountGroupToken = new AccountGroupTokenDefinition();
+        AccountAuthorizationTokenDefinition accountAuthorizationToken = new AccountAuthorizationTokenDefinition();
         KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
-        accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
-        account.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
+        accountAuthorizationToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
+        account.setToken(ObjectUtil.transferToByteArray(accountAuthorizationToken));
 
         try {
             userRepository.getAccount(accountName);
@@ -144,12 +144,12 @@ public class UserManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         GroupEntity group = new GroupEntity();
         group.setID(UUID.randomUUID());
         group.setName(groupName);
-        AccountGroupTokenDefinition accountGroupToken = new AccountGroupTokenDefinition();
+        AccountAuthorizationTokenDefinition accountGroupToken = new AccountAuthorizationTokenDefinition();
         KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
         accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
         group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
@@ -180,7 +180,7 @@ public class UserManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         AccountEntity account = userRepository.getAccount(accountID);
         userRepository.delete(account);
@@ -201,7 +201,7 @@ public class UserManager extends AManager {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getAccountGroupRepository();
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         GroupEntity group = userRepository.getGroup(groupID);
         userRepository.delete(group);

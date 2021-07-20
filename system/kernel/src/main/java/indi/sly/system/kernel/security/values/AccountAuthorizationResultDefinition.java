@@ -4,11 +4,11 @@ import java.util.UUID;
 
 public class AccountAuthorizationResultDefinition {
     public AccountAuthorizationResultDefinition() {
-        this.token = new AccountGroupTokenDefinition();
+        this.token = new AccountAuthorizationTokenDefinition();
     }
 
     private UUID accountID;
-    private final AccountGroupTokenDefinition token;
+    private final AccountAuthorizationTokenDefinition token;
 
     public UUID getAccountID() {
         return this.accountID;
@@ -18,7 +18,7 @@ public class AccountAuthorizationResultDefinition {
         this.accountID = accountID;
     }
 
-    public AccountGroupTokenDefinition getToken() {
+    public AccountAuthorizationTokenDefinition getToken() {
         return this.token;
     }
 }

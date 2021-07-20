@@ -11,7 +11,7 @@ import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
-import indi.sly.system.kernel.security.values.AccountGroupTokenDefinition;
+import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -105,23 +105,23 @@ public class AccountAuthorizationObject extends APrototype {
         this.date.put(DateTimeTypes.ACCESS, nowDateTime);
 
         AccountAuthorizationResultDefinition accountAuthorization = new AccountAuthorizationResultDefinition();
-        AccountGroupTokenDefinition accountAuthorizationToken = accountAuthorization.getToken();
+        AccountAuthorizationTokenDefinition accountAuthorizationToken = accountAuthorization.getToken();
         Map<Long, Integer> accountAuthorizationTokenLimits = accountAuthorizationToken.getLimits();
 
         accountAuthorization.setAccountID(account.getID());
 
-        Set<UserTokenObject> accountGroupTokens = new HashSet<>();
+        Set<UserTokenObject> userTokens = new HashSet<>();
         Set<GroupObject> groups = account.getGroups();
         for (GroupObject group : groups) {
-            accountGroupTokens.add(group.getToken());
+            userTokens.add(group.getToken());
         }
-        accountGroupTokens.add(account.getToken());
+        userTokens.add(account.getToken());
 
-        for (UserTokenObject accountGroupToken : accountGroupTokens) {
+        for (UserTokenObject userToken : userTokens) {
             accountAuthorizationToken.setPrivileges(LogicalUtil.or(accountAuthorizationToken.getPrivileges()
-                    , accountGroupToken.getPrivileges()));
+                    , userToken.getPrivileges()));
 
-            for (Map.Entry<Long, Integer> pair : accountGroupToken.getLimits().entrySet()) {
+            for (Map.Entry<Long, Integer> pair : userToken.getLimits().entrySet()) {
                 int value = accountAuthorizationTokenLimits.getOrDefault(pair.getKey(), Integer.MAX_VALUE);
                 accountAuthorizationTokenLimits.put(pair.getKey(), Integer.min(value, pair.getValue()));
             }

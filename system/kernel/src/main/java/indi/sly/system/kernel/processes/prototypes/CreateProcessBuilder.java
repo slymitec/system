@@ -3,10 +3,7 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusNotReadyException;
-import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeTypes;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -21,7 +18,10 @@ import indi.sly.system.kernel.processes.SessionManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionTypes;
 import indi.sly.system.kernel.processes.values.*;
+import indi.sly.system.kernel.security.SecurityAuthorizationManager;
+import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
+import indi.sly.system.kernel.security.prototypes.AccountObject;
 import indi.sly.system.kernel.security.values.PrivilegeTypes;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -245,8 +245,10 @@ public class CreateProcessBuilder extends APrototype {
         } else if (appContextType == AppType.EXECUTABLE) {
             roles.add(configuration.SECURITY_ROLE_EXECUTABLE_ID);
         }
-        if (ObjectUtil.allNotNull(this.createProcess.getAdditionalRoles())) {
-            roles.addAll(this.createProcess.getAdditionalRoles());
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+        AccountObject account = userManager.getAccount(processToken.getAccountID());
+        if (ValueUtil.isAnyNullOrEmpty(account.getPassword())) {
+            roles.add(configuration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
         }
         SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
         SessionContentObject sessionContent = sessionManager.getAndOpen(processSession.getID());
@@ -259,6 +261,9 @@ public class CreateProcessBuilder extends APrototype {
             roles.add(configuration.SECURITY_ROLE_CLI_ID);
         }
         sessionContent.close();
+        if (ObjectUtil.allNotNull(this.createProcess.getAdditionalRoles())) {
+            roles.addAll(this.createProcess.getAdditionalRoles());
+        }
         processToken.setRoles(roles);
 
         ProcessContextObject processContext = this.process.getContext();

@@ -37,7 +37,7 @@ public class UserFactory extends APrototype {
         };
         Consumer1<Long> funcLock = (lockType) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UserRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+            UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
             accountGroupRepository.lock(account, lockType);
         };
@@ -65,7 +65,7 @@ public class UserFactory extends APrototype {
         };
         Consumer1<Long> funcLock = (lockType) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UserRepositoryObject accountGroupRepository = memoryManager.getAccountGroupRepository();
+            UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
             accountGroupRepository.lock(group, lockType);
         };

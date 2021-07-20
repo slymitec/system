@@ -6,9 +6,7 @@ import indi.sly.system.common.supports.NumberUtil;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class AccountGroupTokenDefinition implements ISerializeCapable<AccountGroupTokenDefinition> {
     public AccountGroupTokenDefinition() {

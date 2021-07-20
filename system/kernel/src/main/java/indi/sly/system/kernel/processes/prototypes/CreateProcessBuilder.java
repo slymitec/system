@@ -195,9 +195,9 @@ public class CreateProcessBuilder extends APrototype {
             processToken.inheritAccountID();
 
             if (this.createProcess.getPrivilegeTypes() != PrivilegeTypes.NULL) {
-                processToken.inheritPrivilegeTypes(this.createProcess.getPrivilegeTypes());
+                processToken.inheritPrivileges(this.createProcess.getPrivilegeTypes());
             } else {
-                processToken.inheritPrivilegeTypes();
+                processToken.inheritPrivileges();
             }
             if (ObjectUtil.allNotNull(this.createProcess.getLimits())) {
                 processToken.setLimits(this.createProcess.getLimits());
@@ -205,10 +205,9 @@ public class CreateProcessBuilder extends APrototype {
                 processToken.inheritLimits();
             }
         }
-        if (ObjectUtil.isAnyNull(this.createProcess.getAppContext().getRoles())) {
-            processToken.inheritRoleTypes();
-        } else {
-            processToken.setRoleTypes(this.createProcess.getAppContext().getRoles());
+        if (ObjectUtil.allNotNull(this.createProcess.getRoles())) {
+            //根据Session，可执行文件类别（服务、脚本、程序）来配置Role
+            processToken.setRoles(this.createProcess.getRoles());
         }
 
         ProcessHandleTableObject processHandleTable = this.process.getHandleTable();

@@ -13,6 +13,7 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
+import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -106,6 +107,9 @@ public class SessionManager extends AManager {
 
         InfoObject session = sessions.createChildAndOpen(typeID, new IdentificationDefinition(UUIDUtil.createRandom()),
                 InfoStatusOpenAttributeType.OPEN_SHARED_WRITE);
+        SessionContentObject sessionContent = (SessionContentObject) session.getContent();
+        sessionContent.setAccountID(accountID);
+
         session.close();
 
         return session.getID();

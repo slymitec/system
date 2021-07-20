@@ -16,7 +16,7 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
     }
 
     private UUID accountID;
-    private long privilegeTypes;
+    private long privileges;
     private final Map<Long, Integer> limits;
     private final Set<UUID> roles;
 
@@ -28,12 +28,12 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
         this.accountID = accountID;
     }
 
-    public long getPrivilegeTypes() {
-        return this.privilegeTypes;
+    public long getPrivileges() {
+        return this.privileges;
     }
 
-    public void setPrivilegeTypes(long privilegeTypes) {
-        this.privilegeTypes = privilegeTypes;
+    public void setPrivileges(long privileges) {
+        this.privileges = privileges;
     }
 
     public Set<UUID> getRoles() {
@@ -49,7 +49,7 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProcessTokenDefinition that = (ProcessTokenDefinition) o;
-        return privilegeTypes == that.privilegeTypes &&
+        return privileges == that.privileges &&
                 Objects.equals(accountID, that.accountID) &&
                 limits.equals(that.limits) &&
                 roles.equals(that.roles);
@@ -57,7 +57,7 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountID, privilegeTypes, limits, roles);
+        return Objects.hash(accountID, privileges, limits, roles);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
         ProcessTokenDefinition definition = new ProcessTokenDefinition();
 
         definition.accountID = this.accountID;
-        definition.privilegeTypes = this.privilegeTypes;
+        definition.privileges = this.privileges;
         definition.limits.putAll(this.limits);
         definition.roles.addAll(this.roles);
 
@@ -75,7 +75,7 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         this.accountID = UUIDUtil.readExternal(in);
-        this.privilegeTypes = NumberUtil.readExternalLong(in);
+        this.privileges = NumberUtil.readExternalLong(in);
 
         int valueInteger;
 
@@ -93,7 +93,7 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         UUIDUtil.writeExternal(out, this.accountID);
-        NumberUtil.writeExternalLong(out, this.privilegeTypes);
+        NumberUtil.writeExternalLong(out, this.privileges);
 
         NumberUtil.writeExternalInteger(out, this.limits.size());
         for (Map.Entry<Long, Integer> pair : this.limits.entrySet()) {

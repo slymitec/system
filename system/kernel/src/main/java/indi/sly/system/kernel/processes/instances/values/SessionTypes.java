@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.processes.instances.types;
+package indi.sly.system.kernel.processes.instances.values;
 
 public interface SessionTypes {
     long NULL = 0L;

@@ -58,7 +58,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
 
         this.value.setAccountID(accountAuthorizationResult.getAccountID());
         AccountGroupTokenDefinition accountAuthorizationResultToken = accountAuthorizationResult.getToken();
-        this.value.setPrivilegeTypes(accountAuthorizationResultToken.getPrivileges());
+        this.value.setPrivileges(accountAuthorizationResultToken.getPrivileges());
         Map<Long, Integer> processTokenLimits = this.value.getLimits();
         processTokenLimits.clear();
         processTokenLimits.putAll(accountAuthorizationResultToken.getLimits());
@@ -88,13 +88,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         this.lock(LockType.NONE);
     }
 
-    public long getPrivilegeTypes() {
+    public long getPrivileges() {
         this.init();
 
-        return this.value.getPrivilegeTypes();
+        return this.value.getPrivileges();
     }
 
-    public void inheritPrivilegeTypes() {
+    public void inheritPrivileges() {
         if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
@@ -103,13 +103,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.setPrivilegeTypes(this.getParentProcessTokenAndCheckIsCurrent().getPrivilegeTypes());
+        this.value.setPrivileges(this.getParentProcessTokenAndCheckIsCurrent().getPrivileges());
 
         this.fresh();
         this.lock(LockType.NONE);
     }
 
-    public void inheritPrivilegeTypes(long privilegeTypes) {
+    public void inheritPrivileges(long privileges) {
         if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
                 || this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
@@ -118,14 +118,14 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.setPrivilegeTypes(LogicalUtil.and(privilegeTypes,
-                this.getParentProcessTokenAndCheckIsCurrent().getPrivilegeTypes()));
+        this.value.setPrivileges(LogicalUtil.and(privileges,
+                this.getParentProcessTokenAndCheckIsCurrent().getPrivileges()));
 
         this.fresh();
         this.lock(LockType.NONE);
     }
 
-    public void setPrivilegeTypes(long privilegeTypes) {
+    public void setPrivileges(long privileges) {
         if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
@@ -146,10 +146,14 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.setPrivilegeTypes(privilegeTypes);
+        this.value.setPrivileges(privileges);
 
         this.fresh();
         this.lock(LockType.NONE);
+    }
+
+    public boolean isPrivilegeType(long privilegeTypes) {
+        return LogicalUtil.isAllExist(this.getPrivileges(), privilegeTypes);
     }
 
     public Map<Long, Integer> getLimits() {
@@ -214,24 +218,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         return this.value.getRoles();
     }
 
-    public void inheritRoleTypes() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
-        }
-
-        this.lock(LockType.WRITE);
-        this.init();
-
-        Set<UUID> processTokenRoles = this.value.getRoles();
-        processTokenRoles.clear();
-        processTokenRoles.addAll(this.getParentProcessTokenAndCheckIsCurrent().getRoles());
-
-        this.fresh();
-        this.lock(LockType.NONE);
-    }
-
-    public void inheritRoleTypes(Set<UUID> roles) {
+    public void setRoles(Set<UUID> roles) {
         if (ObjectUtil.isAnyNull(roles)) {
             throw new ConditionParametersException();
         }
@@ -244,59 +231,9 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         this.lock(LockType.WRITE);
         this.init();
 
-        Set<UUID> parentRoles = this.getParentProcessTokenAndCheckIsCurrent().getRoles();
-        Set<UUID> childRoles = new HashSet<>();
-
-        for (UUID role : roles) {
-            if (parentRoles.contains(role)) {
-                childRoles.add(role);
-            }
-        }
-
-        Set<UUID> processTokenRoles = this.value.getRoles();
-        processTokenRoles.clear();
-        processTokenRoles.addAll(childRoles);
+        this.value.getRoles().addAll(roles);
 
         this.fresh();
         this.lock(LockType.NONE);
-    }
-
-    public void setRoleTypes(Set<UUID> roles) {
-        if (ObjectUtil.isAnyNull(roles)) {
-            throw new ConditionParametersException();
-        }
-
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
-                ProcessStatusType.RUNNING) || this.process.isCurrent()) {
-            throw new StatusRelationshipErrorException();
-        }
-
-        this.getParentProcessTokenAndCheckIsCurrent();
-
-        this.lock(LockType.WRITE);
-        this.init();
-
-        Set<UUID> processTokenRoles = this.value.getRoles();
-        processTokenRoles.clear();
-        processTokenRoles.addAll(roles);
-
-        this.fresh();
-        this.lock(LockType.NONE);
-    }
-
-    public boolean isPrivilegeType(long privilegeTypes) {
-        this.init();
-
-        return LogicalUtil.isAllExist(this.getPrivilegeTypes(), privilegeTypes);
-    }
-
-    public boolean isRoleTypes(UUID roleType) {
-        if (ObjectUtil.isAnyNull(roleType)) {
-            throw new ConditionParametersException();
-        }
-
-        this.init();
-
-        return this.getRoles().contains(roleType);
     }
 }

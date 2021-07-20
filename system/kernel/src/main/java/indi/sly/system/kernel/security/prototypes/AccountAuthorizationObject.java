@@ -110,8 +110,8 @@ public class AccountAuthorizationObject extends APrototype {
 
         accountAuthorization.setAccountID(account.getID());
 
-        List<UserTokenObject> accountGroupTokens = new ArrayList<>();
-        List<GroupObject> groups = account.getGroups();
+        Set<UserTokenObject> accountGroupTokens = new HashSet<>();
+        Set<GroupObject> groups = account.getGroups();
         for (GroupObject group : groups) {
             accountGroupTokens.add(group.getToken());
         }

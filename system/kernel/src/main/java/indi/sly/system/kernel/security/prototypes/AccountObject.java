@@ -19,10 +19,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -62,21 +59,21 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
         this.lock(LockType.NONE);
     }
 
-    public List<GroupObject> getGroups() {
+    public Set<GroupObject> getGroups() {
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         this.init();
 
-        List<GroupObject> groups = new ArrayList<>();
+        Set<GroupObject> groups = new HashSet<>();
 
         for (GroupEntity group : this.value.getGroups()) {
             groups.add(userManager.getGroup(group.getID()));
         }
 
-        return Collections.unmodifiableList(groups);
+        return Collections.unmodifiableSet(groups);
     }
 
-    public void setGroups(List<GroupObject> groups) {
+    public void setGroups(Set<GroupObject> groups) {
         if (ObjectUtil.isAnyNull(groups)) {
             throw new ConditionParametersException();
         }

@@ -15,7 +15,6 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
     private boolean hasChild;
     private final Set<UUID> owners;
     private final Set<AccessControlDefinition> accessControls;
-    private final Set<UUID> roles;
     private long audits;
 
     public SecurityDescriptorDefinition() {
@@ -23,7 +22,6 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
         this.hasChild = false;
         this.owners = new HashSet<>();
         this.accessControls = new HashSet<>();
-        this.roles = new HashSet<>();
         this.audits = AuditTypes.NULL;
     }
 
@@ -51,10 +49,6 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
         return this.accessControls;
     }
 
-    public Set<UUID> getRoles() {
-        return this.roles;
-    }
-
     public long getAudits() {
         return this.audits;
     }
@@ -72,13 +66,12 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
                 hasChild == that.hasChild &&
                 audits == that.audits &&
                 owners.equals(that.owners) &&
-                accessControls.equals(that.accessControls) &&
-                roles.equals(that.roles);
+                accessControls.equals(that.accessControls);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(inherit, hasChild, owners, accessControls, roles, audits);
+        return Objects.hash(inherit, hasChild, owners, accessControls, audits);
     }
 
     @Override
@@ -89,7 +82,6 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
         definition.hasChild = this.hasChild;
         definition.owners.addAll(this.owners);
         definition.accessControls.addAll(this.accessControls);
-        definition.roles.addAll(this.roles);
         definition.audits = this.audits;
 
         return definition;
@@ -112,11 +104,6 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
             this.accessControls.add(ObjectUtil.readExternal(in));
         }
 
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.roles.add(UUIDUtil.readExternal(in));
-        }
-
         this.audits = NumberUtil.readExternalLong(in);
     }
 
@@ -133,11 +120,6 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
         NumberUtil.writeExternalInteger(out, this.accessControls.size());
         for (AccessControlDefinition pair : this.accessControls) {
             ObjectUtil.writeExternal(out, pair);
-        }
-
-        NumberUtil.writeExternalInteger(out, this.roles.size());
-        for (UUID pair : this.roles) {
-            UUIDUtil.writeExternal(out, pair);
         }
 
         NumberUtil.writeExternalLong(out, this.audits);

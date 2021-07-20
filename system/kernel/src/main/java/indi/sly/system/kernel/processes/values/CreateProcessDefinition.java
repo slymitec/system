@@ -6,6 +6,7 @@ import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class CreateProcessDefinition extends ADefinition<CreateProcessDefinition> {
@@ -14,6 +15,7 @@ public class CreateProcessDefinition extends ADefinition<CreateProcessDefinition
     private AccountAuthorizationObject accountAuthorization;
     private long privilegeTypes;
     private Map<Long, Integer> limits;
+    private Set<UUID> roles;
 
     private AppContextDefinition appContext;
     private Map<String, String> environmentVariable;
@@ -51,6 +53,14 @@ public class CreateProcessDefinition extends ADefinition<CreateProcessDefinition
 
     public void setLimits(Map<Long, Integer> limits) {
         this.limits = limits;
+    }
+
+    public Set<UUID> getRoles() {
+        return this.roles;
+    }
+
+    public void setRoles(Set<UUID> roles) {
+        this.roles = roles;
     }
 
     public AppContextDefinition getAppContext() {

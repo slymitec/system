@@ -153,11 +153,12 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         AccountObject account = userManager.getAccount(processToken.getAccountID());
         UUID accountID = account.getID();
-        List<GroupObject> groups = account.getGroups();
-        List<UUID> groupIDs = new ArrayList<>();
+        Set<GroupObject> groups = account.getGroups();
+        Set<UUID> groupIDs = new HashSet<>();
         for (GroupObject group : groups) {
             groupIDs.add(group.getID());
         }
+        Set<UUID> roles = processToken.getRoles();
 
         boolean allow = false;
 
@@ -180,6 +181,15 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
                         return false;
                     }
                 }
+            } else if (pair.getType() == UserTypes.ROLE) {
+                if (roles.contains(pair.getId())) {
+                    if (LogicalUtil.isAllExist(accessControl, pair.getValue())) {
+                        allow = true;
+                    }
+                    if (LogicalUtil.isAnyExist(pair.getValue(), accessControl << 1)) {
+                        return false;
+                    }
+                }
             }
         }
 
@@ -192,7 +202,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             return;
         }
 
-        if (!this.allowAccessControl(accessControl) || !processToken.getRoles().containsAll(this.getRoles())) {
+        if (!this.allowAccessControl(accessControl)) {
             throw new ConditionPermissionsException();
         }
     }
@@ -366,38 +376,6 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         this.value.getAccessControls().clear();
         this.value.getAccessControls().addAll(accessControls);
-
-        this.fresh();
-        this.lock(LockType.NONE);
-    }
-
-    public Set<UUID> getRoles() {
-        if (!this.permission) {
-            throw new StatusNotSupportedException();
-        }
-
-        this.init();
-
-        return Collections.unmodifiableSet(value.getRoles());
-    }
-
-    public void setRoles(List<UUID> roleTypes) {
-        if (!this.permission) {
-            throw new StatusNotSupportedException();
-        }
-
-        ProcessTokenObject processToken = this.getCurrentProcessToken();
-
-        if (!processToken.isPrivilegeType(PrivilegeTypes.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getOwners().contains(processToken.getAccountID())) {
-            throw new ConditionPermissionsException();
-        }
-
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.getRoles().clear();
-        this.value.getRoles().addAll(roleTypes);
 
         this.fresh();
         this.lock(LockType.NONE);

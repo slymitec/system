@@ -13,14 +13,12 @@ import java.util.*;
 public class AppContextDefinition implements ISerializeCapable<AppContextDefinition> {
     public AppContextDefinition() {
         this.configurations = new HashMap<>();
-        this.roles = new HashSet<>();
     }
 
     private String name;
     private long supportedSession;
     private String serverURL;
     private final Map<String, String> configurations;
-    private final Set<UUID> roles;
 
     public String getName() {
         return this.name;
@@ -50,10 +48,6 @@ public class AppContextDefinition implements ISerializeCapable<AppContextDefinit
         return this.configurations;
     }
 
-    public Set<UUID> getRoles() {
-        return this.roles;
-    }
-
     @Override
     public Object clone() throws CloneNotSupportedException {
         return this.deepClone();
@@ -67,7 +61,6 @@ public class AppContextDefinition implements ISerializeCapable<AppContextDefinit
         definition.supportedSession = this.supportedSession;
         definition.serverURL = this.serverURL;
         definition.configurations.putAll(this.configurations);
-        definition.roles.addAll(this.roles);
 
         return definition;
     }
@@ -84,11 +77,6 @@ public class AppContextDefinition implements ISerializeCapable<AppContextDefinit
         for (int i = 0; i < valueInteger; i++) {
             this.configurations.put(StringUtil.readExternal(in), StringUtil.readExternal(in));
         }
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.roles.add(UUIDUtil.readExternal(in));
-        }
     }
 
     @Override
@@ -101,11 +89,6 @@ public class AppContextDefinition implements ISerializeCapable<AppContextDefinit
         for (Map.Entry<String, String> pair : this.configurations.entrySet()) {
             StringUtil.writeExternal(out, pair.getKey());
             StringUtil.writeExternal(out, pair.getValue());
-        }
-
-        NumberUtil.writeExternalInteger(out, this.roles.size());
-        for (UUID pair : this.roles) {
-            UUIDUtil.writeExternal(out, pair);
         }
     }
 }

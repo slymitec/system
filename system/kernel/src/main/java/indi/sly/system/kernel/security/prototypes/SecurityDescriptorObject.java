@@ -257,9 +257,11 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+        if ((!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowPermission(PermissionType.TAKEONWERSHIP_ALLOW)) {
+                && !this.allowPermission(PermissionType.TAKEONWERSHIP_ALLOW))
+                || (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                && !owners.contains(processToken.getAccountID()))) {
             throw new ConditionPermissionsException();
         }
 

@@ -37,13 +37,16 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public void setType(long type) {
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        this.session.setType(type);
+            this.session.setType(type);
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public UUID getAccountID() {
@@ -53,13 +56,16 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public void setAccountID(UUID accountID) {
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        this.session.setAccountID(accountID);
+            this.session.setAccountID(accountID);
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public Set<UUID> getProcessIDs() {
@@ -78,13 +84,18 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public void addProcessID(UUID processID) {
-        this.lock(LockType.WRITE);
-        this.init();
+        boolean result = false;
 
-        boolean result = this.session.getProcessIDs().add(processID);
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            result = this.session.getProcessIDs().add(processID);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
 
         if (!result) {
             throw new StatusAlreadyExistedException();
@@ -92,13 +103,18 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public void deleteProcessID(UUID processID) {
-        this.lock(LockType.WRITE);
-        this.init();
+        boolean result = false;
 
-        boolean result = this.session.getProcessIDs().remove(processID);
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            result = this.session.getProcessIDs().remove(processID);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
 
         if (!result) {
             throw new StatusNotExistedException();
@@ -116,12 +132,15 @@ public class SessionContentObject extends AInfoContentObject {
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        this.session.setClient(client.deepClone());
+            this.session.setClient(client.deepClone());
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 }

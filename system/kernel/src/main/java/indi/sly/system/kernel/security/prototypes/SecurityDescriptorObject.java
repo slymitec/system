@@ -349,21 +349,22 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         boolean allow = false;
 
         for (AccessControlDefinition pair : effectivePermissions) {
-            if (pair.getType() == UserType.GROUP && groupIDs.contains(pair.getId())) {
+            UserIDDefinition pairUserID = pair.getUserID();
+            if (pairUserID.getType() == UserType.GROUP && groupIDs.contains(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(permission, pair.getValue())) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return false;
                 }
-            } else if (pair.getType() == UserType.ACCOUNT && accountID.equals(pair.getId())) {
+            } else if (pairUserID.getType() == UserType.ACCOUNT && accountID.equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(permission, pair.getValue())) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return false;
                 }
-            } else if (pair.getType() == UserType.ROLE && roles.contains(pair.getId())) {
+            } else if (pairUserID.getType() == UserType.ROLE && roles.contains(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(permission, pair.getValue())) {
                     allow = true;
                 }
@@ -422,7 +423,14 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         this.lock(LockType.NONE);
     }
 
-    private void writeAudit(UUID id, long type, long audit) {
+    private void writeAudit(Set<UserIDDefinition> userIDs, long audit) {
+        ProcessTokenObject processToken = this.getCurrentProcessToken();
+
+        UUID accountID = processToken.getAccountID();
+        List<IdentificationDefinition> identifications = this.identifications;
+
+
+
         //
     }
 
@@ -492,22 +500,26 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             groupIDs.add(group.getID());
         }
         Set<UUID> roles = processToken.getRoles();
+        Set<UserIDDefinition> userIDs = new HashSet<>();
 
         for (AccessControlDefinition pair : effectiveAudits) {
-            if (pair.getType() == UserType.GROUP && groupIDs.contains(pair.getId())) {
+            UserIDDefinition pairUserID = pair.getUserID();
+            if (pairUserID.getType() == UserType.GROUP && groupIDs.contains(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
-                    this.writeAudit(pair.getId(), UserType.GROUP, audit);
+                    userIDs.add(pairUserID);
                 }
-            } else if (pair.getType() == UserType.ACCOUNT && accountID.equals(pair.getId())) {
+            } else if (pairUserID.getType() == UserType.ACCOUNT && accountID.equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
-                    this.writeAudit(pair.getId(), UserType.ACCOUNT, audit);
+                    userIDs.add(pairUserID);
                 }
-            } else if (pair.getType() == UserType.ROLE && roles.contains(pair.getId())) {
+            } else if (pairUserID.getType() == UserType.ROLE && roles.contains(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
-                    this.writeAudit(pair.getId(), UserType.ROLE, audit);
+                    userIDs.add(pairUserID);
                 }
             }
         }
+
+        this.writeAudit(userIDs, audit);
     }
 
     public void setAudits(Set<AccessControlDefinition> audits) {

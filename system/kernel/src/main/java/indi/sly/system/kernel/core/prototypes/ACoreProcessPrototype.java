@@ -3,6 +3,7 @@ package indi.sly.system.kernel.core.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.LockType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

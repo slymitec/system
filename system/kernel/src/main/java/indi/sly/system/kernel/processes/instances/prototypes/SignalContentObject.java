@@ -51,71 +51,89 @@ public class SignalContentObject extends AInfoContentObject {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrentProcess();
 
-        if (!this.signal.getProcessID().equals(process.getID())) {
-            throw new ConditionPermissionsException();
-        }
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        Set<UUID> signalSourceProcessIDs = this.signal.getSourceProcessIDs();
-        signalSourceProcessIDs.clear();
-        signalSourceProcessIDs.addAll(sourceProcessIDs);
+            if (!this.signal.getProcessID().equals(process.getID())) {
+                throw new ConditionPermissionsException();
+            }
+
+            Set<UUID> signalSourceProcessIDs = this.signal.getSourceProcessIDs();
+            signalSourceProcessIDs.clear();
+            signalSourceProcessIDs.addAll(sourceProcessIDs);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public List<SignalEntryDefinition> receive() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrentProcess();
 
-        if (!this.signal.getProcessID().equals(process.getID())) {
-            throw new ConditionPermissionsException();
-        }
+        List<SignalEntryDefinition> signalEntries = null;
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
-        long nowDateTime = dateTime.getCurrentDateTime();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        this.lock(LockType.WRITE);
-        this.init();
+            if (!this.signal.getProcessID().equals(process.getID())) {
+                throw new ConditionPermissionsException();
+            }
 
-        List<SignalEntryDefinition> signalEntries = this.signal.pollAll();
+            DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+                    DateTimeObject.class);
+            long nowDateTime = dateTime.getCurrentDateTime();
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            signalEntries = this.signal.pollAll();
 
-        for (SignalEntryDefinition signalEntry : signalEntries) {
-            signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+            this.fresh();
+
+            for (SignalEntryDefinition signalEntry : signalEntries) {
+                signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+            }
+        } finally {
+            this.lock(LockType.NONE);
         }
 
         return signalEntries;
     }
 
     public void send(long key, long value) {
-        if (this.signal.size() >= this.signal.getLimit()) {
-            throw new StatusInsufficientResourcesException();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            if (this.signal.size() >= this.signal.getLimit()) {
+                throw new StatusInsufficientResourcesException();
+            }
+
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrentProcess();
+
+            if (!this.signal.getProcessID().equals(process.getID()) && this.signal.getSourceProcessIDs().contains(process.getID())) {
+                throw new ConditionPermissionsException();
+            }
+
+            DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+                    DateTimeObject.class);
+            long nowDateTime = dateTime.getCurrentDateTime();
+
+            SignalEntryDefinition signalEntry = new SignalEntryDefinition();
+            signalEntry.setSource(process.getID());
+            signalEntry.setKey(key);
+            signalEntry.setValue(value);
+            signalEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
+            signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
+
+            this.signal.add(signalEntry);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrentProcess();
-
-        if (!this.signal.getProcessID().equals(process.getID()) && this.signal.getSourceProcessIDs().contains(process.getID())) {
-            throw new ConditionPermissionsException();
-        }
-
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
-        long nowDateTime = dateTime.getCurrentDateTime();
-
-        SignalEntryDefinition signalEntry = new SignalEntryDefinition();
-        signalEntry.setSource(process.getID());
-        signalEntry.setKey(key);
-        signalEntry.setValue(value);
-        signalEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
-        signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
-
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.signal.add(signalEntry);
-
-        this.fresh();
-        this.lock(LockType.NONE);
     }
 }

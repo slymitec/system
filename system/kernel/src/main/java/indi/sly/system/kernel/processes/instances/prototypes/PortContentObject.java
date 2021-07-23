@@ -47,31 +47,45 @@ public class PortContentObject extends AInfoContentObject {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrentProcess();
 
-        if (!this.port.getProcessID().equals(process.getID())) {
-            throw new ConditionPermissionsException();
-        }
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        Set<UUID> portSourceProcessIDs = this.port.getSourceProcessIDs();
-        portSourceProcessIDs.clear();
-        portSourceProcessIDs.addAll(sourceProcessIDs);
+            if (!this.port.getProcessID().equals(process.getID())) {
+                throw new ConditionPermissionsException();
+            }
+
+            Set<UUID> portSourceProcessIDs = this.port.getSourceProcessIDs();
+            portSourceProcessIDs.clear();
+            portSourceProcessIDs.addAll(sourceProcessIDs);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public byte[] receive() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrentProcess();
 
-        if (!this.port.getProcessID().equals(process.getID())) {
-            throw new ConditionPermissionsException();
+        byte[] value = null;
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            if (!this.port.getProcessID().equals(process.getID())) {
+                throw new ConditionPermissionsException();
+            }
+
+            value = this.port.getValue();
+            this.port.setValue(ArrayUtil.EMPTY_BYTES);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        this.lock(LockType.WRITE);
-        this.init();
-
-        byte[] value = this.port.getValue();
-        this.port.setValue(ArrayUtil.EMPTY_BYTES);
-
-        this.fresh();
-        this.lock(LockType.NONE);
 
         return value;
     }
@@ -81,23 +95,26 @@ public class PortContentObject extends AInfoContentObject {
             throw new ConditionParametersException();
         }
 
-        if (this.port.size() + value.length >= this.port.getLimit()) {
-            throw new StatusInsufficientResourcesException();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            if (this.port.size() + value.length >= this.port.getLimit()) {
+                throw new StatusInsufficientResourcesException();
+            }
+
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrentProcess();
+
+            if (!this.port.getProcessID().equals(process.getID()) && this.port.getSourceProcessIDs().contains(process.getID())) {
+                throw new ConditionPermissionsException();
+            }
+
+            this.port.setValue(ArrayUtil.combineBytes(this.port.getValue(), value));
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrentProcess();
-
-        if (!this.port.getProcessID().equals(process.getID()) && this.port.getSourceProcessIDs().contains(process.getID())) {
-            throw new ConditionPermissionsException();
-        }
-
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.port.setValue(ArrayUtil.combineBytes(this.port.getValue(), value));
-
-        this.fresh();
-        this.lock(LockType.NONE);
     }
 }

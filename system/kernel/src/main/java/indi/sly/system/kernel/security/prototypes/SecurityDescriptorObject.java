@@ -10,13 +10,7 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.UserManager;
-import indi.sly.system.kernel.security.values.AccessControlScopeType;
-import indi.sly.system.kernel.security.values.UserType;
-import indi.sly.system.kernel.security.values.AccessControlDefinition;
-import indi.sly.system.kernel.security.values.SecurityDescriptorDefinition;
-import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryDefinition;
-import indi.sly.system.kernel.security.values.AccessControlType;
-import indi.sly.system.kernel.security.values.PrivilegeType;
+import indi.sly.system.kernel.security.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -88,137 +82,26 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         return process.getToken();
     }
 
-    private boolean allowAccessControl(long accessControl) {
-        if (accessControl == AccessControlType.NULL || LogicalUtil.isAnyExist(accessControl,
-                AccessControlType.FULLCONTROL_DENY)) {
-            throw new ConditionParametersException();
-        }
-        if (!this.permission) {
+    public List<SecurityDescriptorSummaryDefinition> getSummary() {
+        if (!this.permission && !this.audit) {
             throw new StatusNotSupportedException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)) {
-            return true;
+        if (this.permission) {
+            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                    && !this.value.getOwners().contains(processToken.getAccountID())
+                    && !this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                throw new ConditionPermissionsException();
+            }
         }
 
-        List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
-        for (SecurityDescriptorObject pair : this.parents) {
-            pair.init();
-
-            securityDescriptors.add(pair.value);
+        if (this.audit) {
+            this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
         }
 
         this.init();
-
-        securityDescriptors.add(this.value);
-
-        Set<AccessControlDefinition> effectiveAccessControls = new HashSet<>();
-        for (int i = 0; i < securityDescriptors.size(); i++) {
-            if (!securityDescriptors.get(i).isInherit()) {
-                effectiveAccessControls.clear();
-            }
-
-            for (AccessControlDefinition pair : securityDescriptors.get(i).getAccessControls()) {
-                if (LogicalUtil.isAllExist(AccessControlScopeType.THIS, pair.getScope())) {
-                    if (i == securityDescriptors.size() - 1) {
-                        effectiveAccessControls.add(pair);
-                    }
-                }
-                if (LogicalUtil.isAllExist(AccessControlScopeType.CHILD_HAS_CHILD, pair.getScope())) {
-                    if (i == securityDescriptors.size() - 2 && securityDescriptors.get(i + 1).isHasChild()) {
-                        effectiveAccessControls.add(pair);
-                    }
-                }
-                if (LogicalUtil.isAllExist(AccessControlScopeType.CHILD_HAS_NOT_CHILD, pair.getScope())) {
-                    if (i == securityDescriptors.size() - 2 && !securityDescriptors.get(i + 1).isHasChild()) {
-                        effectiveAccessControls.add(pair);
-                    }
-                }
-                if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_CHILD, pair.getScope())) {
-                    if (i < securityDescriptors.size() - 1 && securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
-                        effectiveAccessControls.add(pair);
-                    }
-                }
-                if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD, pair.getScope())) {
-                    if (i < securityDescriptors.size() - 1 && !securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
-                        effectiveAccessControls.add(pair);
-                    }
-                }
-            }
-        }
-
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
-
-        AccountObject account = userManager.getAccount(processToken.getAccountID());
-        UUID accountID = account.getID();
-        Set<GroupObject> groups = account.getGroups();
-        Set<UUID> groupIDs = new HashSet<>();
-        for (GroupObject group : groups) {
-            groupIDs.add(group.getID());
-        }
-        Set<UUID> roles = processToken.getRoles();
-
-        boolean allow = false;
-
-        for (AccessControlDefinition pair : effectiveAccessControls) {
-            if (pair.getType() == UserType.GROUP) {
-                if (groupIDs.contains(pair.getId())) {
-                    if (LogicalUtil.isAllExist(accessControl, pair.getValue())) {
-                        allow = true;
-                    }
-                    if (LogicalUtil.isAnyExist(pair.getValue(), accessControl << 1)) {
-                        return false;
-                    }
-                }
-            } else if (pair.getType() == UserType.ACCOUNT) {
-                if (accountID.equals(pair.getId())) {
-                    if (LogicalUtil.isAllExist(accessControl, pair.getValue())) {
-                        allow = true;
-                    }
-                    if (LogicalUtil.isAnyExist(pair.getValue(), accessControl << 1)) {
-                        return false;
-                    }
-                }
-            } else if (pair.getType() == UserType.ROLE) {
-                if (roles.contains(pair.getId())) {
-                    if (LogicalUtil.isAllExist(accessControl, pair.getValue())) {
-                        allow = true;
-                    }
-                    if (LogicalUtil.isAnyExist(pair.getValue(), accessControl << 1)) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return allow;
-    }
-
-    public void check(long accessControl) {
-        ProcessTokenObject processToken = this.getCurrentProcessToken();
-        if (processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)) {
-            return;
-        }
-
-        if (!this.allowAccessControl(accessControl)) {
-            throw new ConditionPermissionsException();
-        }
-    }
-
-    public List<SecurityDescriptorSummaryDefinition> getSummary() {
-        if (!this.permission) {
-            throw new StatusNotSupportedException();
-        }
-
-        ProcessTokenObject processToken = this.getCurrentProcessToken();
-
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowAccessControl(AccessControlType.READPERMISSIONDESCRIPTOR_ALLOW)) {
-            throw new ConditionPermissionsException();
-        }
 
         List<SecurityDescriptorSummaryDefinition> securityDescriptorSummaries = new ArrayList<>();
 
@@ -227,17 +110,43 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
             SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
             securityDescriptorSummary.getIdentifications().addAll(pair.identifications);
-            securityDescriptorSummary.setInherit(pair.value.isInherit());
-            securityDescriptorSummary.getAccessControls().addAll(pair.value.getAccessControls());
+
+            if (pair.permission) {
+                securityDescriptorSummary.setPermission(true);
+                securityDescriptorSummary.setInherit(pair.value.isInherit());
+                securityDescriptorSummary.getPermissions().addAll(pair.value.getPermissions());
+            } else {
+                securityDescriptorSummary.setPermission(false);
+            }
+
+            if (pair.audit) {
+                securityDescriptorSummary.setAudit(true);
+                securityDescriptorSummary.getAudits().addAll(pair.value.getAudits());
+            } else {
+                securityDescriptorSummary.setAudit(false);
+            }
+
             securityDescriptorSummaries.add(securityDescriptorSummary);
         }
 
-        this.init();
-
         SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
         securityDescriptorSummary.getIdentifications().addAll(this.identifications);
-        securityDescriptorSummary.setInherit(this.value.isInherit());
-        securityDescriptorSummary.getAccessControls().addAll(this.value.getAccessControls());
+
+        if (this.permission) {
+            securityDescriptorSummary.setPermission(true);
+            securityDescriptorSummary.setInherit(this.value.isInherit());
+            securityDescriptorSummary.getPermissions().addAll(this.value.getPermissions());
+
+        } else {
+            securityDescriptorSummary.setPermission(false);
+        }
+        if (this.audit) {
+            securityDescriptorSummary.setAudit(true);
+            securityDescriptorSummary.getAudits().addAll(this.value.getAudits());
+        } else {
+            securityDescriptorSummary.setAudit(false);
+        }
+
         securityDescriptorSummaries.add(securityDescriptorSummary);
 
         return securityDescriptorSummaries;
@@ -252,8 +161,12 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowAccessControl(AccessControlType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                && !this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
+        }
+
+        if (this.audit) {
+            this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
         }
 
         this.init();
@@ -270,8 +183,12 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowAccessControl(AccessControlType.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
+                && !this.allowPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
+        }
+
+        if (this.audit) {
+            this.checkAudit(AuditType.CHANGEPERMISSIONDESCRIPTOR);
         }
 
         this.lock(LockType.WRITE);
@@ -292,7 +209,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowAccessControl(AccessControlType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                && !this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
         }
 
@@ -310,8 +227,12 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowAccessControl(AccessControlType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                && !this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
+        }
+
+        if (this.audit) {
+            this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
         }
 
         this.init();
@@ -331,8 +252,12 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowAccessControl(AccessControlType.TAKEONWERSHIP_ALLOW)) {
+                && !this.allowPermission(PermissionType.TAKEONWERSHIP_ALLOW)) {
             throw new ConditionPermissionsException();
+        }
+
+        if (this.audit) {
+            this.checkAudit(AuditType.TAKEONWERSHIP);
         }
 
         this.lock(LockType.WRITE);
@@ -345,16 +270,128 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         this.lock(LockType.NONE);
     }
 
-    public void setAccessControls(Set<AccessControlDefinition> accessControls) {
-        if (ObjectUtil.isAnyNull(accessControls)) {
+    private boolean allowPermission(long permission) {
+        if (permission == PermissionType.NULL || LogicalUtil.isAnyExist(permission,
+                PermissionType.FULLCONTROL_DENY)) {
             throw new ConditionParametersException();
         }
         if (!this.permission) {
             throw new StatusNotSupportedException();
         }
 
-        for (AccessControlDefinition accessControl : accessControls) {
-            if (!this.value.isHasChild() && LogicalUtil.isAnyExist(accessControl.getScope(),
+        ProcessTokenObject processToken = this.getCurrentProcessToken();
+
+        if (processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)) {
+            return true;
+        }
+
+        List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
+        for (SecurityDescriptorObject pair : this.parents) {
+            pair.init();
+
+            if (pair.permission) {
+                securityDescriptors.add(pair.value);
+            } else {
+                securityDescriptors.clear();
+            }
+        }
+
+        this.init();
+
+        securityDescriptors.add(this.value);
+
+        Set<AccessControlDefinition> effectivePermissions = new HashSet<>();
+        for (int i = 0; i < securityDescriptors.size(); i++) {
+            if (!securityDescriptors.get(i).isInherit()) {
+                effectivePermissions.clear();
+            }
+
+            for (AccessControlDefinition pair : securityDescriptors.get(i).getPermissions()) {
+                if (LogicalUtil.isAllExist(AccessControlScopeType.THIS, pair.getScope())) {
+                    if (i == securityDescriptors.size() - 1) {
+                        effectivePermissions.add(pair);
+                    }
+                }
+                if (LogicalUtil.isAllExist(AccessControlScopeType.CHILD_HAS_CHILD, pair.getScope())) {
+                    if (i == securityDescriptors.size() - 2 && securityDescriptors.get(i + 1).isHasChild()) {
+                        effectivePermissions.add(pair);
+                    }
+                }
+                if (LogicalUtil.isAllExist(AccessControlScopeType.CHILD_HAS_NOT_CHILD, pair.getScope())) {
+                    if (i == securityDescriptors.size() - 2 && !securityDescriptors.get(i + 1).isHasChild()) {
+                        effectivePermissions.add(pair);
+                    }
+                }
+                if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_CHILD, pair.getScope())) {
+                    if (i < securityDescriptors.size() - 1 && securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
+                        effectivePermissions.add(pair);
+                    }
+                }
+                if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD, pair.getScope())) {
+                    if (i < securityDescriptors.size() - 1 && !securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
+                        effectivePermissions.add(pair);
+                    }
+                }
+            }
+        }
+
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+
+        AccountObject account = userManager.getAccount(processToken.getAccountID());
+        UUID accountID = account.getID();
+        Set<GroupObject> groups = account.getGroups();
+        Set<UUID> groupIDs = new HashSet<>();
+        for (GroupObject group : groups) {
+            groupIDs.add(group.getID());
+        }
+        Set<UUID> roles = processToken.getRoles();
+
+        boolean allow = false;
+
+        for (AccessControlDefinition pair : effectivePermissions) {
+            if (pair.getType() == UserType.GROUP && groupIDs.contains(pair.getId())) {
+                if (LogicalUtil.isAllExist(permission, pair.getValue())) {
+                    allow = true;
+                }
+                if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
+                    return false;
+                }
+            } else if (pair.getType() == UserType.ACCOUNT && accountID.equals(pair.getId())) {
+                if (LogicalUtil.isAllExist(permission, pair.getValue())) {
+                    allow = true;
+                }
+                if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
+                    return false;
+                }
+            } else if (pair.getType() == UserType.ROLE && roles.contains(pair.getId())) {
+                if (LogicalUtil.isAllExist(permission, pair.getValue())) {
+                    allow = true;
+                }
+                if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
+                    return false;
+                }
+            }
+        }
+
+        return allow;
+    }
+
+    public void checkPermission(long permission) {
+        if (!this.allowPermission(permission)) {
+            throw new ConditionPermissionsException();
+        }
+    }
+
+    public void setPermissions(Set<AccessControlDefinition> permissions) {
+        if (ObjectUtil.isAnyNull(permissions)) {
+            throw new ConditionParametersException();
+        }
+        if (!this.permission) {
+            throw new StatusNotSupportedException();
+        }
+
+        for (AccessControlDefinition permission : permissions) {
+            if (!this.value.isHasChild() && LogicalUtil.isAnyExist(permission.getScope(),
                     LogicalUtil.or(AccessControlScopeType.CHILD_HAS_CHILD,
                             AccessControlScopeType.CHILD_HAS_NOT_CHILD,
                             AccessControlScopeType.HIERARCHICAL_HAS_CHILD,
@@ -367,70 +404,133 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowAccessControl(AccessControlType.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
+                && !this.allowPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
+        }
+
+        if (this.audit) {
+            this.checkAudit(AuditType.CHANGEPERMISSIONDESCRIPTOR);
         }
 
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.getAccessControls().clear();
-        this.value.getAccessControls().addAll(accessControls);
+        this.value.getPermissions().clear();
+        this.value.getPermissions().addAll(permissions);
 
         this.fresh();
         this.lock(LockType.NONE);
     }
 
-    public void writeAudit(long accessControl) {
-        if (!this.permission || !this.audit) {
-            throw new StatusNotSupportedException();
-        }
-
-        if (LogicalUtil.isNotAllExist(this.value.getAudits(), accessControl)) {
-            return;
-        }
-
-        throw new StatusNotSupportedException();
-
-        /* Write in FileSystem:
-            /Files/Users/{Account Name}/Workspace/Archives/Logs/{LogID : String}.log
-            {LogID : String} is String not UUID
-        */
+    private void writeAudit(UUID id, long type, long audit) {
+        //
     }
 
-    public long getAudits() {
-        if (!this.permission || !this.audit) {
+    public void checkAudit(long audit) {
+        if (audit == AuditType.NULL) {
+            throw new ConditionParametersException();
+        }
+        if (!this.audit) {
             throw new StatusNotSupportedException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getOwners().contains(processToken.getAccountID())) {
-            throw new ConditionPermissionsException();
+        List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
+        for (SecurityDescriptorObject pair : this.parents) {
+            pair.init();
+
+            if (pair.audit) {
+                securityDescriptors.add(pair.value);
+            } else {
+                securityDescriptors.clear();
+            }
         }
 
         this.init();
 
-        return value.getAudits();
+        securityDescriptors.add(this.value);
+
+        Set<AccessControlDefinition> effectiveAudits = new HashSet<>();
+        for (int i = 0; i < securityDescriptors.size(); i++) {
+            for (AccessControlDefinition pair : securityDescriptors.get(i).getAudits()) {
+                if (LogicalUtil.isAllExist(AccessControlScopeType.THIS, pair.getScope())) {
+                    if (i == securityDescriptors.size() - 1) {
+                        effectiveAudits.add(pair);
+                    }
+                }
+                if (LogicalUtil.isAllExist(AccessControlScopeType.CHILD_HAS_CHILD, pair.getScope())) {
+                    if (i == securityDescriptors.size() - 2 && securityDescriptors.get(i + 1).isHasChild()) {
+                        effectiveAudits.add(pair);
+                    }
+                }
+                if (LogicalUtil.isAllExist(AccessControlScopeType.CHILD_HAS_NOT_CHILD, pair.getScope())) {
+                    if (i == securityDescriptors.size() - 2 && !securityDescriptors.get(i + 1).isHasChild()) {
+                        effectiveAudits.add(pair);
+                    }
+                }
+                if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_CHILD, pair.getScope())) {
+                    if (i < securityDescriptors.size() - 1 && securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
+                        effectiveAudits.add(pair);
+                    }
+                }
+                if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD, pair.getScope())) {
+                    if (i < securityDescriptors.size() - 1 && !securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
+                        effectiveAudits.add(pair);
+                    }
+                }
+            }
+        }
+
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+
+        AccountObject account = userManager.getAccount(processToken.getAccountID());
+        UUID accountID = account.getID();
+        Set<GroupObject> groups = account.getGroups();
+        Set<UUID> groupIDs = new HashSet<>();
+        for (GroupObject group : groups) {
+            groupIDs.add(group.getID());
+        }
+        Set<UUID> roles = processToken.getRoles();
+
+        for (AccessControlDefinition pair : effectiveAudits) {
+            if (pair.getType() == UserType.GROUP && groupIDs.contains(pair.getId())) {
+                if (LogicalUtil.isAllExist(audit, pair.getValue())) {
+                    this.writeAudit(pair.getId(), UserType.GROUP, audit);
+                }
+            } else if (pair.getType() == UserType.ACCOUNT && accountID.equals(pair.getId())) {
+                if (LogicalUtil.isAllExist(audit, pair.getValue())) {
+                    this.writeAudit(pair.getId(), UserType.ACCOUNT, audit);
+                }
+            } else if (pair.getType() == UserType.ROLE && roles.contains(pair.getId())) {
+                if (LogicalUtil.isAllExist(audit, pair.getValue())) {
+                    this.writeAudit(pair.getId(), UserType.ROLE, audit);
+                }
+            }
+        }
     }
 
-    public void setAudits(long audits) {
-        if (!this.permission || !this.audit) {
+    public void setAudits(Set<AccessControlDefinition> audits) {
+        if (ObjectUtil.isAnyNull(audits)) {
+            throw new ConditionParametersException();
+        }
+        if (!this.audit) {
             throw new StatusNotSupportedException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getOwners().contains(processToken.getAccountID())) {
+        if (this.permission && !processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                && !this.value.getOwners().contains(processToken.getAccountID())
+                && !this.allowPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionsException();
         }
 
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.setAudits(audits);
+        this.value.getAudits().clear();
+        this.value.getAudits().addAll(audits);
 
         this.fresh();
         this.lock(LockType.NONE);

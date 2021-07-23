@@ -18,7 +18,7 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.security.values.SecurityDescriptorDefinition;
 import indi.sly.system.kernel.security.prototypes.*;
-import indi.sly.system.kernel.security.values.AccessControlType;
+import indi.sly.system.kernel.security.values.PermissionType;
 import indi.sly.system.kernel.security.values.AuditType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -52,16 +52,8 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 }
             }
 
-            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                securityDescriptor.setPermission(true);
-            } else {
-                securityDescriptor.setPermission(false);
-            }
-            if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                securityDescriptor.setAudit(true);
-            } else {
-                securityDescriptor.setAudit(false);
-            }
+            securityDescriptor.setPermission(type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION));
+            securityDescriptor.setAudit(type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT));
 
             return securityDescriptor;
         };
@@ -71,10 +63,10 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    securityDescriptor.check(AccessControlType.LISTCHILD_READDATA_ALLOW);
+                    securityDescriptor.checkPermission(PermissionType.LISTCHILD_READDATA_ALLOW);
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(AuditType.LISTCHILD_READDATA);
+                    securityDescriptor.checkAudit(AuditType.LISTCHILD_READDATA);
                 }
             }
 
@@ -86,10 +78,10 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    securityDescriptor.check(AccessControlType.LISTCHILD_READDATA_ALLOW);
+                    securityDescriptor.checkPermission(PermissionType.LISTCHILD_READDATA_ALLOW);
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(AuditType.LISTCHILD_READDATA);
+                    securityDescriptor.checkAudit(AuditType.LISTCHILD_READDATA);
                 }
             }
 
@@ -101,10 +93,10 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    securityDescriptor.check(AccessControlType.CREATECHILD_WRITEDATA_ALLOW);
+                    securityDescriptor.checkPermission(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(AuditType.CREATECHILD_WRITEDATA);
+                    securityDescriptor.checkAudit(AuditType.CREATECHILD_WRITEDATA);
                 }
             }
 
@@ -136,10 +128,10 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    securityDescriptor.check(AccessControlType.TRAVERSE_EXECUTE_ALLOW);
+                    securityDescriptor.checkPermission(PermissionType.TRAVERSE_EXECUTE_ALLOW);
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(AuditType.TRAVERSE_EXECUTE);
+                    securityDescriptor.checkAudit(AuditType.TRAVERSE_EXECUTE);
                 }
             }
 
@@ -151,10 +143,10 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    securityDescriptor.check(AccessControlType.DELETECHILD_ALLOW);
+                    securityDescriptor.checkPermission(PermissionType.DELETECHILD_ALLOW);
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(AuditType.DELETECHILD);
+                    securityDescriptor.checkAudit(AuditType.DELETECHILD);
                 }
             }
         };
@@ -164,10 +156,10 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    securityDescriptor.check(AccessControlType.LISTCHILD_READDATA_ALLOW);
+                    securityDescriptor.checkPermission(PermissionType.LISTCHILD_READDATA_ALLOW);
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(AuditType.LISTCHILD_READDATA);
+                    securityDescriptor.checkAudit(AuditType.LISTCHILD_READDATA);
                 }
             }
 
@@ -179,10 +171,10 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    securityDescriptor.check(LogicalUtil.or(AccessControlType.CREATECHILD_WRITEDATA_ALLOW, AccessControlType.DELETECHILD_ALLOW));
+                    securityDescriptor.checkPermission(LogicalUtil.or(PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.DELETECHILD_ALLOW));
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(LogicalUtil.or(AuditType.CREATECHILD_WRITEDATA,
+                    securityDescriptor.checkAudit(LogicalUtil.or(AuditType.CREATECHILD_WRITEDATA,
                             AuditType.DELETECHILD));
                 }
             }
@@ -193,10 +185,10 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    securityDescriptor.check(AccessControlType.READPROPERTIES_ALLOW);
+                    securityDescriptor.checkPermission(PermissionType.READPROPERTIES_ALLOW);
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(AuditType.READPROPERTIES);
+                    securityDescriptor.checkAudit(AuditType.READPROPERTIES);
                 }
             }
 
@@ -208,10 +200,10 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    securityDescriptor.check(AccessControlType.WRITEPROPERTIES_ALLOW);
+                    securityDescriptor.checkPermission(PermissionType.WRITEPROPERTIES_ALLOW);
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(AuditType.WRITEPROPERTIES);
+                    securityDescriptor.checkAudit(AuditType.WRITEPROPERTIES);
                 }
             }
         };
@@ -221,10 +213,10 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    securityDescriptor.check(AccessControlType.LISTCHILD_READDATA_ALLOW);
+                    securityDescriptor.checkPermission(PermissionType.LISTCHILD_READDATA_ALLOW);
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(AuditType.LISTCHILD_READDATA);
+                    securityDescriptor.checkAudit(AuditType.LISTCHILD_READDATA);
                 }
             }
 
@@ -236,10 +228,10 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    securityDescriptor.check(AccessControlType.CREATECHILD_WRITEDATA_ALLOW);
+                    securityDescriptor.checkPermission(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                    securityDescriptor.writeAudit(AuditType.CREATECHILD_WRITEDATA);
+                    securityDescriptor.checkAudit(AuditType.CREATECHILD_WRITEDATA);
                 }
             }
         };

@@ -14,15 +14,15 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
     private boolean inherit;
     private boolean hasChild;
     private final Set<UUID> owners;
-    private final Set<AccessControlDefinition> accessControls;
-    private long audits;
+    private final Set<AccessControlDefinition> permissions;
+    private final Set<AccessControlDefinition> audits;
 
     public SecurityDescriptorDefinition() {
         this.inherit = true;
         this.hasChild = false;
         this.owners = new HashSet<>();
-        this.accessControls = new HashSet<>();
-        this.audits = AuditType.NULL;
+        this.permissions = new HashSet<>();
+        this.audits = new HashSet<>();
     }
 
     public boolean isHasChild() {
@@ -45,16 +45,12 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
         return this.owners;
     }
 
-    public Set<AccessControlDefinition> getAccessControls() {
-        return this.accessControls;
+    public Set<AccessControlDefinition> getPermissions() {
+        return this.permissions;
     }
 
-    public long getAudits() {
+    public Set<AccessControlDefinition> getAudits() {
         return this.audits;
-    }
-
-    public void setAudits(long audits) {
-        this.audits = audits;
     }
 
     @Override
@@ -62,16 +58,12 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SecurityDescriptorDefinition that = (SecurityDescriptorDefinition) o;
-        return inherit == that.inherit &&
-                hasChild == that.hasChild &&
-                audits == that.audits &&
-                owners.equals(that.owners) &&
-                accessControls.equals(that.accessControls);
+        return inherit == that.inherit && hasChild == that.hasChild && owners.equals(that.owners) && permissions.equals(that.permissions) && audits.equals(that.audits);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(inherit, hasChild, owners, accessControls, audits);
+        return Objects.hash(inherit, hasChild, owners, permissions, audits);
     }
 
     @Override
@@ -81,8 +73,8 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
         definition.inherit = this.inherit;
         definition.hasChild = this.hasChild;
         definition.owners.addAll(this.owners);
-        definition.accessControls.addAll(this.accessControls);
-        definition.audits = this.audits;
+        definition.permissions.addAll(this.permissions);
+        definition.audits.addAll(this.audits);
 
         return definition;
     }
@@ -101,10 +93,13 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
 
         valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.accessControls.add(ObjectUtil.readExternal(in));
+            this.permissions.add(ObjectUtil.readExternal(in));
         }
 
-        this.audits = NumberUtil.readExternalLong(in);
+        valueInteger = NumberUtil.readExternalInteger(in);
+        for (int i = 0; i < valueInteger; i++) {
+            this.audits.add(ObjectUtil.readExternal(in));
+        }
     }
 
     @Override
@@ -117,11 +112,14 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
             UUIDUtil.writeExternal(out, pair);
         }
 
-        NumberUtil.writeExternalInteger(out, this.accessControls.size());
-        for (AccessControlDefinition pair : this.accessControls) {
+        NumberUtil.writeExternalInteger(out, this.permissions.size());
+        for (AccessControlDefinition pair : this.permissions) {
             ObjectUtil.writeExternal(out, pair);
         }
 
-        NumberUtil.writeExternalLong(out, this.audits);
+        NumberUtil.writeExternalInteger(out, this.audits.size());
+        for (AccessControlDefinition pair : this.audits) {
+            ObjectUtil.writeExternal(out, pair);
+        }
     }
 }

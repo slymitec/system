@@ -49,6 +49,9 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
             = UUIDUtil.getFormLongs(-6207449898682267310L, -6401172295543185544L);
     public final UUID SECURITY_GROUP_USERS_ID
             = UUIDUtil.getFormLongs(-7945695043641654534L, -7688533197792195691L);
+    public final UUID SECURITY_INSTANCE_AUDIT_ID
+            = UUIDUtil.getFormLongs(3236896532833520303L, -7376471019645273123L);
+    public final String SECURITY_INSTANCE_AUDIT_NAME = "Audit";
     public final UUID SECURITY_ROLE_API_ID
             = UUIDUtil.getFormLongs(8490229373355246097L, -7508645069123139812L);
     public final UUID SECURITY_ROLE_BATCHES_ID
@@ -61,4 +64,21 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
             = UUIDUtil.getFormLongs(1951212975570568104L, -8968775932760482565L);
     public final UUID SECURITY_ROLE_GUI_ID
             = UUIDUtil.getFormLongs(-1619619213472611191L, -4997309008069038213L);
+
+    // public final UUID * = UUIDUtil.getFormLongs(5141458603474635654L, -6744682139694385633L);
+    // public final UUID * = UUIDUtil.getFormLongs(-7191269949502635218L, -6103845440396733665L);
+    // public final UUID * = UUIDUtil.getFormLongs(1978793907977537155L, -7186786965693311562L);
+    // public final UUID * = UUIDUtil.getFormLongs(-623865349106545073L, -6997297376516953324L);
+    // public final UUID * = UUIDUtil.getFormLongs(-3687831299068770016L, -5951841443637097351L);
+    // public final UUID * = UUIDUtil.getFormLongs(-1889690034818560723L, -6740428121948687006L);
+    // public final UUID * = UUIDUtil.getFormLongs(-6717814366200446673L, -7746254531580977695L);
+    // public final UUID * = UUIDUtil.getFormLongs(4921857748973800422L, -8509547467847298937L);
+    // public final UUID * = UUIDUtil.getFormLongs(-3593723732334522685L, -8403161936913422272L);
+    // public final UUID * = UUIDUtil.getFormLongs(664567456178587062L, -7473974241703046221L);
+    // public final UUID * = UUIDUtil.getFormLongs(6777827075164359237L, -6593606754970534053L);
+    // public final UUID * = UUIDUtil.getFormLongs(-8145858833867586780L, -8296701644252688692L);
+    // public final UUID * = UUIDUtil.getFormLongs(-5587006296190270038L, -8092516312838105945L);
+    // public final UUID * = UUIDUtil.getFormLongs(-5122125579855835153L, -5714034909898196951L);
+    // public final UUID * = UUIDUtil.getFormLongs(-6975266409795927796L, -5673552816359443899L);
+    // public final UUID * = UUIDUtil.getFormLongs(-1949419174447854865L, -7648010831023358931L);
 }

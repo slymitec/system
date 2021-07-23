@@ -6,10 +6,17 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.objects.ObjectManager;
+import indi.sly.system.kernel.objects.prototypes.InfoObject;
+import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
 import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.instances.prototypes.PortContentObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
+import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import indi.sly.system.kernel.security.UserManager;
+import indi.sly.system.kernel.security.instances.prototypes.AuditContentObject;
 import indi.sly.system.kernel.security.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -423,15 +430,40 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         this.lock(LockType.NONE);
     }
 
-    private void writeAudit(Set<UserIDDefinition> userIDs, long audit) {
+    private void writeAudit(Set<UserIDDefinition> userIDs, long value) {
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        UUID accountID = processToken.getAccountID();
-        List<IdentificationDefinition> identifications = this.identifications;
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
+            InfoObject audits = objectManager.get(List.of(new IdentificationDefinition("Audits")));
 
+            UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().SECURITY_INSTANCE_AUDIT_ID;
 
-        //
+            InfoObject audit = audits.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
+                    InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
+            SecurityDescriptorObject securityDescriptor = audit.getSecurityDescriptor();
+            Set<AccessControlDefinition> permissions = new HashSet<>();
+            AccessControlDefinition permission = new AccessControlDefinition();
+            permission.getUserID().setID(processToken.getAccountID());
+            permission.getUserID().setType(UserType.ACCOUNT);
+            permission.setScope(AccessControlScopeType.THIS);
+            permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+            permissions.add(permission);
+            securityDescriptor.setPermissions(permissions);
+            AuditContentObject auditContent = (AuditContentObject) audit.getContent();
+            auditContent.setUserIDs(userIDs);
+            auditContent.setAudit(value);
+            auditContent.setIdentifications(this.identifications);
+            audit.close();
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void checkAudit(long audit) {

@@ -5,6 +5,7 @@ import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,31 +43,29 @@ public class AuditContentObject extends AInfoContentObject {
         return this.audit.getProcessID();
     }
 
-    public void setProcessID(UUID processID) {
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            this.audit.setProcessID(processID);
-
-            this.fresh();
-        } finally {
-            this.lock(LockType.NONE);
-        }
-    }
-
     public UUID getAccountID() {
         this.init();
 
         return this.audit.getAccountID();
     }
 
-    public void setAccountID(UUID accountID) {
+    public List<IdentificationDefinition> getIdentifications() {
+        this.init();
+
+        return Collections.unmodifiableList(this.audit.getIdentifications());
+    }
+
+    public void setIdentifications(List<IdentificationDefinition> identifications) {
+        if (ObjectUtil.isAnyNull(identifications)) {
+            throw new ConditionParametersException();
+        }
+
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            this.audit.setAccountID(accountID);
+            this.audit.getIdentifications().clear();
+            this.audit.getIdentifications().addAll(identifications);
 
             this.fresh();
         } finally {

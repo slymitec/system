@@ -15,6 +15,8 @@ import indi.sly.system.kernel.processes.instances.values.PortDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
+import indi.sly.system.kernel.security.instances.prototypes.AuditContentObject;
+import indi.sly.system.kernel.security.instances.values.AuditDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -45,12 +47,12 @@ public class AuditTypeInitializer extends ATypeInitializer {
         ProcessObject process = processManager.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        PortDefinition port = new PortDefinition();
+        AuditDefinition audit = new AuditDefinition();
 
-        port.setProcessID(process.getID());
-        port.setLimit(processToken.getLimits().get(ProcessTokenLimitType.PORT_LENGTH_MAX));
+        audit.setProcessID(process.getID());
+        audit.setAccountID(processToken.getAccountID());
 
-        info.setContent(ObjectUtil.transferToByteArray(port));
+        info.setContent(ObjectUtil.transferToByteArray(audit));
     }
 
     @Override
@@ -103,7 +105,7 @@ public class AuditTypeInitializer extends ATypeInitializer {
     @Override
     public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info,
                                                                        InfoStatusOpenDefinition statusOpen) {
-        return PortContentObject.class;
+        return AuditContentObject.class;
     }
 
     @Override

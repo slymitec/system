@@ -4,9 +4,9 @@ public interface TypeInitializerAttributeType {
     long CAN_BE_EXECUTED = 1L << 1;
     long CAN_BE_SENT_AND_INHERITED = 1L << 2;
     long CAN_BE_SHARED_READ = 1L << 3;
-    long CAN_BE_SHARED_WRITE = CAN_BE_SHARED_READ | 1L << 4;
+    long CAN_BE_SHARED_WRITTEN = CAN_BE_SHARED_READ | 1L << 4;
     long CHILD_IS_NAMELESS = 1L << 5;
-    long DONOT_USE_TYPE_COUNT = 1L << 6;
+    long DO_NOT_USE_TYPE_COUNT = 1L << 6;
     long HAS_AUDIT = 1L << 7;
     long HAS_CHILD = 1L << 8;
     long HAS_CONTENT = 1L << 9;

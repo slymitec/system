@@ -28,7 +28,7 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
                     || (openAttribute == InfoStatusOpenAttributeType.OPEN_ONLY_READ && info.getOpened() > 0
                     && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_SHARED_READ))
                     || (openAttribute == InfoStatusOpenAttributeType.OPEN_SHARED_WRITE
-                    && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_SHARED_WRITE))) {
+                    && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN))) {
                 throw new StatusNotSupportedException();
             }
 

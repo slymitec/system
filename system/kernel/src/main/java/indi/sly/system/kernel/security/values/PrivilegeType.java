@@ -1,12 +1,12 @@
 package indi.sly.system.kernel.security.values;
 
 public interface PrivilegeType {
-    long NULL = 0;
+    long NULL = 0L;
     long FULL = -1L;
 
     long CORE_MODIFY_PRIVILEGES = PrivilegeType.FULL;
     long CORE_MODIFY_DATETIME = 1L;
-    long MEMORY_CACHE_MODIFYKERNELSPACECACHE = 1L << 2;
+    long MEMORY_CACHE_MODIFY_KERNEL_SPACE_CACHE = 1L << 2;
     long OBJECTS_ACCESS_INFOOBJECTS = 1L << 3;
     long PROCESSES_MODIFY_ANY_PROCESSES = 1L << 4;
     long PROCESSES_MODIFY_LIMITS = 1L << 5;

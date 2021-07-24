@@ -25,7 +25,7 @@ public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             status.getOpen().setAttribute(openAttribute);
 
-            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DONOT_USE_TYPE_COUNT)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DO_NOT_USE_TYPE_COUNT)) {
                 type.addTotalOccupiedCount();
             }
 
@@ -38,7 +38,7 @@ public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
         this.close = (info, type, status) -> {
             status.getOpen().setAttribute(InfoStatusOpenAttributeType.CLOSE);
 
-            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DONOT_USE_TYPE_COUNT)) {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DO_NOT_USE_TYPE_COUNT)) {
                 type.minusTotalOccupiedCount();
             }
 

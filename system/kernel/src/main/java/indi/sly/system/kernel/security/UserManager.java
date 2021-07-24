@@ -1,17 +1,18 @@
 package indi.sly.system.kernel.security;
 
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
+import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
+import indi.sly.system.kernel.security.instances.prototypes.wrappers.AuditTypeInitializer;
 import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.Set;
 import java.util.UUID;
 
 @Named
@@ -33,6 +35,20 @@ public class UserManager extends AManager {
         if (startupTypes == StartupType.STEP_INIT) {
         } else if (startupTypes == StartupType.STEP_KERNEL) {
             this.factory = this.factoryManager.create(UserFactory.class);
+
+            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+
+            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+
+            Set<UUID> childTypes = Set.of(UUIDUtil.getEmpty());
+
+            typeManager.create(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID,
+                    kernelConfiguration.SECURITY_INSTANCE_AUDIT_NAME,
+                    LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
+                            TypeInitializerAttributeType.CAN_BE_SHARED_READ,
+                            TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
+                            TypeInitializerAttributeType.HAS_PROPERTIES),
+                    childTypes, this.factoryManager.create(AuditTypeInitializer.class));
         }
     }
 
@@ -208,5 +224,32 @@ public class UserManager extends AManager {
 
         GroupEntity group = userRepository.getGroup(groupID);
         userRepository.delete(group);
+    }
+
+    public AccountAuthorizationObject authorize(String accountName, String accountPassword) {
+        if (StringUtil.isNameIllegal(accountName)) {
+            throw new ConditionParametersException();
+        }
+        if (ObjectUtil.isAnyNull(accountPassword)) {
+            accountPassword = StringUtil.EMPTY;
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrentProcess();
+        ProcessTokenObject processToken = process.getToken();
+
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+        AccountObject account = userManager.getAccount(accountName);
+
+        AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
+
+        if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
+                && !ObjectUtil.equals(account.getPassword(), accountPassword)) {
+            throw new ConditionRefuseException();
+        }
+
+        accountAuthorization.setSource(account);
+
+        return accountAuthorization;
     }
 }

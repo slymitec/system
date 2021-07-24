@@ -10,9 +10,14 @@ import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import indi.sly.system.kernel.security.values.PrivilegeType;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
+import javax.inject.Named;
 import java.util.Map;
 
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserTokenObject extends ABytesValueProcessPrototype<AccountAuthorizationTokenDefinition> {
     public long getPrivileges() {
         this.init();

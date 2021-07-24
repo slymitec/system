@@ -28,6 +28,7 @@ import java.util.*;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SecurityDescriptorObject extends ABytesValueProcessPrototype<SecurityDescriptorDefinition> {
     public SecurityDescriptorObject() {
+        this.identifications = new ArrayList<>();
         this.parents = new ArrayList<>();
     }
 
@@ -51,17 +52,18 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         return source;
     }
 
-    private List<IdentificationDefinition> identifications;
+    private final List<IdentificationDefinition> identifications;
     private final List<SecurityDescriptorObject> parents;
     private boolean permission;
     private boolean audit;
 
     public void setIdentifications(List<IdentificationDefinition> identifications) {
-        if (ObjectUtil.isAnyNull(this.identifications)) {
+        if (ObjectUtil.isAnyNull(identifications)) {
             throw new ConditionParametersException();
         }
 
-        this.identifications = identifications;
+        this.identifications.clear();
+        this.identifications.addAll(identifications);
     }
 
     public void setParentSecurityDescriptor(SecurityDescriptorObject parentSecurityDescriptor) {

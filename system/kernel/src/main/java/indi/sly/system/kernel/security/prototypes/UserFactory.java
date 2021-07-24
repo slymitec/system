@@ -35,11 +35,11 @@ public class UserFactory extends APrototype {
         Provider<AccountEntity> funcRead = () -> account;
         Consumer1<AccountEntity> funcWrite = (AccountEntity source) -> {
         };
-        Consumer1<Long> funcLock = (lockType) -> {
+        Consumer1<Long> funcLock = (lock) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
-            accountGroupRepository.lock(account, lockType);
+            accountGroupRepository.lock(account, lock);
         };
 
         return this.buildAccount(funcRead, funcWrite, funcLock);
@@ -63,11 +63,11 @@ public class UserFactory extends APrototype {
         Provider<GroupEntity> funcRead = () -> group;
         Consumer1<GroupEntity> funcWrite = (GroupEntity source) -> {
         };
-        Consumer1<Long> funcLock = (lockType) -> {
+        Consumer1<Long> funcLock = (lock) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
-            accountGroupRepository.lock(group, lockType);
+            accountGroupRepository.lock(group, lock);
         };
 
         return this.buildGroup(funcRead, funcWrite, funcLock);

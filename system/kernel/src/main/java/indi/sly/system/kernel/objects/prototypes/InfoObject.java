@@ -124,7 +124,7 @@ public class InfoObject extends APrototype {
         }
     }
 
-    private synchronized void cache(long spaceType) {
+    private synchronized void cache(long space) {
         if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
@@ -136,19 +136,19 @@ public class InfoObject extends APrototype {
         InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 InfoCacheObject.class);
 
-        if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
+        if (LogicalUtil.isAnyExist(space, SpaceType.KERNEL)) {
             if (!currentProcessToken.isPrivileges(PrivilegeType.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
                 throw new ConditionPermissionsException();
             }
 
             kernelCache.add(SpaceType.KERNEL, this);
         }
-        if (LogicalUtil.isAnyExist(spaceType, SpaceType.USER)) {
+        if (LogicalUtil.isAnyExist(space, SpaceType.USER)) {
             kernelCache.add(SpaceType.USER, this);
         }
     }
 
-    private synchronized void uncache(long spaceType) {
+    private synchronized void uncache(long space) {
         if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
@@ -160,14 +160,14 @@ public class InfoObject extends APrototype {
         InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 InfoCacheObject.class);
 
-        if (LogicalUtil.isAnyExist(spaceType, SpaceType.KERNEL)) {
+        if (LogicalUtil.isAnyExist(space, SpaceType.KERNEL)) {
             if (!currentProcessToken.isPrivileges(PrivilegeType.MEMORY_CACHE_MODIFYKERNELSPACECACHE)) {
                 throw new ConditionPermissionsException();
             }
 
             kernelCache.delete(SpaceType.KERNEL, this.id);
         }
-        if (LogicalUtil.isAnyExist(spaceType, SpaceType.USER)) {
+        if (LogicalUtil.isAnyExist(space, SpaceType.USER)) {
             kernelCache.delete(SpaceType.USER, this.id);
         }
     }

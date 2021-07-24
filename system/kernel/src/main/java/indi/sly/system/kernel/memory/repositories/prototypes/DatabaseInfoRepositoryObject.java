@@ -81,25 +81,25 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
     }
 
     @Override
-    public void lock(InfoEntity info, long lockType) {
+    public void lock(InfoEntity info, long lock) {
         if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
         }
 
-        LockModeType lockModeType;
-        if (lockType == LockType.READ) {
-            lockModeType = LockModeType.PESSIMISTIC_READ;
-        } else if (lockType == LockType.WRITE) {
-            lockModeType = LockModeType.PESSIMISTIC_WRITE;
+        LockModeType lockMode;
+        if (lock == LockType.READ) {
+            lockMode = LockModeType.PESSIMISTIC_READ;
+        } else if (lock == LockType.WRITE) {
+            lockMode = LockModeType.PESSIMISTIC_WRITE;
         } else {
-            lockModeType = LockModeType.NONE;
+            lockMode = LockModeType.NONE;
         }
 
-        this.entityManager.lock(info, lockModeType);
+        this.entityManager.lock(info, lockMode);
 
         List<InfoRelationEntity> relations = this.listRelation(info);
         for (InfoRelationEntity relation : relations) {
-            this.entityManager.lock(relation, lockModeType);
+            this.entityManager.lock(relation, lockMode);
         }
     }
 

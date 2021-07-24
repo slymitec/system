@@ -13,7 +13,7 @@ public class CreateProcessDefinition extends ADefinition<CreateProcessDefinition
     private UUID fileHandle;
 
     private AccountAuthorizationObject accountAuthorization;
-    private long privilegeTypes;
+    private long privileges;
     private Map<Long, Integer> limits;
     private Set<UUID> additionalRoles;
 
@@ -39,12 +39,12 @@ public class CreateProcessDefinition extends ADefinition<CreateProcessDefinition
         this.accountAuthorization = accountAuthorization;
     }
 
-    public long getPrivilegeTypes() {
-        return this.privilegeTypes;
+    public long getPrivileges() {
+        return this.privileges;
     }
 
-    public void setPrivilegeTypes(long privilegeTypes) {
-        this.privilegeTypes = privilegeTypes;
+    public void setPrivileges(long privileges) {
+        this.privileges = privileges;
     }
 
     public Map<Long, Integer> getLimits() {

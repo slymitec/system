@@ -16,7 +16,7 @@ public abstract class AInfoRepositoryObject extends APrototype {
 
     public abstract void delete(InfoEntity info);
 
-    public abstract void lock(InfoEntity info, long lockType);
+    public abstract void lock(InfoEntity info, long lock);
 
     public abstract List<InfoRelationEntity> listRelation(InfoEntity info);
 

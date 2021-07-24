@@ -31,9 +31,9 @@ public class UserManager extends AManager {
     private UserFactory factory;
 
     @Override
-    public void startup(long startupTypes) {
-        if (startupTypes == StartupType.STEP_INIT) {
-        } else if (startupTypes == StartupType.STEP_KERNEL) {
+    public void startup(long startup) {
+        if (startup == StartupType.STEP_INIT) {
+        } else if (startup == StartupType.STEP_KERNEL) {
             this.factory = this.factoryManager.create(UserFactory.class);
 
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);

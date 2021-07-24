@@ -170,37 +170,37 @@ public class UserRepositoryObject extends APrototype {
         this.entityManager.remove(group);
     }
 
-    public void lock(AccountEntity account, long lockType) {
+    public void lock(AccountEntity account, long lock) {
         if (ObjectUtil.isAnyNull(account)) {
             throw new ConditionParametersException();
         }
 
-        LockModeType lockModeType;
-        if (lockType == LockType.READ) {
-            lockModeType = LockModeType.PESSIMISTIC_READ;
-        } else if (lockType == LockType.WRITE) {
-            lockModeType = LockModeType.PESSIMISTIC_WRITE;
+        LockModeType lockMode;
+        if (lock == LockType.READ) {
+            lockMode = LockModeType.PESSIMISTIC_READ;
+        } else if (lock == LockType.WRITE) {
+            lockMode = LockModeType.PESSIMISTIC_WRITE;
         } else {
-            lockModeType = LockModeType.NONE;
+            lockMode = LockModeType.NONE;
         }
 
-        this.entityManager.lock(account, lockModeType);
+        this.entityManager.lock(account, lockMode);
     }
 
-    public void lock(GroupEntity group, long lockType) {
+    public void lock(GroupEntity group, long lock) {
         if (ObjectUtil.isAnyNull(group)) {
             throw new ConditionParametersException();
         }
 
-        LockModeType lockModeType;
-        if (lockType == LockType.READ) {
-            lockModeType = LockModeType.PESSIMISTIC_READ;
-        } else if (lockType == LockType.WRITE) {
-            lockModeType = LockModeType.PESSIMISTIC_WRITE;
+        LockModeType lockMode;
+        if (lock == LockType.READ) {
+            lockMode = LockModeType.PESSIMISTIC_READ;
+        } else if (lock == LockType.WRITE) {
+            lockMode = LockModeType.PESSIMISTIC_WRITE;
         } else {
-            lockModeType = LockModeType.NONE;
+            lockMode = LockModeType.NONE;
         }
 
-        this.entityManager.lock(group, lockModeType);
+        this.entityManager.lock(group, lockMode);
     }
 }

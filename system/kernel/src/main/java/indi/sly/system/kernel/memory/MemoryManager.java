@@ -20,8 +20,8 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class MemoryManager extends AManager {
     @Override
-    public void startup(long startupTypes) {
-        if (startupTypes == StartupType.STEP_INIT) {
+    public void startup(long startup) {
+        if (startup == StartupType.STEP_INIT) {
             this.factoryManager.getCoreRepository().add(SpaceType.KERNEL,
                     this.factoryManager.create(InfoCacheObject.class));
             this.factoryManager.getCoreRepository().addByID(SpaceType.KERNEL,
@@ -32,7 +32,7 @@ public class MemoryManager extends AManager {
                     this.factoryManager.create(ProcessRepositoryObject.class));
             this.factoryManager.getCoreRepository().add(SpaceType.KERNEL,
                     this.factoryManager.create(UserRepositoryObject.class));
-        } else if (startupTypes == StartupType.STEP_KERNEL) {
+        } else if (startup == StartupType.STEP_KERNEL) {
         }
     }
 

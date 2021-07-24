@@ -114,13 +114,13 @@ public class CreateProcessBuilder extends APrototype {
         return this;
     }
 
-    public CreateProcessBuilder setPrivilegeTypes(long privilegeTypes) {
+    public CreateProcessBuilder setPrivileges(long privileges) {
         ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
         if (!parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
             throw new ConditionPermissionsException();
         }
 
-        this.createProcess.setPrivilegeTypes(privilegeTypes);
+        this.createProcess.setPrivileges(privileges);
 
         return this;
     }
@@ -213,8 +213,8 @@ public class CreateProcessBuilder extends APrototype {
         } else {
             processToken.inheritAccountID();
 
-            if (this.createProcess.getPrivilegeTypes() != PrivilegeType.NULL) {
-                processToken.inheritPrivileges(this.createProcess.getPrivilegeTypes());
+            if (this.createProcess.getPrivileges() != PrivilegeType.NULL) {
+                processToken.inheritPrivileges(this.createProcess.getPrivileges());
             } else {
                 processToken.inheritPrivileges();
             }

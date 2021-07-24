@@ -28,9 +28,9 @@ import indi.sly.system.kernel.objects.instances.prototypes.wrappers.NamelessFold
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TypeManager extends AManager {
     @Override
-    public void startup(long startupTypes) {
-        if (startupTypes == StartupType.STEP_INIT) {
-        } else if (startupTypes == StartupType.STEP_KERNEL) {
+    public void startup(long startup) {
+        if (startup == StartupType.STEP_INIT) {
+        } else if (startup == StartupType.STEP_KERNEL) {
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
             Set<UUID> childTypes = Set.of(UUIDUtil.getEmpty());

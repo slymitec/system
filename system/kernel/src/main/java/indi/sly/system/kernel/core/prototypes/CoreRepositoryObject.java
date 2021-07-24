@@ -35,42 +35,42 @@ public class CoreRepositoryObject extends APrototype {
         return this.factoryManager.getUserSpace();
     }
 
-    public Lock getLock(long spaceType, long lockType) {
-        Lock lock = null;
+    public Lock getLock(long space, long lock) {
+        Lock readWriteLock = null;
 
-        if (spaceType == SpaceType.KERNEL) {
-            if (lockType == LockType.READ) {
-                lock = this.getKernelSpace().getCorePrototypeLock().readLock();
-            } else if (lockType == LockType.WRITE) {
-                lock = this.getKernelSpace().getCorePrototypeLock().writeLock();
+        if (space == SpaceType.KERNEL) {
+            if (lock == LockType.READ) {
+                readWriteLock = this.getKernelSpace().getCorePrototypeLock().readLock();
+            } else if (lock == LockType.WRITE) {
+                readWriteLock = this.getKernelSpace().getCorePrototypeLock().writeLock();
             }
-        } else if (spaceType == SpaceType.USER) {
-            if (lockType == LockType.READ) {
-                lock = this.getUserSpace().getInfoObjectLock().readLock();
-            } else if (lockType == LockType.WRITE) {
-                lock = this.getUserSpace().getInfoObjectLock().writeLock();
+        } else if (space == SpaceType.USER) {
+            if (lock == LockType.READ) {
+                readWriteLock = this.getUserSpace().getInfoObjectLock().readLock();
+            } else if (lock == LockType.WRITE) {
+                readWriteLock = this.getUserSpace().getInfoObjectLock().writeLock();
             }
         }
 
-        if (ObjectUtil.isAnyNull(lock)) {
+        if (ObjectUtil.isAnyNull(readWriteLock)) {
             throw new StatusNotSupportedException();
         }
 
-        return lock;
+        return readWriteLock;
     }
 
-    public Set<APrototype> getAll(long spaceType) {
+    public Set<APrototype> getAll(long space) {
         Map<UUID, APrototype> corePrototypes;
 
-        if (spaceType == SpaceType.KERNEL) {
+        if (space == SpaceType.KERNEL) {
             corePrototypes = this.getKernelSpace().getCorePrototypes();
-        } else if (spaceType == SpaceType.USER) {
+        } else if (space == SpaceType.USER) {
             corePrototypes = new HashMap<>();
 
             for (Entry<UUID, InfoObject> pair : this.getUserSpace().getInfoObjects().entrySet()) {
                 corePrototypes.put(pair.getKey(), pair.getValue());
             }
-        } else if (spaceType == SpaceType.ALL) {
+        } else if (space == SpaceType.ALL) {
             corePrototypes = new HashMap<>(this.getKernelSpace().getCorePrototypes());
 
             for (Entry<UUID, InfoObject> pair : this.getUserSpace().getInfoObjects().entrySet()) {
@@ -239,18 +239,18 @@ public class CoreRepositoryObject extends APrototype {
         }
     }
 
-    public <T> Set<APrototype> getByImplementInterface(long spaceType, Class<T> clazz) {
+    public <T> Set<APrototype> getByImplementInterface(long space, Class<T> clazz) {
         if (!clazz.isInterface()) {
             throw new ConditionParametersException();
         }
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.READ);
+        if (space == SpaceType.KERNEL) {
+            Lock lock = this.getLock(space, LockType.READ);
 
             try {
                 lock.lock();
 
-                Set<APrototype> corePrototypes = this.getAll(spaceType);
+                Set<APrototype> corePrototypes = this.getAll(space);
                 Set<APrototype> resultCorePrototypes = new HashSet<>();
 
                 for (APrototype pair : corePrototypes) {

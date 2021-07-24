@@ -28,8 +28,8 @@ import javax.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FactoryManager extends AManager {
     @Override
-    public void startup(long startupTypes) {
-        if (startupTypes == StartupType.STEP_INIT) {
+    public void startup(long startup) {
+        if (startup == StartupType.STEP_INIT) {
             this.factoryManager = this;
             this.factoryManager.check();
 
@@ -51,7 +51,7 @@ public class FactoryManager extends AManager {
             // ...
             this.coreRepository.add(SpaceType.KERNEL, this.create(DateTimeObject.class));
             this.coreRepository.add(SpaceType.KERNEL, this.create(CoreRepositoryObject.class));
-        } else if (startupTypes == StartupType.STEP_KERNEL) {
+        } else if (startup == StartupType.STEP_KERNEL) {
         }
     }
 

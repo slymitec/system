@@ -36,11 +36,11 @@ public abstract class ATypeInitializer extends APrototype {
 
     public abstract void getProcedure(InfoEntity info);
 
-    public final void lockProcedure(InfoEntity info, long lockType) {
+    public final void lockProcedure(InfoEntity info, long lock) {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
-        infoRepository.lock(info, lockType);
+        infoRepository.lock(info, lock);
     }
 
     public abstract void dumpProcedure(InfoEntity info, DumpDefinition dump);

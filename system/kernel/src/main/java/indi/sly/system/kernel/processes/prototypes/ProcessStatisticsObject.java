@@ -16,10 +16,10 @@ import javax.inject.Named;
 public class ProcessStatisticsObject extends ABytesValueProcessPrototype<ProcessStatisticsDefinition> {
     protected ProcessObject process;
 
-    public long getDate(long dataTimeType) {
+    public long getDate(long dataTime) {
         this.init();
 
-        Long value = this.value.getDate().getOrDefault(dataTimeType, null);
+        Long value = this.value.getDate().getOrDefault(dataTime, null);
 
         if (ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();

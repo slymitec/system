@@ -31,11 +31,11 @@ public class GroupObject extends AValueProcessPrototype<GroupEntity> {
         UserTokenObject accountGroupToken = this.factoryManager.create(UserTokenObject.class);
 
         accountGroupToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
-        accountGroupToken.setLock((lockType) -> {
+        accountGroupToken.setLock((lock) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
-            accountGroupRepository.lock(this.value, lockType);
+            accountGroupRepository.lock(this.value, lock);
         });
 
         return accountGroupToken;

@@ -45,13 +45,13 @@ public abstract class ACoreProcessPrototype<T> extends APrototype {
         this.funcLock = funcLock;
     }
 
-    protected final void lock(long lockType) {
+    protected final void lock(long lock) {
         if (ObjectUtil.isAnyNull(this.funcRead, this.funcWrite)) {
             throw new StatusRelationshipErrorException();
         }
 
         if (ObjectUtil.allNotNull(this.funcLock)) {
-            this.funcLock.accept(lockType);
+            this.funcLock.accept(lock);
         }
     }
 

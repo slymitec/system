@@ -22,9 +22,9 @@ import indi.sly.system.kernel.objects.prototypes.InfoFactory;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ObjectManager extends AManager {
     @Override
-    public void startup(long startupTypes) {
-        if (startupTypes == StartupType.STEP_INIT) {
-        } else if (startupTypes == StartupType.STEP_KERNEL) {
+    public void startup(long startup) {
+        if (startup == StartupType.STEP_INIT) {
+        } else if (startup == StartupType.STEP_KERNEL) {
             InfoFactory infoFactory = this.factoryManager.create(InfoFactory.class);
             infoFactory.init();
 

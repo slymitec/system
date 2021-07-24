@@ -30,9 +30,9 @@ public class ProcessManager extends AManager {
     private ProcessFactory factory;
 
     @Override
-    public void startup(long startupTypes) {
-        if (startupTypes == StartupType.STEP_INIT) {
-        } else if (startupTypes == StartupType.STEP_KERNEL) {
+    public void startup(long startup) {
+        if (startup == StartupType.STEP_INIT) {
+        } else if (startup == StartupType.STEP_KERNEL) {
             this.factory = this.factoryManager.create(ProcessFactory.class);
             this.factory.init();
 
@@ -114,7 +114,7 @@ public class ProcessManager extends AManager {
     public ProcessObject createProcess(AccountAuthorizationObject accountAuthorization,
                                        Map<String, String> environmentVariable, UUID fileHandle,
                                        Map<Long, Integer> limits, Map<String, String> parameters,
-                                       long privilegeTypes, List<IdentificationDefinition> workFolder) {
+                                       long privileges, List<IdentificationDefinition> workFolder) {
         ProcessObject currentProcess = this.getCurrentProcess();
 
         CreateProcessBuilder createProcess = this.factory.createProcessBuilder();
@@ -134,8 +134,8 @@ public class ProcessManager extends AManager {
             parameters = new HashMap<>();
         }
         createProcess.setParameters(parameters);
-        if (privilegeTypes != PrivilegeType.NULL) {
-            createProcess.setPrivilegeTypes(privilegeTypes);
+        if (privileges != PrivilegeType.NULL) {
+            createProcess.setPrivileges(privileges);
         }
         if (ObjectUtil.isAnyNull(workFolder)) {
             workFolder = new ArrayList<>();

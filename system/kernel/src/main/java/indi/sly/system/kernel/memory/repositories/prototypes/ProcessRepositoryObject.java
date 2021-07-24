@@ -71,20 +71,20 @@ public class ProcessRepositoryObject extends APrototype {
         this.entityManager.remove(process);
     }
 
-    public void lock(ProcessEntity process, long lockType) {
+    public void lock(ProcessEntity process, long lock) {
         if (ObjectUtil.isAnyNull(process)) {
             throw new ConditionParametersException();
         }
 
-        LockModeType lockModeType;
-        if (lockType == LockType.READ) {
-            lockModeType = LockModeType.PESSIMISTIC_READ;
-        } else if (lockType == LockType.WRITE) {
-            lockModeType = LockModeType.PESSIMISTIC_WRITE;
+        LockModeType lockMode;
+        if (lock == LockType.READ) {
+            lockMode = LockModeType.PESSIMISTIC_READ;
+        } else if (lock == LockType.WRITE) {
+            lockMode = LockModeType.PESSIMISTIC_WRITE;
         } else {
-            lockModeType = LockModeType.NONE;
+            lockMode = LockModeType.NONE;
         }
 
-        this.entityManager.lock(process, lockModeType);
+        this.entityManager.lock(process, lockMode);
     }
 }

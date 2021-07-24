@@ -85,11 +85,11 @@ public class ProcessObject extends APrototype {
                 pair.accept(process, source);
             }
         });
-        processCommunication.setLock((lockType) -> {
+        processCommunication.setLock((lock) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
-            processRepository.lock(process, lockType);
+            processRepository.lock(process, lock);
         });
         processCommunication.process = this;
 
@@ -118,11 +118,11 @@ public class ProcessObject extends APrototype {
                 pair.accept(process, source);
             }
         });
-        processContext.setLock((lockType) -> {
+        processContext.setLock((lock) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
-            processRepository.lock(process, lockType);
+            processRepository.lock(process, lock);
         });
         processContext.process = this;
 
@@ -151,11 +151,11 @@ public class ProcessObject extends APrototype {
                 pair.accept(process, source);
             }
         });
-        processHandleTable.setLock((lockType) -> {
+        processHandleTable.setLock((lock) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
-            processRepository.lock(process, lockType);
+            processRepository.lock(process, lock);
         });
         processHandleTable.process = this;
 
@@ -171,11 +171,11 @@ public class ProcessObject extends APrototype {
             return process;
         }, (processEntity -> {
         }));
-        processSession.setLock((lockType) -> {
+        processSession.setLock((lock) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
-            processRepository.lock(process, lockType);
+            processRepository.lock(process, lock);
         });
         processSession.process = this;
         return processSession;
@@ -203,11 +203,11 @@ public class ProcessObject extends APrototype {
                 pair.accept(process, source);
             }
         });
-        processStatistics.setLock((lockType) -> {
+        processStatistics.setLock((lock) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
-            processRepository.lock(process, lockType);
+            processRepository.lock(process, lock);
         });
         processStatistics.process = this;
 
@@ -236,11 +236,11 @@ public class ProcessObject extends APrototype {
                 pair.accept(process, source);
             }
         });
-        processToken.setLock((lockType) -> {
+        processToken.setLock((lock) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
-            processRepository.lock(process, lockType);
+            processRepository.lock(process, lock);
         });
         processToken.process = this;
 

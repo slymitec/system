@@ -11,7 +11,7 @@ import javax.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class AManager extends APrototype implements IStartupCapable {
     @Override
-    public void startup(long startupTypes) {
+    public void startup(long startup) {
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 
 import javax.inject.Named;
 
+import indi.sly.system.common.lang.Consumer;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -61,18 +62,17 @@ public abstract class ATypeInitializer extends APrototype {
 
     protected abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen);
 
-    public final AInfoContentObject getContentProcedure(InfoEntity info, Provider<byte[]> funcRead, Consumer1<byte[]> funcWrite, InfoStatusOpenDefinition statusOpen) {
+    public final AInfoContentObject getContentProcedure(InfoEntity info, Provider<byte[]> funcRead,
+                                                        Consumer1<byte[]> funcWrite, Consumer funcExecute,
+                                                        InfoStatusOpenDefinition statusOpen) {
         AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, statusOpen));
 
         content.setSource(funcRead, funcWrite);
         content.setLock((lockMode) -> this.lockProcedure(info, lockMode));
+        content.setExecute(funcExecute);
         content.setStatusOpen(statusOpen);
 
         return content;
-    }
-
-    public final AInfoContentObject getContentProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen) {
-        return this.getContentProcedure(info, info::getContent, info::setContent, statusOpen);
     }
 
     public abstract void refreshPropertiesProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen);

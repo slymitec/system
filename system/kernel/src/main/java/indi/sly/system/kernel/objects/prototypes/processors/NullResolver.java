@@ -37,6 +37,9 @@ public class NullResolver extends APrototype implements IInfoResolver {
 
         this.writeContent = (info, type, status, content) -> {
         };
+
+        this.executeContent = (info, type, status) -> {
+        };
     }
 
     private final DumpFunction dump;
@@ -51,6 +54,7 @@ public class NullResolver extends APrototype implements IInfoResolver {
     private final WritePropertyConsumer writeProperties;
     private final ReadContentFunction readContent;
     private final WriteContentConsumer writeContent;
+    private final ExecuteContentConsumer executeContent;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
@@ -66,5 +70,6 @@ public class NullResolver extends APrototype implements IInfoResolver {
         processorMediator.getWriteProperties().add(this.writeProperties);
         processorMediator.getReadContents().add(this.readContent);
         processorMediator.getWriteContents().add(this.writeContent);
+        processorMediator.getExecuteContents().add(this.executeContent);
     }
 }

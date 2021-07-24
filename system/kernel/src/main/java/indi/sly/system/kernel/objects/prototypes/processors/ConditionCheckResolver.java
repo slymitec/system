@@ -120,6 +120,16 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
                 throw new StatusRelationshipErrorException();
             }
         };
+
+        this.executeContent = (info, type, status) -> {
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CONTENT)
+                    || !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_EXECUTED)) {
+                throw new StatusNotSupportedException();
+            }
+            if (status.getOpen().getAttribute() == InfoStatusOpenAttributeType.CLOSE) {
+                throw new StatusRelationshipErrorException();
+            }
+        };
     }
 
     private final OpenFunction open;
@@ -133,6 +143,7 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
     private final WritePropertyConsumer writeProperties;
     private final ReadContentFunction readContent;
     private final WriteContentConsumer writeContent;
+    private final ExecuteContentConsumer executeContent;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
@@ -147,6 +158,7 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
         processorMediator.getWriteProperties().add(this.writeProperties);
         processorMediator.getReadContents().add(this.readContent);
         processorMediator.getWriteContents().add(this.writeContent);
+        processorMediator.getExecuteContents().add(this.executeContent);
     }
 
 }

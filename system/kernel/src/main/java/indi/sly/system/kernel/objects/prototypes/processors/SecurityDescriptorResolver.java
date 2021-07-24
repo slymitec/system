@@ -235,6 +235,19 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
                 }
             }
         };
+
+        this.executeContent = (info, type, status) -> {
+            if ((type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
+                    securityDescriptor.checkPermission(PermissionType.TRAVERSE_EXECUTE_ALLOW);
+                }
+                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
+                    securityDescriptor.checkAudit(AuditType.TRAVERSE_EXECUTE);
+                }
+            }
+        };
     }
 
     private final SecurityDescriptorFunction securityDescriptor;
@@ -249,6 +262,7 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
     private final WritePropertyConsumer writeProperties;
     private final ReadContentFunction readContent;
     private final WriteContentConsumer writeContent;
+    private final ExecuteContentConsumer executeContent;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
@@ -273,5 +287,6 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
         processorMediator.getWriteProperties().add(this.writeProperties);
         processorMediator.getReadContents().add(this.readContent);
         processorMediator.getWriteContents().add(this.writeContent);
+        processorMediator.getExecuteContents().add(this.executeContent);
     }
 }

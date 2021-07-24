@@ -40,7 +40,7 @@ public class UserManager extends AManager {
 
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
-            Set<UUID> childTypes = Set.of(UUIDUtil.getEmpty());
+            Set<UUID> childTypes = Set.of();
 
             typeManager.create(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID,
                     kernelConfiguration.SECURITY_INSTANCE_AUDIT_NAME,

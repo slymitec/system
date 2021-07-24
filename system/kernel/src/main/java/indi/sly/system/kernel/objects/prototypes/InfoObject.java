@@ -473,6 +473,12 @@ public class InfoObject extends APrototype {
             for (WriteContentConsumer resolver : resolvers) {
                 resolver.accept(info, type, status, contentSource);
             }
+        }, () -> {
+            List<ExecuteContentConsumer> resolvers = this.processorMediator.getExecuteContents();
+
+            for (ExecuteContentConsumer resolver : resolvers) {
+                resolver.accept(info, type, status);
+            }
         }, this.status.getOpen());
 
         content.setInfo(this);

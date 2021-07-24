@@ -38,7 +38,7 @@ public class SessionManager extends AManager {
 
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
-            Set<UUID> childTypes = Set.of(UUIDUtil.getEmpty());
+            Set<UUID> childTypes = Set.of();
 
             typeManager.create(kernelConfiguration.PROCESSES_CONTEXT_INSTANCE_SESSION_ID,
                     kernelConfiguration.PROCESSES_CONTEXT_INSTANCE_SESSION_NAME,

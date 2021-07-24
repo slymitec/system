@@ -1,19 +1,8 @@
 package indi.sly.system.kernel.objects.prototypes.wrappers;
 
 import java.util.*;
-import java.util.function.Predicate;
 
-import indi.sly.system.common.lang.*;
-import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.lang.*;
-import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.values.DumpDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
-import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
-import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 
 public class InfoProcessorMediator {
     public InfoProcessorMediator() {
@@ -29,6 +18,7 @@ public class InfoProcessorMediator {
         this.writeProperties = new ArrayList<>();
         this.readContents = new ArrayList<>();
         this.writeContents = new ArrayList<>();
+        this.executeContents = new ArrayList<>();
     }
 
     private InfoFunction info;
@@ -46,6 +36,7 @@ public class InfoProcessorMediator {
     private final List<WritePropertyConsumer> writeProperties;
     private final List<ReadContentFunction> readContents;
     private final List<WriteContentConsumer> writeContents;
+    private final List<ExecuteContentConsumer> executeContents;
 
     public InfoFunction getInfo() {
         return this.info;
@@ -117,5 +108,9 @@ public class InfoProcessorMediator {
 
     public List<WriteContentConsumer> getWriteContents() {
         return this.writeContents;
+    }
+
+    public List<ExecuteContentConsumer> getExecuteContents() {
+        return this.executeContents;
     }
 }

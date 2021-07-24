@@ -118,8 +118,8 @@ public class AccountAuthorizationObject extends APrototype {
         userTokens.add(account.getToken());
 
         for (UserTokenObject userToken : userTokens) {
-            accountAuthorizationToken.setPrivileges(LogicalUtil.or(accountAuthorizationToken.getPrivileges()
-                    , userToken.getPrivileges()));
+            accountAuthorizationToken.setPrivileges(LogicalUtil.or(accountAuthorizationToken.getPrivileges(),
+                    userToken.getPrivileges()));
 
             for (Map.Entry<Long, Integer> pair : userToken.getLimits().entrySet()) {
                 int value = accountAuthorizationTokenLimits.getOrDefault(pair.getKey(), Integer.MAX_VALUE);

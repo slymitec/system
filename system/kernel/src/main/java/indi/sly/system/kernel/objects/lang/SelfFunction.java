@@ -10,5 +10,5 @@ import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import java.util.UUID;
 
 @FunctionalInterface
-public interface InfoFunction extends Function3<InfoEntity, UUID, UUID, InfoStatusDefinition> {
+public interface SelfFunction extends Function3<InfoEntity, UUID, UUID, InfoStatusDefinition> {
 }

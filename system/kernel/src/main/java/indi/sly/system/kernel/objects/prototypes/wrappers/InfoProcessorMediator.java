@@ -21,7 +21,7 @@ public class InfoProcessorMediator {
         this.executeContents = new ArrayList<>();
     }
 
-    private InfoFunction info;
+    private SelfFunction self;
     private ParentFunction parent;
     private SecurityDescriptorFunction securityDescriptor;
     private final List<DumpFunction> dumps;
@@ -38,12 +38,12 @@ public class InfoProcessorMediator {
     private final List<WriteContentConsumer> writeContents;
     private final List<ExecuteContentConsumer> executeContents;
 
-    public InfoFunction getInfo() {
-        return this.info;
+    public SelfFunction getSelf() {
+        return this.self;
     }
 
-    public void setInfo(InfoFunction info) {
-        this.info = info;
+    public void setSelf(SelfFunction self) {
+        this.self = self;
     }
 
     public ParentFunction getParent() {

@@ -61,7 +61,7 @@ public class InfoObject extends APrototype {
             throw new ConditionContextException();
         }
 
-        return this.getInfo().getType();
+        return this.getSelf().getType();
     }
 
     public long getOccupied() {
@@ -69,7 +69,7 @@ public class InfoObject extends APrototype {
             throw new ConditionContextException();
         }
 
-        return this.getInfo().getOccupied();
+        return this.getSelf().getOccupied();
     }
 
     public long getOpened() {
@@ -77,7 +77,7 @@ public class InfoObject extends APrototype {
             throw new ConditionContextException();
         }
 
-        return this.getInfo().getOpened();
+        return this.getSelf().getOpened();
     }
 
     public String getName() {
@@ -85,7 +85,7 @@ public class InfoObject extends APrototype {
             throw new ConditionContextException();
         }
 
-        return this.getInfo().getName();
+        return this.getSelf().getName();
     }
 
     public UUID getHandle() {
@@ -105,7 +105,7 @@ public class InfoObject extends APrototype {
     }
 
     private synchronized void occupy() {
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
         info.setOccupied(info.getOccupied() + 1);
 
         InfoObject parent = this.getParent();
@@ -115,7 +115,7 @@ public class InfoObject extends APrototype {
     }
 
     private synchronized void free() {
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
         info.setOccupied(info.getOccupied() - 1);
 
         InfoObject parent = this.getParent();
@@ -172,12 +172,12 @@ public class InfoObject extends APrototype {
         }
     }
 
-    private synchronized InfoEntity getInfo() {
-        return this.processorMediator.getInfo().apply(this.poolID, this.id, this.status);
+    private synchronized InfoEntity getSelf() {
+        return this.processorMediator.getSelf().apply(this.poolID, this.id, this.status);
     }
 
     public synchronized InfoObject getParent() {
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         if (ValueUtil.isAnyNullOrEmpty(this.status.getParentID())) {
             return null;
@@ -187,7 +187,7 @@ public class InfoObject extends APrototype {
     }
 
     public synchronized Map<Long, Long> getDate() {
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
 
@@ -195,7 +195,7 @@ public class InfoObject extends APrototype {
     }
 
     public synchronized SecurityDescriptorObject getSecurityDescriptor() {
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -210,7 +210,7 @@ public class InfoObject extends APrototype {
     }
 
     public synchronized DumpObject dump() {
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -231,7 +231,7 @@ public class InfoObject extends APrototype {
             throw new StatusAlreadyFinishedException();
         }
 
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -259,7 +259,7 @@ public class InfoObject extends APrototype {
     }
 
     public synchronized void close() {
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         if (!this.isOpened()) {
             throw new StatusAlreadyFinishedException();
@@ -295,7 +295,7 @@ public class InfoObject extends APrototype {
             arguments = new Object[0];
         }
 
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject typeObject = typeManager.get(this.getType());
@@ -329,7 +329,7 @@ public class InfoObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -363,7 +363,7 @@ public class InfoObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
         InfoObject childInfo = this.getChild(identification);
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
@@ -383,7 +383,7 @@ public class InfoObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -405,7 +405,7 @@ public class InfoObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -418,7 +418,7 @@ public class InfoObject extends APrototype {
     }
 
     public synchronized Map<String, String> readProperties() {
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -439,7 +439,7 @@ public class InfoObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -452,7 +452,7 @@ public class InfoObject extends APrototype {
     }
 
     public synchronized AInfoContentObject getContent() {
-        InfoEntity info = this.getInfo();
+        InfoEntity info = this.getSelf();
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());

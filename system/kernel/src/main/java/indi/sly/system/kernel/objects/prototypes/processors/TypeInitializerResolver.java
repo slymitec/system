@@ -14,6 +14,9 @@ import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -32,12 +35,24 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
         };
 
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
-            type.getTypeInitializer().openProcedure(info, status.getOpen(), openAttribute, arguments);
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+
+            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(info.getID(), status);
+
+            type.getTypeInitializer().openProcedure(info, processHandleEntry.getOpen(), openAttribute, arguments);
 
             return handle;
         };
 
-        this.close = (info, type, status) -> type.getTypeInitializer().closeProcedure(info, status.getOpen());
+        this.close = (info, type, status) -> {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+
+            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(info.getID(), status);
+
+            type.getTypeInitializer().closeProcedure(info, processHandleEntry.getOpen());
+        };
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
             if (ObjectUtil.isAnyNull(childInfo)) {
@@ -148,6 +163,11 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
         };
 
         this.writeProperties = (info, type, status, properties) -> {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+
+            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(info.getID(), status);
+
             Map<String, String> newProperties = new HashMap<>();
 
             for (Entry<String, String> pair : properties.entrySet()) {
@@ -162,7 +182,11 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
 
             info.setProperties(newPropertiesSource);
 
-            type.getTypeInitializer().refreshPropertiesProcedure(info, status.getOpen());
+            if (processHandleEntry.isExist()) {
+                type.getTypeInitializer().refreshPropertiesProcedure(info, processHandleEntry.getOpen());
+            } else {
+                type.getTypeInitializer().refreshPropertiesProcedure(info, null);
+            }
         };
 
         this.readContent = (content, info, type, status) -> info.getContent();
@@ -173,6 +197,10 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
             }
 
             info.setContent(content);
+        };
+
+        this.executeContent = (info, type, status) -> {
+
         };
     }
 
@@ -188,6 +216,7 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
     private final WritePropertyConsumer writeProperties;
     private final ReadContentFunction readContent;
     private final WriteContentConsumer writeContent;
+    private final ExecuteContentConsumer executeContent;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
@@ -203,5 +232,11 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
         processorMediator.getWriteProperties().add(this.writeProperties);
         processorMediator.getReadContents().add(this.readContent);
         processorMediator.getWriteContents().add(this.writeContent);
+        processorMediator.getExecuteContents().add(this.executeContent);
+    }
+
+    @Override
+    public int order() {
+        return 2;
     }
 }

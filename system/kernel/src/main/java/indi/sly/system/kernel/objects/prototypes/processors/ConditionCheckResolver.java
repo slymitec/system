@@ -20,9 +20,6 @@ import java.util.UUID;
 public class ConditionCheckResolver extends APrototype implements IInfoResolver {
     public ConditionCheckResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
-            if (status.getOpen().getAttribute() != InfoStatusOpenAttributeType.CLOSE) {
-                throw new StatusAlreadyFinishedException();
-            }
             if (openAttribute == InfoStatusOpenAttributeType.CLOSE
                     || (openAttribute == InfoStatusOpenAttributeType.OPEN_EXCLUSIVE && info.getOpened() > 0)
                     || (openAttribute == InfoStatusOpenAttributeType.OPEN_ONLY_READ && info.getOpened() > 0
@@ -36,9 +33,6 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
         };
 
         this.close = (info, type, status) -> {
-            if (status.getOpen().getAttribute() == InfoStatusOpenAttributeType.CLOSE) {
-                throw new StatusAlreadyFinishedException();
-            }
         };
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
@@ -105,9 +99,6 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CONTENT)) {
                 throw new StatusNotSupportedException();
             }
-            if (status.getOpen().getAttribute() == InfoStatusOpenAttributeType.CLOSE) {
-                throw new StatusRelationshipErrorException();
-            }
 
             return content;
         };
@@ -116,18 +107,12 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CONTENT)) {
                 throw new StatusNotSupportedException();
             }
-            if (status.getOpen().getAttribute() == InfoStatusOpenAttributeType.CLOSE) {
-                throw new StatusRelationshipErrorException();
-            }
         };
 
         this.executeContent = (info, type, status) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CONTENT)
                     || !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_EXECUTED)) {
                 throw new StatusNotSupportedException();
-            }
-            if (status.getOpen().getAttribute() == InfoStatusOpenAttributeType.CLOSE) {
-                throw new StatusRelationshipErrorException();
             }
         };
     }
@@ -161,4 +146,8 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
         processorMediator.getExecuteContents().add(this.executeContent);
     }
 
+    @Override
+    public int order() {
+        return 0;
+    }
 }

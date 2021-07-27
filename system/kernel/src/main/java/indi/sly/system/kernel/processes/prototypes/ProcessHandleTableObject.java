@@ -92,7 +92,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
 
             ProcessHandleEntryDefinition processHandleEntry = parentProcessHandleTable.value.get(handle);
             parentProcessHandleTable.value.delete(handle);
-            this.value.add(handle, processHandleEntry);
+            this.value.add(processHandleEntry);
 
             parentProcessHandleTable.fresh();
             this.fresh();
@@ -127,8 +127,8 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
         return info;
     }
 
-    public ProcessHandleEntryObject getEntry(InfoStatusDefinition status) {
-        if (ObjectUtil.isAnyNull(status)) {
+    public ProcessHandleEntryObject getEntry(UUID infoID, InfoStatusDefinition status) {
+        if (ObjectUtil.isAnyNull(infoID, status)) {
             throw new ConditionParametersException();
         }
 
@@ -141,6 +141,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
         });
         processHandleInfo.setLock(this::lock);
         processHandleInfo.processToken = this.process.getToken();
+        processHandleInfo.infoID = infoID;
         processHandleInfo.status = status;
 
         return processHandleInfo;

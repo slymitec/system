@@ -17,12 +17,9 @@ import indi.sly.system.common.values.ADefinition;
 public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
     private final List<IdentificationDefinition> identifications;
     private UUID parentID;
-    private UUID handle;
-    private InfoStatusOpenDefinition open;
 
     public InfoStatusDefinition() {
         this.identifications = new ArrayList<>();
-        this.open = new InfoStatusOpenDefinition();
     }
 
     public List<IdentificationDefinition> getIdentifications() {
@@ -37,37 +34,18 @@ public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
         this.parentID = parentID;
     }
 
-
-    public UUID getHandle() {
-        return handle;
-    }
-
-    public void setHandle(UUID handle) {
-        this.handle = handle;
-    }
-
-    public InfoStatusOpenDefinition getOpen() {
-        return open;
-    }
-
-    public void setOpen(InfoStatusOpenDefinition open) {
-        this.open = open;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InfoStatusDefinition that = (InfoStatusDefinition) o;
         return identifications.equals(that.identifications) &&
-                Objects.equals(parentID, that.parentID) &&
-                Objects.equals(handle, that.handle) &&
-                open.equals(that.open);
+                Objects.equals(parentID, that.parentID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(identifications, parentID, handle, open);
+        return Objects.hash(identifications, parentID);
     }
 
     @Override
@@ -76,8 +54,6 @@ public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
 
         definition.identifications.addAll(this.identifications);
         definition.parentID = this.parentID;
-        definition.handle = this.handle;
-        definition.open = this.open.deepClone();
 
         return definition;
     }
@@ -91,7 +67,6 @@ public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
             this.identifications.add(ObjectUtil.readExternal(in));
         }
         this.parentID = UUIDUtil.readExternal(in);
-        this.open = ObjectUtil.readExternal(in);
     }
 
     @Override
@@ -101,6 +76,5 @@ public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
             ObjectUtil.writeExternal(out, pair);
         }
         UUIDUtil.writeExternal(out, this.parentID);
-        ObjectUtil.writeExternal(out, this.open);
     }
 }

@@ -289,4 +289,9 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
         processorMediator.getWriteContents().add(this.writeContent);
         processorMediator.getExecuteContents().add(this.executeContent);
     }
+
+    @Override
+    public int order() {
+        return 1;
+    }
 }

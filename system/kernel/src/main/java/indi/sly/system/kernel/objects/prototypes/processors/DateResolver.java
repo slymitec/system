@@ -80,4 +80,9 @@ public class DateResolver extends APrototype implements IInfoResolver {
         processorMediator.getReadContents().add(this.readContent);
         processorMediator.getWriteContents().add(this.writeContent);
     }
+
+    @Override
+    public int order() {
+        return 3;
+    }
 }

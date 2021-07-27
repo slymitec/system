@@ -11,7 +11,6 @@ import indi.sly.system.kernel.objects.lang.OpenFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -23,8 +22,6 @@ import javax.inject.Named;
 public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
     public OpenOrCloseResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
-            status.getOpen().setAttribute(openAttribute);
-
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DO_NOT_USE_TYPE_COUNT)) {
                 type.addTotalOccupiedCount();
             }
@@ -36,8 +33,6 @@ public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
         };
 
         this.close = (info, type, status) -> {
-            status.getOpen().setAttribute(InfoStatusOpenAttributeType.CLOSE);
-
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DO_NOT_USE_TYPE_COUNT)) {
                 type.minusTotalOccupiedCount();
             }
@@ -72,4 +67,8 @@ public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
         processorMediator.getCloses().add(this.close);
     }
 
+    @Override
+    public int order() {
+        return 1;
+    }
 }

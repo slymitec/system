@@ -14,8 +14,8 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessAndThreadResolver extends APrototype implements IInfoResolver {
-    public ProcessAndThreadResolver() {
+public class ProcessAndThreadStatisticsResolver extends APrototype implements IInfoResolver {
+    public ProcessAndThreadStatisticsResolver() {
         this.dump = (dump, info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
@@ -43,9 +43,6 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
 
-            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(status);
-            handle = processHandleEntry.add();
-
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
             processStatistics.addInfoOpen(1);
@@ -60,9 +57,6 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
-
-            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(status);
-            processHandleEntry.delete();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
@@ -186,6 +180,19 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             processStatistics.addInfoWrite(1);
             threadStatistics.addInfoWrite(1);
         };
+
+        this.executeContent = (info, type, status) -> {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+
+            ProcessObject process = processManager.getCurrent();
+            ThreadObject thread = threadManager.getCurrent();
+
+            ProcessStatisticsObject processStatistics = process.getStatistics();
+            ThreadStatisticsObject threadStatistics = thread.getStatistics();
+            processStatistics.addInfoRead(1);
+            threadStatistics.addInfoRead(1);
+        };
     }
 
     private final DumpFunction dump;
@@ -200,6 +207,7 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
     private final WritePropertyConsumer writeProperties;
     private final ReadContentFunction readContent;
     private final WriteContentConsumer writeContent;
+    private final ExecuteContentConsumer executeContent;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
@@ -215,5 +223,11 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
         processorMediator.getWriteProperties().add(this.writeProperties);
         processorMediator.getReadContents().add(this.readContent);
         processorMediator.getWriteContents().add(this.writeContent);
+        processorMediator.getExecuteContents().add(this.executeContent);
+    }
+
+    @Override
+    public int order() {
+        return 3;
     }
 }

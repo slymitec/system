@@ -38,4 +38,9 @@ public class GetInfoParentResolver extends APrototype implements IInfoResolver {
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
         processorMediator.setParent(this.parent);
     }
+
+    @Override
+    public int order() {
+        return 0;
+    }
 }

@@ -31,4 +31,9 @@ public class GetInfoSelfResolver extends APrototype implements IInfoResolver {
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
         processorMediator.setSelf(this.info);
     }
+
+    @Override
+    public int order() {
+        return 0;
+    }
 }

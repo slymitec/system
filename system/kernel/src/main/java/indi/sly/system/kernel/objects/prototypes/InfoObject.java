@@ -19,6 +19,8 @@ import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.values.PrivilegeType;
@@ -86,14 +88,6 @@ public class InfoObject extends APrototype {
         }
 
         return this.getSelf().getName();
-    }
-
-    public UUID getHandle() {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
-            throw new ConditionContextException();
-        }
-
-        return this.status.getHandle();
     }
 
     public List<IdentificationDefinition> getIdentifications() {
@@ -176,6 +170,20 @@ public class InfoObject extends APrototype {
         return this.processorMediator.getSelf().apply(this.poolID, this.id, this.status);
     }
 
+    private synchronized UUID getHandle() {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrent();
+        ProcessHandleTableObject processHandleTable = process.getHandleTable();
+        ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getEntry(this.id, this.status);
+
+        return processHandleTableEntry.getHandle();
+    }
+
     public synchronized InfoObject getParent() {
         InfoEntity info = this.getSelf();
 
@@ -215,7 +223,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        Set<DumpFunction> resolvers = this.processorMediator.getDumps();
+        List<DumpFunction> resolvers = this.processorMediator.getDumps();
 
         DumpDefinition dump = new DumpDefinition();
 
@@ -236,7 +244,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        Set<OpenFunction> resolvers = this.processorMediator.getOpens();
+        List<OpenFunction> resolvers = this.processorMediator.getOpens();
 
         UUID handle = UUIDUtil.getEmpty();
 
@@ -246,9 +254,6 @@ public class InfoObject extends APrototype {
                 throw new StatusUnexpectedException();
             }
         }
-
-        this.status.getOpen().setAttribute(openAttribute);
-        this.status.setHandle(handle);
 
         InfoObject parentInfo = this.getParent();
         if (ObjectUtil.allNotNull(parentInfo)) {
@@ -268,13 +273,11 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        Set<CloseConsumer> resolvers = this.processorMediator.getCloses();
+        List<CloseConsumer> resolvers = this.processorMediator.getCloses();
 
         for (CloseConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status);
         }
-
-        this.status.setHandle(null);
 
         InfoObject parentInfo = this.getParent();
         if (ObjectUtil.allNotNull(parentInfo)) {
@@ -283,12 +286,18 @@ public class InfoObject extends APrototype {
     }
 
     public synchronized boolean isOpened() {
-        return !ValueUtil.isAnyNullOrEmpty(this.status.getHandle());
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrent();
+        ProcessHandleTableObject processHandleTable = process.getHandleTable();
+        ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getEntry(this.id, this.status);
+
+        return processHandleTableEntry.isExist();
     }
 
     public synchronized InfoObject createChildAndOpen(UUID type, IdentificationDefinition identification,
                                                       long openAttribute, Object... arguments) {
-        if (!ValueUtil.isAnyNullOrEmpty(this.status.getHandle()) || ObjectUtil.isAnyNull(identification)) {
+        if (!ValueUtil.isAnyNullOrEmpty(this.getHandle()) || ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
         if (ObjectUtil.isAnyNull(arguments)) {
@@ -300,7 +309,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject typeObject = typeManager.get(this.getType());
 
-        Set<CreateChildAndOpenFunction> resolvers = this.processorMediator.getCreateChildAndOpens();
+        List<CreateChildAndOpenFunction> resolvers = this.processorMediator.getCreateChildAndOpens();
 
         InfoEntity childInfo = null;
 
@@ -334,7 +343,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        Set<GetOrRebuildChildFunction> resolvers = this.processorMediator.getGetOrRebuildChilds();
+        List<GetOrRebuildChildFunction> resolvers = this.processorMediator.getGetOrRebuildChilds();
 
         InfoEntity childInfo = null;
 
@@ -351,11 +360,7 @@ public class InfoObject extends APrototype {
 
         InfoObject childCachedInfo = infoCache.getIfExisted(SpaceType.ALL, childInfo.getID());
         if (ObjectUtil.isAnyNull(childCachedInfo)) {
-            childCachedInfo = this.factory.buildInfo(childInfo, statusOpen, this);
-
-            if (!ValueUtil.isAnyNullOrEmpty(handle)) {
-                childCachedInfo.status.setHandle(handle);
-            }
+            childCachedInfo = this.factory.buildInfo(childInfo, this);
 
             childCachedInfo.cache(SpaceType.USER);
         }
@@ -373,7 +378,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        Set<DeleteChildConsumer> resolvers = this.processorMediator.getDeleteChilds();
+        List<DeleteChildConsumer> resolvers = this.processorMediator.getDeleteChilds();
 
         for (DeleteChildConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status, identification);
@@ -392,7 +397,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        Set<QueryChildFunction> resolvers = this.processorMediator.getQueryChilds();
+        List<QueryChildFunction> resolvers = this.processorMediator.getQueryChilds();
 
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
@@ -414,7 +419,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        Set<RenameChildConsumer> resolvers = this.processorMediator.getRenameChilds();
+        List<RenameChildConsumer> resolvers = this.processorMediator.getRenameChilds();
 
         for (RenameChildConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status, oldIdentification, newIdentification);
@@ -427,7 +432,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        Set<ReadPropertyFunction> resolvers = this.processorMediator.getReadProperties();
+        List<ReadPropertyFunction> resolvers = this.processorMediator.getReadProperties();
 
         Map<String, String> properties = new HashMap<>();
 
@@ -448,7 +453,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        Set<WritePropertyConsumer> resolvers = this.processorMediator.getWriteProperties();
+        List<WritePropertyConsumer> resolvers = this.processorMediator.getWriteProperties();
 
         for (WritePropertyConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status, properties);
@@ -461,8 +466,13 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessHandleTableObject processHandleTable = process.getHandleTable();
+        ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getEntry(this.id, this.status);
+
         AInfoContentObject content = type.getTypeInitializer().getContentProcedure(info, () -> {
-            Set<ReadContentFunction> resolvers = this.processorMediator.getReadContents();
+            List<ReadContentFunction> resolvers = this.processorMediator.getReadContents();
 
             byte[] contentSource = null;
 
@@ -472,18 +482,18 @@ public class InfoObject extends APrototype {
 
             return contentSource;
         }, (byte[] contentSource) -> {
-            Set<WriteContentConsumer> resolvers = this.processorMediator.getWriteContents();
+            List<WriteContentConsumer> resolvers = this.processorMediator.getWriteContents();
 
             for (WriteContentConsumer resolver : resolvers) {
                 resolver.accept(info, type, status, contentSource);
             }
         }, () -> {
-            Set<ExecuteContentConsumer> resolvers = this.processorMediator.getExecuteContents();
+            List<ExecuteContentConsumer> resolvers = this.processorMediator.getExecuteContents();
 
             for (ExecuteContentConsumer resolver : resolvers) {
                 resolver.accept(info, type, status);
             }
-        }, this.status.getOpen());
+        }, processHandleTableEntry.getOpen());
 
         content.setInfo(this);
 

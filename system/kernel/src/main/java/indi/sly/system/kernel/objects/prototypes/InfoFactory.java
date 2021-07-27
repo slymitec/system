@@ -1,8 +1,11 @@
 package indi.sly.system.kernel.objects.prototypes;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.inject.Named;
 
@@ -31,10 +34,10 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoFactory extends APrototype {
-    protected Set<IInfoResolver> infoResolvers;
+    protected List<IInfoResolver> infoResolvers;
 
     public void init() {
-        this.infoResolvers = new ConcurrentSkipListSet<>();
+        this.infoResolvers = new CopyOnWriteArrayList<>();
 
         Set<APrototype> corePrototypes =
                 this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL,
@@ -45,6 +48,8 @@ public class InfoFactory extends APrototype {
                 infoResolvers.add((IInfoResolver) pair);
             }
         }
+
+        Collections.sort(infoResolvers);
     }
 
     private InfoObject buildInfo(InfoProcessorMediator processorMediator, UUID infoID, UUID poolID,
@@ -60,19 +65,13 @@ public class InfoFactory extends APrototype {
         return infoObject;
     }
 
-    private InfoObject buildInfo(InfoEntity info, InfoStatusOpenDefinition statusOpen, UUID poolID,
-                                 InfoObject parentInfo) {
+    private InfoObject buildInfo(InfoEntity info, UUID poolID, InfoObject parentInfo) {
         InfoProcessorMediator processorMediator = this.factoryManager.create(InfoProcessorMediator.class);
         for (IInfoResolver infoResolver : this.infoResolvers) {
             infoResolver.resolve(info, processorMediator);
         }
 
         InfoStatusDefinition status = new InfoStatusDefinition();
-        if (ObjectUtil.isAnyNull(statusOpen)) {
-            statusOpen = new InfoStatusOpenDefinition();
-            statusOpen.setAttribute(InfoStatusOpenAttributeType.CLOSE);
-        }
-        status.setOpen(statusOpen);
 
         if (ObjectUtil.allNotNull(parentInfo)) {
             status.setParentID(parentInfo.getID());
@@ -99,15 +98,10 @@ public class InfoFactory extends APrototype {
         InfoEntity info =
                 infoRepository.get(kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
 
-        return this.buildInfo(info, null,
-                kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID, null);
+        return this.buildInfo(info, kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID, null);
     }
 
     public InfoObject buildInfo(InfoEntity info, InfoObject parentInfo) {
-        return this.buildInfo(info, null, parentInfo);
-    }
-
-    public InfoObject buildInfo(InfoEntity info, InfoStatusOpenDefinition statusOpen, InfoObject parentInfo) {
         if (ObjectUtil.isAnyNull(info, parentInfo)) {
             throw new ConditionParametersException();
         }
@@ -116,7 +110,7 @@ public class InfoFactory extends APrototype {
         TypeObject type = typeManager.get(info.getType());
         UUID poolID = type.getTypeInitializer().getPoolID(info.getID(), info.getType());
 
-        return this.buildInfo(info, statusOpen, poolID, parentInfo);
+        return this.buildInfo(info, poolID, parentInfo);
     }
 
 

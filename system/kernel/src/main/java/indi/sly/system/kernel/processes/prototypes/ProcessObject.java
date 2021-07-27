@@ -1,8 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionContextException;
-import indi.sly.system.common.lang.Consumer2;
-import indi.sly.system.common.lang.Function2;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
@@ -23,7 +21,7 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessObject extends APrototype {
     protected ProcessFactory factory;
-    protected ProcessProcessorMediator processorRegister;
+    protected ProcessProcessorMediator processorMediator;
 
     protected UUID id;
 
@@ -44,7 +42,7 @@ public class ProcessObject extends APrototype {
     }
 
     private synchronized ProcessEntity getProcess() {
-        return this.processorRegister.getProcess().apply(this.id);
+        return this.processorMediator.getProcess().apply(this.id);
     }
 
     public UUID getParentProcessID() {
@@ -56,7 +54,7 @@ public class ProcessObject extends APrototype {
 
         ProcessStatusObject processStatus = this.factoryManager.create(ProcessStatusObject.class);
 
-        processStatus.processorRegister = this.processorRegister;
+        processStatus.processorMediator = this.processorMediator;
         processStatus.setSource(() -> process, (ProcessEntity source) -> {
         });
         processStatus.process = this;
@@ -71,7 +69,7 @@ public class ProcessObject extends APrototype {
 
         processCommunication.setSource(() -> {
             List<ReadProcessComponentFunction> funcs =
-                    this.processorRegister.getReadProcessCommunications();
+                    this.processorMediator.getReadProcessCommunications();
 
             byte[] source = null;
 
@@ -81,7 +79,7 @@ public class ProcessObject extends APrototype {
 
             return source;
         }, (byte[] source) -> {
-            List<WriteProcessComponentConsumer> funcs = this.processorRegister.getWriteProcessCommunications();
+            List<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessCommunications();
 
             for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
@@ -104,7 +102,7 @@ public class ProcessObject extends APrototype {
         ProcessContextObject processContext = this.factoryManager.create(ProcessContextObject.class);
 
         processContext.setSource(() -> {
-            List<ReadProcessComponentFunction> funcs = this.processorRegister.getReadProcessContexts();
+            List<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessContexts();
 
             byte[] source = null;
 
@@ -114,7 +112,7 @@ public class ProcessObject extends APrototype {
 
             return source;
         }, (byte[] source) -> {
-            List<WriteProcessComponentConsumer> funcs = this.processorRegister.getWriteProcessContexts();
+            List<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessContexts();
 
             for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
@@ -137,7 +135,7 @@ public class ProcessObject extends APrototype {
         ProcessHandleTableObject processHandleTable = this.factoryManager.create(ProcessHandleTableObject.class);
 
         processHandleTable.setSource(() -> {
-            List<ReadProcessComponentFunction> funcs = this.processorRegister.getReadProcessHandleTables();
+            List<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessHandleTables();
 
             byte[] source = null;
 
@@ -147,7 +145,7 @@ public class ProcessObject extends APrototype {
 
             return source;
         }, (byte[] source) -> {
-            List<WriteProcessComponentConsumer> funcs = this.processorRegister.getWriteProcessHandleTables();
+            List<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessHandleTables();
 
             for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
@@ -189,7 +187,7 @@ public class ProcessObject extends APrototype {
         ProcessStatisticsObject processStatistics = this.factoryManager.create(ProcessStatisticsObject.class);
 
         processStatistics.setSource(() -> {
-            List<ReadProcessComponentFunction> funcs = this.processorRegister.getReadProcessStatistics();
+            List<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessStatistics();
 
             byte[] source = null;
 
@@ -199,7 +197,7 @@ public class ProcessObject extends APrototype {
 
             return source;
         }, (byte[] source) -> {
-            List<WriteProcessComponentConsumer> funcs = this.processorRegister.getWriteProcessStatistics();
+            List<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessStatistics();
 
             for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
@@ -222,7 +220,7 @@ public class ProcessObject extends APrototype {
         ProcessTokenObject processToken = this.factoryManager.create(ProcessTokenObject.class);
 
         processToken.setSource(() -> {
-            List<ReadProcessComponentFunction> funcs = this.processorRegister.getReadProcessTokens();
+            List<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessTokens();
 
             byte[] source = null;
 
@@ -232,7 +230,7 @@ public class ProcessObject extends APrototype {
 
             return source;
         }, (byte[] source) -> {
-            List<WriteProcessComponentConsumer> funcs = this.processorRegister.getWriteProcessTokens();
+            List<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessTokens();
 
             for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);

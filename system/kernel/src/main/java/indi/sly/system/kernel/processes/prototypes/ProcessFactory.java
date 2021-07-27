@@ -1,10 +1,15 @@
 package indi.sly.system.kernel.processes.prototypes;
 
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.processes.prototypes.processors.IProcessCreatorResolver;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessCreatorProcessorMediator;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
+import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.processors.IProcessResolver;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -19,9 +24,11 @@ import java.util.concurrent.ConcurrentSkipListSet;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessFactory extends APrototype {
     protected Set<IProcessResolver> processResolvers;
+    protected Set<IProcessCreatorResolver> processCreatorResolvers;
 
     public void init() {
         this.processResolvers = new ConcurrentSkipListSet<>();
+        this.processCreatorResolvers = new ConcurrentSkipListSet<>();
 
         Set<APrototype> corePrototypes =
                 this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL,
@@ -30,6 +37,8 @@ public class ProcessFactory extends APrototype {
         for (APrototype prototype : corePrototypes) {
             if (prototype instanceof IProcessResolver) {
                 processResolvers.add((IProcessResolver) prototype);
+            } else if (prototype instanceof IProcessCreatorResolver) {
+                processCreatorResolvers.add((IProcessCreatorResolver) prototype);
             }
         }
     }
@@ -41,7 +50,7 @@ public class ProcessFactory extends APrototype {
         ProcessObject process = this.factoryManager.create(ProcessObject.class);
 
         process.factory = this;
-        process.processorRegister = processorMediator;
+        process.processorMediator = processorMediator;
         process.id = processID;
         ProcessStatisticsObject processStatistics = process.getStatistics();
         processStatistics.setDate(DateTimeType.ACCESS, dateTime.getCurrentDateTime());
@@ -58,12 +67,21 @@ public class ProcessFactory extends APrototype {
         return this.buildProcess(processorMediator, process.getID());
     }
 
+    public ProcessCreatorBuilder createProcess(ProcessCreatorDefinition processCreator) {
+        if (ObjectUtil.isAnyNull(processCreator)) {
+            throw new ConditionParametersException();
+        }
 
-    public ACreateProcessBuilder createProcessBuilder() {
-        ACreateProcessBuilder createProcessBuilder = this.factoryManager.create(ACreateProcessBuilder.class);
+        ProcessCreatorProcessorMediator processorMediator = this.factoryManager.create(ProcessCreatorProcessorMediator.class);
+        for (IProcessCreatorResolver processCreatorResolver : this.processCreatorResolvers) {
+            processCreatorResolver.resolve(processCreator, processorMediator);
+        }
 
-        createProcessBuilder.processFactory = this;
+        ProcessCreatorBuilder processCreatorBuilder = this.factoryManager.create(ProcessCreatorBuilder.class);
 
-        return createProcessBuilder;
+        processCreatorBuilder.processorMediator = processorMediator;
+        processCreatorBuilder.factory = this;
+
+        return processCreatorBuilder;
     }
 }

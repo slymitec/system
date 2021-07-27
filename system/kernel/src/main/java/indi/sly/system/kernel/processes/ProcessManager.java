@@ -116,32 +116,32 @@ public class ProcessManager extends AManager {
                                        long privileges, List<IdentificationDefinition> workFolder) {
         ProcessObject currentProcess = this.getCurrent();
 
-        ACreateProcessBuilder createProcess = this.factory.createProcessBuilder();
+        ProcessCreatorBuilder processCreatorBuilder = this.factory.createProcess(null);
 
-        createProcess.setParentProcess(currentProcess);
-        if (ObjectUtil.allNotNull(accountAuthorization)) {
-            createProcess.setAccountAuthorization(accountAuthorization);
-        }
-        if (ObjectUtil.allNotNull(environmentVariable)) {
-            createProcess.setEnvironmentVariable(environmentVariable);
-        }
-        createProcess.setFileHandle(fileHandle);
-        if (ObjectUtil.allNotNull(limits)) {
-            createProcess.setLimits(limits);
-        }
-        if (ObjectUtil.isAnyNull(parameters)) {
-            parameters = new HashMap<>();
-        }
-        createProcess.setParameters(parameters);
-        if (privileges != PrivilegeType.NULL) {
-            createProcess.setPrivileges(privileges);
-        }
-        if (ObjectUtil.isAnyNull(workFolder)) {
-            workFolder = new ArrayList<>();
-        }
-        createProcess.setWorkFolder(workFolder);
+//        createProcess.setParentProcess(currentProcess);
+//        if (ObjectUtil.allNotNull(accountAuthorization)) {
+//            createProcess.setAccountAuthorization(accountAuthorization);
+//        }
+//        if (ObjectUtil.allNotNull(environmentVariable)) {
+//            createProcess.setEnvironmentVariable(environmentVariable);
+//        }
+//        createProcess.setFileHandle(fileHandle);
+//        if (ObjectUtil.allNotNull(limits)) {
+//            createProcess.setLimits(limits);
+//        }
+//        if (ObjectUtil.isAnyNull(parameters)) {
+//            parameters = new HashMap<>();
+//        }
+//        createProcess.setParameters(parameters);
+//        if (privileges != PrivilegeType.NULL) {
+//            createProcess.setPrivileges(privileges);
+//        }
+//        if (ObjectUtil.isAnyNull(workFolder)) {
+//            workFolder = new ArrayList<>();
+//        }
+//        createProcess.setWorkFolder(workFolder);
 
-        return createProcess.build();
+        return processCreatorBuilder.build();
     }
 
 

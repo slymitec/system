@@ -2,8 +2,6 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
-import indi.sly.system.common.lang.Consumer2;
-import indi.sly.system.common.lang.Function2;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
@@ -27,14 +25,14 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
-    protected ProcessProcessorMediator processorRegister;
+    protected ProcessProcessorMediator processorMediator;
 
     protected ProcessObject process;
 
     public long get() {
         Long status = ProcessStatusType.NULL;
 
-        List<ReadProcessStatusFunction> funcs = this.processorRegister.getReadProcessStatuses();
+        List<ReadProcessStatusFunction> funcs = this.processorMediator.getReadProcessStatuses();
 
         for (ReadProcessStatusFunction pair : funcs) {
             status = pair.apply(status, this.value);
@@ -59,7 +57,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             throw new ConditionPermissionsException();
         }
 
-        List<WriteProcessStatusConsumer> funcs = this.processorRegister.getWriteProcessStatuses();
+        List<WriteProcessStatusConsumer> funcs = this.processorMediator.getWriteProcessStatuses();
 
         for (WriteProcessStatusConsumer pair : funcs) {
             pair.accept(this.value, ProcessStatusType.INITIALIZATION);
@@ -74,7 +72,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
 
         this.init();
 
-        List<WriteProcessStatusConsumer> funcs = this.processorRegister.getWriteProcessStatuses();
+        List<WriteProcessStatusConsumer> funcs = this.processorMediator.getWriteProcessStatuses();
 
         for (WriteProcessStatusConsumer pair : funcs) {
             pair.accept(this.value, ProcessStatusType.RUNNING);
@@ -89,7 +87,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
 
         this.init();
 
-        List<WriteProcessStatusConsumer> funcs = this.processorRegister.getWriteProcessStatuses();
+        List<WriteProcessStatusConsumer> funcs = this.processorMediator.getWriteProcessStatuses();
 
         for (WriteProcessStatusConsumer pair : funcs) {
             pair.accept(this.value, ProcessStatusType.INTERRUPTED);
@@ -106,7 +104,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             this.lock(LockType.WRITE);
             this.init();
 
-            List<WriteProcessStatusConsumer> funcs = this.processorRegister.getWriteProcessStatuses();
+            List<WriteProcessStatusConsumer> funcs = this.processorMediator.getWriteProcessStatuses();
 
             for (WriteProcessStatusConsumer pair : funcs) {
                 pair.accept(this.value, ProcessStatusType.DIED);
@@ -153,7 +151,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             this.lock(LockType.WRITE);
             this.init();
 
-            List<WriteProcessStatusConsumer> funcs = this.processorRegister.getWriteProcessStatuses();
+            List<WriteProcessStatusConsumer> funcs = this.processorMediator.getWriteProcessStatuses();
 
             for (WriteProcessStatusConsumer pair : funcs) {
                 pair.accept(this.value, ProcessStatusType.ZOMBIE);

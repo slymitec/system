@@ -6,20 +6,19 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessCreatorProcessorMediator extends APrototype {
     public ProcessCreatorProcessorMediator() {
-        this.creates = new HashSet<>();
-
+        this.creates = new ArrayList<>();
     }
 
-    private final Set<CreateProcessFunction> creates;
+    private final List<CreateProcessFunction> creates;
 
-    public Set<CreateProcessFunction> getCreates() {
+    public List<CreateProcessFunction> getCreates() {
         return this.creates;
     }
 }

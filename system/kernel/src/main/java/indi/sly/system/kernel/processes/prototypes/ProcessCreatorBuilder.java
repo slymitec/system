@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.List;
 import java.util.Set;
 
 @Named
@@ -49,11 +50,17 @@ public class ProcessCreatorBuilder extends APrototype {
     public ProcessObject build() {
         ProcessObject process = this.init();
 
-        Set<CreateProcessFunction> funcs = this.processorMediator.getCreates();
+        ProcessStatusObject processStatus = process.getStatus();
+
+        processStatus.initialize();
+
+        List<CreateProcessFunction> funcs = this.processorMediator.getCreates();
 
         for (CreateProcessFunction pair : funcs) {
             pair.apply(process, this.parentProcess, this.processCreator);
         }
+
+        processStatus.run();
 
         return process;
     }

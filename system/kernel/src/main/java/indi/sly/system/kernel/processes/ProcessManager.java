@@ -111,53 +111,36 @@ public class ProcessManager extends AManager {
         return process;
     }
 
-    public ProcessObject createProcess(AccountAuthorizationObject accountAuthorization,
-                                       Map<String, String> environmentVariable, UUID fileHandle,
-                                       Map<Long, Integer> limits, Map<String, String> parameters,
-                                       long privileges, List<IdentificationDefinition> workFolder) {
+    public ProcessObject create(AccountAuthorizationObject accountAuthorization, Map<String, String> environmentVariable,
+                                UUID fileHandle, Map<Long, Integer> limits, Map<String, String> parameters, long privileges,
+                                List<IdentificationDefinition> workFolder) {
+        ProcessCreatorDefinition processCreator = new ProcessCreatorDefinition();
+
+        if (ObjectUtil.allNotNull(accountAuthorization)) {
+            processCreator.setAccountAuthorization(accountAuthorization);
+        }
+        if (privileges != PrivilegeType.NULL) {
+            processCreator.setPrivileges(privileges);
+        }
+        if (ObjectUtil.allNotNull(limits) && !limits.isEmpty()) {
+            processCreator.setLimits(limits);
+        }
+
+        processCreator.setFileHandle(fileHandle);
+
+        if (ObjectUtil.allNotNull(environmentVariable) && !environmentVariable.isEmpty()) {
+            processCreator.setEnvironmentVariable(environmentVariable);
+        }
+        if (ObjectUtil.allNotNull(parameters) && !parameters.isEmpty()) {
+            processCreator.setParameters(parameters);
+        }
+        if (ObjectUtil.allNotNull(workFolder)) {
+            processCreator.setWorkFolder(workFolder);
+        }
+
         ProcessObject currentProcess = this.getCurrent();
-
-        ProcessCreatorBuilder processCreatorBuilder = this.factory.createProcess(currentProcess,
-                new ProcessCreatorDefinition());
-
-//        createProcess.setParentProcess(currentProcess);
-//        if (ObjectUtil.allNotNull(accountAuthorization)) {
-//            createProcess.setAccountAuthorization(accountAuthorization);
-//        }
-//        if (ObjectUtil.allNotNull(environmentVariable)) {
-//            createProcess.setEnvironmentVariable(environmentVariable);
-//        }
-//        createProcess.setFileHandle(fileHandle);
-//        if (ObjectUtil.allNotNull(limits)) {
-//            createProcess.setLimits(limits);
-//        }
-//        if (ObjectUtil.isAnyNull(parameters)) {
-//            parameters = new HashMap<>();
-//        }
-//        createProcess.setParameters(parameters);
-//        if (privileges != PrivilegeType.NULL) {
-//            createProcess.setPrivileges(privileges);
-//        }
-//        if (ObjectUtil.isAnyNull(workFolder)) {
-//            workFolder = new ArrayList<>();
-//        }
-//        createProcess.setWorkFolder(workFolder);
+        ProcessCreatorBuilder processCreatorBuilder = this.factory.createProcess(currentProcess, processCreator);
 
         return processCreatorBuilder.build();
     }
-
-
-//    public ShadowKernelModeObject shadowKernelMode() {
-//        ShadowKernelModeObject shadowKernelMode = this.factoryManager.getCorePrototypeRepository().getByID(SpaceTypes
-//        .KERNEL, ShadowKernelModeObject.class, this.factoryManager.getKernelSpace().getConfiguration()
-//        .PROCESSES_SHADOW_SHADOWKERNEMODE_ID);
-//
-//        return shadowKernelMode;
-//    }
-//
-//    //Thread Init/Dispose/Do... Object
-//
-//    public ThreadLifeCycleObject threadLifeCycle() {
-//        return null;
-//    }
 }

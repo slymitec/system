@@ -16,19 +16,19 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessFactory extends APrototype {
     protected Set<IProcessResolver> processResolvers;
-    protected Set<IProcessCreatorResolver> processCreatorResolvers;
+    protected List<IProcessCreatorResolver> processCreatorResolvers;
 
     public void init() {
         this.processResolvers = new ConcurrentSkipListSet<>();
-        this.processCreatorResolvers = new ConcurrentSkipListSet<>();
+        this.processCreatorResolvers = new CopyOnWriteArrayList<>();
 
         Set<APrototype> corePrototypes =
                 this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL,
@@ -41,6 +41,8 @@ public class ProcessFactory extends APrototype {
                 processCreatorResolvers.add((IProcessCreatorResolver) prototype);
             }
         }
+
+        Collections.sort(processCreatorResolvers);
     }
 
     private ProcessObject buildProcess(ProcessProcessorMediator processorMediator, UUID processID) {

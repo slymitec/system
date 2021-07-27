@@ -9,16 +9,13 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
-import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessCreatorProcessorMediator;
-import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 @Named
@@ -77,7 +74,7 @@ public class CreateProcessContextResolver extends APrototype implements IProcess
     }
 
     @Override
-    public void resolve(ProcessCreatorDefinition processCreator, ProcessCreatorProcessorMediator processorCreatorMediator) {
+    public void resolve(ProcessCreatorProcessorMediator processorCreatorMediator) {
         processorCreatorMediator.getCreates().add(createProcessFunction);
     }
 }

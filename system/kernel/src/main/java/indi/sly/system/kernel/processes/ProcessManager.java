@@ -13,6 +13,7 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
+import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
@@ -93,22 +94,23 @@ public class ProcessManager extends AManager {
         }
 
         ProcessObject currentProcess = this.getCurrent();
-        if (currentProcess.getID().equals(processID)) {
-            return currentProcess;
+        if (!currentProcess.getID().equals(processID)) {
+            ProcessTokenObject currentProcessToken = currentProcess.getToken();
+
+            ProcessObject process = this.getTarget(processID);
+            ProcessTokenObject processToken = process.getToken();
+
+            if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
+                    && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
+                    && !(ObjectUtil.allNotNull(accountAuthorization)
+                    && accountAuthorization.checkAndGetResult().getAccountID().equals(processToken.getAccountID())))) {
+                throw new ConditionPermissionsException();
+            }
+
+            return process;
         }
-        ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-        ProcessObject process = this.getTarget(processID);
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
-                && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                && !(ObjectUtil.allNotNull(accountAuthorization)
-                && accountAuthorization.checkAndGetResult().getAccountID().equals(processToken.getAccountID())))) {
-            throw new ConditionPermissionsException();
-        }
-
-        return process;
+        return currentProcess;
     }
 
     public ProcessObject create(AccountAuthorizationObject accountAuthorization, Map<String, String> environmentVariable,
@@ -142,5 +144,53 @@ public class ProcessManager extends AManager {
         ProcessCreatorBuilder processCreatorBuilder = this.factory.createProcess(currentProcess, processCreator);
 
         return processCreatorBuilder.build();
+    }
+
+    private void killTarget(UUID processID) {
+        ProcessObject process = this.getTarget(processID);
+        ProcessStatusObject processStatus = process.getStatus();
+
+        processStatus.die();
+
+        ProcessHandleTableObject processHandleTable = process.getHandleTable();
+        for (UUID handle : processHandleTable.list()) {
+            InfoObject info = processHandleTable.get(handle);
+            info.close();
+        }
+
+
+    }
+
+    public void killCurrent() {
+        ProcessObject process = this.getCurrent();
+
+        this.killTarget(process.getID());
+    }
+
+    public void kill(UUID processID) {
+        this.kill(processID, null);
+    }
+
+    public void kill(UUID processID, AccountAuthorizationObject accountAuthorization) {
+        if (ValueUtil.isAnyNullOrEmpty(processID)) {
+            throw new ConditionParametersException();
+        }
+
+        ProcessObject currentProcess = this.getCurrent();
+        if (!currentProcess.getID().equals(processID)) {
+            ProcessTokenObject currentProcessToken = currentProcess.getToken();
+
+            ProcessObject process = this.getTarget(processID);
+            ProcessTokenObject processToken = process.getToken();
+
+            if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
+                    && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
+                    && !(ObjectUtil.allNotNull(accountAuthorization)
+                    && accountAuthorization.checkAndGetResult().getAccountID().equals(processToken.getAccountID())))) {
+                throw new ConditionPermissionsException();
+            }
+        }
+
+        this.killTarget(processID);
     }
 }

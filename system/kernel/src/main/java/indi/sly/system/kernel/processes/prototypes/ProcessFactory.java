@@ -76,7 +76,7 @@ public class ProcessFactory extends APrototype {
 
         ProcessCreatorProcessorMediator processorMediator = this.factoryManager.create(ProcessCreatorProcessorMediator.class);
         for (IProcessCreatorResolver processCreatorResolver : this.processCreatorResolvers) {
-            processCreatorResolver.resolve(processCreator, processorMediator);
+            processCreatorResolver.resolve(processorMediator);
         }
 
         ProcessCreatorBuilder processCreatorBuilder = this.factoryManager.create(ProcessCreatorBuilder.class);

@@ -15,11 +15,8 @@ import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessCreatorProcessorMediator;
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
 import indi.sly.system.kernel.processes.values.ProcessContextType;
-import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.security.UserManager;
-import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.AccountObject;
-import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -88,7 +85,7 @@ public class CreateProcessTokenRuleResolver extends APrototype implements IProce
     }
 
     @Override
-    public void resolve(ProcessCreatorDefinition processCreator, ProcessCreatorProcessorMediator processorCreatorMediator) {
+    public void resolve(ProcessCreatorProcessorMediator processorCreatorMediator) {
         processorCreatorMediator.getCreates().add(createProcessFunction);
     }
 }

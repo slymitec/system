@@ -9,33 +9,17 @@ import indi.sly.system.kernel.processes.values.ThreadContextDefinition;
 public class ThreadContextObject extends AValueProcessPrototype<ThreadContextDefinition> {
     protected ProcessObject process;
 
-    public Class<?> getRunClass() {
+    public long getType() {
         this.init();
 
-        return this.value.getRun().getClazz();
+        return this.value.getType();
     }
 
-    public void setRunClass(Class<?> clazz) {
+    public void setType(long type) {
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.getRun().setClazz(clazz);
-
-        this.fresh();
-        this.lock(LockType.NONE);
-    }
-
-    public String getRunName() {
-        this.init();
-
-        return this.value.getRun().getName();
-    }
-
-    public void setRunName(String name) {
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.getRun().setName(name);
+        this.value.setType(type);
 
         this.fresh();
         this.lock(LockType.NONE);

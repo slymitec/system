@@ -4,7 +4,6 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.ADefinition;
 
@@ -15,27 +14,35 @@ import java.util.*;
 
 public class ProcessContextDefinition extends ADefinition<ProcessContextDefinition> {
     public ProcessContextDefinition() {
-        this.appContext = new AppContextDefinition();
         this.environmentVariable = new HashMap<>();
         this.parameters = new HashMap<>();
         this.workFolder = new ArrayList<>();
     }
 
-    private AppContextDefinition appContext;
+    private long type;
+    private ApplicationDefinition application;
     private final Map<String, String> environmentVariable;
     private final Map<String, String> parameters;
     private final List<IdentificationDefinition> workFolder;
 
-    public AppContextDefinition getAppContext() {
-        return this.appContext;
+    public long getType() {
+        return this.type;
     }
 
-    public void setAppContext(AppContextDefinition appContext) {
-        if (ObjectUtil.isAnyNull(appContext)) {
+    public void setType(long type) {
+        this.type = type;
+    }
+
+    public ApplicationDefinition getApplication() {
+        return this.application;
+    }
+
+    public void setApplication(ApplicationDefinition application) {
+        if (ObjectUtil.isAnyNull(application)) {
             throw new ConditionParametersException();
         }
 
-        this.appContext = appContext;
+        this.application = application;
     }
 
     public Map<String, String> getEnvironmentVariable() {
@@ -51,10 +58,24 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProcessContextDefinition that = (ProcessContextDefinition) o;
+        return type == that.type && Objects.equals(application, that.application) && environmentVariable.equals(that.environmentVariable) && parameters.equals(that.parameters) && workFolder.equals(that.workFolder);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, application, environmentVariable, parameters, workFolder);
+    }
+
+    @Override
     public ProcessContextDefinition deepClone() {
         ProcessContextDefinition definition = new ProcessContextDefinition();
 
-        definition.appContext = this.appContext.deepClone();
+        definition.type = this.type;
+        definition.application = this.application.deepClone();
         definition.environmentVariable.putAll(this.environmentVariable);
         definition.parameters.putAll(this.parameters);
         definition.workFolder.addAll(this.workFolder);
@@ -64,7 +85,8 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.appContext = ObjectUtil.readExternal(in);
+        this.type = NumberUtil.readExternalLong(in);
+        this.application = ObjectUtil.readExternal(in);
 
         int valueInteger;
 
@@ -86,7 +108,8 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        ObjectUtil.writeExternal(out, this.appContext);
+        NumberUtil.writeExternalLong(out, this.type);
+        ObjectUtil.writeExternal(out, this.application);
 
         NumberUtil.writeExternalInteger(out, this.environmentVariable.size());
         for (Map.Entry<String, String> pair : this.environmentVariable.entrySet()) {

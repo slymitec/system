@@ -24,7 +24,7 @@ public class DateTimeObject extends APrototype {
 
     public void setDateTime(long dateTime) {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject currentProcess = processManager.getCurrentProcess();
+        ProcessObject currentProcess = processManager.getCurrent();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
         if (!currentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_DATETIME)) {

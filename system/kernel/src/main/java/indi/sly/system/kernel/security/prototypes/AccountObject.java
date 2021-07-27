@@ -42,7 +42,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
 
     public void setPassword(String password) {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
         if (!processToken.getAccountID().equals(this.getID())
@@ -81,7 +81,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
         if (!processToken.isPrivileges(PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {

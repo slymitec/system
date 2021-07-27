@@ -28,7 +28,7 @@ public class UserTokenObject extends ABytesValueProcessPrototype<AccountAuthoriz
     public void setPrivileges(long privileges) {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
         if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
@@ -55,7 +55,7 @@ public class UserTokenObject extends ABytesValueProcessPrototype<AccountAuthoriz
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
         if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {

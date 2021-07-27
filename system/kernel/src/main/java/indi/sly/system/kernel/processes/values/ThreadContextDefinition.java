@@ -1,39 +1,25 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.ADefinition;
-
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 public class ThreadContextDefinition extends ADefinition<ThreadContextDefinition> {
     public ThreadContextDefinition() {
+        this.type = ThreadContextType.NULL;
         this.run = new ThreadRunDefinition();
     }
 
-    private ThreadRunDefinition run;
+    private long type;
+    private final ThreadRunDefinition run;
+
+    public long getType() {
+        return this.type;
+    }
+
+    public void setType(long type) {
+        this.type = type;
+    }
 
     public ThreadRunDefinition getRun() {
         return this.run;
-    }
-
-    @Override
-    public ThreadContextDefinition deepClone() {
-        ThreadContextDefinition definition = new ThreadContextDefinition();
-
-        definition.run = this.run.deepClone();
-
-        return definition;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.run = ObjectUtil.readExternal(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        ObjectUtil.writeExternal(out, this.run);
     }
 }

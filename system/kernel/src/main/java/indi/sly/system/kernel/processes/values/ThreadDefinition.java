@@ -1,12 +1,8 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.UUID;
 
 public class ThreadDefinition extends ADefinition<ThreadDefinition> {
@@ -51,33 +47,5 @@ public class ThreadDefinition extends ADefinition<ThreadDefinition> {
 
     public void setContext(ThreadContextDefinition context) {
         this.context = context;
-    }
-
-    @Override
-    public ThreadDefinition deepClone() {
-        ThreadDefinition thread = new ThreadDefinition();
-
-        thread.id = this.id;
-        thread.processID = this.processID;
-        thread.statistics = this.statistics.deepClone();
-        thread.context = this.context.deepClone();
-
-        return null;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.id = UUIDUtil.readExternal(in);
-        this.processID = UUIDUtil.readExternal(in);
-        this.statistics = ObjectUtil.readExternal(in);
-        this.context = ObjectUtil.readExternal(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtil.writeExternal(out, this.id);
-        UUIDUtil.writeExternal(out, this.processID);
-        ObjectUtil.writeExternal(out, this.statistics);
-        ObjectUtil.writeExternal(out, this.context);
     }
 }

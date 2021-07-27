@@ -36,7 +36,7 @@ public class ProcessObject extends APrototype {
     public boolean isCurrent() {
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-        ThreadObject thread = threadManager.getCurrentThread();
+        ThreadObject thread = threadManager.getCurrent();
 
         return this.id.equals(thread.getProcessID());
     }

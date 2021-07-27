@@ -10,11 +10,8 @@ import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.instances.prototypes.PortContentObject;
-import indi.sly.system.kernel.processes.instances.values.PortDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import indi.sly.system.kernel.security.instances.prototypes.AuditContentObject;
 import indi.sly.system.kernel.security.instances.values.AuditDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -44,7 +41,7 @@ public class AuditTypeInitializer extends ATypeInitializer {
     @Override
     public void createProcedure(InfoEntity info) {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
         AuditDefinition audit = new AuditDefinition();

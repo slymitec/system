@@ -23,7 +23,7 @@ public class StatisticsResolver extends APrototype implements IProcessResolver {
         this.writeProcessStatus = (process, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-            ProcessStatisticsObject processStatistics = processManager.getProcess(process.getID()).getStatistics();
+            ProcessStatisticsObject processStatistics = processManager.get(process.getID()).getStatistics();
             processStatistics.addStatusCumulation(1);
         };
     }

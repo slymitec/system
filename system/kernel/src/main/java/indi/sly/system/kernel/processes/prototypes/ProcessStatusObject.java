@@ -49,7 +49,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject parentProcess = processManager.getCurrentProcess();
+        ProcessObject parentProcess = processManager.getCurrent();
 
         this.init();
 

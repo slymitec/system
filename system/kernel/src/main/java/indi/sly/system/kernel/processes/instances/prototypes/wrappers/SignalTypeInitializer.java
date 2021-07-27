@@ -41,7 +41,7 @@ public class SignalTypeInitializer extends ATypeInitializer {
     @Override
     public void createProcedure(InfoEntity info) {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
         SignalDefinition signal = new SignalDefinition();

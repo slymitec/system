@@ -2,21 +2,24 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
-import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessContextDefinition;
-import indi.sly.system.kernel.processes.values.AppContextDefinition;
+import indi.sly.system.kernel.processes.values.ApplicationDefinition;
+import indi.sly.system.kernel.processes.values.ProcessStatusType;
+import indi.sly.system.kernel.processes.values.ThreadContextType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -26,7 +29,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
     private ProcessObject getParentProcessAndCheckIsCurrent() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject currentProcess = processManager.getCurrentProcess();
+        ProcessObject currentProcess = processManager.getCurrent();
 
         if (!currentProcess.getID().equals(process.getParentProcessID())) {
             throw new ConditionPermissionsException();
@@ -35,14 +38,45 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         return currentProcess;
     }
 
-    public AppContextDefinition getAppContext() {
-        this.init();
-
-        return this.value.getAppContext();
+    private ProcessTokenObject getParentProcessTokenAndCheckIsCurrent() {
+        return this.getParentProcessAndCheckIsCurrent().getToken();
     }
 
-    public void setAppContext(AppContextDefinition appContext) {
-        if (ObjectUtil.isAnyNull(appContext)) {
+    public long getType() {
+        this.init();
+
+        return this.value.getType();
+    }
+
+    public void setType(long type) {
+        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.INTERRUPTED)) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            if (this.value.getType() != ThreadContextType.NULL) {
+                throw new StatusAlreadyExistedException();
+            }
+            this.value.setType(type);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+    }
+
+    public ApplicationDefinition getApplication() {
+        this.init();
+
+        return this.value.getApplication();
+    }
+
+    public void setApplication(ApplicationDefinition application) {
+        if (ObjectUtil.isAnyNull(application)) {
             throw new ConditionParametersException();
         }
 
@@ -56,7 +90,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             this.lock(LockType.WRITE);
             this.init();
 
-            this.value.setAppContext(appContext);
+            this.value.setApplication(application);
 
             this.fresh();
         } finally {

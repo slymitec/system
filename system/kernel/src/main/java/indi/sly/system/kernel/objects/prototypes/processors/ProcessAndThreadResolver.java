@@ -20,8 +20,8 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-            ProcessObject process = processManager.getCurrentProcess();
-            ThreadObject thread = threadManager.getCurrentThread();
+            ProcessObject process = processManager.getCurrent();
+            ThreadObject thread = threadManager.getCurrent();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
@@ -40,11 +40,11 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-            ProcessObject process = processManager.getCurrentProcess();
-            ThreadObject thread = threadManager.getCurrentThread();
+            ProcessObject process = processManager.getCurrent();
+            ThreadObject thread = threadManager.getCurrent();
 
-            ProcessHandleInfoObject processHandleInfo = process.getHandleTable().getInfo(status);
-            handle = processHandleInfo.add();
+            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(status);
+            handle = processHandleEntry.add();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
@@ -58,11 +58,11 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-            ProcessObject process = processManager.getCurrentProcess();
-            ThreadObject thread = threadManager.getCurrentThread();
+            ProcessObject process = processManager.getCurrent();
+            ThreadObject thread = threadManager.getCurrent();
 
-            ProcessHandleInfoObject processHandleInfo = process.getHandleTable().getInfo(status);
-            processHandleInfo.delete();
+            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(status);
+            processHandleEntry.delete();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
@@ -74,8 +74,8 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-            ProcessObject process = processManager.getCurrentProcess();
-            ThreadObject thread = threadManager.getCurrentThread();
+            ProcessObject process = processManager.getCurrent();
+            ThreadObject thread = threadManager.getCurrent();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
@@ -89,8 +89,8 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-            ProcessObject process = processManager.getCurrentProcess();
-            ThreadObject thread = threadManager.getCurrentThread();
+            ProcessObject process = processManager.getCurrent();
+            ThreadObject thread = threadManager.getCurrent();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
@@ -104,8 +104,8 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-            ProcessObject process = processManager.getCurrentProcess();
-            ThreadObject thread = threadManager.getCurrentThread();
+            ProcessObject process = processManager.getCurrent();
+            ThreadObject thread = threadManager.getCurrent();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
@@ -117,8 +117,8 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-            ProcessObject process = processManager.getCurrentProcess();
-            ThreadObject thread = threadManager.getCurrentThread();
+            ProcessObject process = processManager.getCurrent();
+            ThreadObject thread = threadManager.getCurrent();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
@@ -135,8 +135,8 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-            ProcessObject process = processManager.getCurrentProcess();
-            ThreadObject thread = threadManager.getCurrentThread();
+            ProcessObject process = processManager.getCurrent();
+            ThreadObject thread = threadManager.getCurrent();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
@@ -150,8 +150,8 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-            ProcessObject process = processManager.getCurrentProcess();
-            ThreadObject thread = threadManager.getCurrentThread();
+            ProcessObject process = processManager.getCurrent();
+            ThreadObject thread = threadManager.getCurrent();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
@@ -163,8 +163,8 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-            ProcessObject process = processManager.getCurrentProcess();
-            ThreadObject thread = threadManager.getCurrentThread();
+            ProcessObject process = processManager.getCurrent();
+            ThreadObject thread = threadManager.getCurrent();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
@@ -178,8 +178,8 @@ public class ProcessAndThreadResolver extends APrototype implements IInfoResolve
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-            ProcessObject process = processManager.getCurrentProcess();
-            ThreadObject thread = threadManager.getCurrentThread();
+            ProcessObject process = processManager.getCurrent();
+            ThreadObject thread = threadManager.getCurrent();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             ThreadStatisticsObject threadStatistics = thread.getStatistics();

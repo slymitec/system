@@ -45,7 +45,7 @@ public class PortContentObject extends AInfoContentObject {
         }
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
 
         try {
             this.lock(LockType.WRITE);
@@ -67,7 +67,7 @@ public class PortContentObject extends AInfoContentObject {
 
     public byte[] receive() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
 
         byte[] value = null;
 
@@ -104,7 +104,7 @@ public class PortContentObject extends AInfoContentObject {
             }
 
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrentProcess();
+            ProcessObject process = processManager.getCurrent();
 
             if (!this.port.getProcessID().equals(process.getID()) && this.port.getSourceProcessIDs().contains(process.getID())) {
                 throw new ConditionPermissionsException();

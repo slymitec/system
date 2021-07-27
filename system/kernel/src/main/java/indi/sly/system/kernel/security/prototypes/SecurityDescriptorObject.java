@@ -10,11 +10,8 @@ import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.instances.prototypes.PortContentObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.instances.prototypes.AuditContentObject;
 import indi.sly.system.kernel.security.values.*;
@@ -86,7 +83,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
     private ProcessTokenObject getCurrentProcessToken() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
 
         return process.getToken();
     }

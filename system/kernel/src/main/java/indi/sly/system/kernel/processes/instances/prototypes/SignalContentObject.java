@@ -49,7 +49,7 @@ public class SignalContentObject extends AInfoContentObject {
         }
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
 
         try {
             this.lock(LockType.WRITE);
@@ -71,7 +71,7 @@ public class SignalContentObject extends AInfoContentObject {
 
     public List<SignalEntryDefinition> receive() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
 
         List<SignalEntryDefinition> signalEntries = null;
 
@@ -111,7 +111,7 @@ public class SignalContentObject extends AInfoContentObject {
             }
 
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrentProcess();
+            ProcessObject process = processManager.getCurrent();
 
             if (!this.signal.getProcessID().equals(process.getID()) && this.signal.getSourceProcessIDs().contains(process.getID())) {
                 throw new ConditionPermissionsException();

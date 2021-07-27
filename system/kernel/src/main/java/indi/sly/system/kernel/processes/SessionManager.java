@@ -58,10 +58,10 @@ public class SessionManager extends AManager {
     public void check() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USERSESSION)) {
+        if (!processToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USER_SESSION)) {
             throw new ConditionPermissionsException();
         }
     }

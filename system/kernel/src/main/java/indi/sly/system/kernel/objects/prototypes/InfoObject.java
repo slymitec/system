@@ -130,7 +130,7 @@ public class InfoObject extends APrototype {
         }
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject currentProcess = processManager.getCurrentProcess();
+        ProcessObject currentProcess = processManager.getCurrent();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
         InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
@@ -154,7 +154,7 @@ public class InfoObject extends APrototype {
         }
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject currentProcess = processManager.getCurrentProcess();
+        ProcessObject currentProcess = processManager.getCurrent();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
         InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,

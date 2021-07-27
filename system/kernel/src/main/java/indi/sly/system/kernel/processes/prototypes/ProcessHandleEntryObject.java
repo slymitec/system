@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessHandleInfoObject extends AValueProcessPrototype<ProcessHandleTableDefinition> {
+public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHandleTableDefinition> {
     protected ProcessTokenObject processToken;
     protected InfoStatusDefinition status;
 

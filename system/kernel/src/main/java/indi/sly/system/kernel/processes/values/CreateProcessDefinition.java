@@ -17,7 +17,7 @@ public class CreateProcessDefinition extends ADefinition<CreateProcessDefinition
     private Map<Long, Integer> limits;
     private Set<UUID> additionalRoles;
 
-    private AppContextDefinition appContext;
+    private ApplicationDefinition appContext;
     private Map<String, String> environmentVariable;
     private Map<String, String> parameters;
     private UUID sessionID;
@@ -63,11 +63,11 @@ public class CreateProcessDefinition extends ADefinition<CreateProcessDefinition
         this.additionalRoles = additionalRoles;
     }
 
-    public AppContextDefinition getAppContext() {
+    public ApplicationDefinition getAppContext() {
         return this.appContext;
     }
 
-    public void setAppContext(AppContextDefinition appContext) {
+    public void setAppContext(ApplicationDefinition appContext) {
         this.appContext = appContext;
     }
 

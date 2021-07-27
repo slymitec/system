@@ -2,9 +2,7 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.values.ThreadContextDefinition;
 import indi.sly.system.kernel.processes.values.ThreadDefinition;
-import indi.sly.system.kernel.processes.values.ThreadStatisticsDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -34,7 +32,7 @@ public class ThreadObject extends APrototype {
 
     public ThreadStatisticsObject getStatistics() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getProcess(this.getProcessID());
+        ProcessObject process = processManager.get(this.getProcessID());
 
         ThreadStatisticsObject threadStatistics = this.factoryManager.create(ThreadStatisticsObject.class);
 
@@ -46,7 +44,7 @@ public class ThreadObject extends APrototype {
 
     public ThreadContextObject getContext() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getProcess(this.getProcessID());
+        ProcessObject process = processManager.get(this.getProcessID());
 
         ThreadContextObject threadContext = this.factoryManager.create(ThreadContextObject.class);
 

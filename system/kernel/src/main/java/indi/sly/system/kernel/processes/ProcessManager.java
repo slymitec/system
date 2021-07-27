@@ -4,7 +4,6 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.AManager;
@@ -64,7 +63,7 @@ public class ProcessManager extends AManager {
     public void shutdown() {
     }
 
-    private ProcessObject getTargetProcess(UUID processID) {
+    private ProcessObject getTarget(UUID processID) {
         if (ValueUtil.isAnyNullOrEmpty(processID)) {
             throw new ConditionParametersException();
         }
@@ -75,30 +74,30 @@ public class ProcessManager extends AManager {
         return this.factory.buildProcess(processRepository.get(processID));
     }
 
-    public ProcessObject getCurrentProcess() {
+    public ProcessObject getCurrent() {
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
-        ThreadObject thread = threadManager.getCurrentThread();
+        ThreadObject thread = threadManager.getCurrent();
 
-        return this.getTargetProcess(thread.getProcessID());
+        return this.getTarget(thread.getProcessID());
     }
 
-    public ProcessObject getProcess(UUID processID) {
-        return this.getProcess(processID, null);
+    public ProcessObject get(UUID processID) {
+        return this.get(processID, null);
     }
 
-    public ProcessObject getProcess(UUID processID, AccountAuthorizationObject accountAuthorization) {
+    public ProcessObject get(UUID processID, AccountAuthorizationObject accountAuthorization) {
         if (ValueUtil.isAnyNullOrEmpty(processID)) {
             throw new ConditionParametersException();
         }
 
-        ProcessObject currentProcess = this.getCurrentProcess();
+        ProcessObject currentProcess = this.getCurrent();
         if (currentProcess.getID().equals(processID)) {
             return currentProcess;
         }
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-        ProcessObject process = this.getTargetProcess(processID);
+        ProcessObject process = this.getTarget(processID);
         ProcessTokenObject processToken = process.getToken();
 
         if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
@@ -115,9 +114,9 @@ public class ProcessManager extends AManager {
                                        Map<String, String> environmentVariable, UUID fileHandle,
                                        Map<Long, Integer> limits, Map<String, String> parameters,
                                        long privileges, List<IdentificationDefinition> workFolder) {
-        ProcessObject currentProcess = this.getCurrentProcess();
+        ProcessObject currentProcess = this.getCurrent();
 
-        CreateProcessBuilder createProcess = this.factory.createProcessBuilder();
+        ACreateProcessBuilder createProcess = this.factory.createProcessBuilder();
 
         createProcess.setParentProcess(currentProcess);
         if (ObjectUtil.allNotNull(accountAuthorization)) {

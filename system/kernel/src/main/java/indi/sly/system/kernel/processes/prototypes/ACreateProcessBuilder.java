@@ -30,8 +30,8 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CreateProcessBuilder extends APrototype {
-    public CreateProcessBuilder() {
+public abstract class ACreateProcessBuilder extends APrototype {
+    public ACreateProcessBuilder() {
         this.createProcess = new CreateProcessDefinition();
     }
 
@@ -44,7 +44,7 @@ public class CreateProcessBuilder extends APrototype {
         this.parentProcess = parentProcess;
     }
 
-    public CreateProcessBuilder setAccountAuthorization(AccountAuthorizationObject accountAuthorization) {
+    public ACreateProcessBuilder setAccountAuthorization(AccountAuthorizationObject accountAuthorization) {
         if (ObjectUtil.isAnyNull(accountAuthorization)) {
             throw new ConditionParametersException();
         }
@@ -54,7 +54,7 @@ public class CreateProcessBuilder extends APrototype {
         return this;
     }
 
-    public CreateProcessBuilder setEnvironmentVariable(Map<String, String> environmentVariable) {
+    public ACreateProcessBuilder setEnvironmentVariable(Map<String, String> environmentVariable) {
         if (ObjectUtil.isAnyNull(environmentVariable)) {
             throw new ConditionParametersException();
         }
@@ -64,7 +64,7 @@ public class CreateProcessBuilder extends APrototype {
         return this;
     }
 
-    public CreateProcessBuilder setFileHandle(UUID fileHandle) {
+    public ACreateProcessBuilder setFileHandle(UUID fileHandle) {
         if (ValueUtil.isAnyNullOrEmpty(fileHandle)) {
             throw new ConditionParametersException();
         }
@@ -74,7 +74,7 @@ public class CreateProcessBuilder extends APrototype {
         return this;
     }
 
-    public CreateProcessBuilder setLimits(Map<Long, Integer> limits) {
+    public ACreateProcessBuilder setLimits(Map<Long, Integer> limits) {
         if (ObjectUtil.isAnyNull(limits)) {
             throw new ConditionParametersException();
         }
@@ -89,7 +89,7 @@ public class CreateProcessBuilder extends APrototype {
         return this;
     }
 
-    public CreateProcessBuilder setAdditionalRoles(Set<UUID> roles) {
+    public ACreateProcessBuilder setAdditionalRoles(Set<UUID> roles) {
         if (ObjectUtil.isAnyNull(roles)) {
             throw new ConditionParametersException();
         }
@@ -104,7 +104,7 @@ public class CreateProcessBuilder extends APrototype {
         return this;
     }
 
-    public CreateProcessBuilder setParameters(Map<String, String> parameters) {
+    public ACreateProcessBuilder setParameters(Map<String, String> parameters) {
         if (ObjectUtil.isAnyNull(parameters)) {
             throw new ConditionParametersException();
         }
@@ -114,7 +114,7 @@ public class CreateProcessBuilder extends APrototype {
         return this;
     }
 
-    public CreateProcessBuilder setPrivileges(long privileges) {
+    public ACreateProcessBuilder setPrivileges(long privileges) {
         ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
         if (!parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
             throw new ConditionPermissionsException();
@@ -125,13 +125,13 @@ public class CreateProcessBuilder extends APrototype {
         return this;
     }
 
-    public CreateProcessBuilder setSessionID(UUID sessionID) {
+    public ACreateProcessBuilder setSessionID(UUID sessionID) {
         if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
             throw new ConditionParametersException();
         }
 
         ProcessTokenObject parentProcessToken = this.parentProcess.getToken();
-        if (!parentProcessToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USERSESSION)) {
+        if (!parentProcessToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USER_SESSION)) {
             throw new ConditionPermissionsException();
         }
 
@@ -140,7 +140,7 @@ public class CreateProcessBuilder extends APrototype {
         return this;
     }
 
-    public CreateProcessBuilder setWorkFolder(List<IdentificationDefinition> workFolder) {
+    public ACreateProcessBuilder setWorkFolder(List<IdentificationDefinition> workFolder) {
         if (ObjectUtil.isAnyNull(workFolder)) {
             throw new ConditionParametersException();
         }
@@ -153,7 +153,7 @@ public class CreateProcessBuilder extends APrototype {
     private void parse() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
         ProcessHandleTableObject processHandleTable = process.getHandleTable();
         InfoObject info = processHandleTable.get(this.createProcess.getFileHandle());
 
@@ -187,7 +187,7 @@ public class CreateProcessBuilder extends APrototype {
     }
 
     private void configuration() {
-        AppContextDefinition appContext = this.createProcess.getAppContext();
+        ApplicationDefinition appContext = this.createProcess.getAppContext();
 
         if (ObjectUtil.isAnyNull(appContext)) {
             throw new StatusNotReadyException();
@@ -236,12 +236,12 @@ public class CreateProcessBuilder extends APrototype {
         }
 
         Set<UUID> roles = new HashSet<>(processToken.getRoles());
-        long appContextType = appContext.getType();
-        if (appContextType == AppType.SERVICE) {
+        long appContextType = this.process.getContext().getType();
+        if (appContextType == ProcessContextType.SERVICE) {
             roles.add(appContext.getID());
-        } else if (appContextType == AppType.BATCH) {
+        } else if (appContextType == ProcessContextType.BATCH) {
             roles.add(configuration.SECURITY_ROLE_BATCHES_ID);
-        } else if (appContextType == AppType.EXECUTABLE) {
+        } else if (appContextType == ProcessContextType.EXECUTABLE) {
             roles.add(configuration.SECURITY_ROLE_EXECUTABLE_ID);
         }
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
@@ -268,7 +268,7 @@ public class CreateProcessBuilder extends APrototype {
         ProcessContextObject processContext = this.process.getContext();
         ProcessContextObject parentProcessContext = this.parentProcess.getContext();
 
-        processContext.setAppContext(appContext);
+        processContext.setApplication(appContext);
         if (ObjectUtil.allNotNull(this.createProcess.getEnvironmentVariable())) {
             processContext.setEnvironmentVariable(this.createProcess.getEnvironmentVariable());
         } else {

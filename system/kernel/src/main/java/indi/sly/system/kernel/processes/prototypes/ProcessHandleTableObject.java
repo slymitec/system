@@ -37,7 +37,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
         if (!this.process.isCurrent()) {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-            ProcessObject currentProcess = processManager.getCurrentProcess();
+            ProcessObject currentProcess = processManager.getCurrent();
             ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
             if (!currentProcessToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
@@ -76,7 +76,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject parentProcess = processManager.getCurrentProcess();
+        ProcessObject parentProcess = processManager.getCurrent();
 
         if (!parentProcess.getID().equals(this.process.getParentProcessID())) {
             throw new ConditionPermissionsException();
@@ -127,14 +127,14 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
         return info;
     }
 
-    public ProcessHandleInfoObject getInfo(InfoStatusDefinition status) {
+    public ProcessHandleEntryObject getEntry(InfoStatusDefinition status) {
         if (ObjectUtil.isAnyNull(status)) {
             throw new ConditionParametersException();
         }
 
         this.checkStatusAndCurrentPermission();
 
-        ProcessHandleInfoObject processHandleInfo = this.factoryManager.create(ProcessHandleInfoObject.class);
+        ProcessHandleEntryObject processHandleInfo = this.factoryManager.create(ProcessHandleEntryObject.class);
 
         processHandleInfo.setParent(this);
         processHandleInfo.setSource(() -> this.value, (ProcessHandleTableDefinition source) -> {

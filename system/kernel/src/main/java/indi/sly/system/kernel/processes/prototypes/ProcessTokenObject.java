@@ -28,7 +28,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
     private ProcessObject getParentProcessAndCheckIsCurrent() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject currentProcess = processManager.getCurrentProcess();
+        ProcessObject currentProcess = processManager.getCurrent();
 
         if (!currentProcess.getID().equals(process.getParentProcessID())) {
             throw new ConditionPermissionsException();

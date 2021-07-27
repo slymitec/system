@@ -73,7 +73,7 @@ public class SessionContentObject extends AInfoContentObject {
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject process = processManager.getCurrentProcess();
+        ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
         if (!processToken.getAccountID().equals(this.session.getAccountID())) {

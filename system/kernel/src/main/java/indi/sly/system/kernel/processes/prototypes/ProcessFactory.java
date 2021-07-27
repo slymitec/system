@@ -58,8 +58,11 @@ public class ProcessFactory extends APrototype {
         return this.buildProcess(processorMediator, process.getID());
     }
 
-    public CreateProcessBuilder createProcessBuilder() {
-        CreateProcessBuilder createProcessBuilder = this.factoryManager.create(CreateProcessBuilder.class);
+
+
+
+    public ACreateProcessBuilder createProcessBuilder() {
+        ACreateProcessBuilder createProcessBuilder = this.factoryManager.create(ACreateProcessBuilder.class);
 
         createProcessBuilder.processFactory = this;
 

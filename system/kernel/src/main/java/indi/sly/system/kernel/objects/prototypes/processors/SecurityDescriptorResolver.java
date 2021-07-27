@@ -108,7 +108,7 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
 
                 if (childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-                    ProcessObject process = processManager.getCurrentProcess();
+                    ProcessObject process = processManager.getCurrent();
 
                     securityDescriptor.getOwners().add(process.getToken().getAccountID());
                     securityDescriptor.setInherit(true);

@@ -23,7 +23,7 @@ public class ProcessSessionObject extends AValueProcessPrototype<ProcessEntity> 
     private ProcessObject getParentProcessAndCheckIsCurrent() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject currentProcess = processManager.getCurrentProcess();
+        ProcessObject currentProcess = processManager.getCurrent();
 
         if (!currentProcess.getID().equals(process.getParentProcessID())) {
             throw new ConditionPermissionsException();
@@ -69,7 +69,7 @@ public class ProcessSessionObject extends AValueProcessPrototype<ProcessEntity> 
 
         ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
 
-        if (!parentProcessToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USERSESSION)) {
+        if (!parentProcessToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USER_SESSION)) {
             throw new ConditionPermissionsException();
         }
 

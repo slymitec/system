@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.objects;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Named;
 
@@ -8,6 +9,7 @@ import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.processes.values.ProcessHandleEntryDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -57,15 +59,19 @@ public class ObjectManager extends AManager {
         return info;
     }
 
-    public InfoObject rebuild(List<IdentificationDefinition> identifications, InfoStatusOpenDefinition open) {
-        if (ObjectUtil.isAnyNull(identifications, open)) {
+    public InfoObject rebuild(ProcessHandleEntryDefinition processHandleEntry) {
+        if (ObjectUtil.isAnyNull(processHandleEntry)) {
             throw new ConditionParametersException();
         }
+
+        List<IdentificationDefinition> identifications = processHandleEntry.getIdentifications();
+        UUID handle = processHandleEntry.getHandle();
+        InfoStatusOpenDefinition infoStatusOpen = processHandleEntry.getOpen();
 
         InfoObject info;
         if (identifications.size() > 0) {
             info = this.get(identifications.subList(0, identifications.size() - 1));
-            info = info.rebuildChild(identifications.get(identifications.size() - 1), open);
+            info = info.rebuildChild(identifications.get(identifications.size() - 1), handle, infoStatusOpen);
         } else {
             info = this.get(identifications);
         }

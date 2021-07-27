@@ -320,10 +320,10 @@ public class InfoObject extends APrototype {
     }
 
     public synchronized InfoObject getChild(IdentificationDefinition identification) {
-        return this.rebuildChild(identification, null);
+        return this.rebuildChild(identification, null, null);
     }
 
-    public synchronized InfoObject rebuildChild(IdentificationDefinition identification,
+    public synchronized InfoObject rebuildChild(IdentificationDefinition identification, UUID handle,
                                                 InfoStatusOpenDefinition statusOpen) {
         if (ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
@@ -352,6 +352,10 @@ public class InfoObject extends APrototype {
         InfoObject childCachedInfo = infoCache.getIfExisted(SpaceType.ALL, childInfo.getID());
         if (ObjectUtil.isAnyNull(childCachedInfo)) {
             childCachedInfo = this.factory.buildInfo(childInfo, statusOpen, this);
+
+            if (!ValueUtil.isAnyNullOrEmpty(handle)) {
+                childCachedInfo.status.setHandle(handle);
+            }
 
             childCachedInfo.cache(SpaceType.USER);
         }

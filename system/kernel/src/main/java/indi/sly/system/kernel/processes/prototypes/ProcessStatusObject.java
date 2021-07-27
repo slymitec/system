@@ -129,7 +129,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         ProcessHandleTableObject handleTable = this.process.getHandleTable();
         Set<UUID> handles = handleTable.list();
         for (UUID handle : handles) {
-            handleTable.get(handle).close();
+            handleTable.getInfo(handle).close();
         }
     }
 

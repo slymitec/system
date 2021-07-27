@@ -1,6 +1,8 @@
 package indi.sly.system.kernel.processes.prototypes;
 
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
+import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
@@ -28,16 +30,15 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
     public synchronized boolean isExist() {
         UUID handle = this.status.getHandle();
 
-        if (ValueUtil.isAnyNullOrEmpty(handle)) {
-            throw new StatusNotReadyException();
-        }
-
-        this.init();
-
-        return this.value.contain(handle);
+        return !ValueUtil.isAnyNullOrEmpty(handle);
     }
 
     public synchronized UUID add() {
+        UUID handle = this.status.getHandle();
+
+        if (!ValueUtil.isAnyNullOrEmpty(handle)) {
+            throw new StatusAlreadyExistedException();
+        }
         if (this.value.size() >= this.processToken.getLimits().get(ProcessTokenLimitType.HANDLE_MAX)) {
             throw new StatusInsufficientResourcesException();
         }
@@ -46,9 +47,10 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
-        UUID handle = UUIDUtil.createRandom();
+        handle = UUIDUtil.createRandom();
 
         ProcessHandleEntryDefinition processHandleEntry = new ProcessHandleEntryDefinition();
+        processHandleEntry.setHandle(handle);
         processHandleEntry.getIdentifications().addAll(status.getIdentifications());
         processHandleEntry.setOpen(status.getOpen());
         processHandleEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
@@ -58,6 +60,7 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
             this.init();
 
             this.value.add(handle, processHandleEntry);
+            this.status.setHandle(handle);
 
             this.fresh();
         } finally {
@@ -68,11 +71,18 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
     }
 
     public synchronized void delete() {
+        UUID handle = this.status.getHandle();
+
+        if (ValueUtil.isAnyNullOrEmpty(handle)) {
+            throw new StatusNotExistedException();
+        }
+
         try {
             this.lock(LockType.WRITE);
             this.init();
 
             this.value.delete(this.status.getHandle());
+            this.status.setHandle(null);
 
             this.fresh();
         } finally {

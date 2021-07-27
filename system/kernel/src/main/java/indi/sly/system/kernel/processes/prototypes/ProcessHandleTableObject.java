@@ -102,7 +102,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
         }
     }
 
-    public synchronized InfoObject get(UUID handle) {
+    public synchronized InfoObject getInfo(UUID handle) {
         this.checkStatusAndCurrentPermission();
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
@@ -117,7 +117,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
 
             ProcessHandleEntryDefinition processHandleEntry = this.value.get(handle);
             processHandleEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
-            info = objectManager.rebuild(processHandleEntry.getIdentifications(), processHandleEntry.getOpen());
+            info = objectManager.rebuild(processHandleEntry);
 
             this.fresh();
         } finally {

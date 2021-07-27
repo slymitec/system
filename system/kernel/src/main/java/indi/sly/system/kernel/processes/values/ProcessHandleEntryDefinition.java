@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
@@ -13,6 +14,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntryDefinition> {
+    private UUID handle;
     private final Map<Long, Long> date;
     private final List<IdentificationDefinition> identifications;
     private InfoStatusOpenDefinition open;
@@ -20,6 +22,14 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
     public ProcessHandleEntryDefinition() {
         this.date = new HashMap<>();
         this.identifications = new ArrayList<>();
+    }
+
+    public UUID getHandle() {
+        return this.handle;
+    }
+
+    public void setHandle(UUID handle) {
+        this.handle = handle;
     }
 
     public Map<Long, Long> getDate() {
@@ -31,7 +41,7 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
     }
 
     public InfoStatusOpenDefinition getOpen() {
-        return open;
+        return this.open;
     }
 
     public void setOpen(InfoStatusOpenDefinition open) {
@@ -43,20 +53,19 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProcessHandleEntryDefinition that = (ProcessHandleEntryDefinition) o;
-        return date.equals(that.date) &&
-                identifications.equals(that.identifications) &&
-                Objects.equals(open, that.open);
+        return Objects.equals(handle, that.handle) && date.equals(that.date) && identifications.equals(that.identifications) && Objects.equals(open, that.open);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, identifications, open);
+        return Objects.hash(handle, date, identifications, open);
     }
 
     @Override
     public ProcessHandleEntryDefinition deepClone() {
         ProcessHandleEntryDefinition definition = new ProcessHandleEntryDefinition();
 
+        definition.handle = this.handle;
         definition.date.putAll(this.date);
         definition.identifications.addAll(this.identifications);
         definition.open = this.open.deepClone();
@@ -66,6 +75,8 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        this.handle = UUIDUtil.readExternal(in);
+
         int valueInteger;
 
         valueInteger = NumberUtil.readExternalInteger(in);
@@ -81,6 +92,8 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        UUIDUtil.writeExternal(out, this.handle);
+
         for (Entry<Long, Long> pair : this.date.entrySet()) {
             NumberUtil.writeExternalLong(out, pair.getKey());
             NumberUtil.writeExternalLong(out, pair.getValue());

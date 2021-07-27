@@ -13,7 +13,6 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
-import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
@@ -148,17 +147,19 @@ public class ProcessManager extends AManager {
 
     private void killTarget(UUID processID) {
         ProcessObject process = this.getTarget(processID);
-        ProcessStatusObject processStatus = process.getStatus();
+        ProcessObject parentProcess = null;
 
-        processStatus.die();
-
-        ProcessHandleTableObject processHandleTable = process.getHandleTable();
-        for (UUID handle : processHandleTable.list()) {
-            InfoObject info = processHandleTable.get(handle);
-            info.close();
+        if (ValueUtil.isAnyNullOrEmpty(process.getParentProcessID())) {
+            parentProcess = this.getTarget(process.getParentProcessID());
         }
 
+        ProcessKillerBuilder processKillerBuilder = this.factory.killProcess(parentProcess, process);
+        processKillerBuilder.build();
 
+        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+        processRepository.delete(processRepository.get(processID));
     }
 
     public void killCurrent() {

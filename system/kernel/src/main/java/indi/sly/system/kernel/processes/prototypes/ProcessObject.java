@@ -167,9 +167,7 @@ public class ProcessObject extends APrototype {
 
         ProcessSessionObject processSession = this.factoryManager.create(ProcessSessionObject.class);
 
-        processSession.setSource(() -> {
-            return process;
-        }, (processEntity -> {
+        processSession.setSource(() -> process, (processEntity -> {
         }));
         processSession.setLock((lock) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);

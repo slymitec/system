@@ -56,7 +56,7 @@ public class ProcessCreatorBuilder extends APrototype {
         List<CreateProcessFunction> funcs = this.processorMediator.getCreates();
 
         for (CreateProcessFunction pair : funcs) {
-            pair.apply(process, this.parentProcess, this.processCreator);
+            process = pair.apply(process, this.parentProcess, this.processCreator);
         }
 
         processStatus.run();

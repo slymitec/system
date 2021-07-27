@@ -7,6 +7,7 @@ import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.prototypes.processors.IProcessCreatorResolver;
+import indi.sly.system.kernel.processes.prototypes.processors.IProcessKillerResolver;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
@@ -25,24 +26,28 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ProcessFactory extends APrototype {
     protected Set<IProcessResolver> processResolvers;
     protected List<IProcessCreatorResolver> processCreatorResolvers;
+    protected List<IProcessKillerResolver> processKillerResolvers;
 
     public void init() {
         this.processResolvers = new ConcurrentSkipListSet<>();
         this.processCreatorResolvers = new CopyOnWriteArrayList<>();
+        this.processKillerResolvers = new CopyOnWriteArrayList<>();
 
         Set<APrototype> corePrototypes =
-                this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL,
-                        IProcessResolver.class);
+                this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL, IProcessResolver.class);
 
         for (APrototype prototype : corePrototypes) {
             if (prototype instanceof IProcessResolver) {
                 processResolvers.add((IProcessResolver) prototype);
             } else if (prototype instanceof IProcessCreatorResolver) {
                 processCreatorResolvers.add((IProcessCreatorResolver) prototype);
+            } else if (prototype instanceof IProcessKillerResolver) {
+                processKillerResolvers.add((IProcessKillerResolver) prototype);
             }
         }
 
         Collections.sort(processCreatorResolvers);
+        Collections.sort(processKillerResolvers);
     }
 
     private ProcessObject buildProcess(ProcessProcessorMediator processorMediator, UUID processID) {
@@ -87,5 +92,25 @@ public class ProcessFactory extends APrototype {
         processCreatorBuilder.parentProcess = parentProcess;
 
         return processCreatorBuilder;
+    }
+
+    public ProcessKillerBuilder killProcess(ProcessObject parentProcess, ProcessObject process) {
+        if (ObjectUtil.isAnyNull(process)) {
+            throw new ConditionParametersException();
+        }
+
+        ProcessLifeCycleProcessorMediator processorMediator = this.factoryManager.create(ProcessLifeCycleProcessorMediator.class);
+        for (IProcessKillerResolver processKillerResolver : this.processKillerResolvers) {
+            processKillerResolver.resolve(processorMediator);
+        }
+
+        ProcessKillerBuilder processKillerBuilder = this.factoryManager.create(ProcessKillerBuilder.class);
+
+        processKillerBuilder.processorMediator = processorMediator;
+        processKillerBuilder.factory = this;
+        processKillerBuilder.parentProcess = parentProcess;
+        processKillerBuilder.process = process;
+
+        return processKillerBuilder;
     }
 }

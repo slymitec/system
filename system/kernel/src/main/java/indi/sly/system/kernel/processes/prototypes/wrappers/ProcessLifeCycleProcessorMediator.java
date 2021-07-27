@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.prototypes.wrappers;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
+import indi.sly.system.kernel.processes.lang.KillProcessFunction;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -14,11 +15,17 @@ import java.util.List;
 public class ProcessLifeCycleProcessorMediator extends APrototype {
     public ProcessLifeCycleProcessorMediator() {
         this.creates = new ArrayList<>();
+        this.kills = new ArrayList<>();
     }
 
     private final List<CreateProcessFunction> creates;
+    private final List<KillProcessFunction> kills;
 
     public List<CreateProcessFunction> getCreates() {
         return this.creates;
+    }
+
+    public List<KillProcessFunction> getKills() {
+        return this.kills;
     }
 }

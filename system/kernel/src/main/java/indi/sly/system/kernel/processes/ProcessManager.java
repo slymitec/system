@@ -14,6 +14,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryOb
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.processes.prototypes.*;
+import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.values.PrivilegeType;
 import indi.sly.system.kernel.processes.instances.prototypes.wrappers.SessionTypeInitializer;
@@ -116,7 +117,8 @@ public class ProcessManager extends AManager {
                                        long privileges, List<IdentificationDefinition> workFolder) {
         ProcessObject currentProcess = this.getCurrent();
 
-        ProcessCreatorBuilder processCreatorBuilder = this.factory.createProcess(null);
+        ProcessCreatorBuilder processCreatorBuilder = this.factory.createProcess(currentProcess,
+                new ProcessCreatorDefinition());
 
 //        createProcess.setParentProcess(currentProcess);
 //        if (ObjectUtil.allNotNull(accountAuthorization)) {

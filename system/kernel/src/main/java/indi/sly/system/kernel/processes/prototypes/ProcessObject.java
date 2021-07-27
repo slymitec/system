@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Named
@@ -68,8 +69,7 @@ public class ProcessObject extends APrototype {
         ProcessCommunicationObject processCommunication = this.factoryManager.create(ProcessCommunicationObject.class);
 
         processCommunication.setSource(() -> {
-            List<ReadProcessComponentFunction> funcs =
-                    this.processorMediator.getReadProcessCommunications();
+            Set<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessCommunications();
 
             byte[] source = null;
 
@@ -79,7 +79,7 @@ public class ProcessObject extends APrototype {
 
             return source;
         }, (byte[] source) -> {
-            List<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessCommunications();
+            Set<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessCommunications();
 
             for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
@@ -102,7 +102,7 @@ public class ProcessObject extends APrototype {
         ProcessContextObject processContext = this.factoryManager.create(ProcessContextObject.class);
 
         processContext.setSource(() -> {
-            List<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessContexts();
+            Set<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessContexts();
 
             byte[] source = null;
 
@@ -112,7 +112,7 @@ public class ProcessObject extends APrototype {
 
             return source;
         }, (byte[] source) -> {
-            List<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessContexts();
+            Set<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessContexts();
 
             for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
@@ -135,7 +135,7 @@ public class ProcessObject extends APrototype {
         ProcessHandleTableObject processHandleTable = this.factoryManager.create(ProcessHandleTableObject.class);
 
         processHandleTable.setSource(() -> {
-            List<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessHandleTables();
+            Set<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessHandleTables();
 
             byte[] source = null;
 
@@ -145,7 +145,7 @@ public class ProcessObject extends APrototype {
 
             return source;
         }, (byte[] source) -> {
-            List<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessHandleTables();
+            Set<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessHandleTables();
 
             for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
@@ -187,7 +187,7 @@ public class ProcessObject extends APrototype {
         ProcessStatisticsObject processStatistics = this.factoryManager.create(ProcessStatisticsObject.class);
 
         processStatistics.setSource(() -> {
-            List<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessStatistics();
+            Set<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessStatistics();
 
             byte[] source = null;
 
@@ -197,7 +197,7 @@ public class ProcessObject extends APrototype {
 
             return source;
         }, (byte[] source) -> {
-            List<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessStatistics();
+            Set<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessStatistics();
 
             for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
@@ -220,7 +220,7 @@ public class ProcessObject extends APrototype {
         ProcessTokenObject processToken = this.factoryManager.create(ProcessTokenObject.class);
 
         processToken.setSource(() -> {
-            List<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessTokens();
+            Set<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessTokens();
 
             byte[] source = null;
 
@@ -230,7 +230,7 @@ public class ProcessObject extends APrototype {
 
             return source;
         }, (byte[] source) -> {
-            List<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessTokens();
+            Set<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessTokens();
 
             for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);

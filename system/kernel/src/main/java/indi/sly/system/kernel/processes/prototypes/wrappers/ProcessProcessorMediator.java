@@ -1,48 +1,45 @@
 package indi.sly.system.kernel.processes.prototypes.wrappers;
 
-import indi.sly.system.common.lang.Function1;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.lang.*;
-import indi.sly.system.kernel.processes.values.ProcessEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessProcessorMediator extends APrototype {
     public ProcessProcessorMediator() {
-        this.readProcessStatuses = new ArrayList<>();
-        this.writeProcessStatuses = new ArrayList<>();
-        this.readProcessCommunications = new ArrayList<>();
-        this.writeProcessCommunications = new ArrayList<>();
-        this.readProcessContexts = new ArrayList<>();
-        this.writeProcessContexts = new ArrayList<>();
-        this.readProcessHandleTables = new ArrayList<>();
-        this.writeProcessHandleTables = new ArrayList<>();
-        this.readProcessStatistics = new ArrayList<>();
-        this.writeProcessStatistics = new ArrayList<>();
-        this.readProcessTokens = new ArrayList<>();
-        this.writeProcessTokens = new ArrayList<>();
+        this.readProcessStatuses = new HashSet<>();
+        this.writeProcessStatuses = new HashSet<>();
+        this.readProcessCommunications = new HashSet<>();
+        this.writeProcessCommunications = new HashSet<>();
+        this.readProcessContexts = new HashSet<>();
+        this.writeProcessContexts = new HashSet<>();
+        this.readProcessHandleTables = new HashSet<>();
+        this.writeProcessHandleTables = new HashSet<>();
+        this.readProcessStatistics = new HashSet<>();
+        this.writeProcessStatistics = new HashSet<>();
+        this.readProcessTokens = new HashSet<>();
+        this.writeProcessTokens = new HashSet<>();
     }
 
     private ProcessSelfFunction process;
-    private final List<ReadProcessStatusFunction> readProcessStatuses;
-    private final List<WriteProcessStatusConsumer> writeProcessStatuses;
-    private final List<ReadProcessComponentFunction> readProcessCommunications;
-    private final List<WriteProcessComponentConsumer> writeProcessCommunications;
-    private final List<ReadProcessComponentFunction> readProcessContexts;
-    private final List<WriteProcessComponentConsumer> writeProcessContexts;
-    private final List<ReadProcessComponentFunction> readProcessHandleTables;
-    private final List<WriteProcessComponentConsumer> writeProcessHandleTables;
-    private final List<ReadProcessComponentFunction> readProcessStatistics;
-    private final List<WriteProcessComponentConsumer> writeProcessStatistics;
-    private final List<ReadProcessComponentFunction> readProcessTokens;
-    private final List<WriteProcessComponentConsumer> writeProcessTokens;
+    private final Set<ReadProcessStatusFunction> readProcessStatuses;
+    private final Set<WriteProcessStatusConsumer> writeProcessStatuses;
+    private final Set<ReadProcessComponentFunction> readProcessCommunications;
+    private final Set<WriteProcessComponentConsumer> writeProcessCommunications;
+    private final Set<ReadProcessComponentFunction> readProcessContexts;
+    private final Set<WriteProcessComponentConsumer> writeProcessContexts;
+    private final Set<ReadProcessComponentFunction> readProcessHandleTables;
+    private final Set<WriteProcessComponentConsumer> writeProcessHandleTables;
+    private final Set<ReadProcessComponentFunction> readProcessStatistics;
+    private final Set<WriteProcessComponentConsumer> writeProcessStatistics;
+    private final Set<ReadProcessComponentFunction> readProcessTokens;
+    private final Set<WriteProcessComponentConsumer> writeProcessTokens;
 
     public ProcessSelfFunction getProcess() {
         return this.process;
@@ -52,51 +49,51 @@ public class ProcessProcessorMediator extends APrototype {
         this.process = process;
     }
 
-    public List<ReadProcessStatusFunction> getReadProcessStatuses() {
+    public Set<ReadProcessStatusFunction> getReadProcessStatuses() {
         return this.readProcessStatuses;
     }
 
-    public List<WriteProcessStatusConsumer> getWriteProcessStatuses() {
+    public Set<WriteProcessStatusConsumer> getWriteProcessStatuses() {
         return this.writeProcessStatuses;
     }
 
-    public List<ReadProcessComponentFunction> getReadProcessCommunications() {
+    public Set<ReadProcessComponentFunction> getReadProcessCommunications() {
         return this.readProcessCommunications;
     }
 
-    public List<WriteProcessComponentConsumer> getWriteProcessCommunications() {
+    public Set<WriteProcessComponentConsumer> getWriteProcessCommunications() {
         return this.writeProcessCommunications;
     }
 
-    public List<ReadProcessComponentFunction> getReadProcessContexts() {
+    public Set<ReadProcessComponentFunction> getReadProcessContexts() {
         return this.readProcessContexts;
     }
 
-    public List<WriteProcessComponentConsumer> getWriteProcessContexts() {
+    public Set<WriteProcessComponentConsumer> getWriteProcessContexts() {
         return this.writeProcessContexts;
     }
 
-    public List<ReadProcessComponentFunction> getReadProcessHandleTables() {
+    public Set<ReadProcessComponentFunction> getReadProcessHandleTables() {
         return this.readProcessHandleTables;
     }
 
-    public List<WriteProcessComponentConsumer> getWriteProcessHandleTables() {
+    public Set<WriteProcessComponentConsumer> getWriteProcessHandleTables() {
         return this.writeProcessHandleTables;
     }
 
-    public List<ReadProcessComponentFunction> getReadProcessStatistics() {
+    public Set<ReadProcessComponentFunction> getReadProcessStatistics() {
         return this.readProcessStatistics;
     }
 
-    public List<WriteProcessComponentConsumer> getWriteProcessStatistics() {
+    public Set<WriteProcessComponentConsumer> getWriteProcessStatistics() {
         return this.writeProcessStatistics;
     }
 
-    public List<ReadProcessComponentFunction> getReadProcessTokens() {
+    public Set<ReadProcessComponentFunction> getReadProcessTokens() {
         return this.readProcessTokens;
     }
 
-    public List<WriteProcessComponentConsumer> getWriteProcessTokens() {
+    public Set<WriteProcessComponentConsumer> getWriteProcessTokens() {
         return this.writeProcessTokens;
     }
 }

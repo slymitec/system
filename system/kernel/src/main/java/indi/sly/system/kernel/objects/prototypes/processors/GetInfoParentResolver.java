@@ -16,8 +16,8 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GetParentResolver extends APrototype implements IInfoResolver {
-    public GetParentResolver() {
+public class GetInfoParentResolver extends APrototype implements IInfoResolver {
+    public GetInfoParentResolver() {
         this.parent = (id) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
 

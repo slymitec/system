@@ -14,7 +14,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessMemberGetAndSetResolver extends APrototype implements IProcessResolver {
+public class ProcessMemberResolver extends APrototype implements IProcessResolver {
     private final ReadProcessStatusFunction readProcessStatus;
     private final WriteProcessStatusConsumer writeProcessStatus;
     private final ReadProcessComponentFunction readProcessCommunication;
@@ -28,7 +28,7 @@ public class ProcessMemberGetAndSetResolver extends APrototype implements IProce
     private final ReadProcessComponentFunction readProcessToken;
     private final WriteProcessComponentConsumer writeProcessToken;
 
-    public ProcessMemberGetAndSetResolver() {
+    public ProcessMemberResolver() {
         this.readProcessStatus = (status, process) -> process.getStatus();
         this.writeProcessStatus = ProcessEntity::setStatus;
 

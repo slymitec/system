@@ -1,8 +1,10 @@
 package indi.sly.system.kernel.processes.lang;
 
-import indi.sly.system.common.lang.Function2;
-import indi.sly.system.kernel.processes.values.ProcessEntity;
+import indi.sly.system.common.lang.Function3;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 
 @FunctionalInterface
-public interface CreateProcessFunction extends Function2<byte[], byte[], ProcessEntity> {
+public interface CreateProcessFunction extends Function3<ProcessObject, ProcessObject, ProcessObject,
+        ProcessCreatorDefinition> {
 }

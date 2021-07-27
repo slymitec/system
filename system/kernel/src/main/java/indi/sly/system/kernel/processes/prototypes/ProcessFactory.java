@@ -67,7 +67,7 @@ public class ProcessFactory extends APrototype {
         return this.buildProcess(processorMediator, process.getID());
     }
 
-    public ProcessCreatorBuilder createProcess(ProcessCreatorDefinition processCreator) {
+    public ProcessCreatorBuilder createProcess(ProcessObject parentProcess, ProcessCreatorDefinition processCreator) {
         if (ObjectUtil.isAnyNull(processCreator)) {
             throw new ConditionParametersException();
         }
@@ -81,6 +81,8 @@ public class ProcessFactory extends APrototype {
 
         processCreatorBuilder.processorMediator = processorMediator;
         processCreatorBuilder.factory = this;
+        processCreatorBuilder.processCreator = processCreator;
+        processCreatorBuilder.parentProcess = parentProcess;
 
         return processCreatorBuilder;
     }

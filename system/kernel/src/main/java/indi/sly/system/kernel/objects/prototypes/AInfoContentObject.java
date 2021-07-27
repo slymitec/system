@@ -3,7 +3,7 @@ package indi.sly.system.kernel.objects.prototypes;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ACoreProcessPrototype;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -15,7 +15,7 @@ public abstract class AInfoContentObject extends ACoreProcessPrototype<byte[]> {
     private Consumer funcExecute;
 
     protected InfoObject info;
-    protected InfoStatusOpenDefinition statusOpen;
+    protected InfoOpenDefinition open;
 
     public final void setExecute(Consumer funcExecute) {
         if (ObjectUtil.isAnyNull(funcExecute)) {
@@ -29,15 +29,15 @@ public abstract class AInfoContentObject extends ACoreProcessPrototype<byte[]> {
         this.info = info;
     }
 
-    public void setStatusOpen(InfoStatusOpenDefinition statusOpen) {
-        this.statusOpen = statusOpen;
+    public void setOpen(InfoOpenDefinition open) {
+        this.open = open;
     }
 
     public synchronized void close() {
         this.info.close();
 
         this.info = null;
-        this.statusOpen = null;
+        this.open = null;
         this.setParent(null);
         this.setSource(() -> {
             throw new StatusRelationshipErrorException();

@@ -10,7 +10,7 @@ public class DumpDefinition extends ADefinition<DumpDefinition> {
     private UUID processID;
     private UUID accountID;
     private final List<IdentificationDefinition> identifications;
-    private InfoStatusOpenDefinition open;
+    private InfoOpenDefinition open;
 
     public DumpDefinition() {
         this.date = new HashMap<>();
@@ -41,11 +41,11 @@ public class DumpDefinition extends ADefinition<DumpDefinition> {
         return this.identifications;
     }
 
-    public InfoStatusOpenDefinition getOpen() {
+    public InfoOpenDefinition getOpen() {
         return this.open;
     }
 
-    public void setOpen(InfoStatusOpenDefinition open) {
+    public void setOpen(InfoOpenDefinition open) {
         this.open = open;
     }
 }

@@ -12,7 +12,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
 
-public class InfoStatusOpenDefinition extends ADefinition<InfoStatusOpenDefinition> {
+public class InfoOpenDefinition extends ADefinition<InfoOpenDefinition> {
     private UUID handle;
     private long attribute;
     private ISerializeCapable<?> context;
@@ -45,7 +45,7 @@ public class InfoStatusOpenDefinition extends ADefinition<InfoStatusOpenDefiniti
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        InfoStatusOpenDefinition that = (InfoStatusOpenDefinition) o;
+        InfoOpenDefinition that = (InfoOpenDefinition) o;
         return attribute == that.attribute && Objects.equals(handle, that.handle) && Objects.equals(context, that.context);
     }
 
@@ -55,8 +55,8 @@ public class InfoStatusOpenDefinition extends ADefinition<InfoStatusOpenDefiniti
     }
 
     @Override
-    public InfoStatusOpenDefinition deepClone() {
-        InfoStatusOpenDefinition definition = new InfoStatusOpenDefinition();
+    public InfoOpenDefinition deepClone() {
+        InfoOpenDefinition definition = new InfoOpenDefinition();
 
         definition.handle = this.handle;
         definition.attribute = this.attribute;

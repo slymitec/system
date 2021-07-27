@@ -7,7 +7,7 @@ import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.prototypes.PortContentObject;
@@ -66,12 +66,12 @@ public class PortTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public void openProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen, long openAttribute,
+    public void openProcedure(InfoEntity info, InfoOpenDefinition open, long openAttribute,
                               Object... arguments) {
     }
 
     @Override
-    public void closeProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen) {
+    public void closeProcedure(InfoEntity info, InfoOpenDefinition open) {
     }
 
     @Override
@@ -102,11 +102,11 @@ public class PortTypeInitializer extends ATypeInitializer {
 
     @Override
     public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info,
-                                                                       InfoStatusOpenDefinition statusOpen) {
+                                                                       InfoOpenDefinition open) {
         return PortContentObject.class;
     }
 
     @Override
-    public void refreshPropertiesProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen) {
+    public void refreshPropertiesProcedure(InfoEntity info, InfoOpenDefinition open) {
     }
 }

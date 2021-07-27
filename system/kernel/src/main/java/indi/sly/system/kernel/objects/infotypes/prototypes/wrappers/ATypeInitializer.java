@@ -19,7 +19,7 @@ import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 
 @Named
@@ -46,9 +46,9 @@ public abstract class ATypeInitializer extends APrototype {
 
     public abstract void dumpProcedure(InfoEntity info, DumpDefinition dump);
 
-    public abstract void openProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen, long openAttribute, Object... arguments);
+    public abstract void openProcedure(InfoEntity info, InfoOpenDefinition open, long openAttribute, Object... arguments);
 
-    public abstract void closeProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen);
+    public abstract void closeProcedure(InfoEntity info, InfoOpenDefinition open);
 
     public abstract void createChildProcedure(InfoEntity info, InfoEntity childInfo);
 
@@ -60,20 +60,20 @@ public abstract class ATypeInitializer extends APrototype {
 
     public abstract void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification);
 
-    protected abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen);
+    protected abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition open);
 
     public final AInfoContentObject getContentProcedure(InfoEntity info, Provider<byte[]> funcRead,
                                                         Consumer1<byte[]> funcWrite, Consumer funcExecute,
-                                                        InfoStatusOpenDefinition statusOpen) {
-        AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, statusOpen));
+                                                        InfoOpenDefinition open) {
+        AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, open));
 
         content.setSource(funcRead, funcWrite);
         content.setLock((lockMode) -> this.lockProcedure(info, lockMode));
         content.setExecute(funcExecute);
-        content.setStatusOpen(statusOpen);
+        content.setOpen(open);
 
         return content;
     }
 
-    public abstract void refreshPropertiesProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen);
+    public abstract void refreshPropertiesProcedure(InfoEntity info, InfoOpenDefinition open);
 }

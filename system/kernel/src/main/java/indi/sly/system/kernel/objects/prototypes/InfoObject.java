@@ -301,7 +301,7 @@ public class InfoObject extends APrototype {
         if (!processHandleTableEntry.isExist()) {
             return InfoStatusOpenAttributeType.CLOSE;
         }
-        
+
         return processHandleTableEntry.getOpen().getAttribute();
     }
 
@@ -343,7 +343,7 @@ public class InfoObject extends APrototype {
     }
 
     public synchronized InfoObject rebuildChild(IdentificationDefinition identification, UUID handle,
-                                                InfoStatusOpenDefinition statusOpen) {
+                                                InfoOpenDefinition statusOpen) {
         if (ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }

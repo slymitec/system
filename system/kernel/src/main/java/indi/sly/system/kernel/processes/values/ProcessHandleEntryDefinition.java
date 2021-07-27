@@ -5,7 +5,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -18,7 +18,7 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
     private final Map<Long, Long> date;
     private UUID infoID;
     private final List<IdentificationDefinition> identifications;
-    private InfoStatusOpenDefinition open;
+    private InfoOpenDefinition open;
 
     public ProcessHandleEntryDefinition() {
         this.date = new HashMap<>();
@@ -49,11 +49,11 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
         return this.identifications;
     }
 
-    public InfoStatusOpenDefinition getOpen() {
+    public InfoOpenDefinition getOpen() {
         return this.open;
     }
 
-    public void setOpen(InfoStatusOpenDefinition open) {
+    public void setOpen(InfoOpenDefinition open) {
         this.open = open;
     }
 

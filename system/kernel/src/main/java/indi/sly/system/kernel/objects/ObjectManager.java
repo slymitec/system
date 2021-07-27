@@ -8,7 +8,7 @@ import javax.inject.Named;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.processes.values.ProcessHandleEntryDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -66,7 +66,7 @@ public class ObjectManager extends AManager {
 
         List<IdentificationDefinition> identifications = processHandleEntry.getIdentifications();
         UUID handle = processHandleEntry.getHandle();
-        InfoStatusOpenDefinition infoStatusOpen = processHandleEntry.getOpen();
+        InfoOpenDefinition infoStatusOpen = processHandleEntry.getOpen();
 
         InfoObject info;
         if (identifications.size() > 0) {

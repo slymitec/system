@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.inject.Named;
@@ -17,8 +16,6 @@ import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObje
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

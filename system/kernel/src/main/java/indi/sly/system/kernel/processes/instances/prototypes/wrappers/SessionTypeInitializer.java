@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
@@ -53,12 +53,12 @@ public class SessionTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public void openProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen, long openAttribute,
+    public void openProcedure(InfoEntity info, InfoOpenDefinition open, long openAttribute,
                               Object... arguments) {
     }
 
     @Override
-    public void closeProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen) {
+    public void closeProcedure(InfoEntity info, InfoOpenDefinition open) {
     }
 
     @Override
@@ -89,11 +89,11 @@ public class SessionTypeInitializer extends ATypeInitializer {
 
     @Override
     public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info,
-                                                                       InfoStatusOpenDefinition statusOpen) {
+                                                                       InfoOpenDefinition open) {
         return SessionContentObject.class;
     }
 
     @Override
-    public void refreshPropertiesProcedure(InfoEntity info, InfoStatusOpenDefinition statusOpen) {
+    public void refreshPropertiesProcedure(InfoEntity info, InfoOpenDefinition open) {
     }
 }

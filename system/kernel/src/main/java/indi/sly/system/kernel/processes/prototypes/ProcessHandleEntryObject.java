@@ -11,7 +11,7 @@ import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import indi.sly.system.kernel.processes.values.ProcessHandleEntryDefinition;
 import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
@@ -42,7 +42,7 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
         return processHandleEntry.getHandle();
     }
 
-    public synchronized InfoStatusOpenDefinition getOpen() {
+    public synchronized InfoOpenDefinition getOpen() {
         if (!this.isExist()) {
             throw new StatusNotExistedException();
         }
@@ -70,7 +70,7 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
         processHandleEntry.setHandle(handle);
         processHandleEntry.getIdentifications().addAll(status.getIdentifications());
 
-        InfoStatusOpenDefinition infoStatusOpen = new InfoStatusOpenDefinition();
+        InfoOpenDefinition infoStatusOpen = new InfoOpenDefinition();
         infoStatusOpen.setHandle(handle);
         infoStatusOpen.setAttribute(openAttribute);
         processHandleEntry.setOpen(infoStatusOpen);

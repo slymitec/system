@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.objects.lang;
 
-import indi.sly.system.common.lang.Function3;
 import indi.sly.system.common.lang.Function6;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;

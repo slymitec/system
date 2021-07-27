@@ -8,6 +8,8 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ThreadManager;
+import indi.sly.system.kernel.processes.lang.ReadProcessComponentFunction;
+import indi.sly.system.kernel.processes.lang.WriteProcessComponentConsumer;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -68,20 +70,20 @@ public class ProcessObject extends APrototype {
         ProcessCommunicationObject processCommunication = this.factoryManager.create(ProcessCommunicationObject.class);
 
         processCommunication.setSource(() -> {
-            List<Function2<byte[], byte[], ProcessEntity>> funcs =
+            List<ReadProcessComponentFunction> funcs =
                     this.processorRegister.getReadProcessCommunications();
 
             byte[] source = null;
 
-            for (Function2<byte[], byte[], ProcessEntity> pair : funcs) {
+            for (ReadProcessComponentFunction pair : funcs) {
                 source = pair.apply(source, process);
             }
 
             return source;
         }, (byte[] source) -> {
-            List<Consumer2<ProcessEntity, byte[]>> funcs = this.processorRegister.getWriteProcessCommunications();
+            List<WriteProcessComponentConsumer> funcs = this.processorRegister.getWriteProcessCommunications();
 
-            for (Consumer2<ProcessEntity, byte[]> pair : funcs) {
+            for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
             }
         });
@@ -102,19 +104,19 @@ public class ProcessObject extends APrototype {
         ProcessContextObject processContext = this.factoryManager.create(ProcessContextObject.class);
 
         processContext.setSource(() -> {
-            List<Function2<byte[], byte[], ProcessEntity>> funcs = this.processorRegister.getReadProcessContexts();
+            List<ReadProcessComponentFunction> funcs = this.processorRegister.getReadProcessContexts();
 
             byte[] source = null;
 
-            for (Function2<byte[], byte[], ProcessEntity> pair : funcs) {
+            for (ReadProcessComponentFunction pair : funcs) {
                 source = pair.apply(source, process);
             }
 
             return source;
         }, (byte[] source) -> {
-            List<Consumer2<ProcessEntity, byte[]>> funcs = this.processorRegister.getWriteProcessContexts();
+            List<WriteProcessComponentConsumer> funcs = this.processorRegister.getWriteProcessContexts();
 
-            for (Consumer2<ProcessEntity, byte[]> pair : funcs) {
+            for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
             }
         });
@@ -135,19 +137,19 @@ public class ProcessObject extends APrototype {
         ProcessHandleTableObject processHandleTable = this.factoryManager.create(ProcessHandleTableObject.class);
 
         processHandleTable.setSource(() -> {
-            List<Function2<byte[], byte[], ProcessEntity>> funcs = this.processorRegister.getReadProcessHandleTables();
+            List<ReadProcessComponentFunction> funcs = this.processorRegister.getReadProcessHandleTables();
 
             byte[] source = null;
 
-            for (Function2<byte[], byte[], ProcessEntity> pair : funcs) {
+            for (ReadProcessComponentFunction pair : funcs) {
                 source = pair.apply(source, process);
             }
 
             return source;
         }, (byte[] source) -> {
-            List<Consumer2<ProcessEntity, byte[]>> funcs = this.processorRegister.getWriteProcessHandleTables();
+            List<WriteProcessComponentConsumer> funcs = this.processorRegister.getWriteProcessHandleTables();
 
-            for (Consumer2<ProcessEntity, byte[]> pair : funcs) {
+            for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
             }
         });
@@ -187,19 +189,19 @@ public class ProcessObject extends APrototype {
         ProcessStatisticsObject processStatistics = this.factoryManager.create(ProcessStatisticsObject.class);
 
         processStatistics.setSource(() -> {
-            List<Function2<byte[], byte[], ProcessEntity>> funcs = this.processorRegister.getReadProcessStatistics();
+            List<ReadProcessComponentFunction> funcs = this.processorRegister.getReadProcessStatistics();
 
             byte[] source = null;
 
-            for (Function2<byte[], byte[], ProcessEntity> pair : funcs) {
+            for (ReadProcessComponentFunction pair : funcs) {
                 source = pair.apply(source, process);
             }
 
             return source;
         }, (byte[] source) -> {
-            List<Consumer2<ProcessEntity, byte[]>> funcs = this.processorRegister.getWriteProcessStatistics();
+            List<WriteProcessComponentConsumer> funcs = this.processorRegister.getWriteProcessStatistics();
 
-            for (Consumer2<ProcessEntity, byte[]> pair : funcs) {
+            for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
             }
         });
@@ -220,19 +222,19 @@ public class ProcessObject extends APrototype {
         ProcessTokenObject processToken = this.factoryManager.create(ProcessTokenObject.class);
 
         processToken.setSource(() -> {
-            List<Function2<byte[], byte[], ProcessEntity>> funcs = this.processorRegister.getReadProcessTokens();
+            List<ReadProcessComponentFunction> funcs = this.processorRegister.getReadProcessTokens();
 
             byte[] source = null;
 
-            for (Function2<byte[], byte[], ProcessEntity> pair : funcs) {
+            for (ReadProcessComponentFunction pair : funcs) {
                 source = pair.apply(source, process);
             }
 
             return source;
         }, (byte[] source) -> {
-            List<Consumer2<ProcessEntity, byte[]>> funcs = this.processorRegister.getWriteProcessTokens();
+            List<WriteProcessComponentConsumer> funcs = this.processorRegister.getWriteProcessTokens();
 
-            for (Consumer2<ProcessEntity, byte[]> pair : funcs) {
+            for (WriteProcessComponentConsumer pair : funcs) {
                 pair.accept(process, source);
             }
         });

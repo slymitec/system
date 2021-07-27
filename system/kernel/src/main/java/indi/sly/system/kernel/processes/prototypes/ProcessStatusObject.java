@@ -10,6 +10,8 @@ import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.lang.ReadProcessStatusFunction;
+import indi.sly.system.kernel.processes.lang.WriteProcessStatusConsumer;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
@@ -32,9 +34,9 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     public long get() {
         Long status = ProcessStatusType.NULL;
 
-        List<Function2<Long, Long, ProcessEntity>> funcs = this.processorRegister.getReadProcessStatuses();
+        List<ReadProcessStatusFunction> funcs = this.processorRegister.getReadProcessStatuses();
 
-        for (Function2<Long, Long, ProcessEntity> pair : funcs) {
+        for (ReadProcessStatusFunction pair : funcs) {
             status = pair.apply(status, this.value);
         }
 
@@ -57,9 +59,9 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             throw new ConditionPermissionsException();
         }
 
-        List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
+        List<WriteProcessStatusConsumer> funcs = this.processorRegister.getWriteProcessStatuses();
 
-        for (Consumer2<ProcessEntity, Long> pair : funcs) {
+        for (WriteProcessStatusConsumer pair : funcs) {
             pair.accept(this.value, ProcessStatusType.INITIALIZATION);
         }
     }
@@ -72,9 +74,9 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
 
         this.init();
 
-        List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
+        List<WriteProcessStatusConsumer> funcs = this.processorRegister.getWriteProcessStatuses();
 
-        for (Consumer2<ProcessEntity, Long> pair : funcs) {
+        for (WriteProcessStatusConsumer pair : funcs) {
             pair.accept(this.value, ProcessStatusType.RUNNING);
         }
     }
@@ -87,9 +89,9 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
 
         this.init();
 
-        List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
+        List<WriteProcessStatusConsumer> funcs = this.processorRegister.getWriteProcessStatuses();
 
-        for (Consumer2<ProcessEntity, Long> pair : funcs) {
+        for (WriteProcessStatusConsumer pair : funcs) {
             pair.accept(this.value, ProcessStatusType.INTERRUPTED);
         }
     }
@@ -104,9 +106,9 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             this.lock(LockType.WRITE);
             this.init();
 
-            List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
+            List<WriteProcessStatusConsumer> funcs = this.processorRegister.getWriteProcessStatuses();
 
-            for (Consumer2<ProcessEntity, Long> pair : funcs) {
+            for (WriteProcessStatusConsumer pair : funcs) {
                 pair.accept(this.value, ProcessStatusType.DIED);
             }
 
@@ -151,9 +153,9 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             this.lock(LockType.WRITE);
             this.init();
 
-            List<Consumer2<ProcessEntity, Long>> funcs = this.processorRegister.getWriteProcessStatuses();
+            List<WriteProcessStatusConsumer> funcs = this.processorRegister.getWriteProcessStatuses();
 
-            for (Consumer2<ProcessEntity, Long> pair : funcs) {
+            for (WriteProcessStatusConsumer pair : funcs) {
                 pair.accept(this.value, ProcessStatusType.ZOMBIE);
             }
 

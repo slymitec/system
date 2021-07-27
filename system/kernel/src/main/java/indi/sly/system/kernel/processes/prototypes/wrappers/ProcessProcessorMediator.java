@@ -1,15 +1,20 @@
 package indi.sly.system.kernel.processes.prototypes.wrappers;
 
-import indi.sly.system.common.lang.Consumer2;
 import indi.sly.system.common.lang.Function1;
-import indi.sly.system.common.lang.Function2;
+import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.processes.lang.*;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ProcessProcessorMediator {
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class ProcessProcessorMediator extends APrototype {
     public ProcessProcessorMediator() {
         this.readProcessStatuses = new ArrayList<>();
         this.writeProcessStatuses = new ArrayList<>();
@@ -25,73 +30,73 @@ public class ProcessProcessorMediator {
         this.writeProcessTokens = new ArrayList<>();
     }
 
-    private Function1<ProcessEntity, UUID> process;
-    private final List<Function2<Long, Long, ProcessEntity>> readProcessStatuses;
-    private final List<Consumer2<ProcessEntity, Long>> writeProcessStatuses;
-    private final List<Function2<byte[], byte[], ProcessEntity>> readProcessCommunications;
-    private final List<Consumer2<ProcessEntity, byte[]>> writeProcessCommunications;
-    private final List<Function2<byte[], byte[], ProcessEntity>> readProcessContexts;
-    private final List<Consumer2<ProcessEntity, byte[]>> writeProcessContexts;
-    private final List<Function2<byte[], byte[], ProcessEntity>> readProcessHandleTables;
-    private final List<Consumer2<ProcessEntity, byte[]>> writeProcessHandleTables;
-    private final List<Function2<byte[], byte[], ProcessEntity>> readProcessStatistics;
-    private final List<Consumer2<ProcessEntity, byte[]>> writeProcessStatistics;
-    private final List<Function2<byte[], byte[], ProcessEntity>> readProcessTokens;
-    private final List<Consumer2<ProcessEntity, byte[]>> writeProcessTokens;
+    private ProcessSelfFunction process;
+    private final List<ReadProcessStatusFunction> readProcessStatuses;
+    private final List<WriteProcessStatusConsumer> writeProcessStatuses;
+    private final List<ReadProcessComponentFunction> readProcessCommunications;
+    private final List<WriteProcessComponentConsumer> writeProcessCommunications;
+    private final List<ReadProcessComponentFunction> readProcessContexts;
+    private final List<WriteProcessComponentConsumer> writeProcessContexts;
+    private final List<ReadProcessComponentFunction> readProcessHandleTables;
+    private final List<WriteProcessComponentConsumer> writeProcessHandleTables;
+    private final List<ReadProcessComponentFunction> readProcessStatistics;
+    private final List<WriteProcessComponentConsumer> writeProcessStatistics;
+    private final List<ReadProcessComponentFunction> readProcessTokens;
+    private final List<WriteProcessComponentConsumer> writeProcessTokens;
 
-    public Function1<ProcessEntity, UUID> getProcess() {
+    public ProcessSelfFunction getProcess() {
         return this.process;
     }
 
-    public void setProcess(Function1<ProcessEntity, UUID> process) {
+    public void setProcess(ProcessSelfFunction process) {
         this.process = process;
     }
 
-    public List<Function2<Long, Long, ProcessEntity>> getReadProcessStatuses() {
+    public List<ReadProcessStatusFunction> getReadProcessStatuses() {
         return this.readProcessStatuses;
     }
 
-    public List<Consumer2<ProcessEntity, Long>> getWriteProcessStatuses() {
+    public List<WriteProcessStatusConsumer> getWriteProcessStatuses() {
         return this.writeProcessStatuses;
     }
 
-    public List<Function2<byte[], byte[], ProcessEntity>> getReadProcessCommunications() {
+    public List<ReadProcessComponentFunction> getReadProcessCommunications() {
         return this.readProcessCommunications;
     }
 
-    public List<Consumer2<ProcessEntity, byte[]>> getWriteProcessCommunications() {
+    public List<WriteProcessComponentConsumer> getWriteProcessCommunications() {
         return this.writeProcessCommunications;
     }
 
-    public List<Function2<byte[], byte[], ProcessEntity>> getReadProcessContexts() {
+    public List<ReadProcessComponentFunction> getReadProcessContexts() {
         return this.readProcessContexts;
     }
 
-    public List<Consumer2<ProcessEntity, byte[]>> getWriteProcessContexts() {
+    public List<WriteProcessComponentConsumer> getWriteProcessContexts() {
         return this.writeProcessContexts;
     }
 
-    public List<Function2<byte[], byte[], ProcessEntity>> getReadProcessHandleTables() {
+    public List<ReadProcessComponentFunction> getReadProcessHandleTables() {
         return this.readProcessHandleTables;
     }
 
-    public List<Consumer2<ProcessEntity, byte[]>> getWriteProcessHandleTables() {
+    public List<WriteProcessComponentConsumer> getWriteProcessHandleTables() {
         return this.writeProcessHandleTables;
     }
 
-    public List<Function2<byte[], byte[], ProcessEntity>> getReadProcessStatistics() {
+    public List<ReadProcessComponentFunction> getReadProcessStatistics() {
         return this.readProcessStatistics;
     }
 
-    public List<Consumer2<ProcessEntity, byte[]>> getWriteProcessStatistics() {
+    public List<WriteProcessComponentConsumer> getWriteProcessStatistics() {
         return this.writeProcessStatistics;
     }
 
-    public List<Function2<byte[], byte[], ProcessEntity>> getReadProcessTokens() {
+    public List<ReadProcessComponentFunction> getReadProcessTokens() {
         return this.readProcessTokens;
     }
 
-    public List<Consumer2<ProcessEntity, byte[]>> getWriteProcessTokens() {
+    public List<WriteProcessComponentConsumer> getWriteProcessTokens() {
         return this.writeProcessTokens;
     }
 }

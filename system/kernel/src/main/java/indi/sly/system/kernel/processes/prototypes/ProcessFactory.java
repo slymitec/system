@@ -50,15 +50,13 @@ public class ProcessFactory extends APrototype {
     }
 
     public ProcessObject buildProcess(ProcessEntity process) {
-        ProcessProcessorMediator processorMediator = new ProcessProcessorMediator();
+        ProcessProcessorMediator processorMediator = this.factoryManager.create(ProcessProcessorMediator.class);
         for (IProcessResolver processResolver : this.processResolvers) {
             processResolver.resolve(process, processorMediator);
         }
 
         return this.buildProcess(processorMediator, process.getID());
     }
-
-
 
 
     public ACreateProcessBuilder createProcessBuilder() {

@@ -7,8 +7,6 @@ import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
 
-import java.util.UUID;
-
 @FunctionalInterface
 public interface GetOrRebuildChildFunction extends Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject,
         InfoStatusDefinition, IdentificationDefinition, InfoStatusOpenDefinition> {

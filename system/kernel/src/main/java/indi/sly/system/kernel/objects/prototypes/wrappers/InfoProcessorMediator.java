@@ -2,9 +2,16 @@ package indi.sly.system.kernel.objects.prototypes.wrappers;
 
 import java.util.*;
 
+import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.lang.*;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
-public class InfoProcessorMediator {
+import javax.inject.Named;
+
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class InfoProcessorMediator extends APrototype {
     public InfoProcessorMediator() {
         this.dumps = new ArrayList<>();
         this.opens = new ArrayList<>();
@@ -21,8 +28,8 @@ public class InfoProcessorMediator {
         this.executeContents = new ArrayList<>();
     }
 
-    private SelfFunction self;
-    private ParentFunction parent;
+    private InfoSelfFunction self;
+    private InfoParentFunction parent;
     private SecurityDescriptorFunction securityDescriptor;
     private final List<DumpFunction> dumps;
     private final List<OpenFunction> opens;
@@ -38,19 +45,19 @@ public class InfoProcessorMediator {
     private final List<WriteContentConsumer> writeContents;
     private final List<ExecuteContentConsumer> executeContents;
 
-    public SelfFunction getSelf() {
+    public InfoSelfFunction getSelf() {
         return this.self;
     }
 
-    public void setSelf(SelfFunction self) {
+    public void setSelf(InfoSelfFunction self) {
         this.self = self;
     }
 
-    public ParentFunction getParent() {
+    public InfoParentFunction getParent() {
         return this.parent;
     }
 
-    public void setParent(ParentFunction parent) {
+    public void setParent(InfoParentFunction parent) {
         this.parent = parent;
     }
 

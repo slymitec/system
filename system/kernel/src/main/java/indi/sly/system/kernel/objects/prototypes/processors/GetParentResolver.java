@@ -6,7 +6,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
-import indi.sly.system.kernel.objects.lang.ParentFunction;
+import indi.sly.system.kernel.objects.lang.InfoParentFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -32,7 +32,7 @@ public class GetParentResolver extends APrototype implements IInfoResolver {
         };
     }
 
-    private final ParentFunction parent;
+    private final InfoParentFunction parent;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {

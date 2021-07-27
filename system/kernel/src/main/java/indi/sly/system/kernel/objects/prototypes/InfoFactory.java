@@ -62,7 +62,7 @@ public class InfoFactory extends APrototype {
 
     private InfoObject buildInfo(InfoEntity info, InfoStatusOpenDefinition statusOpen, UUID poolID,
                                  InfoObject parentInfo) {
-        InfoProcessorMediator processorMediator = new InfoProcessorMediator();
+        InfoProcessorMediator processorMediator = this.factoryManager.create(InfoProcessorMediator.class);
         for (IInfoResolver infoResolver : this.infoResolvers) {
             infoResolver.resolve(info, processorMediator);
         }

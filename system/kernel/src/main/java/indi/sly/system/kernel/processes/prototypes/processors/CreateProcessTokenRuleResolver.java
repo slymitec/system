@@ -12,7 +12,7 @@ import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessCreatorProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
 import indi.sly.system.kernel.processes.values.ProcessContextType;
 import indi.sly.system.kernel.security.UserManager;
@@ -85,7 +85,7 @@ public class CreateProcessTokenRuleResolver extends APrototype implements IProce
     }
 
     @Override
-    public void resolve(ProcessCreatorProcessorMediator processorCreatorMediator) {
+    public void resolve(ProcessLifeCycleProcessorMediator processorCreatorMediator) {
         processorCreatorMediator.getCreates().add(createProcessFunction);
     }
 }

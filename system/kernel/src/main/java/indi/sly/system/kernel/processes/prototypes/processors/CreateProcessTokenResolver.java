@@ -4,7 +4,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessCreatorProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -48,7 +48,7 @@ public class CreateProcessTokenResolver extends APrototype implements IProcessCr
     }
 
     @Override
-    public void resolve(ProcessCreatorProcessorMediator processorCreatorMediator) {
+    public void resolve(ProcessLifeCycleProcessorMediator processorCreatorMediator) {
         processorCreatorMediator.getCreates().add(createProcessFunction);
     }
 }

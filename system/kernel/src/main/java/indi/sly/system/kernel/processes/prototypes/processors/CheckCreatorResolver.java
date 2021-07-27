@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessCreatorProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
 import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -53,7 +53,7 @@ public class CheckCreatorResolver extends APrototype implements IProcessCreatorR
     }
 
     @Override
-    public void resolve(ProcessCreatorProcessorMediator processorCreatorMediator) {
+    public void resolve(ProcessLifeCycleProcessorMediator processorCreatorMediator) {
         processorCreatorMediator.getCreates().add(createProcessFunction);
     }
 }

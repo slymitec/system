@@ -6,7 +6,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessCreatorProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
 import indi.sly.system.kernel.processes.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -18,7 +18,7 @@ import java.util.List;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessCreatorBuilder extends APrototype {
     protected ProcessFactory factory;
-    protected ProcessCreatorProcessorMediator processorMediator;
+    protected ProcessLifeCycleProcessorMediator processorMediator;
     protected ProcessCreatorDefinition processCreator;
 
     protected ProcessObject parentProcess;

@@ -7,7 +7,7 @@ import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.prototypes.processors.IProcessCreatorResolver;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessCreatorProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
@@ -74,7 +74,7 @@ public class ProcessFactory extends APrototype {
             throw new ConditionParametersException();
         }
 
-        ProcessCreatorProcessorMediator processorMediator = this.factoryManager.create(ProcessCreatorProcessorMediator.class);
+        ProcessLifeCycleProcessorMediator processorMediator = this.factoryManager.create(ProcessLifeCycleProcessorMediator.class);
         for (IProcessCreatorResolver processCreatorResolver : this.processCreatorResolvers) {
             processCreatorResolver.resolve(processorMediator);
         }

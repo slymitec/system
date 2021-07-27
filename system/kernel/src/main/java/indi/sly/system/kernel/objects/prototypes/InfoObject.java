@@ -12,11 +12,7 @@ import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
-import indi.sly.system.kernel.objects.values.DumpDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenDefinition;
-import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
+import indi.sly.system.kernel.objects.values.*;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
@@ -293,6 +289,20 @@ public class InfoObject extends APrototype {
         ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getEntry(this.id, this.status);
 
         return processHandleTableEntry.isExist();
+    }
+
+    public synchronized long getOpenAttribute() {
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrent();
+        ProcessHandleTableObject processHandleTable = process.getHandleTable();
+        ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getEntry(this.id, this.status);
+
+        if (!processHandleTableEntry.isExist()) {
+            return InfoStatusOpenAttributeType.CLOSE;
+        }
+        
+        return processHandleTableEntry.getOpen().getAttribute();
     }
 
     public synchronized InfoObject createChildAndOpen(UUID type, IdentificationDefinition identification,

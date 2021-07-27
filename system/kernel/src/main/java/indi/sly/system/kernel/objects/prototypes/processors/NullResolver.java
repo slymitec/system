@@ -18,7 +18,7 @@ public class NullResolver extends APrototype implements IInfoResolver {
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> childInfo;
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification, statusOpen) -> childInfo;
+        this.getOrRebuildChild = (childInfo, info, type, status, identification, open) -> childInfo;
 
         this.deleteChild = (info, type, status, identification) -> {
         };

@@ -79,7 +79,7 @@ public class ProcessAndThreadStatisticsResolver extends APrototype implements II
             return childInfo;
         };
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification, statusOpen) -> {
+        this.getOrRebuildChild = (childInfo, info, type, status, identification, open) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 

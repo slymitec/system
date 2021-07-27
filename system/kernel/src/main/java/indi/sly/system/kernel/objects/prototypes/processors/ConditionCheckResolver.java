@@ -6,7 +6,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
+import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -20,11 +20,11 @@ import java.util.UUID;
 public class ConditionCheckResolver extends APrototype implements IInfoResolver {
     public ConditionCheckResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
-            if (openAttribute == InfoStatusOpenAttributeType.CLOSE
-                    || (openAttribute == InfoStatusOpenAttributeType.OPEN_EXCLUSIVE && info.getOpened() > 0)
-                    || (openAttribute == InfoStatusOpenAttributeType.OPEN_ONLY_READ && info.getOpened() > 0
+            if (openAttribute == InfoOpenAttributeType.CLOSE
+                    || (openAttribute == InfoOpenAttributeType.OPEN_EXCLUSIVE && info.getOpened() > 0)
+                    || (openAttribute == InfoOpenAttributeType.OPEN_ONLY_READ && info.getOpened() > 0
                     && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_SHARED_READ))
-                    || (openAttribute == InfoStatusOpenAttributeType.OPEN_SHARED_WRITE
+                    || (openAttribute == InfoOpenAttributeType.OPEN_SHARED_WRITE
                     && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN))) {
                 throw new StatusNotSupportedException();
             }
@@ -48,7 +48,7 @@ public class ConditionCheckResolver extends APrototype implements IInfoResolver 
             return childInfo;
         };
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification, statusOpen) -> {
+        this.getOrRebuildChild = (childInfo, info, type, status, identification, open) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
                     || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
                 throw new StatusNotSupportedException();

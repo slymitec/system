@@ -8,7 +8,7 @@ import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
+import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
@@ -445,7 +445,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().SECURITY_INSTANCE_AUDIT_ID;
 
             InfoObject audit = audits.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
-                    InfoStatusOpenAttributeType.OPEN_EXCLUSIVE);
+                    InfoOpenAttributeType.OPEN_EXCLUSIVE);
             SecurityDescriptorObject securityDescriptor = audit.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();

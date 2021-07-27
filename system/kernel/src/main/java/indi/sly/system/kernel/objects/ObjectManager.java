@@ -65,13 +65,12 @@ public class ObjectManager extends AManager {
         }
 
         List<IdentificationDefinition> identifications = processHandleEntry.getIdentifications();
-        UUID handle = processHandleEntry.getHandle();
-        InfoOpenDefinition infoStatusOpen = processHandleEntry.getOpen();
+        InfoOpenDefinition infoOpen = processHandleEntry.getOpen();
 
         InfoObject info;
         if (identifications.size() > 0) {
             info = this.get(identifications.subList(0, identifications.size() - 1));
-            info = info.rebuildChild(identifications.get(identifications.size() - 1), handle, infoStatusOpen);
+            info = info.rebuildChild(identifications.get(identifications.size() - 1), infoOpen);
         } else {
             info = this.get(identifications);
         }

@@ -123,7 +123,7 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
             return childInfo;
         };
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification, statusOpen) -> {
+        this.getOrRebuildChild = (childInfo, info, type, status, identification, open) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 

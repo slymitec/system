@@ -14,7 +14,7 @@ import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
+import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
@@ -77,7 +77,7 @@ public class SessionManager extends AManager {
                 new IdentificationDefinition(id));
 
         InfoObject session = objectManager.get(identifications);
-        session.open(InfoStatusOpenAttributeType.OPEN_SHARED_WRITE);
+        session.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
 
         return (SessionContentObject) session.getContent();
     }
@@ -105,7 +105,7 @@ public class SessionManager extends AManager {
         UUID accountID = accountAuthorization.checkAndGetResult().getAccountID();
 
         InfoObject session = sessions.createChildAndOpen(typeID, new IdentificationDefinition(UUIDUtil.createRandom()),
-                InfoStatusOpenAttributeType.OPEN_SHARED_WRITE);
+                InfoOpenAttributeType.OPEN_SHARED_WRITE);
         SessionContentObject sessionContent = (SessionContentObject) session.getContent();
         sessionContent.setAccountID(accountID);
 

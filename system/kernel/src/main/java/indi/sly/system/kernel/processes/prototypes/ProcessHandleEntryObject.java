@@ -10,7 +10,7 @@ import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusOpenAttributeType;
+import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import indi.sly.system.kernel.processes.values.ProcessHandleEntryDefinition;
@@ -70,10 +70,9 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
         processHandleEntry.setHandle(handle);
         processHandleEntry.getIdentifications().addAll(status.getIdentifications());
 
-        InfoOpenDefinition infoStatusOpen = new InfoOpenDefinition();
-        infoStatusOpen.setHandle(handle);
-        infoStatusOpen.setAttribute(openAttribute);
-        processHandleEntry.setOpen(infoStatusOpen);
+        InfoOpenDefinition infoOpen = new InfoOpenDefinition();
+        infoOpen.setAttribute(openAttribute);
+        processHandleEntry.setOpen(infoOpen);
 
         processHandleEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
 
@@ -101,7 +100,7 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
             this.init();
 
             ProcessHandleEntryDefinition processHandleEntry = this.value.getByInfoID(this.infoID);
-            processHandleEntry.getOpen().setAttribute(InfoStatusOpenAttributeType.CLOSE);
+            processHandleEntry.getOpen().setAttribute(InfoOpenAttributeType.CLOSE);
 
             this.value.delete(processHandleEntry.getHandle());
 

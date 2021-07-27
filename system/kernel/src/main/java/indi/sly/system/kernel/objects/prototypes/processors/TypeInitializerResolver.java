@@ -92,7 +92,7 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
             return childInfo;
         };
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification, statusOpen) -> {
+        this.getOrRebuildChild = (childInfo, info, type, status, identification, open) -> {
             InfoSummaryDefinition infoSummary = type.getTypeInitializer().getChildProcedure(info, identification);
 
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);

@@ -299,7 +299,7 @@ public class InfoObject extends APrototype {
         ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getEntry(this.id, this.status);
 
         if (!processHandleTableEntry.isExist()) {
-            return InfoStatusOpenAttributeType.CLOSE;
+            return InfoOpenAttributeType.CLOSE;
         }
 
         return processHandleTableEntry.getOpen().getAttribute();
@@ -339,11 +339,10 @@ public class InfoObject extends APrototype {
     }
 
     public synchronized InfoObject getChild(IdentificationDefinition identification) {
-        return this.rebuildChild(identification, null, null);
+        return this.rebuildChild(identification, null);
     }
 
-    public synchronized InfoObject rebuildChild(IdentificationDefinition identification, UUID handle,
-                                                InfoOpenDefinition statusOpen) {
+    public synchronized InfoObject rebuildChild(IdentificationDefinition identification, InfoOpenDefinition open) {
         if (ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
@@ -358,7 +357,7 @@ public class InfoObject extends APrototype {
         InfoEntity childInfo = null;
 
         for (GetOrRebuildChildFunction resolver : resolvers) {
-            childInfo = resolver.apply(childInfo, info, type, this.status, identification, statusOpen);
+            childInfo = resolver.apply(childInfo, info, type, this.status, identification, open);
         }
 
         if (ObjectUtil.isAnyNull(childInfo)) {

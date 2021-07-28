@@ -33,10 +33,10 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     public long get() {
         Long status = ProcessStatusType.NULL;
 
-        Set<ReadProcessStatusFunction> funcs = this.processorMediator.getReadProcessStatuses();
+        Set<ReadProcessStatusFunction> resolvers = this.processorMediator.getReadProcessStatuses();
 
-        for (ReadProcessStatusFunction pair : funcs) {
-            status = pair.apply(status, this.value);
+        for (ReadProcessStatusFunction resolver : resolvers) {
+            status = resolver.apply(status, this.value);
         }
 
         return status;
@@ -58,10 +58,10 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             throw new ConditionPermissionsException();
         }
 
-        Set<WriteProcessStatusConsumer> funcs = this.processorMediator.getWriteProcessStatuses();
+        Set<WriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-        for (WriteProcessStatusConsumer pair : funcs) {
-            pair.accept(this.value, ProcessStatusType.INITIALIZATION);
+        for (WriteProcessStatusConsumer resolver : resolvers) {
+            resolver.accept(this.value, ProcessStatusType.INITIALIZATION);
         }
     }
 
@@ -73,10 +73,10 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
 
         this.init();
 
-        Set<WriteProcessStatusConsumer> funcs = this.processorMediator.getWriteProcessStatuses();
+        Set<WriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-        for (WriteProcessStatusConsumer pair : funcs) {
-            pair.accept(this.value, ProcessStatusType.RUNNING);
+        for (WriteProcessStatusConsumer resolver : resolvers) {
+            resolver.accept(this.value, ProcessStatusType.RUNNING);
         }
     }
 
@@ -88,10 +88,10 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
 
         this.init();
 
-        Set<WriteProcessStatusConsumer> funcs = this.processorMediator.getWriteProcessStatuses();
+        Set<WriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-        for (WriteProcessStatusConsumer pair : funcs) {
-            pair.accept(this.value, ProcessStatusType.INTERRUPTED);
+        for (WriteProcessStatusConsumer resolver : resolvers) {
+            resolver.accept(this.value, ProcessStatusType.INTERRUPTED);
         }
     }
 
@@ -113,10 +113,10 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             this.lock(LockType.WRITE);
             this.init();
 
-            Set<WriteProcessStatusConsumer> funcs = this.processorMediator.getWriteProcessStatuses();
+            Set<WriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-            for (WriteProcessStatusConsumer pair : funcs) {
-                pair.accept(this.value, ProcessStatusType.DIED);
+            for (WriteProcessStatusConsumer resolver : resolvers) {
+                resolver.accept(this.value, ProcessStatusType.DIED);
             }
 
             this.fresh();
@@ -149,10 +149,10 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             this.lock(LockType.WRITE);
             this.init();
 
-            Set<WriteProcessStatusConsumer> funcs = this.processorMediator.getWriteProcessStatuses();
+            Set<WriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-            for (WriteProcessStatusConsumer pair : funcs) {
-                pair.accept(this.value, ProcessStatusType.ZOMBIE);
+            for (WriteProcessStatusConsumer resolver : resolvers) {
+                resolver.accept(this.value, ProcessStatusType.ZOMBIE);
             }
 
             this.fresh();

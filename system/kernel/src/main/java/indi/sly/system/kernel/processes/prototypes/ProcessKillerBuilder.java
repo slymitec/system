@@ -29,10 +29,10 @@ public class ProcessKillerBuilder extends APrototype {
 
         processStatus.die();
 
-        List<KillProcessFunction> funcs = this.processorMediator.getKills();
+        List<KillProcessFunction> resolvers = this.processorMediator.getKills();
 
-        for (KillProcessFunction pair : funcs) {
-            process = pair.apply(this.parentProcess, this.process);
+        for (KillProcessFunction resolver : resolvers) {
+            process = resolver.apply(this.parentProcess, this.process);
         }
 
         processStatus.zombie();

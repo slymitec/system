@@ -69,20 +69,20 @@ public class ProcessObject extends APrototype {
         ProcessCommunicationObject processCommunication = this.factoryManager.create(ProcessCommunicationObject.class);
 
         processCommunication.setSource(() -> {
-            Set<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessCommunications();
+            Set<ReadProcessComponentFunction> methods = this.processorMediator.getReadProcessCommunications();
 
             byte[] source = null;
 
-            for (ReadProcessComponentFunction pair : funcs) {
-                source = pair.apply(source, process);
+            for (ReadProcessComponentFunction method : methods) {
+                source = method.apply(source, process);
             }
 
             return source;
         }, (byte[] source) -> {
-            Set<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessCommunications();
+            Set<WriteProcessComponentConsumer> resolvers = this.processorMediator.getWriteProcessCommunications();
 
-            for (WriteProcessComponentConsumer pair : funcs) {
-                pair.accept(process, source);
+            for (WriteProcessComponentConsumer resolver : resolvers) {
+                resolver.accept(process, source);
             }
         });
         processCommunication.setLock((lock) -> {
@@ -102,20 +102,20 @@ public class ProcessObject extends APrototype {
         ProcessContextObject processContext = this.factoryManager.create(ProcessContextObject.class);
 
         processContext.setSource(() -> {
-            Set<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessContexts();
+            Set<ReadProcessComponentFunction> resolvers = this.processorMediator.getReadProcessContexts();
 
             byte[] source = null;
 
-            for (ReadProcessComponentFunction pair : funcs) {
-                source = pair.apply(source, process);
+            for (ReadProcessComponentFunction resolver : resolvers) {
+                source = resolver.apply(source, process);
             }
 
             return source;
         }, (byte[] source) -> {
-            Set<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessContexts();
+            Set<WriteProcessComponentConsumer> resolvers = this.processorMediator.getWriteProcessContexts();
 
-            for (WriteProcessComponentConsumer pair : funcs) {
-                pair.accept(process, source);
+            for (WriteProcessComponentConsumer resolver : resolvers) {
+                resolver.accept(process, source);
             }
         });
         processContext.setLock((lock) -> {
@@ -135,20 +135,20 @@ public class ProcessObject extends APrototype {
         ProcessHandleTableObject processHandleTable = this.factoryManager.create(ProcessHandleTableObject.class);
 
         processHandleTable.setSource(() -> {
-            Set<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessHandleTables();
+            Set<ReadProcessComponentFunction> resolvers = this.processorMediator.getReadProcessHandleTables();
 
             byte[] source = null;
 
-            for (ReadProcessComponentFunction pair : funcs) {
-                source = pair.apply(source, process);
+            for (ReadProcessComponentFunction resolver : resolvers) {
+                source = resolver.apply(source, process);
             }
 
             return source;
         }, (byte[] source) -> {
-            Set<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessHandleTables();
+            Set<WriteProcessComponentConsumer> resolvers = this.processorMediator.getWriteProcessHandleTables();
 
-            for (WriteProcessComponentConsumer pair : funcs) {
-                pair.accept(process, source);
+            for (WriteProcessComponentConsumer resolver : resolvers) {
+                resolver.accept(process, source);
             }
         });
         processHandleTable.setLock((lock) -> {
@@ -185,20 +185,20 @@ public class ProcessObject extends APrototype {
         ProcessStatisticsObject processStatistics = this.factoryManager.create(ProcessStatisticsObject.class);
 
         processStatistics.setSource(() -> {
-            Set<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessStatistics();
+            Set<ReadProcessComponentFunction> resolvers = this.processorMediator.getReadProcessStatistics();
 
             byte[] source = null;
 
-            for (ReadProcessComponentFunction pair : funcs) {
-                source = pair.apply(source, process);
+            for (ReadProcessComponentFunction resolver : resolvers) {
+                source = resolver.apply(source, process);
             }
 
             return source;
         }, (byte[] source) -> {
-            Set<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessStatistics();
+            Set<WriteProcessComponentConsumer> resolvers = this.processorMediator.getWriteProcessStatistics();
 
-            for (WriteProcessComponentConsumer pair : funcs) {
-                pair.accept(process, source);
+            for (WriteProcessComponentConsumer resolver : resolvers) {
+                resolver.accept(process, source);
             }
         });
         processStatistics.setLock((lock) -> {
@@ -218,20 +218,20 @@ public class ProcessObject extends APrototype {
         ProcessTokenObject processToken = this.factoryManager.create(ProcessTokenObject.class);
 
         processToken.setSource(() -> {
-            Set<ReadProcessComponentFunction> funcs = this.processorMediator.getReadProcessTokens();
+            Set<ReadProcessComponentFunction> resolvers = this.processorMediator.getReadProcessTokens();
 
             byte[] source = null;
 
-            for (ReadProcessComponentFunction pair : funcs) {
-                source = pair.apply(source, process);
+            for (ReadProcessComponentFunction resolver : resolvers) {
+                source = resolver.apply(source, process);
             }
 
             return source;
         }, (byte[] source) -> {
-            Set<WriteProcessComponentConsumer> funcs = this.processorMediator.getWriteProcessTokens();
+            Set<WriteProcessComponentConsumer> resolvers = this.processorMediator.getWriteProcessTokens();
 
-            for (WriteProcessComponentConsumer pair : funcs) {
-                pair.accept(process, source);
+            for (WriteProcessComponentConsumer resolver : resolvers) {
+                resolver.accept(process, source);
             }
         });
         processToken.setLock((lock) -> {

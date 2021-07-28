@@ -75,7 +75,16 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             throw new ConditionPermissionsException();
         }
 
-        this.value.setShared(shared);
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            this.value.setShared(shared);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
 
         ProcessStatisticsObject processStatistics = this.process.getStatistics();
         processStatistics.addSharedWriteCount(1);

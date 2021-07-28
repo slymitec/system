@@ -18,6 +18,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -105,7 +106,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
 
         this.init();
 
-        return this.value.getEnvironmentVariable();
+        return Collections.unmodifiableMap(this.value.getEnvironmentVariable());
     }
 
     public void setEnvironmentVariable(Map<String, String> environmentVariable) {
@@ -134,7 +135,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
     public Map<String, String> getParameters() {
         this.init();
 
-        return this.value.getParameters();
+        return Collections.unmodifiableMap(this.value.getParameters());
     }
 
     public void setParameters(Map<String, String> parameters) {
@@ -165,7 +166,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
     public List<IdentificationDefinition> getWorkFolder() {
         this.init();
 
-        return this.value.getWorkFolder();
+        return Collections.unmodifiableList(this.value.getWorkFolder());
     }
 
     public void setWorkFolder(List<IdentificationDefinition> workFolder) {

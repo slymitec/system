@@ -11,7 +11,7 @@ import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FolderContentObject extends AInfoContentObject {
     @Override
-    protected void read(byte[] value) {
+    protected void read(byte[] source) {
     }
 
     @Override

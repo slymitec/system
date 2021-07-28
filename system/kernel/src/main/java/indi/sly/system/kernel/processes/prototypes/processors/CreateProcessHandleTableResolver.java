@@ -21,6 +21,7 @@ public class CreateProcessHandleTableResolver extends APrototype implements IPro
                 ProcessHandleTableObject processHandleTable = process.getHandleTable();
                 processHandleTable.inherit(processCreator.getFileHandle());
             }
+
             return process;
         };
     }

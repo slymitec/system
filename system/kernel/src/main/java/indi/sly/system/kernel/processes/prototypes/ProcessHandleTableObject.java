@@ -89,6 +89,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
         try {
             this.lock(LockType.WRITE);
             this.init();
+
             parentProcessHandleTable.lock(LockType.WRITE);
             parentProcessHandleTable.init();
 

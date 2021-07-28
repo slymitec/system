@@ -9,7 +9,7 @@ public abstract class LogicalUtil {
         long result = -1;
 
         for (long pair : values) {
-            result = result | pair;
+            result = result & pair;
         }
 
         return result;

@@ -7,9 +7,12 @@ import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.ObjectManager;
+import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -32,8 +35,19 @@ public class CreateProcessContextResolver extends APrototype implements IProcess
             ProcessContextObject parentProcessContext = parentProcess.getContext();
 
             if (!ValueUtil.isAnyNullOrEmpty(processCreator.getFileHandle())) {
+                ProcessHandleTableObject parentProcessHandleTable = parentProcess.getHandleTable();
+                ProcessHandleEntryObject parentProcessHandleEntry = parentProcessHandleTable.getByHandle(processCreator.getFileHandle());
+
+                InfoObject info = parentProcessHandleEntry.getInfo();
+
+                AInfoContentObject infoContent = info.getContent();
+                infoContent.execute();
+
+                ApplicationDefinition application = new ApplicationDefinition();
+
                 //...
-                processContext.setApplication(new ApplicationDefinition());
+
+                processContext.setApplication(application);
             }
 
             if (ObjectUtil.allNotNull(processCreator.getEnvironmentVariable())) {

@@ -52,7 +52,7 @@ public class CreateProcessContextResolver extends APrototype implements IProcess
 
                 try {
                     InfoObject processContextWorkFolderInfo = objectManager.get(processContextWorkFolder);
-                    if (!configuration.FILESYSTEM_TYPES_INSTANCE_FOLDER_ID.equals(processContextWorkFolderInfo.getType())) {
+                    if (!configuration.FILES_TYPES_INSTANCE_FOLDER_ID.equals(processContextWorkFolderInfo.getType())) {
                         processContextWorkFolder = null;
                     }
                 } catch (AKernelException ignore) {

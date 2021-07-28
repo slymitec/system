@@ -8,12 +8,12 @@ import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 
 public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefinition> {
-    public final UUID FILESYSTEM_TYPES_INSTANCE_FILE_ID
+    public final UUID FILES_TYPES_INSTANCE_FILE_ID
             = UUIDUtil.getFormLongs(5141458603474635654L, -6744682139694385633L);
-    public final String FILESYSTEM_TYPES_INSTANCE_FILE_NAME = "File";
-    public final UUID FILESYSTEM_TYPES_INSTANCE_FOLDER_ID
+    public final String FILES_TYPES_INSTANCE_FILE_NAME = "File";
+    public final UUID FILES_TYPES_INSTANCE_FOLDER_ID
             = UUIDUtil.getFormLongs(1916803478875881556L, -6711235423546474736L);
-    public final String FILESYSTEM_TYPES_INSTANCE_FOLDER_NAME = "Folder";
+    public final String FILES_TYPES_INSTANCE_FOLDER_NAME = "Folder";
 
     public final UUID MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID
             = UUIDUtil.getFormLongs(8953595201274071621L, -4864294792184025833L);

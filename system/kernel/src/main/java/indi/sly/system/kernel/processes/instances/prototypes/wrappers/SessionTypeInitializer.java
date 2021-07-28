@@ -88,8 +88,7 @@ public class SessionTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info,
-                                                                       InfoOpenDefinition infoOpen) {
+    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
         return SessionContentObject.class;
     }
 

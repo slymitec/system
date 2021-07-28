@@ -100,8 +100,7 @@ public class AuditTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info,
-                                                                       InfoOpenDefinition infoOpen) {
+    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
         return AuditContentObject.class;
     }
 

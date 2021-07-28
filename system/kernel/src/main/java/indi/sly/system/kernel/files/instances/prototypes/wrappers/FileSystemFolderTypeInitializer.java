@@ -1,22 +1,18 @@
-package indi.sly.system.kernel.objects.instances.prototypes.wrappers;
+package indi.sly.system.kernel.files.instances.prototypes.wrappers;
 
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusNotSupportedException;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.files.instances.prototypes.FileSystemFolderContentObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.objects.instances.prototypes.FolderContentObject;
-import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoRelationEntity;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
-import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
-import indi.sly.system.kernel.objects.values.DumpDefinition;
+import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
+import indi.sly.system.kernel.objects.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -26,7 +22,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FolderTypeInitializer extends ATypeInitializer {
+public class FileSystemFolderTypeInitializer extends ATypeInitializer {
     @Override
     public void install() {
     }
@@ -216,7 +212,7 @@ public class FolderTypeInitializer extends ATypeInitializer {
 
     @Override
     public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
-        return FolderContentObject.class;
+        return FileSystemFolderContentObject.class;
     }
 
     @Override

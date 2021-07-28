@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.lang.KillProcessFunction;
+import indi.sly.system.kernel.processes.lang.EndProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -11,11 +11,11 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class KillProcessCommunicationResolver extends APrototype implements IProcessKillerResolver {
-    private final KillProcessFunction killProcessFunction;
+public class EndProcessCommunicationResolver extends APrototype implements IProcessKillerResolver {
+    private final EndProcessFunction endProcessFunction;
 
-    public KillProcessCommunicationResolver() {
-        this.killProcessFunction = (process, parentProcess) -> {
+    public EndProcessCommunicationResolver() {
+        this.endProcessFunction = (process, parentProcess) -> {
             ProcessCommunicationObject processCommunication = process.getCommunication();
 
             processCommunication.deleteAllPort();
@@ -32,6 +32,6 @@ public class KillProcessCommunicationResolver extends APrototype implements IPro
 
     @Override
     public void resolve(ProcessLifeCycleProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getKills().add(killProcessFunction);
+        processorCreatorMediator.getEnds().add(endProcessFunction);
     }
 }

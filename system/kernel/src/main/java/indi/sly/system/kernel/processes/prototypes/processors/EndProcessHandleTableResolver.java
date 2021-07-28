@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.processes.lang.KillProcessFunction;
+import indi.sly.system.kernel.processes.lang.EndProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
@@ -14,11 +14,11 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class KillProcessHandleTableResolver extends APrototype implements IProcessKillerResolver {
-    private final KillProcessFunction killProcessFunction;
+public class EndProcessHandleTableResolver extends APrototype implements IProcessKillerResolver {
+    private final EndProcessFunction endProcessFunction;
 
-    public KillProcessHandleTableResolver() {
-        this.killProcessFunction = (process, parentProcess) -> {
+    public EndProcessHandleTableResolver() {
+        this.endProcessFunction = (process, parentProcess) -> {
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
             for (UUID handle : processHandleTable.list()) {
@@ -33,11 +33,11 @@ public class KillProcessHandleTableResolver extends APrototype implements IProce
 
     @Override
     public int order() {
-        return 2;
+        return 1;
     }
 
     @Override
     public void resolve(ProcessLifeCycleProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getKills().add(killProcessFunction);
+        processorCreatorMediator.getEnds().add(endProcessFunction);
     }
 }

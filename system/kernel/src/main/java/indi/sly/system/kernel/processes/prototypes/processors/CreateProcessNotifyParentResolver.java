@@ -1,11 +1,11 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.instances.values.SignalType;
-import indi.sly.system.kernel.processes.lang.KillProcessFunction;
+import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -14,15 +14,16 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class KillProcessNotifyParentResolver extends APrototype implements IProcessKillerResolver {
-    private final KillProcessFunction killProcessFunction;
+public class CreateProcessNotifyParentResolver extends APrototype implements IProcessCreatorResolver {
+    private final CreateProcessFunction createProcessFunction;
 
-    public KillProcessNotifyParentResolver() {
-        this.killProcessFunction = (process, parentProcess) -> {
+    public CreateProcessNotifyParentResolver() {
+        this.createProcessFunction = (process, parentProcess, processCreator) -> {
             if (ObjectUtil.allNotNull(parentProcess)) {
                 ProcessCommunicationObject parentProcessCommunication = parentProcess.getCommunication();
 
-                parentProcessCommunication.sendSignal(parentProcess, SignalType.KEY_PROCESS_EXIT, SignalType.VALUE_SUCCESS);
+                parentProcessCommunication.sendSignal(parentProcess, SignalType.TYPE_PROCESS,
+                        LogicalUtil.or(SignalType.ACTION_CREATE, SignalType.RESULT_SUCCESS));
             }
 
             return process;
@@ -31,11 +32,11 @@ public class KillProcessNotifyParentResolver extends APrototype implements IProc
 
     @Override
     public int order() {
-        return 1;
+        return 4;
     }
 
     @Override
     public void resolve(ProcessLifeCycleProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getKills().add(killProcessFunction);
+        processorCreatorMediator.getCreates().add(createProcessFunction);
     }
 }

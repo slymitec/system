@@ -145,7 +145,7 @@ public class ProcessManager extends AManager {
         return processCreatorBuilder.build();
     }
 
-    private void killTarget(UUID processID) {
+    private void deleteTarget(UUID processID) {
         ProcessObject process = this.getTarget(processID);
         ProcessObject parentProcess = null;
 
@@ -162,17 +162,17 @@ public class ProcessManager extends AManager {
         processRepository.delete(processRepository.get(processID));
     }
 
-    public void killCurrent() {
+    public void endCurrent() {
         ProcessObject process = this.getCurrent();
 
-        this.killTarget(process.getID());
+        this.deleteTarget(process.getID());
     }
 
-    public void kill(UUID processID) {
-        this.kill(processID, null);
+    public void end(UUID processID) {
+        this.end(processID, null);
     }
 
-    public void kill(UUID processID, AccountAuthorizationObject accountAuthorization) {
+    public void end(UUID processID, AccountAuthorizationObject accountAuthorization) {
         if (ValueUtil.isAnyNullOrEmpty(processID)) {
             throw new ConditionParametersException();
         }
@@ -192,6 +192,6 @@ public class ProcessManager extends AManager {
             }
         }
 
-        this.killTarget(processID);
+        this.deleteTarget(processID);
     }
 }

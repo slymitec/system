@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.lang.KillProcessFunction;
+import indi.sly.system.kernel.processes.lang.EndProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -23,9 +23,9 @@ public class ProcessKillerBuilder extends APrototype {
 
         processStatus.die();
 
-        List<KillProcessFunction> resolvers = this.processorMediator.getKills();
+        List<EndProcessFunction> resolvers = this.processorMediator.getEnds();
 
-        for (KillProcessFunction resolver : resolvers) {
+        for (EndProcessFunction resolver : resolvers) {
             process = resolver.apply(this.parentProcess, this.process);
         }
 

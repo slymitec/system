@@ -25,7 +25,7 @@ public class ProcessSessionObject extends AValueProcessPrototype<ProcessEntity> 
 
         ProcessObject currentProcess = processManager.getCurrent();
 
-        if (!currentProcess.getID().equals(process.getParentProcessID())) {
+        if (!currentProcess.getID().equals(process.getParentID())) {
             throw new ConditionPermissionsException();
         }
 

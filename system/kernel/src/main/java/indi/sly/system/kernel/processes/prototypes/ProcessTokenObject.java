@@ -30,7 +30,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
 
         ProcessObject currentProcess = processManager.getCurrent();
 
-        if (!currentProcess.getID().equals(process.getParentProcessID())) {
+        if (!currentProcess.getID().equals(process.getParentID())) {
             throw new ConditionPermissionsException();
         }
 

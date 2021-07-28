@@ -27,7 +27,7 @@ public class ProcessProcessorMediator extends APrototype {
         this.writeProcessTokens = new HashSet<>();
     }
 
-    private ProcessSelfFunction process;
+    private ProcessSelfFunction self;
     private final Set<ReadProcessStatusFunction> readProcessStatuses;
     private final Set<WriteProcessStatusConsumer> writeProcessStatuses;
     private final Set<ReadProcessComponentFunction> readProcessCommunications;
@@ -41,12 +41,12 @@ public class ProcessProcessorMediator extends APrototype {
     private final Set<ReadProcessComponentFunction> readProcessTokens;
     private final Set<WriteProcessComponentConsumer> writeProcessTokens;
 
-    public ProcessSelfFunction getProcess() {
-        return this.process;
+    public ProcessSelfFunction getSelf() {
+        return this.self;
     }
 
-    public void setProcess(ProcessSelfFunction process) {
-        this.process = process;
+    public void setSelf(ProcessSelfFunction self) {
+        this.self = self;
     }
 
     public Set<ReadProcessStatusFunction> getReadProcessStatuses() {

@@ -11,6 +11,7 @@ import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
+import indi.sly.system.kernel.processes.values.ApplicationDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -32,7 +33,7 @@ public class CreateProcessContextResolver extends APrototype implements IProcess
 
             if (!ValueUtil.isAnyNullOrEmpty(processCreator.getFileHandle())) {
                 //...
-                processContext.setApplication(null);
+                processContext.setApplication(new ApplicationDefinition());
             }
 
             if (ObjectUtil.allNotNull(processCreator.getEnvironmentVariable())) {

@@ -31,7 +31,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
 
         ProcessObject currentProcess = processManager.getCurrent();
 
-        if (!currentProcess.getID().equals(process.getParentProcessID())) {
+        if (!currentProcess.getID().equals(process.getParentID())) {
             throw new ConditionPermissionsException();
         }
 

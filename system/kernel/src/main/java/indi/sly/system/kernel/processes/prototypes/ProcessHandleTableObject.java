@@ -80,7 +80,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
 
         ProcessObject parentProcess = processManager.getCurrent();
 
-        if (!parentProcess.getID().equals(this.process.getParentProcessID())) {
+        if (!parentProcess.getID().equals(this.process.getParentID())) {
             throw new ConditionPermissionsException();
         }
 

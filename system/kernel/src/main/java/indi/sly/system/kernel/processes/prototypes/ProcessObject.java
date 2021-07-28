@@ -14,7 +14,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,7 +33,11 @@ public class ProcessObject extends APrototype {
         return this.id;
     }
 
-    public boolean isCurrent() {
+    public synchronized UUID getParentID() {
+        return this.getSelf().getParentProcessID();
+    }
+
+    public synchronized boolean isCurrent() {
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
         ThreadObject thread = threadManager.getCurrent();
@@ -42,16 +45,12 @@ public class ProcessObject extends APrototype {
         return this.id.equals(thread.getProcessID());
     }
 
-    private synchronized ProcessEntity getProcess() {
-        return this.processorMediator.getProcess().apply(this.id);
-    }
-
-    public UUID getParentProcessID() {
-        return this.getProcess().getParentProcessID();
+    private synchronized ProcessEntity getSelf() {
+        return this.processorMediator.getSelf().apply(this.id);
     }
 
     public synchronized ProcessStatusObject getStatus() {
-        ProcessEntity process = this.getProcess();
+        ProcessEntity process = this.getSelf();
 
         ProcessStatusObject processStatus = this.factoryManager.create(ProcessStatusObject.class);
 
@@ -64,7 +63,7 @@ public class ProcessObject extends APrototype {
     }
 
     public synchronized ProcessCommunicationObject getCommunication() {
-        ProcessEntity process = this.getProcess();
+        ProcessEntity process = this.getSelf();
 
         ProcessCommunicationObject processCommunication = this.factoryManager.create(ProcessCommunicationObject.class);
 
@@ -97,7 +96,7 @@ public class ProcessObject extends APrototype {
     }
 
     public synchronized ProcessContextObject getContext() {
-        ProcessEntity process = this.getProcess();
+        ProcessEntity process = this.getSelf();
 
         ProcessContextObject processContext = this.factoryManager.create(ProcessContextObject.class);
 
@@ -130,7 +129,7 @@ public class ProcessObject extends APrototype {
     }
 
     public synchronized ProcessHandleTableObject getHandleTable() {
-        ProcessEntity process = this.getProcess();
+        ProcessEntity process = this.getSelf();
 
         ProcessHandleTableObject processHandleTable = this.factoryManager.create(ProcessHandleTableObject.class);
 
@@ -163,7 +162,7 @@ public class ProcessObject extends APrototype {
     }
 
     public synchronized ProcessSessionObject getSession() {
-        ProcessEntity process = this.getProcess();
+        ProcessEntity process = this.getSelf();
 
         ProcessSessionObject processSession = this.factoryManager.create(ProcessSessionObject.class);
 
@@ -180,7 +179,7 @@ public class ProcessObject extends APrototype {
     }
 
     public synchronized ProcessStatisticsObject getStatistics() {
-        ProcessEntity process = this.getProcess();
+        ProcessEntity process = this.getSelf();
 
         ProcessStatisticsObject processStatistics = this.factoryManager.create(ProcessStatisticsObject.class);
 
@@ -213,7 +212,7 @@ public class ProcessObject extends APrototype {
     }
 
     public synchronized ProcessTokenObject getToken() {
-        ProcessEntity process = this.getProcess();
+        ProcessEntity process = this.getSelf();
 
         ProcessTokenObject processToken = this.factoryManager.create(ProcessTokenObject.class);
 

@@ -149,8 +149,8 @@ public class ProcessManager extends AManager {
         ProcessObject process = this.getTarget(processID);
         ProcessObject parentProcess = null;
 
-        if (ValueUtil.isAnyNullOrEmpty(process.getParentProcessID())) {
-            parentProcess = this.getTarget(process.getParentProcessID());
+        if (ValueUtil.isAnyNullOrEmpty(process.getParentID())) {
+            parentProcess = this.getTarget(process.getParentID());
         }
 
         ProcessKillerBuilder processKillerBuilder = this.factory.killProcess(parentProcess, process);

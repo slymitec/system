@@ -14,10 +14,10 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GetProcessSelfResolver extends APrototype implements IProcessResolver {
-    private final ProcessSelfFunction process;
+    private final ProcessSelfFunction self;
 
     public GetProcessSelfResolver() {
-        this.process = id -> {
+        this.self = id -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
 
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
@@ -28,6 +28,6 @@ public class GetProcessSelfResolver extends APrototype implements IProcessResolv
 
     @Override
     public void resolve(ProcessEntity process, ProcessProcessorMediator processorMediator) {
-        processorMediator.setProcess(this.process);
+        processorMediator.setSelf(this.self);
     }
 }

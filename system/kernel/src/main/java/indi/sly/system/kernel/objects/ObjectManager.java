@@ -1,19 +1,12 @@
 package indi.sly.system.kernel.objects;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.inject.Named;
 
-import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
-import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
-import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -58,31 +51,6 @@ public class ObjectManager extends AManager {
 
         for (IdentificationDefinition identification : identifications) {
             info = info.getChild(identification);
-        }
-
-        return info;
-    }
-
-    public InfoObject get(UUID handle) {
-        if (ValueUtil.isAnyNullOrEmpty(handle)) {
-            throw new ConditionParametersException();
-        }
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessHandleTableObject processHandleTable = process.getHandleTable();
-        ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getByHandle(handle);
-
-        List<IdentificationDefinition> identifications = processHandleTableEntry.getIdentifications();
-        InfoOpenDefinition infoOpen = processHandleTableEntry.getOpen();
-
-        InfoObject info;
-        if (identifications.size() > 0) {
-            info = this.get(identifications.subList(0, identifications.size() - 1));
-            info = info.rebuildChild(identifications.get(identifications.size() - 1), infoOpen);
-        } else {
-            info = this.get(identifications);
         }
 
         return info;

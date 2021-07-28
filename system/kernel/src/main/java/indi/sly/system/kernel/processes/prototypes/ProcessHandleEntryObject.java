@@ -8,6 +8,8 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
+import indi.sly.system.kernel.objects.ObjectManager;
+import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.processes.values.ProcessHandleEntryDefinition;
 import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
@@ -88,6 +90,7 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
 
             ProcessHandleEntryDefinition processHandleEntry = this.value.getByHandle(this.handle);
             processHandleEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
             identifications = processHandleEntry.getIdentifications();
 
             this.fresh();
@@ -124,5 +127,45 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
         }
 
         return infoOpen;
+    }
+
+    public synchronized InfoObject getInfo() {
+        if (!this.isExist()) {
+            throw new StatusNotExistedException();
+        }
+
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+                DateTimeObject.class);
+        long nowDateTime = dateTime.getCurrentDateTime();
+
+        List<IdentificationDefinition> identifications;
+        InfoOpenDefinition infoOpen;
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            ProcessHandleEntryDefinition processHandleEntry = this.value.getByHandle(this.handle);
+            processHandleEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
+            identifications = processHandleEntry.getIdentifications();
+            infoOpen = processHandleEntry.getInfoOpen();
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
+        InfoObject info;
+        if (identifications.size() > 0) {
+            info = objectManager.get(identifications.subList(0, identifications.size() - 1));
+            info = info.rebuildChild(identifications.get(identifications.size() - 1), infoOpen);
+        } else {
+            info = objectManager.get(identifications);
+        }
+
+        return info;
     }
 }

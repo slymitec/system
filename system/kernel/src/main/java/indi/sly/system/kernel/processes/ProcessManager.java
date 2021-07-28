@@ -153,8 +153,8 @@ public class ProcessManager extends AManager {
             parentProcess = this.getTarget(process.getParentID());
         }
 
-        ProcessKillerBuilder processKillerBuilder = this.factory.killProcess(parentProcess, process);
-        processKillerBuilder.build();
+        ProcessEndBuilder processEndBuilder = this.factory.endProcess(parentProcess, process);
+        processEndBuilder.build();
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();

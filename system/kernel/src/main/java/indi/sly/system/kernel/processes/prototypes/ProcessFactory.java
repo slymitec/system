@@ -94,7 +94,7 @@ public class ProcessFactory extends APrototype {
         return processCreatorBuilder;
     }
 
-    public ProcessKillerBuilder killProcess(ProcessObject parentProcess, ProcessObject process) {
+    public ProcessEndBuilder endProcess(ProcessObject parentProcess, ProcessObject process) {
         if (ObjectUtil.isAnyNull(process)) {
             throw new ConditionParametersException();
         }
@@ -104,13 +104,13 @@ public class ProcessFactory extends APrototype {
             processKillerResolver.resolve(processorMediator);
         }
 
-        ProcessKillerBuilder processKillerBuilder = this.factoryManager.create(ProcessKillerBuilder.class);
+        ProcessEndBuilder processEndBuilder = this.factoryManager.create(ProcessEndBuilder.class);
 
-        processKillerBuilder.processorMediator = processorMediator;
-        processKillerBuilder.factory = this;
-        processKillerBuilder.parentProcess = parentProcess;
-        processKillerBuilder.process = process;
+        processEndBuilder.processorMediator = processorMediator;
+        processEndBuilder.factory = this;
+        processEndBuilder.parentProcess = parentProcess;
+        processEndBuilder.process = process;
 
-        return processKillerBuilder;
+        return processEndBuilder;
     }
 }

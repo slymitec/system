@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
+import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.EndProcessFunction;
@@ -23,8 +24,12 @@ public class EndProcessHandleTableResolver extends APrototype implements IProces
 
             for (UUID handle : processHandleTable.list()) {
                 ProcessHandleEntryObject processHandleEntry = processHandleTable.getByHandle(handle);
-                InfoObject info = processHandleEntry.getInfo();
-                info.close();
+
+                try {
+                    InfoObject info = processHandleEntry.getInfo();
+                    info.close();
+                } catch (AKernelException ignore) {
+                }
             }
 
             return process;

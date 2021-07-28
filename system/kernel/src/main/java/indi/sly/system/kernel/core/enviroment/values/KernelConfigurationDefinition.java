@@ -14,6 +14,9 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
     public final UUID FILES_TYPES_INSTANCE_FOLDER_ID
             = UUIDUtil.getFormLongs(1916803478875881556L, -6711235423546474736L);
     public final String FILES_TYPES_INSTANCE_FOLDER_NAME = "Folder";
+    public final UUID FILES_TYPES_INSTANCE_VOLUME_ID = UUIDUtil.getFormLongs(-7191269949502635218L,
+            -6103845440396733665L);
+    public final String FILES_TYPES_INSTANCE_VOLUME_NAME = "Volume";
 
     public final UUID MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID
             = UUIDUtil.getFormLongs(8953595201274071621L, -4864294792184025833L);

@@ -433,28 +433,29 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
     private void writeAudit(Set<UserIDDefinition> userIDs, long value) {
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
+        AccountObject account = userManager.getAccount(processToken.getAccountID());
+        String accountName = account.getName();
 
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            InfoObject audits = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-
             UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().SECURITY_INSTANCE_AUDIT_ID;
 
-            InfoObject audit = audits.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
-                    InfoOpenAttributeType.OPEN_EXCLUSIVE);
-            SecurityDescriptorObject securityDescriptor = audit.getSecurityDescriptor();
-            Set<AccessControlDefinition> permissions = new HashSet<>();
-            AccessControlDefinition permission = new AccessControlDefinition();
-            permission.getUserID().setID(processToken.getAccountID());
-            permission.getUserID().setType(UserType.ACCOUNT);
-            permission.setScope(AccessControlScopeType.THIS);
-            permission.setValue(PermissionType.FULLCONTROL_ALLOW);
-            permissions.add(permission);
-            securityDescriptor.setPermissions(permissions);
+            InfoObject audits = objectManager.get(List.of(new IdentificationDefinition("Audits")));
+            InfoObject audit = null;
+
+            try {
+                audits = audits.getChild(new IdentificationDefinition(accountName));
+                audit = audits.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
+                        InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            } catch (AKernelException ignore) {
+                return;
+            }
+
             AuditContentObject auditContent = (AuditContentObject) audit.getContent();
             auditContent.setUserIDs(userIDs);
             auditContent.setAudit(value);

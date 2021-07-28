@@ -11,7 +11,7 @@ import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessKillerBuilder extends APrototype {
+public class ProcessEndBuilder extends APrototype {
     protected ProcessFactory factory;
     protected ProcessLifeCycleProcessorMediator processorMediator;
 

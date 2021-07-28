@@ -65,12 +65,12 @@ public class SignalTypeInitializer extends ATypeInitializer {
     }
 
     @Override
-    public void openProcedure(InfoEntity info, InfoOpenDefinition open, long openAttribute,
+    public void openProcedure(InfoEntity info, InfoOpenDefinition infoOpen, long openAttribute,
                               Object... arguments) {
     }
 
     @Override
-    public void closeProcedure(InfoEntity info, InfoOpenDefinition open) {
+    public void closeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
     }
 
     @Override
@@ -101,11 +101,11 @@ public class SignalTypeInitializer extends ATypeInitializer {
 
     @Override
     public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info,
-                                                                       InfoOpenDefinition open) {
+                                                                       InfoOpenDefinition infoOpen) {
         return SignalContentObject.class;
     }
 
     @Override
-    public void refreshPropertiesProcedure(InfoEntity info, InfoOpenDefinition open) {
+    public void refreshPropertiesProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
     }
 }

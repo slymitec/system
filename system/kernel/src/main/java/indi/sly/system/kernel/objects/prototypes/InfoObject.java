@@ -163,6 +163,10 @@ public class InfoObject extends APrototype {
     }
 
     private synchronized InfoEntity getSelf() {
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
+        }
+
         return this.processorMediator.getSelf().apply(this.poolID, this.id, this.status);
     }
 
@@ -175,7 +179,7 @@ public class InfoObject extends APrototype {
 
         ProcessObject process = processManager.getCurrent();
         ProcessHandleTableObject processHandleTable = process.getHandleTable();
-        ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getEntry(this.id, this.status);
+        ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getByInfoID(this.id);
 
         return processHandleTableEntry.getHandle();
     }
@@ -231,10 +235,6 @@ public class InfoObject extends APrototype {
     }
 
     public synchronized UUID open(long openAttribute, Object... arguments) {
-        if (this.isOpened()) {
-            throw new StatusAlreadyFinishedException();
-        }
-
         InfoEntity info = this.getSelf();
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
@@ -262,10 +262,6 @@ public class InfoObject extends APrototype {
     public synchronized void close() {
         InfoEntity info = this.getSelf();
 
-        if (!this.isOpened()) {
-            throw new StatusAlreadyFinishedException();
-        }
-
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
@@ -281,28 +277,23 @@ public class InfoObject extends APrototype {
         }
     }
 
-    public synchronized boolean isOpened() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessHandleTableObject processHandleTable = process.getHandleTable();
-        ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getEntry(this.id, this.status);
-
-        return processHandleTableEntry.isExist();
-    }
-
     public synchronized long getOpenAttribute() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessHandleTableObject processHandleTable = process.getHandleTable();
-        ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getEntry(this.id, this.status);
-
-        if (!processHandleTableEntry.isExist()) {
-            return InfoOpenAttributeType.CLOSE;
+        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
+            throw new ConditionContextException();
         }
 
-        return processHandleTableEntry.getOpen().getAttribute();
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrent();
+        ProcessHandleTableObject processHandleTable = process.getHandleTable();
+
+        if (!processHandleTable.containByInfoID(this.id)) {
+            return InfoOpenAttributeType.CLOSE;
+        } else {
+            ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getByInfoID(this.id);
+
+            return processHandleTableEntry.getOpen().getAttribute();
+        }
     }
 
     public synchronized InfoObject createChildAndOpen(UUID type, IdentificationDefinition identification,
@@ -342,7 +333,7 @@ public class InfoObject extends APrototype {
         return this.rebuildChild(identification, null);
     }
 
-    public synchronized InfoObject rebuildChild(IdentificationDefinition identification, InfoOpenDefinition open) {
+    public synchronized InfoObject rebuildChild(IdentificationDefinition identification, InfoOpenDefinition infoOpen) {
         if (ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
@@ -357,7 +348,7 @@ public class InfoObject extends APrototype {
         InfoEntity childInfo = null;
 
         for (GetOrRebuildChildFunction resolver : resolvers) {
-            childInfo = resolver.apply(childInfo, info, type, this.status, identification, open);
+            childInfo = resolver.apply(childInfo, info, type, this.status, identification, infoOpen);
         }
 
         if (ObjectUtil.isAnyNull(childInfo)) {
@@ -475,11 +466,6 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-        ProcessHandleTableObject processHandleTable = process.getHandleTable();
-        ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getEntry(this.id, this.status);
-
         AInfoContentObject content = type.getTypeInitializer().getContentProcedure(info, () -> {
             List<ReadContentFunction> resolvers = this.processorMediator.getReadContents();
 
@@ -502,7 +488,7 @@ public class InfoObject extends APrototype {
             for (ExecuteContentConsumer resolver : resolvers) {
                 resolver.accept(info, type, status);
             }
-        }, processHandleTableEntry.getOpen());
+        });
 
         content.setInfo(this);
 

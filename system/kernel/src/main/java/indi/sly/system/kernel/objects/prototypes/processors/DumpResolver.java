@@ -9,6 +9,7 @@ import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -26,17 +27,18 @@ public class DumpResolver extends APrototype implements IInfoResolver {
             DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
-
             dump.getDate().put(DateTimeType.CREATE, nowDateTime);
 
             dump.getIdentifications().addAll(status.getIdentifications());
 
-            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(info.getID(), status);
-            if (processHandleEntry.isExist()) {
-                dump.setOpen(processHandleEntry.getOpen());
+            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+            if (processHandleTable.containByInfoID(info.getID())) {
+                ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
+                dump.setInfoOpen(processHandleEntry.getOpen());
             } else {
-                dump.setOpen(null);
+                dump.setInfoOpen(null);
             }
+
             return dump;
         };
     }

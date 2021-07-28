@@ -16,6 +16,7 @@ import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -37,8 +38,9 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
+            ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
-            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(info.getID(), status);
+            ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
 
             type.getTypeInitializer().openProcedure(info, processHandleEntry.getOpen(), openAttribute, arguments);
 
@@ -48,8 +50,9 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
         this.close = (info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
+            ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
-            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(info.getID(), status);
+            ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
 
             type.getTypeInitializer().closeProcedure(info, processHandleEntry.getOpen());
         };
@@ -163,11 +166,6 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
         };
 
         this.writeProperties = (info, type, status, properties) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrent();
-
-            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(info.getID(), status);
-
             Map<String, String> newProperties = new HashMap<>();
 
             for (Entry<String, String> pair : properties.entrySet()) {
@@ -182,7 +180,13 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
 
             info.setProperties(newPropertiesSource);
 
-            if (processHandleEntry.isExist()) {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+
+            if (processHandleTable.containByInfoID(info.getID())) {
+                ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
+
                 type.getTypeInitializer().refreshPropertiesProcedure(info, processHandleEntry.getOpen());
             } else {
                 type.getTypeInitializer().refreshPropertiesProcedure(info, null);

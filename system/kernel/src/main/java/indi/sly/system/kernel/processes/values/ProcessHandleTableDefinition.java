@@ -27,10 +27,10 @@ public class ProcessHandleTableDefinition extends ADefinition<ProcessHandleTable
     }
 
     public boolean isEmpty() {
-        return this.handleTable.isEmpty();
+        return this.handleTable.isEmpty() && this.infoTable.isEmpty();
     }
 
-    public boolean contain(UUID handle) {
+    public boolean containByHandle(UUID handle) {
         return this.handleTable.containsKey(handle);
     }
 
@@ -38,7 +38,7 @@ public class ProcessHandleTableDefinition extends ADefinition<ProcessHandleTable
         return this.infoTable.containsKey(infoID);
     }
 
-    public ProcessHandleEntryDefinition get(UUID handle) {
+    public ProcessHandleEntryDefinition getByHandle(UUID handle) {
         ProcessHandleEntryDefinition handleEntry = this.handleTable.getOrDefault(handle, null);
 
         if (ObjectUtil.isAnyNull(handleEntry)) {
@@ -60,6 +60,9 @@ public class ProcessHandleTableDefinition extends ADefinition<ProcessHandleTable
 
     public void add(ProcessHandleEntryDefinition handleEntry) {
         if (this.handleTable.containsKey(handleEntry.getHandle())) {
+            throw new StatusAlreadyExistedException();
+        }
+        if (this.infoTable.containsKey(handleEntry.getInfoID())) {
             throw new StatusAlreadyExistedException();
         }
 

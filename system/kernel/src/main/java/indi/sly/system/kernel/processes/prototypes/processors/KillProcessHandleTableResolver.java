@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.KillProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
@@ -18,10 +19,12 @@ public class KillProcessHandleTableResolver extends APrototype implements IProce
 
     public KillProcessHandleTableResolver() {
         this.killProcessFunction = (process, parentProcess) -> {
+            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
             for (UUID handle : processHandleTable.list()) {
-                InfoObject info = processHandleTable.getInfo(handle);
+                InfoObject info = objectManager.get(handle);
                 info.close();
             }
 

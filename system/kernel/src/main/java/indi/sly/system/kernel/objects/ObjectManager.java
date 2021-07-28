@@ -5,11 +5,15 @@ import java.util.UUID;
 
 import javax.inject.Named;
 
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
-import indi.sly.system.kernel.processes.values.ProcessHandleEntryDefinition;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -59,13 +63,19 @@ public class ObjectManager extends AManager {
         return info;
     }
 
-    public InfoObject rebuild(ProcessHandleEntryDefinition processHandleEntry) {
-        if (ObjectUtil.isAnyNull(processHandleEntry)) {
+    public InfoObject get(UUID handle) {
+        if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();
         }
 
-        List<IdentificationDefinition> identifications = processHandleEntry.getIdentifications();
-        InfoOpenDefinition infoOpen = processHandleEntry.getOpen();
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrent();
+        ProcessHandleTableObject processHandleTable = process.getHandleTable();
+        ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getByHandle(handle);
+
+        List<IdentificationDefinition> identifications = processHandleTableEntry.getIdentifications();
+        InfoOpenDefinition infoOpen = processHandleTableEntry.getOpen();
 
         InfoObject info;
         if (identifications.size() > 0) {

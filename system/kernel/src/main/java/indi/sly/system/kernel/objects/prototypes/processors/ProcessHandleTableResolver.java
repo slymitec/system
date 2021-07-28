@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
+import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.lang.*;
@@ -7,6 +8,7 @@ import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -20,29 +22,39 @@ public class ProcessHandleTableResolver extends APrototype implements IInfoResol
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
+            ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
-            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(info.getID(), status);
-            handle = processHandleEntry.add(openAttribute);
+            if (processHandleTable.containByInfoID(info.getID())) {
+                throw new StatusAlreadyFinishedException();
+            }
 
-            return handle;
+            processHandleTable.add(info.getID(), status, openAttribute);
+            ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
+
+            return processHandleEntry.getHandle();
         };
 
         this.close = (info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
+            ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
-            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(info.getID(), status);
-            processHandleEntry.delete();
+            if (!processHandleTable.containByInfoID(info.getID())) {
+                throw new StatusAlreadyFinishedException();
+            }
+
+            ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
+
+            processHandleTable.delete(processHandleEntry.getHandle());
         };
 
 
         this.readContent = (content, info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
             ProcessObject process = processManager.getCurrent();
+            ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
-            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(info.getID(), status);
-            if (!processHandleEntry.isExist()) {
+            if (!processHandleTable.containByInfoID(info.getID())) {
                 throw new StatusRelationshipErrorException();
             }
 
@@ -51,22 +63,20 @@ public class ProcessHandleTableResolver extends APrototype implements IInfoResol
 
         this.writeContent = (info, type, status, content) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
             ProcessObject process = processManager.getCurrent();
+            ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
-            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(info.getID(), status);
-            if (!processHandleEntry.isExist()) {
+            if (!processHandleTable.containByInfoID(info.getID())) {
                 throw new StatusRelationshipErrorException();
             }
         };
 
         this.executeContent = (info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
             ProcessObject process = processManager.getCurrent();
+            ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
-            ProcessHandleEntryObject processHandleEntry = process.getHandleTable().getEntry(info.getID(), status);
-            if (!processHandleEntry.isExist()) {
+            if (!processHandleTable.containByInfoID(info.getID())) {
                 throw new StatusRelationshipErrorException();
             }
         };

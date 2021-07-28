@@ -18,7 +18,7 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
     private final Map<Long, Long> date;
     private UUID infoID;
     private final List<IdentificationDefinition> identifications;
-    private InfoOpenDefinition open;
+    private InfoOpenDefinition infoOpen;
 
     public ProcessHandleEntryDefinition() {
         this.date = new HashMap<>();
@@ -49,12 +49,12 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
         return this.identifications;
     }
 
-    public InfoOpenDefinition getOpen() {
-        return this.open;
+    public InfoOpenDefinition getInfoOpen() {
+        return this.infoOpen;
     }
 
-    public void setOpen(InfoOpenDefinition open) {
-        this.open = open;
+    public void setInfoOpen(InfoOpenDefinition infoOpen) {
+        this.infoOpen = infoOpen;
     }
 
     @Override
@@ -62,12 +62,12 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProcessHandleEntryDefinition that = (ProcessHandleEntryDefinition) o;
-        return Objects.equals(handle, that.handle) && date.equals(that.date) && Objects.equals(infoID, that.infoID) && identifications.equals(that.identifications) && Objects.equals(open, that.open);
+        return Objects.equals(handle, that.handle) && date.equals(that.date) && Objects.equals(infoID, that.infoID) && identifications.equals(that.identifications) && Objects.equals(infoOpen, that.infoOpen);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(handle, date, infoID, identifications, open);
+        return Objects.hash(handle, date, infoID, identifications, infoOpen);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
         definition.date.putAll(this.date);
         definition.infoID = this.infoID;
         definition.identifications.addAll(this.identifications);
-        definition.open = this.open.deepClone();
+        definition.infoOpen = this.infoOpen.deepClone();
 
         return definition;
     }
@@ -100,7 +100,7 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
         for (int i = 0; i < valueInteger; i++) {
             this.identifications.add(ObjectUtil.readExternal(in));
         }
-        this.open = ObjectUtil.readExternal(in);
+        this.infoOpen = ObjectUtil.readExternal(in);
     }
 
     @Override
@@ -119,6 +119,6 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
             ObjectUtil.writeExternal(out, pair);
         }
 
-        ObjectUtil.writeExternal(out, this.open);
+        ObjectUtil.writeExternal(out, this.infoOpen);
     }
 }

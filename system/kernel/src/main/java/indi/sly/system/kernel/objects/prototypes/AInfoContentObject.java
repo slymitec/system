@@ -15,7 +15,7 @@ public abstract class AInfoContentObject extends ACoreProcessPrototype<byte[]> {
     private Consumer funcExecute;
 
     protected InfoObject info;
-    protected InfoOpenDefinition open;
+    protected InfoOpenDefinition infoOpen;
 
     public final void setExecute(Consumer funcExecute) {
         if (ObjectUtil.isAnyNull(funcExecute)) {
@@ -29,15 +29,15 @@ public abstract class AInfoContentObject extends ACoreProcessPrototype<byte[]> {
         this.info = info;
     }
 
-    public void setOpen(InfoOpenDefinition open) {
-        this.open = open;
+    public void setInfoOpen(InfoOpenDefinition infoOpen) {
+        this.infoOpen = infoOpen;
     }
 
     public synchronized void close() {
         this.info.close();
 
         this.info = null;
-        this.open = null;
+        this.infoOpen = null;
         this.setParent(null);
         this.setSource(() -> {
             throw new StatusRelationshipErrorException();

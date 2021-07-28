@@ -1,7 +1,9 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
@@ -99,6 +101,14 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             throw new StatusRelationshipErrorException();
         }
 
+        if (!this.process.isCurrent()) {
+            ProcessTokenObject processToken = this.process.getToken();
+
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+                return;
+            }
+        }
+
         try {
             this.lock(LockType.WRITE);
             this.init();
@@ -112,24 +122,6 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             this.fresh();
         } finally {
             this.lock(LockType.NONE);
-        }
-
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                return;
-            }
-        }
-
-        ProcessCommunicationObject processCommunication = this.process.getCommunication();
-        processCommunication.deleteAllPort();
-        processCommunication.deleteSignal();
-
-        ProcessHandleTableObject handleTable = this.process.getHandleTable();
-        Set<UUID> handles = handleTable.list();
-        for (UUID handle : handles) {
-            handleTable.getInfo(handle).close();
         }
     }
 
@@ -146,6 +138,13 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             }
         }
 
+        ProcessCommunicationObject processCommunication = this.process.getCommunication();
+        ProcessHandleTableObject processHandleTable = this.process.getHandleTable();
+        if (!processCommunication.getPortIDs().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalID())
+                || !processHandleTable.list().isEmpty()) {
+            throw new StatusNotReadyException();
+        }
+
         try {
             this.lock(LockType.WRITE);
             this.init();
@@ -160,9 +159,5 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         } finally {
             this.lock(LockType.NONE);
         }
-
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
-        processRepository.delete(this.value);
     }
 }

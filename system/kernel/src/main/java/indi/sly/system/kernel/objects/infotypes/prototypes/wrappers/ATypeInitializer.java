@@ -7,6 +7,11 @@ import java.util.function.Predicate;
 import javax.inject.Named;
 
 import indi.sly.system.common.lang.Consumer;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -46,9 +51,9 @@ public abstract class ATypeInitializer extends APrototype {
 
     public abstract void dumpProcedure(InfoEntity info, DumpDefinition dump);
 
-    public abstract void openProcedure(InfoEntity info, InfoOpenDefinition open, long openAttribute, Object... arguments);
+    public abstract void openProcedure(InfoEntity info, InfoOpenDefinition infoOpen, long openAttribute, Object... arguments);
 
-    public abstract void closeProcedure(InfoEntity info, InfoOpenDefinition open);
+    public abstract void closeProcedure(InfoEntity info, InfoOpenDefinition infoOpen);
 
     public abstract void createChildProcedure(InfoEntity info, InfoEntity childInfo);
 
@@ -60,20 +65,31 @@ public abstract class ATypeInitializer extends APrototype {
 
     public abstract void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification);
 
-    protected abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition open);
+    protected abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen);
 
     public final AInfoContentObject getContentProcedure(InfoEntity info, Provider<byte[]> funcRead,
-                                                        Consumer1<byte[]> funcWrite, Consumer funcExecute,
-                                                        InfoOpenDefinition open) {
-        AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, open));
+                                                        Consumer1<byte[]> funcWrite, Consumer funcExecute) {
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessHandleTableObject processHandleTable = process.getHandleTable();
+
+        InfoOpenDefinition infoOpen = null;
+        if (processHandleTable.containByInfoID(info.getID())) {
+            ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getByInfoID(info.getID());
+            infoOpen = processHandleTableEntry.getOpen();
+        }
+
+        AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, infoOpen));
 
         content.setSource(funcRead, funcWrite);
         content.setLock((lockMode) -> this.lockProcedure(info, lockMode));
         content.setExecute(funcExecute);
-        content.setOpen(open);
+        if (ObjectUtil.allNotNull(infoOpen)) {
+            content.setInfoOpen(infoOpen);
+        }
 
         return content;
     }
 
-    public abstract void refreshPropertiesProcedure(InfoEntity info, InfoOpenDefinition open);
+    public abstract void refreshPropertiesProcedure(InfoEntity info, InfoOpenDefinition infoOpen);
 }

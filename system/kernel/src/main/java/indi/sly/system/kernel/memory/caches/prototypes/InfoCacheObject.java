@@ -7,7 +7,7 @@ import javax.inject.Named;
 
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.types.DateTimeType;
+import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.CoreRepositoryObject;
 import indi.sly.system.kernel.memory.caches.values.InfoCacheDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

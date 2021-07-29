@@ -30,19 +30,16 @@ public class ThreadObject extends APrototype {
         this.thread.setProcessID(id);
     }
 
-    public ThreadStatisticsObject getStatistics() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.get(this.getProcessID());
+    public synchronized ThreadStatusObject getStatus() {
+        ThreadStatusObject threadStatus = this.factoryManager.create(ThreadStatusObject.class);
 
-        ThreadStatisticsObject threadStatistics = this.factoryManager.create(ThreadStatisticsObject.class);
+        threadStatus.setSource(() -> this.thread, (source) -> {
+        });
 
-        threadStatistics.setSource(this.thread::getStatistics, this.thread::setStatistics);
-        threadStatistics.process = process;
-
-        return threadStatistics;
+        return threadStatus;
     }
 
-    public ThreadContextObject getContext() {
+    public synchronized ThreadContextObject getContext() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.get(this.getProcessID());
 
@@ -54,11 +51,17 @@ public class ThreadObject extends APrototype {
         return threadContext;
     }
 
-    public void start() {
+    public synchronized ThreadStatisticsObject getStatistics() {
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.get(this.getProcessID());
 
+        ThreadStatisticsObject threadStatistics = this.factoryManager.create(ThreadStatisticsObject.class);
+
+        threadStatistics.setSource(this.thread::getStatistics, this.thread::setStatistics);
+        threadStatistics.process = process;
+
+        return threadStatistics;
     }
 
-    public void end() {
 
-    }
 }

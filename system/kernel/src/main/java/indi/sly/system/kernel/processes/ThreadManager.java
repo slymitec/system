@@ -5,6 +5,7 @@ import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
+import indi.sly.system.kernel.processes.prototypes.ThreadStatusObject;
 import indi.sly.system.kernel.processes.values.ThreadContextType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -41,6 +42,9 @@ public class ThreadManager extends AManager {
         ThreadObject thread = this.factoryManager.create(ThreadObject.class);
         thread.setProcessID(processID);
 
+        ThreadStatusObject threadStatus = thread.getStatus();
+        threadStatus.initialize();
+
         ThreadContextObject context = thread.getContext();
         if (threads.isEmpty()) {
             context.setType(ThreadContextType.CURRENT);
@@ -48,23 +52,9 @@ public class ThreadManager extends AManager {
             context.setType(ThreadContextType.SHADOW);
         }
 
-        thread.start();
-
         userSpace.getThreads().push(thread);
 
         return thread;
-    }
-
-    public void endCurrent() {
-        UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
-        Stack<ThreadObject> threads = userSpace.getThreads();
-
-        if (threads.isEmpty()) {
-            throw new StatusNotExistedException();
-        }
-
-        ThreadObject thread = threads.pop();
-        thread.end();
     }
 
     public void end() {
@@ -72,8 +62,10 @@ public class ThreadManager extends AManager {
         Stack<ThreadObject> threads = userSpace.getThreads();
 
         while (!threads.isEmpty()) {
-            ThreadObject thread = threads.pop();
-            thread.end();
+            ThreadObject thread = threads.peek();
+
+            ThreadStatusObject threadStatus = thread.getStatus();
+            threadStatus.end();
         }
     }
 }

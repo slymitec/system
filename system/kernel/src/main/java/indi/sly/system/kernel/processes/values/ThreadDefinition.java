@@ -14,8 +14,9 @@ public class ThreadDefinition extends ADefinition<ThreadDefinition> {
 
     private UUID id;
     private UUID processID;
-    private ThreadStatisticsDefinition statistics;
+    private long status;
     private ThreadContextDefinition context;
+    private ThreadStatisticsDefinition statistics;
 
     public UUID getID() {
         return this.id;
@@ -33,12 +34,12 @@ public class ThreadDefinition extends ADefinition<ThreadDefinition> {
         this.processID = processID;
     }
 
-    public ThreadStatisticsDefinition getStatistics() {
-        return this.statistics;
+    public long getStatus() {
+        return this.status;
     }
 
-    public void setStatistics(ThreadStatisticsDefinition statistics) {
-        this.statistics = statistics;
+    public void setStatus(long status) {
+        this.status = status;
     }
 
     public ThreadContextDefinition getContext() {
@@ -48,4 +49,13 @@ public class ThreadDefinition extends ADefinition<ThreadDefinition> {
     public void setContext(ThreadContextDefinition context) {
         this.context = context;
     }
+
+    public ThreadStatisticsDefinition getStatistics() {
+        return this.statistics;
+    }
+
+    public void setStatistics(ThreadStatisticsDefinition statistics) {
+        this.statistics = statistics;
+    }
+
 }

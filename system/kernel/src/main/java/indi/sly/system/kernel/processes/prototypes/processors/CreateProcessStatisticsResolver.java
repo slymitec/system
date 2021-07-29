@@ -7,7 +7,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessStatusObject;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -41,7 +41,7 @@ public class CreateProcessStatisticsResolver extends APrototype implements IProc
     }
 
     @Override
-    public void resolve(ProcessLifeCycleProcessorMediator processorCreatorMediator) {
+    public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
         processorCreatorMediator.getCreates().add(createProcessFunction);
     }
 }

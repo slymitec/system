@@ -7,8 +7,8 @@ import indi.sly.system.kernel.core.date.types.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.prototypes.processors.IProcessCreatorResolver;
-import indi.sly.system.kernel.processes.prototypes.processors.IProcessKillerResolver;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.processors.IProcessEndResolver;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
@@ -26,12 +26,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ProcessFactory extends APrototype {
     protected Set<IProcessResolver> processResolvers;
     protected List<IProcessCreatorResolver> processCreatorResolvers;
-    protected List<IProcessKillerResolver> processKillerResolvers;
+    protected List<IProcessEndResolver> processEndResolvers;
 
     public void init() {
         this.processResolvers = new ConcurrentSkipListSet<>();
         this.processCreatorResolvers = new CopyOnWriteArrayList<>();
-        this.processKillerResolvers = new CopyOnWriteArrayList<>();
+        this.processEndResolvers = new CopyOnWriteArrayList<>();
 
         Set<APrototype> corePrototypes =
                 this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL, IProcessResolver.class);
@@ -41,13 +41,13 @@ public class ProcessFactory extends APrototype {
                 processResolvers.add((IProcessResolver) prototype);
             } else if (prototype instanceof IProcessCreatorResolver) {
                 processCreatorResolvers.add((IProcessCreatorResolver) prototype);
-            } else if (prototype instanceof IProcessKillerResolver) {
-                processKillerResolvers.add((IProcessKillerResolver) prototype);
+            } else if (prototype instanceof IProcessEndResolver) {
+                processEndResolvers.add((IProcessEndResolver) prototype);
             }
         }
 
         Collections.sort(processCreatorResolvers);
-        Collections.sort(processKillerResolvers);
+        Collections.sort(processEndResolvers);
     }
 
     private ProcessObject buildProcess(ProcessProcessorMediator processorMediator, UUID processID) {
@@ -79,7 +79,7 @@ public class ProcessFactory extends APrototype {
             throw new ConditionParametersException();
         }
 
-        ProcessLifeCycleProcessorMediator processorMediator = this.factoryManager.create(ProcessLifeCycleProcessorMediator.class);
+        ProcessLifeProcessorMediator processorMediator = this.factoryManager.create(ProcessLifeProcessorMediator.class);
         for (IProcessCreatorResolver processCreatorResolver : this.processCreatorResolvers) {
             processCreatorResolver.resolve(processorMediator);
         }
@@ -99,9 +99,9 @@ public class ProcessFactory extends APrototype {
             throw new ConditionParametersException();
         }
 
-        ProcessLifeCycleProcessorMediator processorMediator = this.factoryManager.create(ProcessLifeCycleProcessorMediator.class);
-        for (IProcessKillerResolver processKillerResolver : this.processKillerResolvers) {
-            processKillerResolver.resolve(processorMediator);
+        ProcessLifeProcessorMediator processorMediator = this.factoryManager.create(ProcessLifeProcessorMediator.class);
+        for (IProcessEndResolver processEndResolver : this.processEndResolvers) {
+            processEndResolver.resolve(processorMediator);
         }
 
         ProcessEndBuilder processEndBuilder = this.factoryManager.create(ProcessEndBuilder.class);

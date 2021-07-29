@@ -6,7 +6,7 @@ import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.EndProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeCycleProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class EndProcessHandleTableResolver extends APrototype implements IProcessKillerResolver {
+public class EndProcessHandleTableResolver extends APrototype implements IProcessEndResolver {
     private final EndProcessFunction endProcessFunction;
 
     public EndProcessHandleTableResolver() {
@@ -42,7 +42,7 @@ public class EndProcessHandleTableResolver extends APrototype implements IProces
     }
 
     @Override
-    public void resolve(ProcessLifeCycleProcessorMediator processorCreatorMediator) {
+    public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
         processorCreatorMediator.getEnds().add(endProcessFunction);
     }
 }

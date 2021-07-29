@@ -12,8 +12,8 @@ import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessLifeCycleProcessorMediator extends APrototype {
-    public ProcessLifeCycleProcessorMediator() {
+public class ProcessLifeProcessorMediator extends APrototype {
+    public ProcessLifeProcessorMediator() {
         this.creates = new ArrayList<>();
         this.ends = new ArrayList<>();
     }

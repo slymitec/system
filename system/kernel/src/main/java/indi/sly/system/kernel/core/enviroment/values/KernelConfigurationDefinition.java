@@ -40,6 +40,8 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
     public final UUID PROCESSES_CONTEXT_INSTANCE_SESSION_ID
             = UUIDUtil.getFormLongs(-6729493064232579129L, -6576183935232554309L);
     public final String PROCESSES_CONTEXT_INSTANCE_SESSION_NAME = "Session";
+    public final UUID PROCESSES_PROTOTYPE_SYSTEM_ID
+            = UUIDUtil.getFormLongs(-7191269949502635218L, -6103845440396733665L);
     public final Map<Long, Integer> PROCESSES_TOKEN_DEFAULT_LIMIT = Map.of(
             ProcessTokenLimitType.HANDLE_MAX, 256,
             ProcessTokenLimitType.SHARED_LENGTH_MAX, 4096,
@@ -72,7 +74,6 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
     public final UUID SECURITY_ROLE_GUI_ID
             = UUIDUtil.getFormLongs(-1619619213472611191L, -4997309008069038213L);
 
-    // public final UUID * = UUIDUtil.getFormLongs(-7191269949502635218L, -6103845440396733665L);
     // public final UUID * = UUIDUtil.getFormLongs(1978793907977537155L, -7186786965693311562L);
     // public final UUID * = UUIDUtil.getFormLongs(-623865349106545073L, -6997297376516953324L);
     // public final UUID * = UUIDUtil.getFormLongs(-3687831299068770016L, -5951841443637097351L);

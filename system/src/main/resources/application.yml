@@ -13,7 +13,7 @@ spring:
     location: classpath:logo.txt
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: "jdbc:sqlserver://;database=SlySystem;server=ShenLiyangHome"
+    url: "jdbc:sqlserver://;database=SlySystem;server=localhost;port=21433"
     username: "sa"
     password: "s34+l510*y24"
   task:

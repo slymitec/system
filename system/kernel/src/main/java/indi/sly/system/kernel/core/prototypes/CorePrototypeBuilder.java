@@ -5,14 +5,19 @@ import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.FactoryManager;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
+import javax.inject.Named;
 import java.lang.reflect.Constructor;
 
-public class CorePrototypeBuilder {
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class CorePrototypeBuilder extends APrototype {
     private FactoryManager factoryManager;
 
     public final void setFactoryManager(FactoryManager factoryManager) {
-        if (ObjectUtil.allNotNull(this.factoryManager)) {
+        if (ObjectUtil.allNotNull(factoryManager)) {
             this.factoryManager = factoryManager;
         }
     }

@@ -36,7 +36,7 @@ public class FactoryManager extends AManager {
             UserSpaceDefinition bootUserSpace = new UserSpaceDefinition();
             this.factoryManager.setUserSpaceContainer(() -> bootUserSpace);
 
-            this.corePrototype = new CorePrototypeBuilder();
+            this.corePrototype = SpringHelper.getInstance(CorePrototypeBuilder.class);
             this.corePrototype.setFactoryManager(this);
 
             this.coreRepository = this.create(CoreRepositoryObject.class);
@@ -48,7 +48,7 @@ public class FactoryManager extends AManager {
             this.coreRepository.add(SpaceType.KERNEL, this.create(ObjectManager.class));
             this.coreRepository.add(SpaceType.KERNEL, this.create(UserManager.class));
             this.coreRepository.add(SpaceType.KERNEL, this.create(SessionManager.class));
-            // ...
+
             this.coreRepository.add(SpaceType.KERNEL, this.create(DateTimeObject.class));
             this.coreRepository.add(SpaceType.KERNEL, this.create(CoreRepositoryObject.class));
         } else if (startup == StartupType.STEP_KERNEL) {

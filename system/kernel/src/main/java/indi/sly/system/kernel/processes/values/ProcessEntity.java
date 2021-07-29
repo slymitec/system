@@ -37,7 +37,7 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
     protected byte[] context;
     @Column(length = 4096, name = "HandleTable", nullable = false)
     protected byte[] handleTable;
-    @Column(length = 4096, name = "Statistics", nullable = false)
+    @Column(length = 4096, name = "CounterStatistics", nullable = false)
     protected byte[] statistics;
     @Column(length = 4096, name = "Token", nullable = false)
     protected byte[] token;

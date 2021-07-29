@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/system" />
             <option value="$PROJECT_DIR$/system/common" />
             <option value="$PROJECT_DIR$/system/kernel" />
+            <option value="$PROJECT_DIR$/system/services" />
           </set>
         </option>
       </GradleProjectSettings>

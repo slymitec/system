@@ -34,7 +34,7 @@ public class FactoryManager extends AManager {
             this.factoryManager.check();
 
             UserSpaceDefinition bootUserSpace = new UserSpaceDefinition();
-            this.factoryManager.setUserSpaceContainer(() -> bootUserSpace);
+            this.factoryManager.setUserSpace(() -> bootUserSpace);
 
             this.corePrototype = SpringHelper.getInstance(CorePrototypeBuilder.class);
             this.corePrototype.setFactoryManager(this);
@@ -89,13 +89,13 @@ public class FactoryManager extends AManager {
         return SpringHelper.getInstance(KernelSpaceDefinition.class);
     }
 
-    private Provider<UserSpaceDefinition> userSpaceContainer;
+    private Provider<UserSpaceDefinition> userSpace;
 
     public UserSpaceDefinition getUserSpace() {
-        return this.userSpaceContainer == null ? null : this.userSpaceContainer.acquire();
+        return this.userSpace == null ? null : this.userSpace.acquire();
     }
 
-    public void setUserSpaceContainer(Provider<UserSpaceDefinition> userSpaceContainer) {
-        this.userSpaceContainer = userSpaceContainer;
+    public void setUserSpace(Provider<UserSpaceDefinition> userSpace) {
+        this.userSpace = userSpace;
     }
 }

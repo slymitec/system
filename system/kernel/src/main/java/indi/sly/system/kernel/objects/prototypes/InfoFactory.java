@@ -11,6 +11,7 @@ import javax.inject.Named;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
@@ -30,9 +31,10 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoFactory extends APrototype {
+public class InfoFactory extends AFactory {
     protected List<IInfoResolver> infoResolvers;
 
+    @Override
     public void init() {
         this.infoResolvers = new CopyOnWriteArrayList<>();
 

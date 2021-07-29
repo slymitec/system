@@ -5,6 +5,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.prototypes.processors.IProcessCreatorResolver;
 import indi.sly.system.kernel.processes.prototypes.processors.IProcessEndResolver;
@@ -23,11 +24,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessFactory extends APrototype {
+public class ProcessFactory extends AFactory {
     protected Set<IProcessResolver> processResolvers;
     protected List<IProcessCreatorResolver> processCreatorResolvers;
     protected List<IProcessEndResolver> processEndResolvers;
 
+    @Override
     public void init() {
         this.processResolvers = new ConcurrentSkipListSet<>();
         this.processCreatorResolvers = new CopyOnWriteArrayList<>();

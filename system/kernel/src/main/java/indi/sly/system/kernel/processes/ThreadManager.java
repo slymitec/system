@@ -31,7 +31,6 @@ public class ThreadManager extends AManager {
     public void shutdown() {
     }
 
-
     public ThreadObject getCurrent() {
         UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
@@ -51,36 +50,10 @@ public class ThreadManager extends AManager {
     }
 
     public ThreadObject create(UUID processID) {
-        UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
-        Stack<ThreadObject> threads = userSpace.getThreads();
-
-        ThreadObject thread = this.factoryManager.create(ThreadObject.class);
-        thread.setProcessID(processID);
-
-        ThreadStatusObject threadStatus = thread.getStatus();
-        threadStatus.initialize();
-
-        ThreadContextObject context = thread.getContext();
-        if (threads.isEmpty()) {
-            context.setType(ThreadContextType.CURRENT);
-        } else {
-            context.setType(ThreadContextType.SHADOW);
-        }
-
-        userSpace.getThreads().push(thread);
-
-        return thread;
+        return this.factory.create(processID);
     }
 
     public void end() {
-        UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
-        Stack<ThreadObject> threads = userSpace.getThreads();
-
-        while (!threads.isEmpty()) {
-            ThreadObject thread = threads.peek();
-
-            ThreadStatusObject threadStatus = thread.getStatus();
-            threadStatus.end();
-        }
+        this.factory.end();
     }
 }

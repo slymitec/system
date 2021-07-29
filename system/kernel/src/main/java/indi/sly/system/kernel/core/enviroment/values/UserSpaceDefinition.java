@@ -20,26 +20,26 @@ import javax.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserSpaceDefinition extends ADefinition<UserSpaceDefinition> {
     public UserSpaceDefinition() {
-        this.infoObjectLock = new ReentrantReadWriteLock();
-        this.cachedInfoObjectDefinitions = new ConcurrentHashMap<>();
-        this.infoObjects = new ConcurrentHashMap<>();
+        this.infoLock = new ReentrantReadWriteLock();
+        this.infoCaches = new ConcurrentHashMap<>();
+        this.infos = new ConcurrentHashMap<>();
         this.threads = new Stack<>();
     }
 
-    private final ReadWriteLock infoObjectLock;
-    private final Map<UUID, InfoCacheDefinition> cachedInfoObjectDefinitions;
-    private final Map<UUID, InfoObject> infoObjects;
+    private final ReadWriteLock infoLock;
+    private final Map<UUID, InfoCacheDefinition> infoCaches;
+    private final Map<UUID, InfoObject> infos;
 
-    public ReadWriteLock getInfoObjectLock() {
-        return this.infoObjectLock;
+    public ReadWriteLock getInfoLock() {
+        return this.infoLock;
     }
 
-    public Map<UUID, InfoCacheDefinition> getCachedInfoObjectDefinitions() {
-        return cachedInfoObjectDefinitions;
+    public Map<UUID, InfoCacheDefinition> getInfoCaches() {
+        return this.infoCaches;
     }
 
-    public Map<UUID, InfoObject> getInfoObjects() {
-        return infoObjects;
+    public Map<UUID, InfoObject> getInfos() {
+        return this.infos;
     }
 
     private final Stack<ThreadObject> threads;

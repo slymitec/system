@@ -46,9 +46,9 @@ public class CoreRepositoryObject extends APrototype {
             }
         } else if (space == SpaceType.USER) {
             if (lock == LockType.READ) {
-                readWriteLock = this.getUserSpace().getInfoObjectLock().readLock();
+                readWriteLock = this.getUserSpace().getInfoLock().readLock();
             } else if (lock == LockType.WRITE) {
-                readWriteLock = this.getUserSpace().getInfoObjectLock().writeLock();
+                readWriteLock = this.getUserSpace().getInfoLock().writeLock();
             }
         }
 
@@ -60,27 +60,20 @@ public class CoreRepositoryObject extends APrototype {
     }
 
     public Set<APrototype> getAll(long space) {
-        Map<UUID, APrototype> corePrototypes;
+        Set<APrototype> corePrototypes = new HashSet<>();
 
         if (space == SpaceType.KERNEL) {
-            corePrototypes = this.getKernelSpace().getCorePrototypes();
+            corePrototypes.addAll(this.getKernelSpace().getCorePrototypes().values());
         } else if (space == SpaceType.USER) {
-            corePrototypes = new HashMap<>();
-
-            for (Entry<UUID, InfoObject> pair : this.getUserSpace().getInfoObjects().entrySet()) {
-                corePrototypes.put(pair.getKey(), pair.getValue());
-            }
+            corePrototypes.addAll(this.getUserSpace().getInfos().values());
         } else if (space == SpaceType.ALL) {
-            corePrototypes = new HashMap<>(this.getKernelSpace().getCorePrototypes());
-
-            for (Entry<UUID, InfoObject> pair : this.getUserSpace().getInfoObjects().entrySet()) {
-                corePrototypes.put(pair.getKey(), pair.getValue());
-            }
+            corePrototypes.addAll(this.getKernelSpace().getCorePrototypes().values());
+            corePrototypes.addAll(this.getUserSpace().getInfos().values());
         } else {
             throw new ConditionParametersException();
         }
 
-        return Set.copyOf(corePrototypes.values());
+        return corePrototypes;
     }
 
     public <T extends APrototype> T get(long spaceType, Class<T> clazz) {
@@ -166,7 +159,7 @@ public class CoreRepositoryObject extends APrototype {
             try {
                 lock.lock();
 
-                Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfoObjects();
+                Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfos();
 
                 InfoObject corePrototype = corePrototypes.getOrDefault(id, null);
                 if (ObjectUtil.isAnyNull(corePrototype)) {
@@ -384,7 +377,7 @@ public class CoreRepositoryObject extends APrototype {
             try {
                 lock.lock();
 
-                Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfoObjects();
+                Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfos();
 
                 if (corePrototypes.containsKey(id)) {
                     throw new StatusAlreadyExistedException();
@@ -491,7 +484,7 @@ public class CoreRepositoryObject extends APrototype {
             try {
                 lock.lock();
 
-                Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfoObjects();
+                Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfos();
 
                 InfoObject corePrototype = corePrototypes.getOrDefault(id, null);
                 boolean isContain;
@@ -614,7 +607,7 @@ public class CoreRepositoryObject extends APrototype {
             try {
                 lock.lock();
 
-                Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfoObjects();
+                Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfos();
 
                 this.getByID(spaceType, clazz, id);
 

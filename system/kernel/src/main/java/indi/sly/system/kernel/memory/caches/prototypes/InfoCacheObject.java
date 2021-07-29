@@ -26,12 +26,12 @@ public class InfoCacheObject extends APrototype {
         if (space == SpaceType.KERNEL) {
             return this.factoryManager.getKernelSpace().getInfoCaches();
         } else if (space == SpaceType.USER) {
-            return this.factoryManager.getUserSpace().getCachedInfoObjectDefinitions();
+            return this.factoryManager.getUserSpace().getInfoCaches();
         } else {
             Map<UUID, InfoCacheDefinition> kernelObjectCache = new HashMap<>();
 
             kernelObjectCache.putAll(this.factoryManager.getKernelSpace().getInfoCaches());
-            kernelObjectCache.putAll(this.factoryManager.getUserSpace().getCachedInfoObjectDefinitions());
+            kernelObjectCache.putAll(this.factoryManager.getUserSpace().getInfoCaches());
 
             return kernelObjectCache;
         }

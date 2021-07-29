@@ -12,7 +12,7 @@ import java.util.List;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessEndBuilder extends APrototype {
-    protected ProcessesFactory factory;
+    protected ProcessFactory factory;
     protected ProcessLifeProcessorMediator processorMediator;
 
     protected ProcessObject process;

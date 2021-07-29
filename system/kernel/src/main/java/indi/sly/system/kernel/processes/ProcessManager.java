@@ -27,13 +27,13 @@ import java.util.*;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessManager extends AManager {
-    private ProcessesFactory factory;
+    private ProcessFactory factory;
 
     @Override
     public void startup(long startup) {
         if (startup == StartupType.STEP_INIT) {
         } else if (startup == StartupType.STEP_KERNEL) {
-            this.factory = this.factoryManager.create(ProcessesFactory.class);
+            this.factory = this.factoryManager.create(ProcessFactory.class);
             this.factory.init();
 
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);

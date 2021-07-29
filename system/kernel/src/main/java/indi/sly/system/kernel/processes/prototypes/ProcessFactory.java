@@ -23,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessesFactory extends APrototype {
+public class ProcessFactory extends APrototype {
     protected Set<IProcessResolver> processResolvers;
     protected List<IProcessCreatorResolver> processCreatorResolvers;
     protected List<IProcessEndResolver> processEndResolvers;

@@ -20,7 +20,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessObject extends APrototype {
-    protected ProcessesFactory factory;
+    protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
     protected UUID id;

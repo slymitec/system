@@ -9,6 +9,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.values.TypeCounterDefinition;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 
@@ -45,15 +46,12 @@ public class TypeObject extends APrototype {
         return this.type.getTypeInitializer();
     }
 
-    public synchronized int getTotalOccupiedCount() {
-        return this.type.getCounter().getTotalOccupiedCount();
-    }
+    public TypeCounterObject getCount() {
+        TypeCounterObject typeCounter = this.factoryManager.create(TypeCounterObject.class);
 
-    public synchronized void addTotalOccupiedCount() {
-        this.type.getCounter().offsetTotalOccupiedCount(1);
-    }
+        typeCounter.setSource(() -> this.type.getCounter(), (TypeCounterDefinition source) -> {
+        });
 
-    public synchronized void minusTotalOccupiedCount() {
-        this.type.getCounter().offsetTotalOccupiedCount(-1);
+        return typeCounter;
     }
 }

@@ -6,6 +6,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.objects.infotypes.prototypes.TypeCounterObject;
 import indi.sly.system.kernel.objects.lang.CloseConsumer;
 import indi.sly.system.kernel.objects.lang.OpenFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
@@ -23,7 +24,8 @@ public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
     public OpenOrCloseResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DO_NOT_USE_TYPE_COUNT)) {
-                type.addTotalOccupiedCount();
+                TypeCounterObject typeCount = type.getCount();
+                typeCount.addTotalOccupiedCount();
             }
 
             info.setOpened(info.getOpened() + 1);
@@ -34,7 +36,8 @@ public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
 
         this.close = (info, type, status) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DO_NOT_USE_TYPE_COUNT)) {
-                type.minusTotalOccupiedCount();
+                TypeCounterObject typeCount = type.getCount();
+                typeCount.minusTotalOccupiedCount();
             }
 
             info.setOpened(info.getOpened() - 1);

@@ -16,11 +16,11 @@ public class InfoCacheDefinition extends ADefinition<InfoCacheDefinition> {
     private long space;
     private final Map<Long, Long> date;
 
-    public UUID getId() {
+    public UUID getID() {
         return this.id;
     }
 
-    public void setId(UUID id) {
+    public void setID(UUID id) {
         this.id = id;
     }
 

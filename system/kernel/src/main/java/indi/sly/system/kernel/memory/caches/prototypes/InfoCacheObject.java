@@ -73,13 +73,13 @@ public class InfoCacheObject extends APrototype {
             Map<UUID, InfoCacheDefinition> kernelObjectCaches = this.getInfoCaches(space);
             if (!kernelObjectCaches.containsKey(info.getID())) {
                 InfoCacheDefinition kernelObjectCache = new InfoCacheDefinition();
-                kernelObjectCache.setId(info.getID());
+                kernelObjectCache.setID(info.getID());
                 kernelObjectCache.setType(info.getType());
                 kernelObjectCache.getDate().put(DateTimeType.CREATE, dateTime.getCurrentDateTime());
                 kernelObjectCache.getDate().put(DateTimeType.ACCESS, dateTime.getCurrentDateTime());
 
-                this.getInfoCaches(space).put(kernelObjectCache.getId(), kernelObjectCache);
-                coreRepository.addByID(space, kernelObjectCache.getId(), info);
+                this.getInfoCaches(space).put(kernelObjectCache.getID(), kernelObjectCache);
+                coreRepository.addByID(space, kernelObjectCache.getID(), info);
             }
         } finally {
             lock.unlock();

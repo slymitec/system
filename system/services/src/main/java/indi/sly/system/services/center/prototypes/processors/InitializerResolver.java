@@ -1,5 +1,6 @@
 package indi.sly.system.services.center.prototypes.processors;
 
+import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.services.center.lang.FinishConsumer;
 import indi.sly.system.services.center.lang.RunConsumer;
@@ -30,7 +31,11 @@ public class InitializerResolver extends APrototype implements ICenterResolver {
         this.run = (center, status, name, run, content) -> {
             ACenterInitializer initializer = center.getInitializer();
 
-            initializer.run(name, run, content);
+            try {
+                initializer.run(name, run, content);
+            } catch (AKernelException exception){
+                content.setException(exception);
+            }
         };
     }
 

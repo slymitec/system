@@ -24,7 +24,6 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Transactional
 public class CenterService extends AService {
     @Override
     public void startup(long startup) {

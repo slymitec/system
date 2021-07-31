@@ -1,7 +1,6 @@
-package indi.sly.system.services.nativeinterface;
+package indi.sly.system.services.core;
 
 import indi.sly.system.kernel.core.AService;
-import indi.sly.system.services.nativeinterface.prototypes.NativeInterfaceObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -11,8 +10,17 @@ import javax.transaction.Transactional;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Transactional
-public class NativeInterfaceSerice extends AService {
-    public NativeInterfaceObject get(String name) {
-        return null;
+public class FactoryService extends AService {
+    @Override
+    public void startup(long startup) {
+    }
+
+    @Override
+    public void shutdown() {
+        super.shutdown();
+    }
+
+    public void boot() {
+
     }
 }

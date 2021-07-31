@@ -1,21 +1,20 @@
 package indi.sly.system.services.nativeinterface.values;
 
 import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.services.nativeinterface.prototypes.wrappers.ANativeInterfaceInitializer;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class NativeInterfaceDefinition extends ADefinition<NativeInterfaceDefinition> {
     public NativeInterfaceDefinition() {
-        this.methodIDs = new HashMap<>();
+
     }
 
     private UUID id;
     private long attribute;
     private String name;
     private UUID processID;
-    private final Map<String, UUID> methodIDs;
+    private ANativeInterfaceInitializer initializer;
 
     public UUID getID() {
         return this.id;
@@ -49,7 +48,4 @@ public class NativeInterfaceDefinition extends ADefinition<NativeInterfaceDefini
         this.processID = processID;
     }
 
-    public Map<String, UUID> getMethodIDs() {
-        return this.methodIDs;
-    }
 }

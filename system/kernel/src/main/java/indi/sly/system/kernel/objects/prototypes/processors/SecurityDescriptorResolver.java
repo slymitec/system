@@ -33,7 +33,7 @@ public class SecurityDescriptorResolver extends APrototype implements IInfoResol
             SecurityDescriptorObject securityDescriptor = this.factoryManager.create(SecurityDescriptorObject.class);
 
             securityDescriptor.setSource(info::getSecurityDescriptor, info::setSecurityDescriptor);
-            securityDescriptor.setLock((lock) -> type.getTypeInitializer().lockProcedure(info, lock));
+            securityDescriptor.setLock((lock) -> type.getInitializer().lockProcedure(info, lock));
             securityDescriptor.setIdentifications(status.getIdentifications());
 
             if (!ValueUtil.isAnyNullOrEmpty(status.getParentID())) {

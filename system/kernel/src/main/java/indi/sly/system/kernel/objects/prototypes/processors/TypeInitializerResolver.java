@@ -30,7 +30,7 @@ import java.util.Map.Entry;
 public class TypeInitializerResolver extends APrototype implements IInfoResolver {
     public TypeInitializerResolver() {
         this.dump = (dump, info, type, status) -> {
-            type.getTypeInitializer().dumpProcedure(info, dump);
+            type.getInitializer().dumpProcedure(info, dump);
 
             return dump;
         };
@@ -42,7 +42,7 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
 
             ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
 
-            type.getTypeInitializer().openProcedure(info, processHandleEntry.getOpen(), openAttribute, arguments);
+            type.getInitializer().openProcedure(info, processHandleEntry.getOpen(), openAttribute, arguments);
 
             return handle;
         };
@@ -54,7 +54,7 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
 
             ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
 
-            type.getTypeInitializer().closeProcedure(info, processHandleEntry.getOpen());
+            type.getInitializer().closeProcedure(info, processHandleEntry.getOpen());
         };
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
@@ -88,26 +88,26 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
 
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
             TypeObject childTypeObject = typeManager.get(childInfo.getType());
-            childTypeObject.getTypeInitializer().createProcedure(childInfo);
+            childTypeObject.getInitializer().createProcedure(childInfo);
 
-            type.getTypeInitializer().createChildProcedure(info, childInfo);
+            type.getInitializer().createChildProcedure(info, childInfo);
 
             return childInfo;
         };
 
         this.getOrRebuildChild = (childInfo, info, type, status, identification, open) -> {
-            InfoSummaryDefinition infoSummary = type.getTypeInitializer().getChildProcedure(info, identification);
+            InfoSummaryDefinition infoSummary = type.getInitializer().getChildProcedure(info, identification);
 
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
             TypeObject childType = typeManager.get(infoSummary.getType());
 
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UUID childRepositoryID = childType.getTypeInitializer().getPoolID(infoSummary.getID(),
+            UUID childRepositoryID = childType.getInitializer().getPoolID(infoSummary.getID(),
                     infoSummary.getType());
             AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(childRepositoryID);
             childInfo = entityRepository.get(infoSummary.getID());
 
-            childType.getTypeInitializer().getProcedure(childInfo);
+            childType.getInitializer().getProcedure(childInfo);
 
             return childInfo;
         };
@@ -122,19 +122,19 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
             TypeObject childType = typeManager.get(childInfo.getType());
 
-            childType.getTypeInitializer().deleteProcedure(childInfo);
+            childType.getInitializer().deleteProcedure(childInfo);
 
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UUID childRepositoryID = childType.getTypeInitializer().getPoolID(childInfo.getID(), childInfo.getType());
+            UUID childRepositoryID = childType.getInitializer().getPoolID(childInfo.getID(), childInfo.getType());
             AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(childRepositoryID);
             entityRepository.delete(childInfo);
 
-            type.getTypeInitializer().deleteChildProcedure(info, identification);
+            type.getInitializer().deleteChildProcedure(info, identification);
         };
 
         this.queryChild = (summaryDefinitions, info, type, status, queryChild) -> {
             Set<InfoSummaryDefinition> TypeInitializerSummaryDefinitions =
-                    type.getTypeInitializer().queryChildProcedure(info, queryChild);
+                    type.getInitializer().queryChildProcedure(info, queryChild);
 
             summaryDefinitions.addAll(TypeInitializerSummaryDefinitions);
 
@@ -148,7 +148,7 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
                 throw new StatusIsUsedException();
             }
 
-            type.getTypeInitializer().renameChildProcedure(info, oldIdentification, newIdentification);
+            type.getInitializer().renameChildProcedure(info, oldIdentification, newIdentification);
 
             if (newIdentification.getType().equals(String.class)) {
                 childInfo.setName(StringUtil.readFormBytes(newIdentification.getID()));
@@ -187,9 +187,9 @@ public class TypeInitializerResolver extends APrototype implements IInfoResolver
             if (processHandleTable.containByInfoID(info.getID())) {
                 ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
 
-                type.getTypeInitializer().refreshPropertiesProcedure(info, processHandleEntry.getOpen());
+                type.getInitializer().refreshPropertiesProcedure(info, processHandleEntry.getOpen());
             } else {
-                type.getTypeInitializer().refreshPropertiesProcedure(info, null);
+                type.getInitializer().refreshPropertiesProcedure(info, null);
             }
         };
 

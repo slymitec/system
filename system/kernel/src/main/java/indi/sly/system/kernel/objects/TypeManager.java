@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.objects;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -79,8 +78,8 @@ public class TypeManager extends AManager {
     }
 
     public synchronized TypeObject create(UUID typeID, String typeName, long attribute, Set<UUID> childTypes,
-                                          ATypeInitializer typeInitializer) {
-        if (ObjectUtil.isAnyNull(typeID, childTypes, typeInitializer) || StringUtil.isNameIllegal(typeName)) {
+                                          ATypeInitializer initializer) {
+        if (ObjectUtil.isAnyNull(typeID, childTypes, initializer) || StringUtil.isNameIllegal(typeName)) {
             throw new ConditionParametersException();
         }
 
@@ -88,7 +87,7 @@ public class TypeManager extends AManager {
         typeDefinition.setId(UUIDUtil.createRandom());
         typeDefinition.setName(typeName);
         typeDefinition.setAttribute(attribute);
-        typeDefinition.setTypeInitializer(typeInitializer);
+        typeDefinition.setInitializer(initializer);
         if (ObjectUtil.allNotNull(childTypes)) {
             typeDefinition.getChildTypes().addAll(childTypes);
         }
@@ -106,7 +105,7 @@ public class TypeManager extends AManager {
                 typeObject);
         objectTypes.add(typeID);
 
-        typeInitializer.install();
+        initializer.install();
 
         return typeObject;
     }
@@ -120,7 +119,7 @@ public class TypeManager extends AManager {
 
         TypeObject type = this.get(typeID);
 
-        type.getTypeInitializer().uninstall();
+        type.getInitializer().uninstall();
 
         this.factoryManager.getCoreRepository().deleteByID(SpaceType.KERNEL, TypeObject.class, typeID);
         objectTypes.remove(typeID);

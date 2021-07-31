@@ -13,7 +13,7 @@ public class TypeDefinition extends ADefinition<TypeDefinition> {
     private long attribute;
     private UUID thisType;
     private final Set<UUID> childTypes;
-    private ATypeInitializer typeInitializer;
+    private ATypeInitializer initializer;
     private final TypeCounterDefinition counter;
 
     public TypeDefinition() {
@@ -57,12 +57,12 @@ public class TypeDefinition extends ADefinition<TypeDefinition> {
         return this.childTypes;
     }
 
-    public ATypeInitializer getTypeInitializer() {
-        return this.typeInitializer;
+    public ATypeInitializer getInitializer() {
+        return this.initializer;
     }
 
-    public void setTypeInitializer(ATypeInitializer typeInitializer) {
-        this.typeInitializer = typeInitializer;
+    public void setInitializer(ATypeInitializer initializer) {
+        this.initializer = initializer;
     }
 
     public TypeCounterDefinition getCounter() {

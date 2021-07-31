@@ -42,8 +42,8 @@ public class TypeObject extends APrototype {
         return LogicalUtil.isAllExist(this.type.getAttribute(), typeInitializerAttributes);
     }
 
-    public ATypeInitializer getTypeInitializer() {
-        return this.type.getTypeInitializer();
+    public ATypeInitializer getInitializer() {
+        return this.type.getInitializer();
     }
 
     public TypeCounterObject getCount() {

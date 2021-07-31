@@ -107,7 +107,7 @@ public class InfoFactory extends AFactory {
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(info.getType());
-        UUID poolID = type.getTypeInitializer().getPoolID(info.getID(), info.getType());
+        UUID poolID = type.getInitializer().getPoolID(info.getID(), info.getType());
 
         return this.buildInfo(info, poolID, parentInfo);
     }

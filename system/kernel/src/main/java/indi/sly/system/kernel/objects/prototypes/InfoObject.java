@@ -466,7 +466,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        AInfoContentObject content = type.getTypeInitializer().getContentProcedure(info, () -> {
+        AInfoContentObject content = type.getInitializer().getContentProcedure(info, () -> {
             List<ReadContentFunction> resolvers = this.processorMediator.getReadContents();
 
             byte[] contentSource = null;

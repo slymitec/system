@@ -80,6 +80,10 @@ public class CenterService extends AService {
     }
 
     public synchronized void create(String name, long attribute, UUID processID, ACenterInitializer initializer) {
+        if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(initializer)) {
+            throw new ConditionParametersException();
+        }
+
         CenterRepositoryObject centerRepository =
                 this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, CenterRepositoryObject.class);
 

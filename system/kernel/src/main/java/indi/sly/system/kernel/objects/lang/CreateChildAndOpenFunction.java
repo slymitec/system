@@ -10,6 +10,5 @@ import java.util.UUID;
 
 @FunctionalInterface
 public interface CreateChildAndOpenFunction extends Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject,
-        InfoStatusDefinition, UUID,
-        IdentificationDefinition> {
+        InfoStatusDefinition, UUID, IdentificationDefinition> {
 }

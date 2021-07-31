@@ -7,6 +7,7 @@ import indi.sly.system.services.center.lang.RunConsumer;
 import indi.sly.system.services.center.lang.StartFunction;
 import indi.sly.system.services.center.prototypes.wrappers.ACenterInitializer;
 import indi.sly.system.services.center.prototypes.wrappers.CenterProcessorMediator;
+import indi.sly.system.services.center.values.CenterDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -33,7 +34,7 @@ public class InitializerResolver extends APrototype implements ICenterResolver {
 
             try {
                 initializer.run(name, run, content);
-            } catch (AKernelException exception){
+            } catch (AKernelException exception) {
                 content.setException(exception);
             }
         };
@@ -49,7 +50,7 @@ public class InitializerResolver extends APrototype implements ICenterResolver {
     private final RunConsumer run;
 
     @Override
-    public void resolve(CenterProcessorMediator processorMediator) {
+    public void resolve(CenterDefinition center, CenterProcessorMediator processorMediator) {
         processorMediator.getStarts().add(this.start);
         processorMediator.getFinishes().add(this.finish);
         processorMediator.getRuns().add(this.run);

@@ -6,10 +6,9 @@ import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadStatusObject;
 import indi.sly.system.services.center.lang.FinishConsumer;
-import indi.sly.system.services.center.lang.RunConsumer;
 import indi.sly.system.services.center.lang.StartFunction;
-import indi.sly.system.services.center.prototypes.wrappers.ACenterInitializer;
 import indi.sly.system.services.center.prototypes.wrappers.CenterProcessorMediator;
+import indi.sly.system.services.center.values.CenterDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -50,8 +49,10 @@ public class ProcessesResolver extends APrototype implements ICenterResolver {
     private final FinishConsumer finish;
 
     @Override
-    public void resolve(CenterProcessorMediator processorMediator) {
-        processorMediator.getStarts().add(this.start);
-        processorMediator.getFinishes().add(this.finish);
+    public void resolve(CenterDefinition center, CenterProcessorMediator processorMediator) {
+        if (!ValueUtil.isAnyNullOrEmpty(center.getProcessID())) {
+            processorMediator.getStarts().add(this.start);
+            processorMediator.getFinishes().add(this.finish);
+        }
     }
 }

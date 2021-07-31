@@ -6,6 +6,7 @@ import indi.sly.system.services.center.lang.FinishConsumer;
 import indi.sly.system.services.center.lang.RunConsumer;
 import indi.sly.system.services.center.lang.StartFunction;
 import indi.sly.system.services.center.prototypes.wrappers.CenterProcessorMediator;
+import indi.sly.system.services.center.values.CenterDefinition;
 import indi.sly.system.services.center.values.CenterStatusRuntimeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -45,7 +46,7 @@ public class CheckConditionResolver extends APrototype implements ICenterResolve
     private final RunConsumer run;
 
     @Override
-    public void resolve(CenterProcessorMediator processorMediator) {
+    public void resolve(CenterDefinition center, CenterProcessorMediator processorMediator) {
         processorMediator.getStarts().add(this.start);
         processorMediator.getFinishes().add(this.finish);
         processorMediator.getRuns().add(this.run);

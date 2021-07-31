@@ -62,7 +62,7 @@ public class CenterFactory extends AFactory {
         CenterProcessorMediator processorMediator =
                 this.factoryManager.create(CenterProcessorMediator.class);
         for (ICenterResolver resolver : this.centerResolvers) {
-            resolver.resolve(processorMediator);
+            resolver.resolve(center, processorMediator);
         }
 
         return this.build(processorMediator, () -> center, (source) -> {

@@ -7,7 +7,6 @@ import java.util.UUID;
 
 public class NativeInterfaceDefinition extends ADefinition<NativeInterfaceDefinition> {
     public NativeInterfaceDefinition() {
-
     }
 
     private UUID id;
@@ -48,4 +47,11 @@ public class NativeInterfaceDefinition extends ADefinition<NativeInterfaceDefini
         this.processID = processID;
     }
 
+    public ANativeInterfaceInitializer getInitializer() {
+        return this.initializer;
+    }
+
+    public void setInitializer(ANativeInterfaceInitializer initializer) {
+        this.initializer = initializer;
+    }
 }

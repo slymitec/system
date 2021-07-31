@@ -6,6 +6,9 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.processes.values.ThreadContextDefinition;
 
+import java.util.Collections;
+import java.util.Map;
+
 public class ThreadContextObject extends AValueProcessPrototype<ThreadContextDefinition> {
     protected ProcessObject process;
 
@@ -25,33 +28,18 @@ public class ThreadContextObject extends AValueProcessPrototype<ThreadContextDef
         this.lock(LockType.NONE);
     }
 
-    public Object[] getRunArguments() {
+    public Map<String, ISerializeCapable> getData() {
         this.init();
 
-        return this.value.getRun().getArguments();
+        return Collections.unmodifiableMap(this.value.getRun().getData());
     }
 
-    public void setRunArguments(ISerializeCapable<?>[] arguments) {
+    public void setData(Map<String, ISerializeCapable> data) {
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.getRun().setArguments(arguments);
-
-        this.fresh();
-        this.lock(LockType.NONE);
-    }
-
-    public ISerializeCapable<?>[] getRunResults() {
-        this.init();
-
-        return this.value.getRun().getResults();
-    }
-
-    public void setRunResults(ISerializeCapable<?>[] results) {
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.getRun().setResults(results);
+        this.value.getRun().getData().clear();
+        this.value.getRun().getData().putAll(data);
 
         this.fresh();
         this.lock(LockType.NONE);

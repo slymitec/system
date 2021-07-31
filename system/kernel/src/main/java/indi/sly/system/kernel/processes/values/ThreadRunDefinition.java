@@ -4,25 +4,19 @@ import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.values.ADefinition;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
-    private ISerializeCapable<?>[] arguments;
-    private ISerializeCapable<?>[] results;
+    public ThreadRunDefinition() {
+        this.data = new HashMap<>();
+    }
+
+    private final Map<String, ISerializeCapable> data;
     private AKernelException exception;
 
-    public Object[] getArguments() {
-        return this.arguments;
-    }
-
-    public void setArguments(ISerializeCapable<?>[] arguments) {
-        this.arguments = arguments;
-    }
-
-    public ISerializeCapable<?>[] getResults() {
-        return this.results;
-    }
-
-    public void setResults(ISerializeCapable<?>[] results) {
-        this.results = results;
+    public Map<String, ISerializeCapable> getData() {
+        return this.data;
     }
 
     public AKernelException getException() {

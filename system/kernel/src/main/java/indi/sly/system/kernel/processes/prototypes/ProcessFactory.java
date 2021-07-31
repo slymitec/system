@@ -40,16 +40,16 @@ public class ProcessFactory extends AFactory {
 
         for (APrototype prototype : corePrototypes) {
             if (prototype instanceof IProcessResolver) {
-                processResolvers.add((IProcessResolver) prototype);
+                this.processResolvers.add((IProcessResolver) prototype);
             } else if (prototype instanceof IProcessCreatorResolver) {
-                processCreatorResolvers.add((IProcessCreatorResolver) prototype);
+                this.processCreatorResolvers.add((IProcessCreatorResolver) prototype);
             } else if (prototype instanceof IProcessEndResolver) {
-                processEndResolvers.add((IProcessEndResolver) prototype);
+                this.processEndResolvers.add((IProcessEndResolver) prototype);
             }
         }
 
-        Collections.sort(processCreatorResolvers);
-        Collections.sort(processEndResolvers);
+        Collections.sort(this.processCreatorResolvers);
+        Collections.sort(this.processEndResolvers);
     }
 
     private ProcessObject buildProcess(ProcessProcessorMediator processorMediator, UUID processID) {

@@ -44,11 +44,11 @@ public class InfoFactory extends AFactory {
 
         for (APrototype pair : corePrototypes) {
             if (pair instanceof IInfoResolver) {
-                infoResolvers.add((IInfoResolver) pair);
+                this.infoResolvers.add((IInfoResolver) pair);
             }
         }
 
-        Collections.sort(infoResolvers);
+        Collections.sort(this.infoResolvers);
     }
 
     private InfoObject buildInfo(InfoProcessorMediator processorMediator, UUID infoID, UUID poolID,

@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.core;
 
+import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -10,7 +11,7 @@ import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.core.prototypes.CorePrototypeBuilder;
+import indi.sly.system.kernel.core.prototypes.CorePrototypeValueBuilder;
 import indi.sly.system.kernel.core.prototypes.CoreRepositoryObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -33,11 +34,10 @@ public class FactoryManager extends AManager {
             this.factoryManager = this;
             this.factoryManager.check();
 
-            UserSpaceDefinition bootUserSpace = new UserSpaceDefinition();
-            this.factoryManager.setUserSpace(() -> bootUserSpace);
+            this.corePrototypeValue = SpringHelper.getInstance(CorePrototypeValueBuilder.class);
+            this.corePrototypeValue.setFactoryManager(this);
 
-            this.corePrototype = SpringHelper.getInstance(CorePrototypeBuilder.class);
-            this.corePrototype.setFactoryManager(this);
+            this.userSpace = () -> this.corePrototypeValue.createOrGetUserSpace();
 
             this.coreRepository = this.create(CoreRepositoryObject.class);
             this.coreRepository.add(SpaceType.KERNEL, this.create(FactoryManager.class));
@@ -66,7 +66,7 @@ public class FactoryManager extends AManager {
         }
     }
 
-    private CorePrototypeBuilder corePrototype;
+    private CorePrototypeValueBuilder corePrototypeValue;
     private CoreRepositoryObject coreRepository;
 
     public CoreRepositoryObject getCoreRepository() {
@@ -74,7 +74,7 @@ public class FactoryManager extends AManager {
     }
 
     public <T extends APrototype> T create(Class<T> clazz) {
-        return this.corePrototype.create(clazz);
+        return this.corePrototypeValue.createPrototype(clazz);
     }
 
     public <T extends AManager> T getManager(Class<T> clazz) {
@@ -100,10 +100,14 @@ public class FactoryManager extends AManager {
     private Provider<UserSpaceDefinition> userSpace;
 
     public UserSpaceDefinition getUserSpace() {
-        return this.userSpace == null ? null : this.userSpace.acquire();
+        return this.userSpace.acquire();
     }
 
     public void setUserSpace(Provider<UserSpaceDefinition> userSpace) {
+        if (ObjectUtil.isAnyNull(userSpace)) {
+            throw new ConditionParametersException();
+        }
+
         this.userSpace = userSpace;
     }
 }

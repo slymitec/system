@@ -21,11 +21,11 @@ public class TypeDefinition extends ADefinition<TypeDefinition> {
         this.counter = new TypeCounterDefinition();
     }
 
-    public UUID getId() {
+    public UUID getID() {
         return this.id;
     }
 
-    public void setId(UUID id) {
+    public void setID(UUID id) {
         this.id = id;
     }
 

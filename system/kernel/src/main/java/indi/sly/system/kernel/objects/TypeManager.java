@@ -84,7 +84,7 @@ public class TypeManager extends AManager {
         }
 
         TypeDefinition typeDefinition = new TypeDefinition();
-        typeDefinition.setId(UUIDUtil.createRandom());
+        typeDefinition.setID(UUIDUtil.createRandom());
         typeDefinition.setName(typeName);
         typeDefinition.setAttribute(attribute);
         typeDefinition.setInitializer(initializer);

@@ -5,6 +5,7 @@ import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.FactoryManager;
+import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -13,7 +14,7 @@ import java.lang.reflect.Constructor;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CorePrototypeBuilder extends APrototype {
+public class CorePrototypeValueBuilder extends APrototype {
     private FactoryManager factoryManager;
 
     public final void setFactoryManager(FactoryManager factoryManager) {
@@ -22,7 +23,7 @@ public class CorePrototypeBuilder extends APrototype {
         }
     }
 
-    public <T extends APrototype> T create(Class<T> clazz) {
+    public <T extends APrototype> T createPrototype(Class<T> clazz) {
         if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
@@ -54,5 +55,9 @@ public class CorePrototypeBuilder extends APrototype {
         corePrototype.factoryManager = this.factoryManager;
 
         return corePrototype;
+    }
+
+    public UserSpaceDefinition createOrGetUserSpace() {
+        return SpringHelper.getInstance(UserSpaceDefinition.class);
     }
 }

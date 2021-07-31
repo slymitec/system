@@ -1,4 +1,4 @@
-package indi.sly.system.services.core;
+package indi.sly.system.services.nativeinterface;
 
 import indi.sly.system.kernel.core.AService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -10,17 +10,5 @@ import javax.transaction.Transactional;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Transactional
-public class LoaderService extends AService {
-    @Override
-    public void startup(long startup) {
-    }
-
-    @Override
-    public void shutdown() {
-        super.shutdown();
-    }
-
-    public void boot() {
-
-    }
+public class NativeInterfaceSerice extends AService {
 }

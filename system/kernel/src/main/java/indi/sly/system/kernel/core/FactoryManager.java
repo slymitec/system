@@ -69,15 +69,23 @@ public class FactoryManager extends AManager {
     private CorePrototypeBuilder corePrototype;
     private CoreRepositoryObject coreRepository;
 
-    public <T extends APrototype> T create(Class<T> clazz) {
-        return this.corePrototype.create(clazz);
-    }
-
     public CoreRepositoryObject getCoreRepository() {
         return this.coreRepository;
     }
 
+    public <T extends APrototype> T create(Class<T> clazz) {
+        return this.corePrototype.create(clazz);
+    }
+
     public <T extends AManager> T getManager(Class<T> clazz) {
+        T manager = this.coreRepository.get(SpaceType.KERNEL, clazz);
+
+        manager.check();
+
+        return manager;
+    }
+
+    public <T extends AService> T getService(Class<T> clazz) {
         T manager = this.coreRepository.get(SpaceType.KERNEL, clazz);
 
         manager.check();

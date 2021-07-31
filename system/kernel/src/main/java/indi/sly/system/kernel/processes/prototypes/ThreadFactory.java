@@ -29,9 +29,9 @@ public class ThreadFactory extends AFactory {
 
         ThreadContextObject context = thread.getContext();
         if (threads.isEmpty()) {
-            context.setType(ThreadContextType.CURRENT);
+            context.setType(ThreadContextType.USER);
         } else {
-            context.setType(ThreadContextType.SHADOW);
+            context.setType(ThreadContextType.DAEMON);
         }
 
         threads.push(thread);

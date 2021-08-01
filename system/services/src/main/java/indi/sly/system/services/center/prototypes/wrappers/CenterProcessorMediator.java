@@ -2,6 +2,7 @@ package indi.sly.system.services.center.prototypes.wrappers;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.services.center.lang.FinishConsumer;
+import indi.sly.system.services.center.lang.GetContentFunction;
 import indi.sly.system.services.center.lang.RunConsumer;
 import indi.sly.system.services.center.lang.StartFunction;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -18,11 +19,13 @@ public class CenterProcessorMediator extends APrototype {
         this.starts = new ArrayList<>();
         this.finishes = new ArrayList<>();
         this.runs = new ArrayList<>();
+        this.contents = new ArrayList<>();
     }
 
     private final List<StartFunction> starts;
     private final List<FinishConsumer> finishes;
     private final List<RunConsumer> runs;
+    private final List<GetContentFunction> contents;
 
     public List<StartFunction> getStarts() {
         return this.starts;
@@ -34,5 +37,9 @@ public class CenterProcessorMediator extends APrototype {
 
     public List<RunConsumer> getRuns() {
         return this.runs;
+    }
+
+    public List<GetContentFunction> getContents() {
+        return this.contents;
     }
 }

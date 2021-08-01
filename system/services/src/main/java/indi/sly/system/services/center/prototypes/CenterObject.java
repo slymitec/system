@@ -4,7 +4,10 @@ import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
+import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
+import indi.sly.system.kernel.processes.values.ThreadRunDefinition;
 import indi.sly.system.services.center.lang.FinishConsumer;
+import indi.sly.system.services.center.lang.GetContentFunction;
 import indi.sly.system.services.center.lang.RunConsumer;
 import indi.sly.system.services.center.lang.StartFunction;
 import indi.sly.system.services.center.prototypes.wrappers.CenterProcessorMediator;
@@ -75,9 +78,18 @@ public class CenterObject extends AValueProcessPrototype<CenterDefinition> {
     }
 
     public synchronized CenterContentObject getContent() {
+        CenterDefinition center = this.getSelf();
+
+        ThreadContextObject threadContext = null;
+
+        List<GetContentFunction> resolvers = this.processorMediator.getContents();
+
+        for (GetContentFunction resolver : resolvers) {
+            threadContext = resolver.apply(center, this.status, threadContext);
+        }
+
         CenterContentObject centerContent = this.factoryManager.create(CenterContentObject.class);
-
-
+        centerContent.threadContext = threadContext;
 
         return centerContent;
     }

@@ -12,10 +12,10 @@ public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
         this.data = new HashMap<>();
     }
 
-    private final Map<String, ISerializeCapable> data;
+    private final Map<String, Object> data;
     private AKernelException exception;
 
-    public Map<String, ISerializeCapable> getData() {
+    public Map<String, Object> getData() {
         return this.data;
     }
 

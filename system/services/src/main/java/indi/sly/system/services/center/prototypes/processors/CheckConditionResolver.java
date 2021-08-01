@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.services.center.lang.FinishConsumer;
+import indi.sly.system.services.center.lang.GetContentFunction;
 import indi.sly.system.services.center.lang.RunConsumer;
 import indi.sly.system.services.center.lang.StartFunction;
 import indi.sly.system.services.center.prototypes.wrappers.CenterProcessorMediator;
@@ -39,6 +40,14 @@ public class CheckConditionResolver extends APrototype implements ICenterResolve
                 throw new StatusNotReadyException();
             }
         };
+
+        this.content = (center, status, threadRun) -> {
+            if (status.getRuntime() != CenterStatusRuntimeType.RUNNING) {
+                throw new StatusRelationshipErrorException();
+            }
+
+            return threadRun;
+        };
     }
 
     @Override
@@ -49,11 +58,13 @@ public class CheckConditionResolver extends APrototype implements ICenterResolve
     private final StartFunction start;
     private final FinishConsumer finish;
     private final RunConsumer run;
+    private final GetContentFunction content;
 
     @Override
     public void resolve(CenterDefinition center, CenterProcessorMediator processorMediator) {
         processorMediator.getStarts().add(this.start);
         processorMediator.getFinishes().add(this.finish);
         processorMediator.getRuns().add(this.run);
+        processorMediator.getContents().add(this.content);
     }
 }

@@ -247,4 +247,13 @@ public abstract class ObjectUtil {
             throw new StatusRelationshipErrorException();
         }
     }
+
+    public static String transferToString(Object value) {
+        return null;
+    }
+
+    public static <T> T transferFromString(String stream) {
+        return null;
+    }
+
 }

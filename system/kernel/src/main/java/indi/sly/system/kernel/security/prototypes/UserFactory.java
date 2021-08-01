@@ -7,6 +7,9 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -76,5 +79,28 @@ public class UserFactory extends AFactory {
         };
 
         return this.buildGroup(funcRead, funcWrite, funcLock);
+    }
+
+    public AccountBuilder createAccount() {
+        AccountBuilder accountBuilder = this.factoryManager.create(AccountBuilder.class);
+
+        accountBuilder.factory = this;
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        accountBuilder.processToken = process.getToken();
+
+        return accountBuilder;
+    }
+
+    public GroupBuilder createGroup() {
+        GroupBuilder groupBuilder = this.factoryManager.create(GroupBuilder.class);
+
+        groupBuilder.factory = this;
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        groupBuilder.processToken = process.getToken();
+
+        return groupBuilder;
+
     }
 }

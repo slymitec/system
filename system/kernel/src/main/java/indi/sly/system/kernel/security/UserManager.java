@@ -109,121 +109,27 @@ public class UserManager extends AManager {
     }
 
     public AccountObject createAccount(String accountName, String accountPassword) {
-        if (StringUtil.isNameIllegal(accountName)) {
-            throw new ConditionParametersException();
-        }
-        if (ObjectUtil.isAnyNull(accountPassword)) {
-            accountPassword = StringUtil.EMPTY;
-        }
+        AccountBuilder accountBuilder = this.factory.createAccount();
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.isPrivileges(PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
-            throw new ConditionPermissionsException();
-        }
-
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getUserRepository();
-
-        AccountEntity account = new AccountEntity();
-        account.setID(UUID.randomUUID());
-        account.setName(accountName);
-        account.setPassword(accountPassword);
-        AccountAuthorizationTokenDefinition accountAuthorizationToken = new AccountAuthorizationTokenDefinition();
-        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
-        accountAuthorizationToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
-        account.setToken(ObjectUtil.transferToByteArray(accountAuthorizationToken));
-
-        try {
-            userRepository.getAccount(accountName);
-
-            throw new StatusAlreadyExistedException();
-        } catch (StatusNotExistedException exception) {
-            userRepository.add(account);
-        }
-
-        return this.factory.buildAccount(account);
+        return accountBuilder.create(accountName, accountPassword);
     }
 
     public GroupObject createGroup(String groupName) {
-        if (StringUtil.isNameIllegal(groupName)) {
-            throw new ConditionParametersException();
-        }
+        GroupBuilder groupBuilder = this.factory.createGroup();
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.isPrivileges(PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
-            throw new ConditionPermissionsException();
-        }
-
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getUserRepository();
-
-        GroupEntity group = new GroupEntity();
-        group.setID(UUID.randomUUID());
-        group.setName(groupName);
-        AccountAuthorizationTokenDefinition accountGroupToken = new AccountAuthorizationTokenDefinition();
-        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
-        accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
-        group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
-
-        try {
-            userRepository.getGroup(groupName);
-
-            throw new StatusAlreadyExistedException();
-        } catch (StatusNotExistedException exception) {
-            userRepository.add(group);
-        }
-
-        return this.factory.buildGroup(group);
+        return groupBuilder.create(groupName);
     }
 
     public void deleteAccount(UUID accountID) {
-        if (ValueUtil.isAnyNullOrEmpty(accountID)) {
-            throw new ConditionParametersException();
-        }
+        AccountBuilder accountBuilder = this.factory.createAccount();
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.isPrivileges(PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
-            throw new ConditionPermissionsException();
-        }
-
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getUserRepository();
-
-        AccountEntity account = userRepository.getAccount(accountID);
-        userRepository.delete(account);
+        accountBuilder.delete(accountID);
     }
 
     public void deleteGroup(UUID groupID) {
-        if (ValueUtil.isAnyNullOrEmpty(groupID)) {
-            throw new ConditionParametersException();
-        }
+        GroupBuilder groupBuilder = this.factory.createGroup();
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.isPrivileges(PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
-            throw new ConditionPermissionsException();
-        }
-
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getUserRepository();
-
-        GroupEntity group = userRepository.getGroup(groupID);
-        userRepository.delete(group);
+        groupBuilder.delete(groupID);
     }
 
     public AccountAuthorizationObject authorize(String accountName, String accountPassword) {

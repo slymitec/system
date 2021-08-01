@@ -10,6 +10,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.system.services.center.prototypes.CenterBuilder;
 import indi.sly.system.services.center.prototypes.CenterFactory;
 import indi.sly.system.services.center.prototypes.CenterObject;
 import indi.sly.system.services.center.prototypes.CenterRepositoryObject;
@@ -79,47 +80,15 @@ public class CenterService extends AService {
         return this.factory.build(center);
     }
 
-    public synchronized void create(String name, long attribute, UUID processID, ACenterInitializer initializer) {
-        if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(initializer)) {
-            throw new ConditionParametersException();
-        }
+    public CenterObject create(String name, long attribute, UUID processID, ACenterInitializer initializer) {
+        CenterBuilder centerBuilder = this.factory.createCenter();
 
-        CenterRepositoryObject centerRepository =
-                this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, CenterRepositoryObject.class);
-
-        if (centerRepository.getCenterIDs().containsKey(name)) {
-            throw new StatusAlreadyExistedException();
-        }
-
-        CenterDefinition center = new CenterDefinition();
-
-        center.setID(UUIDUtil.createRandom());
-        center.setAttribute(attribute);
-        center.setName(name);
-        if (!ValueUtil.isAnyNullOrEmpty(processID)) {
-            center.setProcessID(processID);
-        }
-        center.setInitializer(initializer);
-
-        centerRepository.getCenters().put(center.getID(), center);
-        centerRepository.getCenterIDs().put(center.getName(), center.getID());
+        return centerBuilder.create(name, attribute, processID, initializer);
     }
 
     public synchronized void delete(UUID id) {
-        CenterRepositoryObject centerRepository =
-                this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, CenterRepositoryObject.class);
+        CenterBuilder centerBuilder = this.factory.createCenter();
 
-        if (!centerRepository.getCenters().containsKey(id)) {
-            throw new StatusNotExistedException();
-        }
-
-        CenterDefinition center = centerRepository.getCenters().getOrDefault(id, null);
-
-        if (ObjectUtil.isAnyNull(center)) {
-            throw new StatusNotExistedException();
-        }
-
-        centerRepository.getCenters().remove(center.getID());
-        centerRepository.getCenterIDs().remove(center.getName());
+        centerBuilder.delete(id);
     }
 }

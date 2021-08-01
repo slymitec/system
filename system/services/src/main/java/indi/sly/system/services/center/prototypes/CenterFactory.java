@@ -68,4 +68,12 @@ public class CenterFactory extends AFactory {
         return this.build(processorMediator, () -> center, (source) -> {
         });
     }
+
+    public CenterBuilder createCenter() {
+        CenterBuilder centerBuilder = this.factoryManager.create(CenterBuilder.class);
+
+        centerBuilder.factory = this;
+
+        return centerBuilder;
+    }
 }

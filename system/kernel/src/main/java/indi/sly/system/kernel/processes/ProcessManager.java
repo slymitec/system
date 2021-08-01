@@ -17,7 +17,7 @@ import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.values.PrivilegeType;
-import indi.sly.system.kernel.processes.instances.prototypes.wrappers.SessionTypeInitializer;
+import indi.sly.system.kernel.processes.instances.prototypes.processors.SessionTypeInitializer;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

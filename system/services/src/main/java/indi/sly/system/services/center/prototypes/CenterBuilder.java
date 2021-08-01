@@ -9,7 +9,7 @@ import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.services.center.prototypes.wrappers.ACenterInitializer;
+import indi.sly.system.services.center.prototypes.processors.ACenterInitializer;
 import indi.sly.system.services.center.values.CenterDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

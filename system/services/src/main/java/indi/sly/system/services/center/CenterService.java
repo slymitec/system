@@ -1,26 +1,22 @@
 package indi.sly.system.services.center;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.services.center.prototypes.CenterBuilder;
 import indi.sly.system.services.center.prototypes.CenterFactory;
 import indi.sly.system.services.center.prototypes.CenterObject;
 import indi.sly.system.services.center.prototypes.CenterRepositoryObject;
-import indi.sly.system.services.center.prototypes.wrappers.ACenterInitializer;
+import indi.sly.system.services.center.prototypes.processors.ACenterInitializer;
 import indi.sly.system.services.center.values.CenterDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Named

@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.objects.infotypes.values;
 
 import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.ATypeInitializer;
 
 import java.util.HashSet;
 import java.util.Set;

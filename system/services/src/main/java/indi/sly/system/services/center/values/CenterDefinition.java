@@ -1,7 +1,7 @@
 package indi.sly.system.services.center.values;
 
 import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.services.center.prototypes.wrappers.ACenterInitializer;
+import indi.sly.system.services.center.prototypes.processors.ACenterInitializer;
 
 import java.util.UUID;
 

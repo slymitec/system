@@ -8,7 +8,7 @@ import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.ATypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeCounterDefinition;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;

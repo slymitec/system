@@ -1,1 +1,0 @@
-package indi.sly.system.kernel.objects.instances.prototypes.wrappers;

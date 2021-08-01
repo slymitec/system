@@ -75,6 +75,10 @@ public class CenterObject extends AValueProcessPrototype<CenterDefinition> {
     }
 
     public synchronized CenterContentObject getContent() {
-        return null;
+        CenterContentObject centerContent = this.factoryManager.create(CenterContentObject.class);
+
+
+
+        return centerContent;
     }
 }

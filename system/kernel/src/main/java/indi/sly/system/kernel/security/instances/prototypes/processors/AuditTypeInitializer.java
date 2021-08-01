@@ -1,20 +1,19 @@
-package indi.sly.system.kernel.processes.instances.prototypes.wrappers;
+package indi.sly.system.kernel.security.instances.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.ATypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
+import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.wrappers.ATypeInitializer;
+import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.instances.prototypes.PortContentObject;
-import indi.sly.system.kernel.processes.instances.values.PortDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
+import indi.sly.system.kernel.security.instances.prototypes.AuditContentObject;
+import indi.sly.system.kernel.security.instances.values.AuditDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -25,7 +24,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class PortTypeInitializer extends ATypeInitializer {
+public class AuditTypeInitializer extends ATypeInitializer {
     @Override
     public void install() {
     }
@@ -45,12 +44,12 @@ public class PortTypeInitializer extends ATypeInitializer {
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
-        PortDefinition port = new PortDefinition();
+        AuditDefinition audit = new AuditDefinition();
 
-        port.setProcessID(process.getID());
-        port.setLimit(processToken.getLimits().get(ProcessTokenLimitType.PORT_LENGTH_MAX));
+        audit.setProcessID(process.getID());
+        audit.setAccountID(processToken.getAccountID());
 
-        info.setContent(ObjectUtil.transferToByteArray(port));
+        info.setContent(ObjectUtil.transferToByteArray(audit));
     }
 
     @Override
@@ -102,7 +101,7 @@ public class PortTypeInitializer extends ATypeInitializer {
 
     @Override
     public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
-        return PortContentObject.class;
+        return AuditContentObject.class;
     }
 
     @Override

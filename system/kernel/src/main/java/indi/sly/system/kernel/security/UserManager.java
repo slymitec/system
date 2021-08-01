@@ -12,8 +12,7 @@ import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeT
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.instances.prototypes.wrappers.AuditTypeInitializer;
-import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
+import indi.sly.system.kernel.security.instances.prototypes.processors.AuditTypeInitializer;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
 import indi.sly.system.kernel.security.prototypes.*;

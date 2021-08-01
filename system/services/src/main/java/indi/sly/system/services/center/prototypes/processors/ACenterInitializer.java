@@ -1,4 +1,4 @@
-package indi.sly.system.services.center.prototypes.wrappers;
+package indi.sly.system.services.center.prototypes.processors;
 
 import indi.sly.system.services.center.lang.RunSelfConsumer;
 import indi.sly.system.services.center.prototypes.CenterContentObject;

@@ -5,7 +5,6 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.services.center.lang.FinishConsumer;
 import indi.sly.system.services.center.lang.RunConsumer;
 import indi.sly.system.services.center.lang.StartFunction;
-import indi.sly.system.services.center.prototypes.wrappers.ACenterInitializer;
 import indi.sly.system.services.center.prototypes.wrappers.CenterProcessorMediator;
 import indi.sly.system.services.center.values.CenterDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

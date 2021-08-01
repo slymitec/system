@@ -1,5 +1,6 @@
 package indi.sly.system.services.center.prototypes.processors;
 
+import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.services.center.lang.FinishConsumer;
@@ -32,6 +33,10 @@ public class CheckConditionResolver extends APrototype implements ICenterResolve
         this.run = (center, status, name, run, content) -> {
             if (status.getRuntime() != CenterStatusRuntimeType.RUNNING) {
                 throw new StatusRelationshipErrorException();
+            }
+
+            if (content.isException()) {
+                throw new StatusNotReadyException();
             }
         };
     }

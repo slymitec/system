@@ -28,7 +28,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserManager extends AManager {
-    private UserFactory factory;
+    protected UserFactory factory;
 
     @Override
     public void startup(long startup) {

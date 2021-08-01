@@ -54,8 +54,8 @@ public class CenterContentObject extends APrototype {
         return data;
     }
 
-    public void setData(Map<String, String> data) {
-        if (ObjectUtil.isAnyNull(data)) {
+    public void setData(Map<String, String> data, Map<String, Class<?>> classes) {
+        if (ObjectUtil.isAnyNull(data, classes) || data.size() != classes.size()) {
             throw new ConditionParametersException();
         }
 
@@ -65,7 +65,12 @@ public class CenterContentObject extends APrototype {
             if (StringUtil.isNameIllegal(pair.getKey())) {
                 throw new ConditionParametersException();
             } else {
-                threadContextData.put(pair.getKey(), ObjectUtil.transferFromString(pair.getValue()));
+                Class<?> clazz = classes.getOrDefault(pair.getKey(), null);
+                if (ObjectUtil.isAnyNull(clazz)) {
+                    throw new ConditionParametersException();
+                }
+
+                threadContextData.put(pair.getKey(), ObjectUtil.transferFromString(clazz, pair.getValue()));
             }
         }
 

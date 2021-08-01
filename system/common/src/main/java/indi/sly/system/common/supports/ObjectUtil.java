@@ -1,5 +1,6 @@
 package indi.sly.system.common.supports;
 
+import com.google.gson.Gson;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.lang.ISerializeCapable;
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 public abstract class ObjectUtil {
     private static final String TO_STRING_NULL_OBJECT = "null";
-
+    private static final Gson JSON_HELPER = new Gson();
 
     public static boolean isNull(final Object value) {
         if (value == null) {
@@ -197,8 +198,8 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static byte[] transferToByteArray(Object object) {
-        if (ObjectUtil.isAnyNull(object)) {
+    public static byte[] transferToByteArray(Object value) {
+        if (ObjectUtil.isAnyNull(value)) {
             return null;
         }
 
@@ -207,7 +208,7 @@ public abstract class ObjectUtil {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            objectOutputStream.writeObject(object);
+            objectOutputStream.writeObject(value);
             objectOutputStream.flush();
             stream = byteArrayOutputStream.toByteArray();
             objectOutputStream.close();
@@ -249,11 +250,10 @@ public abstract class ObjectUtil {
     }
 
     public static String transferToString(Object value) {
-        return null;
+        return ObjectUtil.JSON_HELPER.toJson(value);
     }
 
-    public static <T> T transferFromString(String stream) {
-        return null;
+    public static <T> T transferFromString(Class<T> clazz, String stream) {
+        return ObjectUtil.JSON_HELPER.fromJson(stream, clazz);
     }
-
 }

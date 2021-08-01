@@ -76,11 +76,7 @@ public class ProcessFactory extends AFactory {
         return this.buildProcess(processorMediator, process.getID());
     }
 
-    public ProcessCreatorBuilder createProcess(ProcessObject parentProcess, ProcessCreatorDefinition processCreator) {
-        if (ObjectUtil.isAnyNull(processCreator)) {
-            throw new ConditionParametersException();
-        }
-
+    public ProcessCreatorBuilder createProcessCreator(ProcessObject parentProcess) {
         ProcessLifeProcessorMediator processorMediator = this.factoryManager.create(ProcessLifeProcessorMediator.class);
         for (IProcessCreatorResolver processCreatorResolver : this.processCreatorResolvers) {
             processCreatorResolver.resolve(processorMediator);
@@ -90,13 +86,12 @@ public class ProcessFactory extends AFactory {
 
         processCreatorBuilder.processorMediator = processorMediator;
         processCreatorBuilder.factory = this;
-        processCreatorBuilder.processCreator = processCreator;
         processCreatorBuilder.parentProcess = parentProcess;
 
         return processCreatorBuilder;
     }
 
-    public ProcessEndBuilder endProcess(ProcessObject parentProcess, ProcessObject process) {
+    public ProcessEndBuilder createProcessEnd(ProcessObject parentProcess, ProcessObject process) {
         if (ObjectUtil.isAnyNull(process)) {
             throw new ConditionParametersException();
         }

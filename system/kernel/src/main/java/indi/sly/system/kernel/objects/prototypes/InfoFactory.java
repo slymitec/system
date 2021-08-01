@@ -13,6 +13,7 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
@@ -49,6 +50,14 @@ public class InfoFactory extends AFactory {
         }
 
         Collections.sort(this.infoResolvers);
+    }
+
+    public InfoObject getRootInfo() {
+        InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+                InfoCacheObject.class);
+
+        return infoCache.getIfExisted(SpaceType.KERNEL,
+                this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
     }
 
     private InfoObject buildInfo(InfoProcessorMediator processorMediator, UUID infoID, UUID poolID,

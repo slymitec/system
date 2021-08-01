@@ -5,10 +5,15 @@ import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.processes.values.ThreadContextDefinition;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
+import javax.inject.Named;
 import java.util.Collections;
 import java.util.Map;
 
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ThreadContextObject extends AValueProcessPrototype<ThreadContextDefinition> {
     protected ProcessObject process;
 

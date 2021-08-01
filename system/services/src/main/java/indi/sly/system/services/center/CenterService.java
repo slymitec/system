@@ -96,7 +96,9 @@ public class CenterService extends AService {
         center.setID(UUIDUtil.createRandom());
         center.setAttribute(attribute);
         center.setName(name);
-        center.setProcessID(processID);
+        if (!ValueUtil.isAnyNullOrEmpty(processID)) {
+            center.setProcessID(processID);
+        }
         center.setInitializer(initializer);
 
         centerRepository.getCenters().put(center.getID(), center);

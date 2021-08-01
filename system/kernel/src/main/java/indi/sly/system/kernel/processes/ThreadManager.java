@@ -50,10 +50,14 @@ public class ThreadManager extends AManager {
     }
 
     public ThreadObject create(UUID processID) {
-        return this.factory.create(processID);
+        ThreadBuilder threadBuilder = this.factory.createThread();
+
+        return threadBuilder.create(processID);
     }
 
     public void end() {
-        this.factory.end();
+        ThreadBuilder threadBuilder = this.factory.createThread();
+
+        threadBuilder.end();
     }
 }

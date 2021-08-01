@@ -20,14 +20,16 @@ import indi.sly.system.kernel.objects.prototypes.InfoFactory;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ObjectManager extends AManager {
+    protected InfoFactory factory;
+
     @Override
     public void startup(long startup) {
         if (startup == StartupType.STEP_INIT) {
         } else if (startup == StartupType.STEP_KERNEL) {
-            InfoFactory infoFactory = this.factoryManager.create(InfoFactory.class);
-            infoFactory.init();
+            this.factory = this.factoryManager.create(InfoFactory.class);
+            this.factory.init();
 
-            InfoObject rootInfo = infoFactory.buildRootInfo();
+            InfoObject rootInfo = factory.buildRootInfo();
             InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                     InfoCacheObject.class);
             infoCache.add(SpaceType.KERNEL, rootInfo);
@@ -43,11 +45,7 @@ public class ObjectManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
-                InfoCacheObject.class);
-
-        InfoObject info = infoCache.getIfExisted(SpaceType.KERNEL,
-                this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
+        InfoObject info = this.factory.getRootInfo();
 
         for (IdentificationDefinition identification : identifications) {
             info = info.getChild(identification);

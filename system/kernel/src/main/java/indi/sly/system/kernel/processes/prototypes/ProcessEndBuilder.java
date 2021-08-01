@@ -1,6 +1,8 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.lang.EndProcessFunction;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -30,5 +32,14 @@ public class ProcessEndBuilder extends APrototype {
         }
 
         processStatus.zombie();
+
+        this.delete();
+    }
+
+    private void delete() {
+        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+        processRepository.delete(processRepository.get(process.getID()));
     }
 }

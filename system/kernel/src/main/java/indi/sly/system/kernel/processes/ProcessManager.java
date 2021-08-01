@@ -140,9 +140,9 @@ public class ProcessManager extends AManager {
         }
 
         ProcessObject currentProcess = this.getCurrent();
-        ProcessCreatorBuilder processCreatorBuilder = this.factory.createProcess(currentProcess, processCreator);
+        ProcessCreatorBuilder processCreatorBuilder = this.factory.createProcessCreator(currentProcess);
 
-        return processCreatorBuilder.build();
+        return processCreatorBuilder.build(processCreator);
     }
 
     private void deleteTarget(UUID processID) {
@@ -153,13 +153,8 @@ public class ProcessManager extends AManager {
             parentProcess = this.getTarget(process.getParentID());
         }
 
-        ProcessEndBuilder processEndBuilder = this.factory.endProcess(parentProcess, process);
+        ProcessEndBuilder processEndBuilder = this.factory.createProcessEnd(parentProcess, process);
         processEndBuilder.build();
-
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
-
-        processRepository.delete(processRepository.get(processID));
     }
 
     public void endCurrent() {

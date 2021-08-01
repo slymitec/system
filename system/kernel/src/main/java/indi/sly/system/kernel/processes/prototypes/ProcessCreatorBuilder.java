@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
+import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
@@ -19,7 +20,6 @@ import java.util.List;
 public class ProcessCreatorBuilder extends APrototype {
     protected ProcessFactory factory;
     protected ProcessLifeProcessorMediator processorMediator;
-    protected ProcessCreatorDefinition processCreator;
 
     protected ProcessObject parentProcess;
 
@@ -46,7 +46,11 @@ public class ProcessCreatorBuilder extends APrototype {
         return this.factory.buildProcess(process);
     }
 
-    public ProcessObject build() {
+    public ProcessObject build(ProcessCreatorDefinition processCreator) {
+        if (ObjectUtil.isAnyNull(processCreator)) {
+            throw new ConditionParametersException();
+        }
+
         ProcessObject process = this.init();
 
         ProcessStatusObject processStatus = process.getStatus();
@@ -56,7 +60,7 @@ public class ProcessCreatorBuilder extends APrototype {
         List<CreateProcessFunction> resolvers = this.processorMediator.getCreates();
 
         for (CreateProcessFunction resolver : resolvers) {
-            process = resolver.apply(process, this.parentProcess, this.processCreator);
+            process = resolver.apply(process, this.parentProcess, processCreator);
         }
 
         processStatus.run();

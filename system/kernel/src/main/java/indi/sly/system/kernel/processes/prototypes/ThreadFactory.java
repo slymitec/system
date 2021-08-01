@@ -19,43 +19,20 @@ public class ThreadFactory extends AFactory {
     public void init() {
     }
 
-    public ThreadObject create(UUID processID) {
-        UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
-        Stack<ThreadObject> threads = userSpace.getThreads();
-
+    public ThreadObject buildThread(UUID processID) {
         ThreadObject thread = this.factoryManager.create(ThreadObject.class);
+
         thread.setProcessID(processID);
-
-        ThreadStatusObject threadStatus = thread.getStatus();
-        threadStatus.initialize();
-
-        ThreadContextObject context = thread.getContext();
-        if (threads.isEmpty()) {
-            context.setType(ThreadContextType.USER);
-        } else {
-            context.setType(ThreadContextType.DAEMON);
-        }
-
-        threads.push(thread);
 
         return thread;
     }
 
-    public void end() {
-        UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
-        Stack<ThreadObject> threads = userSpace.getThreads();
+    public ThreadBuilder createThread() {
+        ThreadBuilder threadBuilder = this.factoryManager.create(ThreadBuilder.class);
 
-        if (threads.isEmpty()) {
-            throw new StatusAlreadyFinishedException();
-        }
+        threadBuilder.factory = this;
 
-        ThreadObject thread = threads.peek();
-
-        ThreadStatusObject threadStatus = thread.getStatus();
-        if (threadStatus.get() != ThreadStatusType.DIED) {
-            throw new StatusNotReadyException();
-        }
-
-        threads.pop();
+        return threadBuilder;
     }
+
 }

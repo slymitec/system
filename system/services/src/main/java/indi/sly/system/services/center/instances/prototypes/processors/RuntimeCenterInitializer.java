@@ -13,7 +13,7 @@ import javax.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RuntimeCenterInitializer extends ACenterInitializer {
     public RuntimeCenterInitializer() {
-
+        this.register("createSession", this::createSession);
     }
 
     @Override
@@ -27,5 +27,6 @@ public class RuntimeCenterInitializer extends ACenterInitializer {
     private void createSession(CenterRunConsumer run, CenterContentObject content) {
 
     }
+
 
 }

@@ -7,7 +7,6 @@ import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadStatusObject;
 import indi.sly.system.kernel.processes.values.ThreadContextType;
-import indi.sly.system.services.center.lang.CenterInitializerRunMethodConsumer;
 import indi.sly.system.services.center.lang.CenterRunConsumer;
 import indi.sly.system.services.center.prototypes.CenterContentObject;
 import indi.sly.system.services.center.prototypes.processors.ACenterInitializer;
@@ -16,17 +15,14 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Map;
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class LifeCenterInitializer extends ACenterInitializer {
     public LifeCenterInitializer() {
-        Map<String, CenterInitializerRunMethodConsumer> runMethods = this.getRunMethods();
-
-        runMethods.put("createThread", this::createThread);
-        runMethods.put("endThread", this::endThread);
+        this.register("createThread", this::createThread);
+        this.register("endThread", this::endThread);
     }
 
     @Override

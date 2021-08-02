@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import javax.transaction.Transactional;
-import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -36,10 +35,7 @@ public class CenterInitializerResolver extends APrototype implements ICenterReso
 
         this.run = (center, status, name, run, content) -> {
             ACenterInitializer initializer = center.getInitializer();
-            Map<String, CenterInitializerRunMethodConsumer> initializerRunMethods = initializer.getRunMethods();
-            Map<String, Long> initializerRunTransactions = initializer.getRunTransactions();
-
-            CenterInitializerRunMethodConsumer initializerRunMethodEntry = initializerRunMethods.getOrDefault(name, null);
+            CenterInitializerRunMethodConsumer initializerRunMethodEntry = initializer.getRunMethod(name);
 
             if (ObjectUtil.isAnyNull(initializerRunMethodEntry)) {
                 throw new StatusNotExistedException();
@@ -48,8 +44,7 @@ public class CenterInitializerResolver extends APrototype implements ICenterReso
             try {
                 long initializerRunTransaction = CenterTransactionType.WHATEVER;
                 if (LogicalUtil.isNotAnyExist(center.getAttribute(), CenterAttributeType.HAS_NOT_TRANSACTION)) {
-                    initializerRunTransaction = initializerRunTransactions.getOrDefault(name,
-                            CenterTransactionType.INDEPENDENCE);
+                    initializerRunTransaction = initializer.getRunTransaction(name);
                 }
 
                 if (initializerRunTransaction == CenterTransactionType.INDEPENDENCE) {

@@ -28,11 +28,11 @@ public class ProcessStatisticsObject extends ABytesValueProcessPrototype<Process
         return value;
     }
 
-    public void setDate(long dataTimeType, long value) {
+    public void setDate(long dataTime, long value) {
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.getDate().put(dataTimeType, value);
+        this.value.getDate().put(dataTime, value);
 
         this.fresh();
         this.lock(LockType.NONE);

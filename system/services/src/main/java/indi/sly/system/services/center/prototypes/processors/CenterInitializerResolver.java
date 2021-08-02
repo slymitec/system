@@ -10,6 +10,7 @@ import indi.sly.system.services.center.prototypes.CenterContentObject;
 import indi.sly.system.services.center.prototypes.wrappers.CenterProcessorMediator;
 import indi.sly.system.services.center.values.CenterAttributeType;
 import indi.sly.system.services.center.values.CenterDefinition;
+import indi.sly.system.services.center.values.CenterInitializerRunDefinition;
 import indi.sly.system.services.center.values.CenterTransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,24 +36,20 @@ public class CenterInitializerResolver extends APrototype implements ICenterReso
 
         this.run = (center, status, name, run, content) -> {
             ACenterInitializer initializer = center.getInitializer();
-            CenterInitializerRunMethodConsumer initializerRunMethodEntry = initializer.getRunMethodOrNull(name);
-
-            if (ObjectUtil.isAnyNull(initializerRunMethodEntry)) {
-                throw new StatusNotExistedException();
-            }
+            CenterInitializerRunDefinition initializerRun = initializer.getRun(name);
 
             try {
                 long initializerRunTransaction = CenterTransactionType.WHATEVER;
                 if (LogicalUtil.isNotAnyExist(center.getAttribute(), CenterAttributeType.HAS_NOT_TRANSACTION)) {
-                    initializerRunTransaction = initializer.getRunTransactionOrDefault(name);
+                    initializerRunTransaction = initializerRun.getTransaction();
                 }
 
                 if (initializerRunTransaction == CenterTransactionType.INDEPENDENCE) {
-                    this.runEntryWithIndependentTransactional(initializerRunMethodEntry, run, content);
+                    this.runEntryWithIndependentTransactional(initializerRun.getMethod(), run, content);
                 } else if (initializerRunTransaction == CenterTransactionType.PROHIBITED) {
-                    this.runEntryWithoutTransactional(initializerRunMethodEntry, run, content);
+                    this.runEntryWithoutTransactional(initializerRun.getMethod(), run, content);
                 } else if (initializerRunTransaction == CenterTransactionType.WHATEVER) {
-                    this.runEntry(initializerRunMethodEntry, run, content);
+                    this.runEntry(initializerRun.getMethod(), run, content);
                 }
             } catch (AKernelException exception) {
                 content.setException(exception);

@@ -23,10 +23,10 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class LifeCenterInitializer extends ACenterInitializer {
     public LifeCenterInitializer() {
-        Map<String, InitializerConsumer> runs = this.getRuns();
+        Map<String, InitializerConsumer> runMethods = this.getRunMethods();
 
-        runs.put("createThread", this::createThread);
-        runs.put("endThread", this::endThread);
+        runMethods.put("createThread", this::createThread);
+        runMethods.put("endThread", this::endThread);
     }
 
     @Override

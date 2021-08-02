@@ -14,16 +14,22 @@ import java.util.concurrent.ConcurrentHashMap;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class ACenterInitializer extends APrototype {
     public ACenterInitializer() {
-        this.runs = new ConcurrentHashMap<>();
+        this.runMethods = new ConcurrentHashMap<>();
+        this.runTransactions = new ConcurrentHashMap<>();
     }
 
-    private final Map<String, InitializerConsumer> runs;
+    private final Map<String, InitializerConsumer> runMethods;
+    private final Map<String, Long> runTransactions;
 
     public abstract void start(CenterDefinition center);
 
     public abstract void finish(CenterDefinition center);
 
-    public final Map<String, InitializerConsumer> getRuns() {
-        return this.runs;
+    public final Map<String, InitializerConsumer> getRunMethods() {
+        return this.runMethods;
+    }
+
+    public final Map<String, Long> getRunTransactions() {
+        return this.runTransactions;
     }
 }

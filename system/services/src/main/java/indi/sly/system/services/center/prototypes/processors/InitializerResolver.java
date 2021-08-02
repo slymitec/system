@@ -10,6 +10,7 @@ import indi.sly.system.services.center.prototypes.CenterContentObject;
 import indi.sly.system.services.center.prototypes.wrappers.CenterProcessorMediator;
 import indi.sly.system.services.center.values.CenterAttributeType;
 import indi.sly.system.services.center.values.CenterDefinition;
+import indi.sly.system.services.center.values.CenterTransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -35,19 +36,28 @@ public class InitializerResolver extends APrototype implements ICenterResolver {
 
         this.run = (center, status, name, run, content) -> {
             ACenterInitializer initializer = center.getInitializer();
-            Map<String, InitializerConsumer> initializerRuns = initializer.getRuns();
+            Map<String, InitializerConsumer> initializerRunMethods = initializer.getRunMethods();
+            Map<String, Long> initializerRunTransactions = initializer.getRunTransactions();
 
-            InitializerConsumer initializerRunEntry = initializerRuns.getOrDefault(name, null);
+            InitializerConsumer initializerRunEntry = initializerRunMethods.getOrDefault(name, null);
 
             if (ObjectUtil.isAnyNull(initializerRunEntry)) {
                 throw new StatusNotExistedException();
             }
 
             try {
-                if (LogicalUtil.isAnyExist(center.getAttribute(), CenterAttributeType.DO_NOT_NEED_TRANSACTIONAL)) {
-                    this.runEntryWithTransactional(initializerRunEntry, run, content);
-                } else {
+                long initializerRunTransaction = CenterTransactionType.WHATEVER;
+                if (LogicalUtil.isNotAnyExist(center.getAttribute(), CenterAttributeType.HAS_NOT_TRANSACTION)) {
+                    initializerRunTransaction = initializerRunTransactions.getOrDefault(name,
+                            CenterTransactionType.INDEPENDENCE);
+                }
+
+                if (initializerRunTransaction == CenterTransactionType.INDEPENDENCE) {
+                    this.runEntryWithIndependentTransactional(initializerRunEntry, run, content);
+                } else if (initializerRunTransaction == CenterTransactionType.PROHIBITED) {
                     this.runEntryWithoutTransactional(initializerRunEntry, run, content);
+                } else if (initializerRunTransaction == CenterTransactionType.WHATEVER) {
+                    this.runEntry(initializerRunEntry, run, content);
                 }
             } catch (AKernelException exception) {
                 content.setException(exception);
@@ -64,12 +74,19 @@ public class InitializerResolver extends APrototype implements ICenterResolver {
     private final FinishConsumer finish;
     private final RunConsumer run;
 
-    @Transactional
-    protected void runEntryWithTransactional(InitializerConsumer initializerRunEntry, RunSelfConsumer run,
-                                             CenterContentObject content) {
+    @Transactional(value = Transactional.TxType.SUPPORTS)
+    protected void runEntry(InitializerConsumer initializerRunEntry, RunSelfConsumer run,
+                            CenterContentObject content) {
         initializerRunEntry.accept(run, content);
     }
 
+    @Transactional(value = Transactional.TxType.REQUIRES_NEW)
+    protected void runEntryWithIndependentTransactional(InitializerConsumer initializerRunEntry, RunSelfConsumer run,
+                                                        CenterContentObject content) {
+        initializerRunEntry.accept(run, content);
+    }
+
+    @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
     protected void runEntryWithoutTransactional(InitializerConsumer initializerRunEntry, RunSelfConsumer run,
                                                 CenterContentObject content) {
         initializerRunEntry.accept(run, content);

@@ -60,11 +60,11 @@ public class CreateProcessTokenRuleResolver extends APrototype implements IProce
             SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
             SessionContentObject sessionContent = sessionManager.getAndOpen(processSession.getID());
             long sessionContentType = sessionContent.getType();
-            if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.API)) {
+            if (LogicalUtil.isAnyExist(sessionContentType, SessionType.API)) {
                 roles.add(configuration.SECURITY_ROLE_API_ID);
-            } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.GUI)) {
+            } else if (LogicalUtil.isAnyExist(sessionContentType, SessionType.GUI)) {
                 roles.add(configuration.SECURITY_ROLE_GUI_ID);
-            } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.CLI)) {
+            } else if (LogicalUtil.isAnyExist(sessionContentType, SessionType.CLI)) {
                 roles.add(configuration.SECURITY_ROLE_CLI_ID);
             }
             sessionContent.close();

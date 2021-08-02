@@ -3,6 +3,9 @@ package indi.sly.system.kernel.processes;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
+import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
+import indi.sly.system.kernel.core.date.values.DateTimeType;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.processes.values.ThreadContextType;
@@ -35,11 +38,20 @@ public class ThreadManager extends AManager {
         UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
 
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+                DateTimeObject.class);
+        long nowDateTime = dateTime.getCurrentDateTime();
+
         if (threads.isEmpty()) {
             throw new StatusNotExistedException();
         }
 
-        return threads.peek();
+        ThreadObject thread = threads.peek();
+
+        ThreadStatisticsObject threadStatistics = thread.getStatistics();
+        threadStatistics.setDate(DateTimeType.ACCESS, nowDateTime);
+
+        return thread;
     }
 
     public int size() {

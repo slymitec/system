@@ -2,6 +2,9 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.lang.StatusNotReadyException;
+import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
+import indi.sly.system.kernel.core.date.values.DateTimeType;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.values.ThreadContextType;
@@ -22,6 +25,10 @@ public class ThreadBuilder extends APrototype {
         UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
 
+        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+                DateTimeObject.class);
+        long nowDateTime = dateTime.getCurrentDateTime();
+
         ThreadObject thread = this.factory.buildThread(processID);
 
         ThreadStatusObject threadStatus = thread.getStatus();
@@ -33,6 +40,9 @@ public class ThreadBuilder extends APrototype {
         } else {
             context.setType(ThreadContextType.DAEMON);
         }
+
+        ThreadStatisticsObject threadStatistics = thread.getStatistics();
+        threadStatistics.setDate(DateTimeType.CREATE, nowDateTime);
 
         threads.push(thread);
 

@@ -3,13 +3,11 @@ package indi.sly.system.services.center.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.services.center.prototypes.processors.ACenterInitializer;
+import indi.sly.system.services.center.values.CenterAttributeType;
 import indi.sly.system.services.center.values.CenterDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -39,7 +37,8 @@ public class CenterBuilder extends APrototype {
         center.setID(UUIDUtil.createRandom());
         center.setAttribute(attribute);
         center.setName(name);
-        if (!ValueUtil.isAnyNullOrEmpty(processID)) {
+        if (LogicalUtil.isAnyExist(center.getAttribute(), CenterAttributeType.HAS_PROCESS)
+                && !ValueUtil.isAnyNullOrEmpty(processID)) {
             center.setProcessID(processID);
         }
         center.setInitializer(initializer);

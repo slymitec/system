@@ -4,10 +4,6 @@ import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.services.center.lang.CenterInitializerRunMethodConsumer;
 
 public class CenterInitializerRunDefinition extends ADefinition<CenterInitializerRunDefinition> {
-    public CenterInitializerRunDefinition() {
-        this.transaction = CenterTransactionType.INDEPENDENCE;
-    }
-
     private CenterInitializerRunMethodConsumer method;
     private long transaction;
 

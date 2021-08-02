@@ -8,6 +8,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.services.center.lang.CenterInitializerRunMethodConsumer;
 import indi.sly.system.services.center.values.CenterDefinition;
 import indi.sly.system.services.center.values.CenterInitializerRunDefinition;
+import indi.sly.system.services.center.values.CenterTransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -25,14 +26,7 @@ public abstract class ACenterInitializer extends APrototype {
     private final Map<String, CenterInitializerRunDefinition> runs;
 
     protected final void register(String name, CenterInitializerRunMethodConsumer runMethod) {
-        if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(runMethod)) {
-            throw new ConditionParametersException();
-        }
-
-        CenterInitializerRunDefinition run = new CenterInitializerRunDefinition();
-        run.setMethod(runMethod);
-
-        this.runs.put(name, run);
+        this.register(name, runMethod, CenterTransactionType.INDEPENDENCE);
     }
 
     protected final void register(String name, CenterInitializerRunMethodConsumer runMethod, long runTransaction) {

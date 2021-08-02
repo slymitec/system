@@ -14,8 +14,8 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessAndThreadStatisticsResolver extends APrototype implements IInfoResolver {
-    public ProcessAndThreadStatisticsResolver() {
+public class InfoProcessAndThreadStatisticsResolver extends APrototype implements IInfoResolver {
+    public InfoProcessAndThreadStatisticsResolver() {
         this.dump = (dump, info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);

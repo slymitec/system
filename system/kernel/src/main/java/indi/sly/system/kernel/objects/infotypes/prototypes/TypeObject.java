@@ -8,7 +8,7 @@ import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.objects.infotypes.prototypes.processors.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeCounterDefinition;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
@@ -42,7 +42,7 @@ public class TypeObject extends APrototype {
         return LogicalUtil.isAllExist(this.type.getAttribute(), typeInitializerAttributes);
     }
 
-    public ATypeInitializer getInitializer() {
+    public AInfoTypeInitializer getInitializer() {
         return this.type.getInitializer();
     }
 

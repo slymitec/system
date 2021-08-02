@@ -16,7 +16,7 @@ import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.processors.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
@@ -78,7 +78,7 @@ public class TypeManager extends AManager {
     }
 
     public synchronized TypeObject create(UUID typeID, String typeName, long attribute, Set<UUID> childTypes,
-                                          ATypeInitializer initializer) {
+                                          AInfoTypeInitializer initializer) {
         if (ObjectUtil.isAnyNull(typeID, childTypes, initializer) || StringUtil.isNameIllegal(typeName)) {
             throw new ConditionParametersException();
         }

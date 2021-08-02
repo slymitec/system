@@ -10,7 +10,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFolderContentObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.kernel.objects.infotypes.prototypes.processors.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FileSystemVolumeTypeInitializer extends ATypeInitializer {
+public class FileSystemVolumeTypeInitializer extends AInfoTypeInitializer {
     @Override
     public void install() {
     }

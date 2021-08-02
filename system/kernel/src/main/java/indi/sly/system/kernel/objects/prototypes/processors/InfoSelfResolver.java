@@ -14,8 +14,8 @@ import indi.sly.system.kernel.objects.values.InfoEntity;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GetInfoSelfResolver extends APrototype implements IInfoResolver {
-    public GetInfoSelfResolver() {
+public class InfoSelfResolver extends APrototype implements IInfoResolver {
+    public InfoSelfResolver() {
         this.info = (repositoryID, id, status) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
 

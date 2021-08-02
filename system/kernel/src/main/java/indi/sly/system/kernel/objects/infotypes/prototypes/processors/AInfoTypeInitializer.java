@@ -29,7 +29,7 @@ import indi.sly.system.kernel.objects.values.DumpDefinition;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class ATypeInitializer extends APrototype {
+public abstract class AInfoTypeInitializer extends APrototype {
     public abstract void install();
 
     public abstract void uninstall();

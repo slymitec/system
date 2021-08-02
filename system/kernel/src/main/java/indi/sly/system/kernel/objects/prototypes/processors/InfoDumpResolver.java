@@ -18,8 +18,8 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class DumpResolver extends APrototype implements IInfoResolver {
-    public DumpResolver() {
+public class InfoDumpResolver extends APrototype implements IInfoResolver {
+    public InfoDumpResolver() {
         this.dump = (dump, info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();

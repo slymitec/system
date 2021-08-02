@@ -17,8 +17,8 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class DateResolver extends APrototype implements IInfoResolver {
-    public DateResolver() {
+public class InfoDateResolver extends APrototype implements IInfoResolver {
+    public InfoDateResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                     DateTimeObject.class);

@@ -8,7 +8,7 @@ import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.processors.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.prototypes.PortContentObject;
 import indi.sly.system.kernel.processes.instances.values.PortDefinition;
@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class PortTypeInitializer extends ATypeInitializer {
+public class PortTypeInitializer extends AInfoTypeInitializer {
     @Override
     public void install() {
     }

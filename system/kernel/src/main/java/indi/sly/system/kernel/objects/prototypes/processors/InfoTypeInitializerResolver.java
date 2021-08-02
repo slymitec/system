@@ -27,8 +27,8 @@ import java.util.Map.Entry;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TypeInitializerResolver extends APrototype implements IInfoResolver {
-    public TypeInitializerResolver() {
+public class InfoTypeInitializerResolver extends APrototype implements IInfoResolver {
+    public InfoTypeInitializerResolver() {
         this.dump = (dump, info, type, status) -> {
             type.getInitializer().dumpProcedure(info, dump);
 

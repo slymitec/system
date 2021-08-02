@@ -7,7 +7,7 @@ import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.processors.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SessionTypeInitializer extends ATypeInitializer {
+public class SessionTypeInitializer extends AInfoTypeInitializer {
     @Override
     public void install() {
     }

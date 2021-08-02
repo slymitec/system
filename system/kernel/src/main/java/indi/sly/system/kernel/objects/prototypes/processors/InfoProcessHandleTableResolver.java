@@ -17,8 +17,8 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessHandleTableResolver extends APrototype implements IInfoResolver {
-    public ProcessHandleTableResolver() {
+public class InfoProcessHandleTableResolver extends APrototype implements IInfoResolver {
+    public InfoProcessHandleTableResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();

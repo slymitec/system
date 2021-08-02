@@ -20,8 +20,8 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
-    public OpenOrCloseResolver() {
+public class InfoOpenOrCloseResolver extends APrototype implements IInfoResolver {
+    public InfoOpenOrCloseResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DO_NOT_USE_TYPE_COUNT)) {
                 TypeCounterObject typeCount = type.getCount();

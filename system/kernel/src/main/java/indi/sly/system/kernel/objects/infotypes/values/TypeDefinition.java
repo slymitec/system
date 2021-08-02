@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.objects.infotypes.values;
 
 import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.processors.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +13,7 @@ public class TypeDefinition extends ADefinition<TypeDefinition> {
     private long attribute;
     private UUID thisType;
     private final Set<UUID> childTypes;
-    private ATypeInitializer initializer;
+    private AInfoTypeInitializer initializer;
     private final TypeCounterDefinition counter;
 
     public TypeDefinition() {
@@ -57,11 +57,11 @@ public class TypeDefinition extends ADefinition<TypeDefinition> {
         return this.childTypes;
     }
 
-    public ATypeInitializer getInitializer() {
+    public AInfoTypeInitializer getInitializer() {
         return this.initializer;
     }
 
-    public void setInitializer(ATypeInitializer initializer) {
+    public void setInitializer(AInfoTypeInitializer initializer) {
         this.initializer = initializer;
     }
 

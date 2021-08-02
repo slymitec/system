@@ -3,7 +3,7 @@ package indi.sly.system.kernel.security.instances.prototypes.processors;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.processors.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AuditTypeInitializer extends ATypeInitializer {
+public class AuditTypeInitializer extends AInfoTypeInitializer {
     @Override
     public void install() {
     }

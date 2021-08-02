@@ -3,7 +3,7 @@ package indi.sly.system.kernel.files.instances.prototypes.wrappers;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
-import indi.sly.system.kernel.objects.infotypes.prototypes.processors.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FileSystemFileTypeInitializer extends ATypeInitializer {
+public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
     @Override
     public void install() {
     }

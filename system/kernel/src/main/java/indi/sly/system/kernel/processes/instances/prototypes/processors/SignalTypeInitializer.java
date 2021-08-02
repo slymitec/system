@@ -8,7 +8,7 @@ import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.processors.ATypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SignalContentObject;
 import indi.sly.system.kernel.processes.instances.values.SignalDefinition;
@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SignalTypeInitializer extends ATypeInitializer {
+public class SignalTypeInitializer extends AInfoTypeInitializer {
     @Override
     public void install() {
     }

@@ -17,8 +17,8 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CheckConditionResolver extends APrototype implements IInfoResolver {
-    public CheckConditionResolver() {
+public class InfoCheckConditionResolver extends APrototype implements IInfoResolver {
+    public InfoCheckConditionResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             if (openAttribute == InfoOpenAttributeType.CLOSE
                     || (openAttribute == InfoOpenAttributeType.OPEN_EXCLUSIVE && info.getOpened() > 0)

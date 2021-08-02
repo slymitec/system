@@ -18,10 +18,10 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CheckCreatorResolver extends APrototype implements IProcessCreatorResolver {
+public class ProcessCreateCheckResolver extends APrototype implements IProcessCreateResolver {
     private final ProcessLifeProcessorCreateFunction create;
 
-    public CheckCreatorResolver() {
+    public ProcessCreateCheckResolver() {
         this.create = (process, parentProcess, processCreator) -> {
             ProcessTokenObject parentProcessToken = parentProcess.getToken();
 

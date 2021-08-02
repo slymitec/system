@@ -14,11 +14,11 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class StatisticsResolver extends APrototype implements IProcessResolver {
+public class ProcessStatisticsResolver extends APrototype implements IProcessResolver {
     private final ProcessProcessorReadStatusFunction readProcessStatus;
     private final ProcessProcessorWriteStatusConsumer writeProcessStatus;
 
-    public StatisticsResolver() {
+    public ProcessStatisticsResolver() {
         this.readProcessStatus = (status, process) -> status;
         this.writeProcessStatus = (process, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);

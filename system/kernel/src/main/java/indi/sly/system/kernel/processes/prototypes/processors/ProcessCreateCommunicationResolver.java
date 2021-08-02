@@ -1,25 +1,24 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.HashSet;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class EndProcessCommunicationResolver extends APrototype implements IProcessEndResolver {
-    private final ProcessLifeProcessorEndFunction end;
+public class ProcessCreateCommunicationResolver extends APrototype implements IProcessCreateResolver {
+    private final ProcessLifeProcessorCreateFunction create;
 
-    public EndProcessCommunicationResolver() {
-        this.end = (process, parentProcess) -> {
+    public ProcessCreateCommunicationResolver() {
+        this.create = (process, parentProcess, processCreator) -> {
             ProcessCommunicationObject processCommunication = process.getCommunication();
-
-            processCommunication.deleteAllPort();
-            processCommunication.deleteSignal();
+            processCommunication.createSignal(new HashSet<>());
 
             return process;
         };
@@ -32,6 +31,6 @@ public class EndProcessCommunicationResolver extends APrototype implements IProc
 
     @Override
     public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getEnds().add(end);
+        processorCreatorMediator.getCreates().add(create);
     }
 }

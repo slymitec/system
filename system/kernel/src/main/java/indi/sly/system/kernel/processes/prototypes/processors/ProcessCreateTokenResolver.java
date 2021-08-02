@@ -14,10 +14,10 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CreateProcessTokenResolver extends APrototype implements IProcessCreatorResolver {
+public class ProcessCreateTokenResolver extends APrototype implements IProcessCreateResolver {
     private final ProcessLifeProcessorCreateFunction create;
 
-    public CreateProcessTokenResolver() {
+    public ProcessCreateTokenResolver() {
         this.create = (process, parentProcess, processCreator) -> {
             ProcessTokenObject processToken = process.getToken();
             AccountAuthorizationObject accountAuthorization = processCreator.getAccountAuthorization();

@@ -140,9 +140,9 @@ public class ProcessManager extends AManager {
         }
 
         ProcessObject currentProcess = this.getCurrent();
-        ProcessCreatorBuilder processCreatorBuilder = this.factory.createProcessCreator(currentProcess);
+        ProcessCreateBuilder processCreateBuilder = this.factory.createProcessCreator(currentProcess);
 
-        return processCreatorBuilder.build(processCreator);
+        return processCreateBuilder.build(processCreator);
     }
 
     private void deleteTarget(UUID processID) {

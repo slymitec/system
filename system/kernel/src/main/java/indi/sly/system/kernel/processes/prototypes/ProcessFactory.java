@@ -7,11 +7,10 @@ import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.prototypes.processors.IProcessCreatorResolver;
+import indi.sly.system.kernel.processes.prototypes.processors.IProcessCreateResolver;
 import indi.sly.system.kernel.processes.prototypes.processors.IProcessEndResolver;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
-import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.processors.IProcessResolver;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -26,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessFactory extends AFactory {
     protected Set<IProcessResolver> processResolvers;
-    protected List<IProcessCreatorResolver> processCreatorResolvers;
+    protected List<IProcessCreateResolver> processCreatorResolvers;
     protected List<IProcessEndResolver> processEndResolvers;
 
     @Override
@@ -41,8 +40,8 @@ public class ProcessFactory extends AFactory {
         for (APrototype prototype : corePrototypes) {
             if (prototype instanceof IProcessResolver) {
                 this.processResolvers.add((IProcessResolver) prototype);
-            } else if (prototype instanceof IProcessCreatorResolver) {
-                this.processCreatorResolvers.add((IProcessCreatorResolver) prototype);
+            } else if (prototype instanceof IProcessCreateResolver) {
+                this.processCreatorResolvers.add((IProcessCreateResolver) prototype);
             } else if (prototype instanceof IProcessEndResolver) {
                 this.processEndResolvers.add((IProcessEndResolver) prototype);
             }
@@ -76,19 +75,19 @@ public class ProcessFactory extends AFactory {
         return this.buildProcess(processorMediator, process.getID());
     }
 
-    public ProcessCreatorBuilder createProcessCreator(ProcessObject parentProcess) {
+    public ProcessCreateBuilder createProcessCreator(ProcessObject parentProcess) {
         ProcessLifeProcessorMediator processorMediator = this.factoryManager.create(ProcessLifeProcessorMediator.class);
-        for (IProcessCreatorResolver processCreatorResolver : this.processCreatorResolvers) {
+        for (IProcessCreateResolver processCreatorResolver : this.processCreatorResolvers) {
             processCreatorResolver.resolve(processorMediator);
         }
 
-        ProcessCreatorBuilder processCreatorBuilder = this.factoryManager.create(ProcessCreatorBuilder.class);
+        ProcessCreateBuilder processCreateBuilder = this.factoryManager.create(ProcessCreateBuilder.class);
 
-        processCreatorBuilder.processorMediator = processorMediator;
-        processCreatorBuilder.factory = this;
-        processCreatorBuilder.parentProcess = parentProcess;
+        processCreateBuilder.processorMediator = processorMediator;
+        processCreateBuilder.factory = this;
+        processCreateBuilder.parentProcess = parentProcess;
 
-        return processCreatorBuilder;
+        return processCreateBuilder;
     }
 
     public ProcessEndBuilder createProcessEnd(ProcessObject parentProcess, ProcessObject process) {

@@ -15,10 +15,10 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CreateProcessStatisticsResolver extends APrototype implements IProcessCreatorResolver {
+public class ProcessCreateStatisticsResolver extends APrototype implements IProcessCreateResolver {
     private final ProcessLifeProcessorCreateFunction create;
 
-    public CreateProcessStatisticsResolver() {
+    public ProcessCreateStatisticsResolver() {
         this.create = (process, parentProcess, processCreator) -> {
             DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                     DateTimeObject.class);

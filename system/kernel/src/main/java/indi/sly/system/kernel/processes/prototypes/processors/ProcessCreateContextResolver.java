@@ -24,10 +24,10 @@ import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CreateProcessContextResolver extends APrototype implements IProcessCreatorResolver {
+public class ProcessCreateContextResolver extends APrototype implements IProcessCreateResolver {
     private final ProcessLifeProcessorCreateFunction create;
 
-    public CreateProcessContextResolver() {
+    public ProcessCreateContextResolver() {
         this.create = (process, parentProcess, processCreator) -> {
             KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
 

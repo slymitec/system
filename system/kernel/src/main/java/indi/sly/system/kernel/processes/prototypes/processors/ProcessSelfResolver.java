@@ -13,10 +13,10 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GetProcessSelfResolver extends APrototype implements IProcessResolver {
+public class ProcessSelfResolver extends APrototype implements IProcessResolver {
     private final ProcessProcessorSelfFunction self;
 
-    public GetProcessSelfResolver() {
+    public ProcessSelfResolver() {
         this.self = id -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
 

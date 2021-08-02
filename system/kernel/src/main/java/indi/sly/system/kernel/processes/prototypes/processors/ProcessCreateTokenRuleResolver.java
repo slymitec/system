@@ -27,10 +27,10 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CreateProcessTokenRuleResolver extends APrototype implements IProcessCreatorResolver {
+public class ProcessCreateTokenRuleResolver extends APrototype implements IProcessCreateResolver {
     private final ProcessLifeProcessorCreateFunction create;
 
-    public CreateProcessTokenRuleResolver() {
+    public ProcessCreateTokenRuleResolver() {
         this.create = (process, parentProcess, processCreator) -> {
             KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
 

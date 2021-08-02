@@ -15,10 +15,10 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class EndProcessHandleTableResolver extends APrototype implements IProcessEndResolver {
+public class ProcessEndHandleTableResolver extends APrototype implements IProcessEndResolver {
     private final ProcessLifeProcessorEndFunction end;
 
-    public EndProcessHandleTableResolver() {
+    public ProcessEndHandleTableResolver() {
         this.end = (process, parentProcess) -> {
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
 

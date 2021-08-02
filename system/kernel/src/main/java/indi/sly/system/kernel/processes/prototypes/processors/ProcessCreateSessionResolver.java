@@ -1,11 +1,9 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
-import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.instances.values.SignalType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
-import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -14,16 +12,16 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CreateProcessNotifyParentResolver extends APrototype implements IProcessCreatorResolver {
+public class ProcessCreateSessionResolver extends APrototype implements IProcessCreateResolver {
     private final ProcessLifeProcessorCreateFunction create;
 
-    public CreateProcessNotifyParentResolver() {
+    public ProcessCreateSessionResolver() {
         this.create = (process, parentProcess, processCreator) -> {
-            if (ObjectUtil.allNotNull(parentProcess)) {
-                ProcessCommunicationObject parentProcessCommunication = parentProcess.getCommunication();
-
-                parentProcessCommunication.sendSignal(parentProcess, SignalType.TYPE_PROCESS,
-                        LogicalUtil.or(SignalType.ACTION_CREATE, SignalType.RESULT_SUCCESS));
+            ProcessSessionObject processSession = process.getSession();
+            if (!ValueUtil.isAnyNullOrEmpty(processCreator.getSessionID())) {
+                processSession.setID(processCreator.getSessionID());
+            } else {
+                processSession.inheritID();
             }
 
             return process;
@@ -32,7 +30,7 @@ public class CreateProcessNotifyParentResolver extends APrototype implements IPr
 
     @Override
     public int order() {
-        return 4;
+        return 1;
     }
 
     @Override

@@ -2,8 +2,8 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.lang.ProcessProcessorReadProcessStatusFunction;
-import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteProcessStatusConsumer;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteStatusConsumer;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.*;
@@ -15,8 +15,8 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class StatisticsResolver extends APrototype implements IProcessResolver {
-    private final ProcessProcessorReadProcessStatusFunction readProcessStatus;
-    private final ProcessProcessorWriteProcessStatusConsumer writeProcessStatus;
+    private final ProcessProcessorReadStatusFunction readProcessStatus;
+    private final ProcessProcessorWriteStatusConsumer writeProcessStatus;
 
     public StatisticsResolver() {
         this.readProcessStatus = (status, process) -> status;

@@ -35,7 +35,7 @@ public class CenterInitializerResolver extends APrototype implements ICenterReso
 
         this.run = (center, status, name, run, content) -> {
             ACenterInitializer initializer = center.getInitializer();
-            CenterInitializerRunMethodConsumer initializerRunMethodEntry = initializer.getRunMethod(name);
+            CenterInitializerRunMethodConsumer initializerRunMethodEntry = initializer.getRunMethodOrNull(name);
 
             if (ObjectUtil.isAnyNull(initializerRunMethodEntry)) {
                 throw new StatusNotExistedException();
@@ -44,7 +44,7 @@ public class CenterInitializerResolver extends APrototype implements ICenterReso
             try {
                 long initializerRunTransaction = CenterTransactionType.WHATEVER;
                 if (LogicalUtil.isNotAnyExist(center.getAttribute(), CenterAttributeType.HAS_NOT_TRANSACTION)) {
-                    initializerRunTransaction = initializer.getRunTransaction(name);
+                    initializerRunTransaction = initializer.getRunTransactionOrDefault(name);
                 }
 
                 if (initializerRunTransaction == CenterTransactionType.INDEPENDENCE) {

@@ -43,7 +43,7 @@ public abstract class ACenterInitializer extends APrototype {
 
     public abstract void finish(CenterDefinition center);
 
-    public final CenterInitializerRunMethodConsumer getRunMethod(String name) {
+    public final CenterInitializerRunMethodConsumer getRunMethodOrNull(String name) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
@@ -51,7 +51,7 @@ public abstract class ACenterInitializer extends APrototype {
         return this.runMethods.getOrDefault(name, null);
     }
 
-    public final long getRunTransaction(String name) {
+    public final long getRunTransactionOrDefault(String name) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }

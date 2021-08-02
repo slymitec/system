@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 @FunctionalInterface
-public interface QueryChildFunction extends Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>,
+public interface InfoProcessorQueryChildFunction extends Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>,
         InfoEntity, TypeObject,
         InfoStatusDefinition, Predicate<InfoSummaryDefinition>> {
 }

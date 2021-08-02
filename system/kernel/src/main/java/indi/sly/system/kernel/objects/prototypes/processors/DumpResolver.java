@@ -4,7 +4,7 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.objects.lang.DumpFunction;
+import indi.sly.system.kernel.objects.lang.InfoProcessorDumpFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -43,7 +43,7 @@ public class DumpResolver extends APrototype implements IInfoResolver {
         };
     }
 
-    private final DumpFunction dump;
+    private final InfoProcessorDumpFunction dump;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {

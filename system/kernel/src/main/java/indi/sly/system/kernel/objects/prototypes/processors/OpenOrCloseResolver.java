@@ -7,8 +7,8 @@ import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeCounterObject;
-import indi.sly.system.kernel.objects.lang.CloseConsumer;
-import indi.sly.system.kernel.objects.lang.OpenFunction;
+import indi.sly.system.kernel.objects.lang.InfoProcessorCloseConsumer;
+import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -61,8 +61,8 @@ public class OpenOrCloseResolver extends APrototype implements IInfoResolver {
         };
     }
 
-    private final OpenFunction open;
-    private final CloseConsumer close;
+    private final InfoProcessorOpenFunction open;
+    private final InfoProcessorCloseConsumer close;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {

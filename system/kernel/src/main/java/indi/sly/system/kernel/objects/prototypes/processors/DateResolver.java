@@ -68,10 +68,10 @@ public class DateResolver extends APrototype implements IInfoResolver {
         };
     }
 
-    private final OpenFunction open;
-    private final CreateChildAndOpenFunction createChildAndOpen;
-    private final ReadContentFunction readContent;
-    private final WriteContentConsumer writeContent;
+    private final InfoProcessorOpenFunction open;
+    private final InfoProcessorCreateChildAndOpenFunction createChildAndOpen;
+    private final InfoProcessorReadContentFunction readContent;
+    private final InfoProcessorWriteContentConsumer writeContent;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {

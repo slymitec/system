@@ -82,11 +82,11 @@ public class ProcessHandleTableResolver extends APrototype implements IInfoResol
         };
     }
 
-    private final OpenFunction open;
-    private final CloseConsumer close;
-    private final ReadContentFunction readContent;
-    private final WriteContentConsumer writeContent;
-    private final ExecuteContentConsumer executeContent;
+    private final InfoProcessorOpenFunction open;
+    private final InfoProcessorCloseConsumer close;
+    private final InfoProcessorReadContentFunction readContent;
+    private final InfoProcessorWriteContentConsumer writeContent;
+    private final InfoProcessorExecuteContentConsumer executeContent;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {

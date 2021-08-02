@@ -2,7 +2,7 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 
 import javax.inject.Named;
 
-import indi.sly.system.kernel.objects.lang.InfoSelfFunction;
+import indi.sly.system.kernel.objects.lang.InfoProcessorSelfFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -25,7 +25,7 @@ public class GetInfoSelfResolver extends APrototype implements IInfoResolver {
         };
     }
 
-    private final InfoSelfFunction info;
+    private final InfoProcessorSelfFunction info;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {

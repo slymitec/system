@@ -1,10 +1,10 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.lang.ReadProcessComponentFunction;
-import indi.sly.system.kernel.processes.lang.ReadProcessStatusFunction;
-import indi.sly.system.kernel.processes.lang.WriteProcessComponentConsumer;
-import indi.sly.system.kernel.processes.lang.WriteProcessStatusConsumer;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorReadProcessComponentFunction;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorReadProcessStatusFunction;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteProcessComponentConsumer;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteProcessStatusConsumer;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -15,18 +15,18 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessMemberResolver extends APrototype implements IProcessResolver {
-    private final ReadProcessStatusFunction readProcessStatus;
-    private final WriteProcessStatusConsumer writeProcessStatus;
-    private final ReadProcessComponentFunction readProcessCommunication;
-    private final WriteProcessComponentConsumer writeProcessCommunication;
-    private final ReadProcessComponentFunction readProcessContext;
-    private final WriteProcessComponentConsumer writeProcessContext;
-    private final ReadProcessComponentFunction readProcessHandleTable;
-    private final WriteProcessComponentConsumer writeProcessHandleTable;
-    private final ReadProcessComponentFunction readProcessStatistics;
-    private final WriteProcessComponentConsumer writeProcessStatistics;
-    private final ReadProcessComponentFunction readProcessToken;
-    private final WriteProcessComponentConsumer writeProcessToken;
+    private final ProcessProcessorReadProcessStatusFunction readProcessStatus;
+    private final ProcessProcessorWriteProcessStatusConsumer writeProcessStatus;
+    private final ProcessProcessorReadProcessComponentFunction readProcessCommunication;
+    private final ProcessProcessorWriteProcessComponentConsumer writeProcessCommunication;
+    private final ProcessProcessorReadProcessComponentFunction readProcessContext;
+    private final ProcessProcessorWriteProcessComponentConsumer writeProcessContext;
+    private final ProcessProcessorReadProcessComponentFunction readProcessHandleTable;
+    private final ProcessProcessorWriteProcessComponentConsumer writeProcessHandleTable;
+    private final ProcessProcessorReadProcessComponentFunction readProcessStatistics;
+    private final ProcessProcessorWriteProcessComponentConsumer writeProcessStatistics;
+    private final ProcessProcessorReadProcessComponentFunction readProcessToken;
+    private final ProcessProcessorWriteProcessComponentConsumer writeProcessToken;
 
     public ProcessMemberResolver() {
         this.readProcessStatus = (status, process) -> process.getStatus();

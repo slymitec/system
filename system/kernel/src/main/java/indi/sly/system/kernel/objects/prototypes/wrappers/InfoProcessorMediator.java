@@ -7,9 +7,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -30,96 +28,96 @@ public class InfoProcessorMediator extends APrototype {
         this.executeContents = new ArrayList<>();
     }
 
-    private InfoSelfFunction self;
-    private InfoParentFunction parent;
-    private SecurityDescriptorFunction securityDescriptor;
-    private final List<DumpFunction> dumps;
-    private final List<OpenFunction> opens;
-    private final List<CloseConsumer> closes;
-    private final List<CreateChildAndOpenFunction> createChildAndOpens;
-    private final List<GetOrRebuildChildFunction> getOrRebuildChilds;
-    private final List<DeleteChildConsumer> deleteChilds;
-    private final List<QueryChildFunction> queryChilds;
-    private final List<RenameChildConsumer> renameChilds;
-    private final List<ReadPropertyFunction> readProperties;
-    private final List<WritePropertyConsumer> writeProperties;
-    private final List<ReadContentFunction> readContents;
-    private final List<WriteContentConsumer> writeContents;
-    private final List<ExecuteContentConsumer> executeContents;
+    private InfoProcessorSelfFunction self;
+    private InfoProcessorParentFunction parent;
+    private InfoProcessorSecurityDescriptorFunction securityDescriptor;
+    private final List<InfoProcessorDumpFunction> dumps;
+    private final List<InfoProcessorOpenFunction> opens;
+    private final List<InfoProcessorCloseConsumer> closes;
+    private final List<InfoProcessorCreateChildAndOpenFunction> createChildAndOpens;
+    private final List<InfoProcessorGetOrRebuildChildFunction> getOrRebuildChilds;
+    private final List<InfoProcessorDeleteChildConsumer> deleteChilds;
+    private final List<InfoProcessorQueryChildFunction> queryChilds;
+    private final List<InfoProcessorRenameChildConsumer> renameChilds;
+    private final List<InfoProcessorReadPropertyFunction> readProperties;
+    private final List<InfoProcessorWritePropertyConsumer> writeProperties;
+    private final List<InfoProcessorReadContentFunction> readContents;
+    private final List<InfoProcessorWriteContentConsumer> writeContents;
+    private final List<InfoProcessorExecuteContentConsumer> executeContents;
 
-    public InfoSelfFunction getSelf() {
+    public InfoProcessorSelfFunction getSelf() {
         return this.self;
     }
 
-    public void setSelf(InfoSelfFunction self) {
+    public void setSelf(InfoProcessorSelfFunction self) {
         this.self = self;
     }
 
-    public InfoParentFunction getParent() {
+    public InfoProcessorParentFunction getParent() {
         return this.parent;
     }
 
-    public void setParent(InfoParentFunction parent) {
+    public void setParent(InfoProcessorParentFunction parent) {
         this.parent = parent;
     }
 
-    public SecurityDescriptorFunction getSecurityDescriptor() {
+    public InfoProcessorSecurityDescriptorFunction getSecurityDescriptor() {
         return this.securityDescriptor;
     }
 
-    public void setSecurityDescriptor(SecurityDescriptorFunction securityDescriptor) {
+    public void setSecurityDescriptor(InfoProcessorSecurityDescriptorFunction securityDescriptor) {
         this.securityDescriptor = securityDescriptor;
     }
 
-    public List<DumpFunction> getDumps() {
+    public List<InfoProcessorDumpFunction> getDumps() {
         return this.dumps;
     }
 
-    public List<OpenFunction> getOpens() {
+    public List<InfoProcessorOpenFunction> getOpens() {
         return this.opens;
     }
 
-    public List<CloseConsumer> getCloses() {
+    public List<InfoProcessorCloseConsumer> getCloses() {
         return this.closes;
     }
 
-    public List<CreateChildAndOpenFunction> getCreateChildAndOpens() {
+    public List<InfoProcessorCreateChildAndOpenFunction> getCreateChildAndOpens() {
         return this.createChildAndOpens;
     }
 
-    public List<GetOrRebuildChildFunction> getGetOrRebuildChilds() {
+    public List<InfoProcessorGetOrRebuildChildFunction> getGetOrRebuildChilds() {
         return this.getOrRebuildChilds;
     }
 
-    public List<DeleteChildConsumer> getDeleteChilds() {
+    public List<InfoProcessorDeleteChildConsumer> getDeleteChilds() {
         return this.deleteChilds;
     }
 
-    public List<QueryChildFunction> getQueryChilds() {
+    public List<InfoProcessorQueryChildFunction> getQueryChilds() {
         return this.queryChilds;
     }
 
-    public List<RenameChildConsumer> getRenameChilds() {
+    public List<InfoProcessorRenameChildConsumer> getRenameChilds() {
         return this.renameChilds;
     }
 
-    public List<ReadPropertyFunction> getReadProperties() {
+    public List<InfoProcessorReadPropertyFunction> getReadProperties() {
         return this.readProperties;
     }
 
-    public List<WritePropertyConsumer> getWriteProperties() {
+    public List<InfoProcessorWritePropertyConsumer> getWriteProperties() {
         return this.writeProperties;
     }
 
-    public List<ReadContentFunction> getReadContents() {
+    public List<InfoProcessorReadContentFunction> getReadContents() {
         return this.readContents;
     }
 
-    public List<WriteContentConsumer> getWriteContents() {
+    public List<InfoProcessorWriteContentConsumer> getWriteContents() {
         return this.writeContents;
     }
 
-    public List<ExecuteContentConsumer> getExecuteContents() {
+    public List<InfoProcessorExecuteContentConsumer> getExecuteContents() {
         return this.executeContents;
     }
 }

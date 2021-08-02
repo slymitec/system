@@ -8,6 +8,6 @@ import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import java.util.Map;
 
 @FunctionalInterface
-public interface WritePropertyConsumer extends Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Map<String,
+public interface InfoProcessorWritePropertyConsumer extends Consumer4<InfoEntity, TypeObject, InfoStatusDefinition, Map<String,
         String>> {
 }

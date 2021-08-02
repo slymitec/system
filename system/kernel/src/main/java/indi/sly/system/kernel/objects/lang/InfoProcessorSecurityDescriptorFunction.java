@@ -7,6 +7,6 @@ import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 
 @FunctionalInterface
-public interface SecurityDescriptorFunction extends Function3<SecurityDescriptorObject, InfoEntity, TypeObject,
+public interface InfoProcessorSecurityDescriptorFunction extends Function3<SecurityDescriptorObject, InfoEntity, TypeObject,
         InfoStatusDefinition> {
 }

@@ -6,5 +6,5 @@ import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import java.util.UUID;
 
 @FunctionalInterface
-public interface InfoParentFunction extends Function1<InfoObject, UUID> {
+public interface InfoProcessorParentFunction extends Function1<InfoObject, UUID> {
 }

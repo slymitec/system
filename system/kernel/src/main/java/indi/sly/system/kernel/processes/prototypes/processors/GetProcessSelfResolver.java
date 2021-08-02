@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
-import indi.sly.system.kernel.processes.lang.ProcessSelfFunction;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorSelfFunction;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -14,7 +14,7 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GetProcessSelfResolver extends APrototype implements IProcessResolver {
-    private final ProcessSelfFunction self;
+    private final ProcessProcessorSelfFunction self;
 
     public GetProcessSelfResolver() {
         this.self = id -> {

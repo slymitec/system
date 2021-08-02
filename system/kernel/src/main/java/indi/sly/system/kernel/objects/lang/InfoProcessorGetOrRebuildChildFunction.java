@@ -1,12 +1,13 @@
 package indi.sly.system.kernel.objects.lang;
 
-import indi.sly.system.common.lang.Consumer5;
+import indi.sly.system.common.lang.Function6;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 
 @FunctionalInterface
-public interface RenameChildConsumer extends Consumer5<InfoEntity, TypeObject, InfoStatusDefinition,
-        IdentificationDefinition, IdentificationDefinition> {
+public interface InfoProcessorGetOrRebuildChildFunction extends Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject,
+        InfoStatusDefinition, IdentificationDefinition, InfoOpenDefinition> {
 }

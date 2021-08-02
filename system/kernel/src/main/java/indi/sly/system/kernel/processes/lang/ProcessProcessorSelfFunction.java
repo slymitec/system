@@ -6,5 +6,5 @@ import indi.sly.system.kernel.processes.values.ProcessEntity;
 import java.util.UUID;
 
 @FunctionalInterface
-public interface ProcessSelfFunction extends Function1<ProcessEntity, UUID> {
+public interface ProcessProcessorSelfFunction extends Function1<ProcessEntity, UUID> {
 }

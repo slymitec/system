@@ -208,7 +208,7 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        SecurityDescriptorFunction resolver = this.processorMediator.getSecurityDescriptor();
+        InfoProcessorSecurityDescriptorFunction resolver = this.processorMediator.getSecurityDescriptor();
 
         if (ObjectUtil.isAnyNull(resolver)) {
             throw new StatusNotSupportedException();
@@ -223,11 +223,11 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<DumpFunction> resolvers = this.processorMediator.getDumps();
+        List<InfoProcessorDumpFunction> resolvers = this.processorMediator.getDumps();
 
         DumpDefinition dump = new DumpDefinition();
 
-        for (DumpFunction pair : resolvers) {
+        for (InfoProcessorDumpFunction pair : resolvers) {
             dump = pair.apply(dump, info, type, this.status);
         }
 
@@ -240,11 +240,11 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<OpenFunction> resolvers = this.processorMediator.getOpens();
+        List<InfoProcessorOpenFunction> resolvers = this.processorMediator.getOpens();
 
         UUID handle = UUIDUtil.getEmpty();
 
-        for (OpenFunction resolver : resolvers) {
+        for (InfoProcessorOpenFunction resolver : resolvers) {
             handle = resolver.apply(handle, info, type, this.status, openAttribute, arguments);
             if (ObjectUtil.isAnyNull(handle)) {
                 throw new StatusUnexpectedException();
@@ -265,9 +265,9 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<CloseConsumer> resolvers = this.processorMediator.getCloses();
+        List<InfoProcessorCloseConsumer> resolvers = this.processorMediator.getCloses();
 
-        for (CloseConsumer resolver : resolvers) {
+        for (InfoProcessorCloseConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status);
         }
 
@@ -310,11 +310,11 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject typeObject = typeManager.get(this.getType());
 
-        List<CreateChildAndOpenFunction> resolvers = this.processorMediator.getCreateChildAndOpens();
+        List<InfoProcessorCreateChildAndOpenFunction> resolvers = this.processorMediator.getCreateChildAndOpens();
 
         InfoEntity childInfo = null;
 
-        for (CreateChildAndOpenFunction resolver : resolvers) {
+        for (InfoProcessorCreateChildAndOpenFunction resolver : resolvers) {
             childInfo = resolver.apply(childInfo, info, typeObject, this.status, type, identification);
         }
 
@@ -343,11 +343,11 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<GetOrRebuildChildFunction> resolvers = this.processorMediator.getGetOrRebuildChilds();
+        List<InfoProcessorGetOrRebuildChildFunction> resolvers = this.processorMediator.getGetOrRebuildChilds();
 
         InfoEntity childInfo = null;
 
-        for (GetOrRebuildChildFunction resolver : resolvers) {
+        for (InfoProcessorGetOrRebuildChildFunction resolver : resolvers) {
             childInfo = resolver.apply(childInfo, info, type, this.status, identification, infoOpen);
         }
 
@@ -378,9 +378,9 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<DeleteChildConsumer> resolvers = this.processorMediator.getDeleteChilds();
+        List<InfoProcessorDeleteChildConsumer> resolvers = this.processorMediator.getDeleteChilds();
 
-        for (DeleteChildConsumer resolver : resolvers) {
+        for (InfoProcessorDeleteChildConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status, identification);
         }
 
@@ -397,11 +397,11 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<QueryChildFunction> resolvers = this.processorMediator.getQueryChilds();
+        List<InfoProcessorQueryChildFunction> resolvers = this.processorMediator.getQueryChilds();
 
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
-        for (QueryChildFunction resolver : resolvers) {
+        for (InfoProcessorQueryChildFunction resolver : resolvers) {
             infoSummaries = resolver.apply(infoSummaries, info, type, this.status, wildcard);
         }
 
@@ -419,9 +419,9 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<RenameChildConsumer> resolvers = this.processorMediator.getRenameChilds();
+        List<InfoProcessorRenameChildConsumer> resolvers = this.processorMediator.getRenameChilds();
 
-        for (RenameChildConsumer resolver : resolvers) {
+        for (InfoProcessorRenameChildConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status, oldIdentification, newIdentification);
         }
     }
@@ -432,11 +432,11 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<ReadPropertyFunction> resolvers = this.processorMediator.getReadProperties();
+        List<InfoProcessorReadPropertyFunction> resolvers = this.processorMediator.getReadProperties();
 
         Map<String, String> properties = new HashMap<>();
 
-        for (ReadPropertyFunction resolver : resolvers) {
+        for (InfoProcessorReadPropertyFunction resolver : resolvers) {
             properties = resolver.apply(properties, info, type, this.status);
         }
 
@@ -453,9 +453,9 @@ public class InfoObject extends APrototype {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<WritePropertyConsumer> resolvers = this.processorMediator.getWriteProperties();
+        List<InfoProcessorWritePropertyConsumer> resolvers = this.processorMediator.getWriteProperties();
 
-        for (WritePropertyConsumer resolver : resolvers) {
+        for (InfoProcessorWritePropertyConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status, properties);
         }
     }
@@ -467,25 +467,25 @@ public class InfoObject extends APrototype {
         TypeObject type = typeManager.get(this.getType());
 
         AInfoContentObject content = type.getInitializer().getContentProcedure(info, () -> {
-            List<ReadContentFunction> resolvers = this.processorMediator.getReadContents();
+            List<InfoProcessorReadContentFunction> resolvers = this.processorMediator.getReadContents();
 
             byte[] contentSource = null;
 
-            for (ReadContentFunction resolver : resolvers) {
+            for (InfoProcessorReadContentFunction resolver : resolvers) {
                 contentSource = resolver.apply(contentSource, info, type, status);
             }
 
             return contentSource;
         }, (byte[] contentSource) -> {
-            List<WriteContentConsumer> resolvers = this.processorMediator.getWriteContents();
+            List<InfoProcessorWriteContentConsumer> resolvers = this.processorMediator.getWriteContents();
 
-            for (WriteContentConsumer resolver : resolvers) {
+            for (InfoProcessorWriteContentConsumer resolver : resolvers) {
                 resolver.accept(info, type, status, contentSource);
             }
         }, () -> {
-            List<ExecuteContentConsumer> resolvers = this.processorMediator.getExecuteContents();
+            List<InfoProcessorExecuteContentConsumer> resolvers = this.processorMediator.getExecuteContents();
 
-            for (ExecuteContentConsumer resolver : resolvers) {
+            for (InfoProcessorExecuteContentConsumer resolver : resolvers) {
                 resolver.accept(info, type, status);
             }
         });

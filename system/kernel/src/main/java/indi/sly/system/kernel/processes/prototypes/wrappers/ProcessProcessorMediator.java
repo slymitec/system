@@ -27,73 +27,73 @@ public class ProcessProcessorMediator extends APrototype {
         this.writeProcessTokens = new HashSet<>();
     }
 
-    private ProcessSelfFunction self;
-    private final Set<ReadProcessStatusFunction> readProcessStatuses;
-    private final Set<WriteProcessStatusConsumer> writeProcessStatuses;
-    private final Set<ReadProcessComponentFunction> readProcessCommunications;
-    private final Set<WriteProcessComponentConsumer> writeProcessCommunications;
-    private final Set<ReadProcessComponentFunction> readProcessContexts;
-    private final Set<WriteProcessComponentConsumer> writeProcessContexts;
-    private final Set<ReadProcessComponentFunction> readProcessHandleTables;
-    private final Set<WriteProcessComponentConsumer> writeProcessHandleTables;
-    private final Set<ReadProcessComponentFunction> readProcessStatistics;
-    private final Set<WriteProcessComponentConsumer> writeProcessStatistics;
-    private final Set<ReadProcessComponentFunction> readProcessTokens;
-    private final Set<WriteProcessComponentConsumer> writeProcessTokens;
+    private ProcessProcessorSelfFunction self;
+    private final Set<ProcessProcessorReadProcessStatusFunction> readProcessStatuses;
+    private final Set<ProcessProcessorWriteProcessStatusConsumer> writeProcessStatuses;
+    private final Set<ProcessProcessorReadProcessComponentFunction> readProcessCommunications;
+    private final Set<ProcessProcessorWriteProcessComponentConsumer> writeProcessCommunications;
+    private final Set<ProcessProcessorReadProcessComponentFunction> readProcessContexts;
+    private final Set<ProcessProcessorWriteProcessComponentConsumer> writeProcessContexts;
+    private final Set<ProcessProcessorReadProcessComponentFunction> readProcessHandleTables;
+    private final Set<ProcessProcessorWriteProcessComponentConsumer> writeProcessHandleTables;
+    private final Set<ProcessProcessorReadProcessComponentFunction> readProcessStatistics;
+    private final Set<ProcessProcessorWriteProcessComponentConsumer> writeProcessStatistics;
+    private final Set<ProcessProcessorReadProcessComponentFunction> readProcessTokens;
+    private final Set<ProcessProcessorWriteProcessComponentConsumer> writeProcessTokens;
 
-    public ProcessSelfFunction getSelf() {
+    public ProcessProcessorSelfFunction getSelf() {
         return this.self;
     }
 
-    public void setSelf(ProcessSelfFunction self) {
+    public void setSelf(ProcessProcessorSelfFunction self) {
         this.self = self;
     }
 
-    public Set<ReadProcessStatusFunction> getReadProcessStatuses() {
+    public Set<ProcessProcessorReadProcessStatusFunction> getReadProcessStatuses() {
         return this.readProcessStatuses;
     }
 
-    public Set<WriteProcessStatusConsumer> getWriteProcessStatuses() {
+    public Set<ProcessProcessorWriteProcessStatusConsumer> getWriteProcessStatuses() {
         return this.writeProcessStatuses;
     }
 
-    public Set<ReadProcessComponentFunction> getReadProcessCommunications() {
+    public Set<ProcessProcessorReadProcessComponentFunction> getReadProcessCommunications() {
         return this.readProcessCommunications;
     }
 
-    public Set<WriteProcessComponentConsumer> getWriteProcessCommunications() {
+    public Set<ProcessProcessorWriteProcessComponentConsumer> getWriteProcessCommunications() {
         return this.writeProcessCommunications;
     }
 
-    public Set<ReadProcessComponentFunction> getReadProcessContexts() {
+    public Set<ProcessProcessorReadProcessComponentFunction> getReadProcessContexts() {
         return this.readProcessContexts;
     }
 
-    public Set<WriteProcessComponentConsumer> getWriteProcessContexts() {
+    public Set<ProcessProcessorWriteProcessComponentConsumer> getWriteProcessContexts() {
         return this.writeProcessContexts;
     }
 
-    public Set<ReadProcessComponentFunction> getReadProcessHandleTables() {
+    public Set<ProcessProcessorReadProcessComponentFunction> getReadProcessHandleTables() {
         return this.readProcessHandleTables;
     }
 
-    public Set<WriteProcessComponentConsumer> getWriteProcessHandleTables() {
+    public Set<ProcessProcessorWriteProcessComponentConsumer> getWriteProcessHandleTables() {
         return this.writeProcessHandleTables;
     }
 
-    public Set<ReadProcessComponentFunction> getReadProcessStatistics() {
+    public Set<ProcessProcessorReadProcessComponentFunction> getReadProcessStatistics() {
         return this.readProcessStatistics;
     }
 
-    public Set<WriteProcessComponentConsumer> getWriteProcessStatistics() {
+    public Set<ProcessProcessorWriteProcessComponentConsumer> getWriteProcessStatistics() {
         return this.writeProcessStatistics;
     }
 
-    public Set<ReadProcessComponentFunction> getReadProcessTokens() {
+    public Set<ProcessProcessorReadProcessComponentFunction> getReadProcessTokens() {
         return this.readProcessTokens;
     }
 
-    public Set<WriteProcessComponentConsumer> getWriteProcessTokens() {
+    public Set<ProcessProcessorWriteProcessComponentConsumer> getWriteProcessTokens() {
         return this.writeProcessTokens;
     }
 }

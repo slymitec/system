@@ -117,18 +117,18 @@ public class CheckConditionResolver extends APrototype implements IInfoResolver 
         };
     }
 
-    private final OpenFunction open;
-    private final CloseConsumer close;
-    private final CreateChildAndOpenFunction createChildAndOpen;
-    private final GetOrRebuildChildFunction getOrRebuildChild;
-    private final DeleteChildConsumer deleteChild;
-    private final QueryChildFunction queryChild;
-    private final RenameChildConsumer renameChild;
-    private final ReadPropertyFunction readProperties;
-    private final WritePropertyConsumer writeProperties;
-    private final ReadContentFunction readContent;
-    private final WriteContentConsumer writeContent;
-    private final ExecuteContentConsumer executeContent;
+    private final InfoProcessorOpenFunction open;
+    private final InfoProcessorCloseConsumer close;
+    private final InfoProcessorCreateChildAndOpenFunction createChildAndOpen;
+    private final InfoProcessorGetOrRebuildChildFunction getOrRebuildChild;
+    private final InfoProcessorDeleteChildConsumer deleteChild;
+    private final InfoProcessorQueryChildFunction queryChild;
+    private final InfoProcessorRenameChildConsumer renameChild;
+    private final InfoProcessorReadPropertyFunction readProperties;
+    private final InfoProcessorWritePropertyConsumer writeProperties;
+    private final InfoProcessorReadContentFunction readContent;
+    private final InfoProcessorWriteContentConsumer writeContent;
+    private final InfoProcessorExecuteContentConsumer executeContent;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {

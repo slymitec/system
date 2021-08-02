@@ -7,11 +7,9 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
-import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.lang.ReadProcessStatusFunction;
-import indi.sly.system.kernel.processes.lang.WriteProcessStatusConsumer;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorReadProcessStatusFunction;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteProcessStatusConsumer;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
@@ -21,7 +19,6 @@ import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.Set;
-import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -33,9 +30,9 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
     public long get() {
         Long status = ProcessStatusType.NULL;
 
-        Set<ReadProcessStatusFunction> resolvers = this.processorMediator.getReadProcessStatuses();
+        Set<ProcessProcessorReadProcessStatusFunction> resolvers = this.processorMediator.getReadProcessStatuses();
 
-        for (ReadProcessStatusFunction resolver : resolvers) {
+        for (ProcessProcessorReadProcessStatusFunction resolver : resolvers) {
             status = resolver.apply(status, this.value);
         }
 
@@ -58,9 +55,9 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             throw new ConditionPermissionsException();
         }
 
-        Set<WriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+        Set<ProcessProcessorWriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-        for (WriteProcessStatusConsumer resolver : resolvers) {
+        for (ProcessProcessorWriteProcessStatusConsumer resolver : resolvers) {
             resolver.accept(this.value, ProcessStatusType.INITIALIZATION);
         }
     }
@@ -73,9 +70,9 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
 
         this.init();
 
-        Set<WriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+        Set<ProcessProcessorWriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-        for (WriteProcessStatusConsumer resolver : resolvers) {
+        for (ProcessProcessorWriteProcessStatusConsumer resolver : resolvers) {
             resolver.accept(this.value, ProcessStatusType.RUNNING);
         }
     }
@@ -88,9 +85,9 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
 
         this.init();
 
-        Set<WriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+        Set<ProcessProcessorWriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-        for (WriteProcessStatusConsumer resolver : resolvers) {
+        for (ProcessProcessorWriteProcessStatusConsumer resolver : resolvers) {
             resolver.accept(this.value, ProcessStatusType.INTERRUPTED);
         }
     }
@@ -113,9 +110,9 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             this.lock(LockType.WRITE);
             this.init();
 
-            Set<WriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+            Set<ProcessProcessorWriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-            for (WriteProcessStatusConsumer resolver : resolvers) {
+            for (ProcessProcessorWriteProcessStatusConsumer resolver : resolvers) {
                 resolver.accept(this.value, ProcessStatusType.DIED);
             }
 
@@ -149,9 +146,9 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             this.lock(LockType.WRITE);
             this.init();
 
-            Set<WriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+            Set<ProcessProcessorWriteProcessStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-            for (WriteProcessStatusConsumer resolver : resolvers) {
+            for (ProcessProcessorWriteProcessStatusConsumer resolver : resolvers) {
                 resolver.accept(this.value, ProcessStatusType.ZOMBIE);
             }
 

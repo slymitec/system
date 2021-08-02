@@ -6,6 +6,6 @@ import indi.sly.system.services.center.values.CenterDefinition;
 import indi.sly.system.services.center.values.CenterStatusDefinition;
 
 @FunctionalInterface
-public interface RunConsumer extends Consumer5<CenterDefinition, CenterStatusDefinition, String,
-        CenterObjectRunConsumer, CenterContentObject> {
+public interface CenterProcessorRunConsumer extends Consumer5<CenterDefinition, CenterStatusDefinition, String,
+        CenterRunConsumer, CenterContentObject> {
 }

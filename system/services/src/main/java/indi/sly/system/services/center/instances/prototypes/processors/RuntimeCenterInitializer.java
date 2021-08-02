@@ -1,6 +1,6 @@
 package indi.sly.system.services.center.instances.prototypes.processors;
 
-import indi.sly.system.services.center.lang.CenterObjectRunConsumer;
+import indi.sly.system.services.center.lang.CenterRunConsumer;
 import indi.sly.system.services.center.prototypes.CenterContentObject;
 import indi.sly.system.services.center.prototypes.processors.ACenterInitializer;
 import indi.sly.system.services.center.values.CenterDefinition;
@@ -24,7 +24,7 @@ public class RuntimeCenterInitializer extends ACenterInitializer {
     public void finish(CenterDefinition center) {
     }
 
-    private void createSession(CenterObjectRunConsumer run, CenterContentObject content) {
+    private void createSession(CenterRunConsumer run, CenterContentObject content) {
 
     }
 

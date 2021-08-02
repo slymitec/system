@@ -36,12 +36,12 @@ public class InitializerResolver extends APrototype implements ICenterResolver {
 
         this.run = (center, status, name, run, content) -> {
             ACenterInitializer initializer = center.getInitializer();
-            Map<String, InitializerConsumer> initializerRunMethods = initializer.getRunMethods();
+            Map<String, CenterInitializerRunMethodConsumer> initializerRunMethods = initializer.getRunMethods();
             Map<String, Long> initializerRunTransactions = initializer.getRunTransactions();
 
-            InitializerConsumer initializerRunEntry = initializerRunMethods.getOrDefault(name, null);
+            CenterInitializerRunMethodConsumer initializerRunMethodEntry = initializerRunMethods.getOrDefault(name, null);
 
-            if (ObjectUtil.isAnyNull(initializerRunEntry)) {
+            if (ObjectUtil.isAnyNull(initializerRunMethodEntry)) {
                 throw new StatusNotExistedException();
             }
 
@@ -53,11 +53,11 @@ public class InitializerResolver extends APrototype implements ICenterResolver {
                 }
 
                 if (initializerRunTransaction == CenterTransactionType.INDEPENDENCE) {
-                    this.runEntryWithIndependentTransactional(initializerRunEntry, run, content);
+                    this.runEntryWithIndependentTransactional(initializerRunMethodEntry, run, content);
                 } else if (initializerRunTransaction == CenterTransactionType.PROHIBITED) {
-                    this.runEntryWithoutTransactional(initializerRunEntry, run, content);
+                    this.runEntryWithoutTransactional(initializerRunMethodEntry, run, content);
                 } else if (initializerRunTransaction == CenterTransactionType.WHATEVER) {
-                    this.runEntry(initializerRunEntry, run, content);
+                    this.runEntry(initializerRunMethodEntry, run, content);
                 }
             } catch (AKernelException exception) {
                 content.setException(exception);
@@ -70,26 +70,26 @@ public class InitializerResolver extends APrototype implements ICenterResolver {
         return 2;
     }
 
-    private final StartFunction start;
-    private final FinishConsumer finish;
-    private final RunConsumer run;
+    private final CenterProcessorStartFunction start;
+    private final CenterProcessorFinishConsumer finish;
+    private final CenterProcessorRunConsumer run;
 
     @Transactional(value = Transactional.TxType.SUPPORTS)
-    protected void runEntry(InitializerConsumer initializerRunEntry, CenterObjectRunConsumer run,
-                            CenterContentObject content) {
-        initializerRunEntry.accept(run, content);
+    protected void runEntry(CenterInitializerRunMethodConsumer initializerRunMethodEntry,
+                            CenterRunConsumer run, CenterContentObject content) {
+        initializerRunMethodEntry.accept(run, content);
     }
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
-    protected void runEntryWithIndependentTransactional(InitializerConsumer initializerRunEntry, CenterObjectRunConsumer run,
-                                                        CenterContentObject content) {
-        initializerRunEntry.accept(run, content);
+    protected void runEntryWithIndependentTransactional(CenterInitializerRunMethodConsumer initializerRunMethodEntry,
+                                                        CenterRunConsumer run, CenterContentObject content) {
+        initializerRunMethodEntry.accept(run, content);
     }
 
     @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-    protected void runEntryWithoutTransactional(InitializerConsumer initializerRunEntry, CenterObjectRunConsumer run,
-                                                CenterContentObject content) {
-        initializerRunEntry.accept(run, content);
+    protected void runEntryWithoutTransactional(CenterInitializerRunMethodConsumer initializerRunMethodEntry,
+                                                CenterRunConsumer run, CenterContentObject content) {
+        initializerRunMethodEntry.accept(run, content);
     }
 
     @Override

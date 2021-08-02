@@ -1,18 +1,11 @@
 package indi.sly.system.services.center.prototypes.processors;
 
-import indi.sly.system.common.lang.StatusNotReadyException;
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.ThreadManager;
-import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
-import indi.sly.system.services.center.lang.FinishConsumer;
-import indi.sly.system.services.center.lang.GetContentFunction;
-import indi.sly.system.services.center.lang.RunConsumer;
-import indi.sly.system.services.center.lang.StartFunction;
+import indi.sly.system.services.center.lang.CenterProcessorContentFunction;
 import indi.sly.system.services.center.prototypes.wrappers.CenterProcessorMediator;
 import indi.sly.system.services.center.values.CenterDefinition;
-import indi.sly.system.services.center.values.CenterStatusRuntimeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -35,7 +28,7 @@ public class GetContentResolver extends APrototype implements ICenterResolver {
         return 2;
     }
 
-    private final GetContentFunction content;
+    private final CenterProcessorContentFunction content;
 
     @Override
     public void resolve(CenterDefinition center, CenterProcessorMediator processorMediator) {

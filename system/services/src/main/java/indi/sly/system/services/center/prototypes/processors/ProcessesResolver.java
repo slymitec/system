@@ -6,8 +6,8 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadStatusObject;
-import indi.sly.system.services.center.lang.FinishConsumer;
-import indi.sly.system.services.center.lang.StartFunction;
+import indi.sly.system.services.center.lang.CenterProcessorFinishConsumer;
+import indi.sly.system.services.center.lang.CenterProcessorStartFunction;
 import indi.sly.system.services.center.prototypes.wrappers.CenterProcessorMediator;
 import indi.sly.system.services.center.values.CenterAttributeType;
 import indi.sly.system.services.center.values.CenterDefinition;
@@ -49,8 +49,8 @@ public class ProcessesResolver extends APrototype implements ICenterResolver {
         return 1;
     }
 
-    private final StartFunction start;
-    private final FinishConsumer finish;
+    private final CenterProcessorStartFunction start;
+    private final CenterProcessorFinishConsumer finish;
 
     @Override
     public void resolve(CenterDefinition center, CenterProcessorMediator processorMediator) {

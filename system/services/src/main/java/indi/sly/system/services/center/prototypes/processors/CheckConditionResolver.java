@@ -3,10 +3,10 @@ package indi.sly.system.services.center.prototypes.processors;
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.services.center.lang.FinishConsumer;
-import indi.sly.system.services.center.lang.GetContentFunction;
-import indi.sly.system.services.center.lang.RunConsumer;
-import indi.sly.system.services.center.lang.StartFunction;
+import indi.sly.system.services.center.lang.CenterProcessorFinishConsumer;
+import indi.sly.system.services.center.lang.CenterProcessorContentFunction;
+import indi.sly.system.services.center.lang.CenterProcessorRunConsumer;
+import indi.sly.system.services.center.lang.CenterProcessorStartFunction;
 import indi.sly.system.services.center.prototypes.wrappers.CenterProcessorMediator;
 import indi.sly.system.services.center.values.CenterDefinition;
 import indi.sly.system.services.center.values.CenterStatusRuntimeType;
@@ -55,10 +55,10 @@ public class CheckConditionResolver extends APrototype implements ICenterResolve
         return 0;
     }
 
-    private final StartFunction start;
-    private final FinishConsumer finish;
-    private final RunConsumer run;
-    private final GetContentFunction content;
+    private final CenterProcessorStartFunction start;
+    private final CenterProcessorFinishConsumer finish;
+    private final CenterProcessorRunConsumer run;
+    private final CenterProcessorContentFunction content;
 
     @Override
     public void resolve(CenterDefinition center, CenterProcessorMediator processorMediator) {

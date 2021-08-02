@@ -6,6 +6,6 @@ import indi.sly.system.services.center.values.CenterDefinition;
 import indi.sly.system.services.center.values.CenterStatusDefinition;
 
 @FunctionalInterface
-public interface GetContentFunction extends Function3<ThreadContextObject, CenterDefinition, CenterStatusDefinition,
+public interface CenterProcessorContentFunction extends Function3<ThreadContextObject, CenterDefinition, CenterStatusDefinition,
         ThreadContextObject> {
 }

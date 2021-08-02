@@ -1,7 +1,7 @@
 package indi.sly.system.services.center.prototypes.processors;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.services.center.lang.InitializerConsumer;
+import indi.sly.system.services.center.lang.CenterInitializerRunMethodConsumer;
 import indi.sly.system.services.center.values.CenterDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -18,14 +18,14 @@ public abstract class ACenterInitializer extends APrototype {
         this.runTransactions = new ConcurrentHashMap<>();
     }
 
-    private final Map<String, InitializerConsumer> runMethods;
+    private final Map<String, CenterInitializerRunMethodConsumer> runMethods;
     private final Map<String, Long> runTransactions;
 
     public abstract void start(CenterDefinition center);
 
     public abstract void finish(CenterDefinition center);
 
-    public final Map<String, InitializerConsumer> getRunMethods() {
+    public final Map<String, CenterInitializerRunMethodConsumer> getRunMethods() {
         return this.runMethods;
     }
 

@@ -1,10 +1,10 @@
 package indi.sly.system.services.center.prototypes.wrappers;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.services.center.lang.FinishConsumer;
-import indi.sly.system.services.center.lang.GetContentFunction;
-import indi.sly.system.services.center.lang.RunConsumer;
-import indi.sly.system.services.center.lang.StartFunction;
+import indi.sly.system.services.center.lang.CenterProcessorFinishConsumer;
+import indi.sly.system.services.center.lang.CenterProcessorContentFunction;
+import indi.sly.system.services.center.lang.CenterProcessorRunConsumer;
+import indi.sly.system.services.center.lang.CenterProcessorStartFunction;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -22,24 +22,24 @@ public class CenterProcessorMediator extends APrototype {
         this.contents = new ArrayList<>();
     }
 
-    private final List<StartFunction> starts;
-    private final List<FinishConsumer> finishes;
-    private final List<RunConsumer> runs;
-    private final List<GetContentFunction> contents;
+    private final List<CenterProcessorStartFunction> starts;
+    private final List<CenterProcessorFinishConsumer> finishes;
+    private final List<CenterProcessorRunConsumer> runs;
+    private final List<CenterProcessorContentFunction> contents;
 
-    public List<StartFunction> getStarts() {
+    public List<CenterProcessorStartFunction> getStarts() {
         return this.starts;
     }
 
-    public List<FinishConsumer> getFinishes() {
+    public List<CenterProcessorFinishConsumer> getFinishes() {
         return this.finishes;
     }
 
-    public List<RunConsumer> getRuns() {
+    public List<CenterProcessorRunConsumer> getRuns() {
         return this.runs;
     }
 
-    public List<GetContentFunction> getContents() {
+    public List<CenterProcessorContentFunction> getContents() {
         return this.contents;
     }
 }

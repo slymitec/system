@@ -75,19 +75,19 @@ public class InitializerResolver extends APrototype implements ICenterResolver {
     private final RunConsumer run;
 
     @Transactional(value = Transactional.TxType.SUPPORTS)
-    protected void runEntry(InitializerConsumer initializerRunEntry, RunSelfConsumer run,
+    protected void runEntry(InitializerConsumer initializerRunEntry, CenterObjectRunConsumer run,
                             CenterContentObject content) {
         initializerRunEntry.accept(run, content);
     }
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
-    protected void runEntryWithIndependentTransactional(InitializerConsumer initializerRunEntry, RunSelfConsumer run,
+    protected void runEntryWithIndependentTransactional(InitializerConsumer initializerRunEntry, CenterObjectRunConsumer run,
                                                         CenterContentObject content) {
         initializerRunEntry.accept(run, content);
     }
 
     @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-    protected void runEntryWithoutTransactional(InitializerConsumer initializerRunEntry, RunSelfConsumer run,
+    protected void runEntryWithoutTransactional(InitializerConsumer initializerRunEntry, CenterObjectRunConsumer run,
                                                 CenterContentObject content) {
         initializerRunEntry.accept(run, content);
     }

@@ -8,7 +8,7 @@ import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadStatusObject;
 import indi.sly.system.kernel.processes.values.ThreadContextType;
 import indi.sly.system.services.center.lang.InitializerConsumer;
-import indi.sly.system.services.center.lang.RunSelfConsumer;
+import indi.sly.system.services.center.lang.CenterObjectRunConsumer;
 import indi.sly.system.services.center.prototypes.CenterContentObject;
 import indi.sly.system.services.center.prototypes.processors.ACenterInitializer;
 import indi.sly.system.services.center.values.CenterDefinition;
@@ -37,7 +37,7 @@ public class LifeCenterInitializer extends ACenterInitializer {
     public void finish(CenterDefinition center) {
     }
 
-    private void createThread(RunSelfConsumer run, CenterContentObject content) {
+    private void createThread(CenterObjectRunConsumer run, CenterContentObject content) {
         UUID processID = content.getDatum(UUID.class, "processID");
 
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
@@ -52,7 +52,7 @@ public class LifeCenterInitializer extends ACenterInitializer {
         threadStatus.start();
     }
 
-    private void endThread(RunSelfConsumer run, CenterContentObject content) {
+    private void endThread(CenterObjectRunConsumer run, CenterContentObject content) {
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
         ThreadObject thread = threadManager.getCurrent();

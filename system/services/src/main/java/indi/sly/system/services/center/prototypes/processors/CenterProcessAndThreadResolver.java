@@ -18,8 +18,8 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessesResolver extends APrototype implements ICenterResolver {
-    public ProcessesResolver() {
+public class CenterProcessAndThreadResolver extends APrototype implements ICenterResolver {
+    public CenterProcessAndThreadResolver() {
         this.start = (center, status) -> {
             if (LogicalUtil.isAnyExist(center.getAttribute(), CenterAttributeType.HAS_PROCESS)
                     && !ValueUtil.isAnyNullOrEmpty(center.getProcessID())) {

@@ -20,8 +20,8 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InitializerResolver extends APrototype implements ICenterResolver {
-    public InitializerResolver() {
+public class CenterInitializerResolver extends APrototype implements ICenterResolver {
+    public CenterInitializerResolver() {
         this.start = (center, status) -> {
             ACenterInitializer initializer = center.getInitializer();
 

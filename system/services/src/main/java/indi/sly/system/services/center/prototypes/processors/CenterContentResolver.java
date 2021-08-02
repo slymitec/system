@@ -13,8 +13,8 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GetContentResolver extends APrototype implements ICenterResolver {
-    public GetContentResolver() {
+public class CenterContentResolver extends APrototype implements ICenterResolver {
+    public CenterContentResolver() {
         this.content = (center, status, threadRun) -> {
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
             ThreadObject thread = threadManager.getCurrent();

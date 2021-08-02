@@ -13,8 +13,8 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SetRuntimeResolver extends APrototype implements ICenterResolver {
-    public SetRuntimeResolver() {
+public class CenterStatusRuntimeResolver extends APrototype implements ICenterResolver {
+    public CenterStatusRuntimeResolver() {
         this.start = (center, status) -> {
             status.setRuntime(CenterStatusRuntimeType.RUNNING);
         };

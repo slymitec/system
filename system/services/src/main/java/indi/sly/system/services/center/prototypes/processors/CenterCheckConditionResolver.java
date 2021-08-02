@@ -17,8 +17,8 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CheckConditionResolver extends APrototype implements ICenterResolver {
-    public CheckConditionResolver() {
+public class CenterCheckConditionResolver extends APrototype implements ICenterResolver {
+    public CenterCheckConditionResolver() {
         this.start = (center, status) -> {
             if (status.getRuntime() != CenterStatusRuntimeType.INITIALIZATION) {
                 throw new StatusRelationshipErrorException();

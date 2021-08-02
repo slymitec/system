@@ -8,6 +8,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.services.center.lang.CenterInitializerRunMethodConsumer;
 import indi.sly.system.services.center.values.CenterDefinition;
 import indi.sly.system.services.center.values.CenterInitializerRunDefinition;
+import indi.sly.system.services.center.values.CenterInitializerRunSummaryDefinition;
 import indi.sly.system.services.center.values.CenterTransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -53,7 +54,7 @@ public abstract class ACenterInitializer extends APrototype {
         return this.runs.containsKey(name);
     }
 
-    public final CenterInitializerRunDefinition getRun(String name) {
+    public final CenterInitializerRunSummaryDefinition getRun(String name) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
@@ -64,6 +65,10 @@ public abstract class ACenterInitializer extends APrototype {
             throw new StatusNotExistedException();
         }
 
-        return run;
+        CenterInitializerRunSummaryDefinition runSummary = new CenterInitializerRunSummaryDefinition();
+        runSummary.setMethod(run.getMethod());
+        runSummary.setTransaction(run.getTransaction());
+
+        return runSummary;
     }
 }

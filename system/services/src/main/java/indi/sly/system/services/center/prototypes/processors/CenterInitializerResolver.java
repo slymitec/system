@@ -8,10 +8,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.services.center.lang.*;
 import indi.sly.system.services.center.prototypes.CenterContentObject;
 import indi.sly.system.services.center.prototypes.wrappers.CenterProcessorMediator;
-import indi.sly.system.services.center.values.CenterAttributeType;
-import indi.sly.system.services.center.values.CenterDefinition;
-import indi.sly.system.services.center.values.CenterInitializerRunDefinition;
-import indi.sly.system.services.center.values.CenterTransactionType;
+import indi.sly.system.services.center.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -36,7 +33,7 @@ public class CenterInitializerResolver extends APrototype implements ICenterReso
 
         this.run = (center, status, name, run, content) -> {
             ACenterInitializer initializer = center.getInitializer();
-            CenterInitializerRunDefinition initializerRun = initializer.getRun(name);
+            CenterInitializerRunSummaryDefinition initializerRun = initializer.getRun(name);
 
             try {
                 long initializerRunTransaction = CenterTransactionType.WHATEVER;

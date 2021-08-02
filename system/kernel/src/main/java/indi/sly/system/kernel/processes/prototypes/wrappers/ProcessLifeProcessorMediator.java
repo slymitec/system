@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.processes.prototypes.wrappers;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
-import indi.sly.system.kernel.processes.lang.EndProcessFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -18,14 +18,14 @@ public class ProcessLifeProcessorMediator extends APrototype {
         this.ends = new ArrayList<>();
     }
 
-    private final List<CreateProcessFunction> creates;
-    private final List<EndProcessFunction> ends;
+    private final List<ProcessLifeProcessorCreateFunction> creates;
+    private final List<ProcessLifeProcessorEndFunction> ends;
 
-    public List<CreateProcessFunction> getCreates() {
+    public List<ProcessLifeProcessorCreateFunction> getCreates() {
         return this.creates;
     }
 
-    public List<EndProcessFunction> getEnds() {
+    public List<ProcessLifeProcessorEndFunction> getEnds() {
         return this.ends;
     }
 }

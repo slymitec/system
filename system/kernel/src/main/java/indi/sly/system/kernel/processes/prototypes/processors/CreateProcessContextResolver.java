@@ -9,7 +9,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
@@ -25,10 +25,10 @@ import java.util.List;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CreateProcessContextResolver extends APrototype implements IProcessCreatorResolver {
-    private final CreateProcessFunction createProcessFunction;
+    private final ProcessLifeProcessorCreateFunction create;
 
     public CreateProcessContextResolver() {
-        this.createProcessFunction = (process, parentProcess, processCreator) -> {
+        this.create = (process, parentProcess, processCreator) -> {
             KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
 
             ProcessContextObject processContext = process.getContext();
@@ -90,6 +90,6 @@ public class CreateProcessContextResolver extends APrototype implements IProcess
 
     @Override
     public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getCreates().add(createProcessFunction);
+        processorCreatorMediator.getCreates().add(create);
     }
 }

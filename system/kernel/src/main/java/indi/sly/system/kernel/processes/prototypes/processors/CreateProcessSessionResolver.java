@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -13,10 +13,10 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CreateProcessSessionResolver extends APrototype implements IProcessCreatorResolver {
-    private final CreateProcessFunction createProcessFunction;
+    private final ProcessLifeProcessorCreateFunction create;
 
     public CreateProcessSessionResolver() {
-        this.createProcessFunction = (process, parentProcess, processCreator) -> {
+        this.create = (process, parentProcess, processCreator) -> {
             ProcessSessionObject processSession = process.getSession();
             if (!ValueUtil.isAnyNullOrEmpty(processCreator.getSessionID())) {
                 processSession.setID(processCreator.getSessionID());
@@ -35,6 +35,6 @@ public class CreateProcessSessionResolver extends APrototype implements IProcess
 
     @Override
     public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getCreates().add(createProcessFunction);
+        processorCreatorMediator.getCreates().add(create);
     }
 }

@@ -5,6 +5,6 @@ import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 
 @FunctionalInterface
-public interface CreateProcessFunction extends Function3<ProcessObject, ProcessObject, ProcessObject,
+public interface ProcessLifeProcessorCreateFunction extends Function3<ProcessObject, ProcessObject, ProcessObject,
         ProcessCreatorDefinition> {
 }

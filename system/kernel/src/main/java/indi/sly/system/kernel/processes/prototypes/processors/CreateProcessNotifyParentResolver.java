@@ -4,7 +4,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.instances.values.SignalType;
-import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -15,10 +15,10 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CreateProcessNotifyParentResolver extends APrototype implements IProcessCreatorResolver {
-    private final CreateProcessFunction createProcessFunction;
+    private final ProcessLifeProcessorCreateFunction create;
 
     public CreateProcessNotifyParentResolver() {
-        this.createProcessFunction = (process, parentProcess, processCreator) -> {
+        this.create = (process, parentProcess, processCreator) -> {
             if (ObjectUtil.allNotNull(parentProcess)) {
                 ProcessCommunicationObject parentProcessCommunication = parentProcess.getCommunication();
 
@@ -37,6 +37,6 @@ public class CreateProcessNotifyParentResolver extends APrototype implements IPr
 
     @Override
     public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getCreates().add(createProcessFunction);
+        processorCreatorMediator.getCreates().add(create);
     }
 }

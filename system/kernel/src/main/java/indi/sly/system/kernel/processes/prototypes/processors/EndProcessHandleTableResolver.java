@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.processes.lang.EndProcessFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
@@ -16,10 +16,10 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class EndProcessHandleTableResolver extends APrototype implements IProcessEndResolver {
-    private final EndProcessFunction endProcessFunction;
+    private final ProcessLifeProcessorEndFunction end;
 
     public EndProcessHandleTableResolver() {
-        this.endProcessFunction = (process, parentProcess) -> {
+        this.end = (process, parentProcess) -> {
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
             for (UUID handle : processHandleTable.list()) {
@@ -43,6 +43,6 @@ public class EndProcessHandleTableResolver extends APrototype implements IProces
 
     @Override
     public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getEnds().add(endProcessFunction);
+        processorCreatorMediator.getEnds().add(end);
     }
 }

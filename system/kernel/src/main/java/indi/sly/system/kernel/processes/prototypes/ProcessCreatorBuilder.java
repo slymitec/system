@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
-import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import indi.sly.system.kernel.processes.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -57,9 +57,9 @@ public class ProcessCreatorBuilder extends APrototype {
 
         processStatus.initialize();
 
-        List<CreateProcessFunction> resolvers = this.processorMediator.getCreates();
+        List<ProcessLifeProcessorCreateFunction> resolvers = this.processorMediator.getCreates();
 
-        for (CreateProcessFunction resolver : resolvers) {
+        for (ProcessLifeProcessorCreateFunction resolver : resolvers) {
             process = resolver.apply(process, this.parentProcess, processCreator);
         }
 

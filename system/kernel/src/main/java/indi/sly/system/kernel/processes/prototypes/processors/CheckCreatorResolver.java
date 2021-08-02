@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import indi.sly.system.kernel.security.values.PrivilegeType;
@@ -19,10 +19,10 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CheckCreatorResolver extends APrototype implements IProcessCreatorResolver {
-    private final CreateProcessFunction createProcessFunction;
+    private final ProcessLifeProcessorCreateFunction create;
 
     public CheckCreatorResolver() {
-        this.createProcessFunction = (process, parentProcess, processCreator) -> {
+        this.create = (process, parentProcess, processCreator) -> {
             ProcessTokenObject parentProcessToken = parentProcess.getToken();
 
             Map<Long, Integer> limits = processCreator.getLimits();
@@ -54,6 +54,6 @@ public class CheckCreatorResolver extends APrototype implements IProcessCreatorR
 
     @Override
     public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getCreates().add(createProcessFunction);
+        processorCreatorMediator.getCreates().add(create);
     }
 }

@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -13,10 +13,10 @@ import java.util.HashSet;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CreateProcessCommunicationResolver extends APrototype implements IProcessCreatorResolver {
-    private final CreateProcessFunction createProcessFunction;
+    private final ProcessLifeProcessorCreateFunction create;
 
     public CreateProcessCommunicationResolver() {
-        this.createProcessFunction = (process, parentProcess, processCreator) -> {
+        this.create = (process, parentProcess, processCreator) -> {
             ProcessCommunicationObject processCommunication = process.getCommunication();
             processCommunication.createSignal(new HashSet<>());
 
@@ -31,6 +31,6 @@ public class CreateProcessCommunicationResolver extends APrototype implements IP
 
     @Override
     public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getCreates().add(createProcessFunction);
+        processorCreatorMediator.getCreates().add(create);
     }
 }

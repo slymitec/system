@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.lang.EndProcessFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -12,10 +12,10 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class EndProcessCommunicationResolver extends APrototype implements IProcessEndResolver {
-    private final EndProcessFunction endProcessFunction;
+    private final ProcessLifeProcessorEndFunction end;
 
     public EndProcessCommunicationResolver() {
-        this.endProcessFunction = (process, parentProcess) -> {
+        this.end = (process, parentProcess) -> {
             ProcessCommunicationObject processCommunication = process.getCommunication();
 
             processCommunication.deleteAllPort();
@@ -32,6 +32,6 @@ public class EndProcessCommunicationResolver extends APrototype implements IProc
 
     @Override
     public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getEnds().add(endProcessFunction);
+        processorCreatorMediator.getEnds().add(end);
     }
 }

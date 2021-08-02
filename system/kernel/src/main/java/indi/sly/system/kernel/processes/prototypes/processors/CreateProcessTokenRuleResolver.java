@@ -8,7 +8,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.SessionManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionType;
-import indi.sly.system.kernel.processes.lang.CreateProcessFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
@@ -28,10 +28,10 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CreateProcessTokenRuleResolver extends APrototype implements IProcessCreatorResolver {
-    private final CreateProcessFunction createProcessFunction;
+    private final ProcessLifeProcessorCreateFunction create;
 
     public CreateProcessTokenRuleResolver() {
-        this.createProcessFunction = (process, parentProcess, processCreator) -> {
+        this.create = (process, parentProcess, processCreator) -> {
             KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
 
             ProcessContextObject processContext = process.getContext();
@@ -86,6 +86,6 @@ public class CreateProcessTokenRuleResolver extends APrototype implements IProce
 
     @Override
     public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getCreates().add(createProcessFunction);
+        processorCreatorMediator.getCreates().add(create);
     }
 }

@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
-import indi.sly.system.kernel.processes.lang.EndProcessFunction;
+import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -25,9 +25,9 @@ public class ProcessEndBuilder extends APrototype {
 
         processStatus.die();
 
-        List<EndProcessFunction> resolvers = this.processorMediator.getEnds();
+        List<ProcessLifeProcessorEndFunction> resolvers = this.processorMediator.getEnds();
 
-        for (EndProcessFunction resolver : resolvers) {
+        for (ProcessLifeProcessorEndFunction resolver : resolvers) {
             process = resolver.apply(this.parentProcess, this.process);
         }
 

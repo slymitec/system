@@ -94,7 +94,9 @@ public class ProcessManager extends AManager {
         }
 
         ProcessObject currentProcess = this.getCurrent();
-        if (!currentProcess.getID().equals(processID)) {
+        if (currentProcess.getID().equals(processID)) {
+            return currentProcess;
+        } else {
             ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
             ProcessObject process = this.getTarget(processID);
@@ -109,8 +111,6 @@ public class ProcessManager extends AManager {
 
             return process;
         }
-
-        return currentProcess;
     }
 
     public ProcessObject create(AccountAuthorizationObject accountAuthorization,

@@ -99,18 +99,18 @@ public class UserManager extends AManager {
 
         if (currentAccount.getID().equals(accountID)) {
             return currentAccount;
+        } else {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+            ProcessObject process = processManager.getCurrent();
+            ProcessTokenObject processToken = process.getToken();
+
+            if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+                throw new ConditionPermissionsException();
+            }
+
+            return this.getTargetAccount(accountID);
         }
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-            throw new ConditionPermissionsException();
-        }
-
-        return this.getTargetAccount(accountID);
     }
 
     public AccountObject getAccount(String accountName) {
@@ -122,18 +122,18 @@ public class UserManager extends AManager {
 
         if (currentAccount.getName().equals(accountName)) {
             return currentAccount;
+        } else {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+            ProcessObject process = processManager.getCurrent();
+            ProcessTokenObject processToken = process.getToken();
+
+            if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+                throw new ConditionPermissionsException();
+            }
+
+            return this.getTargetAccount(accountName);
         }
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-            throw new ConditionPermissionsException();
-        }
-
-        return this.getTargetAccount(accountName);
     }
 
     public GroupObject getGroup(UUID groupID) {

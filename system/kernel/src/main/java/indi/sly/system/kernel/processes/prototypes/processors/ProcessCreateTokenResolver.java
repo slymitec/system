@@ -21,7 +21,7 @@ public class ProcessCreateTokenResolver extends APrototype implements IProcessCr
         this.create = (process, parentProcess, processCreator) -> {
             ProcessTokenObject processToken = process.getToken();
             AccountAuthorizationObject accountAuthorization = processCreator.getAccountAuthorization();
-            if (ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.isAccountIDLegal()) {
+            if (ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.isLegal()) {
                 processToken.setAccountAuthorization(accountAuthorization);
             } else {
                 processToken.inheritAccountID();

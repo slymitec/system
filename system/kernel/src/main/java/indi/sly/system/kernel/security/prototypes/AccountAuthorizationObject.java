@@ -26,7 +26,6 @@ public class AccountAuthorizationObject extends APrototype {
     }
 
     private AccountAuthorizationGetAccount account;
-
     private String password;
     private final Map<Long, Long> date;
 
@@ -50,7 +49,7 @@ public class AccountAuthorizationObject extends APrototype {
         return Collections.unmodifiableMap(this.date);
     }
 
-    public boolean isAccountIDLegal() {
+    public boolean isLegal() {
         if (ObjectUtil.isAnyNull(this.account)) {
             return false;
         }

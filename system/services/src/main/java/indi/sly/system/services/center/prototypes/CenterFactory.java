@@ -59,8 +59,7 @@ public class CenterFactory extends AFactory {
             throw new ConditionParametersException();
         }
 
-        CenterProcessorMediator processorMediator =
-                this.factoryManager.create(CenterProcessorMediator.class);
+        CenterProcessorMediator processorMediator = this.factoryManager.create(CenterProcessorMediator.class);
         for (ICenterResolver resolver : this.centerResolvers) {
             resolver.resolve(center, processorMediator);
         }

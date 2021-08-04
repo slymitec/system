@@ -73,9 +73,9 @@ public class RuntimeCenterInitializer extends ACenterInitializer {
         Map<String, String> environmentVariables = new HashMap<>();
         environmentVariables.put("AccountID", UUIDUtil.toString(accountAuthorizationResult.getAccountID()));
         environmentVariables.put("Home", "/Files/Main/Users/" + accountAuthorizationResult.getAccountName());
-        sessionContent.setEenvironmentVariables(environmentVariables);
+        sessionContent.setEnvironmentVariables(environmentVariables);
         environmentVariables.put("Path", "/Files/Main/System/Bin;/Files/Main/Users/" + accountAuthorizationResult.getAccountName() + "/Bin");
-        sessionContent.setEenvironmentVariables(environmentVariables);
+        sessionContent.setEnvironmentVariables(environmentVariables);
 
         content.setDatum("Processes_Session_ID", sessionID);
 

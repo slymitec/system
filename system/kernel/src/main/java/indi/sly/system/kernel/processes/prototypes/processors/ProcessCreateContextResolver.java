@@ -1,11 +1,15 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -39,13 +43,20 @@ public class ProcessCreateContextResolver extends APrototype implements IProcess
                 ProcessHandleEntryObject parentProcessHandleEntry = parentProcessHandleTable.getByHandle(processCreator.getFileHandle());
 
                 InfoObject info = parentProcessHandleEntry.getInfo();
+                if (info.getType() != configuration.FILES_TYPES_INSTANCE_FILE_ID) {
+                    throw new StatusRelationshipErrorException();
+                }
 
-                AInfoContentObject infoContent = info.getContent();
+                FileSystemFileContentObject infoContent = (FileSystemFileContentObject) info.getContent();
                 infoContent.execute();
 
-                ApplicationDefinition application = new ApplicationDefinition();
-
-                //...
+                byte[] applicationSource = infoContent.getValue();
+                ApplicationDefinition application;
+                try {
+                    application = ObjectUtil.transferFromByteArray(applicationSource);
+                } catch (RuntimeException e) {
+                    throw new StatusUnexpectedException();
+                }
 
                 processContext.setApplication(application);
             }
@@ -55,10 +66,10 @@ public class ProcessCreateContextResolver extends APrototype implements IProcess
             } else {
                 processContext.setEnvironmentVariable(parentProcessContext.getEnvironmentVariable());
             }
-            if (ObjectUtil.allNotNull(processCreator.getParameters())) {
+            if (!ValueUtil.isAnyNullOrEmpty(processCreator.getParameters())) {
                 processContext.setParameters(processCreator.getParameters());
             } else {
-                processContext.setParameters(new HashMap<>());
+                processContext.setParameters(StringUtil.EMPTY);
             }
             List<IdentificationDefinition> processContextWorkFolder = processCreator.getWorkFolder();
             if (ObjectUtil.allNotNull(processContextWorkFolder)) {

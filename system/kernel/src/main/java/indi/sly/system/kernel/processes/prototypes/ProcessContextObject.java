@@ -132,13 +132,13 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         }
     }
 
-    public Map<String, String> getParameters() {
+    public String getParameters() {
         this.init();
 
-        return Collections.unmodifiableMap(this.value.getParameters());
+        return this.value.getParameters();
     }
 
-    public void setParameters(Map<String, String> parameters) {
+    public void setParameters(String parameters) {
         if (ObjectUtil.isAnyNull(parameters)) {
             throw new ConditionParametersException();
         }
@@ -153,9 +153,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             this.lock(LockType.WRITE);
             this.init();
 
-            Map<String, String> processContextParameters = this.value.getParameters();
-            processContextParameters.clear();
-            processContextParameters.putAll(parameters);
+            this.value.setParameters(parameters);
 
             this.fresh();
         } finally {

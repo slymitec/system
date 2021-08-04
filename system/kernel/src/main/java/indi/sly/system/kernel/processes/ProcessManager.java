@@ -113,7 +113,7 @@ public class ProcessManager extends AManager {
     }
 
     public ProcessObject create(AccountAuthorizationObject accountAuthorization, Map<String, String> environmentVariable,
-                                UUID fileHandle, Map<Long, Integer> limits, Map<String, String> parameters, long privileges,
+                                UUID fileHandle, Map<Long, Integer> limits, String parameters, long privileges,
                                 List<IdentificationDefinition> workFolder) {
         ProcessCreatorDefinition processCreator = new ProcessCreatorDefinition();
 
@@ -132,7 +132,7 @@ public class ProcessManager extends AManager {
         if (ObjectUtil.allNotNull(environmentVariable) && !environmentVariable.isEmpty()) {
             processCreator.setEnvironmentVariable(environmentVariable);
         }
-        if (ObjectUtil.allNotNull(parameters) && !parameters.isEmpty()) {
+        if (!ValueUtil.isAnyNullOrEmpty(parameters)) {
             processCreator.setParameters(parameters);
         }
         if (ObjectUtil.allNotNull(workFolder)) {

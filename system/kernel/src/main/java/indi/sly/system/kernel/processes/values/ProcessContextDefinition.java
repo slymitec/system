@@ -15,14 +15,13 @@ import java.util.*;
 public class ProcessContextDefinition extends ADefinition<ProcessContextDefinition> {
     public ProcessContextDefinition() {
         this.environmentVariable = new HashMap<>();
-        this.parameters = new HashMap<>();
         this.workFolder = new ArrayList<>();
     }
 
     private long type;
     private ApplicationDefinition application;
     private final Map<String, String> environmentVariable;
-    private final Map<String, String> parameters;
+    private String parameters;
     private final List<IdentificationDefinition> workFolder;
 
     public long getType() {
@@ -49,8 +48,12 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
         return this.environmentVariable;
     }
 
-    public Map<String, String> getParameters() {
+    public String getParameters() {
         return this.parameters;
+    }
+
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
     }
 
     public List<IdentificationDefinition> getWorkFolder() {
@@ -77,7 +80,7 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
         definition.type = this.type;
         definition.application = this.application.deepClone();
         definition.environmentVariable.putAll(this.environmentVariable);
-        definition.parameters.putAll(this.parameters);
+        definition.parameters = this.parameters;
         definition.workFolder.addAll(this.workFolder);
 
         return definition;
@@ -95,10 +98,7 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
             this.environmentVariable.put(StringUtil.readExternal(in), StringUtil.readExternal(in));
         }
 
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.parameters.put(StringUtil.readExternal(in), StringUtil.readExternal(in));
-        }
+        this.parameters = StringUtil.readExternal(in);
 
         valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
@@ -117,11 +117,7 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
             StringUtil.writeExternal(out, pair.getValue());
         }
 
-        NumberUtil.writeExternalInteger(out, this.parameters.size());
-        for (Map.Entry<String, String> pair : this.parameters.entrySet()) {
-            StringUtil.writeExternal(out, pair.getKey());
-            StringUtil.writeExternal(out, pair.getValue());
-        }
+        StringUtil.writeExternal(out, this.parameters);
 
         NumberUtil.writeExternalInteger(out, this.workFolder.size());
         for (IdentificationDefinition pair : this.workFolder) {

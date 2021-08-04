@@ -121,13 +121,13 @@ public class SessionContentObject extends AInfoContentObject {
         }
     }
 
-    public Map<String, String> getEnvironment() {
+    public Map<String, String> getEenvironmentVariables() {
         this.init();
 
-        return session.getEnvironment();
+        return session.getEnvironmentVariables();
     }
 
-    public void setEnvironment(Map<String, String> environment) {
+    public void setEenvironmentVariables(Map<String, String> environment) {
         if (ObjectUtil.isAnyNull(environment)) {
             throw new ConditionParametersException();
         }
@@ -136,8 +136,8 @@ public class SessionContentObject extends AInfoContentObject {
             this.lock(LockType.WRITE);
             this.init();
 
-            this.session.getEnvironment().clear();
-            this.session.getEnvironment().putAll(environment);
+            this.session.getEnvironmentVariables().clear();
+            this.session.getEnvironmentVariables().putAll(environment);
 
             this.fresh();
         } finally {

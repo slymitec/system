@@ -34,7 +34,7 @@ public class LifeCenterInitializer extends ACenterInitializer {
     }
 
     private void createThread(CenterRunConsumer run, CenterContentObject content) {
-        UUID processID = content.getDatum(UUID.class, "Processes_Process_ID");
+        UUID parameter_ProcessID = content.getDatum(UUID.class, "Processes_Process_ID");
 
         //
 
@@ -46,7 +46,7 @@ public class LifeCenterInitializer extends ACenterInitializer {
             throw new StatusAlreadyExistedException();
         }
 
-        ThreadObject thread = threadManager.create(processID);
+        ThreadObject thread = threadManager.create(parameter_ProcessID);
 
         ThreadStatusObject threadStatus = thread.getStatus();
         threadStatus.start();

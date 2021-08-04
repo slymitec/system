@@ -14,7 +14,7 @@ public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefiniti
 
     private UUID fileHandle;
 
-    private Map<String, String> environmentVariable;
+    private Map<String, String> environmentVariables;
     private String parameters;
     private List<IdentificationDefinition> workFolder;
 
@@ -39,12 +39,12 @@ public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefiniti
         this.fileHandle = fileHandle;
     }
 
-    public Map<String, String> getEnvironmentVariable() {
-        return this.environmentVariable;
+    public Map<String, String> getEnvironmentVariables() {
+        return this.environmentVariables;
     }
 
-    public void setEnvironmentVariable(Map<String, String> environmentVariable) {
-        this.environmentVariable = environmentVariable;
+    public void setEnvironmentVariables(Map<String, String> environmentVariables) {
+        this.environmentVariables = environmentVariables;
     }
 
     public String getParameters() {

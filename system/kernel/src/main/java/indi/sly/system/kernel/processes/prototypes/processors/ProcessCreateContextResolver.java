@@ -11,7 +11,6 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.objects.ObjectManager;
-import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
@@ -23,7 +22,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.HashMap;
 import java.util.List;
 
 @Named
@@ -61,10 +59,10 @@ public class ProcessCreateContextResolver extends APrototype implements IProcess
                 processContext.setApplication(application);
             }
 
-            if (ObjectUtil.allNotNull(processCreator.getEnvironmentVariable())) {
-                processContext.setEnvironmentVariable(processCreator.getEnvironmentVariable());
+            if (ObjectUtil.allNotNull(processCreator.getEnvironmentVariables())) {
+                processContext.setEnvironmentVariables(processCreator.getEnvironmentVariables());
             } else {
-                processContext.setEnvironmentVariable(parentProcessContext.getEnvironmentVariable());
+                processContext.setEnvironmentVariables(parentProcessContext.getEnvironmentVariables());
             }
             if (!ValueUtil.isAnyNullOrEmpty(processCreator.getParameters())) {
                 processContext.setParameters(processCreator.getParameters());

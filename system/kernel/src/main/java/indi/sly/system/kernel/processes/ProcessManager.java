@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.AManager;
@@ -112,9 +113,9 @@ public class ProcessManager extends AManager {
         return currentProcess;
     }
 
-    public ProcessObject create(AccountAuthorizationObject accountAuthorization, Map<String, String> environmentVariable,
-                                UUID fileHandle, Map<Long, Integer> limits, String parameters, long privileges,
-                                List<IdentificationDefinition> workFolder) {
+    public ProcessObject create(AccountAuthorizationObject accountAuthorization,
+                                Map<String, String> environmentVariables, UUID fileHandle, Map<Long, Integer> limits,
+                                String parameters, long privileges, List<IdentificationDefinition> workFolder) {
         ProcessCreatorDefinition processCreator = new ProcessCreatorDefinition();
 
         if (ObjectUtil.allNotNull(accountAuthorization)) {
@@ -129,11 +130,13 @@ public class ProcessManager extends AManager {
 
         processCreator.setFileHandle(fileHandle);
 
-        if (ObjectUtil.allNotNull(environmentVariable) && !environmentVariable.isEmpty()) {
-            processCreator.setEnvironmentVariable(environmentVariable);
+        if (ObjectUtil.allNotNull(environmentVariables) && !environmentVariables.isEmpty()) {
+            processCreator.setEnvironmentVariables(environmentVariables);
         }
         if (!ValueUtil.isAnyNullOrEmpty(parameters)) {
             processCreator.setParameters(parameters);
+        } else {
+            processCreator.setParameters(StringUtil.EMPTY);
         }
         if (ObjectUtil.allNotNull(workFolder)) {
             processCreator.setWorkFolder(workFolder);

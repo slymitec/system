@@ -18,17 +18,27 @@ public class CenterContentObject extends APrototype {
     protected ThreadContextObject threadContext;
 
     public <T> T getDatum(Class<T> clazz, String name) {
-        return this.getDatumOrDefault(clazz, name, null);
+        return this.getDatumOrDefault(clazz, name, (Provider<T>) () -> {
+            throw new StatusNotExistedException();
+        });
+    }
+
+    public <T> T getDatumOrDefault(Class<T> clazz, String name, T defaultValue) {
+        return this.getDatumOrDefault(clazz, name, (Provider<T>) () -> defaultValue);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getDatumOrDefault(Class<T> clazz, String name, T defaultValue) {
+    public <T> T getDatumOrDefault(Class<T> clazz, String name, Provider<T> defaultValue) {
+        if (ObjectUtil.isAnyNull(clazz, defaultValue) || StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+        
         Map<String, Object> threadContextData = this.threadContext.getData();
 
         Object value = threadContextData.getOrDefault(name, null);
 
         if (ObjectUtil.isAnyNull(value)) {
-            return defaultValue;
+            return defaultValue.acquire();
         } else {
             if (value.getClass() != clazz) {
                 throw new StatusRelationshipErrorException();

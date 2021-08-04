@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.processes.instances.values;
 
 import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
@@ -14,14 +13,14 @@ import java.util.*;
 public class SessionDefinition extends ADefinition<SessionDefinition> {
     public SessionDefinition() {
         this.processIDs = new HashSet<>();
-        this.environment = new HashMap<>();
+        this.environmentVariables = new HashMap<>();
         this.paramaters = new HashMap<>();
     }
 
     private long type;
     private UUID accountID;
     private final Set<UUID> processIDs;
-    private final Map<String, String> environment;
+    private final Map<String, String> environmentVariables;
     private final Map<String, String> paramaters;
 
     public long getType() {
@@ -44,8 +43,8 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
         return this.processIDs;
     }
 
-    public Map<String, String> getEnvironment() {
-        return this.environment;
+    public Map<String, String> getEnvironmentVariables() {
+        return this.environmentVariables;
     }
 
     public Map<String, String> getParamaters() {
@@ -57,12 +56,12 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SessionDefinition that = (SessionDefinition) o;
-        return type == that.type && Objects.equals(accountID, that.accountID) && processIDs.equals(that.processIDs) && environment.equals(that.environment) && paramaters.equals(that.paramaters);
+        return type == that.type && Objects.equals(accountID, that.accountID) && processIDs.equals(that.processIDs) && environmentVariables.equals(that.environmentVariables) && paramaters.equals(that.paramaters);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, accountID, processIDs, environment, paramaters);
+        return Objects.hash(type, accountID, processIDs, environmentVariables, paramaters);
     }
 
     @Override
@@ -72,7 +71,7 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
         definition.type = this.type;
         definition.accountID = this.accountID;
         definition.processIDs.addAll(this.processIDs);
-        definition.environment.putAll(this.environment);
+        definition.environmentVariables.putAll(this.environmentVariables);
         definition.paramaters.putAll(this.paramaters);
 
         return definition;
@@ -92,7 +91,7 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
 
         valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
-            this.environment.put(StringUtil.readExternal(in), StringUtil.readExternal(in));
+            this.environmentVariables.put(StringUtil.readExternal(in), StringUtil.readExternal(in));
         }
 
         valueInteger = NumberUtil.readExternalInteger(in);
@@ -111,8 +110,8 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
             UUIDUtil.writeExternal(out, pair);
         }
 
-        NumberUtil.writeExternalInteger(out, this.environment.size());
-        for (Map.Entry<String, String> pair : this.environment.entrySet()) {
+        NumberUtil.writeExternalInteger(out, this.environmentVariables.size());
+        for (Map.Entry<String, String> pair : this.environmentVariables.entrySet()) {
             StringUtil.writeExternal(out, pair.getKey());
             StringUtil.writeExternal(out, pair.getValue());
         }

@@ -109,6 +109,7 @@ public class AccountAuthorizationObject extends APrototype {
         Map<Long, Integer> accountAuthorizationTokenLimits = accountAuthorizationToken.getLimits();
 
         accountAuthorization.setAccountID(account.getID());
+        accountAuthorization.setAccountName(account.getName());
 
         Set<UserTokenObject> userTokens = new HashSet<>();
         Set<GroupObject> groups = account.getGroups();

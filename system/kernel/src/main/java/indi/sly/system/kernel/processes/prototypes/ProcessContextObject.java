@@ -99,17 +99,17 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         }
     }
 
-    public Map<String, String> getEnvironmentVariable() {
+    public Map<String, String> getEnvironmentVariables() {
         if (!this.process.isCurrent()) {
             throw new ConditionPermissionsException();
         }
 
         this.init();
 
-        return Collections.unmodifiableMap(this.value.getEnvironmentVariable());
+        return Collections.unmodifiableMap(this.value.getEnvironmentVariables());
     }
 
-    public void setEnvironmentVariable(Map<String, String> environmentVariable) {
+    public void setEnvironmentVariables(Map<String, String> environmentVariable) {
         if (ObjectUtil.isAnyNull(environmentVariable)) {
             throw new ConditionParametersException();
         }
@@ -122,7 +122,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
             this.lock(LockType.WRITE);
             this.init();
 
-            Map<String, String> processContextEnvironmentVariable = this.value.getEnvironmentVariable();
+            Map<String, String> processContextEnvironmentVariable = this.value.getEnvironmentVariables();
             processContextEnvironmentVariable.clear();
             processContextEnvironmentVariable.putAll(environmentVariable);
 

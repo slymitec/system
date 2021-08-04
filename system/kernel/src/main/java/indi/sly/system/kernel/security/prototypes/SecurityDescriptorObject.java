@@ -569,7 +569,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         if (this.permission && !processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
                 && !this.allowPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
-            throw new ConditionPermissionException();
+            throw new ConditionAuditException();
         }
 
         this.lock(LockType.WRITE);

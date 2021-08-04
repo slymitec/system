@@ -1,8 +1,10 @@
 package indi.sly.system.kernel.files.instances.prototypes.wrappers;
 
 import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
+import indi.sly.system.kernel.files.instances.values.FileSystemFileDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.*;
@@ -31,6 +33,9 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
 
     @Override
     public void createProcedure(InfoEntity info) {
+        FileSystemFileDefinition fileSystemFile = new FileSystemFileDefinition();
+
+        info.setContent(ObjectUtil.transferToByteArray(fileSystemFile));
     }
 
     @Override

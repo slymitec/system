@@ -10,10 +10,10 @@ import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.processes.instances.values.ClientDefinition;
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -121,14 +121,14 @@ public class SessionContentObject extends AInfoContentObject {
         }
     }
 
-    public ClientDefinition getClient() {
+    public Map<String, String> getEnvironment() {
         this.init();
 
-        return this.session.getClient().deepClone();
+        return session.getEnvironment();
     }
 
-    public void setClient(ClientDefinition client) {
-        if (ObjectUtil.isAnyNull(client)) {
+    public void setEnvironment(Map<String, String> environment) {
+        if (ObjectUtil.isAnyNull(environment)) {
             throw new ConditionParametersException();
         }
 
@@ -136,7 +136,32 @@ public class SessionContentObject extends AInfoContentObject {
             this.lock(LockType.WRITE);
             this.init();
 
-            this.session.setClient(client.deepClone());
+            this.session.getEnvironment().clear();
+            this.session.getEnvironment().putAll(environment);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+    }
+
+    public Map<String, String> getParamaters() {
+        this.init();
+
+        return session.getParamaters();
+    }
+
+    public void setParamaters(Map<String, String> paramaters) {
+        if (ObjectUtil.isAnyNull(paramaters)) {
+            throw new ConditionParametersException();
+        }
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            this.session.getParamaters().clear();
+            this.session.getParamaters().putAll(paramaters);
 
             this.fresh();
         } finally {

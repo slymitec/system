@@ -9,6 +9,7 @@ import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -87,27 +88,34 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
             }
 
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
-            TypeObject childTypeObject = typeManager.get(childInfo.getType());
-            childTypeObject.getInitializer().createProcedure(childInfo);
+            AInfoTypeInitializer childTypeInitializer = typeManager.get(childInfo.getType()).getInitializer();
 
-            type.getInitializer().createChildProcedure(info, childInfo);
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            UUID childRepositoryID = childTypeInitializer.getPoolID(childInfo.getID(), childInfo.getType());
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryID);
+            infoRepository.add(childInfo);
+
+            childTypeInitializer.createProcedure(childInfo);
+
+            AInfoTypeInitializer typeInitializer = type.getInitializer();
+            typeInitializer.createChildProcedure(info, childInfo);
 
             return childInfo;
         };
 
         this.getOrRebuildChild = (childInfo, info, type, status, identification, open) -> {
-            InfoSummaryDefinition infoSummary = type.getInitializer().getChildProcedure(info, identification);
+            AInfoTypeInitializer typeInitializer = type.getInitializer();
+            InfoSummaryDefinition infoSummary = typeInitializer.getChildProcedure(info, identification);
 
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
-            TypeObject childType = typeManager.get(infoSummary.getType());
+            AInfoTypeInitializer childTypeInitializer = typeManager.get(infoSummary.getType()).getInitializer();
 
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UUID childRepositoryID = childType.getInitializer().getPoolID(infoSummary.getID(),
-                    infoSummary.getType());
-            AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(childRepositoryID);
-            childInfo = entityRepository.get(infoSummary.getID());
+            UUID childRepositoryID = childTypeInitializer.getPoolID(infoSummary.getID(), infoSummary.getType());
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryID);
+            childInfo = infoRepository.get(infoSummary.getID());
 
-            childType.getInitializer().getProcedure(childInfo);
+            childTypeInitializer.getProcedure(childInfo);
 
             return childInfo;
         };
@@ -120,25 +128,26 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
             }
 
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
-            TypeObject childType = typeManager.get(childInfo.getType());
+            AInfoTypeInitializer childTypeInitializer = typeManager.get(childInfo.getType()).getInitializer();
 
-            childType.getInitializer().deleteProcedure(childInfo);
+            childTypeInitializer.deleteProcedure(childInfo);
 
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UUID childRepositoryID = childType.getInitializer().getPoolID(childInfo.getID(), childInfo.getType());
-            AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(childRepositoryID);
-            entityRepository.delete(childInfo);
+            UUID childRepositoryID = childTypeInitializer.getPoolID(childInfo.getID(), childInfo.getType());
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryID);
+            infoRepository.delete(childInfo);
 
-            type.getInitializer().deleteChildProcedure(info, identification);
+            AInfoTypeInitializer typeInitializer = type.getInitializer();
+            typeInitializer.deleteChildProcedure(info, identification);
         };
 
-        this.queryChild = (summaryDefinitions, info, type, status, queryChild) -> {
-            Set<InfoSummaryDefinition> TypeInitializerSummaryDefinitions =
-                    type.getInitializer().queryChildProcedure(info, queryChild);
+        this.queryChild = (infoSummaries, info, type, status, queryChild) -> {
+            AInfoTypeInitializer typeInitializer = type.getInitializer();
+            Set<InfoSummaryDefinition> infoSummary = typeInitializer.queryChildProcedure(info, queryChild);
 
-            summaryDefinitions.addAll(TypeInitializerSummaryDefinitions);
+            infoSummaries.addAll(infoSummary);
 
-            return summaryDefinitions;
+            return infoSummaries;
         };
 
         this.renameChild = (info, type, status, oldIdentification, newIdentification) -> {
@@ -148,7 +157,8 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
                 throw new StatusIsUsedException();
             }
 
-            type.getInitializer().renameChildProcedure(info, oldIdentification, newIdentification);
+            AInfoTypeInitializer typeInitializer = type.getInitializer();
+            typeInitializer.renameChildProcedure(info, oldIdentification, newIdentification);
 
             if (newIdentification.getType().equals(String.class)) {
                 childInfo.setName(StringUtil.readFormBytes(newIdentification.getID()));
@@ -184,12 +194,13 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
             ProcessObject process = processManager.getCurrent();
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
+            AInfoTypeInitializer typeInitializer = type.getInitializer();
             if (processHandleTable.containByInfoID(info.getID())) {
                 ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
 
-                type.getInitializer().refreshPropertiesProcedure(info, processHandleEntry.getOpen());
+                typeInitializer.refreshPropertiesProcedure(info, processHandleEntry.getOpen());
             } else {
-                type.getInitializer().refreshPropertiesProcedure(info, null);
+                typeInitializer.refreshPropertiesProcedure(info, null);
             }
         };
 
@@ -204,7 +215,6 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
         };
 
         this.executeContent = (info, type, status) -> {
-
         };
     }
 

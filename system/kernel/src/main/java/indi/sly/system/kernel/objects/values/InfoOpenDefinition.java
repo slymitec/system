@@ -3,16 +3,16 @@ package indi.sly.system.kernel.objects.values;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Arrays;
 import java.util.Objects;
 
-import indi.sly.system.common.lang.ISerializeCapable;
+import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.ADefinition;
 
 public class InfoOpenDefinition extends ADefinition<InfoOpenDefinition> {
     private long attribute;
-    private ISerializeCapable<?> context;
+    private byte[] data;
 
     public long getAttribute() {
         return this.attribute;
@@ -22,12 +22,12 @@ public class InfoOpenDefinition extends ADefinition<InfoOpenDefinition> {
         this.attribute = openAttribute;
     }
 
-    public ISerializeCapable<?> getContext() {
-        return this.context;
+    public byte[] getData() {
+        return this.data;
     }
 
-    public void setContext(ISerializeCapable<?> context) {
-        this.context = context;
+    public void setData(byte[] data) {
+        this.data = data;
     }
 
     @Override
@@ -35,12 +35,14 @@ public class InfoOpenDefinition extends ADefinition<InfoOpenDefinition> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InfoOpenDefinition that = (InfoOpenDefinition) o;
-        return attribute == that.attribute && Objects.equals(context, that.context);
+        return attribute == that.attribute && Arrays.equals(data, that.data);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(attribute, context);
+        int result = Objects.hash(attribute);
+        result = 31 * result + Arrays.hashCode(data);
+        return result;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class InfoOpenDefinition extends ADefinition<InfoOpenDefinition> {
         InfoOpenDefinition definition = new InfoOpenDefinition();
 
         definition.attribute = this.attribute;
-        definition.context = this.context;
+        definition.data = ArrayUtil.copyBytes(this.data);
 
         return definition;
     }
@@ -56,12 +58,12 @@ public class InfoOpenDefinition extends ADefinition<InfoOpenDefinition> {
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         this.attribute = NumberUtil.readExternalLong(in);
-        this.context = ObjectUtil.readExternal(in);
+        this.data = NumberUtil.readExternalBytes(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         NumberUtil.writeExternalLong(out, this.attribute);
-        ObjectUtil.writeExternal(out, this.context);
+        NumberUtil.writeExternalBytes(out, this.data);
     }
 }

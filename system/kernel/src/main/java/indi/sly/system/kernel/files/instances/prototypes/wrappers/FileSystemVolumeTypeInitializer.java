@@ -4,10 +4,13 @@ import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.files.instances.prototypes.FileSystemFolderContentObject;
+import indi.sly.system.kernel.files.instances.prototypes.FileSystemVolumeContentObject;
+import indi.sly.system.kernel.files.instances.values.FileSystemVolumeDefinition;
+import indi.sly.system.kernel.files.instances.values.FileSystemVolumeType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
@@ -38,15 +41,20 @@ public class FileSystemVolumeTypeInitializer extends AInfoTypeInitializer {
 
     @Override
     public void createProcedure(InfoEntity info) {
+        FileSystemVolumeDefinition fileSystemVolume = new FileSystemVolumeDefinition();
+
+        fileSystemVolume.setType(FileSystemVolumeType.REPOSITORY);
+
+        info.setContent(ObjectUtil.transferToByteArray(fileSystemVolume));
     }
 
     @Override
     public void deleteProcedure(InfoEntity info) {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
+        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
 
         if (infoRelations.size() > 0) {
             throw new StatusNotReadyException();
@@ -77,12 +85,12 @@ public class FileSystemVolumeTypeInitializer extends AInfoTypeInitializer {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
         this.lockProcedure(info, LockType.WRITE);
 
-        List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
+        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
         for (InfoRelationEntity infoRelation : infoRelations) {
             if (infoRelation.getName().equals(childInfo.getName())) {
                 this.lockProcedure(info, LockType.NONE);
@@ -96,7 +104,7 @@ public class FileSystemVolumeTypeInitializer extends AInfoTypeInitializer {
         infoRelation.setType(childInfo.getType());
         infoRelation.setName(childInfo.getName());
 
-        entityRepository.addRelation(infoRelation);
+        infoRepository.addRelation(infoRelation);
 
         this.lockProcedure(info, LockType.NONE);
     }
@@ -108,12 +116,12 @@ public class FileSystemVolumeTypeInitializer extends AInfoTypeInitializer {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
         String childName = StringUtil.readFormBytes(identification.getID());
 
-        List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
+        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
         for (InfoRelationEntity infoRelation : infoRelations) {
             if (infoRelation.getName().equals(childName)) {
                 InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
@@ -131,12 +139,12 @@ public class FileSystemVolumeTypeInitializer extends AInfoTypeInitializer {
     @Override
     public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate<InfoSummaryDefinition> wildcard) {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
         this.lockProcedure(info, LockType.WRITE);
 
-        List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
+        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
         for (InfoRelationEntity infoRelation : infoRelations) {
             InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
@@ -160,7 +168,7 @@ public class FileSystemVolumeTypeInitializer extends AInfoTypeInitializer {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
         this.lockProcedure(info, LockType.WRITE);
@@ -168,7 +176,7 @@ public class FileSystemVolumeTypeInitializer extends AInfoTypeInitializer {
         String oldChildName = StringUtil.readFormBytes(oldIdentification.getID());
         String newChildName = StringUtil.readFormBytes(oldIdentification.getID());
 
-        List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
+        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
         for (InfoRelationEntity infoRelation : infoRelations) {
             if (infoRelation.getName().equals(oldChildName)) {
                 infoRelation.setName(newChildName);
@@ -189,17 +197,17 @@ public class FileSystemVolumeTypeInitializer extends AInfoTypeInitializer {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
         this.lockProcedure(info, LockType.WRITE);
 
         String childName = StringUtil.readFormBytes(identification.getID());
 
-        List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
+        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
         for (InfoRelationEntity infoRelation : infoRelations) {
             if (infoRelation.getName().equals(childName)) {
-                entityRepository.deleteRelation(infoRelation);
+                infoRepository.deleteRelation(infoRelation);
 
                 this.lockProcedure(info, LockType.NONE);
                 return;
@@ -212,7 +220,7 @@ public class FileSystemVolumeTypeInitializer extends AInfoTypeInitializer {
 
     @Override
     public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
-        return FileSystemFolderContentObject.class;
+        return FileSystemVolumeContentObject.class;
     }
 
     @Override

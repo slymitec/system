@@ -34,9 +34,13 @@ public class LifeCenterInitializer extends ACenterInitializer {
     }
 
     private void createThread(CenterRunConsumer run, CenterContentObject content) {
-        UUID processID = content.getDatum(UUID.class, "processID");
+        UUID processID = content.getDatum(UUID.class, "Processes_Process_ID");
+
+        //
 
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+
+        //
 
         if (threadManager.size() != 0) {
             throw new StatusAlreadyExistedException();
@@ -50,6 +54,8 @@ public class LifeCenterInitializer extends ACenterInitializer {
 
     private void endThread(CenterRunConsumer run, CenterContentObject content) {
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+
+        //
 
         ThreadObject thread = threadManager.getCurrent();
 

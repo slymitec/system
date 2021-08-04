@@ -17,14 +17,18 @@ import java.util.Map;
 public class CenterContentObject extends APrototype {
     protected ThreadContextObject threadContext;
 
-    @SuppressWarnings("unchecked")
     public <T> T getDatum(Class<T> clazz, String name) {
+        return this.getDatumOrDefault(clazz, name, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getDatumOrDefault(Class<T> clazz, String name, T defaultValue) {
         Map<String, Object> threadContextData = this.threadContext.getData();
 
         Object value = threadContextData.getOrDefault(name, null);
 
         if (ObjectUtil.isAnyNull(value)) {
-            return null;
+            return defaultValue;
         } else {
             if (value.getClass() != clazz) {
                 throw new StatusRelationshipErrorException();

@@ -1,5 +1,6 @@
 package indi.sly.system.common.lang;
 
+@Deprecated
 public class ConditionAuditException extends AKernelException {
 	private static final long serialVersionUID = 3373822921447386600L;
 

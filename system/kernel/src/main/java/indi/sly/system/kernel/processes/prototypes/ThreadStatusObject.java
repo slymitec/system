@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.StatusNotReadyException;
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.processes.values.ThreadDefinition;
@@ -21,7 +22,7 @@ public class ThreadStatusObject extends AValueProcessPrototype<ThreadDefinition>
 
     public void initialize() {
         if (this.value.getStatus() != ThreadStatusType.NULL) {
-            throw new StatusNotReadyException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -35,7 +36,7 @@ public class ThreadStatusObject extends AValueProcessPrototype<ThreadDefinition>
 
     public void start() {
         if (this.value.getStatus() != ThreadStatusType.INITIALIZATION) {
-            throw new StatusNotReadyException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -49,7 +50,7 @@ public class ThreadStatusObject extends AValueProcessPrototype<ThreadDefinition>
 
     public void end() {
         if (this.value.getStatus() != ThreadStatusType.RUNNING) {
-            throw new StatusNotReadyException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);

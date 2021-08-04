@@ -3,6 +3,7 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -159,7 +160,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
     public Map<Long, Integer> getLimits() {
         this.init();
 
-        return Collections.unmodifiableMap(this.value.getLimits());
+        return CollectionUtil.unmodifiable(this.value.getLimits());
     }
 
     public void inheritLimits() {
@@ -215,7 +216,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
     public Set<UUID> getRoles() {
         this.init();
 
-        return Collections.unmodifiableSet(this.value.getRoles());
+        return CollectionUtil.unmodifiable(this.value.getRoles());
     }
 
     public void setRoles(Set<UUID> roles) {

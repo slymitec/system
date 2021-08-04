@@ -1,5 +1,6 @@
 package indi.sly.system.common.lang;
 
+@Deprecated
 public class ConditionRefuseException extends AKernelException {
 	private static final long serialVersionUID = -6395626520348248125L;
 

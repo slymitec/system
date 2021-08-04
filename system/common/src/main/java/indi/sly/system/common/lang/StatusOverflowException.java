@@ -1,5 +1,6 @@
 package indi.sly.system.common.lang;
 
+@Deprecated
 public class StatusOverflowException extends AKernelException {
 	private static final long serialVersionUID = 209807174133597997L;
 

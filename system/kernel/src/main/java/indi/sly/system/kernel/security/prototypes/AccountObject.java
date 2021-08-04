@@ -2,7 +2,7 @@ package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
-import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
@@ -47,7 +47,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
 
         if (!processToken.getAccountID().equals(this.getID())
                 && !processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
-            throw new ConditionRefuseException();
+            throw new ConditionPermissionsException();
         }
 
         this.lock(LockType.WRITE);
@@ -70,7 +70,7 @@ public class AccountObject extends AValueProcessPrototype<AccountEntity> {
             groups.add(userManager.getGroup(group.getID()));
         }
 
-        return Collections.unmodifiableSet(groups);
+        return CollectionUtil.unmodifiable(groups);
     }
 
     public void setGroups(Set<GroupObject> groups) {

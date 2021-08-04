@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.StatusIsUsedException;
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.ValueUtil;
@@ -139,7 +140,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         ProcessHandleTableObject processHandleTable = this.process.getHandleTable();
         if (!processCommunication.getPortIDs().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalID())
                 || !processHandleTable.list().isEmpty()) {
-            throw new StatusNotReadyException();
+            throw new StatusIsUsedException();
         }
 
         try {

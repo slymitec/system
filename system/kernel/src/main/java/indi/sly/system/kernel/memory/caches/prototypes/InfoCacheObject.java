@@ -5,6 +5,7 @@ import java.util.concurrent.locks.Lock;
 
 import javax.inject.Named;
 
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
@@ -87,7 +88,7 @@ public class InfoCacheObject extends APrototype {
     }
 
     public Map<UUID, InfoCacheDefinition> list(long space) {
-        return Collections.unmodifiableMap(this.getInfoCaches(space));
+        return CollectionUtil.unmodifiable(this.getInfoCaches(space));
     }
 
     public InfoObject getIfExisted(long space, UUID id) {

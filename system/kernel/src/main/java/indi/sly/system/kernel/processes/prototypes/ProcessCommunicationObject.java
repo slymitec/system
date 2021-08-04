@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.*;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
@@ -94,7 +95,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
     public Set<UUID> getPortIDs() {
         this.init();
 
-        return Collections.unmodifiableSet(this.value.getPortIDs());
+        return CollectionUtil.unmodifiable(this.value.getPortIDs());
     }
 
     public UUID createPort(Set<UUID> sourceProcessIDs) {
@@ -528,7 +529,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
         ProcessStatisticsObject processStatistics = this.process.getStatistics();
         processStatistics.addSignalReadCount(signalEntries.size());
 
-        return Collections.unmodifiableList(signalEntries);
+        return CollectionUtil.unmodifiable(signalEntries);
     }
 
     public void sendSignal(ProcessObject targetProcess, long key, long value) {

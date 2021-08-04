@@ -1,5 +1,6 @@
 package indi.sly.system.common.lang;
 
+@Deprecated
 public class StatusNotWritableException extends AKernelException {
 	private static final long serialVersionUID = -1103689550677214892L;
 

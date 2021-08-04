@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -106,7 +107,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
 
         this.init();
 
-        return Collections.unmodifiableMap(this.value.getEnvironmentVariables());
+        return CollectionUtil.unmodifiable(this.value.getEnvironmentVariables());
     }
 
     public void setEnvironmentVariables(Map<String, String> environmentVariable) {
@@ -164,7 +165,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
     public List<IdentificationDefinition> getWorkFolder() {
         this.init();
 
-        return Collections.unmodifiableList(this.value.getWorkFolder());
+        return CollectionUtil.unmodifiable(this.value.getWorkFolder());
     }
 
     public void setWorkFolder(List<IdentificationDefinition> workFolder) {

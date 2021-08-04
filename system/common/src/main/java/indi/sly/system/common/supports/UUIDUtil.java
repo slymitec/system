@@ -1,7 +1,6 @@
 package indi.sly.system.common.supports;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusDisabilityException;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -35,7 +34,7 @@ public abstract class UUIDUtil {
         }
     }
 
-    public static UUID readFormBytes(byte[] value) throws StatusDisabilityException {
+    public static UUID readFormBytes(byte[] value) {
         if (ObjectUtil.isAnyNull(value) || value.length != 16) {
             throw new ConditionParametersException();
         }

@@ -3,6 +3,7 @@ package indi.sly.system.kernel.processes.instances.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
@@ -40,7 +41,7 @@ public class SignalContentObject extends AInfoContentObject {
     public Set<UUID> getSourceProcessIDs() {
         this.init();
 
-        return Collections.unmodifiableSet(this.signal.getSourceProcessIDs());
+        return CollectionUtil.unmodifiable(this.signal.getSourceProcessIDs());
     }
 
     public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {

@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
@@ -85,7 +86,7 @@ public class ProcessHandleTableDefinition extends ADefinition<ProcessHandleTable
     }
 
     public Set<UUID> list() {
-        return Collections.unmodifiableSet(this.handleTable.keySet());
+        return CollectionUtil.unmodifiable(this.handleTable.keySet());
     }
 
     @Override

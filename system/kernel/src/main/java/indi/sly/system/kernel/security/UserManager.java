@@ -205,7 +205,7 @@ public class UserManager extends AManager {
 
         if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                 && !ObjectUtil.equals(account.getPassword(), accountPassword)) {
-            throw new ConditionRefuseException();
+            throw new ConditionPermissionsException();
         }
 
         accountAuthorization.setSource(() -> this.getTargetAccount(account.getID()), account.getPassword());

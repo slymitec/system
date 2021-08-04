@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
@@ -70,7 +71,7 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
         ProcessHandleEntryDefinition processHandleEntry = this.value.getByHandle(this.handle);
         Map<Long, Long> processHandleEntryDate = processHandleEntry.getDate();
 
-        return Collections.unmodifiableMap(processHandleEntryDate);
+        return CollectionUtil.unmodifiable(processHandleEntryDate);
     }
 
     public synchronized List<IdentificationDefinition> getIdentifications() {
@@ -98,7 +99,7 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
             this.lock(LockType.NONE);
         }
 
-        return Collections.unmodifiableList(identifications);
+        return CollectionUtil.unmodifiable(identifications);
     }
 
     public synchronized InfoOpenDefinition getOpen() {

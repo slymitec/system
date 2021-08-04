@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
@@ -80,7 +81,7 @@ public class SessionContentObject extends AInfoContentObject {
             throw new ConditionPermissionsException();
         }
 
-        return Collections.unmodifiableSet(this.session.getProcessIDs());
+        return CollectionUtil.unmodifiable(this.session.getProcessIDs());
     }
 
     public void addProcessID(UUID processID) {

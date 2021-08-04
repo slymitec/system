@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.lang.StatusNotReadyException;
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -61,7 +62,7 @@ public class ThreadBuilder extends APrototype {
 
         ThreadStatusObject threadStatus = thread.getStatus();
         if (threadStatus.get() != ThreadStatusType.DIED) {
-            throw new StatusNotReadyException();
+            throw new StatusRelationshipErrorException();
         }
 
         threads.pop();

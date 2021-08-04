@@ -1,10 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes;
 
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
@@ -91,7 +88,7 @@ public class InfoObject extends APrototype {
             throw new ConditionContextException();
         }
 
-        return Collections.unmodifiableList(this.status.getIdentifications());
+        return CollectionUtil.unmodifiable(this.status.getIdentifications());
     }
 
     private synchronized void occupy() {
@@ -199,7 +196,7 @@ public class InfoObject extends APrototype {
 
         Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
 
-        return Collections.unmodifiableMap(date);
+        return CollectionUtil.unmodifiable(date);
     }
 
     public synchronized SecurityDescriptorObject getSecurityDescriptor() {
@@ -440,7 +437,7 @@ public class InfoObject extends APrototype {
             properties = resolver.apply(properties, info, type, this.status);
         }
 
-        return Collections.unmodifiableMap(properties);
+        return CollectionUtil.unmodifiable(properties);
     }
 
     public synchronized void writeProperties(Map<String, String> properties) {

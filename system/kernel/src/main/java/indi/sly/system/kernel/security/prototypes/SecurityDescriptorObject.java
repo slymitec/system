@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.*;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -243,7 +244,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         this.init();
 
-        return Collections.unmodifiableSet(this.value.getOwners());
+        return CollectionUtil.unmodifiable(this.value.getOwners());
     }
 
     public void setOwners(Set<UUID> owners) {

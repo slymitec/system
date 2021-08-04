@@ -1,11 +1,8 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -55,7 +52,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
 
         ProcessHandleEntryDefinition processHandleEntry = this.value.getByHandle(handle);
 
-        return Collections.unmodifiableMap(processHandleEntry.getDate());
+        return CollectionUtil.unmodifiable(processHandleEntry.getDate());
     }
 
     public synchronized Set<UUID> list() {

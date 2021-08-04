@@ -1,8 +1,10 @@
 package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusExpiredException;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
@@ -46,7 +48,7 @@ public class AccountAuthorizationObject extends APrototype {
     }
 
     public Map<Long, Long> getDate() {
-        return Collections.unmodifiableMap(this.date);
+        return CollectionUtil.unmodifiable(this.date);
     }
 
     public boolean isLegal() {
@@ -79,7 +81,7 @@ public class AccountAuthorizationObject extends APrototype {
 
     public AccountAuthorizationResultDefinition checkAndGetResult() {
         if (ObjectUtil.isAnyNull(this.account)) {
-            throw new StatusExpiredException();
+            throw new ConditionContextException();
         }
 
         AccountObject account;

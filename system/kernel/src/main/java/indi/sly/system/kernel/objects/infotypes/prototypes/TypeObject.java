@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
@@ -35,7 +36,7 @@ public class TypeObject extends APrototype {
             throw new StatusNotSupportedException();
         }
 
-        return Collections.unmodifiableSet(this.type.getChildTypes());
+        return CollectionUtil.unmodifiable(this.type.getChildTypes());
     }
 
     public boolean isTypeInitializerAttributesExist(long typeInitializerAttributes) {

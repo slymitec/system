@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionPermissionsException;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.supports.ArrayUtil;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
@@ -52,7 +53,7 @@ public class AuditContentObject extends AInfoContentObject {
     public List<IdentificationDefinition> getIdentifications() {
         this.init();
 
-        return Collections.unmodifiableList(this.audit.getIdentifications());
+        return CollectionUtil.unmodifiable(this.audit.getIdentifications());
     }
 
     public void setIdentifications(List<IdentificationDefinition> identifications) {
@@ -76,7 +77,7 @@ public class AuditContentObject extends AInfoContentObject {
     public Set<UserIDDefinition> getUserIDs() {
         this.init();
 
-        return Collections.unmodifiableSet(this.audit.getUserIDs());
+        return CollectionUtil.unmodifiable(this.audit.getUserIDs());
     }
 
     public void setUserIDs(Set<UserIDDefinition> userUDs) {

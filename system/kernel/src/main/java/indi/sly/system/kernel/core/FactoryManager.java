@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.core;
 
+import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.lang.StatusNotReadyException;
@@ -62,7 +63,7 @@ public class FactoryManager extends AManager {
     @Override
     public void check() {
         if (ObjectUtil.isAnyNull(this.factoryManager)) {
-            throw new StatusNotReadyException();
+            throw new ConditionContextException();
         }
     }
 

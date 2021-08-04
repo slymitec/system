@@ -128,6 +128,6 @@ public class TypeManager extends AManager {
     public Set<UUID> list() {
         Set<UUID> objectTypes = this.factoryManager.getKernelSpace().getPrototypeTypes();
 
-        return Collections.unmodifiableSet(objectTypes);
+        return CollectionUtil.unmodifiable(objectTypes);
     }
 }

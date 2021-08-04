@@ -1,9 +1,7 @@
 package indi.sly.system.kernel.files.instances.prototypes.wrappers;
 
-import indi.sly.system.common.lang.StatusAlreadyExistedException;
-import indi.sly.system.common.lang.StatusNotExistedException;
-import indi.sly.system.common.lang.StatusNotReadyException;
-import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.lang.*;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
@@ -49,7 +47,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
 
         if (infoRelations.size() > 0) {
-            throw new StatusNotReadyException();
+            throw new StatusIsUsedException();
         }
     }
 
@@ -149,7 +147,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             }
         }
 
-        return Collections.unmodifiableSet(infoSummaries);
+        return CollectionUtil.unmodifiable(infoSummaries);
     }
 
     @Override

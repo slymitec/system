@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.processes.values.ThreadContextDefinition;
@@ -35,7 +36,7 @@ public class ThreadContextObject extends AValueProcessPrototype<ThreadContextDef
     public Map<String, Object> getData() {
         this.init();
 
-        return Collections.unmodifiableMap(this.value.getRun().getData());
+        return CollectionUtil.unmodifiable(this.value.getRun().getData());
     }
 
     public void setData(Map<String, Object> data) {

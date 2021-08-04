@@ -103,7 +103,7 @@ public class ProcessManager extends AManager {
             if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
                     && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                     && !(ObjectUtil.allNotNull(accountAuthorization)
-                    && accountAuthorization.checkAndGetResult().getAccountID().equals(processToken.getAccountID())))) {
+                    && accountAuthorization.checkAndGetResult().getID().equals(processToken.getAccountID())))) {
                 throw new ConditionPermissionsException();
             }
 
@@ -185,7 +185,7 @@ public class ProcessManager extends AManager {
             if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
                     && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                     && !(ObjectUtil.allNotNull(accountAuthorization)
-                    && accountAuthorization.checkAndGetResult().getAccountID().equals(processToken.getAccountID())))) {
+                    && accountAuthorization.checkAndGetResult().getID().equals(processToken.getAccountID())))) {
                 throw new ConditionPermissionsException();
             }
         }

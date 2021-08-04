@@ -56,7 +56,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.setAccountID(accountAuthorizationResult.getAccountID());
+        this.value.setAccountID(accountAuthorizationResult.getID());
         AccountAuthorizationTokenDefinition accountAuthorizationResultToken = accountAuthorizationResult.getToken();
         this.value.setPrivileges(accountAuthorizationResultToken.getPrivileges());
         Map<Long, Integer> processTokenLimits = this.value.getLimits();

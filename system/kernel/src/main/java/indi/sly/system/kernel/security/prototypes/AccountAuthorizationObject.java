@@ -1,15 +1,15 @@
 package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusExpiredException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.security.UserManager;
+import indi.sly.system.kernel.security.values.AccountAuthorizationGetAccount;
 import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
 import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -25,13 +25,18 @@ public class AccountAuthorizationObject extends APrototype {
         this.date = new HashMap<>();
     }
 
-    private UUID accountID;
+    private AccountAuthorizationGetAccount account;
+
     private String password;
     private final Map<Long, Long> date;
 
-    public void setSource(AccountObject account) {
-        this.accountID = account.getID();
-        this.password = account.getPassword();
+    public void setSource(AccountAuthorizationGetAccount account, String password) {
+        if (ObjectUtil.isAnyNull(account)) {
+            throw new ConditionParametersException();
+        }
+
+        this.account = account;
+        this.password = password;
 
         DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
@@ -46,15 +51,13 @@ public class AccountAuthorizationObject extends APrototype {
     }
 
     public boolean isAccountIDLegal() {
-        if (ValueUtil.isAnyNullOrEmpty(this.accountID)) {
+        if (ObjectUtil.isAnyNull(this.account)) {
             return false;
         }
 
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
-
         AccountObject account;
         try {
-            account = userManager.getAccount(this.accountID);
+            account = this.account.acquire();
         } catch (AKernelException e) {
             return false;
         }
@@ -76,15 +79,13 @@ public class AccountAuthorizationObject extends APrototype {
     }
 
     public AccountAuthorizationResultDefinition checkAndGetResult() {
-        if (ValueUtil.isAnyNullOrEmpty(this.accountID)) {
+        if (ObjectUtil.isAnyNull(this.account)) {
             throw new StatusExpiredException();
         }
 
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
-
         AccountObject account;
         try {
-            account = userManager.getAccount(this.accountID);
+            account = this.account.acquire();
         } catch (AKernelException e) {
             throw new StatusExpiredException();
         }
@@ -108,8 +109,9 @@ public class AccountAuthorizationObject extends APrototype {
         AccountAuthorizationTokenDefinition accountAuthorizationToken = accountAuthorization.getToken();
         Map<Long, Integer> accountAuthorizationTokenLimits = accountAuthorizationToken.getLimits();
 
-        accountAuthorization.setAccountID(account.getID());
-        accountAuthorization.setAccountName(account.getName());
+        accountAuthorization.setID(account.getID());
+        accountAuthorization.setName(account.getName());
+        accountAuthorization.setPassword(account.getPassword());
 
         Set<UserTokenObject> userTokens = new HashSet<>();
         Set<GroupObject> groups = account.getGroups();

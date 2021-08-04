@@ -7,24 +7,33 @@ public class AccountAuthorizationResultDefinition {
         this.token = new AccountAuthorizationTokenDefinition();
     }
 
-    private UUID accountID;
-    private String accountName;
+    private UUID id;
+    private String name;
+    private String password;
     private final AccountAuthorizationTokenDefinition token;
 
-    public UUID getAccountID() {
-        return this.accountID;
+    public UUID getID() {
+        return this.id;
     }
 
-    public void setAccountID(UUID accountID) {
-        this.accountID = accountID;
+    public void setID(UUID ID) {
+        this.id = ID;
     }
 
-    public String getAccountName() {
-        return this.accountName;
+    public String getName() {
+        return this.name;
     }
 
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public AccountAuthorizationTokenDefinition getToken() {

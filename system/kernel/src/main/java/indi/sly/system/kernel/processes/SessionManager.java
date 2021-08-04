@@ -102,7 +102,7 @@ public class SessionManager extends AManager {
         InfoObject sessions = objectManager.get(identifications);
 
         UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_CONTEXT_INSTANCE_SESSION_ID;
-        UUID accountID = accountAuthorization.checkAndGetResult().getAccountID();
+        UUID accountID = accountAuthorization.checkAndGetResult().getID();
 
         InfoObject session = sessions.createChildAndOpen(typeID, new IdentificationDefinition(UUIDUtil.createRandom()),
                 InfoOpenAttributeType.OPEN_SHARED_WRITE);

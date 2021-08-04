@@ -16,7 +16,9 @@ import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessor
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
 import indi.sly.system.kernel.processes.values.ProcessContextType;
 import indi.sly.system.kernel.security.UserManager;
+import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.AccountObject;
+import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -37,6 +39,7 @@ public class ProcessCreateTokenRuleResolver extends APrototype implements IProce
             ProcessContextObject processContext = process.getContext();
             ProcessSessionObject processSession = process.getSession();
             ProcessTokenObject processToken = process.getToken();
+            ProcessTokenObject parentProcessToken = parentProcess.getToken();
 
             Set<UUID> roles = new HashSet<>(processToken.getRoles());
             long processContextType = processContext.getType();
@@ -51,10 +54,19 @@ public class ProcessCreateTokenRuleResolver extends APrototype implements IProce
                 roles.add(configuration.SECURITY_ROLE_EXECUTABLE_ID);
             }
 
-            UserManager userManager = this.factoryManager.getManager(UserManager.class);
-            AccountObject account = userManager.getAccount(processToken.getAccountID());
-            if (ValueUtil.isAnyNullOrEmpty(account.getPassword())) {
-                roles.add(configuration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
+            if (parentProcessToken.getAccountID().equals(processToken.getAccountID())) {
+                UserManager userManager = this.factoryManager.getManager(UserManager.class);
+
+                AccountObject account = userManager.getCurrentAccount();
+                if (ValueUtil.isAnyNullOrEmpty(account.getPassword())) {
+                    roles.add(configuration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
+                }
+            } else {
+                AccountAuthorizationObject accountAuthorization = processCreator.getAccountAuthorization();
+                AccountAuthorizationResultDefinition accountAuthorizationResult = accountAuthorization.checkAndGetResult();
+                if (ValueUtil.isAnyNullOrEmpty(accountAuthorizationResult.getPassword())) {
+                    roles.add(configuration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
+                }
             }
 
             SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);

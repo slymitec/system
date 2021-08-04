@@ -71,10 +71,10 @@ public class RuntimeCenterInitializer extends ACenterInitializer {
             sessionContent.setType(parameter_SessionType);
         }
         Map<String, String> environmentVariables = new HashMap<>();
-        environmentVariables.put("AccountID", UUIDUtil.toString(accountAuthorizationResult.getAccountID()));
-        environmentVariables.put("Home", "/Files/Main/Users/" + accountAuthorizationResult.getAccountName());
+        environmentVariables.put("AccountID", UUIDUtil.toString(accountAuthorizationResult.getID()));
+        environmentVariables.put("Home", "/Files/Main/Users/" + accountAuthorizationResult.getName());
         sessionContent.setEnvironmentVariables(environmentVariables);
-        environmentVariables.put("Path", "/Files/Main/System/Bin;/Files/Main/Users/" + accountAuthorizationResult.getAccountName() + "/Bin");
+        environmentVariables.put("Path", "/Files/Main/System/Bin;/Files/Main/Users/" + accountAuthorizationResult.getName() + "/Bin");
         sessionContent.setEnvironmentVariables(environmentVariables);
 
         content.setDatum("Processes_Session_ID", sessionID);
@@ -89,7 +89,7 @@ public class RuntimeCenterInitializer extends ACenterInitializer {
         ProcessObject process = processManager.create(accountAuthorization, null, userSessionHandle, null,
                 StringUtil.EMPTY, PrivilegeType.NULL, List.of(new IdentificationDefinition("Files"),
                         new IdentificationDefinition("Main"), new IdentificationDefinition("Users"),
-                        new IdentificationDefinition(accountAuthorizationResult.getAccountName())));
+                        new IdentificationDefinition(accountAuthorizationResult.getName())));
 
         content.setDatum("Processes_Process_UserSession_ID", process.getID());
         /*

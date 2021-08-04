@@ -345,7 +345,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        AccountObject account = userManager.getAccount(processToken.getAccountID());
+        AccountObject account = userManager.getCurrentAccount();
         UUID accountID = account.getID();
         Set<GroupObject> groups = account.getGroups();
         Set<UUID> groupIDs = new HashSet<>();
@@ -435,8 +435,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        ProcessTokenObject processToken = this.getCurrentProcessToken();
-        AccountObject account = userManager.getAccount(processToken.getAccountID());
+        AccountObject account = userManager.getCurrentAccount();
         String accountName = account.getName();
 
         try {
@@ -526,7 +525,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        AccountObject account = userManager.getAccount(processToken.getAccountID());
+        AccountObject account = userManager.getCurrentAccount();
         UUID accountID = account.getID();
         Set<GroupObject> groups = account.getGroups();
         Set<UUID> groupIDs = new HashSet<>();

@@ -55,7 +55,7 @@ public class UserManager extends AManager {
     public void shutdown() {
     }
 
-    public AccountObject getAccount(UUID accountID) {
+    private AccountObject getTargetAccount(UUID accountID) {
         if (ValueUtil.isAnyNullOrEmpty(accountID)) {
             throw new ConditionParametersException();
         }
@@ -68,7 +68,7 @@ public class UserManager extends AManager {
         return this.factory.buildAccount(account);
     }
 
-    public AccountObject getAccount(String accountName) {
+    private AccountObject getTargetAccount(String accountName) {
         if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }
@@ -79,6 +79,61 @@ public class UserManager extends AManager {
         AccountEntity account = userRepository.getAccount(accountName);
 
         return this.factory.buildAccount(account);
+    }
+
+    public AccountObject getCurrentAccount() {
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrent();
+        ProcessTokenObject processToken = process.getToken();
+
+        return this.getTargetAccount(processToken.getAccountID());
+    }
+
+    public AccountObject getAccount(UUID accountID) {
+        if (ValueUtil.isAnyNullOrEmpty(accountID)) {
+            throw new ConditionParametersException();
+        }
+
+        AccountObject currentAccount = this.getCurrentAccount();
+
+        if (currentAccount.getID().equals(accountID)) {
+            return currentAccount;
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrent();
+        ProcessTokenObject processToken = process.getToken();
+
+        if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+            throw new ConditionPermissionsException();
+        }
+
+        return this.getTargetAccount(accountID);
+    }
+
+    public AccountObject getAccount(String accountName) {
+        if (StringUtil.isNameIllegal(accountName)) {
+            throw new ConditionParametersException();
+        }
+
+        AccountObject currentAccount = this.getCurrentAccount();
+
+        if (currentAccount.getName().equals(accountName)) {
+            return currentAccount;
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrent();
+        ProcessTokenObject processToken = process.getToken();
+
+        if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+            throw new ConditionPermissionsException();
+        }
+
+        return this.getTargetAccount(accountName);
     }
 
     public GroupObject getGroup(UUID groupID) {
@@ -144,7 +199,7 @@ public class UserManager extends AManager {
         ProcessTokenObject processToken = process.getToken();
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
-        AccountObject account = userManager.getAccount(accountName);
+        AccountObject account = userManager.getTargetAccount(accountName);
 
         AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
 
@@ -153,7 +208,7 @@ public class UserManager extends AManager {
             throw new ConditionRefuseException();
         }
 
-        accountAuthorization.setSource(account);
+        accountAuthorization.setSource(() -> this.getTargetAccount(account.getID()), account.getPassword());
 
         return accountAuthorization;
     }

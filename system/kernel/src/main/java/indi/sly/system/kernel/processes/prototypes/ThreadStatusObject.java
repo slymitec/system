@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;

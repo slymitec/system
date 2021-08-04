@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
@@ -55,7 +55,7 @@ public class InfoProcessHandleTableResolver extends APrototype implements IInfoR
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
             if (!processHandleTable.containByInfoID(info.getID())) {
-                throw new StatusRelationshipErrorException();
+                throw new StatusNotReadyException();
             }
 
             return content;
@@ -67,7 +67,7 @@ public class InfoProcessHandleTableResolver extends APrototype implements IInfoR
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
             if (!processHandleTable.containByInfoID(info.getID())) {
-                throw new StatusRelationshipErrorException();
+                throw new StatusNotReadyException();
             }
         };
 
@@ -77,7 +77,7 @@ public class InfoProcessHandleTableResolver extends APrototype implements IInfoR
             ProcessHandleTableObject processHandleTable = process.getHandleTable();
 
             if (!processHandleTable.containByInfoID(info.getID())) {
-                throw new StatusRelationshipErrorException();
+                throw new StatusNotReadyException();
             }
         };
     }

@@ -3,7 +3,6 @@ package indi.sly.system.kernel.core.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.LockType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -47,7 +46,7 @@ public abstract class ACoreProcessPrototype<T> extends APrototype {
 
     protected final void lock(long lock) {
         if (ObjectUtil.isAnyNull(this.funcRead, this.funcWrite)) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionContextException();
         }
 
         if (ObjectUtil.allNotNull(this.funcLock)) {
@@ -57,7 +56,7 @@ public abstract class ACoreProcessPrototype<T> extends APrototype {
 
     protected final void init() {
         if (ObjectUtil.isAnyNull(this.funcRead, this.funcWrite)) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionContextException();
         }
 
         T value = this.funcRead.acquire();
@@ -70,7 +69,7 @@ public abstract class ACoreProcessPrototype<T> extends APrototype {
 
     protected final void fresh() {
         if (ObjectUtil.isAnyNull(this.funcRead, this.funcWrite)) {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionContextException();
         }
 
         T value = this.write();

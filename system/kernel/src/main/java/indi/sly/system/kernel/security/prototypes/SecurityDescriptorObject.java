@@ -91,7 +91,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
     public List<SecurityDescriptorSummaryDefinition> getSummary() {
         if (!this.permission && !this.audit) {
-            throw new StatusNotSupportedException();
+            throw new StatusDisabilityException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
@@ -161,7 +161,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
     public boolean isInherit() {
         if (!this.permission) {
-            throw new StatusNotSupportedException();
+            throw new StatusDisabilityException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
@@ -183,7 +183,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
     public void setInherit(boolean inherit) {
         if (!this.permission) {
-            throw new StatusNotSupportedException();
+            throw new StatusDisabilityException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
@@ -209,7 +209,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
     public boolean isHasChild() {
         if (!this.permission) {
-            throw new StatusNotSupportedException();
+            throw new StatusDisabilityException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
@@ -227,7 +227,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
     public Set<UUID> getOwners() {
         if (!this.permission) {
-            throw new StatusNotSupportedException();
+            throw new StatusDisabilityException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
@@ -252,7 +252,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             throw new ConditionParametersException();
         }
         if (!this.permission) {
-            throw new StatusNotSupportedException();
+            throw new StatusDisabilityException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
@@ -285,7 +285,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             throw new ConditionParametersException();
         }
         if (!this.permission) {
-            throw new StatusNotSupportedException();
+            throw new StatusDisabilityException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
@@ -397,7 +397,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             throw new ConditionParametersException();
         }
         if (!this.permission) {
-            throw new StatusNotSupportedException();
+            throw new StatusDisabilityException();
         }
 
         for (AccessControlDefinition permission : permissions) {
@@ -473,7 +473,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             throw new ConditionParametersException();
         }
         if (!this.audit) {
-            throw new StatusNotSupportedException();
+            throw new StatusDisabilityException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
@@ -561,7 +561,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
             throw new ConditionParametersException();
         }
         if (!this.audit) {
-            throw new StatusNotSupportedException();
+            throw new StatusDisabilityException();
         }
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();

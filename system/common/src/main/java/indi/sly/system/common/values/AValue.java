@@ -1,7 +1,7 @@
 package indi.sly.system.common.values;
 
 import indi.sly.system.common.lang.ISerializeCapable;
-import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.lang.StatusDisabilityException;
 import indi.sly.system.common.ABase;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public abstract class AValue<T> extends ABase implements ISerializeCapable<T> {
 
         try {
             value = this.deepClone();
-        } catch (StatusNotSupportedException e) {
+        } catch (StatusDisabilityException e) {
             value = super.clone();
         }
 

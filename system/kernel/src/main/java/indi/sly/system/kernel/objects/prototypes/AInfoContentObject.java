@@ -40,18 +40,18 @@ public abstract class AInfoContentObject extends ACoreProcessPrototype<byte[]> {
         this.infoOpen = null;
         this.setParent(null);
         this.setSource(() -> {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionContextException();
         }, (value) -> {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionContextException();
         });
         this.setLock((lock) -> {
-            throw new StatusRelationshipErrorException();
+            throw new ConditionContextException();
         });
     }
 
     public synchronized void execute() {
         if (ObjectUtil.isAnyNull(this.funcExecute)) {
-            throw new StatusNotSupportedException();
+            throw new StatusDisabilityException();
         }
 
         this.init();

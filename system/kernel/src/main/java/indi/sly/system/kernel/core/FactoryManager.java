@@ -3,7 +3,6 @@ package indi.sly.system.kernel.core;
 import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.Provider;
-import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.boot.values.StartupType;

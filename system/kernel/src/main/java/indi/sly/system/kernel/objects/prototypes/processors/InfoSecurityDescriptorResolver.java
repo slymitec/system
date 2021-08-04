@@ -42,13 +42,14 @@ public class InfoSecurityDescriptorResolver extends APrototype implements IInfoR
 
                 InfoObject parentInfo = infoCache.getIfExisted(SpaceType.ALL, status.getParentID());
 
+                SecurityDescriptorObject parentSecurityDescriptor = null;
                 try {
-                    SecurityDescriptorObject parentSecurityDescriptor = parentInfo.getSecurityDescriptor();
+                    parentSecurityDescriptor = parentInfo.getSecurityDescriptor();
+                } catch (StatusDisabilityException ignored) {
+                }
 
-                    if (ObjectUtil.allNotNull(parentSecurityDescriptor)) {
-                        securityDescriptor.setParentSecurityDescriptor(parentSecurityDescriptor);
-                    }
-                } catch (StatusNotSupportedException ignored) {
+                if (ObjectUtil.allNotNull(parentSecurityDescriptor)) {
+                    securityDescriptor.setParentSecurityDescriptor(parentSecurityDescriptor);
                 }
             }
 

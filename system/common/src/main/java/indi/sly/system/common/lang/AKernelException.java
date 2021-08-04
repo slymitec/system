@@ -19,7 +19,7 @@ public abstract class AKernelException extends RuntimeException {
 	public Class<? extends AKernelException> getType() {
 		return this.type;
 	}
-	
+
 	/*
 	ArithmeticException
 	ArrayIndexOutOfBoundsException

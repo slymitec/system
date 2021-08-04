@@ -208,7 +208,7 @@ public class InfoObject extends APrototype {
         InfoProcessorSecurityDescriptorFunction resolver = this.processorMediator.getSecurityDescriptor();
 
         if (ObjectUtil.isAnyNull(resolver)) {
-            throw new StatusNotSupportedException();
+            throw new StatusDisabilityException();
         }
 
         return resolver.apply(info, type, this.status);

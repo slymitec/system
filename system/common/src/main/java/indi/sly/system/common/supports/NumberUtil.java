@@ -1,6 +1,6 @@
 package indi.sly.system.common.supports;
 
-import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.lang.StatusDisabilityException;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -33,7 +33,7 @@ public abstract class NumberUtil {
             if (length == -1) {
                 return null;
             } else {
-                throw new StatusNotSupportedException();
+                throw new StatusDisabilityException();
             }
         } else {
             byte[] value = new byte[length];

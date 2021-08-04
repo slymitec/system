@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.CollectionUtil;
@@ -13,7 +13,6 @@ import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -78,7 +77,7 @@ public class SessionContentObject extends AInfoContentObject {
         ProcessTokenObject processToken = process.getToken();
 
         if (!processToken.getAccountID().equals(this.session.getAccountID())) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         return CollectionUtil.unmodifiable(this.session.getProcessIDs());

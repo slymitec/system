@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
@@ -19,7 +19,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         ProcessObject currentProcess = processManager.getCurrent();
 
         if (!currentProcess.getID().equals(process.getParentID())) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         return currentProcess;
@@ -83,7 +82,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         }
 
         if (this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.getParentProcessAndCheckIsCurrent();
@@ -102,7 +101,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
 
     public Map<String, String> getEnvironmentVariables() {
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.init();
@@ -116,7 +115,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         try {
@@ -145,7 +144,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         }
 
         if (this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.getParentProcessAndCheckIsCurrent();
@@ -174,7 +173,7 @@ public class ProcessContextObject extends ABytesValueProcessPrototype<ProcessCon
         }
 
         if (this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.getParentProcessAndCheckIsCurrent();

@@ -1,8 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusIsUsedException;
-import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
@@ -53,7 +52,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
         this.init();
 
         if (!parentProcess.getID().equals(this.value.getParentProcessID())) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
@@ -132,7 +131,7 @@ public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 

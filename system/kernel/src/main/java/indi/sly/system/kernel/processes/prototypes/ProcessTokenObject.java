@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
@@ -32,7 +32,7 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
         ProcessObject currentProcess = processManager.getCurrent();
 
         if (!currentProcess.getID().equals(process.getParentID())) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         return currentProcess;
@@ -134,13 +134,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
 
         if (this.process.isCurrent()) {
             if (!this.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         } else {
             ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
 
             if (!parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
@@ -192,13 +192,13 @@ public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessToken
 
         if (this.process.isCurrent()) {
             if (!this.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         } else {
             ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
 
             if (!parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 

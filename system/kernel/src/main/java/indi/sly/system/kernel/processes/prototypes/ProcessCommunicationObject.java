@@ -43,7 +43,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
@@ -67,13 +67,13 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
         ProcessTokenObject processToken = this.process.getToken();
         if (shared.length > processToken.getLimits().get(ProcessTokenLimitType.SHARED_LENGTH_MAX)) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         try {
@@ -107,7 +107,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
@@ -121,7 +121,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
 
             ProcessTokenObject processToken = this.process.getToken();
             if (this.value.getPortIDs().size() > processToken.getLimits().get(ProcessTokenLimitType.PORT_COUNT_MAX)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
 
             List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"));
@@ -171,7 +171,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
@@ -208,7 +208,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
@@ -246,7 +246,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
@@ -274,7 +274,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
@@ -300,7 +300,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
@@ -362,7 +362,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
@@ -419,7 +419,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
@@ -454,7 +454,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
@@ -480,7 +480,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 
@@ -508,7 +508,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessPrototype<Proc
             ProcessTokenObject processToken = this.process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 

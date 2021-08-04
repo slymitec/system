@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -53,7 +52,7 @@ public class PortContentObject extends AInfoContentObject {
             this.init();
 
             if (!this.port.getProcessID().equals(process.getID())) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
 
             Set<UUID> portSourceProcessIDs = this.port.getSourceProcessIDs();
@@ -77,7 +76,7 @@ public class PortContentObject extends AInfoContentObject {
             this.init();
 
             if (!this.port.getProcessID().equals(process.getID())) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
 
             value = this.port.getValue();
@@ -108,7 +107,7 @@ public class PortContentObject extends AInfoContentObject {
             ProcessObject process = processManager.getCurrent();
 
             if (!this.port.getProcessID().equals(process.getID()) && this.port.getSourceProcessIDs().contains(process.getID())) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
 
             this.port.setValue(ArrayUtil.combineBytes(this.port.getValue(), value));

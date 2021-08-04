@@ -1,12 +1,10 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
-import indi.sly.system.kernel.processes.values.ProcessStatisticsDefinition;
 import indi.sly.system.kernel.processes.values.ThreadStatisticsDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -52,7 +50,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -76,7 +74,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -100,7 +98,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -124,7 +122,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -148,7 +146,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -172,7 +170,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -196,7 +194,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -220,7 +218,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -244,7 +242,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -268,7 +266,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -292,7 +290,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -316,7 +314,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -340,7 +338,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -364,7 +362,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -388,7 +386,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -412,7 +410,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -436,7 +434,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -460,7 +458,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -484,7 +482,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -508,7 +506,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -532,7 +530,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -556,7 +554,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -580,7 +578,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -604,7 +602,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -628,7 +626,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -652,7 +650,7 @@ public class ThreadStatisticsObject extends AValueProcessPrototype<ThreadStatist
         }
 
         if (!this.process.isCurrent()) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);

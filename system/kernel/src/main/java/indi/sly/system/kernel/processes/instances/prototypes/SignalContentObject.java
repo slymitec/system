@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
@@ -18,7 +18,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -57,7 +56,7 @@ public class SignalContentObject extends AInfoContentObject {
             this.init();
 
             if (!this.signal.getProcessID().equals(process.getID())) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
 
             Set<UUID> signalSourceProcessIDs = this.signal.getSourceProcessIDs();
@@ -81,7 +80,7 @@ public class SignalContentObject extends AInfoContentObject {
             this.init();
 
             if (!this.signal.getProcessID().equals(process.getID())) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
 
             DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
@@ -115,7 +114,7 @@ public class SignalContentObject extends AInfoContentObject {
             ProcessObject process = processManager.getCurrent();
 
             if (!this.signal.getProcessID().equals(process.getID()) && this.signal.getSourceProcessIDs().contains(process.getID())) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
 
             DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,

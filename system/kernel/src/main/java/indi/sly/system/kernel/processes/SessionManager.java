@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
@@ -62,7 +62,7 @@ public class SessionManager extends AManager {
         ProcessTokenObject processToken = process.getToken();
 
         if (!processToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USER_SESSION)) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
     }
 

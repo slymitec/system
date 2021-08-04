@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.LockType;
@@ -26,7 +26,7 @@ public class ProcessSessionObject extends AValueProcessPrototype<ProcessEntity> 
         ProcessObject currentProcess = processManager.getCurrent();
 
         if (!currentProcess.getID().equals(process.getParentID())) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         return currentProcess;
@@ -70,7 +70,7 @@ public class ProcessSessionObject extends AValueProcessPrototype<ProcessEntity> 
         ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
 
         if (!parentProcessToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USER_SESSION)) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);

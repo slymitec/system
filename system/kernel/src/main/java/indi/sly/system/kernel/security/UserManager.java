@@ -106,7 +106,7 @@ public class UserManager extends AManager {
             ProcessTokenObject processToken = process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
 
             return this.getTargetAccount(accountID);
@@ -129,7 +129,7 @@ public class UserManager extends AManager {
             ProcessTokenObject processToken = process.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
 
             return this.getTargetAccount(accountName);
@@ -205,7 +205,7 @@ public class UserManager extends AManager {
 
         if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                 && !ObjectUtil.equals(account.getPassword(), accountPassword)) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         accountAuthorization.setSource(() -> this.getTargetAccount(account.getID()), account.getPassword());

@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
@@ -32,7 +32,7 @@ public class UserTokenObject extends ABytesValueProcessPrototype<AccountAuthoriz
         ProcessTokenObject processToken = process.getToken();
 
         if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -59,7 +59,7 @@ public class UserTokenObject extends ABytesValueProcessPrototype<AccountAuthoriz
         ProcessTokenObject processToken = process.getToken();
 
         if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);

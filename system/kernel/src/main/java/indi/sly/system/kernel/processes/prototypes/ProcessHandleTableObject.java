@@ -40,7 +40,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
             ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
             if (!currentProcessToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
     }
@@ -78,7 +78,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
         ProcessObject parentProcess = processManager.getCurrent();
 
         if (!parentProcess.getID().equals(this.process.getParentID())) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         ProcessHandleTableObject parentProcessHandleTable = parentProcess.getHandleTable();

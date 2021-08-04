@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
@@ -106,7 +106,7 @@ public class ProcessManager extends AManager {
                     && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                     && !(ObjectUtil.allNotNull(accountAuthorization)
                     && accountAuthorization.checkAndGetResult().getID().equals(processToken.getAccountID())))) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
 
             return process;
@@ -186,7 +186,7 @@ public class ProcessManager extends AManager {
                     && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                     && !(ObjectUtil.allNotNull(accountAuthorization)
                     && accountAuthorization.checkAndGetResult().getID().equals(processToken.getAccountID())))) {
-                throw new ConditionPermissionsException();
+                throw new ConditionRefuseException();
             }
         }
 

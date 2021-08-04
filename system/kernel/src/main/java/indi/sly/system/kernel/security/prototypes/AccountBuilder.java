@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -36,7 +36,7 @@ public class AccountBuilder extends APrototype {
         }
 
         if (!processToken.isPrivileges(PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
@@ -68,7 +68,7 @@ public class AccountBuilder extends APrototype {
         }
 
         if (!processToken.isPrivileges(PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP)) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);

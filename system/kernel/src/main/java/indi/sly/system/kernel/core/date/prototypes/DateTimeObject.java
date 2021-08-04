@@ -2,7 +2,7 @@ package indi.sly.system.kernel.core.date.prototypes;
 
 import java.time.Clock;
 
-import indi.sly.system.common.lang.ConditionPermissionsException;
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -28,7 +28,7 @@ public class DateTimeObject extends APrototype {
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
         if (!currentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_DATETIME)) {
-            throw new ConditionPermissionsException();
+            throw new ConditionRefuseException();
         }
 
         this.offset = dateTime - this.clock.instant().toEpochMilli();

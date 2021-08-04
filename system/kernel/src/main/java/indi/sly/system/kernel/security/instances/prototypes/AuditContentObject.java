@@ -1,24 +1,17 @@
 package indi.sly.system.kernel.security.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionPermissionsException;
-import indi.sly.system.common.lang.StatusInsufficientResourcesException;
-import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.instances.values.PortDefinition;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.security.instances.values.AuditDefinition;
 import indi.sly.system.kernel.security.values.UserIDDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;

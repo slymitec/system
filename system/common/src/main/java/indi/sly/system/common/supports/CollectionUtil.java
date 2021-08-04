@@ -1,7 +1,7 @@
 package indi.sly.system.common.supports;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusUnreadableException;
+import indi.sly.system.common.lang.StatusNotWritableException;
 
 import java.io.Serializable;
 import java.util.*;
@@ -78,7 +78,7 @@ public abstract class CollectionUtil {
                 }
 
                 public void remove() {
-                    throw new StatusUnreadableException();
+                    throw new StatusNotWritableException();
                 }
 
                 @Override
@@ -90,11 +90,11 @@ public abstract class CollectionUtil {
         }
 
         public boolean add(E e) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         public boolean remove(Object o) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         public boolean containsAll(Collection<?> coll) {
@@ -102,19 +102,19 @@ public abstract class CollectionUtil {
         }
 
         public boolean addAll(Collection<? extends E> coll) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         public boolean removeAll(Collection<?> coll) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         public boolean retainAll(Collection<?> coll) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         public void clear() {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         // Override default methods in Collection
@@ -125,7 +125,7 @@ public abstract class CollectionUtil {
 
         @Override
         public boolean removeIf(Predicate<? super E> filter) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         @SuppressWarnings("unchecked")
@@ -193,15 +193,15 @@ public abstract class CollectionUtil {
         }
 
         public E set(int index, E element) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         public void add(int index, E element) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         public E remove(int index) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         public int indexOf(Object o) {
@@ -213,17 +213,17 @@ public abstract class CollectionUtil {
         }
 
         public boolean addAll(int index, Collection<? extends E> c) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         @Override
         public void replaceAll(UnaryOperator<E> operator) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         @Override
         public void sort(Comparator<? super E> c) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         public ListIterator<E> listIterator() {
@@ -260,15 +260,15 @@ public abstract class CollectionUtil {
                 }
 
                 public void remove() {
-                    throw new StatusUnreadableException();
+                    throw new StatusNotWritableException();
                 }
 
                 public void set(E e) {
-                    throw new StatusUnreadableException();
+                    throw new StatusNotWritableException();
                 }
 
                 public void add(E e) {
-                    throw new StatusUnreadableException();
+                    throw new StatusNotWritableException();
                 }
 
                 @Override
@@ -349,19 +349,19 @@ public abstract class CollectionUtil {
         }
 
         public V put(K key, V value) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         public V remove(Object key) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         public void putAll(Map<? extends K, ? extends V> m) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         public void clear() {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         private transient Set<K> keySet;
@@ -413,50 +413,50 @@ public abstract class CollectionUtil {
 
         @Override
         public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         @Override
         public V putIfAbsent(K key, V value) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         @Override
         public boolean remove(Object key, Object value) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         @Override
         public boolean replace(K key, V oldValue, V newValue) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         @Override
         public V replace(K key, V value) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         @Override
         public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         @Override
         public V computeIfPresent(K key,
                                   BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         @Override
         public V compute(K key,
                          BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         @Override
         public V merge(K key, V value,
                        BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-            throw new StatusUnreadableException();
+            throw new StatusNotWritableException();
         }
 
         /**
@@ -570,7 +570,7 @@ public abstract class CollectionUtil {
                     }
 
                     public void remove() {
-                        throw new StatusUnreadableException();
+                        throw new StatusNotWritableException();
                     }
 
                     public void forEachRemaining(Consumer<? super Map.Entry<K, V>> action) {
@@ -667,7 +667,7 @@ public abstract class CollectionUtil {
                 }
 
                 public V setValue(V value) {
-                    throw new StatusUnreadableException();
+                    throw new StatusNotWritableException();
                 }
 
                 public int hashCode() {

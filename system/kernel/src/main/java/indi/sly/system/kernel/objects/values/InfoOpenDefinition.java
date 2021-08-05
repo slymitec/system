@@ -1,14 +1,14 @@
 package indi.sly.system.kernel.objects.values;
 
+import indi.sly.system.common.supports.ArrayUtil;
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.values.ADefinition;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.Arrays;
 import java.util.Objects;
-
-import indi.sly.system.common.supports.ArrayUtil;
-import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.values.ADefinition;
 
 public class InfoOpenDefinition extends ADefinition<InfoOpenDefinition> {
     private long attribute;
@@ -57,12 +57,16 @@ public class InfoOpenDefinition extends ADefinition<InfoOpenDefinition> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.attribute = NumberUtil.readExternalLong(in);
         this.data = NumberUtil.readExternalBytes(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         NumberUtil.writeExternalLong(out, this.attribute);
         NumberUtil.writeExternalBytes(out, this.data);
     }

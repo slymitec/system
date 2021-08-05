@@ -1,5 +1,11 @@
 package indi.sly.system.kernel.objects.values;
 
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.common.values.IdentificationDefinition;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -7,12 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.common.values.ADefinition;
 
 public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
     private final List<IdentificationDefinition> identifications;
@@ -60,6 +60,8 @@ public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         int valueInteger;
 
         valueInteger = NumberUtil.readExternalInteger(in);
@@ -71,6 +73,8 @@ public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         NumberUtil.writeExternalInteger(out, this.identifications.size());
         for (IdentificationDefinition pair : this.identifications) {
             ObjectUtil.writeExternal(out, pair);

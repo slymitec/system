@@ -20,7 +20,11 @@ public abstract class AValue<T> extends ABase implements ISerializeCapable<T> {
         try {
             value = this.deepClone();
         } catch (StatusDisabilityException e) {
-            value = super.clone();
+            try {
+                value = super.clone();
+            } catch (Exception ignore) {
+                throw e;
+            }
         }
 
         return value;

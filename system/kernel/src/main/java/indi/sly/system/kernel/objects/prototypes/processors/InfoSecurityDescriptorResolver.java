@@ -32,7 +32,13 @@ public class InfoSecurityDescriptorResolver extends APrototype implements IInfoR
         this.securityDescriptor = (info, type, status) -> {
             SecurityDescriptorObject securityDescriptor = this.factoryManager.create(SecurityDescriptorObject.class);
 
-            securityDescriptor.setSource(info::getSecurityDescriptor, info::setSecurityDescriptor);
+            securityDescriptor.setSource(info::getSecurityDescriptor, (source) -> {
+                if (source.length > 4096) {
+                    throw new StatusOverflowException();
+                }
+
+                info.setSecurityDescriptor(source);
+            });
             securityDescriptor.setLock((lock) -> type.getInitializer().lockProcedure(info, lock));
             securityDescriptor.setIdentifications(status.getIdentifications());
 

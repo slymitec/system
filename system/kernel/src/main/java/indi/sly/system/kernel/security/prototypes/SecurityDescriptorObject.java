@@ -30,26 +30,6 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         this.parents = new ArrayList<>();
     }
 
-    @Override
-    protected void read(byte[] source) {
-        super.read(source);
-
-        if (ObjectUtil.isAnyNull(this.value)) {
-            this.value = new SecurityDescriptorDefinition();
-        }
-    }
-
-    @Override
-    protected byte[] write() {
-        byte[] source = super.write();
-
-        if (source.length > 4096) {
-            throw new StatusInsufficientResourcesException();
-        }
-
-        return source;
-    }
-
     private final List<IdentificationDefinition> identifications;
     private final List<SecurityDescriptorObject> parents;
     private boolean permission;

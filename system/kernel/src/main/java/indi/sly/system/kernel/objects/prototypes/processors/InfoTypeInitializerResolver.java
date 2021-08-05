@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.StatusIsUsedException;
+import indi.sly.system.common.lang.StatusOverflowException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
@@ -14,7 +15,6 @@ import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
-import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
@@ -23,8 +23,11 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -185,7 +188,7 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
             byte[] newPropertiesSource = ObjectUtil.transferToByteArray(newProperties);
 
             if (newPropertiesSource.length > 1024) {
-                throw new StatusInsufficientResourcesException();
+                throw new StatusOverflowException();
             }
 
             info.setProperties(newPropertiesSource);
@@ -207,8 +210,8 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
         this.readContent = (content, info, type, status) -> info.getContent();
 
         this.writeContent = (info, type, status, content) -> {
-            if (content.length > 1024) {
-                throw new StatusInsufficientResourcesException();
+            if (content.length > 4096) {
+                throw new StatusOverflowException();
             }
 
             info.setContent(content);

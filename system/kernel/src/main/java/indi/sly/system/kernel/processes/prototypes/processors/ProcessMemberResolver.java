@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
+import indi.sly.system.common.lang.StatusOverflowException;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
@@ -33,19 +34,49 @@ public class ProcessMemberResolver extends APrototype implements IProcessResolve
         this.writeProcessStatus = ProcessEntity::setStatus;
 
         this.readProcessCommunication = (communication, process) -> process.getCommunication();
-        this.writeProcessCommunication = ProcessEntity::setCommunication;
+        this.writeProcessCommunication = (process, communication) -> {
+            if (communication.length > 4096) {
+                throw new StatusOverflowException();
+            }
+
+            process.setCommunication(communication);
+        };
 
         this.readProcessContext = (context, process) -> process.getContext();
-        this.writeProcessContext = ProcessEntity::setContext;
+        this.writeProcessContext = (process, context) -> {
+            if (context.length > 4096) {
+                throw new StatusOverflowException();
+            }
+
+            process.setContext(context);
+        };
 
         this.readProcessHandleTable = (handleTable, process) -> process.getHandleTable();
-        this.writeProcessHandleTable = ProcessEntity::setHandleTable;
+        this.writeProcessHandleTable = (process, handleTable) -> {
+            if (handleTable.length > 4096) {
+                throw new StatusOverflowException();
+            }
+
+            process.setHandleTable(handleTable);
+        };
 
         this.readProcessStatistics = (statistics, process) -> process.getStatistics();
-        this.writeProcessStatistics = ProcessEntity::setStatistics;
+        this.writeProcessStatistics = (process, statistics) -> {
+            if (statistics.length > 4096) {
+                throw new StatusOverflowException();
+            }
+
+            process.setStatistics(statistics);
+        };
 
         this.readProcessToken = (token, process) -> process.getToken();
-        this.writeProcessToken = ProcessEntity::setToken;
+        this.writeProcessToken = (process, token) -> {
+            if (token.length > 4096) {
+                throw new StatusOverflowException();
+            }
+
+            process.setToken(token);
+        };
     }
 
     @Override

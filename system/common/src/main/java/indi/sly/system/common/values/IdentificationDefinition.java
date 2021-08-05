@@ -83,12 +83,16 @@ public final class IdentificationDefinition extends ADefinition<IdentificationDe
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.id = NumberUtil.readExternalBytes(in);
         this.type = ClassUtil.readExternal(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         NumberUtil.writeExternalBytes(out, this.id);
         ClassUtil.writeExternal(out, this.type);
     }

@@ -1,15 +1,14 @@
 package indi.sly.system.common.values;
 
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.*;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
-
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ISerializeCapable;
-import indi.sly.system.common.supports.*;
 
 public final class IdentificationDefinition extends ADefinition<IdentificationDefinition> {
     private byte[] id;

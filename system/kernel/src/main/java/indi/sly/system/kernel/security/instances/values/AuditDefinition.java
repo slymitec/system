@@ -84,6 +84,8 @@ public class AuditDefinition extends ADefinition<AuditDefinition> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.processID = UUIDUtil.readExternal(in);
         this.accountID = UUIDUtil.readExternal(in);
 
@@ -104,6 +106,8 @@ public class AuditDefinition extends ADefinition<AuditDefinition> {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         UUIDUtil.writeExternal(out, this.processID);
         UUIDUtil.writeExternal(out, this.accountID);
 

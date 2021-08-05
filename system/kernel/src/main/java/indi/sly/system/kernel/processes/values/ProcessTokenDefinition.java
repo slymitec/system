@@ -1,13 +1,13 @@
 package indi.sly.system.kernel.processes.values;
 
+import indi.sly.system.common.supports.NumberUtil;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.values.ADefinition;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
-
-import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.values.ADefinition;
 
 public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> {
     public ProcessTokenDefinition() {
@@ -74,6 +74,8 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.accountID = UUIDUtil.readExternal(in);
         this.privileges = NumberUtil.readExternalLong(in);
 
@@ -92,6 +94,8 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         UUIDUtil.writeExternal(out, this.accountID);
         NumberUtil.writeExternalLong(out, this.privileges);
 

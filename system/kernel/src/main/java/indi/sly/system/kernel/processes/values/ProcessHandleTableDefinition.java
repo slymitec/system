@@ -1,11 +1,5 @@
 package indi.sly.system.kernel.processes.values;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.util.*;
-import java.util.Map.Entry;
-
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.CollectionUtil;
@@ -13,6 +7,12 @@ import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
+
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class ProcessHandleTableDefinition extends ADefinition<ProcessHandleTableDefinition> {
     public ProcessHandleTableDefinition() {
@@ -114,6 +114,8 @@ public class ProcessHandleTableDefinition extends ADefinition<ProcessHandleTable
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         int valueInteger;
 
         valueInteger = NumberUtil.readExternalInteger(in);
@@ -129,6 +131,8 @@ public class ProcessHandleTableDefinition extends ADefinition<ProcessHandleTable
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         NumberUtil.writeExternalInteger(out, this.handleTable.size());
         for (Entry<UUID, ProcessHandleEntryDefinition> pair : this.handleTable.entrySet()) {
             UUIDUtil.writeExternal(out, pair.getKey());

@@ -98,6 +98,8 @@ public class SignalDefinition extends ADefinition<SignalDefinition> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.processID = UUIDUtil.readExternal(in);
 
         int valueInteger;
@@ -117,6 +119,8 @@ public class SignalDefinition extends ADefinition<SignalDefinition> {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         UUIDUtil.writeExternal(out, this.processID);
 
         NumberUtil.writeExternalInteger(out, this.sourceProcessIDs.size());

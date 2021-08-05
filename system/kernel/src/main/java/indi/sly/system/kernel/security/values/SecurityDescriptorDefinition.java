@@ -81,6 +81,8 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.inherit = NumberUtil.readExternalBoolean(in);
         this.hasChild = NumberUtil.readExternalBoolean(in);
 
@@ -104,6 +106,8 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         NumberUtil.writeExternalBoolean(out, this.inherit);
         NumberUtil.writeExternalBoolean(out, this.hasChild);
 

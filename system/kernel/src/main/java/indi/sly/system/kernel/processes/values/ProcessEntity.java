@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.UUIDUtil;
@@ -160,6 +159,8 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.id = UUIDUtil.readExternal(in);
         this.status = NumberUtil.readExternalLong(in);
         this.parentProcessID = UUIDUtil.readExternal(in);
@@ -173,6 +174,8 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         UUIDUtil.writeExternal(out, this.id);
         NumberUtil.writeExternalLong(out, this.status);
         UUIDUtil.writeExternal(out, this.parentProcessID);

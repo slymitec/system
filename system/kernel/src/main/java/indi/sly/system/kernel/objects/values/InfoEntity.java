@@ -153,6 +153,8 @@ public class InfoEntity extends AEntity<InfoEntity> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.id = UUIDUtil.readExternal(in);
         this.type = UUIDUtil.readExternal(in);
         this.occupied = NumberUtil.readExternalLong(in);
@@ -166,6 +168,8 @@ public class InfoEntity extends AEntity<InfoEntity> {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         UUIDUtil.writeExternal(out, this.id);
         UUIDUtil.writeExternal(out, this.type);
         NumberUtil.writeExternalLong(out, this.occupied);

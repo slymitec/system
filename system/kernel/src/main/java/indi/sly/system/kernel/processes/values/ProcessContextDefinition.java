@@ -88,6 +88,8 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.type = NumberUtil.readExternalLong(in);
         this.application = ObjectUtil.readExternal(in);
 
@@ -108,6 +110,8 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         NumberUtil.writeExternalLong(out, this.type);
         ObjectUtil.writeExternal(out, this.application);
 

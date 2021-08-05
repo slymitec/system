@@ -64,6 +64,8 @@ public class AccessControlDefinition extends ADefinition<AccessControlDefinition
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.userID = ObjectUtil.readExternal(in);
         this.scope = NumberUtil.readExternalLong(in);
         this.value = NumberUtil.readExternalLong(in);
@@ -71,6 +73,8 @@ public class AccessControlDefinition extends ADefinition<AccessControlDefinition
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         ObjectUtil.writeExternal(out, this.userID);
         NumberUtil.writeExternalLong(out, this.scope);
         NumberUtil.writeExternalLong(out, this.value);

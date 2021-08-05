@@ -79,6 +79,8 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.type = NumberUtil.readExternalLong(in);
         this.accountID = UUIDUtil.readExternal(in);
 
@@ -102,6 +104,8 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         NumberUtil.writeExternalLong(out, this.type);
         UUIDUtil.writeExternal(out, this.accountID);
 

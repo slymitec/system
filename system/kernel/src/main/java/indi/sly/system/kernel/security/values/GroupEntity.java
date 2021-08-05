@@ -1,10 +1,10 @@
 package indi.sly.system.kernel.security.values;
 
-import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.kernel.core.values.AEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "KernelGroups")
-public class GroupEntity implements ISerializeCapable<GroupEntity> {
+public class GroupEntity extends AEntity<GroupEntity> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -87,6 +87,8 @@ public class GroupEntity implements ISerializeCapable<GroupEntity> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.id = UUIDUtil.readExternal(in);
         this.name = StringUtil.readExternal(in);
         this.token = NumberUtil.readExternalBytes(in);
@@ -94,6 +96,8 @@ public class GroupEntity implements ISerializeCapable<GroupEntity> {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         UUIDUtil.writeExternal(out, this.id);
         StringUtil.writeExternal(out, this.name);
         NumberUtil.writeExternalBytes(out, this.token);

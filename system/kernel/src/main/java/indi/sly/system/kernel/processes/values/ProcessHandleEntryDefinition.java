@@ -85,6 +85,8 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.handle = UUIDUtil.readExternal(in);
 
         int valueInteger;
@@ -105,6 +107,8 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         UUIDUtil.writeExternal(out, this.handle);
 
         for (Entry<Long, Long> pair : this.date.entrySet()) {

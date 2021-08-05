@@ -448,7 +448,9 @@ public class ProcessStatisticsDefinition extends ADefinition<ProcessStatisticsDe
     }
 
     @Override
-    public void readExternal(ObjectInput in) throws IOException {
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         int valueInteger;
 
         valueInteger = NumberUtil.readExternalInteger(in);
@@ -491,6 +493,8 @@ public class ProcessStatisticsDefinition extends ADefinition<ProcessStatisticsDe
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         NumberUtil.writeExternalInteger(out, this.date.size());
         for (Map.Entry<Long, Long> pair : this.date.entrySet()) {
             NumberUtil.writeExternalLong(out, pair.getKey());

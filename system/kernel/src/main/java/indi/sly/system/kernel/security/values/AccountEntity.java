@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.security.values;
 
-import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.supports.*;
+import indi.sly.system.kernel.core.values.AEntity;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "KernelAccounts")
-public class AccountEntity implements ISerializeCapable<AccountEntity> {
+public class AccountEntity extends AEntity<AccountEntity> {
     private static final long serialVersionUID = 1L;
 
     public AccountEntity() {
@@ -102,6 +102,8 @@ public class AccountEntity implements ISerializeCapable<AccountEntity> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         int valueInteger;
 
         this.id = UUIDUtil.readExternal(in);
@@ -118,6 +120,8 @@ public class AccountEntity implements ISerializeCapable<AccountEntity> {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         UUIDUtil.writeExternal(out, this.id);
         StringUtil.writeExternal(out, this.name);
         StringUtil.writeExternal(out, this.password);

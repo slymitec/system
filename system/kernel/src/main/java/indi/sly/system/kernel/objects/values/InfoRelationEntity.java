@@ -91,6 +91,8 @@ public class InfoRelationEntity extends AEntity<InfoRelationEntity> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.id = UUIDUtil.readExternal(in);
         this.parentID = UUIDUtil.readExternal(in);
         this.type = UUIDUtil.readExternal(in);
@@ -99,6 +101,8 @@ public class InfoRelationEntity extends AEntity<InfoRelationEntity> {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         UUIDUtil.writeExternal(out, this.id);
         UUIDUtil.writeExternal(out, this.parentID);
         UUIDUtil.writeExternal(out, this.type);

@@ -80,6 +80,8 @@ public class SignalEntryDefinition extends ADefinition<SignalEntryDefinition> {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.source = UUIDUtil.readExternal(in);
         this.key = NumberUtil.readExternalLong(in);
         this.value = NumberUtil.readExternalLong(in);
@@ -94,6 +96,8 @@ public class SignalEntryDefinition extends ADefinition<SignalEntryDefinition> {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         UUIDUtil.writeExternal(out, this.source);
         NumberUtil.writeExternalLong(out, this.key);
         NumberUtil.writeExternalLong(out, this.value);

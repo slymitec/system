@@ -67,6 +67,8 @@ public class ProcessCommunicationDefinition extends ADefinition<ProcessCommunica
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+
         this.shared = NumberUtil.readExternalBytes(in);
 
         int valueInteger;
@@ -81,6 +83,8 @@ public class ProcessCommunicationDefinition extends ADefinition<ProcessCommunica
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+
         NumberUtil.writeExternalBytes(out, this.shared);
 
         NumberUtil.writeExternalInteger(out, this.portIDs.size());

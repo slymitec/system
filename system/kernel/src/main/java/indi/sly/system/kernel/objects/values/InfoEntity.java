@@ -36,9 +36,6 @@ public class InfoEntity extends AEntity<InfoEntity> {
     @Column(length = 4096, name = "ContentStream", nullable = true)
     protected byte[] content;
 
-    public InfoEntity() {
-    }
-
     public UUID getID() {
         return this.id;
     }

@@ -69,7 +69,7 @@ public class PortContentObject extends AInfoContentObject {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
 
-        byte[] value = null;
+        byte[] value;
 
         try {
             this.lock(LockType.WRITE);

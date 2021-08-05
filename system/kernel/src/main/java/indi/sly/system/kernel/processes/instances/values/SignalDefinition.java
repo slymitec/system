@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.processes.instances.values;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
@@ -56,7 +55,7 @@ public class SignalDefinition extends ADefinition<SignalDefinition> {
 
         this.signalEntries.clear();
 
-        return CollectionUtil.unmodifiable(resultSignalEntries);
+        return resultSignalEntries;
     }
 
     public void add(SignalEntryDefinition signalEntry) {

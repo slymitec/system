@@ -124,7 +124,7 @@ public class SessionContentObject extends AInfoContentObject {
     public Map<String, String> getEnvironmentVariables() {
         this.init();
 
-        return session.getEnvironmentVariables();
+        return CollectionUtil.unmodifiable(this.session.getEnvironmentVariables());
     }
 
     public void setEnvironmentVariables(Map<String, String> environment) {
@@ -148,7 +148,7 @@ public class SessionContentObject extends AInfoContentObject {
     public Map<String, String> getParameters() {
         this.init();
 
-        return session.getParameters();
+        return CollectionUtil.unmodifiable(this.session.getParameters());
     }
 
     public void setParameters(Map<String, String> parameters) {

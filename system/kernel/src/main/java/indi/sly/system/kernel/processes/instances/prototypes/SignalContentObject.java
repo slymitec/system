@@ -98,7 +98,7 @@ public class SignalContentObject extends AInfoContentObject {
             this.lock(LockType.NONE);
         }
 
-        return signalEntries;
+        return CollectionUtil.unmodifiable(signalEntries);
     }
 
     public void send(long key, long value) {

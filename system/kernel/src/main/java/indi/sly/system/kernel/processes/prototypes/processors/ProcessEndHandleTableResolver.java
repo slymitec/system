@@ -28,7 +28,7 @@ public class ProcessEndHandleTableResolver extends APrototype implements IProces
                 try {
                     InfoObject info = processHandleEntry.getInfo();
                     info.close();
-                } catch (AKernelException ignore) {
+                } catch (AKernelException ignored) {
                 }
             }
 

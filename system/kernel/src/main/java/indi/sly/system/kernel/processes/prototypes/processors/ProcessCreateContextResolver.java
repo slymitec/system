@@ -78,7 +78,7 @@ public class ProcessCreateContextResolver extends APrototype implements IProcess
                     if (!configuration.FILES_TYPES_INSTANCE_FOLDER_ID.equals(processContextWorkFolderInfo.getType())) {
                         processContextWorkFolder = null;
                     }
-                } catch (AKernelException ignore) {
+                } catch (AKernelException ignored) {
                     processContextWorkFolder = null;
                 }
             }

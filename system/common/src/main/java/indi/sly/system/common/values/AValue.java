@@ -22,7 +22,7 @@ public abstract class AValue<T> extends ABase implements ISerializeCapable<T> {
         } catch (StatusDisabilityException e) {
             try {
                 value = super.clone();
-            } catch (Exception ignore) {
+            } catch (Exception ignored) {
                 throw e;
             }
         }

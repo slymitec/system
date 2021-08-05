@@ -432,7 +432,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
                 audits = audits.getChild(new IdentificationDefinition(accountName));
                 audit = audits.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
                         InfoOpenAttributeType.OPEN_EXCLUSIVE);
-            } catch (AKernelException ignore) {
+            } catch (AKernelException ignored) {
                 return;
             }
 

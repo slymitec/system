@@ -76,7 +76,6 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
             if (ValueUtil.isAnyNullOrEmpty(childInfo.getType())) {
                 childInfo.setType(childType);
             }
-            childInfo.setOccupied(0);
             childInfo.setOpened(0);
             if (ValueUtil.isAnyNullOrEmpty(childInfo.getName())) {
                 if (identification.getType().equals(UUID.class)) {
@@ -126,7 +125,7 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
         this.deleteChild = (info, type, status, identification) -> {
             InfoEntity childInfo = this.getOrRebuildChild.apply(null, info, type, status, identification, null);
 
-            if (childInfo.getOccupied() > 0 || childInfo.getOpened() > 0) {
+            if (childInfo.getOpened() > 0) {
                 throw new StatusIsUsedException();
             }
 
@@ -156,7 +155,7 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
         this.renameChild = (info, type, status, oldIdentification, newIdentification) -> {
             InfoEntity childInfo = this.getOrRebuildChild.apply(null, info, type, status, oldIdentification, null);
 
-            if (childInfo.getOccupied() > 0 || childInfo.getOpened() > 0) {
+            if (childInfo.getOpened() > 0) {
                 throw new StatusIsUsedException();
             }
 

@@ -20,7 +20,7 @@ import java.util.Map;
 public class InfoDateResolver extends APrototype implements IInfoResolver {
     public InfoDateResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+            DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -32,7 +32,7 @@ public class InfoDateResolver extends APrototype implements IInfoResolver {
         };
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+            DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -46,7 +46,7 @@ public class InfoDateResolver extends APrototype implements IInfoResolver {
         };
 
         this.readContent = (content, info, type, status) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+            DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -58,7 +58,7 @@ public class InfoDateResolver extends APrototype implements IInfoResolver {
         };
 
         this.writeContent = (info, type, status, content) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+            DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 

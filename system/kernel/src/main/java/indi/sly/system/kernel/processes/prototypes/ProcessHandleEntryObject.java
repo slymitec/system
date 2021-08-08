@@ -18,7 +18,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -44,7 +43,7 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
             throw new StatusNotExistedException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -79,7 +78,7 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
             throw new StatusNotExistedException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -107,7 +106,7 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
             throw new StatusNotExistedException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -135,7 +134,7 @@ public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHand
             throw new StatusNotExistedException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 

@@ -1,22 +1,24 @@
 package indi.sly.system.kernel.objects.prototypes;
 
-import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.*;
-import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
+import indi.sly.system.common.lang.ConditionContextException;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusDisabilityException;
+import indi.sly.system.common.lang.StatusUnexpectedException;
+import indi.sly.system.common.supports.CollectionUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.*;
-import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.values.PrivilegeType;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -59,14 +61,6 @@ public class InfoObject extends APrototype {
         return this.getSelf().getType();
     }
 
-    public long getOccupied() {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
-            throw new ConditionContextException();
-        }
-
-        return this.getSelf().getOccupied();
-    }
-
     public long getOpened() {
         if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
@@ -89,74 +83,6 @@ public class InfoObject extends APrototype {
         }
 
         return CollectionUtil.unmodifiable(this.status.getIdentifications());
-    }
-
-    private synchronized void occupy() {
-        InfoEntity info = this.getSelf();
-        info.setOccupied(info.getOccupied() + 1);
-
-        InfoObject parent = this.getParent();
-        if (ObjectUtil.allNotNull(parent)) {
-            parent.occupy();
-        }
-    }
-
-    private synchronized void free() {
-        InfoEntity info = this.getSelf();
-        info.setOccupied(info.getOccupied() - 1);
-
-        InfoObject parent = this.getParent();
-        if (ObjectUtil.allNotNull(parent)) {
-            parent.free();
-        }
-    }
-
-    private synchronized void cache(long space) {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
-            throw new ConditionContextException();
-        }
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject currentProcess = processManager.getCurrent();
-        ProcessTokenObject currentProcessToken = currentProcess.getToken();
-
-        InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
-                InfoCacheObject.class);
-
-        if (LogicalUtil.isAnyExist(space, SpaceType.KERNEL)) {
-            if (!currentProcessToken.isPrivileges(PrivilegeType.MEMORY_CACHE_MODIFY_KERNEL_SPACE_CACHE)) {
-                throw new ConditionRefuseException();
-            }
-
-            kernelCache.add(SpaceType.KERNEL, this);
-        }
-        if (LogicalUtil.isAnyExist(space, SpaceType.USER)) {
-            kernelCache.add(SpaceType.USER, this);
-        }
-    }
-
-    private synchronized void uncache(long space) {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
-            throw new ConditionContextException();
-        }
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject currentProcess = processManager.getCurrent();
-        ProcessTokenObject currentProcessToken = currentProcess.getToken();
-
-        InfoCacheObject kernelCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
-                InfoCacheObject.class);
-
-        if (LogicalUtil.isAnyExist(space, SpaceType.KERNEL)) {
-            if (!currentProcessToken.isPrivileges(PrivilegeType.MEMORY_CACHE_MODIFY_KERNEL_SPACE_CACHE)) {
-                throw new ConditionRefuseException();
-            }
-
-            kernelCache.delete(SpaceType.KERNEL, this.id);
-        }
-        if (LogicalUtil.isAnyExist(space, SpaceType.USER)) {
-            kernelCache.delete(SpaceType.USER, this.id);
-        }
     }
 
     private synchronized InfoEntity getSelf() {
@@ -182,12 +108,12 @@ public class InfoObject extends APrototype {
     }
 
     public synchronized InfoObject getParent() {
-        InfoEntity info = this.getSelf();
+        this.getSelf();
 
         if (ValueUtil.isAnyNullOrEmpty(this.status.getParentID())) {
             return null;
         } else {
-            return this.processorMediator.getParent().apply(this.status.getParentID());
+            return this.processorMediator.getParent().apply(this.status);
         }
     }
 
@@ -248,11 +174,6 @@ public class InfoObject extends APrototype {
             }
         }
 
-        InfoObject parentInfo = this.getParent();
-        if (ObjectUtil.allNotNull(parentInfo)) {
-            parentInfo.occupy();
-        }
-
         return handle;
     }
 
@@ -266,11 +187,6 @@ public class InfoObject extends APrototype {
 
         for (InfoProcessorCloseConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status);
-        }
-
-        InfoObject parentInfo = this.getParent();
-        if (ObjectUtil.allNotNull(parentInfo)) {
-            parentInfo.free();
         }
     }
 
@@ -352,16 +268,7 @@ public class InfoObject extends APrototype {
             throw new StatusUnexpectedException();
         }
 
-        InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
-                InfoCacheObject.class);
-
-        InfoObject childCachedInfo = infoCache.getIfExisted(SpaceType.ALL, childInfo.getID());
-        if (ObjectUtil.isAnyNull(childCachedInfo)) {
-            childCachedInfo = this.factory.buildInfo(childInfo, this);
-
-            childCachedInfo.cache(SpaceType.USER);
-        }
-        return childCachedInfo;
+        return this.factory.buildInfo(childInfo, this);
     }
 
     public synchronized void deleteChild(IdentificationDefinition identification) {
@@ -380,8 +287,6 @@ public class InfoObject extends APrototype {
         for (InfoProcessorDeleteChildConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status, identification);
         }
-
-        childInfo.uncache(SpaceType.ALL);
     }
 
     public synchronized Set<InfoSummaryDefinition> queryChild(Predicate<InfoSummaryDefinition> wildcard) {

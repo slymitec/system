@@ -1,34 +1,31 @@
 package indi.sly.system.kernel.objects.prototypes;
 
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.prototypes.AFactory;
+import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
+import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
+import indi.sly.system.kernel.objects.prototypes.processors.IInfoResolver;
+import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
+import indi.sly.system.kernel.objects.values.DumpDefinition;
+import indi.sly.system.kernel.objects.values.InfoEntity;
+import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+
+import javax.inject.Named;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import javax.inject.Named;
-
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.prototypes.AFactory;
-import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
-import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
-import indi.sly.system.kernel.objects.values.DumpDefinition;
-import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.objects.TypeManager;
-import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.prototypes.processors.IInfoResolver;
-import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -40,7 +37,7 @@ public class InfoFactory extends AFactory {
         this.infoResolvers = new CopyOnWriteArrayList<>();
 
         Set<APrototype> corePrototypes =
-                this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL,
+                this.factoryManager.getCorePrototypeRepository().getByImplementInterface(SpaceType.KERNEL,
                         IInfoResolver.class);
 
         for (APrototype pair : corePrototypes) {
@@ -53,24 +50,22 @@ public class InfoFactory extends AFactory {
     }
 
     public InfoObject getRootInfo() {
-        InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
-                InfoCacheObject.class);
+        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
-        return infoCache.getIfExisted(SpaceType.KERNEL,
-                this.factoryManager.getKernelSpace().getConfiguration().OBJECTS_PROTOTYPE_ROOT_ID);
+        return this.factoryManager.getCorePrototypeRepository().getByID(SpaceType.KERNEL, InfoObject.class, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
     }
 
     private InfoObject buildInfo(InfoProcessorMediator processorMediator, UUID infoID, UUID poolID,
                                  InfoStatusDefinition status) {
-        InfoObject infoObject = this.factoryManager.create(InfoObject.class);
+        InfoObject info = this.factoryManager.create(InfoObject.class);
 
-        infoObject.factory = this;
-        infoObject.processorMediator = processorMediator;
-        infoObject.id = infoID;
-        infoObject.poolID = poolID;
-        infoObject.status = status;
+        info.factory = this;
+        info.processorMediator = processorMediator;
+        info.id = infoID;
+        info.poolID = poolID;
+        info.status = status;
 
-        return infoObject;
+        return info;
     }
 
     private InfoObject buildInfo(InfoEntity info, UUID poolID, InfoObject parentInfo) {
@@ -97,7 +92,7 @@ public class InfoFactory extends AFactory {
         return this.buildInfo(processorMediator, info.getID(), poolID, status);
     }
 
-    public InfoObject buildRootInfo() {
+    public void buildRootInfo() {
         KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
@@ -106,7 +101,8 @@ public class InfoFactory extends AFactory {
         InfoEntity info =
                 infoRepository.get(kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
 
-        return this.buildInfo(info, kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID, null);
+        this.factoryManager.getCorePrototypeRepository().addByID(SpaceType.KERNEL, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID, this.buildInfo(info,
+                kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID, null));
     }
 
     public InfoObject buildInfo(InfoEntity info, InfoObject parentInfo) {
@@ -127,7 +123,6 @@ public class InfoFactory extends AFactory {
 
         //
 
-
-        return null;
+        return dumpObject;
     }
 }

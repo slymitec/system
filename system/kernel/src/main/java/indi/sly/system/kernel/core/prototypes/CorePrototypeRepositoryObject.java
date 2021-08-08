@@ -1,26 +1,28 @@
 package indi.sly.system.kernel.core.prototypes;
 
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
-import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CoreRepositoryObject extends APrototype {
+public class CorePrototypeRepositoryObject extends APrototype {
     private KernelSpaceDefinition kernelSpace;
 
     private KernelSpaceDefinition getKernelSpace() {
@@ -64,11 +66,6 @@ public class CoreRepositoryObject extends APrototype {
 
         if (space == SpaceType.KERNEL) {
             corePrototypes.addAll(this.getKernelSpace().getCorePrototypes().values());
-        } else if (space == SpaceType.USER) {
-            corePrototypes.addAll(this.getUserSpace().getInfos().values());
-        } else if (space == SpaceType.ALL) {
-            corePrototypes.addAll(this.getKernelSpace().getCorePrototypes().values());
-            corePrototypes.addAll(this.getUserSpace().getInfos().values());
         } else {
             throw new ConditionParametersException();
         }
@@ -143,25 +140,6 @@ public class CoreRepositoryObject extends APrototype {
                 Map<UUID, APrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
 
                 APrototype corePrototype = corePrototypes.getOrDefault(id, null);
-                if (ObjectUtil.isAnyNull(corePrototype)) {
-                    throw new StatusNotExistedException();
-                } else if (corePrototype.getClass() != clazz) {
-                    throw new StatusRelationshipErrorException();
-                }
-
-                return (T) corePrototype;
-            } finally {
-                lock.unlock();
-            }
-        } else if (spaceType == SpaceType.USER) {
-            Lock lock = this.getLock(spaceType, LockType.READ);
-
-            try {
-                lock.lock();
-
-                Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfos();
-
-                InfoObject corePrototype = corePrototypes.getOrDefault(id, null);
                 if (ObjectUtil.isAnyNull(corePrototype)) {
                     throw new StatusNotExistedException();
                 } else if (corePrototype.getClass() != clazz) {
@@ -371,26 +349,6 @@ public class CoreRepositoryObject extends APrototype {
             } finally {
                 lock.unlock();
             }
-        } else if (spaceType == SpaceType.USER) {
-            Lock lock = this.getLock(spaceType, LockType.WRITE);
-
-            try {
-                lock.lock();
-
-                Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfos();
-
-                if (corePrototypes.containsKey(id)) {
-                    throw new StatusAlreadyExistedException();
-                }
-
-                if (!(corePrototype instanceof InfoObject)) {
-                    throw new StatusRelationshipErrorException();
-                }
-
-                corePrototypes.put(id, (InfoObject) corePrototype);
-            } finally {
-                lock.unlock();
-            }
         } else {
             throw new StatusNotSupportedException();
         }
@@ -473,27 +431,6 @@ public class CoreRepositoryObject extends APrototype {
                 } else {
                     isContain = true;
                 }
-
-                return isContain;
-            } finally {
-                lock.unlock();
-            }
-        } else if (spaceType == SpaceType.USER) {
-            Lock lock = this.getLock(spaceType, LockType.WRITE);
-
-            try {
-                lock.lock();
-
-                Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfos();
-
-                InfoObject corePrototype = corePrototypes.getOrDefault(id, null);
-                boolean isContain;
-                if (ObjectUtil.isAnyNull(corePrototype) || corePrototype.getClass() != clazz) {
-                    isContain = false;
-                } else {
-                    isContain = true;
-                }
-
 
                 return isContain;
             } finally {
@@ -594,20 +531,6 @@ public class CoreRepositoryObject extends APrototype {
                 }
 
                 Map<UUID, APrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
-
-                this.getByID(spaceType, clazz, id);
-
-                corePrototypes.remove(id);
-            } finally {
-                lock.unlock();
-            }
-        } else if (spaceType == SpaceType.USER) {
-            Lock lock = this.getLock(spaceType, LockType.WRITE);
-
-            try {
-                lock.lock();
-
-                Map<UUID, InfoObject> corePrototypes = this.getUserSpace().getInfos();
 
                 this.getByID(spaceType, clazz, id);
 

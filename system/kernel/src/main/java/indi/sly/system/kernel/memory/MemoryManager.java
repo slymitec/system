@@ -5,7 +5,6 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.memory.repositories.prototypes.DatabaseInfoRepositoryObject;
@@ -22,15 +21,13 @@ public class MemoryManager extends AManager {
     @Override
     public void startup(long startup) {
         if (startup == StartupType.STEP_INIT) {
-            this.factoryManager.getCoreRepository().add(SpaceType.KERNEL,
-                    this.factoryManager.create(InfoCacheObject.class));
-            this.factoryManager.getCoreRepository().addByID(SpaceType.KERNEL,
+            this.factoryManager.getCorePrototypeRepository().addByID(SpaceType.KERNEL,
                     this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID,
                     this.factoryManager.create(DatabaseInfoRepositoryObject.class));
 
-            this.factoryManager.getCoreRepository().add(SpaceType.KERNEL,
+            this.factoryManager.getCorePrototypeRepository().add(SpaceType.KERNEL,
                     this.factoryManager.create(ProcessRepositoryObject.class));
-            this.factoryManager.getCoreRepository().add(SpaceType.KERNEL,
+            this.factoryManager.getCorePrototypeRepository().add(SpaceType.KERNEL,
                     this.factoryManager.create(UserRepositoryObject.class));
         } else if (startup == StartupType.STEP_KERNEL) {
         }
@@ -45,14 +42,14 @@ public class MemoryManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        return this.factoryManager.getCoreRepository().getByID(SpaceType.KERNEL, AInfoRepositoryObject.class, id);
+        return this.factoryManager.getCorePrototypeRepository().getByID(SpaceType.KERNEL, AInfoRepositoryObject.class, id);
     }
 
     public ProcessRepositoryObject getProcessRepository() {
-        return this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, ProcessRepositoryObject.class);
+        return this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, ProcessRepositoryObject.class);
     }
 
     public UserRepositoryObject getUserRepository() {
-        return this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, UserRepositoryObject.class);
+        return this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, UserRepositoryObject.class);
     }
 }

@@ -196,7 +196,7 @@ public class ProcessHandleTableObject extends ABytesValueProcessPrototype<Proces
             throw new StatusInsufficientResourcesException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 

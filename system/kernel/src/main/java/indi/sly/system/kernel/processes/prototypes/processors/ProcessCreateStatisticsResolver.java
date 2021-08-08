@@ -20,7 +20,7 @@ public class ProcessCreateStatisticsResolver extends APrototype implements IProc
 
     public ProcessCreateStatisticsResolver() {
         this.create = (process, parentProcess, processCreator) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+            DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 

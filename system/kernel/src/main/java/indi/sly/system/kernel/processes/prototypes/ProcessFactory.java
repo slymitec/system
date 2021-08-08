@@ -35,7 +35,7 @@ public class ProcessFactory extends AFactory {
         this.processEndResolvers = new CopyOnWriteArrayList<>();
 
         Set<APrototype> corePrototypes =
-                this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL, IProcessResolver.class);
+                this.factoryManager.getCorePrototypeRepository().getByImplementInterface(SpaceType.KERNEL, IProcessResolver.class);
 
         for (APrototype prototype : corePrototypes) {
             if (prototype instanceof IProcessResolver) {
@@ -52,7 +52,7 @@ public class ProcessFactory extends AFactory {
     }
 
     private ProcessObject buildProcess(ProcessProcessorMediator processorMediator, UUID processID) {
-        DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                 DateTimeObject.class);
 
         ProcessObject process = this.factoryManager.create(ProcessObject.class);

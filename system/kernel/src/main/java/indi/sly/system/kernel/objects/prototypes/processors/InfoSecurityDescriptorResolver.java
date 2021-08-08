@@ -1,29 +1,33 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.StatusDisabilityException;
+import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.lang.StatusOverflowException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
+import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
+import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.lang.*;
+import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
-import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.security.values.SecurityDescriptorDefinition;
-import indi.sly.system.kernel.security.prototypes.*;
-import indi.sly.system.kernel.security.values.PermissionType;
+import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.AuditType;
+import indi.sly.system.kernel.security.values.PermissionType;
+import indi.sly.system.kernel.security.values.SecurityDescriptorDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -43,10 +47,15 @@ public class InfoSecurityDescriptorResolver extends APrototype implements IInfoR
             securityDescriptor.setIdentifications(status.getIdentifications());
 
             if (!ValueUtil.isAnyNullOrEmpty(status.getParentID())) {
-                InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
-                        InfoCacheObject.class);
+                List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
+                if (identifications.size() == 0) {
+                    throw new StatusNotExistedException();
+                }
 
-                InfoObject parentInfo = infoCache.getIfExisted(SpaceType.ALL, status.getParentID());
+                identifications.remove(identifications.size() - 1);
+
+                ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+                InfoObject parentInfo = objectManager.get(identifications);
 
                 SecurityDescriptorObject parentSecurityDescriptor = null;
                 try {

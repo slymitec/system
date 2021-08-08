@@ -1,22 +1,22 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeCounterObject;
+import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.lang.InfoProcessorCloseConsumer;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
+import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -29,7 +29,6 @@ public class InfoOpenOrCloseResolver extends APrototype implements IInfoResolver
             }
 
             info.setOpened(info.getOpened() + 1);
-            info.setOccupied(info.getOccupied() + 1);
 
             return handle;
         };
@@ -41,20 +40,18 @@ public class InfoOpenOrCloseResolver extends APrototype implements IInfoResolver
             }
 
             info.setOpened(info.getOpened() - 1);
-            info.setOccupied(info.getOccupied() - 1);
 
             if (!ValueUtil.isAnyNullOrEmpty(status.getParentID())) {
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.TEMPORARY) && info.getOpened() <= 0) {
-                    IdentificationDefinition identification;
-                    if (StringUtil.isNameIllegal(info.getName())) {
-                        identification = new IdentificationDefinition(info.getName());
-                    } else {
-                        identification = new IdentificationDefinition(info.getID());
+                    List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
+                    if (identifications.size() == 0) {
+                        return;
                     }
+                    IdentificationDefinition identification = identifications.remove(identifications.size() - 1);
 
-                    InfoCacheObject infoObject = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, InfoCacheObject.class);
+                    ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+                    InfoObject parentInfo = objectManager.get(identifications);
 
-                    InfoObject parentInfo = infoObject.getIfExisted(SpaceType.ALL, status.getParentID());
                     parentInfo.deleteChild(identification);
                 }
             }

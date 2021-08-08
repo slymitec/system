@@ -4,7 +4,6 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.Consumer1;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.core.prototypes.APrototype;
@@ -32,7 +31,7 @@ public class CenterFactory extends AFactory {
         this.centerResolvers = new CopyOnWriteArrayList<>();
 
         Set<APrototype> corePrototypes =
-                this.factoryManager.getCoreRepository().getByImplementInterface(SpaceType.KERNEL, IProcessResolver.class);
+                this.factoryManager.getCorePrototypeRepository().getByImplementInterface(SpaceType.KERNEL, IProcessResolver.class);
 
         for (APrototype prototype : corePrototypes) {
             if (prototype instanceof ICenterResolver) {

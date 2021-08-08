@@ -12,7 +12,7 @@ import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.prototypes.CorePrototypeValueBuilder;
-import indi.sly.system.kernel.core.prototypes.CoreRepositoryObject;
+import indi.sly.system.kernel.core.prototypes.CorePrototypeRepositoryObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
@@ -39,18 +39,18 @@ public class FactoryManager extends AManager {
 
             this.userSpace = () -> this.corePrototypeValue.createOrGetUserSpace();
 
-            this.coreRepository = this.create(CoreRepositoryObject.class);
-            this.coreRepository.add(SpaceType.KERNEL, this.create(FactoryManager.class));
-            this.coreRepository.add(SpaceType.KERNEL, this.create(MemoryManager.class));
-            this.coreRepository.add(SpaceType.KERNEL, this.create(ProcessManager.class));
-            this.coreRepository.add(SpaceType.KERNEL, this.create(ThreadManager.class));
-            this.coreRepository.add(SpaceType.KERNEL, this.create(TypeManager.class));
-            this.coreRepository.add(SpaceType.KERNEL, this.create(ObjectManager.class));
-            this.coreRepository.add(SpaceType.KERNEL, this.create(UserManager.class));
-            this.coreRepository.add(SpaceType.KERNEL, this.create(SessionManager.class));
+            this.corePrototypeRepository = this.create(CorePrototypeRepositoryObject.class);
+            this.corePrototypeRepository.add(SpaceType.KERNEL, this.create(FactoryManager.class));
+            this.corePrototypeRepository.add(SpaceType.KERNEL, this.create(MemoryManager.class));
+            this.corePrototypeRepository.add(SpaceType.KERNEL, this.create(ProcessManager.class));
+            this.corePrototypeRepository.add(SpaceType.KERNEL, this.create(ThreadManager.class));
+            this.corePrototypeRepository.add(SpaceType.KERNEL, this.create(TypeManager.class));
+            this.corePrototypeRepository.add(SpaceType.KERNEL, this.create(ObjectManager.class));
+            this.corePrototypeRepository.add(SpaceType.KERNEL, this.create(UserManager.class));
+            this.corePrototypeRepository.add(SpaceType.KERNEL, this.create(SessionManager.class));
 
-            this.coreRepository.add(SpaceType.KERNEL, this.create(DateTimeObject.class));
-            this.coreRepository.add(SpaceType.KERNEL, this.create(CoreRepositoryObject.class));
+            this.corePrototypeRepository.add(SpaceType.KERNEL, this.create(DateTimeObject.class));
+            this.corePrototypeRepository.add(SpaceType.KERNEL, this.create(CorePrototypeRepositoryObject.class));
         } else if (startup == StartupType.STEP_KERNEL) {
         }
     }
@@ -67,10 +67,10 @@ public class FactoryManager extends AManager {
     }
 
     private CorePrototypeValueBuilder corePrototypeValue;
-    private CoreRepositoryObject coreRepository;
+    private CorePrototypeRepositoryObject corePrototypeRepository;
 
-    public CoreRepositoryObject getCoreRepository() {
-        return this.coreRepository;
+    public CorePrototypeRepositoryObject getCorePrototypeRepository() {
+        return this.corePrototypeRepository;
     }
 
     public <T extends APrototype> T create(Class<T> clazz) {
@@ -78,7 +78,7 @@ public class FactoryManager extends AManager {
     }
 
     public <T extends AManager> T getManager(Class<T> clazz) {
-        T manager = this.coreRepository.get(SpaceType.KERNEL, clazz);
+        T manager = this.corePrototypeRepository.get(SpaceType.KERNEL, clazz);
 
         manager.check();
 
@@ -86,7 +86,7 @@ public class FactoryManager extends AManager {
     }
 
     public <T extends AService> T getService(Class<T> clazz) {
-        T manager = this.coreRepository.get(SpaceType.KERNEL, clazz);
+        T manager = this.corePrototypeRepository.get(SpaceType.KERNEL, clazz);
 
         manager.check();
 

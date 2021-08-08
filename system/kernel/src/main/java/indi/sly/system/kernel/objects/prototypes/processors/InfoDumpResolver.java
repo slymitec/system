@@ -24,7 +24,7 @@ public class InfoDumpResolver extends APrototype implements IInfoResolver {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
 
-            DateTimeObject dateTime = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
+            DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
             dump.getDate().put(DateTimeType.CREATE, nowDateTime);

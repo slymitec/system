@@ -157,31 +157,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     @Override
     public void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification,
                                      IdentificationDefinition newIdentification) {
-        if (oldIdentification.getType() != String.class || newIdentification.getType() != String.class) {
-            throw new StatusNotSupportedException();
-        }
-
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
-                info.getType()));
-
-        this.lockProcedure(info, LockType.WRITE);
-
-        String oldChildName = StringUtil.readFormBytes(oldIdentification.getID());
-        String newChildName = StringUtil.readFormBytes(oldIdentification.getID());
-
-        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
-        for (InfoRelationEntity infoRelation : infoRelations) {
-            if (infoRelation.getName().equals(oldChildName)) {
-                infoRelation.setName(newChildName);
-
-                this.lockProcedure(info, LockType.NONE);
-                return;
-            }
-        }
-
-        this.lockProcedure(info, LockType.NONE);
-        throw new StatusNotExistedException();
+        throw new StatusNotSupportedException();
     }
 
     @Override

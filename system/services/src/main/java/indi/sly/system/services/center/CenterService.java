@@ -42,7 +42,7 @@ public class CenterService extends AService {
         }
 
         CenterRepositoryObject centerRepository =
-                this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, CenterRepositoryObject.class);
+                this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, CenterRepositoryObject.class);
 
         CenterDefinition center = centerRepository.getCenters().getOrDefault(id, null);
 
@@ -59,7 +59,7 @@ public class CenterService extends AService {
         }
 
         CenterRepositoryObject centerRepository =
-                this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, CenterRepositoryObject.class);
+                this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, CenterRepositoryObject.class);
 
         UUID centerID = centerRepository.getCenterIDs().getOrDefault(name, null);
 

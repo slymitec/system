@@ -21,8 +21,6 @@ public class InfoEntity extends AEntity<InfoEntity> {
     protected UUID id;
     @Column(columnDefinition = "uniqueidentifier", name = "Type", nullable = false)
     protected UUID type;
-    @Column(name = "Occupied", nullable = false)
-    protected long occupied;
     @Column(name = "Opened", nullable = false)
     protected long opened;
     @Column(length = 256, name = "Name", nullable = true)
@@ -50,14 +48,6 @@ public class InfoEntity extends AEntity<InfoEntity> {
 
     public void setType(UUID type) {
         this.type = type;
-    }
-
-    public long getOccupied() {
-        return this.occupied;
-    }
-
-    public void setOccupied(long occupied) {
-        this.occupied = occupied;
     }
 
     public long getOpened() {
@@ -115,7 +105,6 @@ public class InfoEntity extends AEntity<InfoEntity> {
         InfoEntity that = (InfoEntity) o;
         return id.equals(that.id) &&
                 type.equals(that.type) &&
-                occupied == that.occupied &&
                 opened == that.opened &&
                 Objects.equals(name, that.name) &&
                 Arrays.equals(date, that.date) &&
@@ -126,7 +115,7 @@ public class InfoEntity extends AEntity<InfoEntity> {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, type, occupied, opened, name);
+        int result = Objects.hash(id, type, opened, name);
         result = 31 * result + Arrays.hashCode(date);
         result = 31 * result + Arrays.hashCode(securityDescriptor);
         result = 31 * result + Arrays.hashCode(properties);
@@ -140,7 +129,6 @@ public class InfoEntity extends AEntity<InfoEntity> {
 
         entity.id = this.id;
         entity.type = this.type;
-        entity.occupied = this.occupied;
         entity.opened = this.opened;
         entity.name = this.name;
         entity.date = ArrayUtil.copyBytes(this.date);
@@ -157,7 +145,6 @@ public class InfoEntity extends AEntity<InfoEntity> {
 
         this.id = UUIDUtil.readExternal(in);
         this.type = UUIDUtil.readExternal(in);
-        this.occupied = NumberUtil.readExternalLong(in);
         this.opened = NumberUtil.readExternalLong(in);
         this.name = StringUtil.readExternal(in);
         this.date = NumberUtil.readExternalBytes(in);
@@ -172,7 +159,6 @@ public class InfoEntity extends AEntity<InfoEntity> {
 
         UUIDUtil.writeExternal(out, this.id);
         UUIDUtil.writeExternal(out, this.type);
-        NumberUtil.writeExternalLong(out, this.occupied);
         NumberUtil.writeExternalLong(out, this.opened);
         StringUtil.writeExternal(out, this.name);
         NumberUtil.writeExternalBytes(out, this.date);

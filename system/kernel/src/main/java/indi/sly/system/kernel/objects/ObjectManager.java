@@ -1,21 +1,17 @@
 package indi.sly.system.kernel.objects;
 
-import java.util.List;
-
-import javax.inject.Named;
-
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.memory.caches.prototypes.InfoCacheObject;
+import indi.sly.system.kernel.core.AManager;
+import indi.sly.system.kernel.core.boot.values.StartupType;
+import indi.sly.system.kernel.objects.prototypes.InfoFactory;
+import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.AManager;
-import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.prototypes.InfoFactory;
+import javax.inject.Named;
+import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -29,10 +25,7 @@ public class ObjectManager extends AManager {
             this.factory = this.factoryManager.create(InfoFactory.class);
             this.factory.init();
 
-            InfoObject rootInfo = factory.buildRootInfo();
-            InfoCacheObject infoCache = this.factoryManager.getCoreRepository().get(SpaceType.KERNEL,
-                    InfoCacheObject.class);
-            infoCache.add(SpaceType.KERNEL, rootInfo);
+            this.factory.buildRootInfo();
         }
     }
 

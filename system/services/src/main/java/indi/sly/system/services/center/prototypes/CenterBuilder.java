@@ -26,7 +26,7 @@ public class CenterBuilder extends APrototype {
         }
 
         CenterRepositoryObject centerRepository =
-                this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, CenterRepositoryObject.class);
+                this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, CenterRepositoryObject.class);
 
         if (centerRepository.getCenterIDs().containsKey(name)) {
             throw new StatusAlreadyExistedException();
@@ -55,7 +55,7 @@ public class CenterBuilder extends APrototype {
         }
 
         CenterRepositoryObject centerRepository =
-                this.factoryManager.getCoreRepository().get(SpaceType.KERNEL, CenterRepositoryObject.class);
+                this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, CenterRepositoryObject.class);
 
         if (!centerRepository.getCenters().containsKey(id)) {
             throw new StatusNotExistedException();

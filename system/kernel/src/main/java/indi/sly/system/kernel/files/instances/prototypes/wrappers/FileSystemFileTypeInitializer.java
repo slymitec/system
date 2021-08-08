@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.files.instances.prototypes.wrappers;
 
+import indi.sly.system.common.lang.Predicate1;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
@@ -7,13 +8,16 @@ import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentOb
 import indi.sly.system.kernel.files.instances.values.FileSystemFileDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.objects.values.*;
+import indi.sly.system.kernel.objects.values.DumpDefinition;
+import indi.sly.system.kernel.objects.values.InfoEntity;
+import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.Set;
+import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -70,7 +74,7 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate<InfoSummaryDefinition> wildcard) {
+    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate1<InfoSummaryDefinition> wildcard) {
         throw new StatusNotSupportedException();
     }
 

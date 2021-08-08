@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.security.instances.prototypes.processors;
 
+import indi.sly.system.common.lang.Predicate1;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
@@ -20,7 +21,6 @@ import org.springframework.context.annotation.Scope;
 import javax.inject.Named;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -84,7 +84,7 @@ public class AuditTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate<InfoSummaryDefinition> wildcard) {
+    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate1<InfoSummaryDefinition> wildcard) {
         throw new StatusNotSupportedException();
     }
 

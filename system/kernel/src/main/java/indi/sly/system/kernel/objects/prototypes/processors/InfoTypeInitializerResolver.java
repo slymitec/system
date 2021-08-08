@@ -143,9 +143,9 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
             typeInitializer.deleteChildProcedure(info, identification);
         };
 
-        this.queryChild = (infoSummaries, info, type, status, queryChild) -> {
+        this.queryChild = (infoSummaries, info, type, status, wildcard) -> {
             AInfoTypeInitializer typeInitializer = type.getInitializer();
-            Set<InfoSummaryDefinition> infoSummary = typeInitializer.queryChildProcedure(info, queryChild);
+            Set<InfoSummaryDefinition> infoSummary = typeInitializer.queryChildProcedure(info, wildcard);
 
             infoSummaries.addAll(infoSummary);
 

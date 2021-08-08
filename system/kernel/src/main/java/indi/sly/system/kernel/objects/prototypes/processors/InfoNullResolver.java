@@ -23,7 +23,7 @@ public class InfoNullResolver extends APrototype implements IInfoResolver {
         this.deleteChild = (info, type, status, identification) -> {
         };
 
-        this.queryChild = (summaryDefinitions, info, type, status, queryChild) -> summaryDefinitions;
+        this.queryChild = (summaryDefinitions, info, type, status, wildcard) -> summaryDefinitions;
 
         this.renameChild = (info, type, status, oldIdentification, newIdentification) -> {
         };

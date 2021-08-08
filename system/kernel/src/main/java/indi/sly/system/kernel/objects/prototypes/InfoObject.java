@@ -1,9 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes;
 
-import indi.sly.system.common.lang.ConditionContextException;
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusDisabilityException;
-import indi.sly.system.common.lang.StatusUnexpectedException;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
@@ -25,7 +22,6 @@ import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.*;
-import java.util.function.Predicate;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -281,7 +277,7 @@ public class InfoObject extends APrototype {
         }
     }
 
-    public synchronized Set<InfoSummaryDefinition> queryChild(Predicate<InfoSummaryDefinition> wildcard) {
+    public synchronized Set<InfoSummaryDefinition> queryChild(Predicate1<InfoSummaryDefinition> wildcard) {
         if (ObjectUtil.isAnyNull(wildcard)) {
             throw new ConditionParametersException();
         }

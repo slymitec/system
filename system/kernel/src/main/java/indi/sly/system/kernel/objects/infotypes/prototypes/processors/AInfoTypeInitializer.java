@@ -1,13 +1,19 @@
 package indi.sly.system.kernel.objects.infotypes.prototypes.processors;
 
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Predicate;
-
-import javax.inject.Named;
-
 import indi.sly.system.common.lang.Consumer;
+import indi.sly.system.common.lang.Consumer1;
+import indi.sly.system.common.lang.Predicate1;
+import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
+import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
+import indi.sly.system.kernel.objects.values.DumpDefinition;
+import indi.sly.system.kernel.objects.values.InfoEntity;
+import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
@@ -15,17 +21,9 @@ import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import indi.sly.system.common.lang.Consumer1;
-import indi.sly.system.common.lang.Provider;
-import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
-import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
-import indi.sly.system.kernel.objects.values.DumpDefinition;
+import javax.inject.Named;
+import java.util.Set;
+import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -59,7 +57,7 @@ public abstract class AInfoTypeInitializer extends APrototype {
 
     public abstract InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification);
 
-    public abstract Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate<InfoSummaryDefinition> wildcard);
+    public abstract Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate1<InfoSummaryDefinition> wildcard);
 
     public abstract void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification, IdentificationDefinition newIdentification);
 

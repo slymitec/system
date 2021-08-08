@@ -107,7 +107,7 @@ public class InfoProcessAndThreadStatisticsResolver extends APrototype implement
             threadStatistics.addInfoDelete(1);
         };
 
-        this.queryChild = (summaryDefinitions, info, type, status, queryChild) -> {
+        this.queryChild = (summaryDefinitions, info, type, status, wildcard) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 

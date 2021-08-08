@@ -64,7 +64,7 @@ public class InfoCheckConditionResolver extends APrototype implements IInfoResol
             }
         };
 
-        this.queryChild = (summaryDefinitions, info, type, status, queryChild) -> {
+        this.queryChild = (summaryDefinitions, info, type, status, wildcard) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)) {
                 throw new StatusNotSupportedException();
             }

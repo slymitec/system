@@ -161,7 +161,7 @@ public class InfoSecurityDescriptorResolver extends APrototype implements IInfoR
             }
         };
 
-        this.queryChild = (summaryDefinitions, info, type, status, queryChild) -> {
+        this.queryChild = (summaryDefinitions, info, type, status, wildcard) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 

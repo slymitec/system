@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -41,12 +40,9 @@ public class InfoOpenOrCloseResolver extends APrototype implements IInfoResolver
 
             info.setOpened(info.getOpened() - 1);
 
-            if (!ValueUtil.isAnyNullOrEmpty(status.getParentID())) {
+            if (status.getIdentifications().size() > 0) {
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.TEMPORARY) && info.getOpened() <= 0) {
                     List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
-                    if (identifications.size() == 0) {
-                        return;
-                    }
                     IdentificationDefinition identification = identifications.remove(identifications.size() - 1);
 
                     ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);

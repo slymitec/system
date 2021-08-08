@@ -32,7 +32,7 @@ public class CenterContentObject extends APrototype {
         if (ObjectUtil.isAnyNull(clazz, defaultValue) || StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
-        
+
         Map<String, Object> threadContextData = this.threadContext.getData();
 
         Object value = threadContextData.getOrDefault(name, null);
@@ -61,8 +61,8 @@ public class CenterContentObject extends APrototype {
     public Map<String, String> getData() {
         Map<String, String> data = new HashMap<>();
 
-        for (Map.Entry<String, Object> pair : this.threadContext.getData().entrySet()) {
-            data.put(pair.getKey(), ObjectUtil.transferToString(pair.getValue()));
+        for (Map.Entry<String, Object> datum : this.threadContext.getData().entrySet()) {
+            data.put(datum.getKey(), ObjectUtil.transferToString(datum.getValue()));
         }
 
         return data;
@@ -75,16 +75,16 @@ public class CenterContentObject extends APrototype {
 
         Map<String, Object> threadContextData = new HashMap<>();
 
-        for (Map.Entry<String, String> pair : data.entrySet()) {
-            if (StringUtil.isNameIllegal(pair.getKey())) {
+        for (Map.Entry<String, String> datum : data.entrySet()) {
+            if (StringUtil.isNameIllegal(datum.getKey())) {
                 throw new ConditionParametersException();
             } else {
-                Class<?> clazz = classes.getOrDefault(pair.getKey(), null);
+                Class<?> clazz = classes.getOrDefault(datum.getKey(), null);
                 if (ObjectUtil.isAnyNull(clazz)) {
                     throw new ConditionParametersException();
                 }
 
-                threadContextData.put(pair.getKey(), ObjectUtil.transferFromString(clazz, pair.getValue()));
+                threadContextData.put(datum.getKey(), ObjectUtil.transferFromString(clazz, datum.getValue()));
             }
         }
 

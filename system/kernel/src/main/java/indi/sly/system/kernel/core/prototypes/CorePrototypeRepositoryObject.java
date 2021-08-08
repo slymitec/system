@@ -224,12 +224,12 @@ public class CorePrototypeRepositoryObject extends APrototype {
                 Set<APrototype> corePrototypes = this.getAll(space);
                 Set<APrototype> resultCorePrototypes = new HashSet<>();
 
-                for (APrototype pair : corePrototypes) {
-                    Class<?>[] pairImplementInterfaces = pair.getClass().getInterfaces();
+                for (APrototype corePrototype : corePrototypes) {
+                    Class<?>[] corePrototypeInterfaces = corePrototype.getClass().getInterfaces();
 
-                    for (Class<?> pair2 : pairImplementInterfaces) {
-                        if (pair2.equals(clazz)) {
-                            resultCorePrototypes.add(pair);
+                    for (Class<?> corePrototypeInterface : corePrototypeInterfaces) {
+                        if (corePrototypeInterface.equals(clazz)) {
+                            resultCorePrototypes.add(corePrototype);
                         }
                     }
                 }
@@ -517,15 +517,15 @@ public class CorePrototypeRepositoryObject extends APrototype {
                 Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs =
                         this.getKernelSpace().getClassedCorePrototypeIDs();
 
-                for (Entry<String, UUID> pair : namedCorePrototypeIDs.entrySet()) {
-                    if (pair.getValue() == id) {
-                        namedCorePrototypeIDs.remove(pair.getKey());
+                for (Entry<String, UUID> namedCorePrototypeID : namedCorePrototypeIDs.entrySet()) {
+                    if (namedCorePrototypeID.getValue() == id) {
+                        namedCorePrototypeIDs.remove(namedCorePrototypeID.getKey());
                         break;
                     }
                 }
-                for (Entry<Class<? extends APrototype>, UUID> pair : classedCorePrototypeIDs.entrySet()) {
-                    if (pair.getValue() == id) {
-                        classedCorePrototypeIDs.remove(pair.getKey());
+                for (Entry<Class<? extends APrototype>, UUID> classedCorePrototypeID : classedCorePrototypeIDs.entrySet()) {
+                    if (classedCorePrototypeID.getValue() == id) {
+                        classedCorePrototypeIDs.remove(classedCorePrototypeID.getKey());
                         break;
                     }
                 }

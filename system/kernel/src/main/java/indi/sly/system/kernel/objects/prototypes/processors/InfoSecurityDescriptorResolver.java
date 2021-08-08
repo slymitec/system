@@ -1,11 +1,9 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusDisabilityException;
-import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.lang.StatusOverflowException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -46,12 +44,8 @@ public class InfoSecurityDescriptorResolver extends APrototype implements IInfoR
             securityDescriptor.setLock((lock) -> type.getInitializer().lockProcedure(info, lock));
             securityDescriptor.setIdentifications(status.getIdentifications());
 
-            if (!ValueUtil.isAnyNullOrEmpty(status.getParentID())) {
+            if (status.getIdentifications().size() > 0) {
                 List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
-                if (identifications.size() == 0) {
-                    throw new StatusNotExistedException();
-                }
-
                 identifications.remove(identifications.size() - 1);
 
                 ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);

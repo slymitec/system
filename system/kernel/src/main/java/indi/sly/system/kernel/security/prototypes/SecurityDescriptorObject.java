@@ -92,23 +92,23 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
 
         List<SecurityDescriptorSummaryDefinition> securityDescriptorSummaries = new ArrayList<>();
 
-        for (SecurityDescriptorObject pair : this.parents) {
-            pair.init();
+        for (SecurityDescriptorObject securityDescriptor : this.parents) {
+            securityDescriptor.init();
 
             SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
-            securityDescriptorSummary.getIdentifications().addAll(pair.identifications);
+            securityDescriptorSummary.getIdentifications().addAll(securityDescriptor.identifications);
 
-            if (pair.permission) {
+            if (securityDescriptor.permission) {
                 securityDescriptorSummary.setPermission(true);
-                securityDescriptorSummary.setInherit(pair.value.isInherit());
-                securityDescriptorSummary.getPermissions().addAll(pair.value.getPermissions());
+                securityDescriptorSummary.setInherit(securityDescriptor.value.isInherit());
+                securityDescriptorSummary.getPermissions().addAll(securityDescriptor.value.getPermissions());
             } else {
                 securityDescriptorSummary.setPermission(false);
             }
 
-            if (pair.audit) {
+            if (securityDescriptor.audit) {
                 securityDescriptorSummary.setAudit(true);
-                securityDescriptorSummary.getAudits().addAll(pair.value.getAudits());
+                securityDescriptorSummary.getAudits().addAll(securityDescriptor.value.getAudits());
             } else {
                 securityDescriptorSummary.setAudit(false);
             }
@@ -275,11 +275,11 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
         }
 
         List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
-        for (SecurityDescriptorObject pair : this.parents) {
-            pair.init();
+        for (SecurityDescriptorObject securityDescriptor : this.parents) {
+            securityDescriptor.init();
 
-            if (pair.permission) {
-                securityDescriptors.add(pair.value);
+            if (securityDescriptor.permission) {
+                securityDescriptors.add(securityDescriptor.value);
             } else {
                 securityDescriptors.clear();
             }
@@ -295,30 +295,30 @@ public class SecurityDescriptorObject extends ABytesValueProcessPrototype<Securi
                 effectivePermissions.clear();
             }
 
-            for (AccessControlDefinition pair : securityDescriptors.get(i).getPermissions()) {
-                if (LogicalUtil.isAllExist(AccessControlScopeType.THIS, pair.getScope())) {
+            for (AccessControlDefinition accessControl : securityDescriptors.get(i).getPermissions()) {
+                if (LogicalUtil.isAllExist(AccessControlScopeType.THIS, accessControl.getScope())) {
                     if (i == securityDescriptors.size() - 1) {
-                        effectivePermissions.add(pair);
+                        effectivePermissions.add(accessControl);
                     }
                 }
-                if (LogicalUtil.isAllExist(AccessControlScopeType.CHILD_HAS_CHILD, pair.getScope())) {
+                if (LogicalUtil.isAllExist(AccessControlScopeType.CHILD_HAS_CHILD, accessControl.getScope())) {
                     if (i == securityDescriptors.size() - 2 && securityDescriptors.get(i + 1).isHasChild()) {
-                        effectivePermissions.add(pair);
+                        effectivePermissions.add(accessControl);
                     }
                 }
-                if (LogicalUtil.isAllExist(AccessControlScopeType.CHILD_HAS_NOT_CHILD, pair.getScope())) {
+                if (LogicalUtil.isAllExist(AccessControlScopeType.CHILD_HAS_NOT_CHILD, accessControl.getScope())) {
                     if (i == securityDescriptors.size() - 2 && !securityDescriptors.get(i + 1).isHasChild()) {
-                        effectivePermissions.add(pair);
+                        effectivePermissions.add(accessControl);
                     }
                 }
-                if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_CHILD, pair.getScope())) {
+                if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_CHILD, accessControl.getScope())) {
                     if (i < securityDescriptors.size() - 1 && securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
-                        effectivePermissions.add(pair);
+                        effectivePermissions.add(accessControl);
                     }
                 }
-                if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD, pair.getScope())) {
+                if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD, accessControl.getScope())) {
                     if (i < securityDescriptors.size() - 1 && !securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
-                        effectivePermissions.add(pair);
+                        effectivePermissions.add(accessControl);
                     }
                 }
             }

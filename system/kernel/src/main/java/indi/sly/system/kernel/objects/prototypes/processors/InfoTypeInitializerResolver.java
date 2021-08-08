@@ -170,8 +170,8 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
         this.readProperties = (properties, info, type, status) -> {
             Map<String, String> newProperties = ObjectUtil.transferFromByteArray(info.getProperties());
 
-            for (Entry<String, String> pair : newProperties.entrySet()) {
-                properties.put(pair.getKey(), pair.getValue());
+            for (Entry<String, String> newProperty : newProperties.entrySet()) {
+                properties.put(newProperty.getKey(), newProperty.getValue());
             }
 
             return properties;
@@ -180,8 +180,8 @@ public class InfoTypeInitializerResolver extends APrototype implements IInfoReso
         this.writeProperties = (info, type, status, properties) -> {
             Map<String, String> newProperties = new HashMap<>();
 
-            for (Entry<String, String> pair : properties.entrySet()) {
-                newProperties.put(pair.getKey(), pair.getValue());
+            for (Entry<String, String> property : properties.entrySet()) {
+                newProperties.put(property.getKey(), property.getValue());
             }
 
             byte[] newPropertiesSource = ObjectUtil.transferToByteArray(newProperties);

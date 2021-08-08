@@ -45,14 +45,6 @@ public class InfoObject extends APrototype {
         return this.id;
     }
 
-    public UUID getParentID() {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
-            throw new ConditionContextException();
-        }
-
-        return this.status.getParentID();
-    }
-
     public UUID getType() {
         if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
@@ -110,7 +102,7 @@ public class InfoObject extends APrototype {
     public synchronized InfoObject getParent() {
         this.getSelf();
 
-        if (ValueUtil.isAnyNullOrEmpty(this.status.getParentID())) {
+        if (this.status.getIdentifications().size() == 0) {
             return null;
         } else {
             return this.processorMediator.getParent().apply(this.status);
@@ -150,8 +142,8 @@ public class InfoObject extends APrototype {
 
         DumpDefinition dump = new DumpDefinition();
 
-        for (InfoProcessorDumpFunction pair : resolvers) {
-            dump = pair.apply(dump, info, type, this.status);
+        for (InfoProcessorDumpFunction resolver : resolvers) {
+            dump = resolver.apply(dump, info, type, this.status);
         }
 
         return this.factory.buildDump(dump);

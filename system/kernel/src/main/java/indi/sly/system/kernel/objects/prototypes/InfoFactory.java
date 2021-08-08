@@ -40,9 +40,9 @@ public class InfoFactory extends AFactory {
                 this.factoryManager.getCorePrototypeRepository().getByImplementInterface(SpaceType.KERNEL,
                         IInfoResolver.class);
 
-        for (APrototype pair : corePrototypes) {
-            if (pair instanceof IInfoResolver) {
-                this.infoResolvers.add((IInfoResolver) pair);
+        for (APrototype corePrototype : corePrototypes) {
+            if (corePrototype instanceof IInfoResolver) {
+                this.infoResolvers.add((IInfoResolver) corePrototype);
             }
         }
 
@@ -77,7 +77,6 @@ public class InfoFactory extends AFactory {
         InfoStatusDefinition status = new InfoStatusDefinition();
 
         if (ObjectUtil.allNotNull(parentInfo)) {
-            status.setParentID(parentInfo.getID());
             status.getIdentifications().addAll(parentInfo.status.getIdentifications());
 
             IdentificationDefinition identification;

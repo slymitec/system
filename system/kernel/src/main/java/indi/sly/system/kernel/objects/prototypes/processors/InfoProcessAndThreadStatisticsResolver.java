@@ -122,9 +122,6 @@ public class InfoProcessAndThreadStatisticsResolver extends APrototype implement
             return summaryDefinitions;
         };
 
-        this.renameChild = (info, type, status, oldIdentification, newIdentification) -> {
-        };
-
         this.readProperties = (properties, info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
@@ -202,7 +199,6 @@ public class InfoProcessAndThreadStatisticsResolver extends APrototype implement
     private final InfoProcessorGetOrRebuildChildFunction getOrRebuildChild;
     private final InfoProcessorDeleteChildConsumer deleteChild;
     private final InfoProcessorQueryChildFunction queryChild;
-    private final InfoProcessorRenameChildConsumer renameChild;
     private final InfoProcessorReadPropertyFunction readProperties;
     private final InfoProcessorWritePropertyConsumer writeProperties;
     private final InfoProcessorReadContentFunction readContent;
@@ -218,7 +214,6 @@ public class InfoProcessAndThreadStatisticsResolver extends APrototype implement
         processorMediator.getGetOrRebuildChilds().add(this.getOrRebuildChild);
         processorMediator.getDeleteChilds().add(this.deleteChild);
         processorMediator.getQueryChilds().add(this.queryChild);
-        processorMediator.getRenameChilds().add(this.renameChild);
         processorMediator.getReadProperties().add(this.readProperties);
         processorMediator.getWriteProperties().add(this.writeProperties);
         processorMediator.getReadContents().add(this.readContent);

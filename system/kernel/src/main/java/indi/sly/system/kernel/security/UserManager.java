@@ -105,7 +105,7 @@ public class UserManager extends AManager {
             ProcessObject process = processManager.getCurrent();
             ProcessTokenObject processToken = process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+            if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
                 throw new ConditionRefuseException();
             }
 
@@ -128,7 +128,7 @@ public class UserManager extends AManager {
             ProcessObject process = processManager.getCurrent();
             ProcessTokenObject processToken = process.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+            if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
                 throw new ConditionRefuseException();
             }
 
@@ -186,6 +186,28 @@ public class UserManager extends AManager {
         groupBuilder.delete(groupID);
     }
 
+    public AccountAuthorizationObject authorize(UUID accountID) {
+        if (ValueUtil.isAnyNullOrEmpty(accountID)) {
+            throw new ConditionParametersException();
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessTokenObject processToken = process.getToken();
+
+        AccountObject account = this.getTargetAccount(accountID);
+
+        if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
+            throw new ConditionRefuseException();
+        }
+
+        AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
+
+        accountAuthorization.setSource(() -> this.getTargetAccount(account.getID()), account.getPassword());
+
+        return accountAuthorization;
+    }
+
     public AccountAuthorizationObject authorize(String accountName, String accountPassword) {
         if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
@@ -198,15 +220,14 @@ public class UserManager extends AManager {
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
-        AccountObject account = userManager.getTargetAccount(accountName);
-
-        AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
+        AccountObject account = this.getTargetAccount(accountName);
 
         if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                 && !ObjectUtil.equals(account.getPassword(), accountPassword)) {
             throw new ConditionRefuseException();
         }
+
+        AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
 
         accountAuthorization.setSource(() -> this.getTargetAccount(account.getID()), account.getPassword());
 

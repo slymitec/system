@@ -2,9 +2,7 @@ package indi.sly.system.services.center.instances.prototypes.processors;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.Consumer;
-import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.services.center.lang.CenterRunConsumer;
 import indi.sly.system.services.center.prototypes.CenterContentObject;
 import indi.sly.system.services.center.prototypes.processors.ACenterInitializer;
@@ -38,17 +36,5 @@ public class CustomCenterInitializer extends ACenterInitializer {
         }
 
         resolver.accept();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void provider(CenterRunConsumer run, CenterContentObject content) {
-        Provider<APrototype> resolver = content.getDatumOrDefault(Provider.class, "method", null);
-
-        if (ObjectUtil.isAnyNull(resolver)) {
-            throw new ConditionParametersException();
-        }
-
-        APrototype prototype = resolver.acquire();
-        content.setDatum("result", prototype);
     }
 }

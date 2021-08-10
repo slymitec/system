@@ -34,7 +34,7 @@ public class ThreadCenterInitializer extends ACenterInitializer {
     }
 
     private void createThread(CenterRunConsumer run, CenterContentObject content) {
-        UUID parameter_ProcessID = content.getDatum(UUID.class, "processID");
+        UUID parameter_ProcessID = content.getDatum(UUID.class, "Processes_Process_ID");
 
         //
 

@@ -1,6 +1,7 @@
 package indi.sly.system.services.center.prototypes;
 
 import indi.sly.system.common.lang.*;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.core.prototypes.APrototype;
@@ -9,7 +10,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -51,8 +54,31 @@ public class CenterContentObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        Map<String, Object> threadContextData = this.threadContext.getData();
+        Map<String, Object> threadContextData = new HashMap<>(this.threadContext.getData());
         threadContextData.put(name, value);
+        this.threadContext.setData(threadContextData);
+    }
+
+    public void deleteDatumIfExisted(String name) {
+        if (StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        if (this.threadContext.getData().containsKey(name)) {
+            Map<String, Object> threadContextData = new HashMap<>(this.threadContext.getData());
+            threadContextData.remove(name);
+            this.threadContext.setData(threadContextData);
+        }
+    }
+
+    public Set<String> getNames() {
+        Map<String, Object> threadContextData = this.threadContext.getData();
+
+        return CollectionUtil.unmodifiable(threadContextData.keySet());
+    }
+
+    public void clear() {
+        this.threadContext.setData(new HashMap<>());
     }
 
 //    public UUID transferPrototypeToCache(String name) {

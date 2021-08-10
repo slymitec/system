@@ -15,17 +15,18 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
-import indi.sly.system.kernel.security.values.PrivilegeType;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.instances.prototypes.processors.SessionTypeInitializer;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -90,11 +91,7 @@ public class SessionManager extends AManager {
         sessionContent.close();
     }
 
-    public UUID create(AccountAuthorizationObject accountAuthorization) {
-        if (ObjectUtil.isAnyNull(accountAuthorization)) {
-            throw new ConditionParametersException();
-        }
-
+    public UUID create() {
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"));
@@ -102,12 +99,10 @@ public class SessionManager extends AManager {
         InfoObject sessions = objectManager.get(identifications);
 
         UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_CONTEXT_INSTANCE_SESSION_ID;
-        UUID accountID = accountAuthorization.checkAndGetResult().getID();
 
         InfoObject session = sessions.createChildAndOpen(typeID, new IdentificationDefinition(UUIDUtil.createRandom()),
                 InfoOpenAttributeType.OPEN_SHARED_WRITE);
         SessionContentObject sessionContent = (SessionContentObject) session.getContent();
-        sessionContent.setAccountID(accountID);
 
         session.close();
 

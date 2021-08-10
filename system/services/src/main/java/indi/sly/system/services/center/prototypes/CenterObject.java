@@ -59,7 +59,7 @@ public class CenterObject extends AValueProcessPrototype<CenterDefinition> {
             resolver.accept(center, this.status);
         }
     }
-    
+
     public synchronized void run(String name) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.HashMap;
 import java.util.Map;
 
 @Named
@@ -18,13 +17,13 @@ public class CenterContentObject extends APrototype {
     protected ThreadContextObject threadContext;
 
     public <T> T getDatum(Class<T> clazz, String name) {
-        return this.getDatumOrDefaultProvider(clazz, name, (Provider<T>) () -> {
+        return this.getDatumOrDefaultProvider(clazz, name, () -> {
             throw new StatusNotExistedException();
         });
     }
 
     public <T> T getDatumOrDefault(Class<T> clazz, String name, T defaultValue) {
-        return this.getDatumOrDefaultProvider(clazz, name, (Provider<T>) () -> defaultValue);
+        return this.getDatumOrDefaultProvider(clazz, name, () -> defaultValue);
     }
 
     @SuppressWarnings("unchecked")
@@ -34,7 +33,6 @@ public class CenterContentObject extends APrototype {
         }
 
         Map<String, Object> threadContextData = this.threadContext.getData();
-
         Object value = threadContextData.getOrDefault(name, null);
 
         if (ObjectUtil.isAnyNull(value)) {
@@ -54,42 +52,33 @@ public class CenterContentObject extends APrototype {
         }
 
         Map<String, Object> threadContextData = this.threadContext.getData();
-
         threadContextData.put(name, value);
     }
 
-    public Map<String, String> getData() {
-        Map<String, String> data = new HashMap<>();
-
-        for (Map.Entry<String, Object> datum : this.threadContext.getData().entrySet()) {
-            data.put(datum.getKey(), ObjectUtil.transferToString(datum.getValue()));
-        }
-
-        return data;
-    }
-
-    public void setData(Map<String, String> data, Map<String, Class<?>> classes) {
-        if (ObjectUtil.isAnyNull(data, classes) || data.size() != classes.size()) {
-            throw new ConditionParametersException();
-        }
-
-        Map<String, Object> threadContextData = new HashMap<>();
-
-        for (Map.Entry<String, String> datum : data.entrySet()) {
-            if (StringUtil.isNameIllegal(datum.getKey())) {
-                throw new ConditionParametersException();
-            } else {
-                Class<?> clazz = classes.getOrDefault(datum.getKey(), null);
-                if (ObjectUtil.isAnyNull(clazz)) {
-                    throw new ConditionParametersException();
-                }
-
-                threadContextData.put(datum.getKey(), ObjectUtil.transferFromString(clazz, datum.getValue()));
-            }
-        }
-
-        this.threadContext.getData().putAll(threadContextData);
-    }
+//    public UUID transferPrototypeToCache(String name) {
+//        if (StringUtil.isNameIllegal(name)) {
+//            throw new ConditionParametersException();
+//        }
+//
+//        Map<String, Object> threadContextData = this.threadContext.getData();
+//        Object value = threadContextData.getOrDefault(name, null);
+//
+//        if (ObjectUtil.isAnyNull(value)) {
+//            throw new StatusNotExistedException();
+//        }
+//        if (!(value instanceof APrototype)) {
+//            throw new StatusRelationshipErrorException();
+//        }
+//
+//        threadContextData.remove(name);
+//
+//        CorePrototypeRepositoryObject corePrototypeRepository = this.factoryManager.getCorePrototypeRepository();
+//        UUID id = UUIDUtil.createRandom();
+//        APrototype prototype = (APrototype) value;
+//        corePrototypeRepository.addByID(SpaceType.USER, id, prototype);
+//
+//        return id;
+//    }
 
     public boolean isException() {
         return ObjectUtil.allNotNull(this.threadContext.getRunException());

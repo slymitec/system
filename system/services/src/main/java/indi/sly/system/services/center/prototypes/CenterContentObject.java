@@ -18,17 +18,17 @@ public class CenterContentObject extends APrototype {
     protected ThreadContextObject threadContext;
 
     public <T> T getDatum(Class<T> clazz, String name) {
-        return this.getDatumOrDefault(clazz, name, (Provider<T>) () -> {
+        return this.getDatumOrDefaultProvider(clazz, name, (Provider<T>) () -> {
             throw new StatusNotExistedException();
         });
     }
 
     public <T> T getDatumOrDefault(Class<T> clazz, String name, T defaultValue) {
-        return this.getDatumOrDefault(clazz, name, (Provider<T>) () -> defaultValue);
+        return this.getDatumOrDefaultProvider(clazz, name, (Provider<T>) () -> defaultValue);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getDatumOrDefault(Class<T> clazz, String name, Provider<T> defaultValue) {
+    public <T> T getDatumOrDefaultProvider(Class<T> clazz, String name, Provider<T> defaultValue) {
         if (ObjectUtil.isAnyNull(clazz, defaultValue) || StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }

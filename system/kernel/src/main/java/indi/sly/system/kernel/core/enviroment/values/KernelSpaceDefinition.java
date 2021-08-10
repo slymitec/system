@@ -23,6 +23,7 @@ public class KernelSpaceDefinition extends ADefinition<KernelSpaceDefinition> {
         this.namedCorePrototypeIDs = new ConcurrentHashMap<>();
         this.classedCorePrototypeIDs = new ConcurrentHashMap<>();
         this.infoTypeIDs = new ConcurrentSkipListSet<>();
+        this.userSpaces = new ThreadLocal<>();
     }
 
     private final KernelConfigurationDefinition configuration;
@@ -31,6 +32,7 @@ public class KernelSpaceDefinition extends ADefinition<KernelSpaceDefinition> {
     private final Map<String, UUID> namedCorePrototypeIDs;
     private final Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs;
     private final Set<UUID> infoTypeIDs;
+    private final ThreadLocal<UserSpaceDefinition> userSpaces;
 
     public KernelConfigurationDefinition getConfiguration() {
         return configuration;
@@ -54,5 +56,9 @@ public class KernelSpaceDefinition extends ADefinition<KernelSpaceDefinition> {
 
     public Set<UUID> getInfoTypeIDs() {
         return this.infoTypeIDs;
+    }
+
+    public ThreadLocal<UserSpaceDefinition> getUserSpaces() {
+        return this.userSpaces;
     }
 }

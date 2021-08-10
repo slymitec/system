@@ -27,7 +27,7 @@ public class CenterProcessAndThreadResolver extends APrototype implements ICente
                 ThreadObject thread = threadManager.create(center.getProcessID());
 
                 ThreadStatusObject threadStatus = thread.getStatus();
-                threadStatus.start();
+                threadStatus.running();
             }
         };
 
@@ -38,7 +38,7 @@ public class CenterProcessAndThreadResolver extends APrototype implements ICente
                 ThreadObject thread = threadManager.getCurrent();
 
                 ThreadStatusObject threadStatus = thread.getStatus();
-                threadStatus.end();
+                threadStatus.die();
                 threadManager.end();
             }
         };

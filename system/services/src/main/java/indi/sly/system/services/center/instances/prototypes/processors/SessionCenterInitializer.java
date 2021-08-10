@@ -31,8 +31,8 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class RuntimeCenterInitializer extends ACenterInitializer {
-    public RuntimeCenterInitializer() {
+public class SessionCenterInitializer extends ACenterInitializer {
+    public SessionCenterInitializer() {
         this.register("createSession", this::createSession);
     }
 

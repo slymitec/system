@@ -2,7 +2,6 @@ package indi.sly.system.kernel.core;
 
 import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.boot.values.StartupType;
@@ -11,15 +10,15 @@ import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.core.prototypes.CorePrototypeValueBuilder;
 import indi.sly.system.kernel.core.prototypes.CorePrototypeRepositoryObject;
+import indi.sly.system.kernel.core.prototypes.CorePrototypeValueBuilder;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.SessionManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
-import indi.sly.system.kernel.processes.SessionManager;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -37,7 +36,7 @@ public class FactoryManager extends AManager {
             this.corePrototypeValue = SpringHelper.getInstance(CorePrototypeValueBuilder.class);
             this.corePrototypeValue.setFactoryManager(this);
 
-            this.userSpace = () -> this.corePrototypeValue.createOrGetUserSpace();
+            this.setUserSpace(new UserSpaceDefinition());
 
             this.corePrototypeRepository = this.create(CorePrototypeRepositoryObject.class);
             this.corePrototypeRepository.add(SpaceType.KERNEL, this.create(FactoryManager.class));
@@ -97,17 +96,15 @@ public class FactoryManager extends AManager {
         return SpringHelper.getInstance(KernelSpaceDefinition.class);
     }
 
-    private Provider<UserSpaceDefinition> userSpace;
-
     public UserSpaceDefinition getUserSpace() {
-        return this.userSpace.acquire();
+        return this.getKernelSpace().getUserSpaces().get();
     }
 
-    public void setUserSpace(Provider<UserSpaceDefinition> userSpace) {
+    public void setUserSpace(UserSpaceDefinition userSpace) {
         if (ObjectUtil.isAnyNull(userSpace)) {
             throw new ConditionParametersException();
         }
 
-        this.userSpace = userSpace;
+        this.getKernelSpace().getUserSpaces().set(userSpace);
     }
 }

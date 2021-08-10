@@ -33,7 +33,7 @@ public class ThreadStatusObject extends AValueProcessPrototype<ThreadDefinition>
         this.lock(LockType.NONE);
     }
 
-    public void start() {
+    public void running() {
         if (this.value.getStatus() != ThreadStatusType.INITIALIZATION) {
             throw new StatusRelationshipErrorException();
         }
@@ -47,7 +47,7 @@ public class ThreadStatusObject extends AValueProcessPrototype<ThreadDefinition>
         this.lock(LockType.NONE);
     }
 
-    public void end() {
+    public void die() {
         if (this.value.getStatus() != ThreadStatusType.RUNNING) {
             throw new StatusRelationshipErrorException();
         }

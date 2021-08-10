@@ -47,8 +47,10 @@ public class ProcessCreateContextResolver extends APrototype implements IProcess
 
                 FileSystemFileContentObject infoContent = (FileSystemFileContentObject) info.getContent();
                 infoContent.execute();
+                infoContent.setOffset(0L);
+                long infoContentLength = infoContent.length();
 
-                byte[] applicationSource = infoContent.getValue();
+                byte[] applicationSource = infoContent.tryRead(infoContentLength);
                 ApplicationDefinition application;
                 try {
                     application = ObjectUtil.transferFromByteArray(applicationSource);

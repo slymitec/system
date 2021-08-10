@@ -43,18 +43,18 @@ public class FileSystemVolumeContentObject extends AInfoContentObject {
         }
     }
 
-    public String getPath() {
+    public byte[] getConfiguration() {
         this.init();
 
-        return this.fileSystemVolume.getPath();
+        return fileSystemVolume.getConfiguration();
     }
 
-    public void setPath(String path) {
+    public void setConfiguration(byte[] configuration) {
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            this.fileSystemVolume.setPath(path);
+            fileSystemVolume.setConfiguration(configuration);
 
             this.fresh();
         } finally {

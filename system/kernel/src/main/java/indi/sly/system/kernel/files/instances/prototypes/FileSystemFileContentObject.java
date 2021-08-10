@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.files.instances.prototypes;
 
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.files.instances.values.FileSystemFileDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -24,22 +23,62 @@ public class FileSystemFileContentObject extends AInfoContentObject {
 
     private FileSystemFileDefinition file;
 
-    public byte[] getValue() {
+//    public byte[] getValue() {
+//        this.init();
+//
+//        return this.file.getValue();
+//    }
+//
+//    public void setValue(byte[] value) {
+//        try {
+//            this.lock(LockType.WRITE);
+//            this.init();
+//
+//            this.file.setValue(value);
+//
+//            this.fresh();
+//        } finally {
+//            this.lock(LockType.NONE);
+//        }
+//    }
+
+    public long length() {
+        this.init();
+
+        return ObjectUtil.isAnyNull(this.file.getValue()) ? -1 : this.file.getValue().length;
+    }
+
+    public long getFileOpen() {
+        return 0L;
+    }
+
+    public void setFileOpen(long fileOpen) {
+
+    }
+
+    public long getOffset() {
+        return 0L;
+    }
+
+    public void setOffset(long offset) {
+
+    }
+
+    public byte[] tryRead(long length) {
         this.init();
 
         return this.file.getValue();
     }
 
-    public void setValue(byte[] value) {
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+    public byte[] read(long length) {
+        return null;
+    }
 
-            this.file.setValue(value);
+    public void write(byte[] value) {
 
-            this.fresh();
-        } finally {
-            this.lock(LockType.NONE);
-        }
+    }
+
+    public void append(byte[] value) {
+
     }
 }

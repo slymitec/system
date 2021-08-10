@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.files.instances.values;
 
 import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.ADefinition;
 
 import java.io.IOException;
@@ -13,7 +12,7 @@ public class FileSystemVolumeDefinition extends ADefinition<FileSystemVolumeDefi
     }
 
     private long type;
-    private String path;
+    private byte[] configuration;
 
     public long getType() {
         return this.type;
@@ -23,12 +22,12 @@ public class FileSystemVolumeDefinition extends ADefinition<FileSystemVolumeDefi
         this.type = type;
     }
 
-    public String getPath() {
-        return this.path;
+    public byte[] getConfiguration() {
+        return this.configuration;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setConfiguration(byte[] configuration) {
+        this.configuration = configuration;
     }
 
     @Override
@@ -36,7 +35,7 @@ public class FileSystemVolumeDefinition extends ADefinition<FileSystemVolumeDefi
         FileSystemVolumeDefinition definition = new FileSystemVolumeDefinition();
 
         definition.type = this.type;
-        definition.path = this.path;
+        definition.configuration = this.configuration;
 
         return definition;
     }
@@ -44,12 +43,12 @@ public class FileSystemVolumeDefinition extends ADefinition<FileSystemVolumeDefi
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         this.type = NumberUtil.readExternalLong(in);
-        this.path = StringUtil.readExternal(in);
+        this.configuration = NumberUtil.readExternalBytes(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         NumberUtil.writeExternalLong(out, this.type);
-        StringUtil.writeExternal(out, this.path);
+        NumberUtil.writeExternalBytes(out, this.configuration);
     }
 }

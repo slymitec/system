@@ -24,6 +24,22 @@ public class CenterObject extends AValueProcessPrototype<CenterDefinition> {
     protected CenterProcessorMediator processorMediator;
     protected CenterStatusDefinition status;
 
+    public UUID getID() {
+        this.init();
+
+        return this.value.getID();
+    }
+
+    public long getRuntime() {
+        return this.status.getRuntime();
+    }
+
+    private synchronized CenterDefinition getSelf() {
+        this.init();
+
+        return this.value;
+    }
+
     public void start() {
         CenterDefinition center = this.getSelf();
 
@@ -43,23 +59,7 @@ public class CenterObject extends AValueProcessPrototype<CenterDefinition> {
             resolver.accept(center, this.status);
         }
     }
-
-    private synchronized CenterDefinition getSelf() {
-        this.init();
-
-        return this.value;
-    }
-
-    public UUID getID() {
-        this.init();
-
-        return this.value.getID();
-    }
-
-    public long getRuntime() {
-        return this.status.getRuntime();
-    }
-
+    
     public synchronized void run(String name) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();

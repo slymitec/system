@@ -19,8 +19,8 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class LifeCenterInitializer extends ACenterInitializer {
-    public LifeCenterInitializer() {
+public class ThreadCenterInitializer extends ACenterInitializer {
+    public ThreadCenterInitializer() {
         this.register("createThread", this::createThread);
         this.register("endThread", this::endThread);
     }
@@ -34,7 +34,7 @@ public class LifeCenterInitializer extends ACenterInitializer {
     }
 
     private void createThread(CenterRunConsumer run, CenterContentObject content) {
-        UUID parameter_ProcessID = content.getDatum(UUID.class, "Processes_Process_ID");
+        UUID parameter_ProcessID = content.getDatum(UUID.class, "processID");
 
         //
 
@@ -49,7 +49,7 @@ public class LifeCenterInitializer extends ACenterInitializer {
         ThreadObject thread = threadManager.create(parameter_ProcessID);
 
         ThreadStatusObject threadStatus = thread.getStatus();
-        threadStatus.start();
+        threadStatus.running();
     }
 
     private void endThread(CenterRunConsumer run, CenterContentObject content) {
@@ -65,6 +65,6 @@ public class LifeCenterInitializer extends ACenterInitializer {
         }
 
         ThreadStatusObject threadStatus = thread.getStatus();
-        threadStatus.end();
+        threadStatus.die();
     }
 }

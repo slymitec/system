@@ -6,8 +6,10 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.objenesis.SpringObjenesis;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 @Named
+@Singleton
 public class SpringHelper implements ApplicationContextAware {
     static {
         SpringHelper.objenesis = new SpringObjenesis();

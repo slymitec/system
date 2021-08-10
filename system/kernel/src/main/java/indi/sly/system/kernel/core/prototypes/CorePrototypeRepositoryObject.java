@@ -1,14 +1,11 @@
 package indi.sly.system.kernel.core.prototypes;
 
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.enviroment.values.ASpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -19,39 +16,41 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CorePrototypeRepositoryObject extends APrototype {
     private KernelSpaceDefinition kernelSpace;
 
-    private KernelSpaceDefinition getKernelSpace() {
-        if (ObjectUtil.isAnyNull(this.kernelSpace)) {
-            this.kernelSpace = this.factoryManager.getKernelSpace();
+    private ASpaceDefinition<?> getSpace(long space) {
+        if (space == SpaceType.KERNEL) {
+            if (ObjectUtil.isAnyNull(this.kernelSpace)) {
+                this.kernelSpace = this.factoryManager.getKernelSpace();
+            }
+
+            return this.kernelSpace;
+        } else if (space == SpaceType.USER) {
+            return this.factoryManager.getUserSpace();
+        } else {
+            throw new ConditionParametersException();
         }
-
-        return this.kernelSpace;
-    }
-
-    private UserSpaceDefinition getUserSpace() {
-        return this.factoryManager.getUserSpace();
     }
 
     public Lock getLock(long space, long lock) {
-        Lock readWriteLock = null;
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
 
-        if (space == SpaceType.KERNEL) {
-            if (lock == LockType.READ) {
-                readWriteLock = this.getKernelSpace().getCorePrototypeLock().readLock();
-            } else if (lock == LockType.WRITE) {
-                readWriteLock = this.getKernelSpace().getCorePrototypeLock().writeLock();
-            }
-        } else if (space == SpaceType.USER) {
-            if (lock == LockType.READ) {
-                readWriteLock = this.getUserSpace().getInfoLock().readLock();
-            } else if (lock == LockType.WRITE) {
-                readWriteLock = this.getUserSpace().getInfoLock().writeLock();
-            }
+        ReadWriteLock corePrototypeLock = aSpace.getCorePrototypeLock();
+
+        if (ObjectUtil.isAnyNull(corePrototypeLock)) {
+            throw new StatusNotSupportedException();
+        }
+
+        Lock readWriteLock = null;
+        if (lock == LockType.READ) {
+            readWriteLock = corePrototypeLock.readLock();
+        } else if (lock == LockType.WRITE) {
+            readWriteLock = corePrototypeLock.writeLock();
         }
 
         if (ObjectUtil.isAnyNull(readWriteLock)) {
@@ -62,15 +61,11 @@ public class CorePrototypeRepositoryObject extends APrototype {
     }
 
     public Set<APrototype> getAll(long space) {
-        Set<APrototype> corePrototypes = new HashSet<>();
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
 
-        if (space == SpaceType.KERNEL) {
-            corePrototypes.addAll(this.getKernelSpace().getCorePrototypes().values());
-        } else {
-            throw new ConditionParametersException();
-        }
+        Set<APrototype> corePrototypes = new HashSet<>(aSpace.getCorePrototypes().values());
 
-        return corePrototypes;
+        return CollectionUtil.unmodifiable(corePrototypes);
     }
 
     public <T extends APrototype> T get(long spaceType, Class<T> clazz) {
@@ -78,21 +73,17 @@ public class CorePrototypeRepositoryObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.READ);
+        Lock lock = this.getLock(spaceType, LockType.READ);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                UUID id = this.getIDByClass(spaceType, clazz);
-                T corePrototype = this.getByID(spaceType, clazz, id);
+            UUID id = this.getIDByClass(spaceType, clazz);
+            T corePrototype = this.getByID(spaceType, clazz, id);
 
-                return corePrototype;
-            } finally {
-                lock.unlock();
-            }
-        } else {
-            throw new StatusNotSupportedException();
+            return corePrototype;
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -104,26 +95,22 @@ public class CorePrototypeRepositoryObject extends APrototype {
             name = clazz.getName();
         }
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.READ);
+        Lock lock = this.getLock(spaceType, LockType.READ);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                UUID id = this.getIDByName(spaceType, name);
-                T corePrototype = this.getByID(spaceType, clazz, id);
+            UUID id = this.getIDByName(spaceType, name);
+            T corePrototype = this.getByID(spaceType, clazz, id);
 
-                return corePrototype;
-            } finally {
-                lock.unlock();
-            }
-        } else {
-            throw new StatusNotSupportedException();
+            return corePrototype;
+        } finally {
+            lock.unlock();
         }
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends APrototype> T getByID(long spaceType, Class<T> clazz, UUID id) {
+    public <T extends APrototype> T getByID(long space, Class<T> clazz, UUID id) {
         if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
@@ -131,82 +118,72 @@ public class CorePrototypeRepositoryObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.READ);
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
+        Lock lock = this.getLock(space, LockType.READ);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Map<UUID, APrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
+            Map<UUID, APrototype> corePrototypes = aSpace.getCorePrototypes();
 
-                APrototype corePrototype = corePrototypes.getOrDefault(id, null);
-                if (ObjectUtil.isAnyNull(corePrototype)) {
-                    throw new StatusNotExistedException();
-                } else if (corePrototype.getClass() != clazz) {
-                    throw new StatusRelationshipErrorException();
-                }
-
-                return (T) corePrototype;
-            } finally {
-                lock.unlock();
+            APrototype corePrototype = corePrototypes.getOrDefault(id, null);
+            if (ObjectUtil.isAnyNull(corePrototype)) {
+                throw new StatusNotExistedException();
+            } else if (corePrototype.getClass() != clazz) {
+                throw new StatusRelationshipErrorException();
             }
-        } else {
-            throw new ConditionParametersException();
+
+            return (T) corePrototype;
+        } finally {
+            lock.unlock();
         }
     }
 
-    public <T extends APrototype> UUID getIDByName(long spaceType, String name) {
+    public <T extends APrototype> UUID getIDByName(long space, String name) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.READ);
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
+        Lock lock = this.getLock(space, LockType.READ);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Map<String, UUID> namedCorePrototypeIDs = this.getKernelSpace().getNamedCorePrototypeIDs();
+            Map<String, UUID> namedCorePrototypeIDs = aSpace.getNamedCorePrototypeIDs();
 
-                UUID id = namedCorePrototypeIDs.getOrDefault(name, null);
-                if (ValueUtil.isAnyNullOrEmpty(id)) {
-                    throw new StatusNotExistedException();
-                }
-
-                return id;
-            } finally {
-                lock.unlock();
+            UUID id = namedCorePrototypeIDs.getOrDefault(name, null);
+            if (ValueUtil.isAnyNullOrEmpty(id)) {
+                throw new StatusNotExistedException();
             }
-        } else {
-            throw new StatusNotSupportedException();
+
+            return id;
+        } finally {
+            lock.unlock();
         }
     }
 
-    public <T extends APrototype> UUID getIDByClass(long spaceType, Class<T> clazz) {
+    public <T extends APrototype> UUID getIDByClass(long space, Class<T> clazz) {
         if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.READ);
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
+        Lock lock = this.getLock(space, LockType.READ);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs =
-                        this.getKernelSpace().getClassedCorePrototypeIDs();
+            Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs = aSpace.getClassedCorePrototypeIDs();
 
-                UUID id = classedCorePrototypeIDs.getOrDefault(clazz, null);
-                if (ValueUtil.isAnyNullOrEmpty(id)) {
-                    throw new StatusNotExistedException();
-                }
-
-                return id;
-            } finally {
-                lock.unlock();
+            UUID id = classedCorePrototypeIDs.getOrDefault(clazz, null);
+            if (ValueUtil.isAnyNullOrEmpty(id)) {
+                throw new StatusNotExistedException();
             }
-        } else {
-            throw new StatusNotSupportedException();
+
+            return id;
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -215,31 +192,27 @@ public class CorePrototypeRepositoryObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        if (space == SpaceType.KERNEL) {
-            Lock lock = this.getLock(space, LockType.READ);
+        Lock lock = this.getLock(space, LockType.READ);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Set<APrototype> corePrototypes = this.getAll(space);
-                Set<APrototype> resultCorePrototypes = new HashSet<>();
+            Set<APrototype> corePrototypes = this.getAll(space);
+            Set<APrototype> resultCorePrototypes = new HashSet<>();
 
-                for (APrototype corePrototype : corePrototypes) {
-                    Class<?>[] corePrototypeInterfaces = corePrototype.getClass().getInterfaces();
+            for (APrototype corePrototype : corePrototypes) {
+                Class<?>[] corePrototypeInterfaces = corePrototype.getClass().getInterfaces();
 
-                    for (Class<?> corePrototypeInterface : corePrototypeInterfaces) {
-                        if (corePrototypeInterface.equals(clazz)) {
-                            resultCorePrototypes.add(corePrototype);
-                        }
+                for (Class<?> corePrototypeInterface : corePrototypeInterfaces) {
+                    if (corePrototypeInterface.equals(clazz)) {
+                        resultCorePrototypes.add(corePrototype);
                     }
                 }
-
-                return resultCorePrototypes;
-            } finally {
-                lock.unlock();
             }
-        } else {
-            throw new StatusNotSupportedException();
+
+            return resultCorePrototypes;
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -247,11 +220,11 @@ public class CorePrototypeRepositoryObject extends APrototype {
         this.add(spaceType, null, null, corePrototype);
     }
 
-    public <T extends APrototype> void add(long spaceType, UUID id, String name, T corePrototype) {
+    public <T extends APrototype> void add(long space, UUID id, String name, T corePrototype) {
         if (ValueUtil.isAnyNullOrEmpty(id) && !StringUtil.isNameIllegal(name)) {
-            this.addByName(spaceType, name, corePrototype);
+            this.addByName(space, name, corePrototype);
         } else if (!ValueUtil.isAnyNullOrEmpty(id) && StringUtil.isNameIllegal(name)) {
-            this.addByID(spaceType, id, corePrototype);
+            this.addByID(space, id, corePrototype);
         }
         if (ObjectUtil.isAnyNull(corePrototype)) {
             throw new ConditionParametersException();
@@ -259,35 +232,31 @@ public class CorePrototypeRepositoryObject extends APrototype {
 
         corePrototype.factoryManager = this.factoryManager;
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.WRITE);
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
+        Lock lock = this.getLock(space, LockType.WRITE);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Map<UUID, APrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
+            Map<UUID, APrototype> corePrototypes = aSpace.getCorePrototypes();
 
-                id = UUIDUtil.createRandom();
-                Class<? extends APrototype> clazz = corePrototype.getClass();
+            id = UUIDUtil.createRandom();
+            Class<? extends APrototype> clazz = corePrototype.getClass();
 
-                Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs =
-                        this.getKernelSpace().getClassedCorePrototypeIDs();
+            Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs = aSpace.getClassedCorePrototypeIDs();
 
-                if (classedCorePrototypeIDs.containsKey(clazz)) {
-                    throw new StatusAlreadyExistedException();
-                }
-                classedCorePrototypeIDs.put(clazz, id);
-
-                corePrototypes.put(id, corePrototype);
-            } finally {
-                lock.unlock();
+            if (classedCorePrototypeIDs.containsKey(clazz)) {
+                throw new StatusAlreadyExistedException();
             }
-        } else {
-            throw new StatusNotSupportedException();
+            classedCorePrototypeIDs.put(clazz, id);
+
+            corePrototypes.put(id, corePrototype);
+        } finally {
+            lock.unlock();
         }
     }
 
-    public <T extends APrototype> void addByName(long spaceType, String name, T corePrototype) {
+    public <T extends APrototype> void addByName(long space, String name, T corePrototype) {
         if (ObjectUtil.isAnyNull(corePrototype)) {
             throw new ConditionParametersException();
         }
@@ -297,33 +266,30 @@ public class CorePrototypeRepositoryObject extends APrototype {
 
         corePrototype.factoryManager = this.factoryManager;
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.WRITE);
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
+        Lock lock = this.getLock(space, LockType.WRITE);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Map<UUID, APrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
+            Map<UUID, APrototype> corePrototypes = aSpace.getCorePrototypes();
 
-                UUID id = UUIDUtil.createRandom();
+            UUID id = UUIDUtil.createRandom();
 
-                Map<String, UUID> namedCorePrototypeIDs = this.getKernelSpace().getNamedCorePrototypeIDs();
+            Map<String, UUID> namedCorePrototypeIDs = aSpace.getNamedCorePrototypeIDs();
 
-                if (namedCorePrototypeIDs.containsKey(name)) {
-                    throw new StatusAlreadyExistedException();
-                }
-                namedCorePrototypeIDs.put(name, id);
-
-                corePrototypes.put(id, corePrototype);
-            } finally {
-                lock.unlock();
+            if (namedCorePrototypeIDs.containsKey(name)) {
+                throw new StatusAlreadyExistedException();
             }
-        } else {
-            throw new StatusNotSupportedException();
+            namedCorePrototypeIDs.put(name, id);
+
+            corePrototypes.put(id, corePrototype);
+        } finally {
+            lock.unlock();
         }
     }
 
-    public <T extends APrototype> void addByID(long spaceType, UUID id, T corePrototype) {
+    public <T extends APrototype> void addByID(long space, UUID id, T corePrototype) {
         if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
@@ -333,54 +299,47 @@ public class CorePrototypeRepositoryObject extends APrototype {
 
         corePrototype.factoryManager = this.factoryManager;
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.WRITE);
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
+        Lock lock = this.getLock(space, LockType.WRITE);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Map<UUID, APrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
+            Map<UUID, APrototype> corePrototypes = aSpace.getCorePrototypes();
 
-                if (corePrototypes.containsKey(id)) {
-                    throw new StatusAlreadyExistedException();
-                }
-
-                corePrototypes.put(id, corePrototype);
-            } finally {
-                lock.unlock();
+            if (corePrototypes.containsKey(id)) {
+                throw new StatusAlreadyExistedException();
             }
-        } else {
-            throw new StatusNotSupportedException();
+
+            corePrototypes.put(id, corePrototype);
+        } finally {
+            lock.unlock();
         }
     }
 
-    public <T extends APrototype> boolean contain(long spaceType, Class<T> clazz) {
+    public <T extends APrototype> boolean contain(long space, Class<T> clazz) {
         if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.WRITE);
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
+        Lock lock = this.getLock(space, LockType.READ);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs =
-                        this.getKernelSpace().getClassedCorePrototypeIDs();
+            Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs = aSpace.getClassedCorePrototypeIDs();
 
-                UUID id = classedCorePrototypeIDs.getOrDefault(clazz, null);
-                boolean isContain = this.containByID(spaceType, clazz, id);
+            UUID id = classedCorePrototypeIDs.getOrDefault(clazz, null);
+            boolean isContain = this.containByID(space, clazz, id);
 
-                return isContain;
-            } finally {
-                lock.unlock();
-            }
-        } else {
-            throw new StatusNotSupportedException();
+            return isContain;
+        } finally {
+            lock.unlock();
         }
     }
 
-    public <T extends APrototype> boolean containByName(long spaceType, Class<T> clazz, String name) {
+    public <T extends APrototype> boolean containByName(long space, Class<T> clazz, String name) {
         if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
@@ -388,27 +347,24 @@ public class CorePrototypeRepositoryObject extends APrototype {
             name = clazz.getName();
         }
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.WRITE);
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
+        Lock lock = this.getLock(space, LockType.READ);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Map<String, UUID> namedCorePrototypeIDs = this.getKernelSpace().getNamedCorePrototypeIDs();
+            Map<String, UUID> namedCorePrototypeIDs = aSpace.getNamedCorePrototypeIDs();
 
-                UUID id = namedCorePrototypeIDs.getOrDefault(name, null);
-                boolean isContain = this.containByID(spaceType, clazz, id);
+            UUID id = namedCorePrototypeIDs.getOrDefault(name, null);
+            boolean isContain = this.containByID(space, clazz, id);
 
-                return isContain;
-            } finally {
-                lock.unlock();
-            }
-        } else {
-            throw new StatusNotSupportedException();
+            return isContain;
+        } finally {
+            lock.unlock();
         }
     }
 
-    public <T extends APrototype> boolean containByID(long spaceType, Class<T> clazz, UUID id) {
+    public <T extends APrototype> boolean containByID(long space, Class<T> clazz, UUID id) {
         if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
@@ -416,130 +372,114 @@ public class CorePrototypeRepositoryObject extends APrototype {
             return false;
         }
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.WRITE);
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
+        Lock lock = this.getLock(space, LockType.READ);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Map<UUID, APrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
+            Map<UUID, APrototype> corePrototypes = aSpace.getCorePrototypes();
 
-                APrototype corePrototype = corePrototypes.getOrDefault(id, null);
-                boolean isContain;
-                if (ObjectUtil.isAnyNull(corePrototype) || corePrototype.getClass() != clazz) {
-                    isContain = false;
-                } else {
-                    isContain = true;
-                }
-
-                return isContain;
-            } finally {
-                lock.unlock();
+            APrototype corePrototype = corePrototypes.getOrDefault(id, null);
+            boolean isContain;
+            if (ObjectUtil.isAnyNull(corePrototype) || corePrototype.getClass() != clazz) {
+                isContain = false;
+            } else {
+                isContain = true;
             }
-        } else {
-            throw new StatusNotSupportedException();
+
+            return isContain;
+        } finally {
+            lock.unlock();
         }
     }
 
-    public <T extends APrototype> void delete(long spaceType, Class<T> clazz) {
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.WRITE);
+    public <T extends APrototype> void delete(long space, Class<T> clazz) {
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
+        Lock lock = this.getLock(space, LockType.WRITE);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs =
-                        this.getKernelSpace().getClassedCorePrototypeIDs();
-                Map<UUID, APrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
+            Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs = aSpace.getClassedCorePrototypeIDs();
+            Map<UUID, APrototype> corePrototypes = aSpace.getCorePrototypes();
 
-                UUID id = this.getIDByClass(spaceType, clazz);
-                this.getByID(spaceType, clazz, id);
+            UUID id = this.getIDByClass(space, clazz);
+            this.getByID(space, clazz, id);
 
-                corePrototypes.remove(id);
-                classedCorePrototypeIDs.remove(clazz);
-            } finally {
-                lock.unlock();
-            }
-        } else {
-            throw new StatusNotSupportedException();
+            corePrototypes.remove(id);
+            classedCorePrototypeIDs.remove(clazz);
+        } finally {
+            lock.unlock();
         }
     }
 
-    public <T extends APrototype> void deleteByName(long spaceType, Class<T> clazz, String name) {
-        this.containByName(spaceType, clazz, name);
-
+    public <T extends APrototype> void deleteByName(long space, Class<T> clazz, String name) {
+        if (!this.containByName(space, clazz, name)) {
+            throw new StatusNotExistedException();
+        }
         if (StringUtil.isNameIllegal(name)) {
             name = clazz.getName();
         }
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.WRITE);
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
+        Lock lock = this.getLock(space, LockType.WRITE);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Map<String, UUID> namedCorePrototypeIDs = this.getKernelSpace().getNamedCorePrototypeIDs();
+            Map<String, UUID> namedCorePrototypeIDs = aSpace.getNamedCorePrototypeIDs();
 
-                UUID id = namedCorePrototypeIDs.getOrDefault(name, null);
-                if (ValueUtil.isAnyNullOrEmpty(id)) {
-                    throw new StatusNotExistedException();
-                }
-
-                Map<UUID, APrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
-
-                this.getByID(spaceType, clazz, id);
-
-                corePrototypes.remove(id);
-                namedCorePrototypeIDs.remove(name);
-            } finally {
-                lock.unlock();
+            UUID id = namedCorePrototypeIDs.getOrDefault(name, null);
+            if (ValueUtil.isAnyNullOrEmpty(id)) {
+                throw new StatusNotExistedException();
             }
-        } else {
-            throw new StatusNotSupportedException();
+
+            Map<UUID, APrototype> corePrototypes = aSpace.getCorePrototypes();
+
+            this.getByID(space, clazz, id);
+
+            corePrototypes.remove(id);
+            namedCorePrototypeIDs.remove(name);
+        } finally {
+            lock.unlock();
         }
     }
 
-    public <T extends APrototype> void deleteByID(long spaceType, Class<T> clazz, UUID id) {
-        if (ObjectUtil.isAnyNull(clazz)) {
-            throw new ConditionParametersException();
-        }
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
-            throw new ConditionParametersException();
+    public <T extends APrototype> void deleteByID(long space, Class<T> clazz, UUID id) {
+        if (!this.containByID(space, clazz, id)) {
+            throw new StatusNotExistedException();
         }
 
-        if (spaceType == SpaceType.KERNEL) {
-            Lock lock = this.getLock(spaceType, LockType.WRITE);
+        ASpaceDefinition<?> aSpace = this.getSpace(space);
+        Lock lock = this.getLock(space, LockType.WRITE);
 
-            try {
-                lock.lock();
+        try {
+            lock.lock();
 
-                Map<String, UUID> namedCorePrototypeIDs = this.getKernelSpace().getNamedCorePrototypeIDs();
-                Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs =
-                        this.getKernelSpace().getClassedCorePrototypeIDs();
+            Map<String, UUID> namedCorePrototypeIDs = aSpace.getNamedCorePrototypeIDs();
+            Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs = aSpace.getClassedCorePrototypeIDs();
 
-                for (Entry<String, UUID> namedCorePrototypeID : namedCorePrototypeIDs.entrySet()) {
-                    if (namedCorePrototypeID.getValue() == id) {
-                        namedCorePrototypeIDs.remove(namedCorePrototypeID.getKey());
-                        break;
-                    }
+            for (Entry<String, UUID> namedCorePrototypeID : namedCorePrototypeIDs.entrySet()) {
+                if (namedCorePrototypeID.getValue() == id) {
+                    namedCorePrototypeIDs.remove(namedCorePrototypeID.getKey());
+                    break;
                 }
-                for (Entry<Class<? extends APrototype>, UUID> classedCorePrototypeID : classedCorePrototypeIDs.entrySet()) {
-                    if (classedCorePrototypeID.getValue() == id) {
-                        classedCorePrototypeIDs.remove(classedCorePrototypeID.getKey());
-                        break;
-                    }
-                }
-
-                Map<UUID, APrototype> corePrototypes = this.getKernelSpace().getCorePrototypes();
-
-                this.getByID(spaceType, clazz, id);
-
-                corePrototypes.remove(id);
-            } finally {
-                lock.unlock();
             }
-        } else {
-            throw new StatusNotSupportedException();
+            for (Entry<Class<? extends APrototype>, UUID> classedCorePrototypeID : classedCorePrototypeIDs.entrySet()) {
+                if (classedCorePrototypeID.getValue() == id) {
+                    classedCorePrototypeIDs.remove(classedCorePrototypeID.getKey());
+                    break;
+                }
+            }
+
+            Map<UUID, APrototype> corePrototypes = aSpace.getCorePrototypes();
+
+            this.getByID(space, clazz, id);
+
+            corePrototypes.remove(id);
+        } finally {
+            lock.unlock();
         }
     }
 }

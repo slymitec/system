@@ -3,9 +3,7 @@ package indi.sly.system.services.job.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.Consumer1;
 import indi.sly.system.common.lang.Provider;
-import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.enviroment.values.AUserSpaceExtensionDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
@@ -109,12 +107,8 @@ public class JobFactory extends AFactory {
         KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
 
         UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
-        AUserSpaceExtensionDefinition<?> aServiceExtensions =
-                userSpace.getServiceExtensions().getOrDefault(configuration.CORE_ENVIRONMENT_USER_SPACE_EXTENSION_SERVICE, null);
-        if (ObjectUtil.isAnyNull(aServiceExtensions) || !(aServiceExtensions instanceof ServiceUserSpaceExtensionDefinition)) {
-            throw new StatusNotExistedException();
-        }
-        ServiceUserSpaceExtensionDefinition serviceUserSpaceExtension = (ServiceUserSpaceExtensionDefinition) aServiceExtensions;
+        ServiceUserSpaceExtensionDefinition serviceUserSpaceExtension =
+                (ServiceUserSpaceExtensionDefinition) userSpace.getServiceSpace();
 
         return serviceUserSpaceExtension.getJobPointers();
     }

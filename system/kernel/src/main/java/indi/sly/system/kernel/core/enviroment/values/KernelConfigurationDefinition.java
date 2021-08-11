@@ -8,9 +8,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefinition> {
-    public final UUID CORE_ENVIRONMENT_USER_SPACE_EXTENSION_SERVICE
-            = UUIDUtil.getFormLongs(1978793907977537155L, -7186786965693311562L);
-
     public final UUID FILES_TYPES_INSTANCE_FILE_ID
             = UUIDUtil.getFormLongs(5141458603474635654L, -6744682139694385633L);
     public final String FILES_TYPES_INSTANCE_FILE_NAME = "File";
@@ -79,6 +76,8 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
     public final UUID SECURITY_ROLE_GUI_ID
             = UUIDUtil.getFormLongs(-1619619213472611191L, -4997309008069038213L);
 
+    //    public final UUID CORE_ENVIRONMENT_USER_SPACE_EXTENSION_SERVICE
+    //            = UUIDUtil.getFormLongs(1978793907977537155L, -7186786965693311562L);
     // public final UUID * = UUIDUtil.getFormLongs(-623865349106545073L, -6997297376516953324L);
     // public final UUID * = UUIDUtil.getFormLongs(-3687831299068770016L, -5951841443637097351L);
     // public final UUID * = UUIDUtil.getFormLongs(-1889690034818560723L, -6740428121948687006L);

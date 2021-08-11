@@ -8,7 +8,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessHandleEntryObject extends AValueProcessPrototype<ProcessHandleTableDefinition> {
+public class ProcessHandleEntryObject extends AValueProcessObject<ProcessHandleTableDefinition> {
     protected ProcessTokenObject processToken;
     protected UUID handle;
 

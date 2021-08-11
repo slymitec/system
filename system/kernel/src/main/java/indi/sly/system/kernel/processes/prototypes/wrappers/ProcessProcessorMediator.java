@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.wrappers;
 
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.wrappers.AMediator;
 import indi.sly.system.kernel.processes.lang.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessProcessorMediator extends APrototype {
+public class ProcessProcessorMediator extends AMediator {
     public ProcessProcessorMediator() {
         this.readProcessStatuses = new HashSet<>();
         this.writeProcessStatuses = new HashSet<>();

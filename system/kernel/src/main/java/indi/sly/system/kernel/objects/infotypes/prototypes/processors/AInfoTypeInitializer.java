@@ -6,7 +6,7 @@ import indi.sly.system.common.lang.Predicate1;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.processors.AInitializer;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
@@ -27,7 +27,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class AInfoTypeInitializer extends APrototype {
+public abstract class AInfoTypeInitializer extends AInitializer {
     public abstract void install();
 
     public abstract void uninstall();

@@ -2,7 +2,7 @@ package indi.sly.system.services.job.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import indi.sly.system.services.job.JobService;
 import indi.sly.system.services.job.lang.JobProcessorFinishConsumer;
@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class JobObject extends AValueProcessPrototype<JobDefinition> {
+public class JobObject extends AValueProcessObject<JobDefinition> {
     protected JobProcessorMediator processorMediator;
     protected JobStatusDefinition status;
 

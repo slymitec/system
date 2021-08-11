@@ -1,8 +1,8 @@
 package indi.sly.system.common.values;
 
+import indi.sly.system.common.ABase;
 import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.lang.StatusDisabilityException;
-import indi.sly.system.common.ABase;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -14,7 +14,7 @@ public abstract class AValue<T> extends ABase implements ISerializeCapable<T> {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         Object value;
 
         try {

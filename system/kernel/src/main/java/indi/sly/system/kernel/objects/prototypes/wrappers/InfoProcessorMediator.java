@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes.wrappers;
 
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.wrappers.AMediator;
 import indi.sly.system.kernel.objects.lang.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoProcessorMediator extends APrototype {
+public class InfoProcessorMediator extends AMediator {
     public InfoProcessorMediator() {
         this.dumps = new ArrayList<>();
         this.opens = new ArrayList<>();

@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
@@ -15,7 +16,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessEndHandleTableResolver extends APrototype implements IProcessEndResolver {
+public class ProcessEndHandleTableResolver extends AResolver implements IProcessEndResolver {
     private final ProcessLifeProcessorEndFunction end;
 
     public ProcessEndHandleTableResolver() {

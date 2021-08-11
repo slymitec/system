@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
+import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ThreadDefinition;
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ThreadObject extends APrototype {
+public class ThreadObject extends AObject {
     public ThreadObject() {
         this.thread = new ThreadDefinition();
     }

@@ -3,11 +3,11 @@ package indi.sly.system.kernel.memory.repositories.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
-import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -26,7 +26,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserRepositoryObject extends APrototype {
+public class UserRepositoryObject extends AObject {
     @PersistenceContext
     private EntityManager entityManager;
 

@@ -1,9 +1,9 @@
 package indi.sly.system.kernel.objects.infotypes.prototypes;
 
-import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.objects.infotypes.values.TypeCounterDefinition;
 
-public class TypeCounterObject extends AValueProcessPrototype<TypeCounterDefinition> {
+public class TypeCounterObject extends AValueProcessObject<TypeCounterDefinition> {
     public synchronized int getTotalOccupiedCount() {
         return this.value.getTotalOccupiedCount();
     }

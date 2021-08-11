@@ -10,14 +10,14 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class ACoreProcessPrototype<T> extends APrototype {
+public abstract class ACoreProcessObject<T> extends AObject {
     private Consumer funcParentInit;
     private Consumer funcParentFresh;
     private Provider<T> funcRead;
     private Consumer1<T> funcWrite;
     private Consumer1<Long> funcLock;
 
-    public final void setParent(ACoreProcessPrototype<?> parentCoreProcess) {
+    public final void setParent(ACoreProcessObject<?> parentCoreProcess) {
         if (ObjectUtil.allNotNull(parentCoreProcess)) {
             this.funcParentInit = parentCoreProcess::init;
             this.funcParentFresh = parentCoreProcess::fresh;

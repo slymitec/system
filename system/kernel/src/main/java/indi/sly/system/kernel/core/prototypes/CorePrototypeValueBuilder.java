@@ -14,9 +14,7 @@ import java.lang.reflect.Constructor;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CorePrototypeValueBuilder extends APrototype {
-    private FactoryManager factoryManager;
-
+public class CorePrototypeValueBuilder extends ABuilder {
     public final void setFactoryManager(FactoryManager factoryManager) {
         if (ObjectUtil.allNotNull(factoryManager)) {
             this.factoryManager = factoryManager;

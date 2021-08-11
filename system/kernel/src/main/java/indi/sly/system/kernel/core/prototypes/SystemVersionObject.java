@@ -15,7 +15,7 @@ import java.util.jar.JarFile;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SystemVersionObject extends APrototype {
+public class SystemVersionObject extends AObject {
     public SystemVersionObject() {
         Class<SystemVersionObject> clazz = SystemVersionObject.class;
 

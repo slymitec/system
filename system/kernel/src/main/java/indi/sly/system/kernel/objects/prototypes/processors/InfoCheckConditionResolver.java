@@ -1,13 +1,13 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
+import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
-import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoCheckConditionResolver extends APrototype implements IInfoResolver {
+public class InfoCheckConditionResolver extends AResolver implements IInfoResolver {
     public InfoCheckConditionResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             if (openAttribute == InfoOpenAttributeType.CLOSE

@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.services.job.values.JobPointerDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class JobPointerObject extends AValueProcessPrototype<JobPointerDefinition> {
+public class JobPointerObject extends AValueProcessObject<JobPointerDefinition> {
     public UUID getJobID() {
         this.init();
 

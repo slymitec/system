@@ -6,7 +6,7 @@ import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteStatusConsumer;
@@ -22,7 +22,7 @@ import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessStatusObject extends AValueProcessPrototype<ProcessEntity> {
+public class ProcessStatusObject extends AValueProcessObject<ProcessEntity> {
     protected ProcessProcessorMediator processorMediator;
 
     protected ProcessObject process;

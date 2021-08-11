@@ -70,11 +70,6 @@ public class GroupEntity extends AEntity<GroupEntity> {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return this.deepClone();
-    }
-
-    @Override
     public GroupEntity deepClone() {
         GroupEntity group = new GroupEntity();
 

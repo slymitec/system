@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.wrappers;
 
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.wrappers.AMediator;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessLifeProcessorMediator extends APrototype {
+public class ProcessLifeProcessorMediator extends AMediator {
     public ProcessLifeProcessorMediator() {
         this.creates = new ArrayList<>();
         this.ends = new ArrayList<>();

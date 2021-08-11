@@ -6,6 +6,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
@@ -25,7 +26,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoObject extends APrototype {
+public class InfoObject extends AObject {
     protected InfoFactory factory;
     protected InfoProcessorMediator processorMediator;
 
@@ -202,7 +203,7 @@ public class InfoObject extends APrototype {
         if (!ValueUtil.isAnyNullOrEmpty(this.getHandle()) || ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
-        if (ObjectUtil.isAnyNull(arguments)) {
+        if (ObjectUtil.isNull(arguments)) {
             arguments = new Object[0];
         }
 

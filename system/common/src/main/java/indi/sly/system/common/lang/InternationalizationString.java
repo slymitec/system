@@ -23,7 +23,7 @@ public final class InternationalizationString implements ISerializeCapable<Inter
         this.text = new HashMap<>();
     }
 
-    protected final Map<Locale, String> text;
+    private final Map<Locale, String> text;
 
     public int size() {
         return this.text.size();

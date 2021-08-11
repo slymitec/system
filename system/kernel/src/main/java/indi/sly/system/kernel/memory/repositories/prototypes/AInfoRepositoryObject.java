@@ -1,13 +1,13 @@
 package indi.sly.system.kernel.memory.repositories.prototypes;
 
-import java.util.List;
-import java.util.UUID;
-
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoRelationEntity;
 
-public abstract class AInfoRepositoryObject extends APrototype {
+import java.util.List;
+import java.util.UUID;
+
+public abstract class AInfoRepositoryObject extends AObject {
     public abstract boolean contain(UUID id);
 
     public abstract InfoEntity get(UUID id);

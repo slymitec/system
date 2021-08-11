@@ -7,7 +7,7 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.ABytesValueProcessPrototype;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
@@ -23,7 +23,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessTokenObject extends ABytesValueProcessPrototype<ProcessTokenDefinition> {
+public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDefinition> {
     protected ProcessObject process;
 
     private ProcessObject getParentProcessAndCheckIsCurrent() {

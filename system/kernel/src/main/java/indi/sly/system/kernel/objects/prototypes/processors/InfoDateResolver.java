@@ -1,11 +1,14 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.objects.lang.*;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
+import indi.sly.system.kernel.objects.lang.InfoProcessorCreateChildAndOpenFunction;
+import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
+import indi.sly.system.kernel.objects.lang.InfoProcessorReadContentFunction;
+import indi.sly.system.kernel.objects.lang.InfoProcessorWriteContentConsumer;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -17,7 +20,7 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoDateResolver extends APrototype implements IInfoResolver {
+public class InfoDateResolver extends AResolver implements IInfoResolver {
     public InfoDateResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,

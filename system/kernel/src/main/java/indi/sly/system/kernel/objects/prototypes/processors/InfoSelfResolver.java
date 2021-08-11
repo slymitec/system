@@ -1,20 +1,19 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import javax.inject.Named;
-
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
+import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.lang.InfoProcessorSelfFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
+import indi.sly.system.kernel.objects.values.InfoEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.kernel.objects.values.InfoEntity;
+import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoSelfResolver extends APrototype implements IInfoResolver {
+public class InfoSelfResolver extends AResolver implements IInfoResolver {
     public InfoSelfResolver() {
         this.info = (repositoryID, id, status) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);

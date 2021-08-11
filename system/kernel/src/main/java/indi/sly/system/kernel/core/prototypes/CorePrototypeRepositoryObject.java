@@ -4,7 +4,6 @@ import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.enviroment.values.ASpaceDefinition;
-import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -21,15 +20,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CorePrototypeRepositoryObject extends APrototype {
-    private KernelSpaceDefinition kernelSpace;
-
     private ASpaceDefinition<?> getSpace(long space) {
         if (space == SpaceType.KERNEL) {
-            if (ObjectUtil.isAnyNull(this.kernelSpace)) {
-                this.kernelSpace = this.factoryManager.getKernelSpace();
-            }
-
-            return this.kernelSpace;
+            return this.factoryManager.getKernelSpace();
         } else if (space == SpaceType.USER) {
             return this.factoryManager.getUserSpace();
         } else {

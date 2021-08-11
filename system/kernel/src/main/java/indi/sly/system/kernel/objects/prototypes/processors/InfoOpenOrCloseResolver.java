@@ -2,6 +2,7 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeCounterObject;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoOpenOrCloseResolver extends APrototype implements IInfoResolver {
+public class InfoOpenOrCloseResolver extends AResolver implements IInfoResolver {
     public InfoOpenOrCloseResolver() {
         this.open = (handle, info, type, status, openAttribute, arguments) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DO_NOT_USE_TYPE_COUNT)) {

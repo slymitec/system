@@ -10,6 +10,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.security.values.AccountAuthorizationGetAccount;
 import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
@@ -22,7 +23,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AccountAuthorizationObject extends APrototype {
+public class AccountAuthorizationObject extends AObject {
     public AccountAuthorizationObject() {
         this.date = new HashMap<>();
     }

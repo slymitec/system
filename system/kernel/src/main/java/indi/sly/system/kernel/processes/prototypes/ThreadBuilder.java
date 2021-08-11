@@ -6,7 +6,7 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.kernel.processes.values.ThreadContextType;
 import indi.sly.system.kernel.processes.values.ThreadStatusType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ThreadBuilder extends APrototype {
+public class ThreadBuilder extends ABuilder {
     protected ThreadFactory factory;
 
     public ThreadObject create(UUID processID) {

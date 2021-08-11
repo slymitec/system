@@ -7,5 +7,13 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AResolver extends AProcessor {
+public abstract class AResolver extends AProcessor implements IOrderlyResolver {
+    public int order() {
+        return 0;
+    }
+
+    @Override
+    public final int compareTo(IOrderlyResolver other) {
+        return this.order() - other.order();
+    }
 }

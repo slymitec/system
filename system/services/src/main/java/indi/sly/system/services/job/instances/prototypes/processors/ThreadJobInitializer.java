@@ -34,7 +34,7 @@ public class ThreadJobInitializer extends AJobInitializer {
     }
 
     private void createThread(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_ProcessID = content.getDatum(UUID.class, "Processes_Process_ID");
+        UUID parameter_ProcessID = content.getParameter(UUID.class, "Processes_Process_ID");
 
         //
 

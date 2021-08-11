@@ -52,7 +52,7 @@ public class SessionJobInitializer extends AJobInitializer {
     }
 
     private void createSession(JobRunConsumer run, JobContentObject content) {
-        long parameter_SessionType = content.getDatumOrDefault(Long.class, "Process_Session_Type", SessionType.CLI);
+        long parameter_SessionType = content.getParameterOrDefault(Long.class, "Process_Session_Type", SessionType.CLI);
 
         //
 
@@ -74,11 +74,11 @@ public class SessionJobInitializer extends AJobInitializer {
 
         sessionContent.close();
 
-        content.setDatum("Processes_Session_ID", sessionID);
+        content.setResult("Processes_Session_ID", sessionID);
     }
 
     private void deleteSession(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_SessionID = content.getDatum(UUID.class, "Processes_Session_ID");
+        UUID parameter_SessionID = content.getParameter(UUID.class, "Processes_Session_ID");
 
         //
 
@@ -87,14 +87,12 @@ public class SessionJobInitializer extends AJobInitializer {
         //
 
         sessionManager.delete(parameter_SessionID);
-
-        content.deleteDatumIfExisted("Processes_Session_ID");
     }
 
     private void authorize(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_SessionID = content.getDatum(UUID.class, "Processes_Session_ID");
-        String parameter_AccountName = content.getDatum(String.class, "Security_Account_Name");
-        String parameter_AccountPassword = content.getDatum(String.class, "Security_Account_Password");
+        UUID parameter_SessionID = content.getParameter(UUID.class, "Processes_Session_ID");
+        String parameter_AccountName = content.getParameter(String.class, "Security_Account_Name");
+        String parameter_AccountPassword = content.getParameter(String.class, "Security_Account_Password");
 
         //
 
@@ -118,7 +116,7 @@ public class SessionJobInitializer extends AJobInitializer {
     }
 
     private void createUserSessionBin(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_SessionID = content.getDatum(UUID.class, "Processes_Session_ID");
+        UUID parameter_SessionID = content.getParameter(UUID.class, "Processes_Session_ID");
 
         //
 
@@ -151,11 +149,11 @@ public class SessionJobInitializer extends AJobInitializer {
                         new IdentificationDefinition("Main"), new IdentificationDefinition("Users"),
                         new IdentificationDefinition(account.getName())));
 
-        content.setDatum("Processes_Process_UserSession_ID", process.getID());
+        content.setResult("Processes_Process_UserSession_ID", process.getID());
     }
 
     private void endUserSessionBin(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_ProcessID = content.getDatum(UUID.class, "Processes_Process_UserSession_ID");
+        UUID parameter_ProcessID = content.getParameter(UUID.class, "Processes_Process_UserSession_ID");
 
         //
 

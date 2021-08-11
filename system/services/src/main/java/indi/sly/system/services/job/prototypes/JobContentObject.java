@@ -1,10 +1,7 @@
 package indi.sly.system.services.job.prototypes;
 
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.prototypes.CorePrototypeRepositoryObject;
@@ -24,52 +21,96 @@ public class JobContentObject extends APrototype {
     protected ThreadContextObject threadContext;
     protected JobPointerObject pointer;
 
+    public void setResult(String name, Object value) {
+        if (StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        Map<String, Object> threadContextResults = new HashMap<>(this.threadContext.getResults());
+        threadContextResults.put(name, value);
+        this.threadContext.setResults(threadContextResults);
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T takeResult(Class<T> clazz, String name) {
         if (ObjectUtil.isAnyNull(clazz) || StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
 
-        Map<String, Object> threadContextData = this.threadContext.getResults();
-        Object value = threadContextData.getOrDefault(name, null);
+        Map<String, Object> threadContextResults = this.threadContext.getResults();
+        Object value = threadContextResults.getOrDefault(name, null);
+        T result;
 
         if (ObjectUtil.isAnyNull(value)) {
-            throw new StatusNotExistedException();
+            return null;
         } else if (value instanceof APrototype && clazz == UUID.class) {
             CorePrototypeRepositoryObject corePrototypeRepository = this.factoryManager.getCorePrototypeRepository();
 
             UUID id = UUIDUtil.createRandom();
+            APrototype prototype = (APrototype) value;
 
-            corePrototypeRepository.addByID(SpaceType.USER, id, (APrototype) value);
+            this.pointer.getProtoTypes().put(id, prototype.getClass());
+            corePrototypeRepository.addByID(SpaceType.USER, id, prototype);
 
-            return (T) id;
+            result = (T) id;
         } else if (value.getClass() != clazz) {
             throw new StatusRelationshipErrorException();
         } else {
-            return (T) value;
+            result = (T) value;
         }
+
+        threadContextResults = new HashMap<>(threadContextResults);
+        threadContextResults.remove(name);
+        this.threadContext.setResults(threadContextResults);
+
+        return result;
     }
 
-    //
+    public <T extends APrototype> void injectParameter(UUID id, String name) {
+        if (ValueUtil.isAnyNullOrEmpty(id) || StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
 
-    public <T> T getDatum(Class<T> clazz, String name) {
-        return this.getDatumOrDefaultProvider(clazz, name, () -> {
+        Class<? extends APrototype> prototypeType = this.pointer.getProtoTypes().getOrDefault(id, null);
+
+        if (ObjectUtil.isAnyNull(prototypeType)) {
+            throw new StatusNotExistedException();
+        }
+
+        CorePrototypeRepositoryObject corePrototypeRepository = this.factoryManager.getCorePrototypeRepository();
+        APrototype prototype = corePrototypeRepository.getByID(SpaceType.USER, prototypeType, id);
+
+        Map<String, Object> threadContextParameters = this.threadContext.getParameters();
+        threadContextParameters.put(name, prototype);
+    }
+
+    public <T extends APrototype> void setParameter(Class<T> clazz, String name, Object value) {
+        if (ObjectUtil.isAnyNull(clazz) || StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        Map<String, Object> threadContextParameters = this.threadContext.getParameters();
+        threadContextParameters.put(name, value);
+    }
+
+    public <T> T getParameter(Class<T> clazz, String name) {
+        return this.getParameterOrDefaultProvider(clazz, name, () -> {
             throw new StatusNotExistedException();
         });
     }
 
-    public <T> T getDatumOrDefault(Class<T> clazz, String name, T defaultValue) {
-        return this.getDatumOrDefaultProvider(clazz, name, () -> defaultValue);
+    public <T> T getParameterOrDefault(Class<T> clazz, String name, T defaultValue) {
+        return this.getParameterOrDefaultProvider(clazz, name, () -> defaultValue);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getDatumOrDefaultProvider(Class<T> clazz, String name, Provider<T> defaultValue) {
+    public <T> T getParameterOrDefaultProvider(Class<T> clazz, String name, Provider<T> defaultValue) {
         if (ObjectUtil.isAnyNull(clazz, defaultValue) || StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
 
-        Map<String, Object> threadContextData = this.threadContext.getResults();
-        Object value = threadContextData.getOrDefault(name, null);
+        Map<String, Object> threadContextParameters = this.threadContext.getParameters();
+        Object value = threadContextParameters.getOrDefault(name, null);
 
         if (ObjectUtil.isAnyNull(value)) {
             return defaultValue.acquire();
@@ -82,62 +123,19 @@ public class JobContentObject extends APrototype {
         }
     }
 
-    public void setDatum(String name, Object value) {
-        if (StringUtil.isNameIllegal(name)) {
-            throw new ConditionParametersException();
-        }
+    //
 
-        Map<String, Object> threadContextData = new HashMap<>(this.threadContext.getResults());
-        threadContextData.put(name, value);
-        this.threadContext.setResults(threadContextData);
-    }
-
-    public void deleteDatumIfExisted(String name) {
-        if (StringUtil.isNameIllegal(name)) {
-            throw new ConditionParametersException();
-        }
-
-        if (this.threadContext.getResults().containsKey(name)) {
-            Map<String, Object> threadContextData = new HashMap<>(this.threadContext.getResults());
-            threadContextData.remove(name);
-            this.threadContext.setResults(threadContextData);
-        }
-    }
-
-    public Set<String> getNames() {
-        Map<String, Object> threadContextData = this.threadContext.getResults();
+    public Set<String> getParameterNames() {
+        Map<String, Object> threadContextData = this.threadContext.getParameters();
 
         return CollectionUtil.unmodifiable(threadContextData.keySet());
     }
 
-    public void clear() {
-        this.threadContext.setResults(new HashMap<>());
-    }
+    public Set<String> getResultNames() {
+        Map<String, Object> threadContextData = this.threadContext.getResults();
 
-//    public UUID transferPrototypeToCache(String name) {
-//        if (StringUtil.isNameIllegal(name)) {
-//            throw new ConditionParametersException();
-//        }
-//
-//        Map<String, Object> threadContextData = this.threadContext.getData();
-//        Object value = threadContextData.getOrDefault(name, null);
-//
-//        if (ObjectUtil.isAnyNull(value)) {
-//            throw new StatusNotExistedException();
-//        }
-//        if (!(value instanceof APrototype)) {
-//            throw new StatusRelationshipErrorException();
-//        }
-//
-//        threadContextData.remove(name);
-//
-//        CorePrototypeRepositoryObject corePrototypeRepository = this.factoryManager.getCorePrototypeRepository();
-//        UUID id = UUIDUtil.createRandom();
-//        APrototype prototype = (APrototype) value;
-//        corePrototypeRepository.addByID(SpaceType.USER, id, prototype);
-//
-//        return id;
-//    }
+        return CollectionUtil.unmodifiable(threadContextData.keySet());
+    }
 
     public boolean isException() {
         return ObjectUtil.allNotNull(this.threadContext.getRunException());

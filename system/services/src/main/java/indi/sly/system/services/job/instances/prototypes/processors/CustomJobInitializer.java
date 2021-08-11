@@ -29,7 +29,7 @@ public class CustomJobInitializer extends AJobInitializer {
     }
 
     private void consumer(JobRunConsumer run, JobContentObject content) {
-        Consumer resolver = content.getDatumOrDefault(Consumer.class, "method", null);
+        Consumer resolver = content.getParameterOrDefault(Consumer.class, "method", null);
 
         if (ObjectUtil.isAnyNull(resolver)) {
             throw new ConditionParametersException();

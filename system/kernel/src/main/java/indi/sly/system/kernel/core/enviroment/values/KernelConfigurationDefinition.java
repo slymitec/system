@@ -1,13 +1,16 @@
 package indi.sly.system.kernel.core.enviroment.values;
 
-import java.util.Map;
-import java.util.UUID;
-
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 
+import java.util.Map;
+import java.util.UUID;
+
 public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefinition> {
+    public final UUID CORE_ENVIRONMENT_USER_SPACE_EXTENSION_SERVICE
+            = UUIDUtil.getFormLongs(1978793907977537155L, -7186786965693311562L);
+
     public final UUID FILES_TYPES_INSTANCE_FILE_ID
             = UUIDUtil.getFormLongs(5141458603474635654L, -6744682139694385633L);
     public final String FILES_TYPES_INSTANCE_FILE_NAME = "File";
@@ -44,10 +47,12 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
             = UUIDUtil.getFormLongs(-7191269949502635218L, -6103845440396733665L);
     public final Map<Long, Integer> PROCESSES_TOKEN_DEFAULT_LIMIT = Map.of(
             ProcessTokenLimitType.HANDLE_MAX, 256,
-            ProcessTokenLimitType.SHARED_LENGTH_MAX, 4096,
             ProcessTokenLimitType.PORT_COUNT_MAX, 4,
             ProcessTokenLimitType.PORT_LENGTH_MAX, 4096,
-            ProcessTokenLimitType.SIGNAL_LENGTH_MAX, 256);
+            ProcessTokenLimitType.SHARED_LENGTH_MAX, 4096,
+            ProcessTokenLimitType.SIGNAL_LENGTH_MAX, 256,
+            ProcessTokenLimitType.JOB_PROTOTYPE_CACHES_MAX, 8
+    );
 
     public final long SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME = 65536L;
     public final UUID SECURITY_ACCOUNT_SYSTEM_ID
@@ -74,7 +79,6 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
     public final UUID SECURITY_ROLE_GUI_ID
             = UUIDUtil.getFormLongs(-1619619213472611191L, -4997309008069038213L);
 
-    // public final UUID * = UUIDUtil.getFormLongs(1978793907977537155L, -7186786965693311562L);
     // public final UUID * = UUIDUtil.getFormLongs(-623865349106545073L, -6997297376516953324L);
     // public final UUID * = UUIDUtil.getFormLongs(-3687831299068770016L, -5951841443637097351L);
     // public final UUID * = UUIDUtil.getFormLongs(-1889690034818560723L, -6740428121948687006L);

@@ -1,22 +1,22 @@
 package indi.sly.system.services.job;
 
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.services.job.prototypes.JobBuilder;
-import indi.sly.system.services.job.prototypes.JobFactory;
-import indi.sly.system.services.job.prototypes.JobObject;
-import indi.sly.system.services.job.prototypes.JobRepositoryObject;
+import indi.sly.system.services.job.prototypes.*;
 import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.values.JobDefinition;
+import indi.sly.system.services.job.values.JobPointerDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.Map;
 import java.util.UUID;
 
 @Named
@@ -36,7 +36,7 @@ public class JobService extends AService {
 
     protected JobFactory factory;
 
-    public JobObject get(UUID id) {
+    public JobObject getJob(UUID id) {
         if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
@@ -53,7 +53,7 @@ public class JobService extends AService {
         return this.factory.build(job);
     }
 
-    public JobObject get(String name) {
+    public JobObject getJob(String name) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
@@ -76,15 +76,48 @@ public class JobService extends AService {
         return this.factory.build(job);
     }
 
-    public JobObject create(String name, long attribute, UUID processID, AJobInitializer initializer) {
+    public JobObject createJob(String name, long attribute, UUID processID, AJobInitializer initializer) {
         JobBuilder jobBuilder = this.factory.createJob();
 
         return jobBuilder.create(name, attribute, processID, initializer);
     }
 
-    public synchronized void delete(UUID id) {
+    public void deleteJob(UUID id) {
         JobBuilder jobBuilder = this.factory.createJob();
 
         jobBuilder.delete(id);
+    }
+
+
+    public boolean containPointer(UUID id) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
+            throw new ConditionParametersException();
+        }
+
+        Map<UUID, JobPointerDefinition> jobPointers = this.factory.getJobPointers();
+
+        return jobPointers.containsKey(id);
+    }
+
+    public void createPointer(UUID id) {
+        JobPointerBuilder jobPointerBuilder = this.factory.createJobPointer();
+
+        jobPointerBuilder.create(id);
+    }
+
+    public JobPointerObject getPointer(UUID id) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
+            throw new ConditionParametersException();
+        }
+
+        Map<UUID, JobPointerDefinition> jobPointers = this.factory.getJobPointers();
+
+        JobPointerDefinition jobPointer = jobPointers.getOrDefault(id, null);
+
+        if (ObjectUtil.isAnyNull(jobPointer)) {
+            throw new StatusAlreadyExistedException();
+        }
+
+        return this.factory.build(jobPointer);
     }
 }

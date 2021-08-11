@@ -54,7 +54,7 @@ public class JobInitializerResolver extends APrototype implements IJobResolver {
 
     @Override
     public int order() {
-        return 2;
+        return 3;
     }
 
     private final JobProcessorStartFunction start;

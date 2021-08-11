@@ -4,7 +4,10 @@ import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.CorePrototypeRepositoryObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -13,11 +16,41 @@ import javax.inject.Named;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class JobContentObject extends APrototype {
     protected ThreadContextObject threadContext;
+    protected JobPointerObject pointer;
+
+    @SuppressWarnings("unchecked")
+    public <T> T takeResult(Class<T> clazz, String name) {
+        if (ObjectUtil.isAnyNull(clazz) || StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        Map<String, Object> threadContextData = this.threadContext.getResults();
+        Object value = threadContextData.getOrDefault(name, null);
+
+        if (ObjectUtil.isAnyNull(value)) {
+            throw new StatusNotExistedException();
+        } else if (value instanceof APrototype && clazz == UUID.class) {
+            CorePrototypeRepositoryObject corePrototypeRepository = this.factoryManager.getCorePrototypeRepository();
+
+            UUID id = UUIDUtil.createRandom();
+
+            corePrototypeRepository.addByID(SpaceType.USER, id, (APrototype) value);
+
+            return (T) id;
+        } else if (value.getClass() != clazz) {
+            throw new StatusRelationshipErrorException();
+        } else {
+            return (T) value;
+        }
+    }
+
+    //
 
     public <T> T getDatum(Class<T> clazz, String name) {
         return this.getDatumOrDefaultProvider(clazz, name, () -> {
@@ -35,7 +68,7 @@ public class JobContentObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        Map<String, Object> threadContextData = this.threadContext.getData();
+        Map<String, Object> threadContextData = this.threadContext.getResults();
         Object value = threadContextData.getOrDefault(name, null);
 
         if (ObjectUtil.isAnyNull(value)) {
@@ -54,9 +87,9 @@ public class JobContentObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        Map<String, Object> threadContextData = new HashMap<>(this.threadContext.getData());
+        Map<String, Object> threadContextData = new HashMap<>(this.threadContext.getResults());
         threadContextData.put(name, value);
-        this.threadContext.setData(threadContextData);
+        this.threadContext.setResults(threadContextData);
     }
 
     public void deleteDatumIfExisted(String name) {
@@ -64,21 +97,21 @@ public class JobContentObject extends APrototype {
             throw new ConditionParametersException();
         }
 
-        if (this.threadContext.getData().containsKey(name)) {
-            Map<String, Object> threadContextData = new HashMap<>(this.threadContext.getData());
+        if (this.threadContext.getResults().containsKey(name)) {
+            Map<String, Object> threadContextData = new HashMap<>(this.threadContext.getResults());
             threadContextData.remove(name);
-            this.threadContext.setData(threadContextData);
+            this.threadContext.setResults(threadContextData);
         }
     }
 
     public Set<String> getNames() {
-        Map<String, Object> threadContextData = this.threadContext.getData();
+        Map<String, Object> threadContextData = this.threadContext.getResults();
 
         return CollectionUtil.unmodifiable(threadContextData.keySet());
     }
 
     public void clear() {
-        this.threadContext.setData(new HashMap<>());
+        this.threadContext.setResults(new HashMap<>());
     }
 
 //    public UUID transferPrototypeToCache(String name) {

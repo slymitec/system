@@ -9,7 +9,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Collections;
 import java.util.Map;
 
 @Named
@@ -33,18 +32,35 @@ public class ThreadContextObject extends AValueProcessPrototype<ThreadContextDef
         this.lock(LockType.NONE);
     }
 
-    public Map<String, Object> getData() {
+    public Map<String, Object> getParameters() {
         this.init();
 
-        return CollectionUtil.unmodifiable(this.value.getRun().getData());
+        return CollectionUtil.unmodifiable(this.value.getRun().getParameters());
     }
 
-    public void setData(Map<String, Object> data) {
+    public void setParameters(Map<String, Object> parameters) {
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.getRun().getData().clear();
-        this.value.getRun().getData().putAll(data);
+        this.value.getRun().getParameters().clear();
+        this.value.getRun().getParameters().putAll(parameters);
+
+        this.fresh();
+        this.lock(LockType.NONE);
+    }
+
+    public Map<String, Object> getResults() {
+        this.init();
+
+        return CollectionUtil.unmodifiable(this.value.getRun().getResults());
+    }
+
+    public void setResults(Map<String, Object> results) {
+        this.lock(LockType.WRITE);
+        this.init();
+
+        this.value.getRun().getResults().clear();
+        this.value.getRun().getResults().putAll(results);
 
         this.fresh();
         this.lock(LockType.NONE);

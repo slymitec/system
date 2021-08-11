@@ -3,22 +3,26 @@ package indi.sly.system.services.job.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.Consumer1;
 import indi.sly.system.common.lang.Provider;
+import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.kernel.core.enviroment.values.AUserSpaceExtensionDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.processes.prototypes.processors.IProcessResolver;
+import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
 import indi.sly.system.services.job.prototypes.processors.IJobResolver;
 import indi.sly.system.services.job.prototypes.wrappers.JobProcessorMediator;
 import indi.sly.system.services.job.values.JobDefinition;
+import indi.sly.system.services.job.values.JobPointerDefinition;
 import indi.sly.system.services.job.values.JobStatusDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Named
@@ -73,5 +77,45 @@ public class JobFactory extends AFactory {
         jobBuilder.factory = this;
 
         return jobBuilder;
+    }
+
+    private JobPointerObject build(Provider<JobPointerDefinition> funcRead,
+                                   Consumer1<JobPointerDefinition> funcWrite) {
+        JobPointerObject jobPointer = this.factoryManager.create(JobPointerObject.class);
+
+        jobPointer.setSource(funcRead, funcWrite);
+
+        return jobPointer;
+    }
+
+    public JobPointerObject build(JobPointerDefinition jobPointer) {
+        if (ObjectUtil.isAnyNull(jobPointer)) {
+            throw new ConditionParametersException();
+        }
+
+        return this.build(() -> jobPointer, (source) -> {
+        });
+    }
+
+    public JobPointerBuilder createJobPointer() {
+        JobPointerBuilder jobPointerBuilder = this.factoryManager.create(JobPointerBuilder.class);
+
+        jobPointerBuilder.factory = this;
+
+        return jobPointerBuilder;
+    }
+
+    public Map<UUID, JobPointerDefinition> getJobPointers() {
+        KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
+
+        UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
+        AUserSpaceExtensionDefinition<?> aServiceExtensions =
+                userSpace.getServiceExtensions().getOrDefault(configuration.CORE_ENVIRONMENT_USER_SPACE_EXTENSION_SERVICE, null);
+        if (ObjectUtil.isAnyNull(aServiceExtensions) || !(aServiceExtensions instanceof ServiceUserSpaceExtensionDefinition)) {
+            throw new StatusNotExistedException();
+        }
+        ServiceUserSpaceExtensionDefinition serviceUserSpaceExtension = (ServiceUserSpaceExtensionDefinition) aServiceExtensions;
+
+        return serviceUserSpaceExtension.getJobPointers();
     }
 }

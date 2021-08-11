@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.core.prototypes.AValueProcessPrototype;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
+import indi.sly.system.services.job.JobService;
 import indi.sly.system.services.job.lang.JobProcessorFinishConsumer;
 import indi.sly.system.services.job.lang.JobProcessorContentFunction;
 import indi.sly.system.services.job.lang.JobProcessorRunConsumer;
@@ -78,6 +79,8 @@ public class JobObject extends AValueProcessPrototype<JobDefinition> {
     public synchronized JobContentObject getContent() {
         JobDefinition job = this.getSelf();
 
+        JobService jobService = this.factoryManager.getService(JobService.class);
+
         ThreadContextObject threadContext = null;
 
         List<JobProcessorContentFunction> resolvers = this.processorMediator.getContents();
@@ -88,6 +91,7 @@ public class JobObject extends AValueProcessPrototype<JobDefinition> {
 
         JobContentObject jobContent = this.factoryManager.create(JobContentObject.class);
         jobContent.threadContext = threadContext;
+        jobContent.pointer = jobService.getPointer(job.getID());
 
         return jobContent;
     }

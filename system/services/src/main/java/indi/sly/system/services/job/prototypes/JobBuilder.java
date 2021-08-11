@@ -4,8 +4,8 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.*;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.ABuilder;
+import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
 import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.values.JobAttributeType;
 import indi.sly.system.services.job.values.JobDefinition;
@@ -25,10 +25,9 @@ public class JobBuilder extends ABuilder {
             throw new ConditionParametersException();
         }
 
-        JobRepositoryObject jobRepository =
-                this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, JobRepositoryObject.class);
+        ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.factoryManager.getKernelSpace().getServiceSpace();
 
-        if (jobRepository.getJobIDs().containsKey(name)) {
+        if (serviceSpace.getNamedJobIDs().containsKey(name)) {
             throw new StatusAlreadyExistedException();
         }
 
@@ -43,8 +42,8 @@ public class JobBuilder extends ABuilder {
         }
         job.setInitializer(initializer);
 
-        jobRepository.getJobs().put(job.getID(), job);
-        jobRepository.getJobIDs().put(job.getName(), job.getID());
+        serviceSpace.getJobs().put(job.getID(), job);
+        serviceSpace.getNamedJobIDs().put(job.getName(), job.getID());
 
         return this.factory.build(job);
     }
@@ -54,20 +53,19 @@ public class JobBuilder extends ABuilder {
             throw new ConditionParametersException();
         }
 
-        JobRepositoryObject jobRepository =
-                this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, JobRepositoryObject.class);
+        ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.factoryManager.getKernelSpace().getServiceSpace();
 
-        if (!jobRepository.getJobs().containsKey(id)) {
+        if (!serviceSpace.getJobs().containsKey(id)) {
             throw new StatusNotExistedException();
         }
 
-        JobDefinition job = jobRepository.getJobs().getOrDefault(id, null);
+        JobDefinition job = serviceSpace.getJobs().getOrDefault(id, null);
 
         if (ObjectUtil.isAnyNull(job)) {
             throw new StatusNotExistedException();
         }
 
-        jobRepository.getJobs().remove(job.getID());
-        jobRepository.getJobIDs().remove(job.getName());
+        serviceSpace.getJobs().remove(job.getID());
+        serviceSpace.getNamedJobIDs().remove(job.getName());
     }
 }

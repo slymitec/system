@@ -7,7 +7,8 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.boot.values.StartupType;
+import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
 import indi.sly.system.services.job.prototypes.*;
 import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.values.JobDefinition;
@@ -24,6 +25,10 @@ import java.util.UUID;
 public class JobService extends AService {
     @Override
     public void startup(long startup) {
+        if (startup == StartupType.STEP_INIT) {
+            this.factoryManager.getKernelSpace().setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
+        } else if (startup == StartupType.STEP_SERVICE) {
+        }
     }
 
     @Override
@@ -41,10 +46,9 @@ public class JobService extends AService {
             throw new ConditionParametersException();
         }
 
-        JobRepositoryObject jobRepository =
-                this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, JobRepositoryObject.class);
+        ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.factoryManager.getKernelSpace().getServiceSpace();
 
-        JobDefinition job = jobRepository.getJobs().getOrDefault(id, null);
+        JobDefinition job = serviceSpace.getJobs().getOrDefault(id, null);
 
         if (ObjectUtil.isAnyNull(job)) {
             throw new StatusNotExistedException();
@@ -58,16 +62,15 @@ public class JobService extends AService {
             throw new ConditionParametersException();
         }
 
-        JobRepositoryObject jobRepository =
-                this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, JobRepositoryObject.class);
+        ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.factoryManager.getKernelSpace().getServiceSpace();
 
-        UUID jobID = jobRepository.getJobIDs().getOrDefault(name, null);
+        UUID jobID = serviceSpace.getNamedJobIDs().getOrDefault(name, null);
 
         if (ValueUtil.isAnyNullOrEmpty(jobID)) {
             throw new StatusNotExistedException();
         }
 
-        JobDefinition job = jobRepository.getJobs().getOrDefault(jobID, null);
+        JobDefinition job = serviceSpace.getJobs().getOrDefault(jobID, null);
 
         if (ObjectUtil.isAnyNull(job)) {
             throw new StatusNotExistedException();

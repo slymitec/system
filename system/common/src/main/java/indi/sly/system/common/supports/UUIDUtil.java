@@ -22,8 +22,8 @@ public abstract class UUIDUtil {
         return UUID.nameUUIDFromBytes(value);
     }
 
-    public static UUID getFormLongs(long most, long least) {
-        return new UUID(most, least);
+    public static UUID getFormLongs(long mostSigBits, long leastSigBits) {
+        return new UUID(mostSigBits, leastSigBits);
     }
 
     public static String toString(UUID uuid) {
@@ -32,6 +32,34 @@ public abstract class UUIDUtil {
         } else {
             return uuid.toString().replace("-", StringUtil.EMPTY);
         }
+    }
+
+    public static UUID getFromString(String value) {
+        if (ValueUtil.isAnyNullOrEmpty(value)) {
+            return null;
+        }
+        if (value.length() == 36) {
+            value = value.replace("-", "");
+        }
+        if (value.length() != 32) {
+            return null;
+        }
+        for (int i = 0; i < 32; i++) {
+            char pair = value.charAt(i);
+            if (pair < '0' || (pair > '9' && pair < 'A') || (pair > 'F' && pair < 'a') || pair > 'f') {
+                return null;
+            }
+        }
+
+        long mostSigBits = Long.parseLong(value, 0, 8, 16) & 0xffffffffL;
+        mostSigBits <<= 32;
+        mostSigBits |= Long.parseLong(value, 8, 16, 16) & 0xffffffffL;
+
+        long leastSigBits = Long.parseLong(value, 16, 24, 16) & 0xffffffffL;
+        leastSigBits <<= 32;
+        leastSigBits |= Long.parseLong(value, 24, 32, 16) & 0xffffffffL;
+
+        return new UUID(mostSigBits, leastSigBits);
     }
 
     public static UUID readFormBytes(byte[] value) {

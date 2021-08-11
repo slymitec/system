@@ -22,6 +22,21 @@ public class JobContentObject extends AObject {
     protected ThreadContextObject threadContext;
     protected JobPointerObject pointer;
 
+    public UUID setCache(String name, APrototype value) {
+        if (StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        CorePrototypeRepositoryObject corePrototypeRepository = this.factoryManager.getCorePrototypeRepository();
+
+        UUID id = UUIDUtil.createRandom();
+
+        this.pointer.getProtoTypes().put(id, value.getClass());
+        corePrototypeRepository.addByID(SpaceType.USER, id, value);
+
+        return id;
+    }
+
     public void setResult(String name, Object value) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();

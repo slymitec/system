@@ -1,5 +1,7 @@
 package indi.sly.system.common.supports;
 
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.values.IdentificationDefinition;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -7,6 +9,9 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public abstract class StringUtil {
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
@@ -32,6 +37,40 @@ public abstract class StringUtil {
         }
 
         return false;
+    }
+
+    public static List<IdentificationDefinition> parseIdentifications(String value) {
+        if (ObjectUtil.isAnyNull(value)) {
+            throw new ConditionParametersException();
+        }
+
+        String[] values = value.split("(\\\\)|(/)");
+
+        List<IdentificationDefinition> identifications = new ArrayList<>();
+
+        for (String pair : values) {
+            IdentificationDefinition identification;
+            if (pair.startsWith("<") && pair.endsWith(">")) {
+                if (pair.length() == 34 || pair.length() == 38) {
+                    UUID id = UUIDUtil.getFromString(pair.substring(1, pair.length() - 1));
+                    if (ValueUtil.isAnyNullOrEmpty(id)) {
+                        throw new ConditionParametersException();
+                    }
+                    identification = new IdentificationDefinition(id);
+                } else {
+                    throw new ConditionParametersException();
+                }
+            } else if (ValueUtil.isAnyNullOrEmpty(pair)) {
+                continue;
+            } else if (!StringUtil.isNameIllegal(pair)) {
+                identification = new IdentificationDefinition(pair);
+            } else {
+                throw new ConditionParametersException();
+            }
+            identifications.add(identification);
+        }
+
+        return identifications;
     }
 
     public static String readFormBytes(byte[] value) {

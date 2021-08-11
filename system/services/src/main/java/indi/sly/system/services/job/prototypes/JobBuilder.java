@@ -5,7 +5,7 @@ import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.values.JobAttributeType;
 import indi.sly.system.services.job.values.JobDefinition;
@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class JobBuilder extends APrototype {
+public class JobBuilder extends ABuilder {
     protected JobFactory factory;
 
     public JobObject create(String name, long attribute, UUID processID, AJobInitializer initializer) {

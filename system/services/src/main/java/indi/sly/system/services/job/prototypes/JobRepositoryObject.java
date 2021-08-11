@@ -1,6 +1,6 @@
 package indi.sly.system.services.job.prototypes;
 
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.services.job.values.JobDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class JobRepositoryObject extends APrototype {
+public class JobRepositoryObject extends AObject {
     public JobRepositoryObject() {
         this.jobs = new ConcurrentHashMap<>();
         this.jobIDs = new ConcurrentHashMap<>();

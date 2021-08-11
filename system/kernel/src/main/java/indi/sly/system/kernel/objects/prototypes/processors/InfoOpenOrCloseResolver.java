@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeCounterObject;

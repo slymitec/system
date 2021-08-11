@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;

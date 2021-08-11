@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.lang.AKernelException;
-import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;

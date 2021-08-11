@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.processors.AInitializer;
 import indi.sly.system.services.job.lang.JobInitializerRunMethodConsumer;
 import indi.sly.system.services.job.values.JobDefinition;
 import indi.sly.system.services.job.values.JobInitializerRunDefinition;
@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class AJobInitializer extends APrototype {
+public abstract class AJobInitializer extends AInitializer {
     public AJobInitializer() {
         this.runs = new ConcurrentHashMap<>();
     }

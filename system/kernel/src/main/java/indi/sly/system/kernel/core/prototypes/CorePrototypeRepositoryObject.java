@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CorePrototypeRepositoryObject extends APrototype {
+public class CorePrototypeRepositoryObject extends AObject {
     private ASpaceDefinition<?> getSpace(long space) {
         if (space == SpaceType.KERNEL) {
             return this.factoryManager.getKernelSpace();

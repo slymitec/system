@@ -2,7 +2,6 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.instances.values.SignalType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;

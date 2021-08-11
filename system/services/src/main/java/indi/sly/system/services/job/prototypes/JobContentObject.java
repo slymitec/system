@@ -3,6 +3,7 @@ package indi.sly.system.services.job.prototypes;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.prototypes.CorePrototypeRepositoryObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class JobContentObject extends APrototype {
+public class JobContentObject extends AObject {
     protected ThreadContextObject threadContext;
     protected JobPointerObject pointer;
 

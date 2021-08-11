@@ -8,5 +8,6 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class AFactory extends APrototype {
-    public abstract void init();
+    public void init() {
+    }
 }

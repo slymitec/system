@@ -10,9 +10,6 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ThreadFactory extends AFactory {
-    public void init() {
-    }
-
     public ThreadObject buildThread(UUID processID) {
         ThreadObject thread = this.factoryManager.create(ThreadObject.class);
 

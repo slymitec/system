@@ -36,7 +36,7 @@ public class InfoProcessAndThreadStatisticsResolver extends AResolver implements
             return dump;
         };
 
-        this.open = (handle, info, type, status, openAttribute, arguments) -> {
+        this.open = (index, info, type, status, openAttribute, arguments) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
@@ -48,7 +48,7 @@ public class InfoProcessAndThreadStatisticsResolver extends AResolver implements
             processStatistics.addInfoOpen(1);
             threadStatistics.addInfoOpen(1);
 
-            return handle;
+            return index;
         };
 
         this.close = (info, type, status) -> {

@@ -142,9 +142,9 @@ public class SessionJobInitializer extends AJobInitializer {
         InfoObject userSessionInfo = objectManager.get(List.of(new IdentificationDefinition("Files"),
                 new IdentificationDefinition("Main"), new IdentificationDefinition("System"),
                 new IdentificationDefinition("Bins"), new IdentificationDefinition("UserSession.bin")));
-        UUID userSessionHandle = userSessionInfo.open(InfoOpenAttributeType.OPEN_ONLY_READ);
+        UUID userSessionIndex = userSessionInfo.open(InfoOpenAttributeType.OPEN_ONLY_READ);
 
-        ProcessObject process = processManager.create(userManager.authorize(accountID), null, userSessionHandle, null,
+        ProcessObject process = processManager.create(userManager.authorize(accountID), null, userSessionIndex, null,
                 StringUtil.EMPTY, PrivilegeType.NULL, List.of(new IdentificationDefinition("Files"),
                         new IdentificationDefinition("Main"), new IdentificationDefinition("Users"),
                         new IdentificationDefinition(account.getName())));

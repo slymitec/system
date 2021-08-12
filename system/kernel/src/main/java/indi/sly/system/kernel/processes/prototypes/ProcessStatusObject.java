@@ -136,9 +136,9 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity> {
         }
 
         ProcessCommunicationObject processCommunication = this.process.getCommunication();
-        ProcessHandleTableObject processHandleTable = this.process.getHandleTable();
+        ProcessInfoTableObject processInfoTable = this.process.getInfoTable();
         if (!processCommunication.getPortIDs().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalID())
-                || !processHandleTable.list().isEmpty()) {
+                || !processInfoTable.list().isEmpty()) {
             throw new StatusIsUsedException();
         }
 

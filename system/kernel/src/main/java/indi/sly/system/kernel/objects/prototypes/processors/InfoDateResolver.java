@@ -22,7 +22,7 @@ import java.util.Map;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoDateResolver extends AResolver implements IInfoResolver {
     public InfoDateResolver() {
-        this.open = (handle, info, type, status, openAttribute, arguments) -> {
+        this.open = (index, info, type, status, openAttribute, arguments) -> {
             DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
                     DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
@@ -31,7 +31,7 @@ public class InfoDateResolver extends AResolver implements IInfoResolver {
             date.put(DateTimeType.ACCESS, nowDateTime);
             info.setDate(ObjectUtil.transferToByteArray(date));
 
-            return handle;
+            return index;
         };
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {

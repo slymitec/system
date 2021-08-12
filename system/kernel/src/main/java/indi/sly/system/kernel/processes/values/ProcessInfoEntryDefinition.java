@@ -13,36 +13,36 @@ import java.io.ObjectOutput;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntryDefinition> {
-    private UUID handle;
+public class ProcessInfoEntryDefinition extends ADefinition<ProcessInfoEntryDefinition> {
+    private UUID index;
     private final Map<Long, Long> date;
-    private UUID infoID;
+    private UUID id;
     private final List<IdentificationDefinition> identifications;
     private InfoOpenDefinition infoOpen;
 
-    public ProcessHandleEntryDefinition() {
+    public ProcessInfoEntryDefinition() {
         this.date = new HashMap<>();
         this.identifications = new ArrayList<>();
     }
 
-    public UUID getHandle() {
-        return this.handle;
+    public UUID getIndex() {
+        return this.index;
     }
 
-    public void setHandle(UUID handle) {
-        this.handle = handle;
+    public void setIndex(UUID index) {
+        this.index = index;
     }
 
     public Map<Long, Long> getDate() {
         return this.date;
     }
 
-    public UUID getInfoID() {
-        return this.infoID;
+    public UUID getID() {
+        return this.id;
     }
 
-    public void setInfoID(UUID infoID) {
-        this.infoID = infoID;
+    public void setID(UUID id) {
+        this.id = id;
     }
 
     public List<IdentificationDefinition> getIdentifications() {
@@ -61,22 +61,22 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProcessHandleEntryDefinition that = (ProcessHandleEntryDefinition) o;
-        return Objects.equals(handle, that.handle) && date.equals(that.date) && Objects.equals(infoID, that.infoID) && identifications.equals(that.identifications) && Objects.equals(infoOpen, that.infoOpen);
+        ProcessInfoEntryDefinition that = (ProcessInfoEntryDefinition) o;
+        return Objects.equals(index, that.index) && date.equals(that.date) && Objects.equals(id, that.id) && identifications.equals(that.identifications) && Objects.equals(infoOpen, that.infoOpen);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(handle, date, infoID, identifications, infoOpen);
+        return Objects.hash(index, date, id, identifications, infoOpen);
     }
 
     @Override
-    public ProcessHandleEntryDefinition deepClone() {
-        ProcessHandleEntryDefinition definition = new ProcessHandleEntryDefinition();
+    public ProcessInfoEntryDefinition deepClone() {
+        ProcessInfoEntryDefinition definition = new ProcessInfoEntryDefinition();
 
-        definition.handle = this.handle;
+        definition.index = this.index;
         definition.date.putAll(this.date);
-        definition.infoID = this.infoID;
+        definition.id = this.id;
         definition.identifications.addAll(this.identifications);
         definition.infoOpen = this.infoOpen.deepClone();
 
@@ -87,7 +87,7 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         super.readExternal(in);
 
-        this.handle = UUIDUtil.readExternal(in);
+        this.index = UUIDUtil.readExternal(in);
 
         int valueInteger;
 
@@ -96,7 +96,7 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
             this.date.put(NumberUtil.readExternalLong(in), NumberUtil.readExternalLong(in));
         }
 
-        this.infoID = UUIDUtil.readExternal(in);
+        this.id = UUIDUtil.readExternal(in);
 
         valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
@@ -109,14 +109,14 @@ public class ProcessHandleEntryDefinition extends ADefinition<ProcessHandleEntry
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
 
-        UUIDUtil.writeExternal(out, this.handle);
+        UUIDUtil.writeExternal(out, this.index);
 
         for (Entry<Long, Long> pair : this.date.entrySet()) {
             NumberUtil.writeExternalLong(out, pair.getKey());
             NumberUtil.writeExternalLong(out, pair.getValue());
         }
 
-        UUIDUtil.writeExternal(out, this.infoID);
+        UUIDUtil.writeExternal(out, this.id);
 
         NumberUtil.writeExternalInteger(out, this.identifications.size());
         for (IdentificationDefinition pair : this.identifications) {

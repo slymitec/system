@@ -83,7 +83,7 @@ public class InfoSecurityDescriptorResolver extends AResolver implements IInfoRe
             return dump;
         };
 
-        this.open = (handle, info, type, status, openAttribute, arguments) -> {
+        this.open = (index, info, type, status, openAttribute, arguments) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
@@ -95,7 +95,7 @@ public class InfoSecurityDescriptorResolver extends AResolver implements IInfoRe
                 }
             }
 
-            return handle;
+            return index;
         };
 
         this.createChildAndOpen = (childInfo, info, type, status, childTypeID, identification) -> {

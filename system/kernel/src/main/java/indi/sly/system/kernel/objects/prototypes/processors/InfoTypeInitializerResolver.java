@@ -16,8 +16,8 @@ import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -39,26 +39,26 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
             return dump;
         };
 
-        this.open = (handle, info, type, status, openAttribute, arguments) -> {
+        this.open = (index, info, type, status, openAttribute, arguments) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
-            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
 
-            type.getInitializer().openProcedure(info, processHandleEntry.getOpen(), openAttribute, arguments);
+            type.getInitializer().openProcedure(info, processInfoEntry.getOpen(), openAttribute, arguments);
 
-            return handle;
+            return index;
         };
 
         this.close = (info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
-            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
 
-            type.getInitializer().closeProcedure(info, processHandleEntry.getOpen());
+            type.getInitializer().closeProcedure(info, processInfoEntry.getOpen());
         };
 
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
@@ -194,13 +194,13 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
 
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
-            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
             AInfoTypeInitializer typeInitializer = type.getInitializer();
-            if (processHandleTable.containByInfoID(info.getID())) {
-                ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
+            if (processInfoTable.containByID(info.getID())) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
 
-                typeInitializer.refreshPropertiesProcedure(info, processHandleEntry.getOpen());
+                typeInitializer.refreshPropertiesProcedure(info, processInfoEntry.getOpen());
             } else {
                 typeInitializer.refreshPropertiesProcedure(info, null);
             }

@@ -14,8 +14,8 @@ import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -36,11 +36,11 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
             ProcessContextObject processContext = process.getContext();
             ProcessContextObject parentProcessContext = parentProcess.getContext();
 
-            if (!ValueUtil.isAnyNullOrEmpty(processCreator.getFileHandle())) {
-                ProcessHandleTableObject parentProcessHandleTable = parentProcess.getHandleTable();
-                ProcessHandleEntryObject parentProcessHandleEntry = parentProcessHandleTable.getByHandle(processCreator.getFileHandle());
+            if (!ValueUtil.isAnyNullOrEmpty(processCreator.getFileIndex())) {
+                ProcessInfoTableObject parentProcessInfoTable = parentProcess.getInfoTable();
+                ProcessInfoEntryObject parentProcessInfoEntry = parentProcessInfoTable.getByIndex(processCreator.getFileIndex());
 
-                InfoObject info = parentProcessHandleEntry.getInfo();
+                InfoObject info = parentProcessInfoEntry.getInfo();
                 if (info.getType() != configuration.FILES_TYPES_INSTANCE_FILE_ID) {
                     throw new StatusRelationshipErrorException();
                 }

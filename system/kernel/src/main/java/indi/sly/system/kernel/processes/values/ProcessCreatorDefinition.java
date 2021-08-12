@@ -12,7 +12,7 @@ import java.util.UUID;
 public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefinition> {
     private UUID sessionID;
 
-    private UUID fileHandle;
+    private UUID fileIndex;
 
     private Map<String, String> environmentVariables;
     private String parameters;
@@ -31,12 +31,12 @@ public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefiniti
         this.sessionID = sessionID;
     }
 
-    public UUID getFileHandle() {
-        return this.fileHandle;
+    public UUID getFileIndex() {
+        return this.fileIndex;
     }
 
-    public void setFileHandle(UUID fileHandle) {
-        this.fileHandle = fileHandle;
+    public void setFileIndex(UUID fileIndex) {
+        this.fileIndex = fileIndex;
     }
 
     public Map<String, String> getEnvironmentVariables() {

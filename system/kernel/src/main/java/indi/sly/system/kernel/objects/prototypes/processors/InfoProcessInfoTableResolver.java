@@ -7,8 +7,8 @@ import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -17,44 +17,44 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoProcessHandleTableResolver extends AResolver implements IInfoResolver {
-    public InfoProcessHandleTableResolver() {
-        this.open = (handle, info, type, status, openAttribute, arguments) -> {
+public class InfoProcessInfoTableResolver extends AResolver implements IInfoResolver {
+    public InfoProcessInfoTableResolver() {
+        this.open = (index, info, type, status, openAttribute, arguments) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
-            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (processHandleTable.containByInfoID(info.getID())) {
+            if (processInfoTable.containByID(info.getID())) {
                 throw new StatusAlreadyFinishedException();
             }
 
-            processHandleTable.add(info.getID(), status, openAttribute);
-            ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
+            processInfoTable.add(info.getID(), status, openAttribute);
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
 
-            return processHandleEntry.getHandle();
+            return processInfoEntry.getIndex();
         };
 
         this.close = (info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
-            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (!processHandleTable.containByInfoID(info.getID())) {
+            if (!processInfoTable.containByID(info.getID())) {
                 throw new StatusAlreadyFinishedException();
             }
 
-            ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
 
-            processHandleTable.delete(processHandleEntry.getHandle());
+            processInfoTable.delete(processInfoEntry.getIndex());
         };
 
 
         this.readContent = (content, info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
-            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (!processHandleTable.containByInfoID(info.getID())) {
+            if (!processInfoTable.containByID(info.getID())) {
                 throw new StatusNotReadyException();
             }
 
@@ -64,9 +64,9 @@ public class InfoProcessHandleTableResolver extends AResolver implements IInfoRe
         this.writeContent = (info, type, status, content) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
-            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (!processHandleTable.containByInfoID(info.getID())) {
+            if (!processInfoTable.containByID(info.getID())) {
                 throw new StatusNotReadyException();
             }
         };
@@ -74,9 +74,9 @@ public class InfoProcessHandleTableResolver extends AResolver implements IInfoRe
         this.executeContent = (info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
-            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (!processHandleTable.containByInfoID(info.getID())) {
+            if (!processInfoTable.containByID(info.getID())) {
                 throw new StatusNotReadyException();
             }
         };

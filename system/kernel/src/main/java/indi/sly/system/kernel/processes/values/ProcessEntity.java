@@ -34,8 +34,8 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
     protected byte[] communication;
     @Column(length = 4096, name = "Context", nullable = false)
     protected byte[] context;
-    @Column(length = 4096, name = "HandleTable", nullable = false)
-    protected byte[] handleTable;
+    @Column(length = 4096, name = "InfoTable", nullable = false)
+    protected byte[] infoTable;
     @Column(length = 4096, name = "CounterStatistics", nullable = false)
     protected byte[] statistics;
     @Column(length = 4096, name = "Token", nullable = false)
@@ -89,12 +89,12 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
         this.context = context;
     }
 
-    public byte[] getHandleTable() {
-        return this.handleTable;
+    public byte[] getInfoTable() {
+        return this.infoTable;
     }
 
-    public void setHandleTable(byte[] handleTable) {
-        this.handleTable = handleTable;
+    public void setInfoTable(byte[] infoTable) {
+        this.infoTable = infoTable;
     }
 
     public byte[] getStatistics() {
@@ -124,7 +124,7 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
                 Objects.equals(sessionID, that.sessionID) &&
                 Arrays.equals(communication, that.communication) &&
                 Arrays.equals(context, that.context) &&
-                Arrays.equals(handleTable, that.handleTable) &&
+                Arrays.equals(infoTable, that.infoTable) &&
                 Arrays.equals(statistics, that.statistics) &&
                 Arrays.equals(token, that.token);
     }
@@ -134,7 +134,7 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
         int result = Objects.hash(id, status, parentProcessID, sessionID);
         result = 31 * result + Arrays.hashCode(communication);
         result = 31 * result + Arrays.hashCode(context);
-        result = 31 * result + Arrays.hashCode(handleTable);
+        result = 31 * result + Arrays.hashCode(infoTable);
         result = 31 * result + Arrays.hashCode(statistics);
         result = 31 * result + Arrays.hashCode(token);
         return result;
@@ -150,7 +150,7 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
         process.sessionID = this.sessionID;
         process.communication = ArrayUtil.copyBytes(this.communication);
         process.context = ArrayUtil.copyBytes(this.context);
-        process.handleTable = ArrayUtil.copyBytes(this.handleTable);
+        process.infoTable = ArrayUtil.copyBytes(this.infoTable);
         process.statistics = ArrayUtil.copyBytes(this.statistics);
         process.token = ArrayUtil.copyBytes(this.token);
 
@@ -167,7 +167,7 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
         this.sessionID = UUIDUtil.readExternal(in);
         this.communication = NumberUtil.readExternalBytes(in);
         this.context = NumberUtil.readExternalBytes(in);
-        this.handleTable = NumberUtil.readExternalBytes(in);
+        this.infoTable = NumberUtil.readExternalBytes(in);
         this.statistics = NumberUtil.readExternalBytes(in);
         this.token = NumberUtil.readExternalBytes(in);
     }
@@ -182,7 +182,7 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
         UUIDUtil.writeExternal(out, this.sessionID);
         NumberUtil.writeExternalBytes(out, this.communication);
         NumberUtil.writeExternalBytes(out, this.context);
-        NumberUtil.writeExternalBytes(out, this.handleTable);
+        NumberUtil.writeExternalBytes(out, this.infoTable);
         NumberUtil.writeExternalBytes(out, this.statistics);
         NumberUtil.writeExternalBytes(out, this.token);
     }

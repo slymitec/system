@@ -7,15 +7,14 @@ import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.prototypes.AObject;
-import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.*;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -82,7 +81,7 @@ public class InfoObject extends AObject {
         return this.processorMediator.getSelf().apply(this.poolID, this.id, this.status);
     }
 
-    private synchronized UUID getHandle() {
+    private synchronized UUID getIndex() {
         if (ValueUtil.isAnyNullOrEmpty(this.id)) {
             throw new ConditionContextException();
         }
@@ -90,10 +89,10 @@ public class InfoObject extends AObject {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
-        ProcessHandleTableObject processHandleTable = process.getHandleTable();
-        ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getByInfoID(this.id);
+        ProcessInfoTableObject processInfoTable = process.getInfoTable();
+        ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(this.id);
 
-        return processHandleTableEntry.getHandle();
+        return processInfoEntry.getIndex();
     }
 
     public synchronized InfoObject getParent() {
@@ -154,16 +153,16 @@ public class InfoObject extends AObject {
 
         List<InfoProcessorOpenFunction> resolvers = this.processorMediator.getOpens();
 
-        UUID handle = UUIDUtil.getEmpty();
+        UUID index = UUIDUtil.getEmpty();
 
         for (InfoProcessorOpenFunction resolver : resolvers) {
-            handle = resolver.apply(handle, info, type, this.status, openAttribute, arguments);
-            if (ObjectUtil.isAnyNull(handle)) {
+            index = resolver.apply(index, info, type, this.status, openAttribute, arguments);
+            if (ObjectUtil.isAnyNull(index)) {
                 throw new StatusUnexpectedException();
             }
         }
 
-        return handle;
+        return index;
     }
 
     public synchronized void close() {
@@ -187,20 +186,20 @@ public class InfoObject extends AObject {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
-        ProcessHandleTableObject processHandleTable = process.getHandleTable();
+        ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-        if (!processHandleTable.containByInfoID(this.id)) {
+        if (!processInfoTable.containByID(this.id)) {
             return InfoOpenAttributeType.CLOSE;
         } else {
-            ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getByInfoID(this.id);
+            ProcessInfoEntryObject processInfoTableEntry = processInfoTable.getByID(this.id);
 
-            return processHandleTableEntry.getOpen().getAttribute();
+            return processInfoTableEntry.getOpen().getAttribute();
         }
     }
 
     public synchronized InfoObject createChildAndOpen(UUID type, IdentificationDefinition identification,
                                                       long openAttribute, Object... arguments) {
-        if (!ValueUtil.isAnyNullOrEmpty(this.getHandle()) || ObjectUtil.isAnyNull(identification)) {
+        if (!ValueUtil.isAnyNullOrEmpty(this.getIndex()) || ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
         if (ObjectUtil.isNull(arguments)) {

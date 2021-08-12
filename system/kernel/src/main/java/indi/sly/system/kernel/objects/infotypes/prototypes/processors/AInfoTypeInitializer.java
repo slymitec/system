@@ -15,8 +15,8 @@ import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -69,12 +69,12 @@ public abstract class AInfoTypeInitializer extends AInitializer {
                                                         Consumer1<byte[]> funcWrite, Consumer funcExecute) {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
-        ProcessHandleTableObject processHandleTable = process.getHandleTable();
+        ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
         InfoOpenDefinition infoOpen = null;
-        if (processHandleTable.containByInfoID(info.getID())) {
-            ProcessHandleEntryObject processHandleTableEntry = processHandleTable.getByInfoID(info.getID());
-            infoOpen = processHandleTableEntry.getOpen();
+        if (processInfoTable.containByID(info.getID())) {
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+            infoOpen = processInfoEntry.getOpen();
         }
 
         AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, infoOpen));

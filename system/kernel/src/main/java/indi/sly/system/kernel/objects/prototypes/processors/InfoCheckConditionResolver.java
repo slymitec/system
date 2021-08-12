@@ -19,7 +19,7 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoCheckConditionResolver extends AResolver implements IInfoResolver {
     public InfoCheckConditionResolver() {
-        this.open = (handle, info, type, status, openAttribute, arguments) -> {
+        this.open = (index, info, type, status, openAttribute, arguments) -> {
             if (openAttribute == InfoOpenAttributeType.CLOSE
                     || (openAttribute == InfoOpenAttributeType.OPEN_EXCLUSIVE && info.getOpened() > 0)
                     || (openAttribute == InfoOpenAttributeType.OPEN_ONLY_READ && info.getOpened() > 0
@@ -29,7 +29,7 @@ public class InfoCheckConditionResolver extends AResolver implements IInfoResolv
                 throw new StatusNotSupportedException();
             }
 
-            return handle;
+            return index;
         };
 
         this.close = (info, type, status) -> {

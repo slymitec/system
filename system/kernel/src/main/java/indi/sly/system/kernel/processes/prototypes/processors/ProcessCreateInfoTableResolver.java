@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -12,14 +12,14 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCreateHandleTableResolver extends AResolver implements IProcessCreateResolver {
+public class ProcessCreateInfoTableResolver extends AResolver implements IProcessCreateResolver {
     private final ProcessLifeProcessorCreateFunction create;
 
-    public ProcessCreateHandleTableResolver() {
+    public ProcessCreateInfoTableResolver() {
         this.create = (process, parentProcess, processCreator) -> {
-            if (!ValueUtil.isAnyNullOrEmpty(processCreator.getFileHandle())) {
-                ProcessHandleTableObject processHandleTable = process.getHandleTable();
-                processHandleTable.inherit(processCreator.getFileHandle());
+            if (!ValueUtil.isAnyNullOrEmpty(processCreator.getFileIndex())) {
+                ProcessInfoTableObject processInfoTable = process.getInfoTable();
+                processInfoTable.inherit(processCreator.getFileIndex());
             }
 
             return process;

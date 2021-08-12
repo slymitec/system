@@ -11,8 +11,8 @@ import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.values.ProcessHandleEntryDefinition;
-import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
+import indi.sly.system.kernel.processes.values.ProcessInfoEntryDefinition;
+import indi.sly.system.kernel.processes.values.ProcessInfoTableDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import indi.sly.system.kernel.security.values.PrivilegeType;
@@ -24,7 +24,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessHandleTableObject extends ABytesValueProcessObject<ProcessHandleTableDefinition> {
+public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfoTableDefinition> {
     protected ProcessObject process;
 
     private void checkStatusAndCurrentPermission() {
@@ -45,14 +45,14 @@ public class ProcessHandleTableObject extends ABytesValueProcessObject<ProcessHa
         }
     }
 
-    public Map<Long, Long> getDate(UUID handle) {
+    public Map<Long, Long> getDate(UUID index) {
         this.checkStatusAndCurrentPermission();
 
         this.init();
 
-        ProcessHandleEntryDefinition processHandleEntry = this.value.getByHandle(handle);
+        ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(index);
 
-        return CollectionUtil.unmodifiable(processHandleEntry.getDate());
+        return CollectionUtil.unmodifiable(processInfoEntry.getDate());
     }
 
     public synchronized Set<UUID> list() {
@@ -63,8 +63,8 @@ public class ProcessHandleTableObject extends ABytesValueProcessObject<ProcessHa
         return this.value.list();
     }
 
-    public synchronized void inherit(UUID handle) {
-        if (ValueUtil.isAnyNullOrEmpty(handle)) {
+    public synchronized void inherit(UUID index) {
+        if (ValueUtil.isAnyNullOrEmpty(index)) {
             throw new ConditionParametersException();
         }
 
@@ -81,29 +81,29 @@ public class ProcessHandleTableObject extends ABytesValueProcessObject<ProcessHa
             throw new ConditionRefuseException();
         }
 
-        ProcessHandleTableObject parentProcessHandleTable = parentProcess.getHandleTable();
+        ProcessInfoTableObject parentProcessInfoTable = parentProcess.getInfoTable();
 
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            parentProcessHandleTable.lock(LockType.WRITE);
-            parentProcessHandleTable.init();
+            parentProcessInfoTable.lock(LockType.WRITE);
+            parentProcessInfoTable.init();
 
-            ProcessHandleEntryDefinition processHandleEntry = parentProcessHandleTable.value.getByHandle(handle);
-            parentProcessHandleTable.value.delete(handle);
-            this.value.add(processHandleEntry);
+            ProcessInfoEntryDefinition processInfoEntry = parentProcessInfoTable.value.getByIndex(index);
+            parentProcessInfoTable.value.delete(index);
+            this.value.add(processInfoEntry);
 
-            parentProcessHandleTable.fresh();
+            parentProcessInfoTable.fresh();
             this.fresh();
         } finally {
-            parentProcessHandleTable.lock(LockType.NONE);
+            parentProcessInfoTable.lock(LockType.NONE);
             this.lock(LockType.NONE);
         }
     }
 
-    public synchronized boolean containByHandle(UUID handle) {
-        if (ValueUtil.isAnyNullOrEmpty(handle)) {
+    public synchronized boolean containByIndex(UUID index) {
+        if (ValueUtil.isAnyNullOrEmpty(index)) {
             throw new ConditionParametersException();
         }
 
@@ -111,11 +111,11 @@ public class ProcessHandleTableObject extends ABytesValueProcessObject<ProcessHa
 
         this.init();
 
-        return this.value.containByHandle(handle);
+        return this.value.containByIndex(index);
     }
 
-    public synchronized boolean containByInfoID(UUID infoID) {
-        if (ValueUtil.isAnyNullOrEmpty(infoID)) {
+    public synchronized boolean containByID(UUID id) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -123,76 +123,76 @@ public class ProcessHandleTableObject extends ABytesValueProcessObject<ProcessHa
 
         this.init();
 
-        return this.value.containByInfoID(infoID);
+        return this.value.containByID(id);
     }
 
 
-    public synchronized ProcessHandleEntryObject getByHandle(UUID handle) {
-        if (ValueUtil.isAnyNullOrEmpty(handle)) {
+    public synchronized ProcessInfoEntryObject getByIndex(UUID index) {
+        if (ValueUtil.isAnyNullOrEmpty(index)) {
             throw new ConditionParametersException();
         }
 
         this.checkStatusAndCurrentPermission();
 
-        ProcessHandleEntryObject processHandleEntry = this.factoryManager.create(ProcessHandleEntryObject.class);
+        ProcessInfoEntryObject processInfoEntry = this.factoryManager.create(ProcessInfoEntryObject.class);
 
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            processHandleEntry.setParent(this);
-            processHandleEntry.setSource(() -> this.value, (ProcessHandleTableDefinition source) -> {
+            processInfoEntry.setParent(this);
+            processInfoEntry.setSource(() -> this.value, (ProcessInfoTableDefinition source) -> {
             });
-            processHandleEntry.setLock(this::lock);
-            processHandleEntry.processToken = this.process.getToken();
-            processHandleEntry.handle = handle;
+            processInfoEntry.setLock(this::lock);
+            processInfoEntry.processToken = this.process.getToken();
+            processInfoEntry.index = index;
 
             this.fresh();
         } finally {
             this.lock(LockType.NONE);
         }
 
-        return processHandleEntry;
+        return processInfoEntry;
     }
 
-    public synchronized ProcessHandleEntryObject getByInfoID(UUID infoID) {
-        if (ValueUtil.isAnyNullOrEmpty(infoID)) {
+    public synchronized ProcessInfoEntryObject getByID(UUID id) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
         this.checkStatusAndCurrentPermission();
 
-        ProcessHandleEntryObject processHandleEntry = this.factoryManager.create(ProcessHandleEntryObject.class);
+        ProcessInfoEntryObject processInfoEntry = this.factoryManager.create(ProcessInfoEntryObject.class);
 
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            UUID handle = this.value.getByInfoID(infoID).getHandle();
+            UUID index = this.value.getByID(id).getIndex();
 
-            processHandleEntry.setParent(this);
-            processHandleEntry.setSource(() -> this.value, (ProcessHandleTableDefinition source) -> {
+            processInfoEntry.setParent(this);
+            processInfoEntry.setSource(() -> this.value, (ProcessInfoTableDefinition source) -> {
             });
-            processHandleEntry.setLock(this::lock);
-            processHandleEntry.processToken = this.process.getToken();
-            processHandleEntry.handle = handle;
+            processInfoEntry.setLock(this::lock);
+            processInfoEntry.processToken = this.process.getToken();
+            processInfoEntry.index = index;
 
             this.fresh();
         } finally {
             this.lock(LockType.NONE);
         }
 
-        return processHandleEntry;
+        return processInfoEntry;
     }
 
-    public synchronized void add(UUID infoID, InfoStatusDefinition status, long openAttribute) {
-        if (ValueUtil.isAnyNullOrEmpty(infoID) || ObjectUtil.isAnyNull(status) || openAttribute == InfoOpenAttributeType.CLOSE) {
+    public synchronized void add(UUID id, InfoStatusDefinition status, long openAttribute) {
+        if (ValueUtil.isAnyNullOrEmpty(id) || ObjectUtil.isAnyNull(status) || openAttribute == InfoOpenAttributeType.CLOSE) {
             throw new ConditionParametersException();
         }
 
         this.checkStatusAndCurrentPermission();
 
-        if (this.value.size() >= this.process.getToken().getLimits().get(ProcessTokenLimitType.HANDLE_MAX)) {
+        if (this.value.size() >= this.process.getToken().getLimits().get(ProcessTokenLimitType.INDEX_MAX)) {
             throw new StatusInsufficientResourcesException();
         }
 
@@ -200,23 +200,23 @@ public class ProcessHandleTableObject extends ABytesValueProcessObject<ProcessHa
                 DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
-        UUID handle = UUIDUtil.createRandom();
+        UUID index = UUIDUtil.createRandom();
 
-        ProcessHandleEntryDefinition processHandleEntry = new ProcessHandleEntryDefinition();
-        processHandleEntry.setHandle(handle);
-        processHandleEntry.getIdentifications().addAll(status.getIdentifications());
+        ProcessInfoEntryDefinition processInfoEntry = new ProcessInfoEntryDefinition();
+        processInfoEntry.setIndex(index);
+        processInfoEntry.getIdentifications().addAll(status.getIdentifications());
 
         InfoOpenDefinition infoOpen = new InfoOpenDefinition();
         infoOpen.setAttribute(openAttribute);
-        processHandleEntry.setInfoOpen(infoOpen);
+        processInfoEntry.setInfoOpen(infoOpen);
 
-        processHandleEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
+        processInfoEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
 
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            this.value.add(processHandleEntry);
+            this.value.add(processInfoEntry);
 
             this.fresh();
         } finally {
@@ -224,8 +224,8 @@ public class ProcessHandleTableObject extends ABytesValueProcessObject<ProcessHa
         }
     }
 
-    public synchronized void delete(UUID handle) {
-        if (ValueUtil.isAnyNullOrEmpty(handle)) {
+    public synchronized void delete(UUID index) {
+        if (ValueUtil.isAnyNullOrEmpty(index)) {
             throw new ConditionParametersException();
         }
 
@@ -233,10 +233,10 @@ public class ProcessHandleTableObject extends ABytesValueProcessObject<ProcessHa
             this.lock(LockType.WRITE);
             this.init();
 
-            ProcessHandleEntryDefinition processHandleEntry = this.value.getByHandle(handle);
-            processHandleEntry.getInfoOpen().setAttribute(InfoOpenAttributeType.CLOSE);
+            ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(index);
+            processInfoEntry.getInfoOpen().setAttribute(InfoOpenAttributeType.CLOSE);
 
-            this.value.delete(processHandleEntry.getHandle());
+            this.value.delete(processInfoEntry.getIndex());
 
             this.fresh();
         } finally {

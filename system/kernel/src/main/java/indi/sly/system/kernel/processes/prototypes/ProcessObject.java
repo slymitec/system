@@ -128,13 +128,13 @@ public class ProcessObject extends AObject {
         return processContext;
     }
 
-    public synchronized ProcessHandleTableObject getHandleTable() {
+    public synchronized ProcessInfoTableObject getInfoTable() {
         ProcessEntity process = this.getSelf();
 
-        ProcessHandleTableObject processHandleTable = this.factoryManager.create(ProcessHandleTableObject.class);
+        ProcessInfoTableObject processInfoTable = this.factoryManager.create(ProcessInfoTableObject.class);
 
-        processHandleTable.setSource(() -> {
-            Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessHandleTables();
+        processInfoTable.setSource(() -> {
+            Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessInfoTables();
 
             byte[] source = null;
 
@@ -144,21 +144,21 @@ public class ProcessObject extends AObject {
 
             return source;
         }, (byte[] source) -> {
-            Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessHandleTables();
+            Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessInfoTables();
 
             for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
                 resolver.accept(process, source);
             }
         });
-        processHandleTable.setLock((lock) -> {
+        processInfoTable.setLock((lock) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
             processRepository.lock(process, lock);
         });
-        processHandleTable.process = this;
+        processInfoTable.process = this;
 
-        return processHandleTable;
+        return processInfoTable;
     }
 
     public synchronized ProcessSessionObject getSession() {

@@ -8,8 +8,8 @@ import indi.sly.system.kernel.objects.lang.InfoProcessorDumpFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -31,10 +31,10 @@ public class InfoDumpResolver extends AResolver implements IInfoResolver {
 
             dump.getIdentifications().addAll(status.getIdentifications());
 
-            ProcessHandleTableObject processHandleTable = process.getHandleTable();
-            if (processHandleTable.containByInfoID(info.getID())) {
-                ProcessHandleEntryObject processHandleEntry = processHandleTable.getByInfoID(info.getID());
-                dump.setInfoOpen(processHandleEntry.getOpen());
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
+            if (processInfoTable.containByID(info.getID())) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+                dump.setInfoOpen(processInfoEntry.getOpen());
             } else {
                 dump.setInfoOpen(null);
             }

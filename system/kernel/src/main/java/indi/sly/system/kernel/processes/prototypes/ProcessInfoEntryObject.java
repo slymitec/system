@@ -12,8 +12,8 @@ import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
-import indi.sly.system.kernel.processes.values.ProcessHandleEntryDefinition;
-import indi.sly.system.kernel.processes.values.ProcessHandleTableDefinition;
+import indi.sly.system.kernel.processes.values.ProcessInfoEntryDefinition;
+import indi.sly.system.kernel.processes.values.ProcessInfoTableDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -24,21 +24,21 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessHandleEntryObject extends AValueProcessObject<ProcessHandleTableDefinition> {
+public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTableDefinition> {
     protected ProcessTokenObject processToken;
-    protected UUID handle;
+    protected UUID index;
 
     private boolean isExist() {
         this.init();
 
-        if (ValueUtil.isAnyNullOrEmpty(this.handle)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.index)) {
             return false;
         } else {
-            return this.value.containByHandle(handle);
+            return this.value.containByIndex(index);
         }
     }
 
-    public synchronized UUID getHandle() {
+    public synchronized UUID getIndex() {
         if (!this.isExist()) {
             throw new StatusNotExistedException();
         }
@@ -51,15 +51,15 @@ public class ProcessHandleEntryObject extends AValueProcessObject<ProcessHandleT
             this.lock(LockType.WRITE);
             this.init();
 
-            ProcessHandleEntryDefinition processHandleEntry = this.value.getByHandle(this.handle);
-            processHandleEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+            ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
+            processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
             this.fresh();
         } finally {
             this.lock(LockType.NONE);
         }
 
-        return this.handle;
+        return this.index;
     }
 
     public synchronized Map<Long, Long> getDate() {
@@ -67,10 +67,10 @@ public class ProcessHandleEntryObject extends AValueProcessObject<ProcessHandleT
             throw new StatusNotExistedException();
         }
 
-        ProcessHandleEntryDefinition processHandleEntry = this.value.getByHandle(this.handle);
-        Map<Long, Long> processHandleEntryDate = processHandleEntry.getDate();
+        ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
+        Map<Long, Long> processInfoEntryDate = processInfoEntry.getDate();
 
-        return CollectionUtil.unmodifiable(processHandleEntryDate);
+        return CollectionUtil.unmodifiable(processInfoEntryDate);
     }
 
     public synchronized List<IdentificationDefinition> getIdentifications() {
@@ -88,10 +88,10 @@ public class ProcessHandleEntryObject extends AValueProcessObject<ProcessHandleT
             this.lock(LockType.WRITE);
             this.init();
 
-            ProcessHandleEntryDefinition processHandleEntry = this.value.getByHandle(this.handle);
-            processHandleEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+            ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
+            processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
-            identifications = processHandleEntry.getIdentifications();
+            identifications = processInfoEntry.getIdentifications();
 
             this.fresh();
         } finally {
@@ -116,10 +116,10 @@ public class ProcessHandleEntryObject extends AValueProcessObject<ProcessHandleT
             this.lock(LockType.WRITE);
             this.init();
 
-            ProcessHandleEntryDefinition processHandleEntry = this.value.getByHandle(this.handle);
-            processHandleEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+            ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
+            processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
-            infoOpen = processHandleEntry.getInfoOpen();
+            infoOpen = processInfoEntry.getInfoOpen();
 
             this.fresh();
         } finally {
@@ -145,11 +145,11 @@ public class ProcessHandleEntryObject extends AValueProcessObject<ProcessHandleT
             this.lock(LockType.WRITE);
             this.init();
 
-            ProcessHandleEntryDefinition processHandleEntry = this.value.getByHandle(this.handle);
-            processHandleEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+            ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
+            processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
-            identifications = processHandleEntry.getIdentifications();
-            infoOpen = processHandleEntry.getInfoOpen();
+            identifications = processInfoEntry.getIdentifications();
+            infoOpen = processInfoEntry.getInfoOpen();
 
             this.fresh();
         } finally {

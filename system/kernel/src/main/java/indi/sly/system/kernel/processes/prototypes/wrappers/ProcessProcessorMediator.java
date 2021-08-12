@@ -19,8 +19,8 @@ public class ProcessProcessorMediator extends AMediator {
         this.writeProcessCommunications = new HashSet<>();
         this.readProcessContexts = new HashSet<>();
         this.writeProcessContexts = new HashSet<>();
-        this.readProcessHandleTables = new HashSet<>();
-        this.writeProcessHandleTables = new HashSet<>();
+        this.readProcessInfoTables = new HashSet<>();
+        this.writeProcessInfoTables = new HashSet<>();
         this.readProcessStatistics = new HashSet<>();
         this.writeProcessStatistics = new HashSet<>();
         this.readProcessTokens = new HashSet<>();
@@ -34,8 +34,8 @@ public class ProcessProcessorMediator extends AMediator {
     private final Set<ProcessProcessorWriteComponentConsumer> writeProcessCommunications;
     private final Set<ProcessProcessorReadComponentFunction> readProcessContexts;
     private final Set<ProcessProcessorWriteComponentConsumer> writeProcessContexts;
-    private final Set<ProcessProcessorReadComponentFunction> readProcessHandleTables;
-    private final Set<ProcessProcessorWriteComponentConsumer> writeProcessHandleTables;
+    private final Set<ProcessProcessorReadComponentFunction> readProcessInfoTables;
+    private final Set<ProcessProcessorWriteComponentConsumer> writeProcessInfoTables;
     private final Set<ProcessProcessorReadComponentFunction> readProcessStatistics;
     private final Set<ProcessProcessorWriteComponentConsumer> writeProcessStatistics;
     private final Set<ProcessProcessorReadComponentFunction> readProcessTokens;
@@ -73,12 +73,12 @@ public class ProcessProcessorMediator extends AMediator {
         return this.writeProcessContexts;
     }
 
-    public Set<ProcessProcessorReadComponentFunction> getReadProcessHandleTables() {
-        return this.readProcessHandleTables;
+    public Set<ProcessProcessorReadComponentFunction> getReadProcessInfoTables() {
+        return this.readProcessInfoTables;
     }
 
-    public Set<ProcessProcessorWriteComponentConsumer> getWriteProcessHandleTables() {
-        return this.writeProcessHandleTables;
+    public Set<ProcessProcessorWriteComponentConsumer> getWriteProcessInfoTables() {
+        return this.writeProcessInfoTables;
     }
 
     public Set<ProcessProcessorReadComponentFunction> getReadProcessStatistics() {

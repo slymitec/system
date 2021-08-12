@@ -21,7 +21,7 @@ import java.util.List;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoOpenOrCloseResolver extends AResolver implements IInfoResolver {
     public InfoOpenOrCloseResolver() {
-        this.open = (handle, info, type, status, openAttribute, arguments) -> {
+        this.open = (index, info, type, status, openAttribute, arguments) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DO_NOT_USE_TYPE_COUNT)) {
                 TypeCounterObject typeCount = type.getCount();
                 typeCount.addTotalOccupiedCount();
@@ -29,7 +29,7 @@ public class InfoOpenOrCloseResolver extends AResolver implements IInfoResolver 
 
             info.setOpened(info.getOpened() + 1);
 
-            return handle;
+            return index;
         };
 
         this.close = (info, type, status) -> {

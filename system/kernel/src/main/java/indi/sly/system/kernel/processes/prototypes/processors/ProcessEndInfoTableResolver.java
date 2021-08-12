@@ -4,8 +4,8 @@ import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleEntryObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessHandleTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -15,18 +15,18 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessEndHandleTableResolver extends AResolver implements IProcessEndResolver {
+public class ProcessEndInfoTableResolver extends AResolver implements IProcessEndResolver {
     private final ProcessLifeProcessorEndFunction end;
 
-    public ProcessEndHandleTableResolver() {
+    public ProcessEndInfoTableResolver() {
         this.end = (process, parentProcess) -> {
-            ProcessHandleTableObject processHandleTable = process.getHandleTable();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            for (UUID handle : processHandleTable.list()) {
-                ProcessHandleEntryObject processHandleEntry = processHandleTable.getByHandle(handle);
+            for (UUID index : processInfoTable.list()) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByIndex(index);
 
                 try {
-                    InfoObject info = processHandleEntry.getInfo();
+                    InfoObject info = processInfoEntry.getInfo();
                     info.close();
                 } catch (AKernelException ignored) {
                 }

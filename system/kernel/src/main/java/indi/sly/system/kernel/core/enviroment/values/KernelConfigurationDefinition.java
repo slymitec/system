@@ -43,7 +43,7 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
     public final UUID PROCESSES_PROTOTYPE_SYSTEM_ID
             = UUIDUtil.getFormLongs(-7191269949502635218L, -6103845440396733665L);
     public final Map<Long, Integer> PROCESSES_TOKEN_DEFAULT_LIMIT = Map.of(
-            ProcessTokenLimitType.HANDLE_MAX, 256,
+            ProcessTokenLimitType.INDEX_MAX, 256,
             ProcessTokenLimitType.PORT_COUNT_MAX, 4,
             ProcessTokenLimitType.PORT_LENGTH_MAX, 4096,
             ProcessTokenLimitType.SHARED_LENGTH_MAX, 4096,

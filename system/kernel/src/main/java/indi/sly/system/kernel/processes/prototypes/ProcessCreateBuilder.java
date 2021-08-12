@@ -37,7 +37,7 @@ public class ProcessCreateBuilder extends ABuilder {
         process.setSessionID(UUIDUtil.getEmpty());
         process.setCommunication(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));
         process.setContext(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));
-        process.setHandleTable(ObjectUtil.transferToByteArray(new ProcessHandleTableDefinition()));
+        process.setInfoTable(ObjectUtil.transferToByteArray(new ProcessInfoTableDefinition()));
         process.setStatistics(ObjectUtil.transferToByteArray(new ProcessStatisticsDefinition()));
         process.setToken(ObjectUtil.transferToByteArray(new ProcessTokenDefinition()));
 

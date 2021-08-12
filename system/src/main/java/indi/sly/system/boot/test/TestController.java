@@ -9,7 +9,6 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.values.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import java.util.UUID;
 
 @RestController
 @Transactional
@@ -51,7 +49,7 @@ public class TestController {
         process.setSessionID(UUIDUtil.getEmpty());
         process.setCommunication(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));
         process.setContext(ObjectUtil.transferToByteArray(new ProcessContextDefinition()));
-        process.setHandleTable(ObjectUtil.transferToByteArray(new ProcessHandleTableDefinition()));
+        process.setInfoTable(ObjectUtil.transferToByteArray(new ProcessInfoTableDefinition()));
         process.setStatistics(ObjectUtil.transferToByteArray(new ProcessStatisticsDefinition()));
         process.setToken(ObjectUtil.transferToByteArray(new ProcessTokenDefinition()));
 

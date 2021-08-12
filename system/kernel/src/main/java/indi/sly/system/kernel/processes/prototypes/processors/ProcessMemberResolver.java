@@ -22,8 +22,8 @@ public class ProcessMemberResolver extends AResolver implements IProcessResolver
     private final ProcessProcessorWriteComponentConsumer writeProcessCommunication;
     private final ProcessProcessorReadComponentFunction readProcessContext;
     private final ProcessProcessorWriteComponentConsumer writeProcessContext;
-    private final ProcessProcessorReadComponentFunction readProcessHandleTable;
-    private final ProcessProcessorWriteComponentConsumer writeProcessHandleTable;
+    private final ProcessProcessorReadComponentFunction readProcessInfoTable;
+    private final ProcessProcessorWriteComponentConsumer writeProcessInfoTable;
     private final ProcessProcessorReadComponentFunction readProcessStatistics;
     private final ProcessProcessorWriteComponentConsumer writeProcessStatistics;
     private final ProcessProcessorReadComponentFunction readProcessToken;
@@ -51,13 +51,13 @@ public class ProcessMemberResolver extends AResolver implements IProcessResolver
             process.setContext(context);
         };
 
-        this.readProcessHandleTable = (handleTable, process) -> process.getHandleTable();
-        this.writeProcessHandleTable = (process, handleTable) -> {
-            if (handleTable.length > 4096) {
+        this.readProcessInfoTable = (infoTable, process) -> process.getInfoTable();
+        this.writeProcessInfoTable = (process, infoTable) -> {
+            if (infoTable.length > 4096) {
                 throw new StatusOverflowException();
             }
 
-            process.setHandleTable(handleTable);
+            process.setInfoTable(infoTable);
         };
 
         this.readProcessStatistics = (statistics, process) -> process.getStatistics();
@@ -90,8 +90,8 @@ public class ProcessMemberResolver extends AResolver implements IProcessResolver
         processorMediator.getReadProcessContexts().add(this.readProcessContext);
         processorMediator.getWriteProcessContexts().add(this.writeProcessContext);
 
-        processorMediator.getReadProcessHandleTables().add(this.readProcessHandleTable);
-        processorMediator.getWriteProcessHandleTables().add(this.writeProcessHandleTable);
+        processorMediator.getReadProcessInfoTables().add(this.readProcessInfoTable);
+        processorMediator.getWriteProcessInfoTables().add(this.writeProcessInfoTable);
 
         processorMediator.getReadProcessStatistics().add(this.readProcessStatistics);
         processorMediator.getWriteProcessStatistics().add(this.writeProcessStatistics);

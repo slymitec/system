@@ -11,7 +11,7 @@ public class InfoNullResolver extends AResolver implements IInfoResolver {
     public InfoNullResolver() {
         this.dump = (dump, info, type, status) -> dump;
 
-        this.open = (handle, info, type, status, openAttribute, arguments) -> handle;
+        this.open = (index, info, type, status, openAttribute, arguments) -> index;
 
         this.close = (info, type, status) -> {
         };

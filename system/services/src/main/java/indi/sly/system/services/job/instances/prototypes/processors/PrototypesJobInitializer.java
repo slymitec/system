@@ -15,8 +15,8 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CustomJobInitializer extends AJobInitializer {
-    public CustomJobInitializer() {
+public class PrototypesJobInitializer extends AJobInitializer {
+    public PrototypesJobInitializer() {
         this.register("consumer", this::consumer, JobTransactionType.INDEPENDENCE);
     }
 

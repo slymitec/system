@@ -20,7 +20,6 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class JobContentObject extends AObject {
     protected ThreadContextObject threadContext;
-    protected JobPointerObject pointer;
 
     public Set<String> getParameterNames() {
         Map<String, Object> threadContextData = this.threadContext.getParameters();
@@ -34,37 +33,18 @@ public class JobContentObject extends AObject {
         return CollectionUtil.unmodifiable(threadContextData.keySet());
     }
 
-    public <T extends AObject> T getCache(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+    @Deprecated
+    public <T extends AObject> T getCache(UUID handle) {
+        if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();
         }
 
         CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
 
-        Class<? extends APrototype> prototypeType = this.pointer.getProtoTypes().getOrDefault(id, null);
-
-        if (ObjectUtil.isAnyNull(prototypeType)) {
-            throw new StatusNotExistedException();
-        }
-
-        return coreObjectRepository.getByHandle(SpaceType.USER, id);
+        return coreObjectRepository.getByHandle(SpaceType.USER, handle);
     }
 
-    public UUID setCache(String name, AObject value) {
-        if (StringUtil.isNameIllegal(name)) {
-            throw new ConditionParametersException();
-        }
-
-        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
-
-        UUID handle = UUIDUtil.createRandom();
-
-        this.pointer.getProtoTypes().put(handle, value.getClass());
-        coreObjectRepository.addByHandle(SpaceType.USER, handle, value);
-
-        return handle;
-    }
-
+    @Deprecated
     public void deleteCache(UUID handle) {
         if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();
@@ -72,13 +52,6 @@ public class JobContentObject extends AObject {
 
         CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
 
-        Class<? extends APrototype> prototypeType = this.pointer.getProtoTypes().getOrDefault(handle, null);
-
-        if (ObjectUtil.isAnyNull(prototypeType)) {
-            throw new StatusNotExistedException();
-        }
-
-        this.pointer.getProtoTypes().remove(handle);
         coreObjectRepository.deleteByHandle(SpaceType.USER, handle);
     }
 
@@ -119,41 +92,6 @@ public class JobContentObject extends AObject {
 
         Map<String, Object> threadContextParameters = this.threadContext.getParameters();
         threadContextParameters.put(name, value);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T getOrTakeResult(Class<T> clazz, String name) {
-        if (ObjectUtil.isAnyNull(clazz) || StringUtil.isNameIllegal(name)) {
-            throw new ConditionParametersException();
-        }
-
-        Map<String, Object> threadContextResults = this.threadContext.getResults();
-        Object value = threadContextResults.getOrDefault(name, null);
-        T result;
-
-        if (ObjectUtil.isAnyNull(value)) {
-            return null;
-        } else if (value instanceof APrototype && clazz == UUID.class) {
-            CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
-
-            UUID handle = UUIDUtil.createRandom();
-            AObject prototype = (AObject) value;
-
-            this.pointer.getProtoTypes().put(handle, prototype.getClass());
-            coreObjectRepository.addByHandle(SpaceType.USER, handle, prototype);
-
-            result = (T) handle;
-        } else if (value.getClass() != clazz) {
-            throw new StatusRelationshipErrorException();
-        } else {
-            result = (T) value;
-        }
-
-        threadContextResults = new HashMap<>(threadContextResults);
-        threadContextResults.remove(name);
-        this.threadContext.setResults(threadContextResults);
-
-        return result;
     }
 
     public void setResult(String name, Object value) {

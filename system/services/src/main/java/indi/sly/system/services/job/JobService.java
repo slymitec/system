@@ -1,7 +1,6 @@
 package indi.sly.system.services.job;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
@@ -9,15 +8,16 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
-import indi.sly.system.services.job.prototypes.*;
+import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
+import indi.sly.system.services.job.prototypes.JobBuilder;
+import indi.sly.system.services.job.prototypes.JobFactory;
+import indi.sly.system.services.job.prototypes.JobObject;
 import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.values.JobDefinition;
-import indi.sly.system.services.job.values.JobPointerDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Map;
 import java.util.UUID;
 
 @Named
@@ -27,6 +27,7 @@ public class JobService extends AService {
     public void startup(long startup) {
         if (startup == StartupType.STEP_INIT) {
             this.factoryManager.getKernelSpace().setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
+            this.factoryManager.getUserSpace().setServiceSpace(new ServiceUserSpaceExtensionDefinition());
         } else if (startup == StartupType.STEP_SERVICE) {
         }
     }
@@ -89,38 +90,5 @@ public class JobService extends AService {
         JobBuilder jobBuilder = this.factory.createJob();
 
         jobBuilder.delete(id);
-    }
-
-
-    public boolean containPointer(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
-            throw new ConditionParametersException();
-        }
-
-        Map<UUID, JobPointerDefinition> jobPointers = this.factory.getJobPointers();
-
-        return jobPointers.containsKey(id);
-    }
-
-    public void createPointer(UUID id) {
-        JobPointerBuilder jobPointerBuilder = this.factory.createJobPointer();
-
-        jobPointerBuilder.create(id);
-    }
-
-    public JobPointerObject getPointer(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
-            throw new ConditionParametersException();
-        }
-
-        Map<UUID, JobPointerDefinition> jobPointers = this.factory.getJobPointers();
-
-        JobPointerDefinition jobPointer = jobPointers.getOrDefault(id, null);
-
-        if (ObjectUtil.isAnyNull(jobPointer)) {
-            throw new StatusAlreadyExistedException();
-        }
-
-        return this.factory.build(jobPointer);
     }
 }

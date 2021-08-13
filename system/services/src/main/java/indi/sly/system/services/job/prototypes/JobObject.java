@@ -91,7 +91,6 @@ public class JobObject extends AValueProcessObject<JobDefinition> {
 
         JobContentObject jobContent = this.factoryManager.create(JobContentObject.class);
         jobContent.threadContext = threadContext;
-        jobContent.pointer = jobService.getPointer(job.getID());
 
         return jobContent;
     }

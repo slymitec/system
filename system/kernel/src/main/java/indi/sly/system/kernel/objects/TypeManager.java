@@ -86,7 +86,7 @@ public class TypeManager extends AManager {
             throw new StatusAlreadyExistedException();
         }
 
-        this.factoryManager.getCoreObjectRepository().addByHandle(SpaceType.KERNEL, typeID, typeObject);
+        typeObject.cache(SpaceType.KERNEL, typeID);
         infoTypeIDs.add(typeID);
 
         initializer.install();

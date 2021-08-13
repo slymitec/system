@@ -68,35 +68,20 @@ public class PointerJobInitializer extends AJobInitializer {
     }
 
     private void coreGetDate(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
 
-        UUID id = content.setCache(parameter_PointerName, dateTime);
-        content.setResult("pointerID", id);
+        UUID handle = dateTime.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 
     private void coreGetVersion(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         SystemVersionObject systemVersion = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, SystemVersionObject.class);
 
-        UUID id = content.setCache(parameter_PointerName, systemVersion);
-        content.setResult("pointerID", id);
+        UUID handle = systemVersion.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 
     private void objectGet(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         String parameter_Identifications = content.getParameterOrDefault(String.class, "identifications", null);
         List<IdentificationDefinition> identifications = StringUtil.parseIdentifications(parameter_Identifications);
 
@@ -104,30 +89,20 @@ public class PointerJobInitializer extends AJobInitializer {
 
         InfoObject info = objectManager.get(identifications);
 
-        UUID id = content.setCache(parameter_PointerName, info);
-        content.setResult("pointerID", id);
+        UUID handle = info.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 
     private void processGetCurrent(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
 
-        UUID id = content.setCache(parameter_PointerName, process);
-        content.setResult("pointerID", id);
+        UUID handle = process.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 
     private void processGet(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         UUID parameter_ProcessID = content.getParameterOrDefault(UUID.class, "processID", null);
         if (ValueUtil.isAnyNullOrEmpty(parameter_ProcessID)) {
             throw new ConditionParametersException();
@@ -144,17 +119,12 @@ public class PointerJobInitializer extends AJobInitializer {
             process = processManager.get(parameter_ProcessID, accountAuthorization);
         }
 
-        UUID id = content.setCache(parameter_PointerName, process);
-        content.setResult("pointerID", id);
+        UUID handle = process.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 
     @SuppressWarnings("unchecked")
     private void processCreate(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         UUID parameter_accountAuthorizationID = content.getParameterOrDefault(UUID.class, "accountAuthorizationID", null);
         AccountAuthorizationObject accountAuthorization = null;
         if (ValueUtil.isAnyNullOrEmpty(parameter_accountAuthorizationID)) {
@@ -177,26 +147,16 @@ public class PointerJobInitializer extends AJobInitializer {
         ProcessObject process = processManager.create(accountAuthorization, parameter_EnvironmentVariables, parameter_FileIndex,
                 parameter_Limits, parameter_Parameters, parameter_Privileges, workFolder);
 
-        UUID id = content.setCache(parameter_PointerName, process);
-        content.setResult("pointerID", id);
+        UUID handle = process.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 
     private void processEndCurrent(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         processManager.endCurrent();
     }
 
     private void processEnd(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         UUID parameter_ProcessID = content.getParameterOrDefault(UUID.class, "processID", null);
         if (ValueUtil.isAnyNullOrEmpty(parameter_ProcessID)) {
             throw new ConditionParametersException();
@@ -214,11 +174,6 @@ public class PointerJobInitializer extends AJobInitializer {
     }
 
     private void sessionGetAndOpen(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         UUID parameter_SessionID = content.getParameterOrDefault(UUID.class, "sessionID", null);
         if (ValueUtil.isAnyNullOrEmpty(parameter_SessionID)) {
             throw new ConditionParametersException();
@@ -228,16 +183,11 @@ public class PointerJobInitializer extends AJobInitializer {
 
         SessionContentObject sessionContent = sessionManager.getAndOpen(parameter_SessionID);
 
-        UUID id = content.setCache(parameter_PointerName, sessionContent);
-        content.setResult("pointerID", id);
+        UUID handle = sessionContent.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 
     private void sessionClose(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         UUID parameter_SessionContentID = content.getParameterOrDefault(UUID.class, "sessionContentID", null);
         SessionContentObject sessionContent;
         if (ValueUtil.isAnyNullOrEmpty(parameter_SessionContentID)) {
@@ -254,26 +204,16 @@ public class PointerJobInitializer extends AJobInitializer {
     }
 
     private void userGetCurrentAccount(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         AccountObject account = userManager.getCurrentAccount();
 
-        UUID id = content.setCache(parameter_PointerName, account);
-        content.setResult("pointerID", id);
+        UUID handle = account.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 
     private void userGetAccount(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
-        UUID parameter_AccountID = content.getParameterOrDefault(UUID.class, "accountID", null);
+       UUID parameter_AccountID = content.getParameterOrDefault(UUID.class, "accountID", null);
         String parameter_AccountName = content.getParameterOrDefault(String.class, "accountName", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
@@ -287,16 +227,11 @@ public class PointerJobInitializer extends AJobInitializer {
             throw new ConditionParametersException();
         }
 
-        UUID id = content.setCache(parameter_PointerName, account);
-        content.setResult("pointerID", id);
+        UUID handle = account.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 
     private void userGetGroup(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         UUID parameter_GroupID = content.getParameterOrDefault(UUID.class, "groupID", null);
         String parameter_GroupName = content.getParameterOrDefault(String.class, "groupName", null);
 
@@ -311,16 +246,11 @@ public class PointerJobInitializer extends AJobInitializer {
             throw new ConditionParametersException();
         }
 
-        UUID id = content.setCache(parameter_PointerName, group);
-        content.setResult("pointerID", id);
+        UUID handle = group.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 
     private void userCreateAccount(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         String parameter_AccountName = content.getParameterOrDefault(String.class, "accountName", null);
         String parameter_AccountPassword = content.getParameterOrDefault(String.class, "accountPassword", null);
 
@@ -328,32 +258,22 @@ public class PointerJobInitializer extends AJobInitializer {
 
         AccountObject account = userManager.createAccount(parameter_AccountName, parameter_AccountPassword);
 
-        UUID id = content.setCache(parameter_PointerName, account);
-        content.setResult("pointerID", id);
+        UUID handle = account.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 
     private void userCreateGroup(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         String parameter_GroupName = content.getParameterOrDefault(String.class, "groupName", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         GroupObject group = userManager.createGroup(parameter_GroupName);
 
-        UUID id = content.setCache(parameter_PointerName, group);
-        content.setResult("pointerID", id);
+        UUID handle = group.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 
     private void userDeleteAccount(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         UUID parameter_AccountID = content.getParameterOrDefault(UUID.class, "accountID", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
@@ -362,11 +282,6 @@ public class PointerJobInitializer extends AJobInitializer {
     }
 
     private void userDeleteGroup(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         UUID parameter_GroupID = content.getParameterOrDefault(UUID.class, "groupID", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
@@ -375,11 +290,6 @@ public class PointerJobInitializer extends AJobInitializer {
     }
 
     private void userAuthorize(JobRunConsumer run, JobContentObject content) {
-        String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
-        if (StringUtil.isNameIllegal(parameter_PointerName)) {
-            throw new ConditionParametersException();
-        }
-
         UUID parameter_AccountID = content.getParameterOrDefault(UUID.class, "accountID", null);
         String parameter_AccountName = content.getParameterOrDefault(String.class, "accountName", null);
         String parameter_AccountPassword = content.getParameterOrDefault(String.class, "accountPassword", null);
@@ -395,7 +305,7 @@ public class PointerJobInitializer extends AJobInitializer {
             throw new ConditionParametersException();
         }
 
-        UUID id = content.setCache(parameter_PointerName, accountAuthorization);
-        content.setResult("pointerID", id);
+        UUID handle = accountAuthorization.cache(SpaceType.USER);
+        content.setResult("handle", handle);
     }
 }

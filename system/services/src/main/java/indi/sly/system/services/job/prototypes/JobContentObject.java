@@ -33,7 +33,6 @@ public class JobContentObject extends AObject {
         return CollectionUtil.unmodifiable(threadContextData.keySet());
     }
 
-    @Deprecated
     public <T extends AObject> T getCache(UUID handle) {
         if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();
@@ -44,7 +43,6 @@ public class JobContentObject extends AObject {
         return coreObjectRepository.getByHandle(SpaceType.USER, handle);
     }
 
-    @Deprecated
     public void deleteCache(UUID handle) {
         if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();

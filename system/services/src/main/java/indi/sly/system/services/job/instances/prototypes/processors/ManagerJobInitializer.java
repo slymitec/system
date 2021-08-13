@@ -33,8 +33,8 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class PointerJobInitializer extends AJobInitializer {
-    public PointerJobInitializer() {
+public class ManagerJobInitializer extends AJobInitializer {
+    public ManagerJobInitializer() {
         this.register("coreGetDate", this::coreGetDate, JobTransactionType.INDEPENDENCE);
         this.register("coreGetVersion", this::coreGetVersion, JobTransactionType.INDEPENDENCE);
 

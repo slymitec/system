@@ -5,7 +5,6 @@ import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.FactoryManager;
-import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -53,9 +52,5 @@ public class CorePrototypeValueBuilder extends ABuilder {
         corePrototype.factoryManager = this.factoryManager;
 
         return corePrototype;
-    }
-
-    public UserSpaceDefinition createOrGetUserSpace() {
-        return SpringHelper.getInstance(UserSpaceDefinition.class);
     }
 }

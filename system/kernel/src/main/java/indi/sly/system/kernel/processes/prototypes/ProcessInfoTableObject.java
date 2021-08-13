@@ -196,8 +196,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new StatusInsufficientResourcesException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
         UUID index = UUIDUtil.createRandom();

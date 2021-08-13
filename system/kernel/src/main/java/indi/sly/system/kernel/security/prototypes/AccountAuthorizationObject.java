@@ -39,8 +39,7 @@ public class AccountAuthorizationObject extends AObject {
         this.account = account;
         this.password = password;
 
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
         this.date.put(DateTimeType.CREATE, nowDateTime);
@@ -66,8 +65,7 @@ public class AccountAuthorizationObject extends AObject {
             return false;
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
         long expiredTime =
                 this.factoryManager.getKernelSpace().getConfiguration().SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME;
@@ -94,8 +92,7 @@ public class AccountAuthorizationObject extends AObject {
             throw new StatusExpiredException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
         long expiredTime =
                 this.factoryManager.getKernelSpace().getConfiguration().SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME;

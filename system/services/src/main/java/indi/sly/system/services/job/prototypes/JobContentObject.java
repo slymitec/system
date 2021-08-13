@@ -5,7 +5,7 @@ import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.core.prototypes.CorePrototypeRepositoryObject;
+import indi.sly.system.kernel.core.prototypes.CoreObjectRepositoryObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -34,13 +34,12 @@ public class JobContentObject extends AObject {
         return CollectionUtil.unmodifiable(threadContextData.keySet());
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends APrototype> T getCache(UUID id) {
+    public <T extends AObject> T getCache(UUID id) {
         if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
-        CorePrototypeRepositoryObject corePrototypeRepository = this.factoryManager.getCorePrototypeRepository();
+        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
 
         Class<? extends APrototype> prototypeType = this.pointer.getProtoTypes().getOrDefault(id, null);
 
@@ -48,39 +47,39 @@ public class JobContentObject extends AObject {
             throw new StatusNotExistedException();
         }
 
-        return (T) corePrototypeRepository.getByID(SpaceType.USER, prototypeType, id);
+        return coreObjectRepository.getByHandle(SpaceType.USER, id);
     }
 
-    public UUID setCache(String name, APrototype value) {
+    public UUID setCache(String name, AObject value) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
 
-        CorePrototypeRepositoryObject corePrototypeRepository = this.factoryManager.getCorePrototypeRepository();
+        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
 
-        UUID id = UUIDUtil.createRandom();
+        UUID handle = UUIDUtil.createRandom();
 
-        this.pointer.getProtoTypes().put(id, value.getClass());
-        corePrototypeRepository.addByID(SpaceType.USER, id, value);
+        this.pointer.getProtoTypes().put(handle, value.getClass());
+        coreObjectRepository.addByHandle(SpaceType.USER, handle, value);
 
-        return id;
+        return handle;
     }
 
-    public void deleteCache(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+    public void deleteCache(UUID handle) {
+        if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();
         }
 
-        CorePrototypeRepositoryObject corePrototypeRepository = this.factoryManager.getCorePrototypeRepository();
+        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
 
-        Class<? extends APrototype> prototypeType = this.pointer.getProtoTypes().getOrDefault(id, null);
+        Class<? extends APrototype> prototypeType = this.pointer.getProtoTypes().getOrDefault(handle, null);
 
         if (ObjectUtil.isAnyNull(prototypeType)) {
             throw new StatusNotExistedException();
         }
 
-        this.pointer.getProtoTypes().remove(id);
-        corePrototypeRepository.deleteByID(SpaceType.USER, prototypeType, id);
+        this.pointer.getProtoTypes().remove(handle);
+        coreObjectRepository.deleteByHandle(SpaceType.USER, handle);
     }
 
     public <T> T getParameter(Class<T> clazz, String name) {
@@ -135,15 +134,15 @@ public class JobContentObject extends AObject {
         if (ObjectUtil.isAnyNull(value)) {
             return null;
         } else if (value instanceof APrototype && clazz == UUID.class) {
-            CorePrototypeRepositoryObject corePrototypeRepository = this.factoryManager.getCorePrototypeRepository();
+            CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
 
-            UUID id = UUIDUtil.createRandom();
-            APrototype prototype = (APrototype) value;
+            UUID handle = UUIDUtil.createRandom();
+            AObject prototype = (AObject) value;
 
-            this.pointer.getProtoTypes().put(id, prototype.getClass());
-            corePrototypeRepository.addByID(SpaceType.USER, id, prototype);
+            this.pointer.getProtoTypes().put(handle, prototype.getClass());
+            coreObjectRepository.addByHandle(SpaceType.USER, handle, prototype);
 
-            result = (T) id;
+            result = (T) handle;
         } else if (value.getClass() != clazz) {
             throw new StatusRelationshipErrorException();
         } else {

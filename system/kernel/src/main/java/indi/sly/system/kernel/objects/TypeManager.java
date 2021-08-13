@@ -57,19 +57,7 @@ public class TypeManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        TypeObject type = this.factoryManager.getCorePrototypeRepository().getByID(SpaceType.KERNEL, TypeObject.class,
-                typeID);
-
-        return type;
-    }
-
-    public TypeObject getIDByName(String typeName) {
-        if (StringUtil.isNameIllegal(typeName)) {
-            throw new ConditionParametersException();
-        }
-
-        TypeObject type = this.factoryManager.getCorePrototypeRepository().getByName(SpaceType.KERNEL, TypeObject.class
-                , "Objects_Types_" + typeName);
+        TypeObject type = this.factoryManager.getCoreObjectRepository().getByHandle(SpaceType.KERNEL, typeID);
 
         return type;
     }
@@ -98,8 +86,7 @@ public class TypeManager extends AManager {
             throw new StatusAlreadyExistedException();
         }
 
-        this.factoryManager.getCorePrototypeRepository().add(SpaceType.KERNEL, typeID, "Objects_Types_" + typeName,
-                typeObject);
+        this.factoryManager.getCoreObjectRepository().addByHandle(SpaceType.KERNEL, typeID, typeObject);
         infoTypeIDs.add(typeID);
 
         initializer.install();
@@ -118,7 +105,7 @@ public class TypeManager extends AManager {
 
         type.getInitializer().uninstall();
 
-        this.factoryManager.getCorePrototypeRepository().deleteByID(SpaceType.KERNEL, TypeObject.class, typeID);
+        this.factoryManager.getCoreObjectRepository().deleteByHandle(SpaceType.KERNEL, typeID);
         infoTypeIDs.remove(typeID);
     }
 

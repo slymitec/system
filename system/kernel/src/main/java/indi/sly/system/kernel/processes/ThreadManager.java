@@ -37,8 +37,7 @@ public class ThreadManager extends AManager {
         UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
 
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
         if (threads.isEmpty()) {

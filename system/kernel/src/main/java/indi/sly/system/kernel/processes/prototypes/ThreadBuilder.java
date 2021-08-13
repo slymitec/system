@@ -25,8 +25,7 @@ public class ThreadBuilder extends ABuilder {
         UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
 
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
         ThreadObject thread = this.factory.buildThread(processID);

@@ -43,8 +43,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
             throw new StatusNotExistedException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
         try {
@@ -78,8 +77,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
             throw new StatusNotExistedException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
         List<IdentificationDefinition> identifications;
@@ -106,8 +104,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
             throw new StatusNotExistedException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
         InfoOpenDefinition infoOpen;
@@ -134,8 +131,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
             throw new StatusNotExistedException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
         List<IdentificationDefinition> identifications;

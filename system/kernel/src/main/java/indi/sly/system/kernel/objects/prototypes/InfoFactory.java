@@ -7,12 +7,12 @@ import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
-import indi.sly.system.kernel.objects.prototypes.processors.IInfoResolver;
+import indi.sly.system.kernel.objects.prototypes.processors.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -21,10 +21,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Named
@@ -36,13 +33,21 @@ public class InfoFactory extends AFactory {
     public void init() {
         this.infoResolvers = new CopyOnWriteArrayList<>();
 
-        Set<APrototype> corePrototypes =
-                this.factoryManager.getCorePrototypeRepository().getByImplementInterface(SpaceType.KERNEL,
-                        IInfoResolver.class);
+        Set<AResolver> resolvers = new HashSet<>();
+        resolvers.add(this.factoryManager.create(InfoCheckConditionResolver.class));
+        resolvers.add(this.factoryManager.create(InfoDateResolver.class));
+        resolvers.add(this.factoryManager.create(InfoDumpResolver.class));
+        resolvers.add(this.factoryManager.create(InfoOpenOrCloseResolver.class));
+        resolvers.add(this.factoryManager.create(InfoParentResolver.class));
+        resolvers.add(this.factoryManager.create(InfoProcessAndThreadStatisticsResolver.class));
+        resolvers.add(this.factoryManager.create(InfoProcessInfoTableResolver.class));
+        resolvers.add(this.factoryManager.create(InfoSecurityDescriptorResolver.class));
+        resolvers.add(this.factoryManager.create(InfoSelfResolver.class));
+        resolvers.add(this.factoryManager.create(InfoTypeInitializerResolver.class));
 
-        for (APrototype corePrototype : corePrototypes) {
-            if (corePrototype instanceof IInfoResolver) {
-                this.infoResolvers.add((IInfoResolver) corePrototype);
+        for (AResolver resolver : resolvers) {
+            if (resolver instanceof IInfoResolver) {
+                this.infoResolvers.add((IInfoResolver) resolver);
             }
         }
 
@@ -52,7 +57,7 @@ public class InfoFactory extends AFactory {
     public InfoObject getRootInfo() {
         KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
-        return this.factoryManager.getCorePrototypeRepository().getByID(SpaceType.KERNEL, InfoObject.class, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
+        return this.factoryManager.getCoreObjectRepository().getByHandle(SpaceType.KERNEL, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
     }
 
     private InfoObject buildInfo(InfoProcessorMediator processorMediator, UUID infoID, UUID poolID,
@@ -100,8 +105,8 @@ public class InfoFactory extends AFactory {
         InfoEntity info =
                 infoRepository.get(kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
 
-        this.factoryManager.getCorePrototypeRepository().addByID(SpaceType.KERNEL, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID, this.buildInfo(info,
-                kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID, null));
+        this.factoryManager.getCoreObjectRepository().addByHandle(SpaceType.KERNEL, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID,
+                this.buildInfo(info, kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID, null));
     }
 
     public InfoObject buildInfo(InfoEntity info, InfoObject parentInfo) {

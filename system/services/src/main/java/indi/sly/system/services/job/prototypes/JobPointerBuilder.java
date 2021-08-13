@@ -47,8 +47,7 @@ public class JobPointerBuilder extends ABuilder {
         int limit = processToken.getLimits().getOrDefault(ProcessTokenLimitType.JOB_PROTOTYPE_CACHES_MAX,
                 configuration.PROCESSES_TOKEN_DEFAULT_LIMIT.get(ProcessTokenLimitType.JOB_PROTOTYPE_CACHES_MAX));
         jobPointer.setLimit(limit);
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
         jobPointer.getDate().put(DateTimeType.CREATE, nowDateTime);
         jobPointer.getDate().put(DateTimeType.ACCESS, nowDateTime);

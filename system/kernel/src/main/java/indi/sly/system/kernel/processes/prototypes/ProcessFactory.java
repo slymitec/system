@@ -6,54 +6,65 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
-import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.prototypes.processors.IProcessCreateResolver;
-import indi.sly.system.kernel.processes.prototypes.processors.IProcessEndResolver;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
+import indi.sly.system.kernel.processes.prototypes.processors.*;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
-import indi.sly.system.kernel.processes.prototypes.processors.IProcessResolver;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.*;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessFactory extends AFactory {
-    protected Set<IProcessResolver> processResolvers;
+    protected List<IProcessResolver> processResolvers;
     protected List<IProcessCreateResolver> processCreatorResolvers;
     protected List<IProcessEndResolver> processEndResolvers;
 
     @Override
     public void init() {
-        this.processResolvers = new ConcurrentSkipListSet<>();
+        this.processResolvers = new CopyOnWriteArrayList<>();
         this.processCreatorResolvers = new CopyOnWriteArrayList<>();
         this.processEndResolvers = new CopyOnWriteArrayList<>();
 
-        Set<APrototype> corePrototypes =
-                this.factoryManager.getCorePrototypeRepository().getByImplementInterface(SpaceType.KERNEL, IProcessResolver.class);
+        Set<AResolver> resolvers = new HashSet<>();
+        resolvers.add(this.factoryManager.create(ProcessCreateCheckResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessCreateCommunicationResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessCreateContextResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessCreateInfoTableResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessCreateNotifyParentResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessCreateSessionResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessCreateStatisticsResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessCreateTokenResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessCreateTokenRuleResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessEndCommunicationResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessEndInfoTableResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessEndNotifyParentResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessMemberResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessSelfResolver.class));
+        resolvers.add(this.factoryManager.create(ProcessStatisticsResolver.class));
 
-        for (APrototype prototype : corePrototypes) {
-            if (prototype instanceof IProcessResolver) {
-                this.processResolvers.add((IProcessResolver) prototype);
-            } else if (prototype instanceof IProcessCreateResolver) {
-                this.processCreatorResolvers.add((IProcessCreateResolver) prototype);
-            } else if (prototype instanceof IProcessEndResolver) {
-                this.processEndResolvers.add((IProcessEndResolver) prototype);
+        for (AResolver resolver : resolvers) {
+            if (resolver instanceof IProcessResolver) {
+                this.processResolvers.add((IProcessResolver) resolver);
+            } else if (resolver instanceof IProcessCreateResolver) {
+                this.processCreatorResolvers.add((IProcessCreateResolver) resolver);
+            } else if (resolver instanceof IProcessEndResolver) {
+                this.processEndResolvers.add((IProcessEndResolver) resolver);
             }
         }
 
+        Collections.sort(this.processResolvers);
         Collections.sort(this.processCreatorResolvers);
         Collections.sort(this.processEndResolvers);
     }
 
     private ProcessObject buildProcess(ProcessProcessorMediator processorMediator, UUID processID) {
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
 
         ProcessObject process = this.factoryManager.create(ProcessObject.class);
 

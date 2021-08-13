@@ -73,7 +73,7 @@ public class PointerJobInitializer extends AJobInitializer {
             throw new ConditionParametersException();
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, DateTimeObject.class);
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
 
         UUID id = content.setCache(parameter_PointerName, dateTime);
         content.setResult("pointerID", id);
@@ -85,8 +85,7 @@ public class PointerJobInitializer extends AJobInitializer {
             throw new ConditionParametersException();
         }
 
-        SystemVersionObject systemVersion = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                SystemVersionObject.class);
+        SystemVersionObject systemVersion = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, SystemVersionObject.class);
 
         UUID id = content.setCache(parameter_PointerName, systemVersion);
         content.setResult("pointerID", id);
@@ -149,6 +148,7 @@ public class PointerJobInitializer extends AJobInitializer {
         content.setResult("pointerID", id);
     }
 
+    @SuppressWarnings("unchecked")
     private void processCreate(JobRunConsumer run, JobContentObject content) {
         String parameter_PointerName = content.getParameterOrDefault(String.class, "pointerName", null);
         if (StringUtil.isNameIllegal(parameter_PointerName)) {

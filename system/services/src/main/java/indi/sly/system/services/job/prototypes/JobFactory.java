@@ -5,13 +5,11 @@ import indi.sly.system.common.lang.Consumer1;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.core.prototypes.AFactory;
-import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.prototypes.processors.IProcessResolver;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
-import indi.sly.system.services.job.prototypes.processors.IJobResolver;
+import indi.sly.system.services.job.prototypes.processors.*;
 import indi.sly.system.services.job.prototypes.wrappers.JobProcessorMediator;
 import indi.sly.system.services.job.values.JobDefinition;
 import indi.sly.system.services.job.values.JobPointerDefinition;
@@ -32,12 +30,17 @@ public class JobFactory extends AFactory {
     public void init() {
         this.jobResolvers = new CopyOnWriteArrayList<>();
 
-        Set<APrototype> corePrototypes =
-                this.factoryManager.getCorePrototypeRepository().getByImplementInterface(SpaceType.KERNEL, IProcessResolver.class);
+        Set<AResolver> resolvers = new HashSet<>();
+        resolvers.add(this.factoryManager.create(JobCheckConditionResolver.class));
+        resolvers.add(this.factoryManager.create(JobContentResolver.class));
+        resolvers.add(this.factoryManager.create(JobInitializerResolver.class));
+        resolvers.add(this.factoryManager.create(JobPointerResolver.class));
+        resolvers.add(this.factoryManager.create(JobProcessAndThreadResolver.class));
+        resolvers.add(this.factoryManager.create(JobStatusRuntimeResolver.class));
 
-        for (APrototype prototype : corePrototypes) {
-            if (prototype instanceof IJobResolver) {
-                this.jobResolvers.add((IJobResolver) prototype);
+        for (AResolver resolver : resolvers) {
+            if (resolver instanceof IJobResolver) {
+                this.jobResolvers.add((IJobResolver) resolver);
             }
         }
 

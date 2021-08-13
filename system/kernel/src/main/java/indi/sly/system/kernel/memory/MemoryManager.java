@@ -21,13 +21,13 @@ public class MemoryManager extends AManager {
     @Override
     public void startup(long startup) {
         if (startup == StartupType.STEP_INIT) {
-            this.factoryManager.getCorePrototypeRepository().addByID(SpaceType.KERNEL,
+            this.factoryManager.getCoreObjectRepository().addByHandle(SpaceType.KERNEL,
                     this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID,
                     this.factoryManager.create(DatabaseInfoRepositoryObject.class));
 
-            this.factoryManager.getCorePrototypeRepository().add(SpaceType.KERNEL,
+            this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL,
                     this.factoryManager.create(ProcessRepositoryObject.class));
-            this.factoryManager.getCorePrototypeRepository().add(SpaceType.KERNEL,
+            this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL,
                     this.factoryManager.create(UserRepositoryObject.class));
         } else if (startup == StartupType.STEP_KERNEL) {
         }
@@ -42,14 +42,14 @@ public class MemoryManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        return this.factoryManager.getCorePrototypeRepository().getByID(SpaceType.KERNEL, AInfoRepositoryObject.class, id);
+        return this.factoryManager.getCoreObjectRepository().getByHandle(SpaceType.KERNEL, id);
     }
 
     public ProcessRepositoryObject getProcessRepository() {
-        return this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, ProcessRepositoryObject.class);
+        return this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, ProcessRepositoryObject.class);
     }
 
     public UserRepositoryObject getUserRepository() {
-        return this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL, UserRepositoryObject.class);
+        return this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, UserRepositoryObject.class);
     }
 }

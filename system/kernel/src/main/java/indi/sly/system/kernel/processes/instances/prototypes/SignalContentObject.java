@@ -83,8 +83,7 @@ public class SignalContentObject extends AInfoContentObject {
                 throw new ConditionRefuseException();
             }
 
-            DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                    DateTimeObject.class);
+            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
             signalEntries = this.signal.pollAll();
@@ -117,8 +116,7 @@ public class SignalContentObject extends AInfoContentObject {
                 throw new ConditionRefuseException();
             }
 
-            DateTimeObject dateTime = this.factoryManager.getCorePrototypeRepository().get(SpaceType.KERNEL,
-                    DateTimeObject.class);
+            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
             SignalEntryDefinition signalEntry = new SignalEntryDefinition();

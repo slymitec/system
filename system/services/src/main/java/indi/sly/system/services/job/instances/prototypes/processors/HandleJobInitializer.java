@@ -52,7 +52,7 @@ public class HandleJobInitializer extends AJobInitializer {
         AObject object = content.getCache(parameter_HandleID);
 
         Class<? extends AObject> clazz = object.getClass();
-        Method method = null;
+        Method method;
         try {
             if (ObjectUtil.notNull(parameter_MethodParameters)) {
                 method = clazz.getMethod(parameter_MethodName, parameter_MethodParameters);

@@ -60,6 +60,12 @@ public class CoreObjectRepositoryObject extends AObject {
         return CollectionUtil.unmodifiable(coreObjects);
     }
 
+    public Set<UUID> getAllHandle(long space) {
+        HashSet<UUID> handles = new HashSet<>(this.getSpace(space).getHandledHandles().keySet());
+
+        return CollectionUtil.unmodifiable(handles);
+    }
+
     public int getSize(long space) {
         Lock lock = this.getLock(space, LockType.READ);
 

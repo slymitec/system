@@ -33,6 +33,12 @@ public class JobContentObject extends AObject {
         return CollectionUtil.unmodifiable(threadContextData.keySet());
     }
 
+    public Set<UUID> getAllHandle() {
+        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
+
+        return coreObjectRepository.getAllHandle(SpaceType.USER);
+    }
+
     public <T extends AObject> T getCache(UUID handle) {
         if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();

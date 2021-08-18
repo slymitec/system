@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.objects;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
@@ -9,10 +8,11 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
-import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.instances.prototypes.processors.FolderTypeInitializer;
 import indi.sly.system.kernel.objects.instances.prototypes.processors.NamelessFolderTypeInitializer;
+import indi.sly.system.kernel.objects.prototypes.TypeBuilder;
+import indi.sly.system.kernel.objects.prototypes.TypeFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -23,9 +23,13 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TypeManager extends AManager {
+    protected TypeFactory factory;
+
     @Override
     public void startup(long startup) {
         if (startup == StartupType.STEP_INIT) {
+            this.factory = this.factoryManager.create(TypeFactory.class);
+            this.factory.init();
         } else if (startup == StartupType.STEP_KERNEL) {
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
@@ -68,30 +72,9 @@ public class TypeManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        TypeDefinition typeDefinition = new TypeDefinition();
-        typeDefinition.setID(UUIDUtil.createRandom());
-        typeDefinition.setName(typeName);
-        typeDefinition.setAttribute(attribute);
-        typeDefinition.setInitializer(initializer);
-        if (ObjectUtil.allNotNull(childTypes)) {
-            typeDefinition.getChildTypes().addAll(childTypes);
-        }
+        TypeBuilder typeBuilder = this.factory.createType();
 
-        TypeObject typeObject = this.factoryManager.create(TypeObject.class);
-        typeObject.setType(typeDefinition);
-
-        Set<UUID> infoTypeIDs = this.factoryManager.getKernelSpace().getInfoTypeIDs();
-
-        if (infoTypeIDs.contains(typeID)) {
-            throw new StatusAlreadyExistedException();
-        }
-
-        typeObject.cache(SpaceType.KERNEL, typeID);
-        infoTypeIDs.add(typeID);
-
-        initializer.install();
-
-        return typeObject;
+        return typeBuilder.create(typeID, typeName, attribute, childTypes, initializer);
     }
 
     public synchronized void delete(UUID typeID) {
@@ -99,14 +82,11 @@ public class TypeManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        Set<UUID> infoTypeIDs = this.factoryManager.getKernelSpace().getInfoTypeIDs();
-
         TypeObject type = this.get(typeID);
 
-        type.getInitializer().uninstall();
+        TypeBuilder typeBuilder = this.factory.createType();
 
-        this.factoryManager.getCoreObjectRepository().deleteByHandle(SpaceType.KERNEL, typeID);
-        infoTypeIDs.remove(typeID);
+        typeBuilder.delete(typeID, type);
     }
 
     public Set<UUID> list() {

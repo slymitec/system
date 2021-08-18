@@ -1,35 +1,28 @@
 package indi.sly.system.kernel.objects.infotypes.prototypes;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.UUID;
-
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.AObject;
-import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeCounterDefinition;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 
-public class TypeObject extends AObject {
-    private TypeDefinition type;
+import java.util.Set;
+import java.util.UUID;
 
-    public void setType(TypeDefinition type) {
-        if (ObjectUtil.isAnyNull(this.type)) {
-            this.type = type;
-        }
-    }
-
+public class TypeObject extends AValueProcessObject<TypeDefinition> {
     public String getName() {
-        return this.type.getName();
+        this.init();
+
+        return this.value.getName();
     }
 
     public UUID getThisType() {
-        return this.type.getThisType();
+        this.init();
+
+        return this.value.getThisType();
     }
 
     public Set<UUID> getChildTypes() {
@@ -37,21 +30,28 @@ public class TypeObject extends AObject {
             throw new StatusNotSupportedException();
         }
 
-        return CollectionUtil.unmodifiable(this.type.getChildTypes());
+        this.init();
+
+        return CollectionUtil.unmodifiable(this.value.getChildTypes());
     }
 
     public boolean isTypeInitializerAttributesExist(long typeInitializerAttributes) {
-        return LogicalUtil.isAllExist(this.type.getAttribute(), typeInitializerAttributes);
+        this.init();
+
+        return LogicalUtil.isAllExist(this.value.getAttribute(), typeInitializerAttributes);
     }
 
     public AInfoTypeInitializer getInitializer() {
-        return this.type.getInitializer();
+        this.init();
+
+        return this.value.getInitializer();
     }
 
     public TypeCounterObject getCount() {
         TypeCounterObject typeCounter = this.factoryManager.create(TypeCounterObject.class);
 
-        typeCounter.setSource(() -> this.type.getCounter(), (TypeCounterDefinition source) -> {
+        typeCounter.setParent(this);
+        typeCounter.setSource(() -> this.value.getCounter(), (TypeCounterDefinition source) -> {
         });
 
         return typeCounter;

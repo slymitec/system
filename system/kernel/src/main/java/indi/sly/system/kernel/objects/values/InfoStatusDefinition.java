@@ -2,6 +2,7 @@ package indi.sly.system.kernel.objects.values;
 
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.common.values.IdentificationDefinition;
 
@@ -11,9 +12,11 @@ import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
     private final List<IdentificationDefinition> identifications;
+    private UUID poolID;
 
     public InfoStatusDefinition() {
         this.identifications = new ArrayList<>();
@@ -23,17 +26,25 @@ public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
         return this.identifications;
     }
 
+    public UUID getPoolID() {
+        return this.poolID;
+    }
+
+    public void setPoolID(UUID poolID) {
+        this.poolID = poolID;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InfoStatusDefinition that = (InfoStatusDefinition) o;
-        return identifications.equals(that.identifications);
+        return identifications.equals(that.identifications) && Objects.equals(poolID, that.poolID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(identifications);
+        return Objects.hash(identifications, poolID);
     }
 
     @Override
@@ -41,6 +52,7 @@ public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
         InfoStatusDefinition definition = new InfoStatusDefinition();
 
         definition.identifications.addAll(this.identifications);
+        definition.poolID = this.poolID;
 
         return definition;
     }
@@ -55,6 +67,8 @@ public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
         for (int i = 0; i < valueInteger; i++) {
             this.identifications.add(ObjectUtil.readExternal(in));
         }
+
+        this.poolID = UUIDUtil.readExternal(in);
     }
 
     @Override
@@ -65,5 +79,7 @@ public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
         for (IdentificationDefinition pair : this.identifications) {
             ObjectUtil.writeExternal(out, pair);
         }
+
+        UUIDUtil.writeExternal(out, this.poolID);
     }
 }

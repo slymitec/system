@@ -13,6 +13,7 @@ import javax.inject.Named;
 public abstract class ACoreProcessObject<T> extends AObject {
     private Consumer funcParentInit;
     private Consumer funcParentFresh;
+    private Consumer1<Long> funcParentLock;
     private Provider<T> funcRead;
     private Consumer1<T> funcWrite;
     private Consumer1<Long> funcLock;
@@ -21,9 +22,11 @@ public abstract class ACoreProcessObject<T> extends AObject {
         if (ObjectUtil.allNotNull(parentCoreProcess)) {
             this.funcParentInit = parentCoreProcess::init;
             this.funcParentFresh = parentCoreProcess::fresh;
+            this.funcParentLock = parentCoreProcess::lock;
         } else {
             this.funcParentInit = null;
             this.funcParentFresh = null;
+            this.funcParentLock = null;
         }
     }
 
@@ -51,6 +54,9 @@ public abstract class ACoreProcessObject<T> extends AObject {
 
         if (ObjectUtil.allNotNull(this.funcLock)) {
             this.funcLock.accept(lock);
+        }
+        if (ObjectUtil.allNotNull(this.funcParentLock)) {
+            this.funcParentLock.accept(lock);
         }
     }
 

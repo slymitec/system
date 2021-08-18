@@ -126,7 +126,6 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
         return this.value.containByID(id);
     }
 
-
     public synchronized ProcessInfoEntryObject getByIndex(UUID index) {
         if (ValueUtil.isAnyNullOrEmpty(index)) {
             throw new ConditionParametersException();

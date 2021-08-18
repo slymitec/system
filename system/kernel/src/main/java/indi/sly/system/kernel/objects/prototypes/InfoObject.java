@@ -30,7 +30,6 @@ public class InfoObject extends AObject {
     protected InfoProcessorMediator processorMediator;
 
     protected UUID id;
-    protected UUID poolID;
     protected InfoStatusDefinition status;
 
     public UUID getID() {
@@ -78,7 +77,7 @@ public class InfoObject extends AObject {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.poolID, this.id, this.status);
+        return this.processorMediator.getSelf().apply(this.id, this.status);
     }
 
     private synchronized UUID getIndex() {

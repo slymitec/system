@@ -15,10 +15,10 @@ import javax.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoSelfResolver extends AResolver implements IInfoResolver {
     public InfoSelfResolver() {
-        this.info = (repositoryID, id, status) -> {
+        this.info = (id, status) -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
 
-            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(repositoryID);
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(status.getPoolID());
 
             return infoRepository.get(id);
         };

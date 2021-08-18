@@ -60,14 +60,12 @@ public class InfoFactory extends AFactory {
         return this.factoryManager.getCoreObjectRepository().getByHandle(SpaceType.KERNEL, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
     }
 
-    private InfoObject buildInfo(InfoProcessorMediator processorMediator, UUID infoID, UUID poolID,
-                                 InfoStatusDefinition status) {
+    private InfoObject buildInfo(InfoProcessorMediator processorMediator, UUID infoID, InfoStatusDefinition status) {
         InfoObject info = this.factoryManager.create(InfoObject.class);
 
         info.factory = this;
         info.processorMediator = processorMediator;
         info.id = infoID;
-        info.poolID = poolID;
         info.status = status;
 
         return info;
@@ -93,7 +91,9 @@ public class InfoFactory extends AFactory {
             status.getIdentifications().add(identification);
         }
 
-        return this.buildInfo(processorMediator, info.getID(), poolID, status);
+        status.setPoolID(poolID);
+
+        return this.buildInfo(processorMediator, info.getID(), status);
     }
 
     public void buildRootInfo() {

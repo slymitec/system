@@ -22,8 +22,9 @@ public class ProcessCreateBuilder extends ABuilder {
     protected ProcessLifeProcessorMediator processorMediator;
 
     protected ProcessObject parentProcess;
+    protected ProcessObject process;
 
-    private ProcessObject init() {
+    private void build() {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
@@ -43,7 +44,7 @@ public class ProcessCreateBuilder extends ABuilder {
 
         processRepository.add(process);
 
-        return this.factory.buildProcess(process);
+        this.process = this.factory.buildProcess(process);
     }
 
     public ProcessObject build(ProcessCreatorDefinition processCreator) {
@@ -51,20 +52,20 @@ public class ProcessCreateBuilder extends ABuilder {
             throw new ConditionParametersException();
         }
 
-        ProcessObject process = this.init();
+        this.build();
 
-        ProcessStatusObject processStatus = process.getStatus();
+        ProcessStatusObject processStatus = this.process.getStatus();
 
         processStatus.initialize();
 
         List<ProcessLifeProcessorCreateFunction> resolvers = this.processorMediator.getCreates();
 
         for (ProcessLifeProcessorCreateFunction resolver : resolvers) {
-            process = resolver.apply(process, this.parentProcess, processCreator);
+            this.process = resolver.apply(this.process, this.parentProcess, processCreator);
         }
 
         processStatus.run();
 
-        return process;
+        return this.process;
     }
 }

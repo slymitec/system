@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.UUID;
 
 public class TypeDefinition extends ADefinition<TypeDefinition> {
-    private UUID id;
     private String name;
     private long attribute;
     private UUID thisType;
@@ -19,14 +18,6 @@ public class TypeDefinition extends ADefinition<TypeDefinition> {
     public TypeDefinition() {
         this.childTypes = new HashSet<>();
         this.counter = new TypeCounterDefinition();
-    }
-
-    public UUID getID() {
-        return this.id;
-    }
-
-    public void setID(UUID id) {
-        this.id = id;
     }
 
     public String getName() {

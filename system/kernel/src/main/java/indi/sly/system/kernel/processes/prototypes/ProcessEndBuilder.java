@@ -21,25 +21,27 @@ public class ProcessEndBuilder extends ABuilder {
     protected ProcessObject parentProcess;
 
     public void build() {
-        ProcessStatusObject processStatus = process.getStatus();
+        ProcessStatusObject processStatus = this.process.getStatus();
 
         processStatus.die();
 
         List<ProcessLifeProcessorEndFunction> resolvers = this.processorMediator.getEnds();
 
         for (ProcessLifeProcessorEndFunction resolver : resolvers) {
-            process = resolver.apply(this.parentProcess, this.process);
+            this.process = resolver.apply(this.process, this.parentProcess);
         }
 
         processStatus.zombie();
 
         this.delete();
+
+        this.process = null;
     }
 
     private void delete() {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
-        processRepository.delete(processRepository.get(process.getID()));
+        processRepository.delete(processRepository.get(this.process.getID()));
     }
 }

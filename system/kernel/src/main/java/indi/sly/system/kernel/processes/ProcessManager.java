@@ -32,10 +32,10 @@ public class ProcessManager extends AManager {
 
     @Override
     public void startup(long startup) {
-        if (startup == StartupType.STEP_INIT) {
+        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT)) {
             this.factory = this.factoryManager.create(ProcessFactory.class);
             this.factory.init();
-        } else if (startup == StartupType.STEP_KERNEL) {
+        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_KERNEL)) {
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
 
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();

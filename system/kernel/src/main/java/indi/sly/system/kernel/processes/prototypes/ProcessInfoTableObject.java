@@ -171,7 +171,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
     }
 
     public synchronized ProcessInfoEntryObject create(UUID id, InfoStatusDefinition status, long openAttribute) {
-        if (ValueUtil.isAnyNullOrEmpty(id) || ObjectUtil.isAnyNull(status) || openAttribute == InfoOpenAttributeType.CLOSE) {
+        if (ValueUtil.isAnyNullOrEmpty(id) || ObjectUtil.isAnyNull(status) || LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.CLOSE)) {
             throw new ConditionParametersException();
         }
 

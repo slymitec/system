@@ -43,14 +43,14 @@ public class ProcessCreateTokenRuleResolver extends AResolver implements IProces
 
             Set<UUID> roles = new HashSet<>(processToken.getRoles());
             long processContextType = processContext.getType();
-            if (processContextType == ProcessContextType.SERVICE) {
+            if (LogicalUtil.isAllExist(processContextType, ProcessContextType.SERVICE)) {
                 ApplicationDefinition processContextApplication = processContext.getApplication();
                 if (ObjectUtil.allNotNull(processContextApplication)) {
                     roles.add(processContextApplication.getID());
                 }
-            } else if (processContextType == ProcessContextType.BATCH) {
+            } else if (LogicalUtil.isAllExist(processContextType, ProcessContextType.BATCH)) {
                 roles.add(configuration.SECURITY_ROLE_BATCHES_ID);
-            } else if (processContextType == ProcessContextType.EXECUTABLE) {
+            } else if (LogicalUtil.isAllExist(processContextType, ProcessContextType.EXECUTABLE)) {
                 roles.add(configuration.SECURITY_ROLE_EXECUTABLE_ID);
             }
 

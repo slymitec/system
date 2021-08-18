@@ -21,7 +21,7 @@ import javax.inject.Named;
 public class JobProcessAndThreadResolver extends AResolver implements IJobResolver {
     public JobProcessAndThreadResolver() {
         this.start = (job, status) -> {
-            if (LogicalUtil.isAnyExist(job.getAttribute(), JobAttributeType.HAS_PROCESS)
+            if (LogicalUtil.isAllExist(job.getAttribute(), JobAttributeType.HAS_PROCESS)
                     && !ValueUtil.isAnyNullOrEmpty(job.getProcessID())) {
                 ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
                 ThreadObject thread = threadManager.create(job.getProcessID());
@@ -32,7 +32,7 @@ public class JobProcessAndThreadResolver extends AResolver implements IJobResolv
         };
 
         this.finish = (job, status) -> {
-            if (LogicalUtil.isAnyExist(job.getAttribute(), JobAttributeType.HAS_PROCESS)
+            if (LogicalUtil.isAllExist(job.getAttribute(), JobAttributeType.HAS_PROCESS)
                     && !ValueUtil.isAnyNullOrEmpty(job.getProcessID())) {
                 ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
                 ThreadObject thread = threadManager.getCurrent();

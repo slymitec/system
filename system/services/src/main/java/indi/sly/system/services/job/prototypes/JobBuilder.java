@@ -36,7 +36,7 @@ public class JobBuilder extends ABuilder {
         job.setID(UUIDUtil.createRandom());
         job.setAttribute(attribute);
         job.setName(name);
-        if (LogicalUtil.isAnyExist(job.getAttribute(), JobAttributeType.HAS_PROCESS)
+        if (LogicalUtil.isAllExist(job.getAttribute(), JobAttributeType.HAS_PROCESS)
                 && !ValueUtil.isAnyNullOrEmpty(processID)) {
             job.setProcessID(processID);
         }

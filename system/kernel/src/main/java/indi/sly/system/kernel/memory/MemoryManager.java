@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.memory;
 
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
@@ -20,7 +21,7 @@ import java.util.UUID;
 public class MemoryManager extends AManager {
     @Override
     public void startup(long startup) {
-        if (startup == StartupType.STEP_INIT) {
+        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT)) {
             this.factoryManager.getCoreObjectRepository().addByHandle(SpaceType.KERNEL,
                     this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID,
                     this.factoryManager.create(DatabaseInfoRepositoryObject.class));
@@ -29,7 +30,7 @@ public class MemoryManager extends AManager {
                     this.factoryManager.create(ProcessRepositoryObject.class));
             this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL,
                     this.factoryManager.create(UserRepositoryObject.class));
-        } else if (startup == StartupType.STEP_KERNEL) {
+        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_KERNEL)) {
         }
     }
 

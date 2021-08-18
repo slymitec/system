@@ -38,7 +38,7 @@ public class JobInitializerResolver extends AResolver implements IJobResolver {
 
             try {
                 long initializerRunTransaction = JobTransactionType.WHATEVER;
-                if (LogicalUtil.isNotAnyExist(job.getAttribute(), JobAttributeType.HAS_NOT_TRANSACTION)) {
+                if (LogicalUtil.isAllExist(job.getAttribute(), JobAttributeType.HAS_NOT_TRANSACTION)) {
                     initializerRunTransaction = initializerRun.getTransaction();
                 }
 

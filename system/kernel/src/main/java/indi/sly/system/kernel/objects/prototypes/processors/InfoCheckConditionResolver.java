@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
@@ -20,11 +21,11 @@ import java.util.UUID;
 public class InfoCheckConditionResolver extends AResolver implements IInfoResolver {
     public InfoCheckConditionResolver() {
         this.open = (index, info, type, status, openAttribute, arguments) -> {
-            if (openAttribute == InfoOpenAttributeType.CLOSE
-                    || (openAttribute == InfoOpenAttributeType.OPEN_EXCLUSIVE && info.getOpened() > 0)
-                    || (openAttribute == InfoOpenAttributeType.OPEN_ONLY_READ && info.getOpened() > 0
+            if (LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.CLOSE)
+                    || (LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.OPEN_EXCLUSIVE) && info.getOpened() > 0)
+                    || (LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.OPEN_ONLY_READ) && info.getOpened() > 0
                     && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_SHARED_READ))
-                    || (openAttribute == InfoOpenAttributeType.OPEN_SHARED_WRITE
+                    || (LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.OPEN_SHARED_WRITE)
                     && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN))) {
                 throw new StatusNotSupportedException();
             }

@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.objects;
 
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.AManager;
@@ -20,10 +21,10 @@ public class ObjectManager extends AManager {
 
     @Override
     public void startup(long startup) {
-        if (startup == StartupType.STEP_INIT) {
+        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT)) {
             this.factory = this.factoryManager.create(InfoFactory.class);
             this.factory.init();
-        } else if (startup == StartupType.STEP_KERNEL) {
+        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_KERNEL)) {
             this.factory.buildRootInfo();
         }
     }

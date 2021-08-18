@@ -27,10 +27,10 @@ public class TypeManager extends AManager {
 
     @Override
     public void startup(long startup) {
-        if (startup == StartupType.STEP_INIT) {
+        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT)) {
             this.factory = this.factoryManager.create(TypeFactory.class);
             this.factory.init();
-        } else if (startup == StartupType.STEP_KERNEL) {
+        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_KERNEL)) {
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
             Set<UUID> childTypes = Set.of(UUIDUtil.getEmpty());

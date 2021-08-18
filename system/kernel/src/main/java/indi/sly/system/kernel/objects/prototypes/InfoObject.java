@@ -97,7 +97,7 @@ public class InfoObject extends AObject {
     public synchronized InfoObject getParent() {
         this.getSelf();
 
-        if (this.status.getIdentifications().size() == 0) {
+        if (this.status.getIdentifications().isEmpty()) {
             return null;
         } else {
             return this.processorMediator.getParent().apply(this.status);

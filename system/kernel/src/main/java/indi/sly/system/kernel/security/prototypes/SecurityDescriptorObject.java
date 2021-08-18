@@ -2,11 +2,11 @@ package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -449,7 +449,7 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
     }
 
     public void checkAudit(long audit) {
-        if (audit == AuditType.NULL) {
+        if (LogicalUtil.isAllExist(audit, AuditType.NULL)) {
             throw new ConditionParametersException();
         }
         if (!this.audit) {

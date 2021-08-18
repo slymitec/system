@@ -1,10 +1,7 @@
 package indi.sly.system.kernel.core.prototypes;
 
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.enviroment.values.ASpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -24,9 +21,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CoreObjectRepositoryObject extends AObject {
     private ASpaceDefinition<?> getSpace(long space) {
-        if (space == SpaceType.KERNEL) {
+        if (LogicalUtil.isAnyEqual(space, SpaceType.KERNEL)) {
             return this.factoryManager.getKernelSpace();
-        } else if (space == SpaceType.USER) {
+        } else if (LogicalUtil.isAnyEqual(space, SpaceType.USER)) {
             return this.factoryManager.getUserSpace();
         } else {
             throw new ConditionParametersException();
@@ -41,9 +38,9 @@ public class CoreObjectRepositoryObject extends AObject {
         }
 
         Lock readWriteLock = null;
-        if (lock == LockType.READ) {
+        if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
             readWriteLock = coreObjectLock.readLock();
-        } else if (lock == LockType.WRITE) {
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
             readWriteLock = coreObjectLock.writeLock();
         }
 

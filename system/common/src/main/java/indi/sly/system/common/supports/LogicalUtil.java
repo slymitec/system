@@ -45,22 +45,6 @@ public abstract class LogicalUtil {
         }
     }
 
-    public static boolean isNotAllExist(long source, long values) {
-        if ((source & values) == 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static boolean isNotAnyExist(long source, long values) {
-        if ((source & values) == values) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public static boolean isAnyEqual(long source, long... values) {
         if (ObjectUtil.isAnyNull(values) || values.length == 0) {
             return false;

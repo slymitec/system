@@ -3,6 +3,7 @@ package indi.sly.system.kernel.memory.repositories.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
@@ -77,9 +78,9 @@ public class ProcessRepositoryObject extends AObject {
         }
 
         LockModeType lockMode;
-        if (lock == LockType.READ) {
+        if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
             lockMode = LockModeType.PESSIMISTIC_READ;
-        } else if (lock == LockType.WRITE) {
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
             lockMode = LockModeType.PESSIMISTIC_WRITE;
         } else {
             lockMode = LockModeType.NONE;

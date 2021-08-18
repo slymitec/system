@@ -2,6 +2,7 @@ package indi.sly.system.services.job.instances.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
@@ -60,7 +61,7 @@ public class ThreadJobInitializer extends AJobInitializer {
         ThreadObject thread = threadManager.getCurrent();
 
         ThreadContextObject threadContext = thread.getContext();
-        if (threadContext.getType() != ThreadContextType.USER) {
+        if (LogicalUtil.allNotEqual(threadContext.getType(), ThreadContextType.USER)) {
             throw new StatusRelationshipErrorException();
         }
 

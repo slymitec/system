@@ -2,6 +2,7 @@ package indi.sly.system.kernel.core;
 
 import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.boot.values.StartupType;
@@ -28,7 +29,7 @@ import javax.inject.Named;
 public class FactoryManager extends AManager {
     @Override
     public void startup(long startup) {
-        if (startup == StartupType.STEP_INIT) {
+        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT)) {
             this.factoryManager = this;
             this.factoryManager.check();
 
@@ -50,7 +51,7 @@ public class FactoryManager extends AManager {
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(UserManager.class));
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(DateTimeObject.class));
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(SystemVersionObject.class));
-        } else if (startup == StartupType.STEP_KERNEL) {
+        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_KERNEL)) {
         }
     }
 

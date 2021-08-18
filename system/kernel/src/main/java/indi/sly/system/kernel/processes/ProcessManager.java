@@ -147,8 +147,8 @@ public class ProcessManager extends AManager {
         return processCreateBuilder.build(processCreator);
     }
 
-    private void deleteTarget(UUID processID) {
-        ProcessObject process = this.getTarget(processID);
+    public void endCurrent() {
+        ProcessObject process = this.getCurrent();
         ProcessObject parentProcess = null;
 
         if (ValueUtil.isAnyNullOrEmpty(process.getParentID())) {
@@ -159,36 +159,42 @@ public class ProcessManager extends AManager {
         processEndBuilder.build();
     }
 
-    public void endCurrent() {
-        ProcessObject process = this.getCurrent();
-
-        this.deleteTarget(process.getID());
-    }
-
-    public void end(UUID processID) {
-        this.end(processID, null);
-    }
-
-    public void end(UUID processID, AccountAuthorizationObject accountAuthorization) {
-        if (ValueUtil.isAnyNullOrEmpty(processID)) {
-            throw new ConditionParametersException();
-        }
-
-        ProcessObject currentProcess = this.getCurrent();
-        if (!currentProcess.getID().equals(processID)) {
-            ProcessTokenObject currentProcessToken = currentProcess.getToken();
-
-            ProcessObject process = this.getTarget(processID);
-            ProcessTokenObject processToken = process.getToken();
-
-            if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
-                    && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                    && !(ObjectUtil.allNotNull(accountAuthorization)
-                    && accountAuthorization.checkAndGetResult().getID().equals(processToken.getAccountID())))) {
-                throw new ConditionRefuseException();
-            }
-        }
-
-        this.deleteTarget(processID);
-    }
+//    private void deleteTarget(UUID processID) {
+//        ProcessObject process = this.getTarget(processID);
+//        ProcessObject parentProcess = null;
+//
+//        if (ValueUtil.isAnyNullOrEmpty(process.getParentID())) {
+//            parentProcess = this.getTarget(process.getParentID());
+//        }
+//
+//        ProcessEndBuilder processEndBuilder = this.factory.createProcessEnd(parentProcess, process);
+//        processEndBuilder.build();
+//    }
+//
+//    public void end(UUID processID) {
+//        this.end(processID, null);
+//    }
+//
+//    public void end(UUID processID, AccountAuthorizationObject accountAuthorization) {
+//        if (ValueUtil.isAnyNullOrEmpty(processID)) {
+//            throw new ConditionParametersException();
+//        }
+//
+//        ProcessObject currentProcess = this.getCurrent();
+//        if (!currentProcess.getID().equals(processID)) {
+//            ProcessTokenObject currentProcessToken = currentProcess.getToken();
+//
+//            ProcessObject process = this.getTarget(processID);
+//            ProcessTokenObject processToken = process.getToken();
+//
+//            if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
+//                    && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
+//                    && !(ObjectUtil.allNotNull(accountAuthorization)
+//                    && accountAuthorization.checkAndGetResult().getID().equals(processToken.getAccountID())))) {
+//                throw new ConditionRefuseException();
+//            }
+//        }
+//
+//        this.deleteTarget(processID);
+//    }
 }

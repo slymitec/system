@@ -44,7 +44,7 @@ public class ManagerJobInitializer extends AJobInitializer {
         this.register("processGet", this::processGet, JobTransactionType.INDEPENDENCE);
         this.register("processCreate", this::processCreate, JobTransactionType.INDEPENDENCE);
         this.register("processEndCurrent", this::processEndCurrent, JobTransactionType.INDEPENDENCE);
-        this.register("processEnd", this::processEnd, JobTransactionType.INDEPENDENCE);
+        //this.register("processEnd", this::processEnd, JobTransactionType.INDEPENDENCE);
 
         this.register("sessionGetAndOpen", this::sessionGetAndOpen, JobTransactionType.INDEPENDENCE);
         this.register("sessionEnd", this::sessionClose, JobTransactionType.INDEPENDENCE);
@@ -156,22 +156,22 @@ public class ManagerJobInitializer extends AJobInitializer {
         processManager.endCurrent();
     }
 
-    private void processEnd(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_ProcessID = content.getParameterOrDefault(UUID.class, "processID", null);
-        if (ValueUtil.isAnyNullOrEmpty(parameter_ProcessID)) {
-            throw new ConditionParametersException();
-        }
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        UUID parameter_accountAuthorizationID = content.getParameterOrDefault(UUID.class, "accountAuthorizationID", null);
-        if (ValueUtil.isAnyNullOrEmpty(parameter_accountAuthorizationID)) {
-            processManager.end(parameter_ProcessID);
-        } else {
-            AccountAuthorizationObject accountAuthorization = content.getCache(parameter_accountAuthorizationID);
-            processManager.end(parameter_ProcessID, accountAuthorization);
-        }
-    }
+//    private void processEnd(JobRunConsumer run, JobContentObject content) {
+//        UUID parameter_ProcessID = content.getParameterOrDefault(UUID.class, "processID", null);
+//        if (ValueUtil.isAnyNullOrEmpty(parameter_ProcessID)) {
+//            throw new ConditionParametersException();
+//        }
+//
+//        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+//
+//        UUID parameter_accountAuthorizationID = content.getParameterOrDefault(UUID.class, "accountAuthorizationID", null);
+//        if (ValueUtil.isAnyNullOrEmpty(parameter_accountAuthorizationID)) {
+//            processManager.end(parameter_ProcessID);
+//        } else {
+//            AccountAuthorizationObject accountAuthorization = content.getCache(parameter_accountAuthorizationID);
+//            processManager.end(parameter_ProcessID, accountAuthorization);
+//        }
+//    }
 
     private void sessionGetAndOpen(JobRunConsumer run, JobContentObject content) {
         UUID parameter_SessionID = content.getParameterOrDefault(UUID.class, "sessionID", null);

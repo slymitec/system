@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessSessionObject extends AValueProcessObject<ProcessEntity> {
+public class ProcessSessionObject extends AIndependentValueProcessObject<ProcessEntity> {
     protected ProcessObject process;
 
     private ProcessObject getParentProcessAndCheckIsCurrent() {

@@ -9,7 +9,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessContextDefinition;
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessContextObject extends ABytesValueProcessObject<ProcessContextDefinition> {
+public class ProcessContextObject extends AIndependentBytesValueProcessObject<ProcessContextDefinition> {
     protected ProcessObject process;
 
     private ProcessObject getParentProcessAndCheckIsCurrent() {

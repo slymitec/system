@@ -3,7 +3,7 @@ package indi.sly.system.kernel.objects.infotypes.prototypes;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeCounterDefinition;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
@@ -12,7 +12,7 @@ import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeT
 import java.util.Set;
 import java.util.UUID;
 
-public class TypeObject extends AValueProcessObject<TypeDefinition> {
+public class TypeObject extends AIndependentValueProcessObject<TypeDefinition> {
     public String getName() {
         this.init();
 

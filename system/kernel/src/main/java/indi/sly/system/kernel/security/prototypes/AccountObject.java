@@ -5,7 +5,7 @@ import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -23,7 +23,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AccountObject extends AValueProcessObject<AccountEntity> {
+public class AccountObject extends AIndependentValueProcessObject<AccountEntity> {
     public UUID getID() {
         this.init();
 

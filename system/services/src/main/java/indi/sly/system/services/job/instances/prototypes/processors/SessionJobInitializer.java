@@ -161,6 +161,6 @@ public class SessionJobInitializer extends AJobInitializer {
 
         //
 
-        processManager.end(parameter_ProcessID);
+        //processManager.end(parameter_ProcessID);
     }
 }

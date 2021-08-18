@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -31,7 +31,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCommunicationObject extends ABytesValueProcessObject<ProcessCommunicationDefinition> {
+public class ProcessCommunicationObject extends AIndependentBytesValueProcessObject<ProcessCommunicationDefinition> {
     protected ProcessObject process;
 
     public byte[] getShared() {

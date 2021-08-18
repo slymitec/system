@@ -7,14 +7,14 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class AValueProcessObject<T1, T2> extends AProcessObject<T1, T2> {
-    protected T1 value;
+public abstract class AIndependentValueProcessObject<T> extends AIndependentProcessObject<T> {
+    protected T value;
 
-    protected void read(T1 source) {
+    protected void read(T source) {
         this.value = source;
     }
 
-    protected T1 write() {
+    protected T write() {
         return this.value;
     }
 }

@@ -28,8 +28,7 @@ public class InfoProcessInfoTableResolver extends AResolver implements IInfoReso
                 throw new StatusAlreadyFinishedException();
             }
 
-            processInfoTable.add(info.getID(), status, openAttribute);
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.create(info.getID(), status, openAttribute);
 
             return processInfoEntry.getIndex();
         };
@@ -45,7 +44,7 @@ public class InfoProcessInfoTableResolver extends AResolver implements IInfoReso
 
             ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
 
-            processInfoTable.delete(processInfoEntry.getIndex());
+            processInfoEntry.delete();
         };
 
 

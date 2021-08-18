@@ -13,7 +13,6 @@ import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteStatusConsumer
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
-import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -96,14 +95,6 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
             throw new StatusRelationshipErrorException();
         }
 
-        if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                return;
-            }
-        }
-
         try {
             this.lock(LockType.WRITE);
             this.init();
@@ -123,14 +114,6 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     public void zombie() {
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
-        }
-
-        if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionRefuseException();
-            }
         }
 
         ProcessCommunicationObject processCommunication = this.parent.getCommunication();

@@ -4,7 +4,10 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
-import indi.sly.system.common.supports.*;
+import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
@@ -18,48 +21,21 @@ import indi.sly.system.kernel.processes.values.ProcessInfoEntryDefinition;
 import indi.sly.system.kernel.processes.values.ProcessInfoTableDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
-import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfoTableDefinition, ProcessObject> {
-    private void checkStatusAndCurrentPermission() {
+    public synchronized Set<UUID> list() {
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
                 ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
-
-        if (!this.parent.isCurrent()) {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-            ProcessObject currentProcess = processManager.getCurrent();
-            ProcessTokenObject currentProcessToken = currentProcess.getToken();
-
-            if (!currentProcessToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
-                throw new ConditionRefuseException();
-            }
-        }
-    }
-
-    public Map<Long, Long> getDate(UUID index) {
-        this.checkStatusAndCurrentPermission();
-
-        this.init();
-
-        ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(index);
-
-        return CollectionUtil.unmodifiable(processInfoEntry.getDate());
-    }
-
-    public synchronized Set<UUID> list() {
-        this.checkStatusAndCurrentPermission();
 
         this.init();
 
@@ -77,8 +53,11 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
         }
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
         ProcessObject parentProcess = processManager.getCurrent();
+
+        if (LogicalUtil.allNotEqual(parentProcess.getStatus().get(), ProcessStatusType.RUNNING)) {
+            throw new StatusRelationshipErrorException();
+        }
 
         if (!parentProcess.getID().equals(this.parent.getParentID())) {
             throw new ConditionRefuseException();
@@ -89,7 +68,6 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
         try {
             this.lock(LockType.WRITE);
             this.init();
-
             parentProcessInfoTable.lock(LockType.WRITE);
             parentProcessInfoTable.init();
 
@@ -110,7 +88,10 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new ConditionParametersException();
         }
 
-        this.checkStatusAndCurrentPermission();
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
+                ProcessStatusType.DIED)) {
+            throw new StatusRelationshipErrorException();
+        }
 
         this.init();
 
@@ -122,7 +103,10 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new ConditionParametersException();
         }
 
-        this.checkStatusAndCurrentPermission();
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
+                ProcessStatusType.DIED)) {
+            throw new StatusRelationshipErrorException();
+        }
 
         this.init();
 
@@ -134,7 +118,13 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new ConditionParametersException();
         }
 
-        this.checkStatusAndCurrentPermission();
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
+                ProcessStatusType.DIED)) {
+            throw new StatusRelationshipErrorException();
+        }
+        if (!this.parent.isCurrent()) {
+            throw new StatusRelationshipErrorException();
+        }
 
         ProcessInfoEntryObject processInfoEntry = this.factoryManager.create(ProcessInfoEntryObject.class);
 
@@ -161,7 +151,13 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new ConditionParametersException();
         }
 
-        this.checkStatusAndCurrentPermission();
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
+                ProcessStatusType.DIED)) {
+            throw new StatusRelationshipErrorException();
+        }
+        if (!this.parent.isCurrent()) {
+            throw new StatusRelationshipErrorException();
+        }
 
         ProcessInfoEntryObject processInfoEntry = this.factoryManager.create(ProcessInfoEntryObject.class);
 
@@ -184,12 +180,18 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
         return processInfoEntry;
     }
 
-    public synchronized void add(UUID id, InfoStatusDefinition status, long openAttribute) {
+    public synchronized ProcessInfoEntryObject create(UUID id, InfoStatusDefinition status, long openAttribute) {
         if (ValueUtil.isAnyNullOrEmpty(id) || ObjectUtil.isAnyNull(status) || openAttribute == InfoOpenAttributeType.CLOSE) {
             throw new ConditionParametersException();
         }
 
-        this.checkStatusAndCurrentPermission();
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
+                ProcessStatusType.DIED)) {
+            throw new StatusRelationshipErrorException();
+        }
+        if (!this.parent.isCurrent()) {
+            throw new StatusRelationshipErrorException();
+        }
 
         if (this.value.size() >= this.parent.getToken().getLimits().get(ProcessTokenLimitType.INDEX_MAX)) {
             throw new StatusInsufficientResourcesException();
@@ -220,25 +222,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
         } finally {
             this.lock(LockType.NONE);
         }
-    }
 
-    public synchronized void delete(UUID index) {
-        if (ValueUtil.isAnyNullOrEmpty(index)) {
-            throw new ConditionParametersException();
-        }
-
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(index);
-            processInfoEntry.getInfoOpen().setAttribute(InfoOpenAttributeType.CLOSE);
-
-            this.value.delete(processInfoEntry.getIndex());
-
-            this.fresh();
-        } finally {
-            this.lock(LockType.NONE);
-        }
+        return this.getByIndex(index);
     }
 }

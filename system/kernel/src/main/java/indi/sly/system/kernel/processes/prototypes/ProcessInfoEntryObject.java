@@ -12,6 +12,7 @@ import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
+import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.processes.values.ProcessInfoEntryDefinition;
 import indi.sly.system.kernel.processes.values.ProcessInfoTableDefinition;
@@ -166,5 +167,23 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         }
 
         return info;
+    }
+
+    public synchronized void delete() {
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(index);
+            processInfoEntry.getInfoOpen().setAttribute(InfoOpenAttributeType.CLOSE);
+
+            this.value.delete(processInfoEntry.getIndex());
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+
+        this.index = null;
     }
 }

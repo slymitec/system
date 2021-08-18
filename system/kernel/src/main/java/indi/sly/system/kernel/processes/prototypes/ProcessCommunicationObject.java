@@ -36,7 +36,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }
@@ -60,7 +60,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }
@@ -100,7 +100,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }
@@ -164,7 +164,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }
@@ -201,7 +201,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }
@@ -239,7 +239,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }
@@ -267,7 +267,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }
@@ -293,7 +293,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }
@@ -355,7 +355,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }
@@ -412,7 +412,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }
@@ -447,7 +447,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }
@@ -473,7 +473,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }
@@ -501,7 +501,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (!this.parent.isCurrent()) {
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
                 throw new ConditionRefuseException();
             }
         }

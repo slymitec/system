@@ -83,10 +83,6 @@ public class ProcessManager extends AManager {
         return this.getTarget(thread.getProcessID());
     }
 
-    public ProcessObject get(UUID processID) {
-        return this.get(processID, null);
-    }
-
     public ProcessObject get(UUID processID, AccountAuthorizationObject accountAuthorization) {
         if (ValueUtil.isAnyNullOrEmpty(processID)) {
             throw new ConditionParametersException();
@@ -95,21 +91,25 @@ public class ProcessManager extends AManager {
         ProcessObject currentProcess = this.getCurrent();
         if (currentProcess.getID().equals(processID)) {
             return currentProcess;
-        } else {
-            ProcessTokenObject currentProcessToken = currentProcess.getToken();
-
-            ProcessObject process = this.getTarget(processID);
-            ProcessTokenObject processToken = process.getToken();
-
-            if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
-                    && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                    && !(ObjectUtil.allNotNull(accountAuthorization)
-                    && accountAuthorization.checkAndGetResult().getID().equals(processToken.getAccountID())))) {
-                throw new ConditionRefuseException();
-            }
-
-            return process;
         }
+
+        ProcessObject process = this.getTarget(processID);
+
+        ProcessTokenObject processToken = process.getToken();
+        ProcessTokenObject currentProcessToken = currentProcess.getToken();
+
+        if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
+                && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
+                && !(ObjectUtil.allNotNull(accountAuthorization)
+                && accountAuthorization.checkAndGetResult().getID().equals(processToken.getAccountID())))) {
+            throw new ConditionRefuseException();
+        }
+
+        return process;
+    }
+
+    public ProcessObject get(UUID processID) {
+        return this.get(processID, null);
     }
 
     public ProcessObject create(AccountAuthorizationObject accountAuthorization,

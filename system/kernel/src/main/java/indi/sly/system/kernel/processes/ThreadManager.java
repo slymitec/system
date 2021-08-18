@@ -63,7 +63,14 @@ public class ThreadManager extends AManager {
     public ThreadObject create(UUID processID) {
         ThreadBuilder threadBuilder = this.factory.createThread();
 
-        return threadBuilder.create(processID);
+        ThreadObject thread = threadBuilder.create(processID);
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessStatisticsObject processStatistics = process.getStatistics();
+        processStatistics.addThreadCumulation(1);
+
+        return thread;
     }
 
     public void end() {

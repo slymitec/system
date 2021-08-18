@@ -4,6 +4,7 @@ import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteStatusConsumer;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
@@ -22,9 +23,12 @@ public class ProcessStatisticsResolver extends AResolver implements IProcessReso
         this.readProcessStatus = (status, process) -> status;
         this.writeProcessStatus = (process, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject currentProcess = processManager.getCurrent();
 
-            ProcessStatisticsObject processStatistics = processManager.get(process.getID()).getStatistics();
-            processStatistics.addStatusCumulation(1);
+            if (process.getID().equals(currentProcess.getID())) {
+                ProcessStatisticsObject processStatistics = currentProcess.getStatistics();
+                processStatistics.addStatusCumulation(1);
+            }
         };
     }
 

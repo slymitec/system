@@ -52,12 +52,13 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
-            throw new StatusRelationshipErrorException();
-        }
         if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+            throw new StatusRelationshipErrorException();
+        }
+
 
         ProcessTokenObject processToken = this.parent.getToken();
         if (shared.length > processToken.getLimits().get(ProcessTokenLimitType.SHARED_LENGTH_MAX)) {
@@ -98,11 +99,11 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
-            throw new StatusRelationshipErrorException();
-        }
         if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
+        }
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+            throw new StatusRelationshipErrorException();
         }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
@@ -530,15 +531,16 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         return CollectionUtil.unmodifiable(signalEntries);
     }
 
-    public void sendSignal(ProcessObject targetProcess, long key, long value) {
-        if (ObjectUtil.isAnyNull(targetProcess)) {
+    public void sendSignal(UUID signalID, long key, long value) {
+        if (ValueUtil.isAnyNullOrEmpty(signalID)) {
             throw new ConditionParametersException();
+        }
+        if (!this.parent.isCurrent()) {
+            throw new ConditionRefuseException();
         }
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
-
-        UUID signalID = targetProcess.getCommunication().getSignalID();
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 

@@ -58,6 +58,9 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
         for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
             resolver.accept(this.value, ProcessStatusType.INITIALIZATION);
         }
+
+        ProcessStatisticsObject processStatus = this.parent.getStatistics();
+        processStatus.addStatusCumulation(1);
     }
 
     public void run() {
@@ -116,7 +119,6 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
                 ProcessStatusType.INTERRUPTED, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
-
 
         try {
             this.lock(LockType.WRITE);

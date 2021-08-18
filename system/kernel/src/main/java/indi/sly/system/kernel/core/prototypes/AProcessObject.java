@@ -73,12 +73,12 @@ public abstract class AProcessObject<T1, T2> extends AObject {
             throw new ConditionContextException();
         }
 
-        T1 value = this.funcRead.acquire();
-        this.read(value);
-
         if (ObjectUtil.allNotNull(this.funcParentInit)) {
             this.funcParentInit.accept();
         }
+
+        T1 value = this.funcRead.acquire();
+        this.read(value);
     }
 
     protected final void fresh() {

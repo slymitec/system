@@ -50,13 +50,16 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
             throw new ConditionRefuseException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        this.value.setPassword(password);
+            this.value.setPassword(password);
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public Set<GroupObject> getGroups() {
@@ -88,23 +91,26 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
             throw new ConditionRefuseException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
         UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
-        if (ObjectUtil.isAnyNull(this.value.getGroups())) {
-            this.value.setGroups(new ArrayList<>());
-        } else {
-            this.value.getGroups().clear();
-        }
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        for (GroupObject group : groups) {
-            this.value.getGroups().add(accountGroupRepository.getGroup(group.getID()));
-        }
+            if (ObjectUtil.isAnyNull(this.value.getGroups())) {
+                this.value.setGroups(new ArrayList<>());
+            } else {
+                this.value.getGroups().clear();
+            }
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            for (GroupObject group : groups) {
+                this.value.getGroups().add(accountGroupRepository.getGroup(group.getID()));
+            }
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public UserTokenObject getToken() {

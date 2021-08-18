@@ -74,12 +74,14 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
             throw new StatusDisabilityException();
         }
 
+        this.init();
+
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
         if (this.permission) {
             if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                     && !this.value.getOwners().contains(processToken.getAccountID())
-                    && !this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                    && this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
                 throw new ConditionPermissionException();
             }
         }
@@ -87,8 +89,6 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
         if (this.audit) {
             this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
         }
-
-        this.init();
 
         List<SecurityDescriptorSummaryDefinition> securityDescriptorSummaries = new ArrayList<>();
 
@@ -144,19 +144,19 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
             throw new StatusDisabilityException();
         }
 
+        this.init();
+
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
         if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                && this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionException();
         }
 
         if (this.audit) {
             this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
         }
-
-        this.init();
 
         return this.value.isInherit();
     }
@@ -168,23 +168,26 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
-            throw new ConditionPermissionException();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                    && !this.value.getOwners().contains(processToken.getAccountID())
+                    && this.allowPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
+                throw new ConditionPermissionException();
+            }
+
+            if (this.audit) {
+                this.checkAudit(AuditType.CHANGEPERMISSIONDESCRIPTOR);
+            }
+
+            this.value.setInherit(inherit);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        if (this.audit) {
-            this.checkAudit(AuditType.CHANGEPERMISSIONDESCRIPTOR);
-        }
-
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.setInherit(inherit);
-
-        this.fresh();
-        this.lock(LockType.NONE);
     }
 
     public boolean isHasChild() {
@@ -194,13 +197,13 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
+        this.init();
+
         if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                && this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionRefuseException();
         }
-
-        this.init();
 
         return this.value.isHasChild();
     }
@@ -212,17 +215,17 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
+        this.init();
+
         if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                 && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                && this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
             throw new ConditionPermissionException();
         }
 
         if (this.audit) {
             this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
         }
-
-        this.init();
 
         return CollectionUtil.unmodifiable(this.value.getOwners());
     }
@@ -237,26 +240,31 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if ((!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowPermission(PermissionType.TAKEONWERSHIP_ALLOW))
-                || (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                && !owners.contains(processToken.getAccountID()))) {
-            throw new ConditionPermissionException();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+
+            if ((!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                    && !this.value.getOwners().contains(processToken.getAccountID())
+                    && this.allowPermission(PermissionType.TAKEONWERSHIP_ALLOW))
+                    || (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                    && !owners.contains(processToken.getAccountID()))) {
+                throw new ConditionPermissionException();
+            }
+
+            if (this.audit) {
+                this.checkAudit(AuditType.TAKEONWERSHIP);
+            }
+
+
+            this.value.getOwners().clear();
+            this.value.getOwners().addAll(owners);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        if (this.audit) {
-            this.checkAudit(AuditType.TAKEONWERSHIP);
-        }
-
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.getOwners().clear();
-        this.value.getOwners().addAll(owners);
-
-        this.fresh();
-        this.lock(LockType.NONE);
     }
 
     private boolean allowPermission(long permission) {
@@ -271,8 +279,10 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
         if (processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)) {
-            return true;
+            return false;
         }
+
+        this.init();
 
         List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
         for (SecurityDescriptorObject securityDescriptor : this.parents) {
@@ -284,8 +294,6 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
                 securityDescriptors.clear();
             }
         }
-
-        this.init();
 
         securityDescriptors.add(this.value);
 
@@ -344,30 +352,30 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
-                    return false;
+                    return true;
                 }
             } else if (pairUserID.getType() == UserType.ACCOUNT && accountID.equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(permission, pair.getValue())) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
-                    return false;
+                    return true;
                 }
             } else if (pairUserID.getType() == UserType.ROLE && roles.contains(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(permission, pair.getValue())) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
-                    return false;
+                    return true;
                 }
             }
         }
 
-        return allow;
+        return !allow;
     }
 
     public void checkPermission(long permission) {
-        if (!this.allowPermission(permission)) {
+        if (this.allowPermission(permission)) {
             throw new ConditionPermissionException();
         }
     }
@@ -380,36 +388,40 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
             throw new StatusDisabilityException();
         }
 
-        for (AccessControlDefinition permission : permissions) {
-            if (!this.value.isHasChild() && LogicalUtil.isAnyExist(permission.getScope(),
-                    LogicalUtil.or(AccessControlScopeType.CHILD_HAS_CHILD,
-                            AccessControlScopeType.CHILD_HAS_NOT_CHILD,
-                            AccessControlScopeType.HIERARCHICAL_HAS_CHILD,
-                            AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD))) {
-                throw new ConditionParametersException();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            for (AccessControlDefinition permission : permissions) {
+                if (!this.value.isHasChild() && LogicalUtil.isAnyExist(permission.getScope(),
+                        LogicalUtil.or(AccessControlScopeType.CHILD_HAS_CHILD,
+                                AccessControlScopeType.CHILD_HAS_NOT_CHILD,
+                                AccessControlScopeType.HIERARCHICAL_HAS_CHILD,
+                                AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD))) {
+                    throw new ConditionParametersException();
+                }
             }
+
+            ProcessTokenObject processToken = this.getCurrentProcessToken();
+
+            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                    && !this.value.getOwners().contains(processToken.getAccountID())
+                    && this.allowPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
+                throw new ConditionPermissionException();
+            }
+
+            if (this.audit) {
+                this.checkAudit(AuditType.CHANGEPERMISSIONDESCRIPTOR);
+            }
+
+
+            this.value.getPermissions().clear();
+            this.value.getPermissions().addAll(permissions);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        ProcessTokenObject processToken = this.getCurrentProcessToken();
-
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
-            throw new ConditionPermissionException();
-        }
-
-        if (this.audit) {
-            this.checkAudit(AuditType.CHANGEPERMISSIONDESCRIPTOR);
-        }
-
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.getPermissions().clear();
-        this.value.getPermissions().addAll(permissions);
-
-        this.fresh();
-        this.lock(LockType.NONE);
     }
 
     private void writeAudit(Set<UserIDDefinition> userIDs, long value) {
@@ -426,7 +438,7 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
             UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().SECURITY_INSTANCE_AUDIT_ID;
 
             InfoObject audits = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-            InfoObject audit = null;
+            InfoObject audit;
 
             try {
                 audits = audits.getChild(new IdentificationDefinition(accountName));
@@ -458,6 +470,8 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
+        this.init();
+
         List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
         for (SecurityDescriptorObject pair : this.parents) {
             pair.init();
@@ -468,8 +482,6 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
                 securityDescriptors.clear();
             }
         }
-
-        this.init();
 
         securityDescriptors.add(this.value);
 
@@ -546,19 +558,22 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (this.permission && !processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getOwners().contains(processToken.getAccountID())
-                && !this.allowPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
-            throw new ConditionAuditException();
+        try {
+            if (this.permission && !processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                    && !this.value.getOwners().contains(processToken.getAccountID())
+                    && this.allowPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW)) {
+                throw new ConditionAuditException();
+            }
+
+            this.lock(LockType.WRITE);
+            this.init();
+
+            this.value.getAudits().clear();
+            this.value.getAudits().addAll(audits);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.getAudits().clear();
-        this.value.getAudits().addAll(audits);
-
-        this.fresh();
-        this.lock(LockType.NONE);
     }
 }

@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
@@ -48,7 +48,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -72,7 +72,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -96,7 +96,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -120,7 +120,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -144,7 +144,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -168,7 +168,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -192,7 +192,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -216,7 +216,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -240,7 +240,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -264,7 +264,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -288,7 +288,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -312,7 +312,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -336,7 +336,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -360,7 +360,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -384,7 +384,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -408,7 +408,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -432,7 +432,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -456,7 +456,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -480,7 +480,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -504,7 +504,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -528,7 +528,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -552,7 +552,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -576,7 +576,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -600,7 +600,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -624,7 +624,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -648,7 +648,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -672,7 +672,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);
@@ -696,7 +696,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            throw new StatusRelationshipErrorException();
         }
 
         this.lock(LockType.WRITE);

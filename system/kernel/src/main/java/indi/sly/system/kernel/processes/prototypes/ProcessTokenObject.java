@@ -31,8 +31,8 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.parent.isCurrent()) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -67,8 +67,8 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
     }
 
     public void inheritAccountID() {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.parent.isCurrent()) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -100,8 +100,8 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
     }
 
     public void inheritPrivileges() {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.parent.isCurrent()) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -127,8 +127,8 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
     }
 
     public void inheritPrivileges(long privileges) {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.parent.isCurrent()) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -154,25 +154,8 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
     }
 
     public void setPrivileges(long privileges) {
-        if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
-            if (this.parent.isCurrent()) {
-                throw new StatusRelationshipErrorException();
-            } else {
-                ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-                ProcessObject process = processManager.getCurrent();
-
-                if (!process.getID().equals(parent.getParentID())) {
-                    throw new ConditionRefuseException();
-                }
-
-                ProcessTokenObject processToken = process.getToken();
-
-                if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-                    throw new ConditionRefuseException();
-                }
-            }
-        } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
-            if (!this.parent.isCurrent()) {
+        if (this.parent.isCurrent()) {
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
                 throw new StatusRelationshipErrorException();
             } else {
                 if (!this.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
@@ -180,7 +163,20 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
                 }
             }
         } else {
-            throw new StatusRelationshipErrorException();
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+                throw new StatusRelationshipErrorException();
+            }
+
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+            ProcessTokenObject processToken = process.getToken();
+
+            if (!process.getID().equals(parent.getParentID())) {
+                throw new ConditionRefuseException();
+            }
+            if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+                throw new ConditionRefuseException();
+            }
         }
 
         try {
@@ -211,8 +207,8 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
     }
 
     public void inheritLimits() {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.parent.isCurrent()) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -244,25 +240,8 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
-            if (this.parent.isCurrent()) {
-                throw new StatusRelationshipErrorException();
-            } else {
-                ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-                ProcessObject process = processManager.getCurrent();
-
-                if (!process.getID().equals(parent.getParentID())) {
-                    throw new ConditionRefuseException();
-                }
-
-                ProcessTokenObject processToken = process.getToken();
-
-                if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
-                    throw new ConditionRefuseException();
-                }
-            }
-        } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
-            if (!this.parent.isCurrent()) {
+        if (this.parent.isCurrent()) {
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
                 throw new StatusRelationshipErrorException();
             } else {
                 if (!this.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
@@ -270,7 +249,20 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
                 }
             }
         } else {
-            throw new StatusRelationshipErrorException();
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+                throw new StatusRelationshipErrorException();
+            }
+
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+            ProcessTokenObject processToken = process.getToken();
+
+            if (!process.getID().equals(parent.getParentID())) {
+                throw new ConditionRefuseException();
+            }
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
+                throw new ConditionRefuseException();
+            }
         }
 
         try {
@@ -292,7 +284,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
                 ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
-        
+
         this.init();
 
         return CollectionUtil.unmodifiable(this.value.getRoles());
@@ -303,8 +295,8 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.parent.isCurrent()) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 

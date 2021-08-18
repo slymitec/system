@@ -38,10 +38,7 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     }
 
     public void initialize() {
-        if (this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.NULL)) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.NULL)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -65,25 +62,32 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     }
 
     public void run() {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.INTERRUPTED)) {
+            throw new StatusRelationshipErrorException();
+        }
         if (!this.parent.isCurrent()) {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject currentProcess = processManager.getCurrent();
             ProcessSessionObject currentProcessSession = currentProcess.getSession();
             ProcessTokenObject currentProcessToken = currentProcess.getToken();
-
             ProcessSessionObject processSession = this.parent.getSession();
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!currentProcess.getID().equals(this.parent.getParentID())
-                    && !currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                    && currentProcessToken.getAccountID() != processToken.getAccountID()
-                    && currentProcessSession.getID() != processSession.getID()) {
-                throw new ConditionRefuseException();
+            if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+                if (!currentProcess.getID().equals(this.parent.getParentID())
+                        && !currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
+                        && currentProcessToken.getAccountID() != processToken.getAccountID()
+                        && currentProcessSession.getID() != processSession.getID()) {
+                    throw new ConditionRefuseException();
+                }
+            } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INTERRUPTED)) {
+                if (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
+                        && currentProcessToken.getAccountID() != processToken.getAccountID()
+                        && currentProcessSession.getID() != processSession.getID()) {
+                    throw new ConditionRefuseException();
+                }
             }
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
-                ProcessStatusType.INTERRUPTED)) {
-            throw new StatusRelationshipErrorException();
         }
 
         this.init();
@@ -96,24 +100,32 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     }
 
     public void interrupt() {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.RUNNING)) {
+            throw new StatusRelationshipErrorException();
+        }
         if (!this.parent.isCurrent()) {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject currentProcess = processManager.getCurrent();
             ProcessSessionObject currentProcessSession = currentProcess.getSession();
             ProcessTokenObject currentProcessToken = currentProcess.getToken();
-
             ProcessSessionObject processSession = this.parent.getSession();
             ProcessTokenObject processToken = this.parent.getToken();
 
-            if (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                    && currentProcessToken.getAccountID() != processToken.getAccountID()
-                    && currentProcessSession.getID() != processSession.getID()) {
-                throw new ConditionRefuseException();
+            if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+                if (!currentProcess.getID().equals(this.parent.getParentID())
+                        && !currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
+                        && currentProcessToken.getAccountID() != processToken.getAccountID()
+                        && currentProcessSession.getID() != processSession.getID()) {
+                    throw new ConditionRefuseException();
+                }
+            } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INTERRUPTED)) {
+                if (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
+                        && currentProcessToken.getAccountID() != processToken.getAccountID()
+                        && currentProcessSession.getID() != processSession.getID()) {
+                    throw new ConditionRefuseException();
+                }
             }
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
-                ProcessStatusType.RUNNING)) {
-            throw new StatusRelationshipErrorException();
         }
 
         try {
@@ -133,11 +145,8 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     }
 
     public void die() {
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
-                ProcessStatusType.INTERRUPTED, ProcessStatusType.DIED)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING, ProcessStatusType.INTERRUPTED, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -158,10 +167,8 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     }
 
     public void zombie() {
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.DIED)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 

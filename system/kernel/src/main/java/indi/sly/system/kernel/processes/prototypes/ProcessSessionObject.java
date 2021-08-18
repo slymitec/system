@@ -25,8 +25,8 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
     }
 
     public void inheritID() {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.parent.isCurrent()) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 

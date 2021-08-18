@@ -29,10 +29,8 @@ import java.util.*;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessCommunicationObject extends ABytesValueProcessObject<ProcessCommunicationDefinition, ProcessObject> {
     public byte[] getShared() {
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -52,13 +50,10 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
-
 
         ProcessTokenObject processToken = this.parent.getToken();
         if (shared.length > processToken.getLimits().get(ProcessTokenLimitType.SHARED_LENGTH_MAX)) {
@@ -82,10 +77,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
     }
 
     public Set<UUID> getPortIDs() {
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -99,10 +92,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -162,10 +153,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
     }
 
     public void deleteAllPort() {
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -198,10 +187,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -235,10 +222,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -246,7 +231,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
+        List<IdentificationDefinition> identifications
+                = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
         InfoObject port = objectManager.get(identifications);
         port.open(InfoOpenAttributeType.OPEN_ONLY_READ);
@@ -262,10 +248,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -273,7 +257,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
+        List<IdentificationDefinition> identifications
+                = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
         InfoObject port = objectManager.get(identifications);
         port.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
@@ -287,10 +272,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -322,16 +305,15 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
+        List<IdentificationDefinition> identifications
+                = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
         InfoObject port = objectManager.get(identifications);
         port.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
@@ -345,10 +327,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
     }
 
     public UUID getSignalID() {
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -362,10 +342,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -418,10 +396,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
     }
 
     public void deleteSignal() {
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -437,7 +413,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-            List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Signals"));
+            List<IdentificationDefinition> identifications
+                    = List.of(new IdentificationDefinition("Signals"));
 
             InfoObject signals = objectManager.get(identifications);
             signals.deleteChild(new IdentificationDefinition(signalID));
@@ -452,10 +429,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
     }
 
     public Set<UUID> getSignalSourceProcessIDs() {
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -465,7 +440,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
         UUID signalID = this.value.getSignalID();
 
-        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
+        List<IdentificationDefinition> identifications
+                = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
         InfoObject signal = objectManager.get(identifications);
         signal.open(InfoOpenAttributeType.OPEN_ONLY_READ);
@@ -481,10 +457,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -494,7 +468,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
         UUID signalID = this.value.getSignalID();
 
-        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
+        List<IdentificationDefinition> identifications
+                = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
         InfoObject signal = objectManager.get(identifications);
         signal.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
@@ -504,10 +479,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
     }
 
     public List<SignalEntryDefinition> receiveSignals() {
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -517,7 +490,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
         UUID signalID = this.value.getSignalID();
 
-        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
+        List<IdentificationDefinition> identifications
+                = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
         InfoObject signal = objectManager.get(identifications);
         signal.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
@@ -535,16 +509,16 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         if (ValueUtil.isAnyNullOrEmpty(signalID)) {
             throw new ConditionParametersException();
         }
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
+        List<IdentificationDefinition> identifications
+                = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
         InfoObject signal = objectManager.get(identifications);
         signal.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);

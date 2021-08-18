@@ -35,8 +35,8 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
     }
 
     public void setType(long type) {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.parent.isCurrent()) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -75,8 +75,8 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.parent.isCurrent()) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -115,23 +115,21 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
-            if (this.parent.isCurrent()) {
-                throw new StatusRelationshipErrorException();
-            } else {
-                ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-                ProcessObject process = processManager.getCurrent();
-
-                if (!process.getID().equals(this.parent.getParentID())) {
-                    throw new ConditionRefuseException();
-                }
-            }
-        } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
-            if (!this.parent.isCurrent()) {
+        if (this.parent.isCurrent()) {
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
                 throw new StatusRelationshipErrorException();
             }
         } else {
-            throw new StatusRelationshipErrorException();
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+                throw new StatusRelationshipErrorException();
+            }
+
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+
+            if (!process.getID().equals(this.parent.getParentID())) {
+                throw new ConditionRefuseException();
+            }
         }
 
         try {
@@ -164,8 +162,8 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.parent.isCurrent()) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -204,23 +202,21 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
-            if (this.parent.isCurrent()) {
-                throw new StatusRelationshipErrorException();
-            } else {
-                ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-                ProcessObject process = processManager.getCurrent();
-
-                if (!process.getID().equals(this.parent.getParentID())) {
-                    throw new ConditionRefuseException();
-                }
-            }
-        } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
-            if (!this.parent.isCurrent()) {
+        if (this.parent.isCurrent()) {
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
                 throw new StatusRelationshipErrorException();
             }
         } else {
-            throw new StatusRelationshipErrorException();
+            if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+                throw new StatusRelationshipErrorException();
+            }
+
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+
+            if (!process.getID().equals(this.parent.getParentID())) {
+                throw new ConditionRefuseException();
+            }
         }
 
         try {

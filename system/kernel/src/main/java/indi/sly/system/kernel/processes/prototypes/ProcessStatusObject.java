@@ -38,7 +38,8 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     }
 
     public void initialize() {
-        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.NULL)) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.NULL)) {
             throw new StatusRelationshipErrorException();
         }
 

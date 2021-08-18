@@ -1,8 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.kernel.core.prototypes.AObject;
-import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ThreadDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -34,6 +32,7 @@ public class ThreadObject extends AObject {
     public synchronized ThreadStatusObject getStatus() {
         ThreadStatusObject threadStatus = this.factoryManager.create(ThreadStatusObject.class);
 
+        threadStatus.setParent(this);
         threadStatus.setSource(() -> this.thread, (source) -> {
         });
 
@@ -41,25 +40,19 @@ public class ThreadObject extends AObject {
     }
 
     public synchronized ThreadContextObject getContext() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.get(this.getProcessID());
-
         ThreadContextObject threadContext = this.factoryManager.create(ThreadContextObject.class);
 
+        threadContext.setParent(this);
         threadContext.setSource(this.thread::getContext, this.thread::setContext);
-        threadContext.process = process;
 
         return threadContext;
     }
 
     public synchronized ThreadStatisticsObject getStatistics() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.get(this.getProcessID());
-
         ThreadStatisticsObject threadStatistics = this.factoryManager.create(ThreadStatisticsObject.class);
 
+        threadStatistics.setParent(this);
         threadStatistics.setSource(this.thread::getStatistics, this.thread::setStatistics);
-        threadStatistics.process = process;
 
         return threadStatistics;
     }

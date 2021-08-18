@@ -8,7 +8,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class ABytesValueProcessObject<T1, T2> extends AIndependentProcessObject<byte[]> {
+public abstract class ABytesValueProcessObject<T1, T2> extends AProcessObject<byte[], T2> {
     protected T1 value;
 
     protected void read(byte[] source) {

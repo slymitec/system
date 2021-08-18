@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.processes.values.ThreadDefinition;
 import indi.sly.system.kernel.processes.values.ThreadStatusType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -12,7 +12,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ThreadStatusObject extends AIndependentValueProcessObject<ThreadDefinition> {
+public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, ThreadObject> {
     public long get() {
         this.init();
 

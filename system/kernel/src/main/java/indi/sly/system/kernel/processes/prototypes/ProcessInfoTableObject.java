@@ -1,12 +1,15 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.lang.StatusInsufficientResourcesException;
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
@@ -20,20 +23,20 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessInfoTableObject extends AIndependentBytesValueProcessObject<ProcessInfoTableDefinition> {
-    protected ProcessObject process;
-
+public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfoTableDefinition, ProcessObject> {
     private void checkStatusAndCurrentPermission() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.RUNNING,
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
                 ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
             ProcessObject currentProcess = processManager.getCurrent();
@@ -68,8 +71,8 @@ public class ProcessInfoTableObject extends AIndependentBytesValueProcessObject<
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.process.isCurrent()) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
+                || this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -77,7 +80,7 @@ public class ProcessInfoTableObject extends AIndependentBytesValueProcessObject<
 
         ProcessObject parentProcess = processManager.getCurrent();
 
-        if (!parentProcess.getID().equals(this.process.getParentID())) {
+        if (!parentProcess.getID().equals(this.parent.getParentID())) {
             throw new ConditionRefuseException();
         }
 
@@ -139,11 +142,10 @@ public class ProcessInfoTableObject extends AIndependentBytesValueProcessObject<
             this.lock(LockType.WRITE);
             this.init();
 
-            processInfoEntry.setParent(this);
+            processInfoEntry.setParent(this.parent);
             processInfoEntry.setSource(() -> this.value, (ProcessInfoTableDefinition source) -> {
             });
             processInfoEntry.setLock(this::lock);
-            processInfoEntry.processToken = this.process.getToken();
             processInfoEntry.index = index;
 
             this.fresh();
@@ -169,10 +171,9 @@ public class ProcessInfoTableObject extends AIndependentBytesValueProcessObject<
 
             UUID index = this.value.getByID(id).getIndex();
 
-            processInfoEntry.setParent(this);
+            processInfoEntry.setParent(this.parent);
             processInfoEntry.setSource(() -> this.value, (ProcessInfoTableDefinition source) -> {
             });
-            processInfoEntry.processToken = this.process.getToken();
             processInfoEntry.index = index;
 
             this.fresh();
@@ -190,7 +191,7 @@ public class ProcessInfoTableObject extends AIndependentBytesValueProcessObject<
 
         this.checkStatusAndCurrentPermission();
 
-        if (this.value.size() >= this.process.getToken().getLimits().get(ProcessTokenLimitType.INDEX_MAX)) {
+        if (this.value.size() >= this.parent.getToken().getLimits().get(ProcessTokenLimitType.INDEX_MAX)) {
             throw new StatusInsufficientResourcesException();
         }
 

@@ -6,13 +6,13 @@ import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
+import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.values.ProcessContextDefinition;
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
+import indi.sly.system.kernel.processes.values.ProcessContextDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.processes.values.ThreadContextType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -24,15 +24,13 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessContextObject extends AIndependentBytesValueProcessObject<ProcessContextDefinition> {
-    protected ProcessObject process;
-
+public class ProcessContextObject extends ABytesValueProcessObject<ProcessContextDefinition, ProcessObject> {
     private ProcessObject getParentProcessAndCheckIsCurrent() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject currentProcess = processManager.getCurrent();
 
-        if (!currentProcess.getID().equals(process.getParentID())) {
+        if (!currentProcess.getID().equals(parent.getParentID())) {
             throw new ConditionRefuseException();
         }
 
@@ -50,7 +48,7 @@ public class ProcessContextObject extends AIndependentBytesValueProcessObject<Pr
     }
 
     public void setType(long type) {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.INTERRUPTED)) {
             throw new StatusRelationshipErrorException();
         }
@@ -81,7 +79,7 @@ public class ProcessContextObject extends AIndependentBytesValueProcessObject<Pr
             throw new ConditionParametersException();
         }
 
-        if (this.process.isCurrent()) {
+        if (this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -100,7 +98,7 @@ public class ProcessContextObject extends AIndependentBytesValueProcessObject<Pr
     }
 
     public Map<String, String> getEnvironmentVariables() {
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -114,7 +112,7 @@ public class ProcessContextObject extends AIndependentBytesValueProcessObject<Pr
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -143,7 +141,7 @@ public class ProcessContextObject extends AIndependentBytesValueProcessObject<Pr
             throw new ConditionParametersException();
         }
 
-        if (this.process.isCurrent()) {
+        if (this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -172,7 +170,7 @@ public class ProcessContextObject extends AIndependentBytesValueProcessObject<Pr
             throw new ConditionParametersException();
         }
 
-        if (this.process.isCurrent()) {
+        if (this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 

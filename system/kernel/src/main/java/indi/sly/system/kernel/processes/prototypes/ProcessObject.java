@@ -54,10 +54,10 @@ public class ProcessObject extends AObject {
 
         ProcessStatusObject processStatus = this.factoryManager.create(ProcessStatusObject.class);
 
+        processStatus.setParent(this);
         processStatus.processorMediator = this.processorMediator;
         processStatus.setSource(() -> process, (ProcessEntity source) -> {
         });
-        processStatus.process = this;
 
         return processStatus;
     }
@@ -67,6 +67,7 @@ public class ProcessObject extends AObject {
 
         ProcessCommunicationObject processCommunication = this.factoryManager.create(ProcessCommunicationObject.class);
 
+        processCommunication.setParent(this);
         processCommunication.setSource(() -> {
             Set<ProcessProcessorReadComponentFunction> methods = this.processorMediator.getReadProcessCommunications();
 
@@ -90,7 +91,6 @@ public class ProcessObject extends AObject {
 
             processRepository.lock(process, lock);
         });
-        processCommunication.process = this;
 
         return processCommunication;
     }
@@ -100,6 +100,7 @@ public class ProcessObject extends AObject {
 
         ProcessContextObject processContext = this.factoryManager.create(ProcessContextObject.class);
 
+        processContext.setParent(this);
         processContext.setSource(() -> {
             Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessContexts();
 
@@ -123,7 +124,6 @@ public class ProcessObject extends AObject {
 
             processRepository.lock(process, lock);
         });
-        processContext.process = this;
 
         return processContext;
     }
@@ -133,6 +133,7 @@ public class ProcessObject extends AObject {
 
         ProcessInfoTableObject processInfoTable = this.factoryManager.create(ProcessInfoTableObject.class);
 
+        processInfoTable.setParent(this);
         processInfoTable.setSource(() -> {
             Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessInfoTables();
 
@@ -156,7 +157,6 @@ public class ProcessObject extends AObject {
 
             processRepository.lock(process, lock);
         });
-        processInfoTable.process = this;
 
         return processInfoTable;
     }
@@ -166,6 +166,7 @@ public class ProcessObject extends AObject {
 
         ProcessSessionObject processSession = this.factoryManager.create(ProcessSessionObject.class);
 
+        processSession.setParent(this);
         processSession.setSource(() -> process, (processEntity -> {
         }));
         processSession.setLock((lock) -> {
@@ -174,7 +175,6 @@ public class ProcessObject extends AObject {
 
             processRepository.lock(process, lock);
         });
-        processSession.process = this;
         return processSession;
     }
 
@@ -183,6 +183,7 @@ public class ProcessObject extends AObject {
 
         ProcessStatisticsObject processStatistics = this.factoryManager.create(ProcessStatisticsObject.class);
 
+        processStatistics.setParent(this);
         processStatistics.setSource(() -> {
             Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessStatistics();
 
@@ -206,7 +207,6 @@ public class ProcessObject extends AObject {
 
             processRepository.lock(process, lock);
         });
-        processStatistics.process = this;
 
         return processStatistics;
     }
@@ -216,6 +216,7 @@ public class ProcessObject extends AObject {
 
         ProcessTokenObject processToken = this.factoryManager.create(ProcessTokenObject.class);
 
+        processToken.setParent(this);
         processToken.setSource(() -> {
             Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessTokens();
 
@@ -239,7 +240,6 @@ public class ProcessObject extends AObject {
 
             processRepository.lock(process, lock);
         });
-        processToken.process = this;
 
         return processToken;
     }

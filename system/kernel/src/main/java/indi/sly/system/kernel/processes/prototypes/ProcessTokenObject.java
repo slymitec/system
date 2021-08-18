@@ -4,34 +4,34 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
+import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
+import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
+import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
 import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
-import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessTokenObject extends AIndependentBytesValueProcessObject<ProcessTokenDefinition> {
-    protected ProcessObject process;
-
+public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDefinition, ProcessObject> {
     private ProcessObject getParentProcessAndCheckIsCurrent() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject currentProcess = processManager.getCurrent();
 
-        if (!currentProcess.getID().equals(process.getParentID())) {
+        if (!currentProcess.getID().equals(parent.getParentID())) {
             throw new ConditionRefuseException();
         }
 
@@ -47,8 +47,8 @@ public class ProcessTokenObject extends AIndependentBytesValueProcessObject<Proc
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.process.isCurrent()) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
+                || this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -75,8 +75,8 @@ public class ProcessTokenObject extends AIndependentBytesValueProcessObject<Proc
     }
 
     public void inheritAccountID() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.process.isCurrent()) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
+                || this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -96,8 +96,8 @@ public class ProcessTokenObject extends AIndependentBytesValueProcessObject<Proc
     }
 
     public void inheritPrivileges() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.process.isCurrent()) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
+                || this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -111,8 +111,8 @@ public class ProcessTokenObject extends AIndependentBytesValueProcessObject<Proc
     }
 
     public void inheritPrivileges(long privileges) {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.process.isCurrent()) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
+                || this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -127,12 +127,12 @@ public class ProcessTokenObject extends AIndependentBytesValueProcessObject<Proc
     }
 
     public void setPrivileges(long privileges) {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
-        if (this.process.isCurrent()) {
+        if (this.parent.isCurrent()) {
             if (!this.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
                 throw new ConditionRefuseException();
             }
@@ -164,8 +164,8 @@ public class ProcessTokenObject extends AIndependentBytesValueProcessObject<Proc
     }
 
     public void inheritLimits() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.process.isCurrent()) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
+                || this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -185,12 +185,12 @@ public class ProcessTokenObject extends AIndependentBytesValueProcessObject<Proc
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
-        if (this.process.isCurrent()) {
+        if (this.parent.isCurrent()) {
             if (!this.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
                 throw new ConditionRefuseException();
             }
@@ -224,8 +224,8 @@ public class ProcessTokenObject extends AIndependentBytesValueProcessObject<Proc
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.process.isCurrent()) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
+                || this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 

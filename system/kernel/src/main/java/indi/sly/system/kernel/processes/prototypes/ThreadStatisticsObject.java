@@ -1,10 +1,9 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.processes.values.ThreadStatisticsDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -13,9 +12,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ThreadStatisticsObject extends AIndependentValueProcessObject<ThreadStatisticsDefinition> {
-    protected ProcessObject process;
-
+public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatisticsDefinition, ThreadObject> {
     public long getDate(long dataTime) {
         this.init();
 
@@ -49,10 +46,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -71,10 +64,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addInfoGet(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -97,10 +86,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -119,10 +104,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addInfoDelete(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -145,10 +126,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -167,10 +144,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addInfoOpen(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -193,10 +166,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -215,10 +184,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addInfoRead(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -241,10 +206,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -263,10 +224,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addSharedReadCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -289,10 +246,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -311,10 +264,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addSharedWriteCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -337,10 +286,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -359,10 +304,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addPortCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -385,10 +326,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -407,10 +344,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addPortReadBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -433,10 +366,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -455,10 +384,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addPortWriteBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -481,10 +406,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -503,10 +424,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addSignalWriteCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -529,10 +446,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -551,10 +464,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addIoStatus(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -577,10 +486,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -599,10 +504,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addIoReadBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);
@@ -625,10 +526,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 
@@ -647,10 +544,6 @@ public class ThreadStatisticsObject extends AIndependentValueProcessObject<Threa
     public void addIoWriteBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
-        }
-
-        if (!this.process.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         this.lock(LockType.WRITE);

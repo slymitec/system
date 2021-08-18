@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.processes.values.ThreadContextDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -13,9 +13,7 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ThreadContextObject extends AIndependentValueProcessObject<ThreadContextDefinition> {
-    protected ProcessObject process;
-
+public class ThreadContextObject extends AValueProcessObject<ThreadContextDefinition, ThreadObject> {
     public long getType() {
         this.init();
 

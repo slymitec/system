@@ -2,9 +2,9 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
+import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.processes.values.ProcessStatisticsDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -13,9 +13,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject<ProcessStatisticsDefinition> {
-    protected ProcessObject process;
-
+public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessStatisticsDefinition, ProcessObject> {
     public long getDate(long dataTime) {
         this.init();
 
@@ -49,7 +47,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -73,7 +71,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -97,7 +95,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -121,7 +119,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -145,7 +143,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -169,7 +167,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -193,7 +191,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -217,7 +215,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -241,7 +239,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -265,7 +263,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -289,7 +287,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -313,7 +311,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -337,7 +335,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -361,7 +359,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -385,7 +383,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -409,7 +407,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -433,7 +431,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -457,7 +455,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -481,7 +479,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -505,7 +503,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -529,7 +527,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -553,7 +551,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -577,7 +575,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -601,7 +599,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -625,7 +623,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -649,7 +647,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -673,7 +671,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 
@@ -697,7 +695,7 @@ public class ProcessStatisticsObject extends AIndependentBytesValueProcessObject
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
+        if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
         }
 

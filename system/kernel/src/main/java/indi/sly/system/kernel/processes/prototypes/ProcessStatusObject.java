@@ -3,10 +3,10 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusIsUsedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteStatusConsumer;
@@ -22,10 +22,8 @@ import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessStatusObject extends AIndependentValueProcessObject<ProcessEntity> {
+public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, ProcessObject> {
     protected ProcessProcessorMediator processorMediator;
-
-    protected ProcessObject process;
 
     public long get() {
         Long status = ProcessStatusType.NULL;
@@ -40,8 +38,8 @@ public class ProcessStatusObject extends AIndependentValueProcessObject<ProcessE
     }
 
     public void initialize() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.NULL)
-                || this.process.isCurrent()) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.NULL)
+                || this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -63,7 +61,7 @@ public class ProcessStatusObject extends AIndependentValueProcessObject<ProcessE
     }
 
     public void run() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.INTERRUPTED)) {
             throw new StatusRelationshipErrorException();
         }
@@ -78,7 +76,7 @@ public class ProcessStatusObject extends AIndependentValueProcessObject<ProcessE
     }
 
     public void interrupt() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
@@ -93,13 +91,13 @@ public class ProcessStatusObject extends AIndependentValueProcessObject<ProcessE
     }
 
     public void die() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.RUNNING,
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
                 ProcessStatusType.INTERRUPTED, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 return;
@@ -123,20 +121,20 @@ public class ProcessStatusObject extends AIndependentValueProcessObject<ProcessE
     }
 
     public void zombie() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.DIED)) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
             }
         }
 
-        ProcessCommunicationObject processCommunication = this.process.getCommunication();
-        ProcessInfoTableObject processInfoTable = this.process.getInfoTable();
+        ProcessCommunicationObject processCommunication = this.parent.getCommunication();
+        ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
         if (!processCommunication.getPortIDs().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalID())
                 || !processInfoTable.list().isEmpty()) {
             throw new StatusIsUsedException();

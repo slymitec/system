@@ -2,27 +2,23 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
-import indi.sly.system.kernel.processes.values.ProcessCommunicationDefinition;
 import indi.sly.system.kernel.processes.instances.prototypes.PortContentObject;
 import indi.sly.system.kernel.processes.instances.prototypes.SignalContentObject;
 import indi.sly.system.kernel.processes.instances.values.SignalEntryDefinition;
+import indi.sly.system.kernel.processes.values.ProcessCommunicationDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
-import indi.sly.system.kernel.security.values.AccessControlScopeType;
-import indi.sly.system.kernel.security.values.PermissionType;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
-import indi.sly.system.kernel.security.values.PrivilegeType;
-import indi.sly.system.kernel.security.values.UserType;
-import indi.sly.system.kernel.security.values.AccessControlDefinition;
+import indi.sly.system.kernel.security.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -31,16 +27,14 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCommunicationObject extends AIndependentBytesValueProcessObject<ProcessCommunicationDefinition> {
-    protected ProcessObject process;
-
+public class ProcessCommunicationObject extends ABytesValueProcessObject<ProcessCommunicationDefinition, ProcessObject> {
     public byte[] getShared() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.RUNNING)) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
@@ -51,7 +45,7 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
 
         byte[] processCommunicationShared = this.value.getShared();
 
-        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addSharedReadCount(1);
         processStatistics.addSharedReadBytes(processCommunicationShared.length);
 
@@ -63,15 +57,15 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
             }
         }
 
-        ProcessTokenObject processToken = this.process.getToken();
+        ProcessTokenObject processToken = this.parent.getToken();
         if (shared.length > processToken.getLimits().get(ProcessTokenLimitType.SHARED_LENGTH_MAX)) {
             throw new ConditionRefuseException();
         }
@@ -87,7 +81,7 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
             this.lock(LockType.NONE);
         }
 
-        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addSharedWriteCount(1);
         processStatistics.addSharedWriteBytes(shared.length);
     }
@@ -103,8 +97,8 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
@@ -119,7 +113,7 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
             this.lock(LockType.WRITE);
             this.init();
 
-            ProcessTokenObject processToken = this.process.getToken();
+            ProcessTokenObject processToken = this.parent.getToken();
             if (this.value.getPortIDs().size() > processToken.getLimits().get(ProcessTokenLimitType.PORT_COUNT_MAX)) {
                 throw new ConditionRefuseException();
             }
@@ -160,15 +154,15 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
             this.lock(LockType.NONE);
         }
 
-        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addPortCount(1);
 
         return portID;
     }
 
     public void deleteAllPort() {
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
@@ -204,8 +198,8 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
@@ -242,8 +236,8 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
@@ -270,8 +264,8 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
@@ -296,8 +290,8 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
@@ -320,7 +314,7 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
         byte[] value = portContent.receive();
         port.close();
 
-        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addPortReadCount(1);
         processStatistics.addPortReadBytes(value.length);
 
@@ -342,7 +336,7 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
         portContent.send(value);
         port.close();
 
-        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addPortWriteCount(1);
         processStatistics.addPortWriteBytes(value.length);
     }
@@ -358,8 +352,8 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
             throw new ConditionParametersException();
         }
 
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
@@ -374,7 +368,7 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
                 throw new StatusAlreadyFinishedException();
             }
 
-            ProcessTokenObject processToken = this.process.getToken();
+            ProcessTokenObject processToken = this.parent.getToken();
 
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -415,8 +409,8 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
     }
 
     public void deleteSignal() {
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
@@ -450,8 +444,8 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
     }
 
     public Set<UUID> getSignalSourceProcessIDs() {
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
@@ -476,8 +470,8 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
     }
 
     public void setSignalSourceProcessIDs(Set<UUID> sourceProcessIDs) {
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
@@ -504,8 +498,8 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
     }
 
     public List<SignalEntryDefinition> receiveSignals() {
-        if (!this.process.isCurrent()) {
-            ProcessTokenObject processToken = this.process.getToken();
+        if (!this.parent.isCurrent()) {
+            ProcessTokenObject processToken = this.parent.getToken();
 
             if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_ANY_PROCESSES)) {
                 throw new ConditionRefuseException();
@@ -526,7 +520,7 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
         List<SignalEntryDefinition> signalEntries = signalContent.receive();
         signal.close();
 
-        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addSignalReadCount(signalEntries.size());
 
         return CollectionUtil.unmodifiable(signalEntries);
@@ -549,7 +543,7 @@ public class ProcessCommunicationObject extends AIndependentBytesValueProcessObj
         signalContent.send(key, value);
         signal.close();
 
-        ProcessStatisticsObject processStatistics = this.process.getStatistics();
+        ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addSignalWriteCount(1);
     }
 }

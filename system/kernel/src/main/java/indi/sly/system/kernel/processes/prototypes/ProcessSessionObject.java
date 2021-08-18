@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
@@ -17,15 +17,13 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessSessionObject extends AIndependentValueProcessObject<ProcessEntity> {
-    protected ProcessObject process;
-
+public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, ProcessObject> {
     private ProcessObject getParentProcessAndCheckIsCurrent() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject currentProcess = processManager.getCurrent();
 
-        if (!currentProcess.getID().equals(process.getParentID())) {
+        if (!currentProcess.getID().equals(parent.getParentID())) {
             throw new ConditionRefuseException();
         }
 
@@ -47,8 +45,8 @@ public class ProcessSessionObject extends AIndependentValueProcessObject<Process
     }
 
     public void inheritID() {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION)
-                || this.process.isCurrent()) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
+                || this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -62,7 +60,7 @@ public class ProcessSessionObject extends AIndependentValueProcessObject<Process
     }
 
     public void setID(UUID sessionID) {
-        if (LogicalUtil.allNotEqual(this.process.getStatus().get(), ProcessStatusType.INITIALIZATION,
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }

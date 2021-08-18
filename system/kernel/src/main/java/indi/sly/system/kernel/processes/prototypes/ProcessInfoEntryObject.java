@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
@@ -8,7 +9,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
@@ -24,8 +25,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessInfoEntryObject extends AIndependentValueProcessObject<ProcessInfoTableDefinition> {
-    protected ProcessTokenObject processToken;
+public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTableDefinition, ProcessObject> {
     protected UUID index;
 
     private boolean isExist() {
@@ -129,6 +129,9 @@ public class ProcessInfoEntryObject extends AIndependentValueProcessObject<Proce
     public synchronized InfoObject getInfo() {
         if (!this.isExist()) {
             throw new StatusNotExistedException();
+        }
+        if (!this.parent.isCurrent()) {
+            throw new StatusRelationshipErrorException();
         }
 
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);

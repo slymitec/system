@@ -13,6 +13,7 @@ import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteStatusConsumer
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -45,9 +46,9 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
         }
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
+        ProcessObject currentProcess = processManager.getCurrent();
 
-        if (!process.getID().equals(this.parent.getParentID())) {
+        if (!currentProcess.getID().equals(this.parent.getParentID())) {
             throw new ConditionRefuseException();
         }
 
@@ -66,9 +67,17 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     public void run() {
         if (!this.parent.isCurrent()) {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrent();
+            ProcessObject currentProcess = processManager.getCurrent();
+            ProcessSessionObject currentProcessSession = currentProcess.getSession();
+            ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-            if (!process.getID().equals(this.parent.getParentID())) {
+            ProcessSessionObject processSession = this.parent.getSession();
+            ProcessTokenObject processToken = this.parent.getToken();
+
+            if (!currentProcess.getID().equals(this.parent.getParentID())
+                    && !currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
+                    && currentProcessToken.getAccountID() != processToken.getAccountID()
+                    && currentProcessSession.getID() != processSession.getID()) {
                 throw new ConditionRefuseException();
             }
         }
@@ -88,7 +97,19 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
 
     public void interrupt() {
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject currentProcess = processManager.getCurrent();
+            ProcessSessionObject currentProcessSession = currentProcess.getSession();
+            ProcessTokenObject currentProcessToken = currentProcess.getToken();
+
+            ProcessSessionObject processSession = this.parent.getSession();
+            ProcessTokenObject processToken = this.parent.getToken();
+
+            if (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
+                    && currentProcessToken.getAccountID() != processToken.getAccountID()
+                    && currentProcessSession.getID() != processSession.getID()) {
+                throw new ConditionRefuseException();
+            }
         }
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING)) {

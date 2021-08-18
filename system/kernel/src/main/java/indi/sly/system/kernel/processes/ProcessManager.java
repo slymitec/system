@@ -95,13 +95,15 @@ public class ProcessManager extends AManager {
 
         ProcessObject process = this.getTarget(processID);
 
+        ProcessSessionObject processSession = process.getSession();
         ProcessTokenObject processToken = process.getToken();
+        ProcessSessionObject currentProcessSession = currentProcess.getSession();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
         if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
                 && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                && !(ObjectUtil.allNotNull(accountAuthorization)
-                && accountAuthorization.checkAndGetResult().getID().equals(processToken.getAccountID())))) {
+                && !(ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.checkAndGetResult().getID().equals(processToken.getAccountID())))
+                && currentProcessSession.getID() != processSession.getID()) {
             throw new ConditionRefuseException();
         }
 

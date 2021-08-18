@@ -56,6 +56,11 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
     }
 
     public UUID getAccountID() {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+            throw new StatusRelationshipErrorException();
+        }
+
         this.init();
 
         return this.value.getAccountID();
@@ -149,28 +154,33 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
     }
 
     public void setPrivileges(long privileges) {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
-                ProcessStatusType.RUNNING)) {
-            throw new StatusRelationshipErrorException();
-        }
+        if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+            if (this.parent.isCurrent()) {
+                throw new StatusRelationshipErrorException();
+            } else {
+                ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+                ProcessObject process = processManager.getCurrent();
 
-        if (this.parent.isCurrent()) {
-            if (!this.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-                throw new ConditionRefuseException();
+                if (!process.getID().equals(parent.getParentID())) {
+                    throw new ConditionRefuseException();
+                }
+
+                ProcessTokenObject processToken = process.getToken();
+
+                if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+                    throw new ConditionRefuseException();
+                }
+            }
+        } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+            if (!this.parent.isCurrent()) {
+                throw new StatusRelationshipErrorException();
+            } else {
+                if (!this.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+                    throw new ConditionRefuseException();
+                }
             }
         } else {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrent();
-
-            if (!process.getID().equals(parent.getParentID())) {
-                throw new ConditionRefuseException();
-            }
-
-            ProcessTokenObject processToken = process.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-                throw new ConditionRefuseException();
-            }
+            throw new StatusRelationshipErrorException();
         }
 
         try {
@@ -190,6 +200,11 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
     }
 
     public Map<Long, Integer> getLimits() {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+            throw new StatusRelationshipErrorException();
+        }
+
         this.init();
 
         return CollectionUtil.unmodifiable(this.value.getLimits());
@@ -229,28 +244,33 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
-                ProcessStatusType.RUNNING)) {
-            throw new StatusRelationshipErrorException();
-        }
+        if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+            if (this.parent.isCurrent()) {
+                throw new StatusRelationshipErrorException();
+            } else {
+                ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+                ProcessObject process = processManager.getCurrent();
 
-        if (this.parent.isCurrent()) {
-            if (!this.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
-                throw new ConditionRefuseException();
+                if (!process.getID().equals(parent.getParentID())) {
+                    throw new ConditionRefuseException();
+                }
+
+                ProcessTokenObject processToken = process.getToken();
+
+                if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
+                    throw new ConditionRefuseException();
+                }
+            }
+        } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+            if (!this.parent.isCurrent()) {
+                throw new StatusRelationshipErrorException();
+            } else {
+                if (!this.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
+                    throw new ConditionRefuseException();
+                }
             }
         } else {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrent();
-
-            if (!process.getID().equals(parent.getParentID())) {
-                throw new ConditionRefuseException();
-            }
-
-            ProcessTokenObject processToken = process.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
-                throw new ConditionRefuseException();
-            }
+            throw new StatusRelationshipErrorException();
         }
 
         try {
@@ -268,6 +288,11 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
     }
 
     public Set<UUID> getRoles() {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+            throw new StatusRelationshipErrorException();
+        }
+        
         this.init();
 
         return CollectionUtil.unmodifiable(this.value.getRoles());

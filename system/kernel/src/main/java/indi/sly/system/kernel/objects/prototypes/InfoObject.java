@@ -264,7 +264,6 @@ public class InfoObject extends AObject {
         }
 
         InfoEntity info = this.getSelf();
-        InfoObject childInfo = this.getChild(identification);
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());

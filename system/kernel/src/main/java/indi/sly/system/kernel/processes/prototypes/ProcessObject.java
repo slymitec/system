@@ -50,25 +50,23 @@ public class ProcessObject extends AObject {
     }
 
     public synchronized ProcessStatusObject getStatus() {
-        ProcessEntity process = this.getSelf();
-
         ProcessStatusObject processStatus = this.factoryManager.create(ProcessStatusObject.class);
 
         processStatus.setParent(this);
         processStatus.processorMediator = this.processorMediator;
-        processStatus.setSource(() -> process, (ProcessEntity source) -> {
+        processStatus.setSource(this::getSelf, (ProcessEntity source) -> {
         });
 
         return processStatus;
     }
 
     public synchronized ProcessCommunicationObject getCommunication() {
-        ProcessEntity process = this.getSelf();
-
         ProcessCommunicationObject processCommunication = this.factoryManager.create(ProcessCommunicationObject.class);
 
         processCommunication.setParent(this);
         processCommunication.setSource(() -> {
+            ProcessEntity process = this.getSelf();
+
             Set<ProcessProcessorReadComponentFunction> methods = this.processorMediator.getReadProcessCommunications();
 
             byte[] source = null;
@@ -79,6 +77,8 @@ public class ProcessObject extends AObject {
 
             return source;
         }, (byte[] source) -> {
+            ProcessEntity process = this.getSelf();
+
             Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessCommunications();
 
             for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
@@ -86,6 +86,8 @@ public class ProcessObject extends AObject {
             }
         });
         processCommunication.setLock((lock) -> {
+            ProcessEntity process = this.getSelf();
+
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
@@ -96,12 +98,12 @@ public class ProcessObject extends AObject {
     }
 
     public synchronized ProcessContextObject getContext() {
-        ProcessEntity process = this.getSelf();
-
         ProcessContextObject processContext = this.factoryManager.create(ProcessContextObject.class);
 
         processContext.setParent(this);
         processContext.setSource(() -> {
+            ProcessEntity process = this.getSelf();
+
             Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessContexts();
 
             byte[] source = null;
@@ -112,6 +114,8 @@ public class ProcessObject extends AObject {
 
             return source;
         }, (byte[] source) -> {
+            ProcessEntity process = this.getSelf();
+
             Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessContexts();
 
             for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
@@ -119,6 +123,8 @@ public class ProcessObject extends AObject {
             }
         });
         processContext.setLock((lock) -> {
+            ProcessEntity process = this.getSelf();
+
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
@@ -129,12 +135,12 @@ public class ProcessObject extends AObject {
     }
 
     public synchronized ProcessInfoTableObject getInfoTable() {
-        ProcessEntity process = this.getSelf();
-
         ProcessInfoTableObject processInfoTable = this.factoryManager.create(ProcessInfoTableObject.class);
 
         processInfoTable.setParent(this);
         processInfoTable.setSource(() -> {
+            ProcessEntity process = this.getSelf();
+
             Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessInfoTables();
 
             byte[] source = null;
@@ -145,6 +151,8 @@ public class ProcessObject extends AObject {
 
             return source;
         }, (byte[] source) -> {
+            ProcessEntity process = this.getSelf();
+
             Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessInfoTables();
 
             for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
@@ -152,6 +160,8 @@ public class ProcessObject extends AObject {
             }
         });
         processInfoTable.setLock((lock) -> {
+            ProcessEntity process = this.getSelf();
+
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
@@ -162,14 +172,14 @@ public class ProcessObject extends AObject {
     }
 
     public synchronized ProcessSessionObject getSession() {
-        ProcessEntity process = this.getSelf();
-
         ProcessSessionObject processSession = this.factoryManager.create(ProcessSessionObject.class);
 
         processSession.setParent(this);
-        processSession.setSource(() -> process, (processEntity -> {
+        processSession.setSource(this::getSelf, (processEntity -> {
         }));
         processSession.setLock((lock) -> {
+            ProcessEntity process = this.getSelf();
+
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
@@ -179,12 +189,12 @@ public class ProcessObject extends AObject {
     }
 
     public synchronized ProcessStatisticsObject getStatistics() {
-        ProcessEntity process = this.getSelf();
-
         ProcessStatisticsObject processStatistics = this.factoryManager.create(ProcessStatisticsObject.class);
 
         processStatistics.setParent(this);
         processStatistics.setSource(() -> {
+            ProcessEntity process = this.getSelf();
+
             Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessStatistics();
 
             byte[] source = null;
@@ -195,6 +205,8 @@ public class ProcessObject extends AObject {
 
             return source;
         }, (byte[] source) -> {
+            ProcessEntity process = this.getSelf();
+
             Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessStatistics();
 
             for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
@@ -202,6 +214,8 @@ public class ProcessObject extends AObject {
             }
         });
         processStatistics.setLock((lock) -> {
+            ProcessEntity process = this.getSelf();
+
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
@@ -212,12 +226,12 @@ public class ProcessObject extends AObject {
     }
 
     public synchronized ProcessTokenObject getToken() {
-        ProcessEntity process = this.getSelf();
-
         ProcessTokenObject processToken = this.factoryManager.create(ProcessTokenObject.class);
 
         processToken.setParent(this);
         processToken.setSource(() -> {
+            ProcessEntity process = this.getSelf();
+
             Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessTokens();
 
             byte[] source = null;
@@ -228,6 +242,8 @@ public class ProcessObject extends AObject {
 
             return source;
         }, (byte[] source) -> {
+            ProcessEntity process = this.getSelf();
+
             Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessTokens();
 
             for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
@@ -235,6 +251,8 @@ public class ProcessObject extends AObject {
             }
         });
         processToken.setLock((lock) -> {
+            ProcessEntity process = this.getSelf();
+
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 

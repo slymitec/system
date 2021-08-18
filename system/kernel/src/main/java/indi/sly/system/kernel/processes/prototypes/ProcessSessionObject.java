@@ -18,26 +18,6 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, ProcessObject> {
-    private ProcessObject getParentProcessAndCheckIsCurrent() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject currentProcess = processManager.getCurrent();
-
-        if (!currentProcess.getID().equals(parent.getParentID())) {
-            throw new ConditionRefuseException();
-        }
-
-        return currentProcess;
-    }
-
-    private ProcessSessionObject getParentProcessSessionAndCheckIsCurrent() {
-        return this.getParentProcessAndCheckIsCurrent().getSession();
-    }
-
-    private ProcessTokenObject getParentProcessTokenAndCheckIsCurrent() {
-        return this.getParentProcessAndCheckIsCurrent().getToken();
-    }
-
     public UUID getID() {
         this.init();
 
@@ -50,13 +30,23 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
 
-        this.value.setSessionID(this.getParentProcessSessionAndCheckIsCurrent().getID());
+        if (!process.getID().equals(parent.getParentID())) {
+            throw new ConditionRefuseException();
+        }
 
-        this.fresh();
-        this.lock(LockType.NONE);
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            this.value.setSessionID(process.getSession().getID());
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setID(UUID sessionID) {
@@ -65,18 +55,23 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessTokenObject processToken = process.getToken();
 
-        if (!parentProcessToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USER_SESSION)) {
+        if (!processToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USER_SESSION)) {
             throw new ConditionRefuseException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        this.value.setSessionID(sessionID);
+            this.value.setSessionID(sessionID);
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 }

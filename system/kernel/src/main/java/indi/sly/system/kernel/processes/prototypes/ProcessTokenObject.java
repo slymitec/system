@@ -26,22 +26,6 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDefinition, ProcessObject> {
-    private ProcessObject getParentProcessAndCheckIsCurrent() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject currentProcess = processManager.getCurrent();
-
-        if (!currentProcess.getID().equals(parent.getParentID())) {
-            throw new ConditionRefuseException();
-        }
-
-        return currentProcess;
-    }
-
-    private ProcessTokenObject getParentProcessTokenAndCheckIsCurrent() {
-        return this.getParentProcessAndCheckIsCurrent().getToken();
-    }
-
     public void setAccountAuthorization(AccountAuthorizationObject accountAuthorization) {
         if (ObjectUtil.isAnyNull(accountAuthorization)) {
             throw new ConditionParametersException();
@@ -54,18 +38,21 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
 
         AccountAuthorizationResultDefinition accountAuthorizationResult = accountAuthorization.checkAndGetResult();
 
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        this.value.setAccountID(accountAuthorizationResult.getID());
-        AccountAuthorizationTokenDefinition accountAuthorizationResultToken = accountAuthorizationResult.getToken();
-        this.value.setPrivileges(accountAuthorizationResultToken.getPrivileges());
-        Map<Long, Integer> processTokenLimits = this.value.getLimits();
-        processTokenLimits.clear();
-        processTokenLimits.putAll(accountAuthorizationResultToken.getLimits());
+            this.value.setAccountID(accountAuthorizationResult.getID());
+            AccountAuthorizationTokenDefinition accountAuthorizationResultToken = accountAuthorizationResult.getToken();
+            this.value.setPrivileges(accountAuthorizationResultToken.getPrivileges());
+            Map<Long, Integer> processTokenLimits = this.value.getLimits();
+            processTokenLimits.clear();
+            processTokenLimits.putAll(accountAuthorizationResultToken.getLimits());
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public UUID getAccountID() {
@@ -80,13 +67,25 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
 
-        this.value.setAccountID(this.getParentProcessTokenAndCheckIsCurrent().getAccountID());
+        if (!process.getID().equals(parent.getParentID())) {
+            throw new ConditionRefuseException();
+        }
 
-        this.fresh();
-        this.lock(LockType.NONE);
+        ProcessTokenObject processToken = process.getToken();
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            this.value.setAccountID(processToken.getAccountID());
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public long getPrivileges() {
@@ -101,13 +100,25 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
 
-        this.value.setPrivileges(this.getParentProcessTokenAndCheckIsCurrent().getPrivileges());
+        if (!process.getID().equals(parent.getParentID())) {
+            throw new ConditionRefuseException();
+        }
 
-        this.fresh();
-        this.lock(LockType.NONE);
+        ProcessTokenObject processToken = process.getToken();
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            this.value.setPrivileges(processToken.getPrivileges());
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void inheritPrivileges(long privileges) {
@@ -116,14 +127,25 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
 
-        this.value.setPrivileges(LogicalUtil.and(privileges,
-                this.getParentProcessTokenAndCheckIsCurrent().getPrivileges()));
+        if (!process.getID().equals(parent.getParentID())) {
+            throw new ConditionRefuseException();
+        }
 
-        this.fresh();
-        this.lock(LockType.NONE);
+        ProcessTokenObject processToken = process.getToken();
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            this.value.setPrivileges(LogicalUtil.and(privileges, processToken.getPrivileges()));
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setPrivileges(long privileges) {
@@ -137,20 +159,30 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
                 throw new ConditionRefuseException();
             }
         } else {
-            ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
 
-            if (!parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+            if (!process.getID().equals(parent.getParentID())) {
+                throw new ConditionRefuseException();
+            }
+
+            ProcessTokenObject processToken = process.getToken();
+
+            if (!processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
                 throw new ConditionRefuseException();
             }
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        this.value.setPrivileges(privileges);
+            this.value.setPrivileges(privileges);
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public boolean isPrivileges(long privileges) {
@@ -169,15 +201,27 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        Map<Long, Integer> processTokenLimits = this.getLimits();
-        processTokenLimits.clear();
-        processTokenLimits.putAll(this.getParentProcessTokenAndCheckIsCurrent().getLimits());
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            if (!process.getID().equals(parent.getParentID())) {
+                throw new ConditionRefuseException();
+            }
+
+            ProcessTokenObject processToken = process.getToken();
+
+            Map<Long, Integer> processTokenLimits = this.getLimits();
+            processTokenLimits.clear();
+            processTokenLimits.putAll(processToken.getLimits());
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setLimits(Map<Long, Integer> limits) {
@@ -195,22 +239,32 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
                 throw new ConditionRefuseException();
             }
         } else {
-            ProcessTokenObject parentProcessToken = this.getParentProcessTokenAndCheckIsCurrent();
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
 
-            if (!parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+            if (!process.getID().equals(parent.getParentID())) {
+                throw new ConditionRefuseException();
+            }
+
+            ProcessTokenObject processToken = process.getToken();
+
+            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
                 throw new ConditionRefuseException();
             }
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        Map<Long, Integer> processTokenLimits = this.getLimits();
-        processTokenLimits.clear();
-        processTokenLimits.putAll(limits);
+            Map<Long, Integer> processTokenLimits = this.getLimits();
+            processTokenLimits.clear();
+            processTokenLimits.putAll(limits);
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public Set<UUID> getRoles() {
@@ -229,12 +283,21 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        this.value.getRoles().addAll(roles);
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            if (!process.getID().equals(parent.getParentID())) {
+                throw new ConditionRefuseException();
+            }
+
+            this.value.getRoles().addAll(roles);
+
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 }

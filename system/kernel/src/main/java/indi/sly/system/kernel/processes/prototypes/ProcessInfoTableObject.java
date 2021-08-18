@@ -53,32 +53,28 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
         }
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject parentProcess = processManager.getCurrent();
+        ProcessObject process = processManager.getCurrent();
 
-        if (LogicalUtil.allNotEqual(parentProcess.getStatus().get(), ProcessStatusType.RUNNING)) {
-            throw new StatusRelationshipErrorException();
-        }
-
-        if (!parentProcess.getID().equals(this.parent.getParentID())) {
+        if (!process.getID().equals(this.parent.getParentID())) {
             throw new ConditionRefuseException();
         }
 
-        ProcessInfoTableObject parentProcessInfoTable = parentProcess.getInfoTable();
+        ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
         try {
             this.lock(LockType.WRITE);
             this.init();
-            parentProcessInfoTable.lock(LockType.WRITE);
-            parentProcessInfoTable.init();
+            processInfoTable.lock(LockType.WRITE);
+            processInfoTable.init();
 
-            ProcessInfoEntryDefinition processInfoEntry = parentProcessInfoTable.value.getByIndex(index);
-            parentProcessInfoTable.value.delete(index);
+            ProcessInfoEntryDefinition processInfoEntry = processInfoTable.value.getByIndex(index);
+            processInfoTable.value.delete(index);
             this.value.add(processInfoEntry);
 
-            parentProcessInfoTable.fresh();
+            processInfoTable.fresh();
             this.fresh();
         } finally {
-            parentProcessInfoTable.lock(LockType.NONE);
+            processInfoTable.lock(LockType.NONE);
             this.lock(LockType.NONE);
         }
     }
@@ -119,10 +115,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
         }
 
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
-                ProcessStatusType.DIED)) {
-            throw new StatusRelationshipErrorException();
-        }
-        if (!this.parent.isCurrent()) {
+                ProcessStatusType.DIED) || !this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -152,10 +145,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
         }
 
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
-                ProcessStatusType.DIED)) {
-            throw new StatusRelationshipErrorException();
-        }
-        if (!this.parent.isCurrent()) {
+                ProcessStatusType.DIED) || !this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -186,10 +176,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
         }
 
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
-                ProcessStatusType.DIED)) {
-            throw new StatusRelationshipErrorException();
-        }
-        if (!this.parent.isCurrent()) {
+                ProcessStatusType.DIED) || !this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 

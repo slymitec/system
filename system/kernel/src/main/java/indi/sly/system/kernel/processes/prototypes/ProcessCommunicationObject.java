@@ -34,11 +34,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         }
 
         if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
+            throw new ConditionRefuseException();
         }
 
         this.init();
@@ -58,11 +54,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         }
 
         if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
+            throw new ConditionRefuseException();
         }
 
         ProcessTokenObject processToken = this.parent.getToken();
@@ -98,11 +90,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         }
 
         if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
+            throw new ConditionRefuseException();
         }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
@@ -162,11 +150,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
     public void deleteAllPort() {
         if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
+            throw new ConditionRefuseException();
         }
 
         try {
@@ -199,11 +183,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         }
 
         if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
+            throw new ConditionRefuseException();
         }
 
         try {
@@ -237,11 +217,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         }
 
         if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
+            throw new ConditionRefuseException();
         }
 
         this.init();
@@ -265,11 +241,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         }
 
         if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
+            throw new ConditionRefuseException();
         }
 
         this.init();
@@ -291,11 +263,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         }
 
         if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
+            throw new ConditionRefuseException();
         }
 
         this.init();
@@ -353,11 +321,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         }
 
         if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
+            throw new ConditionRefuseException();
         }
 
         try {
@@ -410,11 +374,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
     public void deleteSignal() {
         if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
+            throw new ConditionRefuseException();
         }
 
         try {
@@ -445,11 +405,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
     public Set<UUID> getSignalSourceProcessIDs() {
         if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
+            throw new ConditionRefuseException();
         }
 
         this.init();
@@ -470,16 +426,12 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
     }
 
     public void setSignalSourceProcessIDs(Set<UUID> sourceProcessIDs) {
-        if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
-        }
-
         if (ObjectUtil.isAnyNull(sourceProcessIDs)) {
             throw new ConditionParametersException();
+        }
+
+        if (!this.parent.isCurrent()) {
+            throw new ConditionRefuseException();
         }
 
         this.init();
@@ -499,11 +451,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
     public List<SignalEntryDefinition> receiveSignals() {
         if (!this.parent.isCurrent()) {
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_COMMUNICATION)) {
-                throw new ConditionRefuseException();
-            }
+            throw new ConditionRefuseException();
         }
 
         this.init();

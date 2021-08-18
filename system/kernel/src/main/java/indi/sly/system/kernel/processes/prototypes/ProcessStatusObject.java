@@ -43,14 +43,13 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
         }
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
 
-        ProcessObject parentProcess = processManager.getCurrent();
-
-        this.init();
-
-        if (!parentProcess.getID().equals(this.value.getParentProcessID())) {
+        if (!process.getID().equals(this.parent.getParentID())) {
             throw new ConditionRefuseException();
         }
+
+        this.init();
 
         Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
@@ -63,6 +62,15 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.INTERRUPTED)) {
             throw new StatusRelationshipErrorException();
+        }
+
+        if (!this.parent.isCurrent()) {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+
+            if (!process.getID().equals(this.parent.getParentID())) {
+                throw new ConditionRefuseException();
+            }
         }
 
         this.init();
@@ -80,12 +88,23 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        if (!this.parent.isCurrent()) {
+            throw new ConditionRefuseException();
+        }
 
-        Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-            resolver.accept(this.value, ProcessStatusType.INTERRUPTED);
+            Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+
+            for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
+                resolver.accept(this.value, ProcessStatusType.INTERRUPTED);
+            }
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
         }
     }
 
@@ -93,6 +112,10 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
                 ProcessStatusType.INTERRUPTED, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
+        }
+
+        if (!this.parent.isCurrent()) {
+            throw new ConditionRefuseException();
         }
 
         try {
@@ -114,6 +137,10 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     public void zombie() {
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
+        }
+
+        if (!this.parent.isCurrent()) {
+            throw new ConditionRefuseException();
         }
 
         ProcessCommunicationObject processCommunication = this.parent.getCommunication();

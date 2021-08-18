@@ -2,7 +2,6 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
@@ -14,7 +13,6 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
 import indi.sly.system.kernel.processes.values.ProcessContextDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
-import indi.sly.system.kernel.processes.values.ThreadContextType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -25,22 +23,6 @@ import java.util.Map;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessContextObject extends ABytesValueProcessObject<ProcessContextDefinition, ProcessObject> {
-    private ProcessObject getParentProcessAndCheckIsCurrent() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject currentProcess = processManager.getCurrent();
-
-        if (!currentProcess.getID().equals(parent.getParentID())) {
-            throw new ConditionRefuseException();
-        }
-
-        return currentProcess;
-    }
-
-    private ProcessTokenObject getParentProcessTokenAndCheckIsCurrent() {
-        return this.getParentProcessAndCheckIsCurrent().getToken();
-    }
-
     public long getType() {
         this.init();
 
@@ -48,18 +30,22 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
     }
 
     public void setType(long type) {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
-                ProcessStatusType.INTERRUPTED)) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
+                || this.parent.isCurrent()) {
             throw new StatusRelationshipErrorException();
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+
+        if (!process.getID().equals(this.parent.getParentID())) {
+            throw new ConditionRefuseException();
         }
 
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            if (this.value.getType() != ThreadContextType.NULL) {
-                throw new StatusAlreadyExistedException();
-            }
             this.value.setType(type);
 
             this.fresh();
@@ -79,11 +65,17 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
             throw new ConditionParametersException();
         }
 
-        if (this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
+                || this.parent.isCurrent()) {
+            throw new StatusRelationshipErrorException();
         }
 
-        this.getParentProcessAndCheckIsCurrent();
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+
+        if (!process.getID().equals(this.parent.getParentID())) {
+            throw new ConditionRefuseException();
+        }
 
         try {
             this.lock(LockType.WRITE);
@@ -98,10 +90,6 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
     }
 
     public Map<String, String> getEnvironmentVariables() {
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
-
         this.init();
 
         return CollectionUtil.unmodifiable(this.value.getEnvironmentVariables());
@@ -113,7 +101,12 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
         }
 
         if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+
+            if (!process.getID().equals(this.parent.getParentID())) {
+                throw new ConditionRefuseException();
+            }
         }
 
         try {
@@ -141,11 +134,17 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
             throw new ConditionParametersException();
         }
 
-        if (this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
+                || this.parent.isCurrent()) {
+            throw new StatusRelationshipErrorException();
         }
 
-        this.getParentProcessAndCheckIsCurrent();
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+
+        if (!process.getID().equals(this.parent.getParentID())) {
+            throw new ConditionRefuseException();
+        }
 
         try {
             this.lock(LockType.WRITE);
@@ -170,11 +169,17 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
             throw new ConditionParametersException();
         }
 
-        if (this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)
+                || this.parent.isCurrent()) {
+            throw new StatusRelationshipErrorException();
         }
 
-        this.getParentProcessAndCheckIsCurrent();
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+
+        if (!process.getID().equals(this.parent.getParentID())) {
+            throw new ConditionRefuseException();
+        }
 
         try {
             this.lock(LockType.WRITE);

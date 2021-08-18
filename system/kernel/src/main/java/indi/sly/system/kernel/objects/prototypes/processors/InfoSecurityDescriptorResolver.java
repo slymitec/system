@@ -58,7 +58,7 @@ public class InfoSecurityDescriptorResolver extends AResolver implements IInfoRe
                 }
 
                 if (ObjectUtil.allNotNull(parentSecurityDescriptor)) {
-                    securityDescriptor.setParentSecurityDescriptor(parentSecurityDescriptor);
+                    securityDescriptor.setParent(parentSecurityDescriptor);
                 }
             }
 

@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -24,14 +24,12 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SecurityDescriptorObject extends AIndependentBytesValueProcessObject<SecurityDescriptorDefinition> {
+public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityDescriptorDefinition, SecurityDescriptorObject> {
     public SecurityDescriptorObject() {
         this.identifications = new ArrayList<>();
-        this.parents = new ArrayList<>();
     }
 
     private final List<IdentificationDefinition> identifications;
-    private final List<SecurityDescriptorObject> parents;
     private boolean permission;
     private boolean audit;
 
@@ -42,15 +40,6 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
 
         this.identifications.clear();
         this.identifications.addAll(identifications);
-    }
-
-    public void setParentSecurityDescriptor(SecurityDescriptorObject parentSecurityDescriptor) {
-        if (ObjectUtil.isAnyNull(parentSecurityDescriptor)) {
-            throw new ConditionParametersException();
-        }
-
-        this.parents.addAll(parentSecurityDescriptor.parents);
-        this.parents.add(parentSecurityDescriptor);
     }
 
     public void setPermission(boolean permission) {
@@ -91,10 +80,8 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
         }
 
         List<SecurityDescriptorSummaryDefinition> securityDescriptorSummaries = new ArrayList<>();
-
-        for (SecurityDescriptorObject securityDescriptor : this.parents) {
-            securityDescriptor.init();
-
+        SecurityDescriptorObject securityDescriptor = this;
+        do {
             SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
             securityDescriptorSummary.getIdentifications().addAll(securityDescriptor.identifications);
 
@@ -114,27 +101,10 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
             }
 
             securityDescriptorSummaries.add(securityDescriptorSummary);
-        }
 
-        SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
-        securityDescriptorSummary.getIdentifications().addAll(this.identifications);
-
-        if (this.permission) {
-            securityDescriptorSummary.setPermission(true);
-            securityDescriptorSummary.setInherit(this.value.isInherit());
-            securityDescriptorSummary.getPermissions().addAll(this.value.getPermissions());
-
-        } else {
-            securityDescriptorSummary.setPermission(false);
-        }
-        if (this.audit) {
-            securityDescriptorSummary.setAudit(true);
-            securityDescriptorSummary.getAudits().addAll(this.value.getAudits());
-        } else {
-            securityDescriptorSummary.setAudit(false);
-        }
-
-        securityDescriptorSummaries.add(securityDescriptorSummary);
+            securityDescriptor = securityDescriptor.parent;
+        } while (securityDescriptor != null);
+        Collections.reverse(securityDescriptorSummaries);
 
         return securityDescriptorSummaries;
     }
@@ -285,24 +255,24 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
         this.init();
 
         List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
-        for (SecurityDescriptorObject securityDescriptor : this.parents) {
-            securityDescriptor.init();
-
+        SecurityDescriptorObject securityDescriptor = this;
+        do {
             if (securityDescriptor.permission) {
                 securityDescriptors.add(securityDescriptor.value);
-            } else {
-                securityDescriptors.clear();
-            }
-        }
 
-        securityDescriptors.add(this.value);
+                if (!securityDescriptor.isInherit()) {
+                    break;
+                }
+            } else {
+                break;
+            }
+
+            securityDescriptor = securityDescriptor.parent;
+        } while (securityDescriptor != null);
+        Collections.reverse(securityDescriptors);
 
         Set<AccessControlDefinition> effectivePermissions = new HashSet<>();
         for (int i = 0; i < securityDescriptors.size(); i++) {
-            if (!securityDescriptors.get(i).isInherit()) {
-                effectivePermissions.clear();
-            }
-
             for (AccessControlDefinition accessControl : securityDescriptors.get(i).getPermissions()) {
                 if (LogicalUtil.isAllExist(AccessControlScopeType.THIS, accessControl.getScope())) {
                     if (i == securityDescriptors.size() - 1) {
@@ -473,17 +443,17 @@ public class SecurityDescriptorObject extends AIndependentBytesValueProcessObjec
         this.init();
 
         List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
-        for (SecurityDescriptorObject pair : this.parents) {
-            pair.init();
-
-            if (pair.audit) {
-                securityDescriptors.add(pair.value);
+        SecurityDescriptorObject securityDescriptor = this;
+        do {
+            if (securityDescriptor.audit) {
+                securityDescriptors.add(securityDescriptor.value);
             } else {
-                securityDescriptors.clear();
+                break;
             }
-        }
 
-        securityDescriptors.add(this.value);
+            securityDescriptor = securityDescriptor.parent;
+        } while (securityDescriptor != null);
+        Collections.reverse(securityDescriptors);
 
         Set<AccessControlDefinition> effectiveAudits = new HashSet<>();
         for (int i = 0; i < securityDescriptors.size(); i++) {

@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
@@ -26,7 +27,7 @@ public class ProcessCreateTokenResolver extends AResolver implements IProcessCre
             } else {
                 processToken.inheritAccountID();
 
-                if (processCreator.getPrivileges() != PrivilegeType.NULL) {
+                if (LogicalUtil.allNotEqual(processCreator.getPrivileges(), PrivilegeType.NULL)) {
                     processToken.inheritPrivileges(processCreator.getPrivileges());
                 } else {
                     processToken.inheritPrivileges();

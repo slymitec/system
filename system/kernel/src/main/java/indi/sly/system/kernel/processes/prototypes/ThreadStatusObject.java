@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.processes.values.ThreadDefinition;
@@ -20,7 +21,7 @@ public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, Th
     }
 
     public void initialize() {
-        if (this.value.getStatus() != ThreadStatusType.NULL) {
+        if (LogicalUtil.allNotEqual(this.value.getStatus(), ThreadStatusType.NULL)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -34,7 +35,7 @@ public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, Th
     }
 
     public void running() {
-        if (this.value.getStatus() != ThreadStatusType.INITIALIZATION) {
+        if (LogicalUtil.allNotEqual(this.value.getStatus(), ThreadStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -48,7 +49,7 @@ public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, Th
     }
 
     public void die() {
-        if (this.value.getStatus() != ThreadStatusType.RUNNING) {
+        if (LogicalUtil.allNotEqual(this.value.getStatus(), ThreadStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 

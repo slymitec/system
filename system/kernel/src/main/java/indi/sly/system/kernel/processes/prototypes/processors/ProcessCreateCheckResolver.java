@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
@@ -35,7 +36,7 @@ public class ProcessCreateCheckResolver extends AResolver implements IProcessCre
                 throw new ConditionRefuseException();
             }
 
-            if (processCreator.getPrivileges() != PrivilegeType.NULL && !parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+            if (LogicalUtil.allNotEqual(processCreator.getPrivileges(), PrivilegeType.NULL) && !parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
                 throw new ConditionRefuseException();
             }
 

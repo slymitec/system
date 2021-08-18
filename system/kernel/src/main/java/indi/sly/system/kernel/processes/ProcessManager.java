@@ -120,7 +120,7 @@ public class ProcessManager extends AManager {
         if (ObjectUtil.allNotNull(accountAuthorization)) {
             processCreator.setAccountAuthorization(accountAuthorization);
         }
-        if (privileges != PrivilegeType.NULL) {
+        if (LogicalUtil.allNotEqual(privileges, PrivilegeType.NULL)) {
             processCreator.setPrivileges(privileges);
         }
         if (ObjectUtil.allNotNull(limits) && !limits.isEmpty()) {

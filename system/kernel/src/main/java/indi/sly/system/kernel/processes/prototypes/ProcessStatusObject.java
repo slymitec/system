@@ -37,8 +37,10 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     }
 
     public void initialize() {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.NULL)
-                || this.parent.isCurrent()) {
+        if (this.parent.isCurrent()) {
+            throw new ConditionRefuseException();
+        }
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.NULL)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -59,11 +61,6 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     }
 
     public void run() {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
-                ProcessStatusType.INTERRUPTED)) {
-            throw new StatusRelationshipErrorException();
-        }
-
         if (!this.parent.isCurrent()) {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
@@ -71,6 +68,10 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
             if (!process.getID().equals(this.parent.getParentID())) {
                 throw new ConditionRefuseException();
             }
+        }
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.INTERRUPTED)) {
+            throw new StatusRelationshipErrorException();
         }
 
         this.init();
@@ -83,13 +84,12 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     }
 
     public void interrupt() {
+        if (!this.parent.isCurrent()) {
+            throw new ConditionRefuseException();
+        }
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
-        }
-
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
         }
 
         try {
@@ -109,14 +109,14 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     }
 
     public void die() {
+        if (!this.parent.isCurrent()) {
+            throw new ConditionRefuseException();
+        }
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
                 ProcessStatusType.INTERRUPTED, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
-        if (!this.parent.isCurrent()) {
-            throw new ConditionRefuseException();
-        }
 
         try {
             this.lock(LockType.WRITE);
@@ -135,12 +135,11 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     }
 
     public void zombie() {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.DIED)) {
-            throw new StatusRelationshipErrorException();
-        }
-
         if (!this.parent.isCurrent()) {
             throw new ConditionRefuseException();
+        }
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.DIED)) {
+            throw new StatusRelationshipErrorException();
         }
 
         ProcessCommunicationObject processCommunication = this.parent.getCommunication();

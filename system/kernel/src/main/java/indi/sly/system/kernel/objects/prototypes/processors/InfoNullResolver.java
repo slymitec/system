@@ -1,13 +1,12 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 
 //@Named
 //@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoNullResolver extends AResolver implements IInfoResolver {
+public class InfoNullResolver extends AInfoResolver {
     public InfoNullResolver() {
         this.dump = (dump, info, type, status) -> dump;
 

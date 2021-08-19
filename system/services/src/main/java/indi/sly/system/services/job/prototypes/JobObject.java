@@ -1,12 +1,11 @@
 package indi.sly.system.services.job.prototypes;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
-import indi.sly.system.services.job.JobService;
-import indi.sly.system.services.job.lang.JobProcessorFinishConsumer;
 import indi.sly.system.services.job.lang.JobProcessorContentFunction;
+import indi.sly.system.services.job.lang.JobProcessorFinishConsumer;
 import indi.sly.system.services.job.lang.JobProcessorRunConsumer;
 import indi.sly.system.services.job.lang.JobProcessorStartFunction;
 import indi.sly.system.services.job.prototypes.wrappers.JobProcessorMediator;
@@ -78,8 +77,6 @@ public class JobObject extends AIndependentValueProcessObject<JobDefinition> {
 
     public synchronized JobContentObject getContent() {
         JobDefinition job = this.getSelf();
-
-        JobService jobService = this.factoryManager.getService(JobService.class);
 
         ThreadContextObject threadContext = null;
 

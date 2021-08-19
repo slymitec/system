@@ -1,12 +1,14 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
-import indi.sly.system.kernel.processes.prototypes.*;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
+import indi.sly.system.kernel.processes.prototypes.ThreadObject;
+import indi.sly.system.kernel.processes.prototypes.ThreadStatisticsObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -14,7 +16,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoProcessAndThreadStatisticsResolver extends AResolver implements IInfoResolver {
+public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
     public InfoProcessAndThreadStatisticsResolver() {
         this.dump = (dump, info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);

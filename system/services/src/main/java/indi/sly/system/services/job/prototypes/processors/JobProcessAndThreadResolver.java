@@ -2,7 +2,6 @@ package indi.sly.system.services.job.prototypes.processors;
 
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadStatusObject;
@@ -18,7 +17,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class JobProcessAndThreadResolver extends AResolver implements IJobResolver {
+public class JobProcessAndThreadResolver extends AJobResolver {
     public JobProcessAndThreadResolver() {
         this.start = (job, status) -> {
             if (LogicalUtil.isAllExist(job.getAttribute(), JobAttributeType.HAS_PROCESS)

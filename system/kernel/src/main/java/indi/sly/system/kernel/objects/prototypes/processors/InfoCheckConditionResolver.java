@@ -3,7 +3,6 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
@@ -18,7 +17,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoCheckConditionResolver extends AResolver implements IInfoResolver {
+public class InfoCheckConditionResolver extends AInfoResolver {
     public InfoCheckConditionResolver() {
         this.open = (index, info, type, status, openAttribute, arguments) -> {
             if (LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.CLOSE)

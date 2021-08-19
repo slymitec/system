@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
@@ -12,7 +11,7 @@ import java.util.HashSet;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCreateCommunicationResolver extends AResolver implements IProcessCreateResolver {
+public class ProcessCreateCommunicationResolver extends AProcessCreateResolver {
     private final ProcessLifeProcessorCreateFunction create;
 
     public ProcessCreateCommunicationResolver() {

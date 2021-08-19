@@ -1,6 +1,5 @@
 package indi.sly.system.services.job.prototypes.processors;
 
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.services.job.lang.JobProcessorContentFunction;
@@ -13,7 +12,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class JobContentResolver extends AResolver implements IJobResolver {
+public class JobContentResolver extends AJobResolver {
     public JobContentResolver() {
         this.content = (job, status, threadRun) -> {
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);

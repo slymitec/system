@@ -9,7 +9,6 @@ import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
@@ -23,35 +22,30 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoFactory extends AFactory {
-    protected List<IInfoResolver> infoResolvers;
+    protected List<AInfoResolver> infoResolvers;
 
     @Override
     public void init() {
         this.infoResolvers = new CopyOnWriteArrayList<>();
 
-        Set<AResolver> resolvers = new HashSet<>();
-        resolvers.add(this.factoryManager.create(InfoCheckConditionResolver.class));
-        resolvers.add(this.factoryManager.create(InfoDateResolver.class));
-        resolvers.add(this.factoryManager.create(InfoDumpResolver.class));
-        resolvers.add(this.factoryManager.create(InfoOpenOrCloseResolver.class));
-        resolvers.add(this.factoryManager.create(InfoParentResolver.class));
-        resolvers.add(this.factoryManager.create(InfoProcessAndThreadStatisticsResolver.class));
-        resolvers.add(this.factoryManager.create(InfoProcessInfoTableResolver.class));
-        resolvers.add(this.factoryManager.create(InfoSecurityDescriptorResolver.class));
-        resolvers.add(this.factoryManager.create(InfoSelfResolver.class));
-        resolvers.add(this.factoryManager.create(InfoTypeInitializerResolver.class));
-
-        for (AResolver resolver : resolvers) {
-            if (resolver instanceof IInfoResolver) {
-                this.infoResolvers.add((IInfoResolver) resolver);
-            }
-        }
+        this.infoResolvers.add(this.factoryManager.create(InfoCheckConditionResolver.class));
+        this.infoResolvers.add(this.factoryManager.create(InfoDateResolver.class));
+        this.infoResolvers.add(this.factoryManager.create(InfoDumpResolver.class));
+        this.infoResolvers.add(this.factoryManager.create(InfoOpenOrCloseResolver.class));
+        this.infoResolvers.add(this.factoryManager.create(InfoParentResolver.class));
+        this.infoResolvers.add(this.factoryManager.create(InfoProcessAndThreadStatisticsResolver.class));
+        this.infoResolvers.add(this.factoryManager.create(InfoProcessInfoTableResolver.class));
+        this.infoResolvers.add(this.factoryManager.create(InfoSecurityDescriptorResolver.class));
+        this.infoResolvers.add(this.factoryManager.create(InfoSelfResolver.class));
+        this.infoResolvers.add(this.factoryManager.create(InfoTypeInitializerResolver.class));
 
         Collections.sort(this.infoResolvers);
     }
@@ -75,7 +69,7 @@ public class InfoFactory extends AFactory {
 
     private InfoObject buildInfo(InfoEntity info, UUID poolID, InfoObject parentInfo) {
         InfoProcessorMediator processorMediator = this.factoryManager.create(InfoProcessorMediator.class);
-        for (IInfoResolver infoResolver : this.infoResolvers) {
+        for (AInfoResolver infoResolver : this.infoResolvers) {
             infoResolver.resolve(info, processorMediator);
         }
 

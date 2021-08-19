@@ -2,7 +2,6 @@ package indi.sly.system.services.job.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.job.lang.JobProcessorContentFunction;
 import indi.sly.system.services.job.lang.JobProcessorFinishConsumer;
 import indi.sly.system.services.job.lang.JobProcessorRunConsumer;
@@ -17,7 +16,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class JobCheckConditionResolver extends AResolver implements IJobResolver {
+public class JobCheckConditionResolver extends AJobResolver {
     public JobCheckConditionResolver() {
         this.start = (job, status) -> {
             if (status.getRuntime() != JobStatusRuntimeType.INITIALIZATION) {

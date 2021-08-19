@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessEndInfoTableResolver extends AResolver implements IProcessEndResolver {
+public class ProcessEndInfoTableResolver extends AProcessEndResolver {
     private final ProcessLifeProcessorEndFunction end;
 
     public ProcessEndInfoTableResolver() {

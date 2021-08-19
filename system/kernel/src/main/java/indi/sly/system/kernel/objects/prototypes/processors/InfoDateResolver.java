@@ -4,7 +4,6 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.lang.InfoProcessorCreateChildAndOpenFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorReadContentFunction;
@@ -20,13 +19,14 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoDateResolver extends AResolver implements IInfoResolver {
+public class InfoDateResolver extends AInfoResolver {
     public InfoDateResolver() {
         this.open = (index, info, type, status, openAttribute, arguments) -> {
             DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
+            assert date != null;
             date.put(DateTimeType.ACCESS, nowDateTime);
             info.setDate(ObjectUtil.transferToByteArray(date));
 
@@ -51,6 +51,7 @@ public class InfoDateResolver extends AResolver implements IInfoResolver {
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
+            assert date != null;
             date.put(DateTimeType.ACCESS, nowDateTime);
             info.setDate(ObjectUtil.transferToByteArray(date));
 
@@ -62,6 +63,7 @@ public class InfoDateResolver extends AResolver implements IInfoResolver {
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
+            assert date != null;
             date.put(DateTimeType.MODIFIED, nowDateTime);
             info.setDate(ObjectUtil.transferToByteArray(date));
         };

@@ -2,7 +2,6 @@ package indi.sly.system.services.job.prototypes.processors;
 
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.job.lang.*;
 import indi.sly.system.services.job.prototypes.JobContentObject;
 import indi.sly.system.services.job.prototypes.wrappers.JobProcessorMediator;
@@ -18,7 +17,7 @@ import javax.transaction.Transactional;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class JobInitializerResolver extends AResolver implements IJobResolver {
+public class JobInitializerResolver extends AJobResolver {
     public JobInitializerResolver() {
         this.start = (job, status) -> {
             AJobInitializer initializer = job.getInitializer();

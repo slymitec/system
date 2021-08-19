@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusOverflowException;
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
@@ -15,7 +14,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessMemberResolver extends AResolver implements IProcessResolver {
+public class ProcessMemberResolver extends AProcessResolver {
     private final ProcessProcessorReadStatusFunction readProcessStatus;
     private final ProcessProcessorWriteStatusConsumer writeProcessStatus;
     private final ProcessProcessorReadComponentFunction readProcessCommunication;

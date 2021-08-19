@@ -3,7 +3,6 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessStatusObject;
@@ -15,7 +14,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCreateStatisticsResolver extends AResolver implements IProcessCreateResolver {
+public class ProcessCreateStatisticsResolver extends AProcessCreateResolver {
     private final ProcessLifeProcessorCreateFunction create;
 
     public ProcessCreateStatisticsResolver() {

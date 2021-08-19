@@ -1,6 +1,5 @@
 package indi.sly.system.services.job.prototypes.processors;
 
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.job.lang.JobProcessorFinishConsumer;
 import indi.sly.system.services.job.lang.JobProcessorStartFunction;
 import indi.sly.system.services.job.prototypes.wrappers.JobProcessorMediator;
@@ -13,15 +12,11 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class JobStatusRuntimeResolver extends AResolver implements IJobResolver {
+public class JobStatusRuntimeResolver extends AJobResolver {
     public JobStatusRuntimeResolver() {
-        this.start = (job, status) -> {
-            status.setRuntime(JobStatusRuntimeType.RUNNING);
-        };
+        this.start = (job, status) -> status.setRuntime(JobStatusRuntimeType.RUNNING);
 
-        this.finish = (job, status) -> {
-            status.setRuntime(JobStatusRuntimeType.FINISHED);
-        };
+        this.finish = (job, status) -> status.setRuntime(JobStatusRuntimeType.FINISHED);
     }
 
     @Override

@@ -3,7 +3,6 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.instances.values.SignalType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
@@ -16,7 +15,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessEndNotifyParentResolver extends AResolver implements IProcessEndResolver {
+public class ProcessEndNotifyParentResolver extends AProcessEndResolver {
     private final ProcessLifeProcessorEndFunction end;
 
     public ProcessEndNotifyParentResolver() {

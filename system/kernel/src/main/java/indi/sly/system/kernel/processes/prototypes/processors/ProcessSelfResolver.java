@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorSelfFunction;
@@ -13,7 +12,7 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessSelfResolver extends AResolver implements IProcessResolver {
+public class ProcessSelfResolver extends AProcessResolver {
     private final ProcessProcessorSelfFunction self;
 
     public ProcessSelfResolver() {

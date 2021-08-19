@@ -6,7 +6,6 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
@@ -25,13 +24,12 @@ import org.springframework.context.annotation.Scope;
 import javax.inject.Named;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoTypeInitializerResolver extends AResolver implements IInfoResolver {
+public class InfoTypeInitializerResolver extends AInfoResolver {
     public InfoTypeInitializerResolver() {
         this.dump = (dump, info, type, status) -> {
             type.getInitializer().dumpProcedure(info, dump);
@@ -169,22 +167,18 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
 
         this.readProperties = (properties, info, type, status) -> {
             Map<String, String> newProperties = ObjectUtil.transferFromByteArray(info.getProperties());
+            assert newProperties != null;
 
-            for (Entry<String, String> newProperty : newProperties.entrySet()) {
-                properties.put(newProperty.getKey(), newProperty.getValue());
-            }
+            properties.putAll(newProperties);
 
             return properties;
         };
 
         this.writeProperties = (info, type, status, properties) -> {
-            Map<String, String> newProperties = new HashMap<>();
-
-            for (Entry<String, String> property : properties.entrySet()) {
-                newProperties.put(property.getKey(), property.getValue());
-            }
+            Map<String, String> newProperties = new HashMap<>(properties);
 
             byte[] newPropertiesSource = ObjectUtil.transferToByteArray(newProperties);
+            assert newPropertiesSource != null;
 
             if (newPropertiesSource.length > 1024) {
                 throw new StatusOverflowException();

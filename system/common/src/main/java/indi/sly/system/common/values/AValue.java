@@ -14,7 +14,7 @@ public abstract class AValue<T> extends ABase implements ISerializeCapable<T> {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public Object clone() {
         Object value;
 
         try {

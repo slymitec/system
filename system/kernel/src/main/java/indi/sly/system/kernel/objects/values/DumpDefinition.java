@@ -2,20 +2,23 @@ package indi.sly.system.kernel.objects.values;
 
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryDefinition;
 
 import java.util.*;
 
 public class DumpDefinition extends ADefinition<DumpDefinition> {
+    public DumpDefinition() {
+        this.date = new HashMap<>();
+        this.identifications = new ArrayList<>();
+        this.securityDescriptorSummary = new ArrayList<>();
+    }
+
     private final Map<Long, Long> date;
     private UUID processID;
     private UUID accountID;
     private final List<IdentificationDefinition> identifications;
     private InfoOpenDefinition infoOpen;
-
-    public DumpDefinition() {
-        this.date = new HashMap<>();
-        this.identifications = new ArrayList<>();
-    }
+    private final List<SecurityDescriptorSummaryDefinition> securityDescriptorSummary;
 
     public Map<Long, Long> getDate() {
         return this.date;
@@ -47,5 +50,9 @@ public class DumpDefinition extends ADefinition<DumpDefinition> {
 
     public void setInfoOpen(InfoOpenDefinition infoOpen) {
         this.infoOpen = infoOpen;
+    }
+
+    public List<SecurityDescriptorSummaryDefinition> getSecurityDescriptorSummary() {
+        return this.securityDescriptorSummary;
     }
 }

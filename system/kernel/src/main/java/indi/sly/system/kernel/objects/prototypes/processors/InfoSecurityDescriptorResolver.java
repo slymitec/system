@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
+import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.StatusDisabilityException;
 import indi.sly.system.common.lang.StatusOverflowException;
 import indi.sly.system.common.supports.LogicalUtil;
@@ -20,6 +21,7 @@ import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.AuditType;
 import indi.sly.system.kernel.security.values.PermissionType;
 import indi.sly.system.kernel.security.values.SecurityDescriptorDefinition;
+import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -78,6 +80,12 @@ public class InfoSecurityDescriptorResolver extends AResolver implements IInfoRe
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.checkAudit(AuditType.LISTCHILD_READDATA);
+                }
+
+                try {
+                    List<SecurityDescriptorSummaryDefinition> securityDescriptorSummary = securityDescriptor.getSummary();
+                    dump.getSecurityDescriptorSummary().addAll(securityDescriptorSummary);
+                } catch (AKernelException ignored) {
                 }
             }
 

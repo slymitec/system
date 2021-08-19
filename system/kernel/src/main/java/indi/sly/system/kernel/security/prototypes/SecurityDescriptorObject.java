@@ -83,9 +83,14 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
         SecurityDescriptorObject securityDescriptor = this;
         do {
             SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
-            securityDescriptorSummary.getIdentifications().addAll(securityDescriptor.identifications);
 
             if (securityDescriptor.permission) {
+                if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                        && !securityDescriptor.value.getOwners().contains(processToken.getAccountID())
+                        && securityDescriptor.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                    break;
+                }
+
                 securityDescriptorSummary.setPermission(true);
                 securityDescriptorSummary.setInherit(securityDescriptor.value.isInherit());
                 securityDescriptorSummary.getPermissions().addAll(securityDescriptor.value.getPermissions());
@@ -100,13 +105,15 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 securityDescriptorSummary.setAudit(false);
             }
 
+            securityDescriptorSummary.getIdentifications().addAll(securityDescriptor.identifications);
+
             securityDescriptorSummaries.add(securityDescriptorSummary);
 
             securityDescriptor = securityDescriptor.parent;
         } while (securityDescriptor != null);
         Collections.reverse(securityDescriptorSummaries);
 
-        return securityDescriptorSummaries;
+        return CollectionUtil.unmodifiable(securityDescriptorSummaries);
     }
 
     public boolean isInherit() {

@@ -65,8 +65,10 @@ public abstract class AInfoTypeInitializer extends AInitializer {
 
     protected abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen);
 
-    public final AInfoContentObject getContentProcedure(InfoEntity info, Provider<byte[]> funcRead,
+    public final AInfoContentObject getContentProcedure(Provider<InfoEntity> infoProvider, Provider<byte[]> funcRead,
                                                         Consumer1<byte[]> funcWrite, Consumer funcExecute) {
+        InfoEntity info = infoProvider.acquire();
+
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
@@ -80,7 +82,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, infoOpen));
 
         content.setSource(funcRead, funcWrite);
-        content.setLock((lockMode) -> this.lockProcedure(info, lockMode));
+        content.setLock((lockMode) -> this.lockProcedure(infoProvider.acquire(), lockMode));
         content.setExecute(funcExecute);
         if (ObjectUtil.allNotNull(infoOpen)) {
             content.setInfoOpen(infoOpen);

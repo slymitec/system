@@ -1,8 +1,11 @@
 package indi.sly.system.kernel.objects.prototypes;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.ConditionContextException;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.Consumer;
+import indi.sly.system.common.lang.StatusDisabilityException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.AIndependentProcessObject;
+import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -11,10 +14,9 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class AInfoContentObject extends AIndependentProcessObject<byte[]> {
+public abstract class AInfoContentObject extends AValueProcessObject<byte[], InfoObject> {
     private Consumer funcExecute;
 
-    protected InfoObject info;
     protected InfoOpenDefinition infoOpen;
 
     public final void setExecute(Consumer funcExecute) {
@@ -25,18 +27,14 @@ public abstract class AInfoContentObject extends AIndependentProcessObject<byte[
         this.funcExecute = funcExecute;
     }
 
-    public void setInfo(InfoObject info) {
-        this.info = info;
-    }
-
     public void setInfoOpen(InfoOpenDefinition infoOpen) {
         this.infoOpen = infoOpen;
     }
 
     public synchronized void close() {
-        this.info.close();
+        this.parent.close();
 
-        this.info = null;
+        this.parent = null;
         this.infoOpen = null;
         this.setParent(null);
         this.setSource(() -> {

@@ -28,11 +28,6 @@ public class InfoProcessAndThreadStatisticsResolver extends AResolver implements
             processStatistics.addInfoDump(1);
             threadStatistics.addInfoDump(1);
 
-            ProcessTokenObject processToken = process.getToken();
-
-            dump.setProcessID(process.getID());
-            dump.setAccountID(processToken.getAccountID());
-
             return dump;
         };
 

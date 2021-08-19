@@ -141,7 +141,7 @@ public class InfoObject extends AObject {
             dump = resolver.apply(dump, info, type, this.status);
         }
 
-        return this.factory.buildDump(dump);
+        return this.factory.buildDump(this, dump);
     }
 
     public synchronized UUID open(long openAttribute, Object... arguments) {
@@ -349,12 +349,12 @@ public class InfoObject extends AObject {
     }
 
     public synchronized AInfoContentObject getContent() {
-        InfoEntity info = this.getSelf();
-
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        AInfoContentObject content = type.getInitializer().getContentProcedure(info, () -> {
+        AInfoContentObject content = type.getInitializer().getContentProcedure(this::getSelf, () -> {
+            InfoEntity info = this.getSelf();
+
             List<InfoProcessorReadContentFunction> resolvers = this.processorMediator.getReadContents();
 
             byte[] contentSource = null;
@@ -365,20 +365,23 @@ public class InfoObject extends AObject {
 
             return contentSource;
         }, (byte[] contentSource) -> {
+            InfoEntity info = this.getSelf();
+
             List<InfoProcessorWriteContentConsumer> resolvers = this.processorMediator.getWriteContents();
 
             for (InfoProcessorWriteContentConsumer resolver : resolvers) {
                 resolver.accept(info, type, status, contentSource);
             }
         }, () -> {
+            InfoEntity info = this.getSelf();
+
             List<InfoProcessorExecuteContentConsumer> resolvers = this.processorMediator.getExecuteContents();
 
             for (InfoProcessorExecuteContentConsumer resolver : resolvers) {
                 resolver.accept(info, type, status);
             }
         });
-
-        content.setInfo(this);
+        content.setParent(this);
 
         return content;
     }

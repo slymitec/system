@@ -83,7 +83,6 @@ public abstract class CollectionUtil {
 
                 @Override
                 public void forEachRemaining(Consumer<? super E> action) {
-                    // Use backing collection version
                     i.forEachRemaining(action);
                 }
             };
@@ -117,7 +116,6 @@ public abstract class CollectionUtil {
             throw new StatusNotWritableException();
         }
 
-        // Override default methods in Collection
         @Override
         public void forEach(Consumer<? super E> action) {
             c.forEach(action);
@@ -159,12 +157,6 @@ public abstract class CollectionUtil {
 
         private static final long serialVersionUID = -2542308836966382001L;
 
-        /**
-         * Allows instances to be deserialized in pre-1.4 JREs (which do
-         * not have UnmodifiableRandomAccessList).  UnmodifiableList has
-         * a readResolve method that inverts this transformation upon
-         * deserialization.
-         */
         private Object writeReplace() {
             return new UnmodifiableList<>(list);
         }
@@ -282,18 +274,6 @@ public abstract class CollectionUtil {
             return new UnmodifiableList<>(list.subList(fromIndex, toIndex));
         }
 
-        /**
-         * UnmodifiableRandomAccessList instances are serialized as
-         * UnmodifiableList instances to allow them to be deserialized
-         * in pre-1.4 JREs (which do not have UnmodifiableRandomAccessList).
-         * This method inverts the transformation.  As a beneficial
-         * side-effect, it also grafts the RandomAccess marker onto
-         * UnmodifiableList instances that were serialized in pre-1.4 JREs.
-         * <p>
-         * Note: Unfortunately, UnmodifiableRandomAccessList instances
-         * serialized in 1.4.1 and deserialized in 1.4 will become
-         * UnmodifiableList instances, as this method was missing in 1.4.
-         */
         private Object readResolve() {
             return (list instanceof RandomAccess
                     ? new UnmodifiableRandomAccessList<>(list)
@@ -398,11 +378,9 @@ public abstract class CollectionUtil {
             return m.toString();
         }
 
-        // Override default methods in Map
         @Override
         @SuppressWarnings("unchecked")
         public V getOrDefault(Object k, V defaultValue) {
-            // Safe cast as we don't change the value
             return ((Map<K, V>) m).getOrDefault(k, defaultValue);
         }
 
@@ -459,21 +437,12 @@ public abstract class CollectionUtil {
             throw new StatusNotWritableException();
         }
 
-        /**
-         * We need this class in addition to UnmodifiableSet as
-         * Map.Entries themselves permit modification of the backing Map
-         * via their setValue operation.  This class is subtle: there are
-         * many possible attacks that must be thwarted.
-         *
-         * @serial include
-         */
         static class UnmodifiableEntrySet<K, V>
                 extends UnmodifiableSet<Entry<K, V>> {
             private static final long serialVersionUID = 7854390611657943733L;
 
             @SuppressWarnings({"unchecked", "rawtypes"})
             UnmodifiableEntrySet(Set<? extends Map.Entry<? extends K, ? extends V>> s) {
-                // Need to cast to raw in order to work around a limitation in the type system
                 super((Set) s);
             }
 
@@ -589,9 +558,6 @@ public abstract class CollectionUtil {
 
             @SuppressWarnings("unchecked")
             public <T> T[] toArray(T[] a) {
-                // We don't pass a to c.toArray, to avoid window of
-                // vulnerability wherein an unscrupulous multithreaded client
-                // could get his hands on raw (unwrapped) Entries from c.
                 Object[] arr = c.toArray(a.length == 0 ? a : Arrays.copyOf(a, 0));
 
                 for (int i = 0; i < arr.length; i++)
@@ -606,12 +572,6 @@ public abstract class CollectionUtil {
                 return a;
             }
 
-            /**
-             * This method is overridden to protect the backing set against
-             * an object with a nefarious equals function that senses
-             * that the equality-candidate is Map.Entry and calls its
-             * setValue method.
-             */
             public boolean contains(Object o) {
                 if (!(o instanceof Map.Entry))
                     return false;
@@ -619,11 +579,6 @@ public abstract class CollectionUtil {
                         new UnmodifiableMap.UnmodifiableEntrySet.UnmodifiableEntry<>((Map.Entry<?, ?>) o));
             }
 
-            /**
-             * The next two methods are overridden to protect against
-             * an unscrupulous List whose contains(Object o) method senses
-             * when o is a Map.Entry, and calls o.setValue.
-             */
             public boolean containsAll(Collection<?> coll) {
                 for (Object e : coll) {
                     if (!contains(e)) // Invokes safe contains() above
@@ -644,13 +599,6 @@ public abstract class CollectionUtil {
                 return containsAll(s); // Invokes safe containsAll() above
             }
 
-            /**
-             * This "wrapper class" serves two purposes: it prevents
-             * the client from modifying the backing Map, by short-circuiting
-             * the setValue method, and it protects the backing Map against
-             * an ill-behaved Map.Entry that attempts to modify another
-             * Map Entry when asked to perform an equality check.
-             */
             private static class UnmodifiableEntry<K, V> implements Map.Entry<K, V> {
                 private Map.Entry<? extends K, ? extends V> e;
 

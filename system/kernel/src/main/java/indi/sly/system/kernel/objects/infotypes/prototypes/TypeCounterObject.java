@@ -6,9 +6,13 @@ import indi.sly.system.kernel.objects.infotypes.values.TypeCounterDefinition;
 
 public class TypeCounterObject extends AValueProcessObject<TypeCounterDefinition, TypeObject> {
     public synchronized int getTotalOccupiedCount() {
+        this.lock(LockType.READ);
         this.init();
 
-        return this.value.getTotalOccupiedCount();
+        int totalOccupiedCount = this.value.getTotalOccupiedCount();
+
+        this.lock(LockType.NONE);
+        return totalOccupiedCount;
     }
 
     public synchronized void addTotalOccupiedCount() {

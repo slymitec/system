@@ -11,6 +11,7 @@ import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
+import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.instances.prototypes.PortContentObject;
 import indi.sly.system.kernel.processes.instances.prototypes.SignalContentObject;
 import indi.sly.system.kernel.processes.instances.values.SignalEntryDefinition;
@@ -34,15 +35,26 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadObject thread = threadManager.getCurrent();
 
-        byte[] processCommunicationShared = this.value.getShared();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        ProcessStatisticsObject processStatistics = this.parent.getStatistics();
-        processStatistics.addSharedReadCount(1);
-        processStatistics.addSharedReadBytes(processCommunicationShared.length);
+            byte[] processCommunicationShared = this.value.getShared();
 
-        return processCommunicationShared;
+            ProcessStatisticsObject processStatistics = this.parent.getStatistics();
+            processStatistics.addSharedReadCount(1);
+            processStatistics.addSharedReadBytes(processCommunicationShared.length);
+            ThreadStatisticsObject threadStatistics = thread.getStatistics();
+            threadStatistics.addSharedReadCount(1);
+            threadStatistics.addSharedReadBytes(processCommunicationShared.length);
+
+            return processCommunicationShared;
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setShared(byte[] shared) {
@@ -74,6 +86,11 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addSharedWriteCount(1);
         processStatistics.addSharedWriteBytes(shared.length);
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadObject thread = threadManager.getCurrent();
+        ThreadStatisticsObject threadStatistics = thread.getStatistics();
+        threadStatistics.addSharedWriteCount(1);
+        threadStatistics.addSharedWriteBytes(shared.length);
     }
 
     public Set<UUID> getPortIDs() {
@@ -82,9 +99,14 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return CollectionUtil.unmodifiable(this.value.getPortIDs());
+            return CollectionUtil.unmodifiable(this.value.getPortIDs());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public UUID createPort(Set<UUID> sourceProcessIDs) {
@@ -148,6 +170,10 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addPortCount(1);
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadObject thread = threadManager.getCurrent();
+        ThreadStatisticsObject threadStatistics = thread.getStatistics();
+        threadStatistics.addPortCount(1);
 
         return portID;
     }
@@ -176,7 +202,6 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             }
 
             this.fresh();
-            this.lock(LockType.NONE);
         } finally {
             this.lock(LockType.NONE);
         }
@@ -211,7 +236,6 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             processCommunicationPortIDs.remove(portID);
 
             this.fresh();
-            this.lock(LockType.NONE);
         } finally {
             this.lock(LockType.NONE);
         }
@@ -227,7 +251,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        if (!this.getPortIDs().contains(portID)) {
+            throw new StatusNotExistedException();
+        }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -253,7 +279,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        if (!this.getPortIDs().contains(portID)) {
+            throw new StatusNotExistedException();
+        }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -277,7 +305,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        if (!this.getPortIDs().contains(portID)) {
+            throw new StatusNotExistedException();
+        }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -296,6 +326,11 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addPortReadCount(1);
         processStatistics.addPortReadBytes(value.length);
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadObject thread = threadManager.getCurrent();
+        ThreadStatisticsObject threadStatistics = thread.getStatistics();
+        threadStatistics.addPortReadCount(1);
+        threadStatistics.addPortReadBytes(value.length);
 
         return value;
     }
@@ -324,6 +359,11 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addPortWriteCount(1);
         processStatistics.addPortWriteBytes(value.length);
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadObject thread = threadManager.getCurrent();
+        ThreadStatisticsObject threadStatistics = thread.getStatistics();
+        threadStatistics.addPortWriteCount(1);
+        threadStatistics.addPortWriteBytes(value.length);
     }
 
     public UUID getSignalID() {
@@ -332,9 +372,14 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.getSignalID();
+            return this.value.getSignalID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void createSignal(Set<UUID> sourceProcessIDs) {
@@ -389,7 +434,6 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             this.value.setSignalID(signals.getID());
 
             this.fresh();
-            this.lock(LockType.NONE);
         } finally {
             this.lock(LockType.NONE);
         }
@@ -434,11 +478,18 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        UUID signalID;
+
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            signalID = this.value.getSignalID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
-        UUID signalID = this.value.getSignalID();
 
         List<IdentificationDefinition> identifications
                 = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
@@ -462,11 +513,18 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        UUID signalID;
+
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            signalID = this.value.getSignalID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
-        UUID signalID = this.value.getSignalID();
 
         List<IdentificationDefinition> identifications
                 = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
@@ -484,11 +542,18 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        UUID signalID;
+
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            signalID = this.value.getSignalID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
-        UUID signalID = this.value.getSignalID();
 
         List<IdentificationDefinition> identifications
                 = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
@@ -501,6 +566,10 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addSignalReadCount(signalEntries.size());
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadObject thread = threadManager.getCurrent();
+        ThreadStatisticsObject threadStatistics = thread.getStatistics();
+        threadStatistics.addSignalReadCount(signalEntries.size());
 
         return CollectionUtil.unmodifiable(signalEntries);
     }
@@ -528,5 +597,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addSignalWriteCount(1);
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadObject thread = threadManager.getCurrent();
+        ThreadStatisticsObject threadStatistics = thread.getStatistics();
+        threadStatistics.addSignalWriteCount(1);
     }
 }

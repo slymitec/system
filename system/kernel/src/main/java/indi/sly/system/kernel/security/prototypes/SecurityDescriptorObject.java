@@ -63,55 +63,61 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
             throw new StatusDisabilityException();
         }
 
-        this.init();
-
-        ProcessTokenObject processToken = this.getCurrentProcessToken();
-
-        if (this.permission) {
-            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                    && !this.value.getOwners().contains(processToken.getAccountID())
-                    && this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
-                throw new ConditionPermissionException();
-            }
-        }
-
-        if (this.audit) {
-            this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
-        }
-
         List<SecurityDescriptorSummaryDefinition> securityDescriptorSummaries = new ArrayList<>();
-        SecurityDescriptorObject securityDescriptor = this;
-        do {
-            SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
 
-            if (securityDescriptor.permission) {
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            ProcessTokenObject processToken = this.getCurrentProcessToken();
+
+            if (this.permission) {
                 if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                        && !securityDescriptor.value.getOwners().contains(processToken.getAccountID())
-                        && securityDescriptor.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
-                    break;
+                        && !this.value.getOwners().contains(processToken.getAccountID())
+                        && this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                    throw new ConditionPermissionException();
+                }
+            }
+
+            if (this.audit) {
+                this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
+            }
+
+            SecurityDescriptorObject securityDescriptor = this;
+            do {
+                SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
+
+                if (securityDescriptor.permission) {
+                    if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                            && !securityDescriptor.value.getOwners().contains(processToken.getAccountID())
+                            && securityDescriptor.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                        break;
+                    }
+
+                    securityDescriptorSummary.setPermission(true);
+                    securityDescriptorSummary.setInherit(securityDescriptor.value.isInherit());
+                    securityDescriptorSummary.getPermissions().addAll(securityDescriptor.value.getPermissions());
+                } else {
+                    securityDescriptorSummary.setPermission(false);
                 }
 
-                securityDescriptorSummary.setPermission(true);
-                securityDescriptorSummary.setInherit(securityDescriptor.value.isInherit());
-                securityDescriptorSummary.getPermissions().addAll(securityDescriptor.value.getPermissions());
-            } else {
-                securityDescriptorSummary.setPermission(false);
-            }
+                if (securityDescriptor.audit) {
+                    securityDescriptorSummary.setAudit(true);
+                    securityDescriptorSummary.getAudits().addAll(securityDescriptor.value.getAudits());
+                } else {
+                    securityDescriptorSummary.setAudit(false);
+                }
 
-            if (securityDescriptor.audit) {
-                securityDescriptorSummary.setAudit(true);
-                securityDescriptorSummary.getAudits().addAll(securityDescriptor.value.getAudits());
-            } else {
-                securityDescriptorSummary.setAudit(false);
-            }
+                securityDescriptorSummary.getIdentifications().addAll(securityDescriptor.identifications);
 
-            securityDescriptorSummary.getIdentifications().addAll(securityDescriptor.identifications);
+                securityDescriptorSummaries.add(securityDescriptorSummary);
 
-            securityDescriptorSummaries.add(securityDescriptorSummary);
-
-            securityDescriptor = securityDescriptor.parent;
-        } while (securityDescriptor != null);
-        Collections.reverse(securityDescriptorSummaries);
+                securityDescriptor = securityDescriptor.parent;
+            } while (securityDescriptor != null);
+            Collections.reverse(securityDescriptorSummaries);
+        } finally {
+            this.lock(LockType.NONE);
+        }
 
         return CollectionUtil.unmodifiable(securityDescriptorSummaries);
     }
@@ -121,21 +127,26 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
             throw new StatusDisabilityException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        ProcessTokenObject processToken = this.getCurrentProcessToken();
+            ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getOwners().contains(processToken.getAccountID())
-                && this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
-            throw new ConditionPermissionException();
+            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                    && !this.value.getOwners().contains(processToken.getAccountID())
+                    && this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                throw new ConditionPermissionException();
+            }
+
+            if (this.audit) {
+                this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
+            }
+
+            return this.value.isInherit();
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        if (this.audit) {
-            this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
-        }
-
-        return this.value.isInherit();
     }
 
     public void setInherit(boolean inherit) {
@@ -174,15 +185,20 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getOwners().contains(processToken.getAccountID())
-                && this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
-            throw new ConditionRefuseException();
+            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                    && !this.value.getOwners().contains(processToken.getAccountID())
+                    && this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                throw new ConditionRefuseException();
+            }
+
+            return this.value.isHasChild();
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        return this.value.isHasChild();
     }
 
     public Set<UUID> getOwners() {
@@ -192,19 +208,24 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                && !this.value.getOwners().contains(processToken.getAccountID())
-                && this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
-            throw new ConditionPermissionException();
+            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                    && !this.value.getOwners().contains(processToken.getAccountID())
+                    && this.allowPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW)) {
+                throw new ConditionPermissionException();
+            }
+
+            if (this.audit) {
+                this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
+            }
+
+            return CollectionUtil.unmodifiable(this.value.getOwners());
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        if (this.audit) {
-            this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
-        }
-
-        return CollectionUtil.unmodifiable(this.value.getOwners());
     }
 
     public void setOwners(Set<UUID> owners) {
@@ -259,24 +280,30 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
             return false;
         }
 
-        this.init();
-
         List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
-        SecurityDescriptorObject securityDescriptor = this;
-        do {
-            if (securityDescriptor.permission) {
-                securityDescriptors.add(securityDescriptor.value);
 
-                if (!securityDescriptor.isInherit()) {
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            SecurityDescriptorObject securityDescriptor = this;
+            do {
+                if (securityDescriptor.permission) {
+                    securityDescriptors.add(securityDescriptor.value);
+
+                    if (!securityDescriptor.isInherit()) {
+                        break;
+                    }
+                } else {
                     break;
                 }
-            } else {
-                break;
-            }
 
-            securityDescriptor = securityDescriptor.parent;
-        } while (securityDescriptor != null);
-        Collections.reverse(securityDescriptors);
+                securityDescriptor = securityDescriptor.parent;
+            } while (securityDescriptor != null);
+            Collections.reverse(securityDescriptors);
+        } finally {
+            this.lock(LockType.NONE);
+        }
 
         Set<AccessControlDefinition> effectivePermissions = new HashSet<>();
         for (int i = 0; i < securityDescriptors.size(); i++) {
@@ -447,20 +474,26 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        this.init();
-
         List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
-        SecurityDescriptorObject securityDescriptor = this;
-        do {
-            if (securityDescriptor.audit) {
-                securityDescriptors.add(securityDescriptor.value);
-            } else {
-                break;
-            }
 
-            securityDescriptor = securityDescriptor.parent;
-        } while (securityDescriptor != null);
-        Collections.reverse(securityDescriptors);
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            SecurityDescriptorObject securityDescriptor = this;
+            do {
+                if (securityDescriptor.audit) {
+                    securityDescriptors.add(securityDescriptor.value);
+                } else {
+                    break;
+                }
+
+                securityDescriptor = securityDescriptor.parent;
+            } while (securityDescriptor != null);
+            Collections.reverse(securityDescriptors);
+        } finally {
+            this.lock(LockType.NONE);
+        }
 
         Set<AccessControlDefinition> effectiveAudits = new HashSet<>();
         for (int i = 0; i < securityDescriptors.size(); i++) {

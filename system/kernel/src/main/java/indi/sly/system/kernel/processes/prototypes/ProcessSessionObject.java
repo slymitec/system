@@ -19,9 +19,14 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, ProcessObject> {
     public UUID getID() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.getSessionID();
+            return this.value.getSessionID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void inheritID() {

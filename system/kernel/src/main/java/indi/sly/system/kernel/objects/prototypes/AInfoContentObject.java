@@ -5,6 +5,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.Consumer;
 import indi.sly.system.common.lang.StatusDisabilityException;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -52,8 +53,13 @@ public abstract class AInfoContentObject extends AValueProcessObject<byte[], Inf
             throw new StatusDisabilityException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        this.funcExecute.accept();
+            this.funcExecute.accept();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 }

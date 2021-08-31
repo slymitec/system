@@ -20,9 +20,13 @@ import java.util.Map;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserTokenObject extends AIndependentBytesValueProcessObject<AccountAuthorizationTokenDefinition> {
     public long getPrivileges() {
+        this.lock(LockType.READ);
         this.init();
 
-        return this.value.getPrivileges();
+        long privileges = this.value.getPrivileges();
+
+        this.lock(LockType.NONE);
+        return privileges;
     }
 
     public void setPrivileges(long privileges) {

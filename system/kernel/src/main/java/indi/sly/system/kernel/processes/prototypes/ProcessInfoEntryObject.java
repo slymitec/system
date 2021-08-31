@@ -30,12 +30,17 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
     protected UUID index;
 
     private boolean isExist() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        if (ValueUtil.isAnyNullOrEmpty(this.index)) {
-            return false;
-        } else {
-            return this.value.containByIndex(index);
+            if (ValueUtil.isAnyNullOrEmpty(this.index)) {
+                return false;
+            } else {
+                return this.value.containByIndex(index);
+            }
+        } finally {
+            this.lock(LockType.NONE);
         }
     }
 
@@ -67,10 +72,17 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
             throw new StatusNotExistedException();
         }
 
-        ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
-        Map<Long, Long> processInfoEntryDate = processInfoEntry.getDate();
+        try {
+            this.lock(LockType.READ);
+            this.init();
+            
+            ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
+            Map<Long, Long> processInfoEntryDate = processInfoEntry.getDate();
 
-        return CollectionUtil.unmodifiable(processInfoEntryDate);
+            return CollectionUtil.unmodifiable(processInfoEntryDate);
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public synchronized List<IdentificationDefinition> getIdentifications() {

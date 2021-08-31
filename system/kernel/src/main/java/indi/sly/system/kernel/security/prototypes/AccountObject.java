@@ -25,19 +25,33 @@ import java.util.*;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AccountObject extends AIndependentValueProcessObject<AccountEntity> {
     public UUID getID() {
+        this.lock(LockType.READ);
         this.init();
 
-        return this.value.getID();
+        UUID id = this.value.getID();
+
+        this.lock(LockType.NONE);
+        return id;
     }
 
     public String getName() {
+        this.lock(LockType.READ);
         this.init();
 
-        return this.value.getName();
+        String name = this.value.getName();
+
+        this.lock(LockType.NONE);
+        return name;
     }
 
     public String getPassword() {
-        return this.value.getPassword();
+        this.lock(LockType.READ);
+        this.init();
+
+        String password = this.value.getPassword();
+
+        this.lock(LockType.NONE);
+        return password;
     }
 
     public void setPassword(String password) {
@@ -65,6 +79,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
     public Set<GroupObject> getGroups() {
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
+        this.lock(LockType.READ);
         this.init();
 
         Set<GroupObject> groups = new HashSet<>();
@@ -73,6 +88,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
             groups.add(userManager.getGroup(group.getID()));
         }
 
+        this.lock(LockType.NONE);
         return CollectionUtil.unmodifiable(groups);
     }
 
@@ -114,6 +130,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
     }
 
     public UserTokenObject getToken() {
+        this.lock(LockType.READ);
         this.init();
 
         UserTokenObject accountGroupToken = this.factoryManager.create(UserTokenObject.class);
@@ -121,6 +138,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
         accountGroupToken.setParent(this);
         accountGroupToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
 
+        this.lock(LockType.NONE);
         return accountGroupToken;
     }
 }

@@ -37,9 +37,14 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.list();
+            return this.value.list();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public synchronized void inherit(UUID index) {
@@ -89,9 +94,14 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.containByIndex(index);
+            return this.value.containByIndex(index);
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public synchronized boolean containByID(UUID id) {
@@ -104,9 +114,14 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.containByID(id);
+            return this.value.containByID(id);
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public synchronized ProcessInfoEntryObject getByIndex(UUID index) {

@@ -2,6 +2,7 @@ package indi.sly.system.services.job.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import indi.sly.system.services.job.lang.JobProcessorContentFunction;
@@ -25,39 +26,43 @@ public class JobObject extends AIndependentValueProcessObject<JobDefinition> {
     protected JobStatusDefinition status;
 
     public UUID getID() {
+        this.lock(LockType.READ);
         this.init();
 
-        return this.value.getID();
+        UUID id = this.value.getID();
+
+        this.lock(LockType.NONE);
+        return id;
     }
 
     public long getRuntime() {
         return this.status.getRuntime();
     }
 
-    private synchronized JobDefinition getSelf() {
-        this.init();
-
-        return this.value;
-    }
-
     public void start() {
-        JobDefinition job = this.getSelf();
-
         List<JobProcessorStartFunction> resolvers = this.processorMediator.getStarts();
 
+        this.lock(LockType.READ);
+        this.init();
+
         for (JobProcessorStartFunction resolver : resolvers) {
-            resolver.accept(job, this.status);
+            resolver.accept(this.value, this.status);
         }
+
+        this.lock(LockType.NONE);
     }
 
     public void finish() {
-        JobDefinition job = this.getSelf();
-
         List<JobProcessorFinishConsumer> resolvers = this.processorMediator.getFinishes();
 
+        this.lock(LockType.READ);
+        this.init();
+
         for (JobProcessorFinishConsumer resolver : resolvers) {
-            resolver.accept(job, this.status);
+            resolver.accept(this.value, this.status);
         }
+
+        this.lock(LockType.NONE);
     }
 
     public synchronized void run(String name) {
@@ -65,26 +70,33 @@ public class JobObject extends AIndependentValueProcessObject<JobDefinition> {
             throw new ConditionParametersException();
         }
 
-        JobDefinition job = this.getSelf();
         JobContentObject content = this.getContent();
 
         List<JobProcessorRunConsumer> resolvers = this.processorMediator.getRuns();
 
+        this.lock(LockType.READ);
+        this.init();
+
         for (JobProcessorRunConsumer resolver : resolvers) {
-            resolver.accept(job, this.status, name, this::run, content);
+            resolver.accept(this.value, this.status, name, this::run, content);
         }
+
+        this.lock(LockType.NONE);
     }
 
     public synchronized JobContentObject getContent() {
-        JobDefinition job = this.getSelf();
-
         ThreadContextObject threadContext = null;
 
         List<JobProcessorContentFunction> resolvers = this.processorMediator.getContents();
 
+        this.lock(LockType.READ);
+        this.init();
+
         for (JobProcessorContentFunction resolver : resolvers) {
-            threadContext = resolver.apply(job, this.status, threadContext);
+            threadContext = resolver.apply(this.value, this.status, threadContext);
         }
+
+        this.lock(LockType.NONE);
 
         JobContentObject jobContent = this.factoryManager.create(JobContentObject.class);
         jobContent.threadContext = threadContext;

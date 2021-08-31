@@ -26,15 +26,22 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
     protected ProcessProcessorMediator processorMediator;
 
     public long get() {
-        Long status = ProcessStatusType.NULL;
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        Set<ProcessProcessorReadStatusFunction> resolvers = this.processorMediator.getReadProcessStatuses();
+            Long status = ProcessStatusType.NULL;
 
-        for (ProcessProcessorReadStatusFunction resolver : resolvers) {
-            status = resolver.apply(status, this.value);
+            Set<ProcessProcessorReadStatusFunction> resolvers = this.processorMediator.getReadProcessStatuses();
+
+            for (ProcessProcessorReadStatusFunction resolver : resolvers) {
+                status = resolver.apply(status, this.value);
+            }
+
+            return status;
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        return status;
     }
 
     public void initialize() {
@@ -50,12 +57,17 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
             throw new ConditionRefuseException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+            Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-        for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-            resolver.accept(this.value, ProcessStatusType.INITIALIZATION);
+            for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
+                resolver.accept(this.value, ProcessStatusType.INITIALIZATION);
+            }
+        } finally {
+            this.lock(LockType.NONE);
         }
 
         ProcessStatisticsObject processStatus = this.parent.getStatistics();
@@ -91,12 +103,17 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
             }
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+            Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-        for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-            resolver.accept(this.value, ProcessStatusType.RUNNING);
+            for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
+                resolver.accept(this.value, ProcessStatusType.RUNNING);
+            }
+        } finally {
+            this.lock(LockType.NONE);
         }
     }
 

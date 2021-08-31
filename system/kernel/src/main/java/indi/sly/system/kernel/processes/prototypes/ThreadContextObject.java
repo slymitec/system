@@ -15,9 +15,13 @@ import java.util.Map;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ThreadContextObject extends AValueProcessObject<ThreadContextDefinition, ThreadObject> {
     public long getType() {
+        this.lock(LockType.READ);
         this.init();
 
-        return this.value.getType();
+        long type = this.value.getType();
+
+        this.lock(LockType.NONE);
+        return type;
     }
 
     public void setType(long type) {
@@ -31,9 +35,13 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
     }
 
     public Map<String, Object> getParameters() {
+        this.lock(LockType.READ);
         this.init();
 
-        return CollectionUtil.unmodifiable(this.value.getRun().getParameters());
+        Map<String, Object> parameters = this.value.getRun().getParameters();
+
+        this.lock(LockType.NONE);
+        return CollectionUtil.unmodifiable(parameters);
     }
 
     public void setParameters(Map<String, Object> parameters) {
@@ -48,9 +56,13 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
     }
 
     public Map<String, Object> getResults() {
+        this.lock(LockType.READ);
         this.init();
 
-        return CollectionUtil.unmodifiable(this.value.getRun().getResults());
+        Map<String, Object> results = this.value.getRun().getResults();
+
+        this.lock(LockType.NONE);
+        return CollectionUtil.unmodifiable(results);
     }
 
     public void setResults(Map<String, Object> results) {
@@ -65,9 +77,13 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
     }
 
     public AKernelException getRunException() {
+        this.lock(LockType.READ);
         this.init();
 
-        return this.value.getRun().getException();
+        AKernelException exception = this.value.getRun().getException();
+
+        this.lock(LockType.NONE);
+        return exception;
     }
 
     public void setRunException(AKernelException exception) {

@@ -29,9 +29,14 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.getType();
+            return this.value.getType();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setType(long type) {
@@ -65,9 +70,14 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.getApplication();
+            return this.value.getApplication();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setApplication(ApplicationDefinition application) {
@@ -105,9 +115,14 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return CollectionUtil.unmodifiable(this.value.getEnvironmentVariables());
+            return CollectionUtil.unmodifiable(this.value.getEnvironmentVariables());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setEnvironmentVariables(Map<String, String> environmentVariable) {
@@ -152,9 +167,14 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.getParameters();
+            return this.value.getParameters();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setParameters(String parameters) {
@@ -192,9 +212,14 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return CollectionUtil.unmodifiable(this.value.getWorkFolder());
+            return CollectionUtil.unmodifiable(this.value.getWorkFolder());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setWorkFolder(List<IdentificationDefinition> workFolder) {

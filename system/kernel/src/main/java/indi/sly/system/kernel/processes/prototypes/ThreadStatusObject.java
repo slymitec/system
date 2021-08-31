@@ -15,9 +15,13 @@ import javax.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, ThreadObject> {
     public long get() {
+        this.lock(LockType.READ);
         this.init();
 
-        return this.value.getStatus();
+        long status = this.value.getStatus();
+
+        this.lock(LockType.NONE);
+        return status;
     }
 
     public void initialize() {

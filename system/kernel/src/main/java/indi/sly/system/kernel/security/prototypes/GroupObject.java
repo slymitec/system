@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.security.prototypes;
 
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
@@ -14,18 +15,27 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GroupObject extends AIndependentValueProcessObject<GroupEntity> {
     public UUID getID() {
+        this.lock(LockType.READ);
         this.init();
 
-        return this.value.getID();
+        UUID id = this.value.getID();
+
+        this.lock(LockType.NONE);
+        return id;
     }
 
     public String getName() {
+        this.lock(LockType.READ);
         this.init();
 
-        return this.value.getName();
+        String name = this.value.getName();
+
+        this.lock(LockType.NONE);
+        return name;
     }
 
     public UserTokenObject getToken() {
+        this.lock(LockType.READ);
         this.init();
 
         UserTokenObject accountGroupToken = this.factoryManager.create(UserTokenObject.class);
@@ -38,6 +48,7 @@ public class GroupObject extends AIndependentValueProcessObject<GroupEntity> {
             accountGroupRepository.lock(this.value, lock);
         });
 
+        this.lock(LockType.NONE);
         return accountGroupToken;
     }
 }

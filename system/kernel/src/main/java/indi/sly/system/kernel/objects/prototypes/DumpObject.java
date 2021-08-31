@@ -2,6 +2,7 @@ package indi.sly.system.kernel.objects.prototypes;
 
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
@@ -18,36 +19,68 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class DumpObject extends AValueProcessObject<DumpDefinition, InfoObject> {
     public Map<Long, Long> getDate() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return CollectionUtil.unmodifiable(this.value.getDate());
+            return CollectionUtil.unmodifiable(this.value.getDate());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public UUID getProcessID() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.getProcessID();
+            return this.value.getProcessID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public UUID getAccountID() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.getAccountID();
+            return this.value.getAccountID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public List<IdentificationDefinition> getIdentifications() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.getIdentifications();
+            return this.value.getIdentifications();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public InfoOpenDefinition getInfoOpen() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.getInfoOpen();
+            return this.value.getInfoOpen();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public List<SecurityDescriptorSummaryDefinition> getSecurityDescriptorSummary() {
-        return CollectionUtil.unmodifiable(this.value.getSecurityDescriptorSummary());
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            return CollectionUtil.unmodifiable(this.value.getSecurityDescriptorSummary());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 }

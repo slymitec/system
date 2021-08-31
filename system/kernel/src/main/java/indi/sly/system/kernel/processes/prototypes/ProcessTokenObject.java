@@ -61,9 +61,14 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.getAccountID();
+            return this.value.getAccountID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void inheritAccountID() {
@@ -94,9 +99,14 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
     }
 
     public long getPrivileges() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.value.getPrivileges();
+            return this.value.getPrivileges();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void inheritPrivileges() {
@@ -201,9 +211,14 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return CollectionUtil.unmodifiable(this.value.getLimits());
+            return CollectionUtil.unmodifiable(this.value.getLimits());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void inheritLimits() {
@@ -285,9 +300,14 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new StatusRelationshipErrorException();
         }
 
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return CollectionUtil.unmodifiable(this.value.getRoles());
+            return CollectionUtil.unmodifiable(this.value.getRoles());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setRoles(Set<UUID> roles) {

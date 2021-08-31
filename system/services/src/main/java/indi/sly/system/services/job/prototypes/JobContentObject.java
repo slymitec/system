@@ -118,6 +118,5 @@ public class JobContentObject extends AObject {
 
     public void setException(AKernelException exception) {
         this.threadContext.setRunException(exception);
-
     }
 }

@@ -1,6 +1,8 @@
 package indi.sly.system.kernel.core.enviroment.values;
 
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.core.values.HandleEntryDefinition;
 
@@ -8,7 +10,7 @@ import javax.inject.Named;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Named
@@ -17,14 +19,17 @@ public abstract class ASpaceDefinition<T> extends ADefinition<T> {
         this.coreObjects = new ConcurrentHashMap<>();
         this.handledHandles = new ConcurrentHashMap<>();
         this.classedHandles = new ConcurrentHashMap<>();
-        this.coreObjectLock = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock coreObjectLock = new ReentrantReadWriteLock();
+        this.coreObjectReadLock = coreObjectLock.readLock();
+        this.coreObjectWriteLock = coreObjectLock.writeLock();
         this.coreObjectLimit = 0L;
     }
 
     private final Map<UUID, AObject> coreObjects;
     private final Map<UUID, HandleEntryDefinition> handledHandles;
     private final Map<Class<? extends AObject>, HandleEntryDefinition> classedHandles;
-    private final ReadWriteLock coreObjectLock;
+    private final Lock coreObjectReadLock;
+    private final Lock coreObjectWriteLock;
     private long coreObjectLimit;
 
     public Map<UUID, AObject> getCoreObjects() {
@@ -39,8 +44,14 @@ public abstract class ASpaceDefinition<T> extends ADefinition<T> {
         return this.classedHandles;
     }
 
-    public ReadWriteLock getCoreObjectLock() {
-        return this.coreObjectLock;
+    public Lock getCoreObjectLock(long lock) {
+        if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
+            return this.coreObjectReadLock;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
+            return this.coreObjectWriteLock;
+        } else {
+            return null;
+        }
     }
 
     public long getCoreObjectLimit() {

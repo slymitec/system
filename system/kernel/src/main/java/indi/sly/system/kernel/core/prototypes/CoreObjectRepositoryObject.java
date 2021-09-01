@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -31,18 +30,7 @@ public class CoreObjectRepositoryObject extends AObject {
     }
 
     public Lock getLock(long space, long lock) {
-        ReadWriteLock coreObjectLock = this.getSpace(space).getCoreObjectLock();
-
-        if (ObjectUtil.isAnyNull(coreObjectLock)) {
-            throw new StatusNotSupportedException();
-        }
-
-        Lock readWriteLock = null;
-        if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-            readWriteLock = coreObjectLock.readLock();
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-            readWriteLock = coreObjectLock.writeLock();
-        }
+        Lock readWriteLock = this.getSpace(space).getCoreObjectLock(lock);
 
         if (ObjectUtil.isAnyNull(readWriteLock)) {
             throw new StatusNotSupportedException();
@@ -52,13 +40,33 @@ public class CoreObjectRepositoryObject extends AObject {
     }
 
     public Set<AObject> getAll(long space) {
-        Set<AObject> coreObjects = new HashSet<>(this.getSpace(space).getCoreObjects().values());
+        Set<AObject> coreObjects;
+
+        Lock lock = this.getLock(space, LockType.READ);
+
+        try {
+            lock.lock();
+
+            coreObjects = new HashSet<>(this.getSpace(space).getCoreObjects().values());
+        } finally {
+            lock.unlock();
+        }
 
         return CollectionUtil.unmodifiable(coreObjects);
     }
 
     public Set<UUID> getAllHandle(long space) {
-        HashSet<UUID> handles = new HashSet<>(this.getSpace(space).getHandledHandles().keySet());
+        HashSet<UUID> handles;
+
+        Lock lock = this.getLock(space, LockType.READ);
+
+        try {
+            lock.lock();
+
+            handles = new HashSet<>(this.getSpace(space).getHandledHandles().keySet());
+        } finally {
+            lock.unlock();
+        }
 
         return CollectionUtil.unmodifiable(handles);
     }
@@ -76,7 +84,15 @@ public class CoreObjectRepositoryObject extends AObject {
     }
 
     public long getLimit(long space) {
-        return this.getSpace(space).getCoreObjectLimit();
+        Lock lock = this.getLock(space, LockType.READ);
+
+        try {
+            lock.lock();
+
+            return this.getSpace(space).getCoreObjectLimit();
+        } finally {
+            lock.unlock();
+        }
     }
 
     public void setLimit(long space, long limit) {

@@ -35,7 +35,7 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":kernel"))
 
-    implementation("com.microsoft.sqlserver:mssql-jdbc:9.2.1.jre11")
+    implementation("com.microsoft.sqlserver:mssql-jdbc:9.4.0.jre11")
     implementation("javax.inject:javax.inject:1")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-aop")

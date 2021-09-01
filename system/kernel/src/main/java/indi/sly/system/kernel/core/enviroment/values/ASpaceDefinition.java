@@ -2,7 +2,6 @@ package indi.sly.system.kernel.core.enviroment.values;
 
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.kernel.core.prototypes.AObject;
-import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.values.HandleEntryDefinition;
 
 import javax.inject.Named;
@@ -20,11 +19,6 @@ public abstract class ASpaceDefinition<T> extends ADefinition<T> {
         this.classedHandles = new ConcurrentHashMap<>();
         this.coreObjectLock = new ReentrantReadWriteLock();
         this.coreObjectLimit = 0L;
-
-        this.corePrototypes = new ConcurrentHashMap<>();
-        this.namedCorePrototypeIDs = new ConcurrentHashMap<>();
-        this.classedCorePrototypeIDs = new ConcurrentHashMap<>();
-        this.corePrototypeLock = new ReentrantReadWriteLock();
     }
 
     private final Map<UUID, AObject> coreObjects;
@@ -55,28 +49,5 @@ public abstract class ASpaceDefinition<T> extends ADefinition<T> {
 
     public void setCoreObjectLimit(long coreObjectLimit) {
         this.coreObjectLimit = coreObjectLimit;
-    }
-
-    //
-
-    private final Map<UUID, APrototype> corePrototypes;
-    private final Map<String, UUID> namedCorePrototypeIDs;
-    private final Map<Class<? extends APrototype>, UUID> classedCorePrototypeIDs;
-    private final ReadWriteLock corePrototypeLock;
-
-    public final Map<UUID, APrototype> getCorePrototypes() {
-        return this.corePrototypes;
-    }
-
-    public final Map<String, UUID> getNamedCorePrototypeIDs() {
-        return this.namedCorePrototypeIDs;
-    }
-
-    public final Map<Class<? extends APrototype>, UUID> getClassedCorePrototypeIDs() {
-        return classedCorePrototypeIDs;
-    }
-
-    public final ReadWriteLock getCorePrototypeLock() {
-        return this.corePrototypeLock;
     }
 }

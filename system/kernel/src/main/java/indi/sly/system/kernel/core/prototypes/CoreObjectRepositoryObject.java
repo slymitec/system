@@ -181,7 +181,9 @@ public class CoreObjectRepositoryObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        coreObject.factoryManager = this.factoryManager;
+        if (ObjectUtil.isAnyNull(coreObject.factoryManager)) {
+            coreObject.factoryManager = this.factoryManager;
+        }
 
         Lock lock = this.getLock(space, LockType.READ);
 
@@ -218,13 +220,14 @@ public class CoreObjectRepositoryObject extends AObject {
         if (ObjectUtil.isAnyNull(coreObject)) {
             throw new ConditionParametersException();
         }
-
-        coreObject.factoryManager = this.factoryManager;
-
-        Lock lock = this.getLock(space, LockType.READ);
+        if (ObjectUtil.isAnyNull(coreObject.factoryManager)) {
+            coreObject.factoryManager = this.factoryManager;
+        }
 
         UUID handle = UUIDUtil.createRandom();
         UUID id = UUIDUtil.createRandom();
+
+        Lock lock = this.getLock(space, LockType.READ);
 
         try {
             lock.lock();

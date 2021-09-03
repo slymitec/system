@@ -30,12 +30,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoFactory extends AFactory {
-    protected List<AInfoResolver> infoResolvers;
+    public InfoFactory() {
+        this.infoResolvers = new CopyOnWriteArrayList<>();
+    }
+
+    protected final List<AInfoResolver> infoResolvers;
 
     @Override
     public void init() {
-        this.infoResolvers = new CopyOnWriteArrayList<>();
-
         this.infoResolvers.add(this.factoryManager.create(InfoCheckConditionResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoDateResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoDumpResolver.class));

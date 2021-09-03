@@ -22,16 +22,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessFactory extends AFactory {
-    protected List<AProcessResolver> processResolvers;
-    protected List<AProcessCreateResolver> processCreatorResolvers;
-    protected List<AProcessEndResolver> processEndResolvers;
-
-    @Override
-    public void init() {
+    public ProcessFactory(){
         this.processResolvers = new CopyOnWriteArrayList<>();
         this.processCreatorResolvers = new CopyOnWriteArrayList<>();
         this.processEndResolvers = new CopyOnWriteArrayList<>();
+    }
 
+    protected final List<AProcessResolver> processResolvers;
+    protected final List<AProcessCreateResolver> processCreatorResolvers;
+    protected final List<AProcessEndResolver> processEndResolvers;
+
+    @Override
+    public void init() {
         this.processCreatorResolvers.add(this.factoryManager.create(ProcessCreateCheckResolver.class));
         this.processCreatorResolvers.add(this.factoryManager.create(ProcessCreateCommunicationResolver.class));
         this.processCreatorResolvers.add(this.factoryManager.create(ProcessCreateContextResolver.class));

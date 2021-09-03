@@ -21,7 +21,7 @@ import java.util.UUID;
 public class MemoryManager extends AManager {
     @Override
     public void startup(long startup) {
-        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT)) {
+        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_FINISH_SELF)) {
             this.factoryManager.getCoreObjectRepository().addByHandle(SpaceType.KERNEL,
                     this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID,
                     this.factoryManager.create(DatabaseInfoRepositoryObject.class));
@@ -30,7 +30,6 @@ public class MemoryManager extends AManager {
                     this.factoryManager.create(ProcessRepositoryObject.class));
             this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL,
                     this.factoryManager.create(UserRepositoryObject.class));
-        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_KERNEL)) {
         }
     }
 

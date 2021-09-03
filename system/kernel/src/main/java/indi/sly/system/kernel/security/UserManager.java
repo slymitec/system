@@ -2,25 +2,29 @@ package indi.sly.system.kernel.security;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
+import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
+import indi.sly.system.kernel.objects.prototypes.InfoObject;
+import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.instances.prototypes.processors.AuditTypeInitializer;
-import indi.sly.system.kernel.security.values.AccountEntity;
-import indi.sly.system.kernel.security.values.GroupEntity;
+import indi.sly.system.kernel.security.values.*;
 import indi.sly.system.kernel.security.prototypes.*;
-import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -31,10 +35,10 @@ public class UserManager extends AManager {
 
     @Override
     public void startup(long startup) {
-        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT)) {
-        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_KERNEL)) {
+        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
             this.factory = this.factoryManager.create(UserFactory.class);
-
+            this.factory.init();
+        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
 
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
@@ -165,7 +169,27 @@ public class UserManager extends AManager {
     public AccountObject createAccount(String accountName, String accountPassword) {
         AccountBuilder accountBuilder = this.factory.createAccount();
 
-        return accountBuilder.create(accountName, accountPassword);
+        AccountObject account = accountBuilder.create(accountName, accountPassword);
+
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        InfoObject audits = objectManager.get(List.of(new IdentificationDefinition("Audits")));
+
+        KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
+
+        InfoObject audit = audits.createChildAndOpen(configuration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+                new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+        SecurityDescriptorObject auditSecurityDescriptor = audit.getSecurityDescriptor();
+        Set<AccessControlDefinition> permissions = new HashSet<>();
+        AccessControlDefinition permission = new AccessControlDefinition();
+        permission.getUserID().setID(account.getID());
+        permission.getUserID().setType(UserType.ACCOUNT);
+        permission.setScope(AccessControlScopeType.HIERARCHICAL_HAS_CHILD);
+        permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+        permissions.add(permission);
+        auditSecurityDescriptor.setPermissions(permissions);
+        audit.close();
+
+        return account;
     }
 
     public GroupObject createGroup(String groupName) {

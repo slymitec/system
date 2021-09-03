@@ -25,10 +25,10 @@ import java.util.UUID;
 public class JobService extends AService {
     @Override
     public void startup(long startup) {
-        if (startup == StartupType.STEP_INIT) {
+        if (startup == StartupType.STEP_INIT_SELF) {
             this.factoryManager.getKernelSpace().setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
             this.factoryManager.getUserSpace().setServiceSpace(new ServiceUserSpaceExtensionDefinition());
-        } else if (startup == StartupType.STEP_SERVICE) {
+        } else if (startup == StartupType.STEP_INIT_SERVICE) {
         }
     }
 

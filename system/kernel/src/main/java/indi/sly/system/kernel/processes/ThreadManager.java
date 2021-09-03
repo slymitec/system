@@ -23,8 +23,7 @@ public class ThreadManager extends AManager {
 
     @Override
     public void startup(long startup) {
-        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT)) {
-        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_KERNEL)) {
+        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
             this.factory = this.factoryManager.create(ThreadFactory.class);
             this.factory.init();
         }

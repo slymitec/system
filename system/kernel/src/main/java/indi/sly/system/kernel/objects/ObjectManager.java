@@ -21,10 +21,10 @@ public class ObjectManager extends AManager {
 
     @Override
     public void startup(long startup) {
-        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT)) {
+        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
             this.factory = this.factoryManager.create(InfoFactory.class);
             this.factory.init();
-        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_KERNEL)) {
+        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
             this.factory.buildRootInfo();
         }
     }

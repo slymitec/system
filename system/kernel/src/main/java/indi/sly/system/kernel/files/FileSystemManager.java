@@ -21,8 +21,8 @@ import java.util.UUID;
 public class FileSystemManager extends AManager {
     @Override
     public void startup(long startup) {
-        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT)) {
-        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_KERNEL)) {
+        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
+        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
 
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();

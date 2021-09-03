@@ -31,13 +31,13 @@ public class TestController {
         System.out.println("----Start----");
         String ret = "finished...";
 
-        this.factoryManager.startup(StartupType.STEP_INIT);
+        this.factoryManager.startup(StartupType.STEP_INIT_SELF);
         KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         System.out.println(memoryManager != null);
-        memoryManager.startup(StartupType.STEP_INIT);
+        memoryManager.startup(StartupType.STEP_INIT_SELF);
 
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
         System.out.println(processRepository != null);

@@ -5,12 +5,16 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
+import indi.sly.system.kernel.core.boot.prototypes.BootFactory;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
-import indi.sly.system.kernel.core.prototypes.*;
+import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.CoreObjectRepositoryObject;
+import indi.sly.system.kernel.core.prototypes.CorePrototypeValueBuilder;
+import indi.sly.system.kernel.core.prototypes.SystemVersionObject;
 import indi.sly.system.kernel.files.FileSystemManager;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -27,9 +31,11 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FactoryManager extends AManager {
+    protected BootFactory bootFactory;
+
     @Override
     public void startup(long startup) {
-        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT)) {
+        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
             this.factoryManager = this;
             this.factoryManager.check();
 
@@ -51,7 +57,9 @@ public class FactoryManager extends AManager {
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(UserManager.class));
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(DateTimeObject.class));
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(SystemVersionObject.class));
-        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_KERNEL)) {
+            this.bootFactory = this.factoryManager.create(BootFactory.class);
+            this.bootFactory.init();
+            this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.bootFactory.buildBoot());
         }
     }
 

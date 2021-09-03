@@ -50,6 +50,14 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
             ProcessTokenLimitType.SIGNAL_LENGTH_MAX, 256,
             ProcessTokenLimitType.JOB_PROTOTYPE_CACHES_MAX, 8
     );
+    public final Map<Long, Integer> PROCESSES_TOKEN_FULL_LIMIT = Map.of(
+            ProcessTokenLimitType.INDEX_MAX, Integer.MAX_VALUE,
+            ProcessTokenLimitType.PORT_COUNT_MAX, Integer.MAX_VALUE,
+            ProcessTokenLimitType.PORT_LENGTH_MAX, Integer.MAX_VALUE,
+            ProcessTokenLimitType.SHARED_LENGTH_MAX, Integer.MAX_VALUE,
+            ProcessTokenLimitType.SIGNAL_LENGTH_MAX, Integer.MAX_VALUE,
+            ProcessTokenLimitType.JOB_PROTOTYPE_CACHES_MAX, Integer.MAX_VALUE
+    );
 
     public final long SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME = 65536L;
     public final UUID SECURITY_ACCOUNT_SYSTEM_ID

@@ -106,7 +106,7 @@ public class PortContentObject extends AInfoContentObject {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
 
-            if (!this.port.getProcessID().equals(process.getID()) && this.port.getSourceProcessIDs().contains(process.getID())) {
+            if (!this.port.getProcessID().equals(process.getID()) && !this.port.getSourceProcessIDs().contains(process.getID())) {
                 throw new ConditionRefuseException();
             }
 

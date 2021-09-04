@@ -20,9 +20,9 @@ public class BootProcessesLaterResolver extends ABootResolver {
         this.start = (startup) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-            ProcessObject process = processManager.getCurrent();
-
             if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_AFTER_KERNEL)) {
+                ProcessObject process = processManager.getCurrent();
+
                 ProcessCommunicationObject communication = process.getCommunication();
                 communication.createSignal(new HashSet<>());
             }

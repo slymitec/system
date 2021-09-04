@@ -59,6 +59,8 @@ public class BootUserResolver extends ABootResolver {
                     AccountAuthorizationTokenDefinition accountAuthorizationToken = new AccountAuthorizationTokenDefinition();
                     accountAuthorizationToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
                     account.setToken(ObjectUtil.transferToByteArray(accountAuthorizationToken));
+
+                    userRepository.add(account);
                 }
             }
         };

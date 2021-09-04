@@ -1,13 +1,16 @@
 package indi.sly.system.boot.test;
 
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.FactoryManager;
+import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
-import indi.sly.system.kernel.processes.values.*;
+import indi.sly.system.kernel.objects.ObjectManager;
+import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.SessionManager;
+import indi.sly.system.kernel.processes.ThreadManager;
+import indi.sly.system.kernel.security.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,35 +28,46 @@ public class TestController {
     @Autowired
     private FactoryManager factoryManager;
 
-    @RequestMapping(value = {"/T.action", "/T.do"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/Test.action", "/Test.do"}, method = {RequestMethod.GET})
     @Transactional
     public String T(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         System.out.println("----Start----");
-        String ret = "finished...";
+        String ret;
 
         this.factoryManager.startup(StartupType.STEP_INIT_SELF);
-        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+        this.factoryManager.startup(StartupType.STEP_AFTER_SELF);
 
-
+        BootObject boot = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, BootObject.class);
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        System.out.println(memoryManager != null);
-        memoryManager.startup(StartupType.STEP_INIT_SELF);
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
-        System.out.println(processRepository != null);
-        assert processRepository != null;
+        Long[] startups = new Long[]{
+                StartupType.STEP_INIT_SELF,
+                StartupType.STEP_AFTER_SELF,
+                StartupType.STEP_INIT_KERNEL
+        };
 
-        ProcessEntity process = new ProcessEntity();
-        process.setID(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
-        process.setStatus(ProcessStatusType.RUNNING);
-        process.setSessionID(UUIDUtil.getEmpty());
-        process.setCommunication(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));
-        process.setContext(ObjectUtil.transferToByteArray(new ProcessContextDefinition()));
-        process.setInfoTable(ObjectUtil.transferToByteArray(new ProcessInfoTableDefinition()));
-        process.setStatistics(ObjectUtil.transferToByteArray(new ProcessStatisticsDefinition()));
-        process.setToken(ObjectUtil.transferToByteArray(new ProcessTokenDefinition()));
+//        Long[] startups = new Long[]{StartupType.STEP_INIT_SELF, StartupType.STEP_AFTER_SELF,
+//                StartupType.STEP_INIT_KERNEL, StartupType.STEP_AFTER_KERNEL};
 
-        processRepository.add(process);
+        for (Long startup : startups) {
+            memoryManager.startup(startup);
+            boot.startup(startup);
+            threadManager.startup(startup);
+            processManager.startup(startup);
+            typeManager.startup(startup);
+            userManager.startup(startup);
+            objectManager.startup(startup);
+            sessionManager.startup(startup);
+
+        }
+
+        ret = "----finished----";
 
         return ret;
     }

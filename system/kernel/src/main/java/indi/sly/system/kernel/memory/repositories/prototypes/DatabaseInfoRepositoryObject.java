@@ -37,7 +37,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
         InfoEntity info = this.entityManager.find(InfoEntity.class, id);
 
-        return !ObjectUtil.isAnyNull(info);
+        return ObjectUtil.allNotNull(info);
     }
 
     @Override

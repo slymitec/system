@@ -31,7 +31,7 @@ public class ProcessRepositoryObject extends AObject {
 
         ProcessEntity process = this.entityManager.find(ProcessEntity.class, id);
 
-        return !ObjectUtil.isAnyNull(process);
+        return ObjectUtil.allNotNull(process);
     }
 
     public ProcessEntity get(UUID id) {
@@ -86,6 +86,7 @@ public class ProcessRepositoryObject extends AObject {
             lockMode = LockModeType.NONE;
         }
 
+        System.out.println("XXXXXXXXXXXXXXXXXXXX:" + process.getID());
         this.entityManager.lock(process, lockMode);
     }
 }

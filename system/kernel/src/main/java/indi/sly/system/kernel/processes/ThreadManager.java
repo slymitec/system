@@ -6,6 +6,7 @@ import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.processes.prototypes.*;
@@ -26,6 +27,10 @@ public class ThreadManager extends AManager {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
             this.factory = this.factoryManager.create(ThreadFactory.class);
             this.factory.init();
+        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
+            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+
+            this.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
         }
     }
 

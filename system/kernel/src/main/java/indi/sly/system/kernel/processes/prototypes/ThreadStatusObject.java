@@ -25,12 +25,12 @@ public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, Th
     }
 
     public void initialize() {
+        this.lock(LockType.WRITE);
+        this.init();
+
         if (LogicalUtil.allNotEqual(this.value.getStatus(), ThreadStatusType.NULL)) {
             throw new StatusRelationshipErrorException();
         }
-
-        this.lock(LockType.WRITE);
-        this.init();
 
         this.value.setStatus(ThreadStatusType.INITIALIZATION);
 
@@ -39,12 +39,12 @@ public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, Th
     }
 
     public void running() {
+        this.lock(LockType.WRITE);
+        this.init();
+
         if (LogicalUtil.allNotEqual(this.value.getStatus(), ThreadStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
-
-        this.lock(LockType.WRITE);
-        this.init();
 
         this.value.setStatus(ThreadStatusType.RUNNING);
 
@@ -53,12 +53,12 @@ public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, Th
     }
 
     public void die() {
+        this.lock(LockType.WRITE);
+        this.init();
+
         if (LogicalUtil.allNotEqual(this.value.getStatus(), ThreadStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
-
-        this.lock(LockType.WRITE);
-        this.init();
 
         this.value.setStatus(ThreadStatusType.DIED);
 

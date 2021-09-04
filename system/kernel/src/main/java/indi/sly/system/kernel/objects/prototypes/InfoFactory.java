@@ -104,7 +104,7 @@ public class InfoFactory extends AFactory {
                 infoRepository.get(kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
 
         this.buildInfo(info, kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID, null)
-                .cache(SpaceType.KERNEL, kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID);
+                .cache(SpaceType.KERNEL, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
     }
 
     public InfoObject buildInfo(InfoEntity info, InfoObject parentInfo) {

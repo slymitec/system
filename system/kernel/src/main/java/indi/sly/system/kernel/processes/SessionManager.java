@@ -8,8 +8,10 @@ import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.AManager;
+import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
@@ -56,6 +58,13 @@ public class SessionManager extends AManager {
 
     @Override
     public void check() {
+        BootObject boot = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, BootObject.class);
+
+        if (LogicalUtil.isAnyEqual(boot.getStartupStatus(), StartupType.SHUTDOWN, StartupType.STEP_INIT_SELF,
+                StartupType.STEP_AFTER_SELF, StartupType.STEP_INIT_KERNEL)) {
+            return;
+        }
+
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();

@@ -38,7 +38,7 @@ public class UserRepositoryObject extends AObject {
 
         AccountEntity account = this.entityManager.find(AccountEntity.class, id);
 
-        return ObjectUtil.isAnyNull(account);
+        return ObjectUtil.allNotNull(account);
     }
 
     public boolean containGroup(UUID id) {
@@ -48,7 +48,7 @@ public class UserRepositoryObject extends AObject {
 
         GroupEntity group = this.entityManager.find(GroupEntity.class, id);
 
-        return ObjectUtil.isAnyNull(group);
+        return ObjectUtil.allNotNull(group);
     }
 
     public AccountEntity getAccount(UUID id) {

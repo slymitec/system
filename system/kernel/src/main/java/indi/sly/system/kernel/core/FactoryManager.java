@@ -6,6 +6,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.boot.prototypes.BootFactory;
+import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
@@ -59,7 +60,8 @@ public class FactoryManager extends AManager {
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(SystemVersionObject.class));
             this.bootFactory = this.factoryManager.create(BootFactory.class);
             this.bootFactory.init();
-            this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.bootFactory.buildBoot());
+            BootObject boot = this.bootFactory.buildBoot();
+            this.coreObjectRepository.addByClass(SpaceType.KERNEL, boot);
         }
     }
 

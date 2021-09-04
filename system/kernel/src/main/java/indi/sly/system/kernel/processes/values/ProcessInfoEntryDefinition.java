@@ -102,6 +102,7 @@ public class ProcessInfoEntryDefinition extends ADefinition<ProcessInfoEntryDefi
         for (int i = 0; i < valueInteger; i++) {
             this.identifications.add(ObjectUtil.readExternal(in));
         }
+
         this.infoOpen = ObjectUtil.readExternal(in);
     }
 
@@ -111,6 +112,7 @@ public class ProcessInfoEntryDefinition extends ADefinition<ProcessInfoEntryDefi
 
         UUIDUtil.writeExternal(out, this.index);
 
+        NumberUtil.writeExternalInteger(out, this.date.size());
         for (Entry<Long, Long> pair : this.date.entrySet()) {
             NumberUtil.writeExternalLong(out, pair.getKey());
             NumberUtil.writeExternalLong(out, pair.getValue());

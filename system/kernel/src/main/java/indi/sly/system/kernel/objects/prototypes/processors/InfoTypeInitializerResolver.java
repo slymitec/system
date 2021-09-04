@@ -82,6 +82,8 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
                     childInfo.setName(StringUtil.readFormBytes(identification.getID()));
                 }
             }
+            Map<Long, Long> date = new HashMap<>();
+            childInfo.setDate(ObjectUtil.transferToByteArray(date));
             if (ObjectUtil.isAnyNull(childInfo.getProperties())) {
                 Map<String, String> childProperties = new HashMap<>();
                 childInfo.setProperties(ObjectUtil.transferToByteArray(childProperties));
@@ -93,7 +95,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
             UUID childRepositoryID = childTypeInitializer.getPoolID(childInfo.getID(), childInfo.getType());
             AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryID);
-            infoRepository.add(childInfo);
+            childInfo = infoRepository.add(childInfo);
 
             childTypeInitializer.createProcedure(childInfo);
 

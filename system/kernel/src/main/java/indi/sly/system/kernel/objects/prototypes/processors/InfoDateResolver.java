@@ -14,7 +14,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.HashMap;
 import java.util.Map;
 
 @Named
@@ -37,7 +36,8 @@ public class InfoDateResolver extends AInfoResolver {
             DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
 
-            Map<Long, Long> date = new HashMap<>();
+            Map<Long, Long> date = ObjectUtil.transferFromByteArray(childInfo.getDate());
+            assert date != null;
             date.put(DateTimeType.CREATE, nowDateTime);
             date.put(DateTimeType.MODIFIED, nowDateTime);
             date.put(DateTimeType.ACCESS, nowDateTime);

@@ -195,28 +195,31 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new StatusRelationshipErrorException();
         }
 
-        if (this.value.size() >= this.parent.getToken().getLimits().get(ProcessTokenLimitType.INDEX_MAX)) {
-            throw new StatusInsufficientResourcesException();
-        }
-
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
-        long nowDateTime = dateTime.getCurrentDateTime();
-
-        UUID index = UUIDUtil.createRandom();
-
-        ProcessInfoEntryDefinition processInfoEntry = new ProcessInfoEntryDefinition();
-        processInfoEntry.setIndex(index);
-        processInfoEntry.getIdentifications().addAll(status.getIdentifications());
-
-        InfoOpenDefinition infoOpen = new InfoOpenDefinition();
-        infoOpen.setAttribute(openAttribute);
-        processInfoEntry.setInfoOpen(infoOpen);
-
-        processInfoEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
+        UUID index;
 
         try {
-            this.lock(LockType.WRITE);
+            this.lock(LockType.READ);
             this.init();
+
+            if (this.value.size() >= this.parent.getToken().getLimits().get(ProcessTokenLimitType.INDEX_MAX)) {
+                throw new StatusInsufficientResourcesException();
+            }
+
+            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+            long nowDateTime = dateTime.getCurrentDateTime();
+
+            index = UUIDUtil.createRandom();
+
+            ProcessInfoEntryDefinition processInfoEntry = new ProcessInfoEntryDefinition();
+            processInfoEntry.setIndex(index);
+            processInfoEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
+            processInfoEntry.setID(id);
+            processInfoEntry.getIdentifications().addAll(status.getIdentifications());
+
+            InfoOpenDefinition infoOpen = new InfoOpenDefinition();
+            infoOpen.setAttribute(openAttribute);
+            processInfoEntry.setInfoOpen(infoOpen);
+
 
             this.value.add(processInfoEntry);
 

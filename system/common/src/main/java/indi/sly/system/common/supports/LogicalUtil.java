@@ -30,7 +30,9 @@ public abstract class LogicalUtil {
     }
 
     public static boolean isAllExist(long source, long values) {
-        if ((source & values) == values) {
+        if (values == 0) {
+            return source == values;
+        } else if ((source & values) == values) {
             return true;
         } else {
             return false;
@@ -38,7 +40,9 @@ public abstract class LogicalUtil {
     }
 
     public static boolean isAnyExist(long source, long values) {
-        if ((source & values) == 0) {
+        if (values == 0) {
+            return source == values;
+        } else if ((source & values) == 0) {
             return false;
         } else {
             return true;

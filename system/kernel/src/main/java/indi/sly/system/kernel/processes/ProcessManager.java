@@ -14,16 +14,20 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
+import indi.sly.system.kernel.processes.instances.prototypes.processors.PortTypeInitializer;
+import indi.sly.system.kernel.processes.instances.prototypes.processors.SignalTypeInitializer;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.values.PrivilegeType;
-import indi.sly.system.kernel.processes.instances.prototypes.processors.SessionTypeInitializer;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -48,7 +52,7 @@ public class ProcessManager extends AManager {
                             TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
                             TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
                             TypeInitializerAttributeType.HAS_PROPERTIES),
-                    childTypes, this.factoryManager.create(SessionTypeInitializer.class));
+                    childTypes, this.factoryManager.create(PortTypeInitializer.class));
 
             typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID,
                     kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_NAME,
@@ -56,7 +60,7 @@ public class ProcessManager extends AManager {
                             TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
                             TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
                             TypeInitializerAttributeType.HAS_PROPERTIES),
-                    childTypes, this.factoryManager.create(SessionTypeInitializer.class));
+                    childTypes, this.factoryManager.create(SignalTypeInitializer.class));
         }
     }
 

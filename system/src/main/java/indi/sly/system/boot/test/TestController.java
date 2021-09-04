@@ -49,7 +49,8 @@ public class TestController {
         Long[] startups = new Long[]{
                 StartupType.STEP_INIT_SELF,
                 StartupType.STEP_AFTER_SELF,
-                StartupType.STEP_INIT_KERNEL
+                StartupType.STEP_INIT_KERNEL,
+                StartupType.STEP_AFTER_KERNEL
         };
 
 //        Long[] startups = new Long[]{StartupType.STEP_INIT_SELF, StartupType.STEP_AFTER_SELF,

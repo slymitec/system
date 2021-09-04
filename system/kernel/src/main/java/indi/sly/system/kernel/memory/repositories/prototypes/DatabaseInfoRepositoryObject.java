@@ -35,6 +35,8 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new ConditionParametersException();
         }
 
+        //this.logger.warn(".contain(" + id + ");");
+
         InfoEntity info = this.entityManager.find(InfoEntity.class, id);
 
         return ObjectUtil.allNotNull(info);
@@ -46,6 +48,8 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new ConditionParametersException();
         }
 
+        //this.logger.warn(".get(" + id + ");");
+
         InfoEntity info = this.entityManager.find(InfoEntity.class, id);
 
         if (ObjectUtil.isAnyNull(info)) {
@@ -56,7 +60,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
     }
 
     @Override
-    public void add(InfoEntity info) {
+    public InfoEntity add(InfoEntity info) {
         if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
         }
@@ -65,7 +69,9 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new StatusAlreadyExistedException();
         }
 
-        this.entityManager.merge(info);
+        //this.logger.warn(".add(" + info.getID() + ");");
+
+        return this.entityManager.merge(info);
     }
 
     @Override
@@ -78,6 +84,8 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new StatusNotExistedException();
         }
 
+        //this.logger.warn(".delete(" + info.getID() + ");");
+
         this.entityManager.remove(info);
     }
 
@@ -87,13 +95,30 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new ConditionParametersException();
         }
 
-        LockModeType lockMode;
-        if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-            lockMode = LockModeType.PESSIMISTIC_READ;
+        LockModeType lockMode = this.entityManager.getLockMode(info);
+
+        //this.logger.warn(".lock(" + info.getID() + ", " + lock + "); Current lockMode is " + lockMode);
+
+        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
+            return;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
+            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
+                return;
+            } else {
+                lockMode = LockModeType.PESSIMISTIC_READ;
+            }
         } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-            lockMode = LockModeType.PESSIMISTIC_WRITE;
+            if (lockMode == LockModeType.PESSIMISTIC_WRITE) {
+                return;
+            } else {
+                lockMode = LockModeType.PESSIMISTIC_WRITE;
+            }
         } else {
-            lockMode = LockModeType.NONE;
+            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
+                return;
+            } else {
+                lockMode = LockModeType.NONE;
+            }
         }
 
         this.entityManager.lock(info, lockMode);
@@ -110,13 +135,17 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new ConditionParametersException();
         }
 
+        this.logger.warn(".listRelation(" + info.getID() + ");");
+
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<InfoRelationEntity> criteriaQuery = criteriaBuilder.createQuery(InfoRelationEntity.class);
         Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
         criteriaQuery.select(root);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("ParentID"), info.getID()));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("parentID"), info.getID()));
         TypedQuery<InfoRelationEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
         List<InfoRelationEntity> relations = typedQuery.getResultList();
+
+        this.logger.warn("-.listRelation(" + relations.size() + ");");
 
         return relations;
     }
@@ -126,6 +155,8 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         if (ObjectUtil.isAnyNull(relation)) {
             throw new ConditionParametersException();
         }
+
+        this.logger.warn(".addRelation(" + relation.getID() + " " + relation.getParentID() + ");");
 
         if (this.entityManager.contains(relation)) {
             throw new StatusAlreadyExistedException();
@@ -139,6 +170,8 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         if (ObjectUtil.isAnyNull(relation)) {
             throw new ConditionParametersException();
         }
+
+        //this.logger.warn(".deleteRelation(" + relation.getID() + " " + relation.getParentID() + ");");
 
         if (this.entityManager.contains(relation)) {
             throw new StatusNotExistedException();

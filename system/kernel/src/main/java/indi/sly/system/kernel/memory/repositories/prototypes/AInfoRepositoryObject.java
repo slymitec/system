@@ -12,7 +12,7 @@ public abstract class AInfoRepositoryObject extends AObject {
 
     public abstract InfoEntity get(UUID id);
 
-    public abstract void add(InfoEntity info);
+    public abstract InfoEntity add(InfoEntity info);
 
     public abstract void delete(InfoEntity info);
 

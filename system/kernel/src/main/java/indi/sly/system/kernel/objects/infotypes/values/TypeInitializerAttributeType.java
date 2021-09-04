@@ -12,5 +12,5 @@ public interface TypeInitializerAttributeType {
     long HAS_CONTENT = 1L << 8;
     long HAS_PERMISSION = 1L << 9;
     long HAS_PROPERTIES = 1L << 10;
-    long TEMPORARY = 1L << 10; // Could not HAS_CHILD
+    long TEMPORARY = 1L << 11; // Could not HAS_CHILD
 }

@@ -42,7 +42,7 @@ public class ProcessCreateBuilder extends ABuilder {
         process.setStatistics(ObjectUtil.transferToByteArray(new ProcessStatisticsDefinition()));
         process.setToken(ObjectUtil.transferToByteArray(new ProcessTokenDefinition()));
 
-        processRepository.add(process);
+        process = processRepository.add(process);
 
         this.process = this.factory.buildProcess(process);
     }

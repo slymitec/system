@@ -555,7 +555,9 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
             }
         }
 
-        this.writeAudit(userIDs, audit);
+        if (!userIDs.isEmpty()) {
+            this.writeAudit(userIDs, audit);
+        }
     }
 
     public void setAudits(Set<AccessControlDefinition> audits) {

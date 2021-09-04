@@ -45,6 +45,7 @@ public class InfoFactory extends AFactory {
         this.infoResolvers.add(this.factoryManager.create(InfoParentResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoProcessAndThreadStatisticsResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoProcessInfoTableResolver.class));
+        this.infoResolvers.add(this.factoryManager.create(InfoSecurityDescriptorCreateResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoSecurityDescriptorResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoSelfResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoTypeInitializerResolver.class));
@@ -81,7 +82,7 @@ public class InfoFactory extends AFactory {
             status.getIdentifications().addAll(parentInfo.status.getIdentifications());
 
             IdentificationDefinition identification;
-            if (StringUtil.isNameIllegal(info.getName())) {
+            if (!StringUtil.isNameIllegal(info.getName())) {
                 identification = new IdentificationDefinition(info.getName());
             } else {
                 identification = new IdentificationDefinition(info.getID());

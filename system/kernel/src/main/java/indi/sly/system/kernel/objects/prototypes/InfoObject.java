@@ -198,7 +198,7 @@ public class InfoObject extends AObject {
 
     public synchronized InfoObject createChildAndOpen(UUID type, IdentificationDefinition identification,
                                                       long openAttribute, Object... arguments) {
-        if (!ValueUtil.isAnyNullOrEmpty(this.getIndex()) || ObjectUtil.isAnyNull(identification)) {
+        if (ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
         if (ObjectUtil.isNull(arguments)) {

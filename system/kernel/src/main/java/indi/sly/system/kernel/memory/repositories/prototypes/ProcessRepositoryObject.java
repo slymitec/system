@@ -29,6 +29,8 @@ public class ProcessRepositoryObject extends AObject {
             throw new ConditionParametersException();
         }
 
+        //this.logger.warn(".contain(" + id + ");");
+
         ProcessEntity process = this.entityManager.find(ProcessEntity.class, id);
 
         return ObjectUtil.allNotNull(process);
@@ -39,6 +41,8 @@ public class ProcessRepositoryObject extends AObject {
             throw new ConditionParametersException();
         }
 
+        //this.logger.warn(".get(" + id + ");");
+
         ProcessEntity process = this.entityManager.find(ProcessEntity.class, id);
 
         if (ObjectUtil.isAnyNull(process)) {
@@ -48,7 +52,7 @@ public class ProcessRepositoryObject extends AObject {
         return process;
     }
 
-    public void add(ProcessEntity process) {
+    public ProcessEntity add(ProcessEntity process) {
         if (ObjectUtil.isAnyNull(process)) {
             throw new ConditionParametersException();
         }
@@ -57,7 +61,9 @@ public class ProcessRepositoryObject extends AObject {
             throw new StatusAlreadyExistedException();
         }
 
-        this.entityManager.merge(process);
+        //this.logger.warn(".add(" + process.getID() + ");");
+
+        return this.entityManager.merge(process);
     }
 
     public void delete(ProcessEntity process) {
@@ -69,6 +75,8 @@ public class ProcessRepositoryObject extends AObject {
             throw new StatusNotExistedException();
         }
 
+        //this.logger.warn(".delete(" + process.getID() + ");");
+
         this.entityManager.remove(process);
     }
 
@@ -77,16 +85,32 @@ public class ProcessRepositoryObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        LockModeType lockMode;
-        if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-            lockMode = LockModeType.PESSIMISTIC_READ;
+        LockModeType lockMode = this.entityManager.getLockMode(process);
+
+        //this.logger.warn(".lock(" + process.getID() + ", " + lock + "); Current lockMode is " + lockMode);
+
+        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
+            return;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
+            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
+                return;
+            } else {
+                lockMode = LockModeType.PESSIMISTIC_READ;
+            }
         } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-            lockMode = LockModeType.PESSIMISTIC_WRITE;
+            if (lockMode == LockModeType.PESSIMISTIC_WRITE) {
+                return;
+            } else {
+                lockMode = LockModeType.PESSIMISTIC_WRITE;
+            }
         } else {
-            lockMode = LockModeType.NONE;
+            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
+                return;
+            } else {
+                lockMode = LockModeType.NONE;
+            }
         }
 
-        System.out.println("XXXXXXXXXXXXXXXXXXXX:" + process.getID());
         this.entityManager.lock(process, lockMode);
     }
 }

@@ -14,12 +14,9 @@ import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.AuditType;
 import indi.sly.system.kernel.security.values.PermissionType;
-import indi.sly.system.kernel.security.values.SecurityDescriptorDefinition;
 import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -118,27 +115,6 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
                     securityDescriptor.checkAudit(AuditType.CREATECHILD_WRITEDATA);
                 }
-            }
-
-            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
-            TypeObject childType = typeManager.get(childTypeID);
-
-            if (childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
-                    || childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorDefinition securityDescriptor = new SecurityDescriptorDefinition();
-
-                if (childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-                    ProcessObject process = processManager.getCurrent();
-
-                    securityDescriptor.getOwners().add(process.getToken().getAccountID());
-                    securityDescriptor.setInherit(true);
-                    securityDescriptor.setHasChild(childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD));
-                }
-
-                childInfo.setSecurityDescriptor(ObjectUtil.transferToByteArray(securityDescriptor));
-            } else {
-                childInfo.setSecurityDescriptor(null);
             }
 
             return childInfo;

@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "KernelGroups")
+@Table(name = "Kernel_Groups")
 public class GroupEntity extends AEntity<GroupEntity> {
     private static final long serialVersionUID = 1L;
 

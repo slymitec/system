@@ -10,7 +10,7 @@ import java.io.ObjectOutput;
 import java.util.*;
 
 @Entity
-@Table(name = "KernelAccounts")
+@Table(name = "Kernel_Accounts")
 public class AccountEntity extends AEntity<AccountEntity> {
     private static final long serialVersionUID = 1L;
 
@@ -26,7 +26,7 @@ public class AccountEntity extends AEntity<AccountEntity> {
     @Column(length = 256, name = "password", nullable = true)
     protected String password;
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "KernelAccountsGroups", joinColumns = {@JoinColumn(name = "AccountID")}, inverseJoinColumns =
+    @JoinTable(name = "Kernel_Accounts_Groups", joinColumns = {@JoinColumn(name = "AccountID")}, inverseJoinColumns =
             {@JoinColumn(name = "GroupID")})
     protected List<GroupEntity> groups;
     @Column(length = 4096, name = "Token", nullable = false)

@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "KernelInfos")
+@Table(name = "Kernel_Infos")
 public class InfoEntity extends AEntity<InfoEntity> {
     private static final long serialVersionUID = 1L;
 

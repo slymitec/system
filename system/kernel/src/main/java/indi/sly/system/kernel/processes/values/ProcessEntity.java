@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "KernelProcesses")
+@Table(name = "Kernel_Processes")
 public class ProcessEntity extends AEntity<ProcessEntity> {
     private static final long serialVersionUID = 1L;
 

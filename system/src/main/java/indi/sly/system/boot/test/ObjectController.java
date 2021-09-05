@@ -21,20 +21,34 @@ public class ObjectController extends AController {
     @Transactional
     public Object objectTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init(request, response, session);
+        Object ret = "finished";
 
         KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-//        InfoObject info = objectManager.get(List.of());
-//        InfoObject childInfo = info.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
-//                new IdentificationDefinition("SLY"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
-//        childInfo.close();
-
         InfoObject info = objectManager.get(List.of());
+        InfoObject childInfo = info.getChild(new IdentificationDefinition("Ports"));
 
-        info.deleteChild(new IdentificationDefinition("SLY"));
+        //childInfo.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
-        return "finished";
+        //AInfoContentObject infoContent = childInfo.getContent();
+
+        //ret = infoContent.toString();
+
+        childInfo.close();
+
+
+//        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+//        ProcessInfoTableObject infoTable = processManager.getCurrent().getInfoTable();
+//        ProcessInfoEntryObject infoEntry = infoTable.getByID(UUID.fromString("6c0d0303-d5fd-4a47-b69d-fd7a1d32655c"));
+//
+//        infoEntry.delete();
+
+//        InfoObject info = objectManager.get(List.of());
+//
+//        info.deleteChild(new IdentificationDefinition("AAA"));
+
+        return ret;
     }
 }

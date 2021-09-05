@@ -1,0 +1,46 @@
+package indi.sly.system.kernel.objects.prototypes.processors;
+
+import indi.sly.system.common.lang.StatusAlreadyFinishedException;
+import indi.sly.system.kernel.objects.lang.InfoProcessorCloseConsumer;
+import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
+import indi.sly.system.kernel.objects.values.InfoEntity;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+
+import javax.inject.Named;
+
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class InfoProcessInfoTableCloseResolver extends AInfoResolver {
+    public InfoProcessInfoTableCloseResolver() {
+        this.close = (info, type, status) -> {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
+
+            if (!processInfoTable.containByID(info.getID())) {
+                throw new StatusAlreadyFinishedException();
+            }
+
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+
+            processInfoEntry.delete();
+        };
+    }
+
+    private final InfoProcessorCloseConsumer close;
+
+    @Override
+    public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
+        processorMediator.getCloses().add(this.close);
+    }
+
+    @Override
+    public int order() {
+        return 3;
+    }
+}

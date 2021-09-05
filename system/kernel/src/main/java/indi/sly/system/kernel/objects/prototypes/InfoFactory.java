@@ -44,6 +44,7 @@ public class InfoFactory extends AFactory {
         this.infoResolvers.add(this.factoryManager.create(InfoOpenOrCloseResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoParentResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoProcessAndThreadStatisticsResolver.class));
+        this.infoResolvers.add(this.factoryManager.create(InfoProcessInfoTableCloseResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoProcessInfoTableResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoSecurityDescriptorCreateResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoSecurityDescriptorResolver.class));

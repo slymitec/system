@@ -26,7 +26,8 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTableDefinition, ProcessObject> {
+public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTableDefinition, ProcessInfoTableObject> {
+    protected ProcessObject process;
     protected UUID index;
 
     private boolean isExist() {
@@ -75,7 +76,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         try {
             this.lock(LockType.READ);
             this.init();
-            
+
             ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
             Map<Long, Long> processInfoEntryDate = processInfoEntry.getDate();
 
@@ -143,7 +144,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         if (!this.isExist()) {
             throw new StatusNotExistedException();
         }
-        if (!this.parent.isCurrent()) {
+        if (!this.process.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 

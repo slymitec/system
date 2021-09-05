@@ -32,21 +32,6 @@ public class InfoProcessInfoTableResolver extends AInfoResolver {
             return processInfoEntry.getIndex();
         };
 
-        this.close = (info, type, status) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrent();
-            ProcessInfoTableObject processInfoTable = process.getInfoTable();
-
-            if (!processInfoTable.containByID(info.getID())) {
-                throw new StatusAlreadyFinishedException();
-            }
-
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
-
-            processInfoEntry.delete();
-        };
-
-
         this.readContent = (content, info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
@@ -81,7 +66,6 @@ public class InfoProcessInfoTableResolver extends AInfoResolver {
     }
 
     private final InfoProcessorOpenFunction open;
-    private final InfoProcessorCloseConsumer close;
     private final InfoProcessorReadContentFunction readContent;
     private final InfoProcessorWriteContentConsumer writeContent;
     private final InfoProcessorExecuteContentConsumer executeContent;
@@ -89,7 +73,6 @@ public class InfoProcessInfoTableResolver extends AInfoResolver {
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
         processorMediator.getOpens().add(this.open);
-        processorMediator.getCloses().add(this.close);
         processorMediator.getReadContents().add(this.readContent);
         processorMediator.getWriteContents().add(this.writeContent);
         processorMediator.getExecuteContents().add(this.executeContent);

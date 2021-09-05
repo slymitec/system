@@ -22,6 +22,7 @@ public abstract class AInfoResolver extends AResolver {
 //InfoSecurityDescriptorResolver	    	1
 //InfoDumpResolver		                	2
 //InfoTypeInitializerResolver	            2
+//InfoProcessInfoTableCloseResolver         3
 //InfoProcessAndThreadStatisticsResolver    3
 //InfoDateResolver		                	3
 //InfoSecurityDescriptorCreateResolver  	3

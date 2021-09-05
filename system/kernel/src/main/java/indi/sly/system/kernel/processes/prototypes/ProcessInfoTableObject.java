@@ -140,11 +140,12 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             this.lock(LockType.WRITE);
             this.init();
 
-            processInfoEntry.setParent(this.parent);
+            processInfoEntry.setParent(this);
             processInfoEntry.setSource(() -> this.value, (ProcessInfoTableDefinition source) -> {
             });
             processInfoEntry.setLock(this::lock);
             processInfoEntry.index = index;
+            processInfoEntry.process = this.parent;
 
             this.fresh();
         } finally {
@@ -172,10 +173,11 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
 
             UUID index = this.value.getByID(id).getIndex();
 
-            processInfoEntry.setParent(this.parent);
+            processInfoEntry.setParent(this);
             processInfoEntry.setSource(() -> this.value, (ProcessInfoTableDefinition source) -> {
             });
             processInfoEntry.index = index;
+            processInfoEntry.process = this.parent;
 
             this.fresh();
         } finally {
@@ -219,7 +221,6 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             InfoOpenDefinition infoOpen = new InfoOpenDefinition();
             infoOpen.setAttribute(openAttribute);
             processInfoEntry.setInfoOpen(infoOpen);
-
 
             this.value.add(processInfoEntry);
 

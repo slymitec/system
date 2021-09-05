@@ -145,7 +145,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             });
             processInfoEntry.setLock(this::lock);
             processInfoEntry.index = index;
-            processInfoEntry.process = this.parent;
+            processInfoEntry.isProcessCurrent = () -> this.parent.isCurrent();
 
             this.fresh();
         } finally {
@@ -177,7 +177,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             processInfoEntry.setSource(() -> this.value, (ProcessInfoTableDefinition source) -> {
             });
             processInfoEntry.index = index;
-            processInfoEntry.process = this.parent;
+            processInfoEntry.isProcessCurrent = () -> this.parent.isCurrent();
 
             this.fresh();
         } finally {

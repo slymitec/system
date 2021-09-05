@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
+import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
@@ -27,7 +28,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTableDefinition, ProcessInfoTableObject> {
-    protected ProcessObject process;
+    protected Provider<Boolean> isProcessCurrent;
     protected UUID index;
 
     private boolean isExist() {
@@ -144,7 +145,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         if (!this.isExist()) {
             throw new StatusNotExistedException();
         }
-        if (!this.process.isCurrent()) {
+        if (!this.isProcessCurrent.acquire()) {
             throw new StatusRelationshipErrorException();
         }
 

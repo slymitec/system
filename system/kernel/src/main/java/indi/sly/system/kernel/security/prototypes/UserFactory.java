@@ -22,7 +22,6 @@ import java.util.UUID;
 public class UserFactory extends AFactory {
     @Override
     public void init() {
-
     }
 
     private AccountObject buildAccount(Provider<AccountEntity> funcRead, Consumer1<AccountEntity> funcWrite,

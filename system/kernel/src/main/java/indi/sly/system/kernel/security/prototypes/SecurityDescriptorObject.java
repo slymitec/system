@@ -266,6 +266,10 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
     }
 
     private boolean denyPermission(long permission) {
+        return this.denyPermission(null, permission);
+    }
+
+    private boolean denyPermission(PermissionQueryDefinition permissionQuery, long permission) {
         if (permission == PermissionType.NULL || LogicalUtil.isAnyExist(permission,
                 PermissionType.FULLCONTROL_DENY)) {
             throw new ConditionParametersException();
@@ -276,7 +280,8 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        if (processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)) {
+        if ((ObjectUtil.isAnyNull(permissionQuery) || permissionQuery.isPrivilege())
+                && processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)) {
             return false;
         }
 
@@ -365,7 +370,8 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (pairUserID.getType() == UserType.ROLE && roles.contains(pairUserID.getID())) {
+            } else if (pairUserID.getType() == UserType.ROLE && roles.contains(pairUserID.getID())
+                    && (ObjectUtil.isAnyNull(permissionQuery) || permissionQuery.isRole())) {
                 if (LogicalUtil.isAllExist(permission, pair.getValue())) {
                     allow = true;
                 }
@@ -376,6 +382,16 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
         }
 
         return !allow;
+    }
+
+    public void checkPermission(PermissionQueryDefinition permissionQuery, long permission) {
+        if (ObjectUtil.isAnyNull(permissionQuery)) {
+            throw new ConditionParametersException();
+        }
+
+        if (this.denyPermission(permissionQuery, permission)) {
+            throw new ConditionPermissionException();
+        }
     }
 
     public void checkPermission(long permission) {

@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.security.values;
 
 import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.kernel.security.lang.PermissionCustomPredicate;
 
 public class PermissionQueryDefinition extends ADefinition<PermissionQueryDefinition> {
     public PermissionQueryDefinition() {
@@ -10,6 +11,7 @@ public class PermissionQueryDefinition extends ADefinition<PermissionQueryDefini
 
     private boolean privilege;
     private boolean role;
+    private PermissionCustomPredicate customDeny;
 
     public boolean isPrivilege() {
         return this.privilege;
@@ -25,5 +27,14 @@ public class PermissionQueryDefinition extends ADefinition<PermissionQueryDefini
 
     public void setRole(boolean role) {
         this.role = role;
+    }
+
+    public PermissionCustomPredicate getCustomDeny() {
+        return this.customDeny;
+
+    }
+
+    public void setCustomDeny(PermissionCustomPredicate customDeny) {
+        this.customDeny = customDeny;
     }
 }

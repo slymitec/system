@@ -370,12 +370,17 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (pairUserID.getType() == UserType.ROLE && roles.contains(pairUserID.getID())
-                    && (ObjectUtil.isAnyNull(permissionQuery) || permissionQuery.isRole())) {
-                if (LogicalUtil.isAllExist(permission, pair.getValue())) {
+            } else if (pairUserID.getType() == UserType.ROLE && roles.contains(pairUserID.getID())) {
+                if (LogicalUtil.isAllExist(permission, pair.getValue())
+                        && (ObjectUtil.isAnyNull(permissionQuery) || permissionQuery.isRole())) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
+                    return true;
+                }
+            }
+            if (ObjectUtil.allNotNull(permissionQuery, permissionQuery.getCustomDeny())) {
+                if (permissionQuery.getCustomDeny().test(pair, permission)) {
                     return true;
                 }
             }

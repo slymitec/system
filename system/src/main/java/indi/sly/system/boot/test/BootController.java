@@ -42,8 +42,6 @@ public class BootController extends ABase {
             return "----Boot-Already-Finished----";
         }
 
-        this.logger.warn("----Boot-Start----");
-
         this.factoryManager.startup(StartupType.STEP_INIT_SELF);
         this.factoryManager.startup(StartupType.STEP_AFTER_SELF);
 
@@ -76,7 +74,6 @@ public class BootController extends ABase {
         }
 
         this.ret = "----Boot-Finished----";
-        this.logger.warn(this.ret);
 
         return this.ret;
     }

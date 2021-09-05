@@ -380,7 +380,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 }
             }
             if (ObjectUtil.allNotNull(permissionQuery, permissionQuery.getCustomDeny())) {
-                if (permissionQuery.getCustomDeny().test(pair, permission)) {
+                if (permissionQuery.getCustomDeny().test(pair.deepClone(), permission)) {
                     return true;
                 }
             }

@@ -118,6 +118,7 @@ public class BootObjectsResolver extends ABootResolver {
                 }
 
                 InfoObject auditsInfo = rootInfo.getChild(new IdentificationDefinition("Audits"));
+                infoSummaryDefinitions = auditsInfo.queryChild((InfoSummaryDefinition infoSummary) -> true);
 
                 isExist = false;
                 for (InfoSummaryDefinition infoSummaryDefinition : infoSummaryDefinitions) {

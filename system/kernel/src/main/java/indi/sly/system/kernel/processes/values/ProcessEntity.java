@@ -26,7 +26,7 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
     protected UUID id;
     @Column(name = "Status", nullable = false)
     protected long status;
-    @Column(columnDefinition = "uniqueidentifier", name = "ParentProcessID", nullable = true)
+    @Column(columnDefinition = "uniqueidentifier", name = "Parent_ProcessID", nullable = true)
     protected UUID parentProcessID;
     @Column(columnDefinition = "uniqueidentifier", name = "SessionID", nullable = true)
     protected UUID sessionID;
@@ -34,9 +34,9 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
     protected byte[] communication;
     @Column(length = 4096, name = "Context", nullable = false)
     protected byte[] context;
-    @Column(length = 4096, name = "InfoTable", nullable = false)
+    @Column(length = 4096, name = "Info_Table", nullable = false)
     protected byte[] infoTable;
-    @Column(length = 4096, name = "CounterStatistics", nullable = false)
+    @Column(length = 4096, name = "Counter_Statistics", nullable = false)
     protected byte[] statistics;
     @Column(length = 4096, name = "Token", nullable = false)
     protected byte[] token;

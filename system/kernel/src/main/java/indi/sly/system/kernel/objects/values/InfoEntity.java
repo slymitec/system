@@ -27,11 +27,11 @@ public class InfoEntity extends AEntity<InfoEntity> {
     protected String name;
     @Column(length = 256, name = "Date", nullable = false)
     protected byte[] date;
-    @Column(length = 4096, name = "SecurityDescriptor", nullable = true)
+    @Column(length = 4096, name = "Security_Descriptor", nullable = true)
     protected byte[] securityDescriptor;
     @Column(length = 1024, name = "Properties", nullable = false)
     protected byte[] properties;
-    @Column(length = 4096, name = "ContentStream", nullable = true)
+    @Column(length = 4096, name = "Content_Stream", nullable = true)
     protected byte[] content;
 
     public UUID getID() {

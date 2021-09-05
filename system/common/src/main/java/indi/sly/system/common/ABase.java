@@ -24,6 +24,7 @@ public abstract class ABase {
     @Override
     public Object clone() {
         throw new StatusNotSupportedException();
+
     }
 
     @Override

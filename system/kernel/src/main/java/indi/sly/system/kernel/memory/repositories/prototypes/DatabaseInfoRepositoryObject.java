@@ -80,7 +80,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new ConditionParametersException();
         }
 
-        if (this.entityManager.contains(info)) {
+        if (!this.entityManager.contains(info)) {
             throw new StatusNotExistedException();
         }
 
@@ -135,7 +135,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new ConditionParametersException();
         }
 
-        this.logger.warn(".listRelation(" + info.getID() + ");");
+        //this.logger.warn(".listRelation(" + info.getID() + ");");
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<InfoRelationEntity> criteriaQuery = criteriaBuilder.createQuery(InfoRelationEntity.class);
@@ -145,7 +145,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         TypedQuery<InfoRelationEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
         List<InfoRelationEntity> relations = typedQuery.getResultList();
 
-        this.logger.warn("-.listRelation(" + relations.size() + ");");
+        //this.logger.warn("-.listRelation(" + relations.size() + ");");
 
         return relations;
     }
@@ -156,7 +156,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new ConditionParametersException();
         }
 
-        this.logger.warn(".addRelation(" + relation.getID() + " " + relation.getParentID() + ");");
+        //this.logger.warn(".addRelation(" + relation.getID() + " " + relation.getParentID() + ");");
 
         if (this.entityManager.contains(relation)) {
             throw new StatusAlreadyExistedException();
@@ -173,7 +173,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
         //this.logger.warn(".deleteRelation(" + relation.getID() + " " + relation.getParentID() + ");");
 
-        if (this.entityManager.contains(relation)) {
+        if (!this.entityManager.contains(relation)) {
             throw new StatusNotExistedException();
         }
 

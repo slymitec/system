@@ -71,7 +71,7 @@ public class ProcessRepositoryObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        if (this.entityManager.contains(process)) {
+        if (!this.entityManager.contains(process)) {
             throw new StatusNotExistedException();
         }
 

@@ -1,5 +1,7 @@
 package indi.sly.system.boot.test;
 
+import indi.sly.system.common.ABase;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.FactoryManager;
 import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
@@ -23,16 +25,24 @@ import javax.transaction.Transactional;
 
 @RestController
 @Transactional
-public class TestController {
-
+public class BootController extends ABase {
     @Autowired
     private FactoryManager factoryManager;
 
-    @RequestMapping(value = {"/Test.action", "/Test.do"}, method = {RequestMethod.GET})
+    private String ret;
+
+    public String getRet() {
+        return this.ret;
+    }
+
+    @RequestMapping(value = {"/Boot.action", "/Boot.do"}, method = {RequestMethod.GET})
     @Transactional
-    public String T(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        System.out.println("----Start----");
-        String ret;
+    public String Boot(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        if (!ValueUtil.isAnyNullOrEmpty(this.ret)) {
+            return "----Boot-Already-Finished----";
+        }
+
+        this.logger.warn("----Boot-Start----");
 
         this.factoryManager.startup(StartupType.STEP_INIT_SELF);
         this.factoryManager.startup(StartupType.STEP_AFTER_SELF);
@@ -53,9 +63,6 @@ public class TestController {
                 StartupType.STEP_AFTER_KERNEL
         };
 
-//        Long[] startups = new Long[]{StartupType.STEP_INIT_SELF, StartupType.STEP_AFTER_SELF,
-//                StartupType.STEP_INIT_KERNEL, StartupType.STEP_AFTER_KERNEL};
-
         for (Long startup : startups) {
             memoryManager.startup(startup);
             boot.startup(startup);
@@ -68,8 +75,9 @@ public class TestController {
 
         }
 
-        ret = "----finished----";
+        this.ret = "----Boot-Finished----";
+        this.logger.warn(this.ret);
 
-        return ret;
+        return this.ret;
     }
 }

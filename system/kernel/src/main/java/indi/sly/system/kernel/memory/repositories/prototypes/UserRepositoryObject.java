@@ -152,7 +152,7 @@ public class UserRepositoryObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        if (this.entityManager.contains(account)) {
+        if (!this.entityManager.contains(account)) {
             throw new StatusNotExistedException();
         }
 
@@ -164,7 +164,7 @@ public class UserRepositoryObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        if (this.entityManager.contains(group)) {
+        if (!this.entityManager.contains(group)) {
             throw new StatusNotExistedException();
         }
 

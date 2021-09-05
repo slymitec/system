@@ -17,6 +17,7 @@ import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
+import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -114,6 +115,33 @@ public class BootObjectsResolver extends ABootResolver {
                         childInfo.close();
                     }
                     isExist = false;
+                }
+
+                InfoObject auditsInfo = rootInfo.getChild(new IdentificationDefinition("Audits"));
+
+                isExist = false;
+                for (InfoSummaryDefinition infoSummaryDefinition : infoSummaryDefinitions) {
+                    if ("System".equals(infoSummaryDefinition.getName())) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    InfoObject audit = auditsInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+                            new IdentificationDefinition("System"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+
+                    SecurityDescriptorObject auditSecurityDescriptor = audit.getSecurityDescriptor();
+                    Set<AccessControlDefinition> permissions = new HashSet<>();
+                    AccessControlDefinition permission = new AccessControlDefinition();
+                    permission.getUserID().setID(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
+                    permission.getUserID().setType(UserType.ACCOUNT);
+                    permission.setScope(AccessControlScopeType.HIERARCHICAL_HAS_CHILD);
+                    permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+                    permissions.add(permission);
+                    auditSecurityDescriptor.setPermissions(permissions);
+                    auditSecurityDescriptor.setInherit(false);
+
+                    audit.close();
                 }
             }
         };

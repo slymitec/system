@@ -187,6 +187,7 @@ public class UserManager extends AManager {
         permission.setValue(PermissionType.FULLCONTROL_ALLOW);
         permissions.add(permission);
         auditSecurityDescriptor.setPermissions(permissions);
+        auditSecurityDescriptor.setInherit(false);
         audit.close();
 
         return account;

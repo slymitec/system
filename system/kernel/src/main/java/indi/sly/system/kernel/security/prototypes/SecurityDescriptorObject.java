@@ -463,15 +463,10 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
             UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().SECURITY_INSTANCE_AUDIT_ID;
 
             InfoObject audits = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-            InfoObject audit;
+            audits = audits.getChild(new IdentificationDefinition(accountName));
 
-            try {
-                audits = audits.getChild(new IdentificationDefinition(accountName));
-                audit = audits.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
-                        InfoOpenAttributeType.OPEN_EXCLUSIVE);
-            } catch (AKernelException ignored) {
-                return;
-            }
+            InfoObject audit = audits.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
+                    InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             AuditContentObject auditContent = (AuditContentObject) audit.getContent();
             auditContent.setUserIDs(userIDs);

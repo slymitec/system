@@ -13,6 +13,7 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
+import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
@@ -172,23 +173,26 @@ public class UserManager extends AManager {
         AccountObject account = accountBuilder.create(accountName, accountPassword);
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        InfoObject audits = objectManager.get(List.of(new IdentificationDefinition("Audits")));
+        InfoObject auditsInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
 
         KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
 
-        InfoObject audit = audits.createChildAndOpen(configuration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
-        SecurityDescriptorObject auditSecurityDescriptor = audit.getSecurityDescriptor();
-        Set<AccessControlDefinition> permissions = new HashSet<>();
-        AccessControlDefinition permission = new AccessControlDefinition();
-        permission.getUserID().setID(account.getID());
-        permission.getUserID().setType(UserType.ACCOUNT);
-        permission.setScope(AccessControlScopeType.HIERARCHICAL_HAS_CHILD);
-        permission.setValue(PermissionType.FULLCONTROL_ALLOW);
-        permissions.add(permission);
-        auditSecurityDescriptor.setPermissions(permissions);
-        auditSecurityDescriptor.setInherit(false);
-        audit.close();
+        Set<InfoSummaryDefinition> infoSummary = auditsInfo.queryChild(infoSummaryDefinition -> account.getName().equals(infoSummaryDefinition.getName()));
+        if (infoSummary.isEmpty()) {
+            InfoObject auditInfo = auditsInfo.createChildAndOpen(configuration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+                    new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            SecurityDescriptorObject auditSecurityDescriptor = auditInfo.getSecurityDescriptor();
+            Set<AccessControlDefinition> permissions = new HashSet<>();
+            AccessControlDefinition permission = new AccessControlDefinition();
+            permission.getUserID().setID(account.getID());
+            permission.getUserID().setType(UserType.ACCOUNT);
+            permission.setScope(AccessControlScopeType.HIERARCHICAL_HAS_CHILD);
+            permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+            permissions.add(permission);
+            auditSecurityDescriptor.setPermissions(permissions);
+            auditSecurityDescriptor.setInherit(false);
+            auditInfo.close();
+        }
 
         return account;
     }
@@ -201,6 +205,21 @@ public class UserManager extends AManager {
 
     public void deleteAccount(UUID accountID) {
         AccountBuilder accountBuilder = this.factory.createAccount();
+
+        AccountObject account = this.getAccount(accountID);
+
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        InfoObject auditsInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
+
+        Set<InfoSummaryDefinition> infoSummary = auditsInfo.queryChild(infoSummaryDefinition -> account.getName().equals(infoSummaryDefinition.getName()));
+        if (!infoSummary.isEmpty()) {
+            InfoObject auditInfo = auditsInfo.getChild(new IdentificationDefinition(account.getName()));
+            Set<InfoSummaryDefinition> auditInfoSummaries = auditInfo.queryChild(infoSummaryDefinition -> true);
+            for (InfoSummaryDefinition auditInfoSummary : auditInfoSummaries) {
+                auditInfo.deleteChild(new IdentificationDefinition(auditInfoSummary.getID()));
+            }
+            auditsInfo.deleteChild(new IdentificationDefinition(account.getName()));
+        }
 
         accountBuilder.delete(accountID);
     }

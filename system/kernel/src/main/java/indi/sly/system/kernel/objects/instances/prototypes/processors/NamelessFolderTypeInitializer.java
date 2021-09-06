@@ -104,7 +104,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
 
     @Override
     public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification) {
-        if (identification.getType() != String.class) {
+        if (identification.getType() != UUID.class) {
             throw new StatusNotSupportedException();
         }
 
@@ -161,7 +161,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
 
     @Override
     public void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification) {
-        if (identification.getType() != String.class) {
+        if (identification.getType() != UUID.class) {
             throw new StatusNotSupportedException();
         }
 

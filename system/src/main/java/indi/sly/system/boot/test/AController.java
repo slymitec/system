@@ -21,13 +21,14 @@ public abstract class AController extends ABase {
     private BootController bootController;
 
     protected FactoryManager factoryManager;
+    protected KernelConfigurationDefinition kernelConfiguration;
 
     public final void init(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         if (ValueUtil.isAnyNullOrEmpty(bootController.getRet())) {
             this.bootController.Boot(request, response, session);
         }
 
-        KernelConfigurationDefinition kernelConfiguration = this.kernelSpaceDefinition.getConfiguration();
+        this.kernelConfiguration = this.kernelSpaceDefinition.getConfiguration();
 
         this.factoryManager = (FactoryManager) this.kernelSpaceDefinition.getCoreObjects().getOrDefault(
                 this.kernelSpaceDefinition.getClassedHandles().getOrDefault(

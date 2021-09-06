@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.files.instances.prototypes;
 
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.files.instances.values.FileSystemFileDefinition;
+import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -21,7 +21,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
         return ObjectUtil.transferToByteArray(this.file);
     }
 
-    private FileSystemFileDefinition file;
+    private FileSystemEntryDefinition file;
 
 //    public byte[] getValue() {
 //        this.init();

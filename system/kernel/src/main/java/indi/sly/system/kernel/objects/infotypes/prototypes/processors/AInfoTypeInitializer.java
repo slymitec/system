@@ -38,7 +38,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
 
     public abstract void deleteProcedure(InfoEntity info);
 
-    public abstract void getProcedure(InfoEntity info);
+    public abstract void getProcedure(InfoEntity info, IdentificationDefinition identification);
 
     public final void lockProcedure(InfoEntity info, long lock) {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);

@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.files.instances.values;
 
-public interface FileSystemVolumeType {
+public interface FileSystemLocationType {
     long REPOSITORY = 0L;
     long MAPPING = 1L;
 }

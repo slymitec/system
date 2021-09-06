@@ -117,7 +117,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryID);
             childInfo = infoRepository.get(infoSummary.getID());
 
-            childTypeInitializer.getProcedure(childInfo);
+            childTypeInitializer.getProcedure(childInfo, identification);
 
             return childInfo;
         };

@@ -3,9 +3,10 @@ package indi.sly.system.kernel.files.instances.prototypes.wrappers;
 import indi.sly.system.common.lang.Predicate1;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
-import indi.sly.system.kernel.files.instances.values.FileSystemFileDefinition;
+import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
@@ -37,7 +38,7 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
 
     @Override
     public void createProcedure(InfoEntity info) {
-        FileSystemFileDefinition fileSystemFile = new FileSystemFileDefinition();
+        FileSystemEntryDefinition fileSystemFile = new FileSystemEntryDefinition();
 
         info.setContent(ObjectUtil.transferToByteArray(fileSystemFile));
     }
@@ -47,7 +48,13 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void getProcedure(InfoEntity info) {
+    public void getProcedure(InfoEntity info, IdentificationDefinition identification) {
+        if (identification.getType() == String.class) {
+            String childInfoName = StringUtil.readFormBytes(identification.getID());
+            if (!childInfoName.equals(info.getName())) {
+                info.setName(childInfoName);
+            }
+        }
     }
 
     @Override

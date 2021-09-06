@@ -6,7 +6,6 @@ import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.files.instances.prototypes.wrappers.FileSystemFileTypeInitializer;
 import indi.sly.system.kernel.files.instances.prototypes.wrappers.FileSystemFolderTypeInitializer;
-import indi.sly.system.kernel.files.instances.prototypes.wrappers.FileSystemVolumeTypeInitializer;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -34,8 +33,10 @@ public class FileSystemManager extends AManager {
                     LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_EXECUTED,
                             TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
                             TypeInitializerAttributeType.CAN_BE_SHARED_READ,
-                            TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN, TypeInitializerAttributeType.HAS_AUDIT,
-                            TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
+                            TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,
+                            TypeInitializerAttributeType.HAS_AUDIT,
+                            TypeInitializerAttributeType.HAS_CONTENT,
+                            TypeInitializerAttributeType.HAS_PERMISSION,
                             TypeInitializerAttributeType.HAS_PROPERTIES),
                     childTypes, this.factoryManager.create(FileSystemFileTypeInitializer.class));
 
@@ -45,19 +46,12 @@ public class FileSystemManager extends AManager {
                     kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_NAME,
                     LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
                             TypeInitializerAttributeType.CAN_BE_SHARED_READ,
-                            TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CHILD,
-                            TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
+                            TypeInitializerAttributeType.HAS_AUDIT,
+                            TypeInitializerAttributeType.HAS_CHILD,
+                            TypeInitializerAttributeType.HAS_CONTENT,
+                            TypeInitializerAttributeType.HAS_PERMISSION,
                             TypeInitializerAttributeType.HAS_PROPERTIES),
                     childTypes, this.factoryManager.create(FileSystemFolderTypeInitializer.class));
-
-            typeManager.create(kernelConfiguration.FILES_TYPES_INSTANCE_VOLUME_ID,
-                    kernelConfiguration.FILES_TYPES_INSTANCE_VOLUME_NAME,
-                    LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
-                            TypeInitializerAttributeType.CAN_BE_SHARED_READ,
-                            TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CHILD,
-                            TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
-                            TypeInitializerAttributeType.HAS_PROPERTIES),
-                    childTypes, this.factoryManager.create(FileSystemVolumeTypeInitializer.class));
         }
     }
 

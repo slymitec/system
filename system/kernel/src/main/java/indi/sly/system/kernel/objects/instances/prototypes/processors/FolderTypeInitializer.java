@@ -54,7 +54,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void getProcedure(InfoEntity info) {
+    public void getProcedure(InfoEntity info, IdentificationDefinition identification) {
     }
 
     @Override
@@ -80,25 +80,26 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        this.lockProcedure(info, LockType.WRITE);
+        try {
+            this.lockProcedure(info, LockType.WRITE);
 
-        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
-        for (InfoRelationEntity infoRelation : infoRelations) {
-            if (infoRelation.getName().equals(childInfo.getName())) {
-                this.lockProcedure(info, LockType.NONE);
-                throw new StatusAlreadyExistedException();
+            List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
+            for (InfoRelationEntity infoRelation : infoRelations) {
+                if (infoRelation.getName().equals(childInfo.getName())) {
+                    throw new StatusAlreadyExistedException();
+                }
             }
+
+            InfoRelationEntity infoRelation = new InfoRelationEntity();
+            infoRelation.setID(childInfo.getID());
+            infoRelation.setParentID(info.getID());
+            infoRelation.setType(childInfo.getType());
+            infoRelation.setName(childInfo.getName());
+
+            infoRepository.addRelation(infoRelation);
+        } finally {
+            this.lockProcedure(info, LockType.NONE);
         }
-
-        InfoRelationEntity infoRelation = new InfoRelationEntity();
-        infoRelation.setID(childInfo.getID());
-        infoRelation.setParentID(info.getID());
-        infoRelation.setType(childInfo.getType());
-        infoRelation.setName(childInfo.getName());
-
-        infoRepository.addRelation(infoRelation);
-
-        this.lockProcedure(info, LockType.NONE);
     }
 
     @Override
@@ -107,46 +108,64 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
+        String childInfoName = StringUtil.readFormBytes(identification.getID());
+        InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
+
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        String childName = StringUtil.readFormBytes(identification.getID());
+        try {
+            this.lockProcedure(info, LockType.READ);
 
-        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
-        for (InfoRelationEntity infoRelation : infoRelations) {
-            if (infoRelation.getName().equals(childName)) {
+            List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
+
+            boolean isFinished = false;
+            for (InfoRelationEntity infoRelation : infoRelations) {
+                if (infoRelation.getName().equals(childInfoName)) {
+                    infoSummary.setID(infoRelation.getID());
+                    infoSummary.setType(infoRelation.getType());
+                    infoSummary.setName(infoRelation.getName());
+
+                    isFinished = true;
+                    break;
+                }
+            }
+
+            if (!isFinished) {
+                throw new StatusNotExistedException();
+            }
+        } finally {
+            this.lockProcedure(info, LockType.NONE);
+        }
+
+        return infoSummary;
+    }
+
+    @Override
+    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate1<InfoSummaryDefinition> wildcard) {
+        Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
+
+        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
+                info.getType()));
+
+        try {
+            this.lockProcedure(info, LockType.READ);
+
+            List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
+            for (InfoRelationEntity infoRelation : infoRelations) {
                 InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
                 infoSummary.setID(infoRelation.getID());
                 infoSummary.setType(infoRelation.getType());
                 infoSummary.setName(infoRelation.getName());
 
-                return infoSummary;
+                if (wildcard.test(infoSummary)) {
+                    infoSummaries.add(infoSummary);
+                }
             }
-        }
-
-        throw new StatusNotExistedException();
-    }
-
-    @Override
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate1<InfoSummaryDefinition> wildcard) {
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
-                info.getType()));
-
-        this.lockProcedure(info, LockType.WRITE);
-
-        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
-        Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
-        for (InfoRelationEntity infoRelation : infoRelations) {
-            InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
-            infoSummary.setID(infoRelation.getID());
-            infoSummary.setType(infoRelation.getType());
-            infoSummary.setName(infoRelation.getName());
-
-            if (wildcard.test(infoSummary)) {
-                infoSummaries.add(infoSummary);
-            }
+        } finally {
+            this.lockProcedure(info, LockType.NONE);
         }
 
         return CollectionUtil.unmodifiable(infoSummaries);
@@ -164,26 +183,32 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
+        String childInfoName = StringUtil.readFormBytes(identification.getID());
+
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                 info.getType()));
 
-        this.lockProcedure(info, LockType.WRITE);
+        try {
+            this.lockProcedure(info, LockType.WRITE);
 
-        String childName = StringUtil.readFormBytes(identification.getID());
+            List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
 
-        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
-        for (InfoRelationEntity infoRelation : infoRelations) {
-            if (infoRelation.getName().equals(childName)) {
-                infoRepository.deleteRelation(infoRelation);
+            boolean isFinished = false;
+            for (InfoRelationEntity infoRelation : infoRelations) {
+                if (infoRelation.getName().equals(childInfoName)) {
+                    infoRepository.deleteRelation(infoRelation);
 
-                this.lockProcedure(info, LockType.NONE);
-                return;
+                    isFinished = true;
+                }
             }
-        }
 
-        this.lockProcedure(info, LockType.NONE);
-        throw new StatusNotExistedException();
+            if (!isFinished) {
+                throw new StatusNotExistedException();
+            }
+        } finally {
+            this.lockProcedure(info, LockType.NONE);
+        }
     }
 
     @Override

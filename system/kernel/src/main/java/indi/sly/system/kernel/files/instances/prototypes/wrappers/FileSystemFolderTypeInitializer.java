@@ -167,7 +167,9 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             childInfo.setContent(ObjectUtil.transferToByteArray(childEntry));
 
             try {
-                childInfoFile.createNewFile();
+                if (!childInfoFile.createNewFile()) {
+                    throw new StatusUnexpectedException();
+                }
             } catch (IOException e) {
                 throw new StatusUnexpectedException();
             }
@@ -267,21 +269,23 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
                     info.getType()));
 
-            this.lockProcedure(info, LockType.READ);
+            try {
+                this.lockProcedure(info, LockType.READ);
 
-            List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
-            for (InfoRelationEntity infoRelation : infoRelations) {
-                InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
-                infoSummary.setID(infoRelation.getID());
-                infoSummary.setType(infoRelation.getType());
-                infoSummary.setName(infoRelation.getName());
+                List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
+                for (InfoRelationEntity infoRelation : infoRelations) {
+                    InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
+                    infoSummary.setID(infoRelation.getID());
+                    infoSummary.setType(infoRelation.getType());
+                    infoSummary.setName(infoRelation.getName());
 
-                if (wildcard.test(infoSummary)) {
-                    infoSummaries.add(infoSummary);
+                    if (wildcard.test(infoSummary)) {
+                        infoSummaries.add(infoSummary);
+                    }
                 }
+            } finally {
+                this.lockProcedure(info, LockType.NONE);
             }
-
-            this.lockProcedure(info, LockType.NONE);
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
             File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "_Relation");

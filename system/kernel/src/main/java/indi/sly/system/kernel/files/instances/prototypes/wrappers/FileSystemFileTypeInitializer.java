@@ -7,6 +7,7 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
+import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
@@ -38,9 +39,11 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
 
     @Override
     public void createProcedure(InfoEntity info) {
-        FileSystemEntryDefinition fileSystemFile = new FileSystemEntryDefinition();
+        FileSystemEntryDefinition entry = new FileSystemEntryDefinition();
 
-        info.setContent(ObjectUtil.transferToByteArray(fileSystemFile));
+        entry.setType(FileSystemLocationType.REPOSITORY);
+
+        info.setContent(ObjectUtil.transferToByteArray(entry));
     }
 
     @Override

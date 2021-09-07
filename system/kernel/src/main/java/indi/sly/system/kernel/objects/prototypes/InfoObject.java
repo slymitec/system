@@ -275,7 +275,7 @@ public class InfoObject extends AObject {
         }
     }
 
-    public synchronized Set<InfoSummaryDefinition> queryChild(Predicate1<InfoSummaryDefinition> wildcard) {
+    public synchronized Set<InfoSummaryDefinition> queryChild(InfoQueryChildPredicate wildcard) {
         if (ObjectUtil.isAnyNull(wildcard)) {
             throw new ConditionParametersException();
         }
@@ -357,20 +357,20 @@ public class InfoObject extends AObject {
 
             List<InfoProcessorReadContentFunction> resolvers = this.processorMediator.getReadContents();
 
-            byte[] contentSource = null;
+            byte[] source = null;
 
             for (InfoProcessorReadContentFunction resolver : resolvers) {
-                contentSource = resolver.apply(contentSource, info, type, status);
+                source = resolver.apply(source, info, type, status);
             }
 
-            return contentSource;
-        }, (byte[] contentSource) -> {
+            return source;
+        }, (byte[] source) -> {
             InfoEntity info = this.getSelf();
 
             List<InfoProcessorWriteContentConsumer> resolvers = this.processorMediator.getWriteContents();
 
             for (InfoProcessorWriteContentConsumer resolver : resolvers) {
-                resolver.accept(info, type, status, contentSource);
+                resolver.accept(info, type, status, source);
             }
         }, () -> {
             InfoEntity info = this.getSelf();

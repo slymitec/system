@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusIsUsedException;
-import indi.sly.system.common.lang.StatusOverflowException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
@@ -168,51 +167,87 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
         };
 
         this.readProperties = (properties, info, type, status) -> {
-            Map<String, String> newProperties = ObjectUtil.transferFromByteArray(info.getProperties());
-            assert newProperties != null;
+            AInfoTypeInitializer typeInitializer = type.getInitializer();
 
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
+
+            Map<String, String> newProperties;
+            if (processInfoTable.containByID(info.getID())) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+
+                newProperties = typeInitializer.readPropertiesProcedure(info, processInfoEntry.getOpen());
+            } else {
+                newProperties = typeInitializer.readPropertiesProcedure(info, null);
+            }
             properties.putAll(newProperties);
 
             return properties;
         };
 
         this.writeProperties = (info, type, status, properties) -> {
-            Map<String, String> newProperties = new HashMap<>(properties);
-
-            byte[] newPropertiesSource = ObjectUtil.transferToByteArray(newProperties);
-            assert newPropertiesSource != null;
-
-            if (newPropertiesSource.length > 1024) {
-                throw new StatusOverflowException();
-            }
-
-            info.setProperties(newPropertiesSource);
+            AInfoTypeInitializer typeInitializer = type.getInitializer();
 
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            AInfoTypeInitializer typeInitializer = type.getInitializer();
             if (processInfoTable.containByID(info.getID())) {
                 ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
 
-                typeInitializer.refreshPropertiesProcedure(info, processInfoEntry.getOpen());
+                typeInitializer.writePropertiesProcedure(info, new HashMap<>(properties), processInfoEntry.getOpen());
             } else {
-                typeInitializer.refreshPropertiesProcedure(info, null);
+                typeInitializer.writePropertiesProcedure(info, new HashMap<>(properties), null);
             }
         };
 
-        this.readContent = (content, info, type, status) -> info.getContent();
+        this.readContent = (content, info, type, status) -> {
+            AInfoTypeInitializer typeInitializer = type.getInitializer();
+
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
+
+            if (processInfoTable.containByID(info.getID())) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+
+                return typeInitializer.readContentProcedure(info, processInfoEntry.getOpen());
+            } else {
+                return typeInitializer.readContentProcedure(info, null);
+            }
+        };
 
         this.writeContent = (info, type, status, content) -> {
-            if (content.length > 4096) {
-                throw new StatusOverflowException();
-            }
+            AInfoTypeInitializer typeInitializer = type.getInitializer();
 
-            info.setContent(content);
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
+
+            if (processInfoTable.containByID(info.getID())) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+
+                typeInitializer.writeContentProcedure(info, processInfoEntry.getOpen(), content);
+            } else {
+                typeInitializer.writeContentProcedure(info, null, content);
+            }
         };
 
         this.executeContent = (info, type, status) -> {
+            AInfoTypeInitializer typeInitializer = type.getInitializer();
+
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
+
+            if (processInfoTable.containByID(info.getID())) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+
+                typeInitializer.executeContentProcedure(info, processInfoEntry.getOpen());
+            } else {
+                typeInitializer.executeContentProcedure(info, null);
+            }
         };
     }
 

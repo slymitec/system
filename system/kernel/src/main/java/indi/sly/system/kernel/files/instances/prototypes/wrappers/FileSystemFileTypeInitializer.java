@@ -1,37 +1,29 @@
 package indi.sly.system.kernel.files.instances.prototypes.wrappers;
 
-import indi.sly.system.common.lang.Predicate1;
-import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.lang.Consumer1;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
+import indi.sly.system.kernel.files.instances.values.FileSystemFilePropertyTypes;
 import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
-    @Override
-    public void install() {
-    }
-
-    @Override
-    public void uninstall() {
-    }
-
     @Override
     public UUID getPoolID(UUID id, UUID type) {
         return this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID;
@@ -47,10 +39,6 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void deleteProcedure(InfoEntity info) {
-    }
-
-    @Override
     public void getProcedure(InfoEntity info, IdentificationDefinition identification) {
         if (identification.getType() == String.class) {
             String childInfoName = StringUtil.readFormBytes(identification.getID());
@@ -61,50 +49,34 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void dumpProcedure(InfoEntity info, DumpDefinition dump) {
-    }
-
-    @Override
-    public void openProcedure(InfoEntity info, InfoOpenDefinition infoOpen, long openAttribute,
-                              Object... arguments) {
-    }
-
-    @Override
-    public void closeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
-    }
-
-    @Override
-    public void createChildProcedure(InfoEntity info, InfoEntity childInfo) {
-        throw new StatusNotSupportedException();
-    }
-
-    @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification) {
-        throw new StatusNotSupportedException();
-    }
-
-    @Override
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate1<InfoSummaryDefinition> wildcard) {
-        throw new StatusNotSupportedException();
-    }
-
-    @Override
-    public void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification,
-                                     IdentificationDefinition newIdentification) {
-        throw new StatusNotSupportedException();
-    }
-
-    @Override
-    public void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification) {
-        throw new StatusNotSupportedException();
-    }
-
-    @Override
     public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
         return FileSystemFileContentObject.class;
     }
 
     @Override
-    public void refreshPropertiesProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
+    protected Consumer1<byte[]> writeContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen, Consumer1<byte[]> funcWrite) {
+        return source -> {
+            Map<String, String> properties = this.readPropertiesProcedure(info, infoOpen);
+            assert properties != null;
+
+            String property;
+            boolean isPropertiesModified = false;
+
+            property = properties.getOrDefault(FileSystemFilePropertyTypes.HIDDEN, StringUtil.EMPTY);
+            if (!ValueUtil.isAnyNullOrEmpty(property)) {
+                throw new ConditionRefuseException();
+            }
+            property = properties.getOrDefault(FileSystemFilePropertyTypes.UNCHANGED, StringUtil.EMPTY);
+            if (!ValueUtil.isAnyNullOrEmpty(property)) {
+                properties.remove(FileSystemFilePropertyTypes.UNCHANGED);
+                isPropertiesModified = true;
+            }
+
+            if (isPropertiesModified) {
+                info.setProperties(ObjectUtil.transferToByteArray(properties));
+            }
+
+            funcWrite.accept(source);
+        };
     }
 }

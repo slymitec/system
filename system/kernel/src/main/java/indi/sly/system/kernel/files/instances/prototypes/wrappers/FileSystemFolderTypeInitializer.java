@@ -10,6 +10,7 @@ import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
+import indi.sly.system.kernel.objects.lang.InfoQueryChildPredicate;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -28,14 +29,6 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
-    @Override
-    public void install() {
-    }
-
-    @Override
-    public void uninstall() {
-    }
-
     @Override
     public UUID getPoolID(UUID id, UUID type) {
         return this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID;
@@ -89,19 +82,6 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 info.setName(childInfoName);
             }
         }
-    }
-
-    @Override
-    public void dumpProcedure(InfoEntity info, DumpDefinition dump) {
-    }
-
-    @Override
-    public void openProcedure(InfoEntity info, InfoOpenDefinition infoOpen, long openAttribute,
-                              Object... arguments) {
-    }
-
-    @Override
-    public void closeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
     }
 
     @Override
@@ -258,7 +238,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate1<InfoSummaryDefinition> wildcard) {
+    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoQueryChildPredicate wildcard) {
         FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
         assert entry != null;
 
@@ -444,9 +424,5 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     @Override
     public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
         return FileSystemFolderContentObject.class;
-    }
-
-    @Override
-    public void refreshPropertiesProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
     }
 }

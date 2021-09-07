@@ -1,14 +1,12 @@
 package indi.sly.system.kernel.objects.infotypes.prototypes.processors;
 
-import indi.sly.system.common.lang.Consumer;
-import indi.sly.system.common.lang.Consumer1;
-import indi.sly.system.common.lang.Predicate1;
-import indi.sly.system.common.lang.Provider;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.prototypes.processors.AInitializer;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
+import indi.sly.system.kernel.objects.lang.InfoQueryChildPredicate;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -22,23 +20,29 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class AInfoTypeInitializer extends AInitializer {
-    public abstract void install();
+    public void install() {
+    }
 
-    public abstract void uninstall();
+    public void uninstall() {
+    }
 
     public abstract UUID getPoolID(UUID id, UUID type);
 
-    public abstract void createProcedure(InfoEntity info);
+    public void createProcedure(InfoEntity info) {
+    }
 
-    public abstract void deleteProcedure(InfoEntity info);
+    public void deleteProcedure(InfoEntity info) {
+    }
 
-    public abstract void getProcedure(InfoEntity info, IdentificationDefinition identification);
+    public void getProcedure(InfoEntity info, IdentificationDefinition identification) {
+    }
 
     public final void lockProcedure(InfoEntity info, long lock) {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
@@ -47,21 +51,52 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         infoRepository.lock(info, lock);
     }
 
-    public abstract void dumpProcedure(InfoEntity info, DumpDefinition dump);
+    public void dumpProcedure(InfoEntity info, DumpDefinition dump) {
+    }
 
-    public abstract void openProcedure(InfoEntity info, InfoOpenDefinition infoOpen, long openAttribute, Object... arguments);
+    public void openProcedure(InfoEntity info, InfoOpenDefinition infoOpen, long openAttribute, Object... arguments) {
+    }
 
-    public abstract void closeProcedure(InfoEntity info, InfoOpenDefinition infoOpen);
+    public void closeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
+    }
 
-    public abstract void createChildProcedure(InfoEntity info, InfoEntity childInfo);
+    public void createChildProcedure(InfoEntity info, InfoEntity childInfo) {
+    }
 
-    public abstract InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification);
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification) {
+        throw new StatusNotSupportedException();
+    }
 
-    public abstract Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, Predicate1<InfoSummaryDefinition> wildcard);
+    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoQueryChildPredicate wildcard) {
+        throw new StatusNotSupportedException();
+    }
 
-    public abstract void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification, IdentificationDefinition newIdentification);
+    public void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification,
+                                     IdentificationDefinition newIdentification) {
+        throw new StatusNotSupportedException();
+    }
 
-    public abstract void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification);
+    public void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification) {
+        throw new StatusNotSupportedException();
+    }
+
+    public Map<String, String> readPropertiesProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
+        Map<String, String> properties = ObjectUtil.transferFromByteArray(info.getProperties());
+        assert properties != null;
+
+        return properties;
+    }
+
+    public void writePropertiesProcedure(InfoEntity info, Map<String, String> properties, InfoOpenDefinition infoOpen) {
+        byte[] propertiesSource = ObjectUtil.transferToByteArray(properties);
+        assert propertiesSource != null;
+
+        if (propertiesSource.length > 1024) {
+            throw new StatusOverflowException();
+        }
+
+        info.setProperties(propertiesSource);
+    }
 
     protected abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen);
 
@@ -79,6 +114,9 @@ public abstract class AInfoTypeInitializer extends AInitializer {
             infoOpen = processInfoEntry.getOpen();
         }
 
+        funcRead = this.readContentProcedure(info, infoOpen, funcRead);
+        funcWrite = this.writeContentProcedure(info, infoOpen, funcWrite);
+
         AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, infoOpen));
 
         content.setSource(funcRead, funcWrite);
@@ -91,5 +129,26 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         return content;
     }
 
-    public abstract void refreshPropertiesProcedure(InfoEntity info, InfoOpenDefinition infoOpen);
+    protected Provider<byte[]> readContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen, Provider<byte[]> funcRead) {
+        return funcRead;
+    }
+
+    protected Consumer1<byte[]> writeContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen, Consumer1<byte[]> funcWrite) {
+        return funcWrite;
+    }
+
+    public byte[] readContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
+        return info.getContent();
+    }
+
+    public void writeContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen, byte[] source) {
+        if (source.length > 4096) {
+            throw new StatusOverflowException();
+        }
+
+        info.setContent(source);
+    }
+
+    public void executeContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
+    }
 }

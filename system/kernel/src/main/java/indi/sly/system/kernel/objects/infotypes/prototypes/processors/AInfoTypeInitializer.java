@@ -61,6 +61,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
     }
 
     public void createChildProcedure(InfoEntity info, InfoEntity childInfo) {
+        throw new StatusNotSupportedException();
     }
 
     public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification) {

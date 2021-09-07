@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.files.instances.prototypes.wrappers;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
@@ -33,7 +34,8 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
         FileSystemEntryDefinition entry = new FileSystemEntryDefinition();
 
         entry.setType(FileSystemLocationType.REPOSITORY);
-
+        entry.setValue(ArrayUtil.EMPTY_BYTES);
+        
         info.setContent(ObjectUtil.transferToByteArray(entry));
     }
 

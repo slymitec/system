@@ -19,15 +19,15 @@ import javax.inject.Named;
 public class FileSystemFolderContentObject extends AInfoContentObject {
     @Override
     protected void read(byte[] source) {
-        this.fileSystemVolume = ObjectUtil.transferFromByteArray(source);
+        this.entry = ObjectUtil.transferFromByteArray(source);
     }
 
     @Override
     protected byte[] write() {
-        return ObjectUtil.transferToByteArray(this.fileSystemVolume);
+        return ObjectUtil.transferToByteArray(this.entry);
     }
 
-    private FileSystemEntryDefinition fileSystemVolume;
+    private FileSystemEntryDefinition entry;
 
     public long getType() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
@@ -43,7 +43,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
             this.lock(LockType.READ);
             this.init();
 
-            return this.fileSystemVolume.getType();
+            return this.entry.getType();
         } finally {
             this.lock(LockType.NONE);
         }
@@ -63,7 +63,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
             this.lock(LockType.WRITE);
             this.init();
 
-            this.fileSystemVolume.setType(type);
+            this.entry.setType(type);
 
             this.fresh();
         } finally {
@@ -85,7 +85,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
             this.lock(LockType.READ);
             this.init();
 
-            return this.fileSystemVolume.getValue();
+            return this.entry.getValue();
         } finally {
             this.lock(LockType.NONE);
         }
@@ -105,7 +105,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
             this.lock(LockType.WRITE);
             this.init();
 
-            this.fileSystemVolume.setValue(configuration);
+            this.entry.setValue(configuration);
 
             this.fresh();
         } finally {

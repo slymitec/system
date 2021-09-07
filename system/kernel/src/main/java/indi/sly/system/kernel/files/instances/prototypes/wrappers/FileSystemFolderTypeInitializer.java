@@ -39,6 +39,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         FileSystemEntryDefinition entry = new FileSystemEntryDefinition();
 
         entry.setType(FileSystemLocationType.REPOSITORY);
+        entry.setValue(ArrayUtil.EMPTY_BYTES);
 
         info.setContent(ObjectUtil.transferToByteArray(entry));
     }
@@ -107,10 +108,11 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                     }
                 }
 
-                FileSystemEntryDefinition childFileSystemEntry = ObjectUtil.transferFromByteArray(childInfo.getContent());
-                assert childFileSystemEntry != null;
-                childFileSystemEntry.setType(entry.getType());
-                childInfo.setContent(ObjectUtil.transferToByteArray(childFileSystemEntry));
+                FileSystemEntryDefinition childEntry = ObjectUtil.transferFromByteArray(childInfo.getContent());
+                assert childEntry != null;
+                childEntry.setType(entry.getType());
+                childEntry.setValue(ArrayUtil.EMPTY_BYTES);
+                childInfo.setContent(ObjectUtil.transferToByteArray(childEntry));
 
                 InfoRelationEntity infoRelation = new InfoRelationEntity();
                 infoRelation.setID(childInfo.getID());

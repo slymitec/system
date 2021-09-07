@@ -451,6 +451,20 @@ public abstract class ArrayUtil {
         return stringJoiner.toString();
     }
 
+    public static byte[] acquireBytes(byte[] original, int offset, int length) {
+        if (original == null) {
+            throw new NullPointerException();
+        }
+        if (offset < 0 || offset + length >= original.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+
+        byte[] result = new byte[length];
+        System.arraycopy(original, offset, result, 0, length);
+
+        return result;
+    }
+
     public static byte[] copyBytes(byte[] original) {
         if (ObjectUtil.isAnyNull(original)) {
             return null;

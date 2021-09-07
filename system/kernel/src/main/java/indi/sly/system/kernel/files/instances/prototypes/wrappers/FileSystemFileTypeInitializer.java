@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.files.instances.prototypes.wrappers;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.lang.Consumer1;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
@@ -54,29 +53,27 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    protected Consumer1<byte[]> writeContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen, Consumer1<byte[]> funcWrite) {
-        return source -> {
-            Map<String, String> properties = this.readPropertiesProcedure(info, infoOpen);
-            assert properties != null;
+    public void writeContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen, byte[] source) {
+        Map<String, String> properties = this.readPropertiesProcedure(info, infoOpen);
+        assert properties != null;
 
-            String property;
-            boolean isPropertiesModified = false;
+        String property;
+        boolean isPropertiesModified = false;
 
-            property = properties.getOrDefault(FileSystemFilePropertyTypes.HIDDEN, StringUtil.EMPTY);
-            if (!ValueUtil.isAnyNullOrEmpty(property)) {
-                throw new ConditionRefuseException();
-            }
-            property = properties.getOrDefault(FileSystemFilePropertyTypes.UNCHANGED, StringUtil.EMPTY);
-            if (!ValueUtil.isAnyNullOrEmpty(property)) {
-                properties.remove(FileSystemFilePropertyTypes.UNCHANGED);
-                isPropertiesModified = true;
-            }
+        property = properties.getOrDefault(FileSystemFilePropertyTypes.HIDDEN, StringUtil.EMPTY);
+        if (!ValueUtil.isAnyNullOrEmpty(property)) {
+            throw new ConditionRefuseException();
+        }
+        property = properties.getOrDefault(FileSystemFilePropertyTypes.UNCHANGED, StringUtil.EMPTY);
+        if (!ValueUtil.isAnyNullOrEmpty(property)) {
+            properties.remove(FileSystemFilePropertyTypes.UNCHANGED);
+            isPropertiesModified = true;
+        }
 
-            if (isPropertiesModified) {
-                info.setProperties(ObjectUtil.transferToByteArray(properties));
-            }
+        if (isPropertiesModified) {
+            info.setProperties(ObjectUtil.transferToByteArray(properties));
+        }
 
-            funcWrite.accept(source);
-        };
+        super.writeContentProcedure(info, infoOpen, source);
     }
 }

@@ -114,9 +114,6 @@ public abstract class AInfoTypeInitializer extends AInitializer {
             infoOpen = processInfoEntry.getOpen();
         }
 
-        funcRead = this.readContentProcedure(info, infoOpen, funcRead);
-        funcWrite = this.writeContentProcedure(info, infoOpen, funcWrite);
-
         AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, infoOpen));
 
         content.setSource(funcRead, funcWrite);
@@ -127,14 +124,6 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         }
 
         return content;
-    }
-
-    protected Provider<byte[]> readContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen, Provider<byte[]> funcRead) {
-        return funcRead;
-    }
-
-    protected Consumer1<byte[]> writeContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen, Consumer1<byte[]> funcWrite) {
-        return funcWrite;
     }
 
     public byte[] readContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {

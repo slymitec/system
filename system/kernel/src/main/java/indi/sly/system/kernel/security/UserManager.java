@@ -177,8 +177,8 @@ public class UserManager extends AManager {
 
         KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
 
-        Set<InfoSummaryDefinition> infoSummary = auditsInfo.queryChild(infoSummaryDefinition -> account.getName().equals(infoSummaryDefinition.getName()));
-        if (infoSummary.isEmpty()) {
+        Set<InfoSummaryDefinition> infoSummaries = auditsInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        if (infoSummaries.isEmpty()) {
             InfoObject auditInfo = auditsInfo.createChildAndOpen(configuration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                     new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
             SecurityDescriptorObject auditSecurityDescriptor = auditInfo.getSecurityDescriptor();
@@ -211,10 +211,10 @@ public class UserManager extends AManager {
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         InfoObject auditsInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
 
-        Set<InfoSummaryDefinition> infoSummary = auditsInfo.queryChild(infoSummaryDefinition -> account.getName().equals(infoSummaryDefinition.getName()));
-        if (!infoSummary.isEmpty()) {
+        Set<InfoSummaryDefinition> infoSummaries = auditsInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        if (!infoSummaries.isEmpty()) {
             InfoObject auditInfo = auditsInfo.getChild(new IdentificationDefinition(account.getName()));
-            Set<InfoSummaryDefinition> auditInfoSummaries = auditInfo.queryChild(infoSummaryDefinition -> true);
+            Set<InfoSummaryDefinition> auditInfoSummaries = auditInfo.queryChild(infoSummary -> true);
             for (InfoSummaryDefinition auditInfoSummary : auditInfoSummaries) {
                 auditInfo.deleteChild(new IdentificationDefinition(auditInfoSummary.getID()));
             }

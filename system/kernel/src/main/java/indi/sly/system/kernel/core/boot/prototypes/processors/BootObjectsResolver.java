@@ -119,8 +119,8 @@ public class BootObjectsResolver extends ABootResolver {
 
                 InfoObject auditsInfo = rootInfo.getChild(new IdentificationDefinition("Audits"));
 
-                Set<InfoSummaryDefinition> auditsInfoSummaries = auditsInfo.queryChild(infoSummaryDefinition ->
-                        "System".equals(infoSummaryDefinition.getName()));
+                Set<InfoSummaryDefinition> auditsInfoSummaries = auditsInfo.queryChild(infoSummary ->
+                        "System".equals(infoSummary.getName()));
                 if (auditsInfoSummaries.isEmpty()) {
                     InfoObject auditInfo = auditsInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                             new IdentificationDefinition("System"), InfoOpenAttributeType.OPEN_EXCLUSIVE);

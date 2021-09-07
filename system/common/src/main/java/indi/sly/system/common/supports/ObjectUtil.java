@@ -254,6 +254,10 @@ public abstract class ObjectUtil {
     }
 
     public static <T> T transferFromString(Class<T> clazz, String stream) {
-        return ObjectUtil.JSON_HELPER.fromJson(stream, clazz);
+        try {
+            return ObjectUtil.JSON_HELPER.fromJson(stream, clazz);
+        } catch (Exception ignored) {
+            throw new StatusUnexpectedException();
+        }
     }
 }

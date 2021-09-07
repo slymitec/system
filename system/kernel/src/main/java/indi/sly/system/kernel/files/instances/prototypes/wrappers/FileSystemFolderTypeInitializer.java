@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFolderContentObject;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
@@ -12,7 +13,10 @@ import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObje
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.lang.InfoQueryChildPredicate;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.objects.values.*;
+import indi.sly.system.kernel.objects.values.InfoEntity;
+import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoRelationEntity;
+import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -125,8 +129,10 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 this.lockProcedure(info, LockType.NONE);
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
+            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
-            File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "_Relation");
+            File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "$Relations");
 
             if (!infoFolder.exists() || !infoFolder.isDirectory() || !infoRelationFolder.exists() || !infoRelationFolder.isDirectory()) {
                 throw new StatusNotExistedException();
@@ -139,18 +145,30 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 throw new StatusAlreadyExistedException();
             }
 
-            File childInfoFile = new File(infoFolder.getAbsolutePath() + "/" + childInfo.getName());
+            File childInfoFileFolder = new File(infoFolder.getAbsolutePath() + "/" + childInfo.getName());
             File childInfoRelationFile = new File(infoRelationFolder.getAbsolutePath() + "/" + childInfo.getName());
 
             FileSystemEntryDefinition childEntry = ObjectUtil.transferFromByteArray(childInfo.getContent());
             assert childEntry != null;
             childEntry.setType(entry.getType());
-            childEntry.setValue(StringUtil.writeToBytes(childInfoFile.getAbsolutePath().replace("\\", "/")));
+            childEntry.setValue(StringUtil.writeToBytes(childInfoFileFolder.getAbsolutePath().replace("\\", "/")));
             childInfo.setContent(ObjectUtil.transferToByteArray(childEntry));
 
+            UUID childInfoType = childInfo.getType();
+
             try {
-                if (!childInfoFile.createNewFile()) {
-                    throw new StatusUnexpectedException();
+                if (childInfoType.equals(kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID)) {
+                    if (!childInfoFileFolder.createNewFile()) {
+                        throw new StatusUnexpectedException();
+                    }
+                } else if (childInfoType.equals(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID)) {
+                    if (!childInfoFileFolder.mkdir()) {
+                        throw new StatusUnexpectedException();
+                    }
+                    File childInfoRelationFolder = new File(infoFolder.getAbsolutePath() + "/" + childInfo.getName() + "$Relations");
+                    if (!childInfoRelationFolder.mkdir()) {
+                        throw new StatusUnexpectedException();
+                    }
                 }
             } catch (IOException e) {
                 throw new StatusUnexpectedException();
@@ -208,7 +226,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
-            File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "_Relation");
+            File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "$Relations");
 
             if (!infoFolder.exists() || !infoFolder.isDirectory() || !infoRelationFolder.exists() || !infoRelationFolder.isDirectory()) {
                 throw new StatusNotExistedException();
@@ -270,7 +288,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
-            File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "_Relation");
+            File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "$Relations");
 
             if (!infoFolder.exists() || !infoFolder.isDirectory() || !infoRelationFolder.exists() || !infoRelationFolder.isDirectory()) {
                 throw new StatusNotExistedException();
@@ -339,7 +357,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
-            File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "_Relation");
+            File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "$Relations");
 
             if (!infoFolder.exists() || !infoFolder.isDirectory() || !infoRelationFolder.exists() || !infoRelationFolder.isDirectory()) {
                 throw new StatusNotExistedException();
@@ -349,13 +367,20 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             assert childInfoNames != null;
 
             if (childInfoNames.length > 0) {
-                File oldChildInfoFile = new File(infoFolder.getAbsolutePath() + "/" + oldChildInfoName);
+                File oldChildInfoFileFolder = new File(infoFolder.getAbsolutePath() + "/" + oldChildInfoName);
                 File oldChildInfoRelationFile = new File(infoRelationFolder.getAbsolutePath() + "/" + oldChildInfoName);
-                File newChildInfoFile = new File(infoFolder.getAbsolutePath() + "/" + newChildInfoName);
+                File newChildInfoFileFolder = new File(infoFolder.getAbsolutePath() + "/" + newChildInfoName);
                 File newChildInfoRelationFile = new File(infoRelationFolder.getAbsolutePath() + "/" + newChildInfoName);
 
-                oldChildInfoFile.renameTo(newChildInfoFile);
+                oldChildInfoFileFolder.renameTo(newChildInfoFileFolder);
                 oldChildInfoRelationFile.renameTo(newChildInfoRelationFile);
+
+                if (oldChildInfoFileFolder.isDirectory()) {
+                    File oldChildInfoRelationFolder = new File(infoFolder.getAbsolutePath() + "/" + oldChildInfoName + "$Relations");
+                    File newChildInfoRelationFolder = new File(infoFolder.getAbsolutePath() + "/" + newChildInfoName + "$Relations");
+
+                    oldChildInfoRelationFolder.renameTo(newChildInfoRelationFolder);
+                }
 
                 return;
             }
@@ -402,7 +427,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
-            File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "_Relation");
+            File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "$Relations");
 
             if (!infoFolder.exists() || !infoFolder.isDirectory() || !infoRelationFolder.exists() || !infoRelationFolder.isDirectory()) {
                 throw new StatusNotExistedException();
@@ -415,10 +440,16 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 throw new StatusNotExistedException();
             }
 
-            File childInfoFile = new File(infoFolder.getAbsolutePath() + "/" + childInfoName);
+            File childInfoFileFolder = new File(infoFolder.getAbsolutePath() + "/" + childInfoName);
             File childInfoRelationFile = new File(infoRelationFolder.getAbsolutePath() + "/" + childInfoName);
 
-            childInfoFile.delete();
+            if (childInfoFileFolder.isDirectory()) {
+                File childInfoRelationFolder = new File(infoFolder.getAbsolutePath() + "/" + childInfoName + "$Relations");
+
+                childInfoRelationFolder.delete();
+            }
+
+            childInfoFileFolder.delete();
             childInfoRelationFile.delete();
         }
     }

@@ -61,7 +61,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
     }
 
     public byte[] read(long offset, int length) {
-        if (length < 0 || offset + length >= this.length()) {
+        if (length < 0 || offset + length > this.length()) {
             throw new ConditionParametersException();
         }
 

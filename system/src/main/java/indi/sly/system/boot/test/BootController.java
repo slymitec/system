@@ -6,6 +6,7 @@ import indi.sly.system.kernel.core.FactoryManager;
 import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.files.FileSystemManager;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
@@ -46,6 +47,7 @@ public class BootController extends ABase {
         this.factoryManager.startup(StartupType.STEP_AFTER_SELF);
 
         BootObject boot = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, BootObject.class);
+        FileSystemManager fileSystemManager = this.factoryManager.getManager(FileSystemManager.class);
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
@@ -70,7 +72,7 @@ public class BootController extends ABase {
             userManager.startup(startup);
             objectManager.startup(startup);
             sessionManager.startup(startup);
-
+            fileSystemManager.startup(startup);
         }
 
         this.ret = "----Boot-Finished----";

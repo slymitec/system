@@ -21,7 +21,7 @@ public abstract class StringUtil {
         if (ValueUtil.isAnyNullOrEmpty(value)) {
             return true;
         }
-        if (value.length() > 256 || StringUtils.containsAny(value, '/', '\\', ':', '*', '?', '\"', '<', '>', '|') || StringUtils.equalsIgnoreCase(value, ".")
+        if (value.length() > 256 || StringUtils.containsAny(value, '/', '\\', ':', '*', '?', '\"', '<', '>', '|', '$') || StringUtils.equalsIgnoreCase(value, ".")
                 || StringUtils.equalsIgnoreCase(value, "..") || (value.length() > 1 && value.charAt(value.length() - 1) == '.')) {
             return true;
         }

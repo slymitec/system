@@ -2,7 +2,6 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
-import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
@@ -46,16 +45,9 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
 
                 FileSystemFileContentObject infoContent = (FileSystemFileContentObject) info.getContent();
                 infoContent.execute();
-                infoContent.setOffset(0L);
                 long infoContentLength = infoContent.length();
-
-                byte[] applicationSource = infoContent.tryRead(infoContentLength);
-                ApplicationDefinition application;
-                try {
-                    application = ObjectUtil.transferFromByteArray(applicationSource);
-                } catch (RuntimeException e) {
-                    throw new StatusUnexpectedException();
-                }
+                byte[] applicationSource = infoContent.read(0, (int) infoContentLength);
+                ApplicationDefinition application = ObjectUtil.transferFromString(ApplicationDefinition.class, StringUtil.readFormBytes(applicationSource));
 
                 processContext.setApplication(application);
             }

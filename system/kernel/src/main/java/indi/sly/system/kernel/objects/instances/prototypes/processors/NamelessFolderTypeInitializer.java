@@ -167,6 +167,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
                     infoRepository.deleteRelation(infoRelation);
 
                     isFinished = true;
+                    break;
                 }
             }
 

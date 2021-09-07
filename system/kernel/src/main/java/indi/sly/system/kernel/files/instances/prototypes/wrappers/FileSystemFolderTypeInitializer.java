@@ -232,14 +232,12 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 throw new StatusNotExistedException();
             }
 
-            String[] childInfoNames = infoFolder.list((dir, name) -> childInfoName.equals(name));
-            assert childInfoNames != null;
+            File childInfoRelationFile = new File(infoRelationFolder.getAbsolutePath() + "/" + childInfoName);
 
-            if (childInfoNames.length == 0) {
+            if (!childInfoRelationFile.exists()) {
                 throw new StatusNotExistedException();
             }
 
-            File childInfoRelationFile = new File(infoRelationFolder.getAbsolutePath() + "/" + childInfoName);
             byte[] childInfoRelationID = new byte[16];
             byte[] childInfoRelationType = new byte[16];
             try (FileInputStream fileInputStream = new FileInputStream(childInfoRelationFile)) {
@@ -348,7 +346,6 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                     if (infoRelation.getName().equals(oldChildInfoName)) {
                         infoRelation.setName(newChildInfoName);
 
-                        this.lockProcedure(info, LockType.NONE);
                         return;
                     }
                 }
@@ -416,6 +413,8 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                         infoRepository.deleteRelation(infoRelation);
 
                         isFinished = true;
+
+                        break;
                     }
                 }
 

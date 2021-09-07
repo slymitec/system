@@ -1,13 +1,11 @@
 package indi.sly.system.boot.test;
 
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
-import indi.sly.system.kernel.processes.values.ApplicationDefinition;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,21 +31,30 @@ public class FileController extends AController {
         InfoObject i1 = objectManager.get(List.of(new IdentificationDefinition("Files"),
                 new IdentificationDefinition("Volume")));
 
-        InfoObject i2 = i1.getChild(new IdentificationDefinition("file.txt"));
+        InfoObject xiaoxiao = i1.createChildAndOpen(this.kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID,
+                new IdentificationDefinition("Xiaoxiao.txt"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
-        i2.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
+        FileSystemFileContentObject fc = (FileSystemFileContentObject) xiaoxiao.getContent();
 
-        FileSystemFileContentObject i2Content = (FileSystemFileContentObject) i2.getContent();
+        fc.write(StringUtil.writeToBytes("hello,羊羊爱笑笑。"));
 
-
-        byte[] source = i2Content.read(0, (int) i2Content.length());
-
-        String value = StringUtil.readFormBytes(source);
-
-        ApplicationDefinition application = ObjectUtil.transferFromString(ApplicationDefinition.class, value);
+        xiaoxiao.close();
 
 
-        ret = application;
+//        InfoObject i2 = i1.getChild(new IdentificationDefinition("file.txt"));
+//
+//        i2.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
+//
+//        FileSystemFileContentObject i2Content = (FileSystemFileContentObject) i2.getContent();
+//
+//
+//        byte[] source = i2Content.read(0, (int) i2Content.length());
+//
+//        String value = StringUtil.readFormBytes(source);
+//
+//        ApplicationDefinition application = ObjectUtil.transferFromString(ApplicationDefinition.class, value);
+
+//        ret = application;
 //        ApplicationDefinition applicationDefinition = new ApplicationDefinition();
 //        applicationDefinition.setID(UUID.randomUUID());
 //        applicationDefinition.setName("TestApp");
@@ -58,7 +65,7 @@ public class FileController extends AController {
 //
 //        String string = ObjectUtil.transferToString(applicationDefinition);
 
-        i2.close();
+//        i2.close();
 
         return ret;
     }

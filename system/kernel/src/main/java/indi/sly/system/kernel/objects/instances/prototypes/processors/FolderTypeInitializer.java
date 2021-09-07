@@ -166,6 +166,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
                     infoRepository.deleteRelation(infoRelation);
 
                     isFinished = true;
+                    break;
                 }
             }
 

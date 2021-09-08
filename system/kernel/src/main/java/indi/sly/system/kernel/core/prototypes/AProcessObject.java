@@ -21,17 +21,15 @@ public abstract class AProcessObject<T1, T2> extends AObject {
     private Consumer1<Long> funcLock;
 
     public final void setParent(T2 parent) {
-        if (ObjectUtil.allNotNull(parent)) {
-            this.parent = parent;
+        this.parent = parent;
 
+        if (ObjectUtil.allNotNull(parent)) {
             if (parent instanceof AProcessObject) {
-                this.funcParentInit = ((AProcessObject<?, ?>) parent)::init;
-                this.funcParentFresh = ((AProcessObject<?, ?>) parent)::fresh;
-                this.funcParentLock = ((AProcessObject<?, ?>) parent)::lock;
+                this.funcParentInit = ((AProcessObject<?, ?>) this.parent)::init;
+                this.funcParentFresh = ((AProcessObject<?, ?>) this.parent)::fresh;
+                this.funcParentLock = ((AProcessObject<?, ?>) this.parent)::lock;
             }
         } else {
-            this.parent = null;
-
             this.funcParentInit = null;
             this.funcParentFresh = null;
             this.funcParentLock = null;

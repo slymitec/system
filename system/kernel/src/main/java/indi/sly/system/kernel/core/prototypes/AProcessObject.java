@@ -31,11 +31,11 @@ public abstract class AProcessObject<T1, T2> extends AObject {
 
                 return;
             }
+        } else {
+            this.funcParentInit = null;
+            this.funcParentFresh = null;
+            this.funcParentLock = null;
         }
-
-        this.funcParentInit = null;
-        this.funcParentFresh = null;
-        this.funcParentLock = null;
     }
 
     public final void setSource(Provider<T1> funcRead, Consumer1<T1> funcWrite) {

@@ -455,7 +455,7 @@ public abstract class ArrayUtil {
         if (original == null) {
             throw new NullPointerException();
         }
-        if (offset < 0 || offset + length >= original.length) {
+        if (offset < 0 || offset + length > original.length) {
             throw new ArrayIndexOutOfBoundsException();
         }
 

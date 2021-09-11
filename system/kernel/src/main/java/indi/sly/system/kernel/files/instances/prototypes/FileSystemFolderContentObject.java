@@ -17,14 +17,9 @@ import javax.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FileSystemFolderContentObject extends AInfoContentObject {
-    @Override
-    protected void read(byte[] source) {
-        this.entry = ObjectUtil.transferFromByteArray(source);
-    }
-
-    @Override
-    protected byte[] write() {
-        return ObjectUtil.transferToByteArray(this.entry);
+    public FileSystemFolderContentObject() {
+        this.funcCustomRead = () -> this.entry = ObjectUtil.transferFromByteArray(this.value);
+        this.funcCustomWrite = () -> this.value = ObjectUtil.transferToByteArray(this.entry);
     }
 
     private FileSystemEntryDefinition entry;

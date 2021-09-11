@@ -25,14 +25,9 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SignalContentObject extends AInfoContentObject {
-    @Override
-    protected void read(byte[] source) {
-        this.signal = ObjectUtil.transferFromByteArray(source);
-    }
-
-    @Override
-    protected byte[] write() {
-        return ObjectUtil.transferToByteArray(this.signal);
+    public SignalContentObject() {
+        this.funcCustomRead = () -> this.signal = ObjectUtil.transferFromByteArray(this.value);
+        this.funcCustomWrite = () -> this.value = ObjectUtil.transferToByteArray(this.signal);
     }
 
     private SignalDefinition signal;
@@ -73,7 +68,7 @@ public class SignalContentObject extends AInfoContentObject {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
 
-        List<SignalEntryDefinition> signalEntries = null;
+        List<SignalEntryDefinition> signalEntries;
 
         try {
             this.lock(LockType.WRITE);

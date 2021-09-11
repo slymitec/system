@@ -19,14 +19,9 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AuditContentObject extends AInfoContentObject {
-    @Override
-    protected void read(byte[] source) {
-        this.audit = ObjectUtil.transferFromByteArray(source);
-    }
-
-    @Override
-    protected byte[] write() {
-        return ObjectUtil.transferToByteArray(this.audit);
+    public AuditContentObject() {
+        this.funcCustomRead = () -> this.audit = ObjectUtil.transferFromByteArray(this.value);
+        this.funcCustomWrite = () -> this.value = ObjectUtil.transferToByteArray(this.audit);
     }
 
     private AuditDefinition audit;

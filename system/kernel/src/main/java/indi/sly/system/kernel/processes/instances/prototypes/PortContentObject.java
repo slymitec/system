@@ -21,14 +21,9 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PortContentObject extends AInfoContentObject {
-    @Override
-    protected void read(byte[] source) {
-        this.port = ObjectUtil.transferFromByteArray(source);
-    }
-
-    @Override
-    protected byte[] write() {
-        return ObjectUtil.transferToByteArray(this.port);
+    public PortContentObject() {
+        this.funcCustomRead = () -> this.port = ObjectUtil.transferFromByteArray(this.value);
+        this.funcCustomWrite = () -> this.value = ObjectUtil.transferToByteArray(this.port);
     }
 
     private PortDefinition port;

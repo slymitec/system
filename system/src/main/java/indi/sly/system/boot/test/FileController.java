@@ -14,14 +14,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @Transactional
 public class FileController extends AController {
-    @RequestMapping(value = {"/FileTest.action"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/FRTest.action"}, method = {RequestMethod.GET})
     @Transactional
-    public Object fileTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    public Object fRTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        this.init(request, response, session);
+
+        Object ret = "finished";
+
+        InfoObject i1 = this.get("Files", "Main", "Test.txt");
+
+        i1.close();
+
+        i1 = this.get("Files", "Main");
+
+        this.del(i1, "Test.txt");
+
+        return ret;
+    }
+
+    @RequestMapping(value = {"/FMTest.action"}, method = {RequestMethod.GET})
+    @Transactional
+    public Object fMTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init(request, response, session);
 
         Object ret = "finished";
@@ -70,16 +89,44 @@ public class FileController extends AController {
         return ret;
     }
 
-    private InfoObject mf(InfoObject info, String name) {
-        return info.createChildAndOpen(this.kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID,
-                new IdentificationDefinition(name), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+    private InfoObject get(String... path) {
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
+        List<IdentificationDefinition> identifications = new ArrayList<>();
+
+        if (path != null && path.length > 0) {
+            for (String pair : path) {
+                identifications.add(new IdentificationDefinition(pair));
+            }
+        }
+
+        return objectManager.get(identifications);
     }
 
-    private void md(InfoObject info, String name) {
+    private InfoObject mf(InfoObject info, String name, boolean isOpen) {
+        InfoObject chidlInfo = info.createChildAndOpen(this.kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID,
+                new IdentificationDefinition(name), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+
+        if (!isOpen) {
+            chidlInfo.close();
+        }
+
+        return chidlInfo;
+    }
+
+    private InfoObject md(InfoObject info, String name, boolean isOpen) {
         InfoObject chidlInfo = info.createChildAndOpen(this.kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
                 new IdentificationDefinition(name), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
-        chidlInfo.close();
+        if (!isOpen) {
+            chidlInfo.close();
+        }
+
+        return chidlInfo;
+    }
+
+    private InfoObject md(InfoObject info, String name) {
+        return this.md(info, name, false);
     }
 
     private void del(InfoObject info, String name) {

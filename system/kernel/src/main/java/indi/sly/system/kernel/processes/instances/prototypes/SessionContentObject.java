@@ -18,14 +18,9 @@ import java.util.Set;
 import java.util.UUID;
 
 public class SessionContentObject extends AInfoContentObject {
-    @Override
-    protected void read(byte[] source) {
-        this.session = ObjectUtil.transferFromByteArray(source);
-    }
-
-    @Override
-    protected byte[] write() {
-        return ObjectUtil.transferToByteArray(this.session);
+    public SessionContentObject() {
+        this.funcCustomRead = () -> this.session = ObjectUtil.transferFromByteArray(this.value);
+        this.funcCustomWrite = () -> this.value = ObjectUtil.transferToByteArray(this.session);
     }
 
     private SessionDefinition session;
@@ -84,7 +79,7 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public void addProcessID(UUID processID) {
-        boolean result = false;
+        boolean result;
 
         try {
             this.lock(LockType.WRITE);
@@ -103,7 +98,7 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public void deleteProcessID(UUID processID) {
-        boolean result = false;
+        boolean result;
 
         try {
             this.lock(LockType.WRITE);

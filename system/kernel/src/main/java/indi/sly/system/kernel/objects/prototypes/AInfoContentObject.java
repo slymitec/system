@@ -17,6 +17,8 @@ import javax.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class AInfoContentObject extends AValueProcessObject<byte[], InfoObject> {
     private Consumer funcExecute;
+    protected Consumer funcCustomRead;
+    protected Consumer funcCustomWrite;
 
     protected InfoOpenDefinition infoOpen;
 
@@ -30,6 +32,22 @@ public abstract class AInfoContentObject extends AValueProcessObject<byte[], Inf
 
     public void setInfoOpen(InfoOpenDefinition infoOpen) {
         this.infoOpen = infoOpen;
+    }
+
+    protected final void read(byte[] source) {
+        super.read(source);
+
+        if (ObjectUtil.allNotNull(this.funcCustomRead)) {
+            this.funcCustomRead.accept();
+        }
+    }
+
+    protected final byte[] write() {
+        if (ObjectUtil.allNotNull(this.funcCustomRead)) {
+            this.funcCustomWrite.accept();
+        }
+
+        return super.write();
     }
 
     public synchronized void close() {

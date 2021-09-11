@@ -23,14 +23,9 @@ import java.io.IOException;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FileSystemFileContentObject extends AInfoContentObject {
-    @Override
-    protected void read(byte[] source) {
-        this.entry = ObjectUtil.transferFromByteArray(source);
-    }
-
-    @Override
-    protected byte[] write() {
-        return ObjectUtil.transferToByteArray(this.entry);
+    public FileSystemFileContentObject() {
+        this.funcCustomRead = () -> this.entry = ObjectUtil.transferFromByteArray(this.value);
+        this.funcCustomWrite = () -> this.value = ObjectUtil.transferToByteArray(this.entry);
     }
 
     private FileSystemEntryDefinition entry;
@@ -76,7 +71,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
                     throw new ConditionParametersException();
                 }
 
-                value = ArrayUtil.acquireBytes(this.value, (int) offset, length);
+                value = ArrayUtil.acquireBytes(this.entry.getValue(), (int) offset, length);
             } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
                 value = new byte[length];
 
@@ -106,7 +101,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
         }
 
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
@@ -124,6 +119,8 @@ public class FileSystemFileContentObject extends AInfoContentObject {
                     throw new StatusUnexpectedException();
                 }
             }
+
+            this.fresh();
         } finally {
             this.lock(LockType.NONE);
         }
@@ -135,7 +132,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
         }
 
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
@@ -157,6 +154,8 @@ public class FileSystemFileContentObject extends AInfoContentObject {
                     throw new StatusUnexpectedException();
                 }
             }
+
+            this.fresh();
         } finally {
             this.lock(LockType.NONE);
         }

@@ -12,6 +12,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObjec
 import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -32,20 +33,45 @@ public class BootUserResolver extends ABootResolver {
             if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
                 UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
-                UUID[] groupIDs = new UUID[]{kernelConfiguration.SECURITY_GROUP_ADMINISTRATORS_ID,
-                        kernelConfiguration.SECURITY_GROUP_SYSTEMS_ID, kernelConfiguration.SECURITY_GROUP_USERS_ID};
-                String[] groupNames = new String[]{"Administrators", "Systems", "Users"};
-                for (int i = 0; i < groupIDs.length; i++) {
-                    if (!userRepository.containGroup(groupIDs[i])) {
-                        GroupEntity group = new GroupEntity();
-                        group.setID(groupIDs[i]);
-                        group.setName(groupNames[i]);
-                        AccountAuthorizationTokenDefinition accountGroupToken = new AccountAuthorizationTokenDefinition();
-                        accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
-                        group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
+                UUID groupID = kernelConfiguration.SECURITY_GROUP_SYSTEMS_ID;
+                String groupName = "Systems";
+                if (!userRepository.containGroup(groupID)) {
+                    GroupEntity group = new GroupEntity();
+                    group.setID(groupID);
+                    group.setName(groupName);
+                    AccountAuthorizationTokenDefinition accountGroupToken = new AccountAuthorizationTokenDefinition();
+                    accountGroupToken.setPrivileges(PrivilegeType.FULL);
+                    accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
+                    group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
 
-                        userRepository.add(group);
-                    }
+                    userRepository.add(group);
+                }
+                groupID = kernelConfiguration.SECURITY_GROUP_ADMINISTRATORS_ID;
+                groupName = "Administrators";
+                if (!userRepository.containGroup(groupID)) {
+                    GroupEntity group = new GroupEntity();
+                    group.setID(groupID);
+                    group.setName(groupName);
+                    AccountAuthorizationTokenDefinition accountGroupToken = new AccountAuthorizationTokenDefinition();
+                    accountGroupToken.setPrivileges(LogicalUtil.or(PrivilegeType.CORE_MODIFY_DATETIME,
+                            PrivilegeType.FILE_SYSTEM_ACCESS_MODIFY_MAPPING, PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT,
+                            PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP));
+                    accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
+                    group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
+
+                    userRepository.add(group);
+                }
+                groupID = kernelConfiguration.SECURITY_GROUP_USERS_ID;
+                groupName = "Users";
+                if (!userRepository.containGroup(groupID)) {
+                    GroupEntity group = new GroupEntity();
+                    group.setID(groupID);
+                    group.setName(groupName);
+                    AccountAuthorizationTokenDefinition accountGroupToken = new AccountAuthorizationTokenDefinition();
+                    accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
+                    group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
+
+                    userRepository.add(group);
                 }
 
                 if (!userRepository.containAccount(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID)) {
@@ -56,9 +82,7 @@ public class BootUserResolver extends ABootResolver {
                     account.setName("System");
                     account.setPassword(StringUtil.EMPTY);
                     account.setGroups(new ArrayList<>(List.of(group)));
-                    AccountAuthorizationTokenDefinition accountAuthorizationToken = new AccountAuthorizationTokenDefinition();
-                    accountAuthorizationToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
-                    account.setToken(ObjectUtil.transferToByteArray(accountAuthorizationToken));
+                    account.setToken(ObjectUtil.transferToByteArray(new AccountAuthorizationTokenDefinition()));
 
                     userRepository.add(account);
                 }

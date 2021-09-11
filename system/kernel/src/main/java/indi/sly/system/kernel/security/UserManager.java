@@ -172,16 +172,16 @@ public class UserManager extends AManager {
 
         AccountObject account = accountBuilder.create(accountName, accountPassword);
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        InfoObject auditsInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-
         KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
 
-        Set<InfoSummaryDefinition> infoSummaries = auditsInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
+        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
+        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
         if (infoSummaries.isEmpty()) {
-            InfoObject auditInfo = auditsInfo.createChildAndOpen(configuration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+            InfoObject childInfo = parentInfo.createChildAndOpen(configuration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                     new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
-            SecurityDescriptorObject auditSecurityDescriptor = auditInfo.getSecurityDescriptor();
+            SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
             permission.getUserID().setID(account.getID());
@@ -191,7 +191,26 @@ public class UserManager extends AManager {
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
             auditSecurityDescriptor.setInherit(false);
-            auditInfo.close();
+            childInfo.close();
+        }
+
+        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"),
+                new IdentificationDefinition("Main"), new IdentificationDefinition("Home")));
+        infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        if (infoSummaries.isEmpty()) {
+            InfoObject childInfo = parentInfo.createChildAndOpen(configuration.FILES_TYPES_INSTANCE_FOLDER_ID,
+                    new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
+            Set<AccessControlDefinition> permissions = new HashSet<>();
+            AccessControlDefinition permission = new AccessControlDefinition();
+            permission.getUserID().setID(account.getID());
+            permission.getUserID().setType(UserType.ACCOUNT);
+            permission.setScope(AccessControlScopeType.HIERARCHICAL_HAS_CHILD);
+            permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+            permissions.add(permission);
+            auditSecurityDescriptor.setPermissions(permissions);
+            auditSecurityDescriptor.setInherit(false);
+            childInfo.close();
         }
 
         return account;

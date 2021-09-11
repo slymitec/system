@@ -117,14 +117,12 @@ public class BootObjectsResolver extends ABootResolver {
                     isExist = false;
                 }
 
-                InfoObject auditsInfo = rootInfo.getChild(new IdentificationDefinition("Audits"));
-
-                Set<InfoSummaryDefinition> auditsInfoSummaries = auditsInfo.queryChild(infoSummary ->
-                        "System".equals(infoSummary.getName()));
-                if (auditsInfoSummaries.isEmpty()) {
-                    InfoObject auditInfo = auditsInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+                InfoObject parentInfo = rootInfo.getChild(new IdentificationDefinition("Audits"));
+                infoSummaries = parentInfo.queryChild(infoSummary -> "System".equals(infoSummary.getName()));
+                if (infoSummaries.isEmpty()) {
+                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                             new IdentificationDefinition("System"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
-                    SecurityDescriptorObject auditSecurityDescriptor = auditInfo.getSecurityDescriptor();
+                    SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                     Set<AccessControlDefinition> permissions = new HashSet<>();
                     AccessControlDefinition permission = new AccessControlDefinition();
                     permission.getUserID().setID(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
@@ -134,7 +132,22 @@ public class BootObjectsResolver extends ABootResolver {
                     permissions.add(permission);
                     auditSecurityDescriptor.setPermissions(permissions);
                     auditSecurityDescriptor.setInherit(false);
-                    auditInfo.close();
+                    childInfo.close();
+                }
+
+                parentInfo = rootInfo.getChild(new IdentificationDefinition("Files"));
+                infoSummaries = parentInfo.queryChild(infoSummary -> "Main".equals(infoSummary.getName()));
+                if (infoSummaries.isEmpty()) {
+                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
+                            new IdentificationDefinition("Main"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    childInfo.close();
+                }
+                parentInfo = parentInfo.getChild(new IdentificationDefinition("Main"));
+                infoSummaries = parentInfo.queryChild(infoSummary -> "Home".equals(infoSummary.getName()));
+                if (infoSummaries.isEmpty()) {
+                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
+                            new IdentificationDefinition("Home"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    childInfo.close();
                 }
             }
         };

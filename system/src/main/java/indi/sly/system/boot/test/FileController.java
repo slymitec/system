@@ -27,14 +27,6 @@ public class FileController extends AController {
 
         Object ret = "finished";
 
-        InfoObject i1 = this.get("Files", "Main", "Test.txt");
-
-        i1.close();
-
-        i1 = this.get("Files", "Main");
-
-        this.del(i1, "Test.txt");
-
         return ret;
     }
 

@@ -74,7 +74,7 @@ public class UserRepositoryObject extends AObject {
         CriteriaQuery<AccountEntity> criteriaQuery = criteriaBuilder.createQuery(AccountEntity.class);
         Root<AccountEntity> root = criteriaQuery.from(AccountEntity.class);
         criteriaQuery.select(root);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("Name"), name));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("name"), name));
         TypedQuery<AccountEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
         List<AccountEntity> accounts = typedQuery.getResultList();
 
@@ -110,7 +110,7 @@ public class UserRepositoryObject extends AObject {
         CriteriaQuery<GroupEntity> criteriaQuery = criteriaBuilder.createQuery(GroupEntity.class);
         Root<GroupEntity> root = criteriaQuery.from(GroupEntity.class);
         criteriaQuery.select(root);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("Name"), name));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("name"), name));
         TypedQuery<GroupEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
         List<GroupEntity> groups = typedQuery.getResultList();
 

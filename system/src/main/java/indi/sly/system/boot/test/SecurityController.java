@@ -1,8 +1,7 @@
 package indi.sly.system.boot.test;
 
 import indi.sly.system.kernel.security.UserManager;
-import indi.sly.system.kernel.security.prototypes.AccountObject;
-import indi.sly.system.kernel.security.prototypes.GroupObject;
+import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import java.util.Set;
 
 @RestController
 @Transactional
@@ -25,11 +23,10 @@ public class SecurityController extends AController {
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        GroupObject group = userManager.getGroup("Administrators");
+        AccountAuthorizationObject authorize = userManager.authorize("Sly", null);
 
-        AccountObject account = userManager.createAccount("Sly", "s34l510y24");
+        ret = authorize.checkAndGetResult();
 
-        account.setGroups(Set.of(group));
 
         return ret;
     }

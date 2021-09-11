@@ -228,16 +228,24 @@ public class UserManager extends AManager {
         AccountObject account = this.getAccount(accountID);
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        InfoObject auditsInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
 
-        Set<InfoSummaryDefinition> infoSummaries = auditsInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"),
+                new IdentificationDefinition("Main"), new IdentificationDefinition("Home")));
+        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
         if (!infoSummaries.isEmpty()) {
-            InfoObject auditInfo = auditsInfo.getChild(new IdentificationDefinition(account.getName()));
-            Set<InfoSummaryDefinition> auditInfoSummaries = auditInfo.queryChild(infoSummary -> true);
+            parentInfo.renameChild(new IdentificationDefinition(account.getName()),
+                    new IdentificationDefinition(account.getName() + "_Deleted"));
+        }
+
+        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
+        infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        if (!infoSummaries.isEmpty()) {
+            InfoObject childInfo = parentInfo.getChild(new IdentificationDefinition(account.getName()));
+            Set<InfoSummaryDefinition> auditInfoSummaries = childInfo.queryChild(infoSummary -> true);
             for (InfoSummaryDefinition auditInfoSummary : auditInfoSummaries) {
-                auditInfo.deleteChild(new IdentificationDefinition(auditInfoSummary.getID()));
+                childInfo.deleteChild(new IdentificationDefinition(auditInfoSummary.getID()));
             }
-            auditsInfo.deleteChild(new IdentificationDefinition(account.getName()));
+            parentInfo.deleteChild(new IdentificationDefinition(account.getName()));
         }
 
         accountBuilder.delete(accountID);

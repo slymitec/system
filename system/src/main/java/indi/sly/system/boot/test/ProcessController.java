@@ -1,7 +1,6 @@
 package indi.sly.system.boot.test;
 
 import indi.sly.system.kernel.core.date.values.DateTimeType;
-import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +28,6 @@ public class ProcessController extends AController {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
-        ProcessCommunicationObject processCommunication = process.getCommunication();
 
         return ret;
     }
@@ -121,7 +119,6 @@ public class ProcessController extends AController {
         this.init(request, response, session);
         Object ret = "finished";
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessCommunicationObject processCommunication = process.getCommunication();

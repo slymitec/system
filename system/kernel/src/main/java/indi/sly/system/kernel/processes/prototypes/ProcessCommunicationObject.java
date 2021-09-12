@@ -450,11 +450,11 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             this.lock(LockType.WRITE);
             this.init();
 
-            if (!ValueUtil.isAnyNullOrEmpty(this.value.getSignalID())) {
+            UUID signalID = this.value.getSignalID();
+
+            if (!ValueUtil.isAnyNullOrEmpty(signalID)) {
                 throw new StatusAlreadyFinishedException();
             }
-
-            UUID signalID = this.value.getSignalID();
 
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -488,6 +488,10 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             signalID = this.value.getSignalID();
         } finally {
             this.lock(LockType.NONE);
+        }
+
+        if (ValueUtil.isAnyNullOrEmpty(signalID)) {
+            throw new StatusNotExistedException();
         }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
@@ -525,6 +529,10 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             this.lock(LockType.NONE);
         }
 
+        if (ValueUtil.isAnyNullOrEmpty(signalID)) {
+            throw new StatusNotExistedException();
+        }
+
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         List<IdentificationDefinition> identifications
@@ -552,6 +560,10 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             signalID = this.value.getSignalID();
         } finally {
             this.lock(LockType.NONE);
+        }
+
+        if (ValueUtil.isAnyNullOrEmpty(signalID)) {
+            throw new StatusNotExistedException();
         }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);

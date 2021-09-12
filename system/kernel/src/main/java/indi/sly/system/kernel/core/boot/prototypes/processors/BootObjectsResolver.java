@@ -61,13 +61,13 @@ public class BootObjectsResolver extends ABootResolver {
                     AccessControlDefinition permission = new AccessControlDefinition();
                     permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_SYSTEMS_ID);
                     permission.getUserID().setType(UserType.GROUP);
-                    permission.setScope(AccessControlScopeType.HIERARCHICAL_HAS_CHILD);
+                    permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(PermissionType.FULLCONTROL_ALLOW);
                     securityDescriptor.getPermissions().add(permission);
                     permission = new AccessControlDefinition();
                     permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_ADMINISTRATORS_ID);
                     permission.getUserID().setType(UserType.GROUP);
-                    permission.setScope(AccessControlScopeType.HIERARCHICAL_HAS_CHILD);
+                    permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
                             PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
                             PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW,
@@ -77,7 +77,7 @@ public class BootObjectsResolver extends ABootResolver {
                     permission = new AccessControlDefinition();
                     permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_USERS_ID);
                     permission.getUserID().setType(UserType.GROUP);
-                    permission.setScope(AccessControlScopeType.HIERARCHICAL_HAS_CHILD);
+                    permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
                             PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.READPROPERTIES_ALLOW,
                             PermissionType.READPERMISSIONDESCRIPTOR_ALLOW));
@@ -127,7 +127,7 @@ public class BootObjectsResolver extends ABootResolver {
                     AccessControlDefinition permission = new AccessControlDefinition();
                     permission.getUserID().setID(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
                     permission.getUserID().setType(UserType.ACCOUNT);
-                    permission.setScope(AccessControlScopeType.HIERARCHICAL_HAS_CHILD);
+                    permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(PermissionType.FULLCONTROL_ALLOW);
                     permissions.add(permission);
                     auditSecurityDescriptor.setPermissions(permissions);

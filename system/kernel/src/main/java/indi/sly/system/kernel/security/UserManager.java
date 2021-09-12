@@ -186,7 +186,7 @@ public class UserManager extends AManager {
             AccessControlDefinition permission = new AccessControlDefinition();
             permission.getUserID().setID(account.getID());
             permission.getUserID().setType(UserType.ACCOUNT);
-            permission.setScope(AccessControlScopeType.HIERARCHICAL_HAS_CHILD);
+            permission.setScope(AccessControlScopeType.ALL);
             permission.setValue(PermissionType.FULLCONTROL_ALLOW);
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
@@ -205,7 +205,7 @@ public class UserManager extends AManager {
             AccessControlDefinition permission = new AccessControlDefinition();
             permission.getUserID().setID(account.getID());
             permission.getUserID().setType(UserType.ACCOUNT);
-            permission.setScope(AccessControlScopeType.HIERARCHICAL_HAS_CHILD);
+            permission.setScope(AccessControlScopeType.ALL);
             permission.setValue(PermissionType.FULLCONTROL_ALLOW);
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);

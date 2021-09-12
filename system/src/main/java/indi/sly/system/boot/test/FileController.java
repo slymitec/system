@@ -2,7 +2,8 @@ package indi.sly.system.boot.test;
 
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
+import indi.sly.system.kernel.files.instances.prototypes.FileSystemFolderContentObject;
+import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -39,44 +40,18 @@ public class FileController extends AController {
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        InfoObject i1 = objectManager.get(List.of(new IdentificationDefinition("Files"),
-                new IdentificationDefinition("Volume")));
+        InfoObject filesInfo = objectManager.get(List.of(new IdentificationDefinition("Files")));
 
-        InfoObject xiaoxiao = i1.createChildAndOpen(this.kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID,
-                new IdentificationDefinition("Xiaoxiao.txt"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+        InfoObject volumeInfo = this.md(filesInfo, "Volume", true);
 
-        FileSystemFileContentObject fc = (FileSystemFileContentObject) xiaoxiao.getContent();
+        FileSystemFolderContentObject infoContent = (FileSystemFolderContentObject) volumeInfo.getContent();
 
-        fc.write(StringUtil.writeToBytes("hello,羊羊爱笑笑。"));
+        infoContent.setType(FileSystemLocationType.MAPPING);
+        infoContent.setValue(StringUtil.writeToBytes("C:/Users/Sly/Desktop/SlySystem/Volume"));
 
-        xiaoxiao.close();
+        volumeInfo.close();
 
-
-//        InfoObject i2 = i1.getChild(new IdentificationDefinition("file.txt"));
-//
-//        i2.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
-//
-//        FileSystemFileContentObject i2Content = (FileSystemFileContentObject) i2.getContent();
-//
-//
-//        byte[] source = i2Content.read(0, (int) i2Content.length());
-//
-//        String value = StringUtil.readFormBytes(source);
-//
-//        ApplicationDefinition application = ObjectUtil.transferFromString(ApplicationDefinition.class, value);
-
-//        ret = application;
-//        ApplicationDefinition applicationDefinition = new ApplicationDefinition();
-//        applicationDefinition.setID(UUID.randomUUID());
-//        applicationDefinition.setName("TestApp");
-//        applicationDefinition.setSupportedSession(SessionType.CLI);
-//        applicationDefinition.setServerURL("http://1.2.3.4:1234");
-//        applicationDefinition.getConfigurations().put("k1", "v1");
-//        applicationDefinition.getConfigurations().put("k2", null);
-//
-//        String string = ObjectUtil.transferToString(applicationDefinition);
-
-//        i2.close();
+        this.mf(volumeInfo, "test.bin", false);
 
         return ret;
     }

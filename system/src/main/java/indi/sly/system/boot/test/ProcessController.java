@@ -9,6 +9,7 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
+import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,7 +38,11 @@ public class ProcessController extends AController {
 
         InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
 
-        ret = parentInfo.queryChild(infoSummaryDefinition -> true);
+        SecurityDescriptorObject securityDescriptor = parentInfo.getSecurityDescriptor();
+
+        ret = securityDescriptor.getSummary();
+
+        //  ret = parentInfo.queryChild(infoSummaryDefinition -> true);
 
 
         return ret;
@@ -56,7 +61,7 @@ public class ProcessController extends AController {
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         InfoObject execInfo = objectManager.get(List.of(new IdentificationDefinition("Files"),
-                new IdentificationDefinition("Volume"), new IdentificationDefinition("file.txt")));
+                new IdentificationDefinition("Volume"), new IdentificationDefinition("test.bin")));
 
         UUID handle = execInfo.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
@@ -71,6 +76,8 @@ public class ProcessController extends AController {
                 PrivilegeType.NULL,
                 null,
                 null);
+
+        ret = processObject.getID();
 
         return ret;
     }

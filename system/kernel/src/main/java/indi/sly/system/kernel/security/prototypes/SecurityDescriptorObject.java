@@ -296,7 +296,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 if (securityDescriptor.permission) {
                     securityDescriptors.add(securityDescriptor.value);
 
-                    if (!securityDescriptor.isInherit()) {
+                    if (!securityDescriptor.value.isInherit()) {
                         break;
                     }
                 } else {
@@ -313,27 +313,27 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
         Set<AccessControlDefinition> effectivePermissions = new HashSet<>();
         for (int i = 0; i < securityDescriptors.size(); i++) {
             for (AccessControlDefinition accessControl : securityDescriptors.get(i).getPermissions()) {
-                if (LogicalUtil.isAllExist(AccessControlScopeType.THIS, accessControl.getScope())) {
+                if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.THIS)) {
                     if (i == securityDescriptors.size() - 1) {
                         effectivePermissions.add(accessControl);
                     }
                 }
-                if (LogicalUtil.isAllExist(AccessControlScopeType.CHILD_HAS_CHILD, accessControl.getScope())) {
+                if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.CHILD_HAS_CHILD)) {
                     if (i == securityDescriptors.size() - 2 && securityDescriptors.get(i + 1).isHasChild()) {
                         effectivePermissions.add(accessControl);
                     }
                 }
-                if (LogicalUtil.isAllExist(AccessControlScopeType.CHILD_HAS_NOT_CHILD, accessControl.getScope())) {
+                if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.CHILD_HAS_NOT_CHILD)) {
                     if (i == securityDescriptors.size() - 2 && !securityDescriptors.get(i + 1).isHasChild()) {
                         effectivePermissions.add(accessControl);
                     }
                 }
-                if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_CHILD, accessControl.getScope())) {
+                if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.HIERARCHICAL_HAS_CHILD)) {
                     if (i < securityDescriptors.size() - 1 && securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
                         effectivePermissions.add(accessControl);
                     }
                 }
-                if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD, accessControl.getScope())) {
+                if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD)) {
                     if (i < securityDescriptors.size() - 1 && !securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
                         effectivePermissions.add(accessControl);
                     }
@@ -356,22 +356,22 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
         for (AccessControlDefinition pair : effectivePermissions) {
             UserIDDefinition pairUserID = pair.getUserID();
-            if (pairUserID.getType() == UserType.GROUP && groupIDs.contains(pairUserID.getID())) {
-                if (LogicalUtil.isAllExist(permission, pair.getValue())) {
+            if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.GROUP) && groupIDs.contains(pairUserID.getID())) {
+                if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (pairUserID.getType() == UserType.ACCOUNT && accountID.equals(pairUserID.getID())) {
-                if (LogicalUtil.isAllExist(permission, pair.getValue())) {
+            } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.ACCOUNT) && accountID.equals(pairUserID.getID())) {
+                if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (pairUserID.getType() == UserType.ROLE && roles.contains(pairUserID.getID())) {
-                if (LogicalUtil.isAllExist(permission, pair.getValue())
+            } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.ROLE) && roles.contains(pairUserID.getID())) {
+                if (LogicalUtil.isAllExist(pair.getValue(), permission)
                         && (ObjectUtil.isAnyNull(permissionQuery) || permissionQuery.isRole())) {
                     allow = true;
                 }
@@ -379,10 +379,10 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                     return true;
                 }
             }
-            if (ObjectUtil.allNotNull(permissionQuery, permissionQuery.getCustomDeny())) {
-                if (permissionQuery.getCustomDeny().test(pair.deepClone(), permission)) {
-                    return true;
-                }
+            if (ObjectUtil.allNotNull(permissionQuery) && ObjectUtil.allNotNull(permissionQuery.getCustomDeny()) &&
+                    permissionQuery.getCustomDeny().test(pair.deepClone(), permission)) {
+                return true;
+
             }
         }
 

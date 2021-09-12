@@ -61,11 +61,13 @@ public class InitController extends AController {
         }
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
-        GroupObject group = userManager.getGroup("Administrators");
+        Set<GroupObject> groups = new HashSet<>();
+        groups.add(userManager.getGroup("Administrators"));
+        groups.add(userManager.getGroup("Users"));
 
         try {
             AccountObject account = userManager.createAccount("Sly", "s34l510y24");
-            account.setGroups(Set.of(group));
+            account.setGroups(groups);
         } catch (Exception ignored) {
         }
 

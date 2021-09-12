@@ -42,14 +42,7 @@ public class ObjectController extends AController {
         ret = infoContent.receive();
 
 
-
         info.close();
-
-//        for (int i = 0; i < 10; i++) {
-//            childInfo = info.createChildAndOpen(this.kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
-//                    new IdentificationDefinition(Integer.toString(i)), InfoOpenAttributeType.OPEN_EXCLUSIVE);
-//            childInfo.close();
-//        }
 
         return ret;
     }

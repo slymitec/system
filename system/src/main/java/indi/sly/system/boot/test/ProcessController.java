@@ -1,16 +1,9 @@
 package indi.sly.system.boot.test;
 
-import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.objects.ObjectManager;
-import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.*;
-import indi.sly.system.kernel.security.UserManager;
-import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
-import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
-import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,9 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @Transactional
@@ -32,52 +23,15 @@ public class ProcessController extends AController {
     public Object processTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init(request, response, session);
 
-        Object ret = "finished";
+        Map<String, Object> result = new HashMap<>();
+        Object ret = result;
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
-        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-
-        SecurityDescriptorObject securityDescriptor = parentInfo.getSecurityDescriptor();
-
-        ret = securityDescriptor.getSummary();
-
-        //  ret = parentInfo.queryChild(infoSummaryDefinition -> true);
-
-
-        return ret;
-    }
-
-
-    @RequestMapping(value = {"/ProcessCreate.action"}, method = {RequestMethod.GET})
-    @Transactional
-    public Object processCreate(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        this.init(request, response, session);
-
-        Object ret = "finished";
-
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        InfoObject execInfo = objectManager.get(List.of(new IdentificationDefinition("Files"),
-                new IdentificationDefinition("Volume"), new IdentificationDefinition("test.bin")));
+        ProcessObject process = processManager.getCurrent();
+        ProcessCommunicationObject processCommunication = process.getCommunication();
 
-        UUID handle = execInfo.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
-
-        AccountAuthorizationObject accountAuthorization = userManager.authorize("Sly", null);
-
-        ProcessObject processObject = processManager.create(
-                accountAuthorization,
-                null,
-                handle,
-                null,
-                null,
-                PrivilegeType.NULL,
-                null,
-                null);
-
-        ret = processObject.getID();
+        ret = processCommunication.receiveSignals();
 
         return ret;
     }
@@ -161,5 +115,21 @@ public class ProcessController extends AController {
         }
 
         return "finished";
+    }
+
+    @RequestMapping(value = {"/ProcessSignal.action"}, method = {RequestMethod.GET})
+    @Transactional
+    public Object processSignal(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        this.init(request, response, session);
+        Object ret = "finished";
+
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessCommunicationObject processCommunication = process.getCommunication();
+
+        ret = processCommunication.receiveSignals();
+
+        return ret;
     }
 }

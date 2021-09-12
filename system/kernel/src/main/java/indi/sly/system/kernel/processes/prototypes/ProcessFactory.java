@@ -35,7 +35,6 @@ public class ProcessFactory extends AFactory {
     @Override
     public void init() {
         this.processCreatorResolvers.add(this.factoryManager.create(ProcessCreateCheckResolver.class));
-        this.processCreatorResolvers.add(this.factoryManager.create(ProcessCreateCommunicationResolver.class));
         this.processCreatorResolvers.add(this.factoryManager.create(ProcessCreateContextResolver.class));
         this.processCreatorResolvers.add(this.factoryManager.create(ProcessCreateInfoTableResolver.class));
         this.processCreatorResolvers.add(this.factoryManager.create(ProcessCreateNotifyParentResolver.class));

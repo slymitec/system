@@ -11,7 +11,6 @@ import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
-import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.instances.prototypes.PortContentObject;
 import indi.sly.system.kernel.processes.instances.prototypes.SignalContentObject;
@@ -20,7 +19,10 @@ import indi.sly.system.kernel.processes.values.ProcessCommunicationDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
-import indi.sly.system.kernel.security.values.*;
+import indi.sly.system.kernel.security.values.AccessControlDefinition;
+import indi.sly.system.kernel.security.values.AccessControlScopeType;
+import indi.sly.system.kernel.security.values.PermissionType;
+import indi.sly.system.kernel.security.values.UserType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -388,18 +390,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
-            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
-                throw new StatusRelationshipErrorException();
-            }
-
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrent();
-
-            if (!process.getID().equals(parent.getParentID())) {
-                throw new ConditionRefuseException();
-            }
-        } else if (this.parent.isCurrent() && LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }

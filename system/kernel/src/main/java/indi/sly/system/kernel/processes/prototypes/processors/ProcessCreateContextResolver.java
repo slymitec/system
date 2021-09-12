@@ -49,6 +49,7 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
                 byte[] applicationSource = infoContent.read(0, (int) infoContentLength);
                 ApplicationDefinition application = ObjectUtil.transferFromString(ApplicationDefinition.class, StringUtil.readFormBytes(applicationSource));
 
+                processContext.setIdentifications(info.getIdentifications());
                 processContext.setApplication(application);
             }
 

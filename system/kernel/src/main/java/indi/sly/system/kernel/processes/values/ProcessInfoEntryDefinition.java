@@ -3,8 +3,8 @@ package indi.sly.system.kernel.processes.values;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 
 import java.io.IOException;
@@ -14,16 +14,17 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public class ProcessInfoEntryDefinition extends ADefinition<ProcessInfoEntryDefinition> {
+    public ProcessInfoEntryDefinition() {
+        this.date = new HashMap<>();
+        this.identifications = new ArrayList<>();
+    }
+
     private UUID index;
     private final Map<Long, Long> date;
     private UUID id;
     private final List<IdentificationDefinition> identifications;
     private InfoOpenDefinition infoOpen;
-
-    public ProcessInfoEntryDefinition() {
-        this.date = new HashMap<>();
-        this.identifications = new ArrayList<>();
-    }
+    private boolean unsupportedDelete;
 
     public UUID getIndex() {
         return this.index;
@@ -57,17 +58,25 @@ public class ProcessInfoEntryDefinition extends ADefinition<ProcessInfoEntryDefi
         this.infoOpen = infoOpen;
     }
 
+    public boolean isUnsupportedDelete() {
+        return this.unsupportedDelete;
+    }
+
+    public void setUnsupportedDelete(boolean unsupportedDelete) {
+        this.unsupportedDelete = unsupportedDelete;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProcessInfoEntryDefinition that = (ProcessInfoEntryDefinition) o;
-        return Objects.equals(index, that.index) && date.equals(that.date) && Objects.equals(id, that.id) && identifications.equals(that.identifications) && Objects.equals(infoOpen, that.infoOpen);
+        return unsupportedDelete == that.unsupportedDelete && Objects.equals(index, that.index) && date.equals(that.date) && Objects.equals(id, that.id) && identifications.equals(that.identifications) && Objects.equals(infoOpen, that.infoOpen);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(index, date, id, identifications, infoOpen);
+        return Objects.hash(index, date, id, identifications, infoOpen, unsupportedDelete);
     }
 
     @Override
@@ -79,6 +88,7 @@ public class ProcessInfoEntryDefinition extends ADefinition<ProcessInfoEntryDefi
         definition.id = this.id;
         definition.identifications.addAll(this.identifications);
         definition.infoOpen = this.infoOpen.deepClone();
+        definition.unsupportedDelete = this.unsupportedDelete;
 
         return definition;
     }
@@ -104,6 +114,7 @@ public class ProcessInfoEntryDefinition extends ADefinition<ProcessInfoEntryDefi
         }
 
         this.infoOpen = ObjectUtil.readExternal(in);
+        this.unsupportedDelete = NumberUtil.readExternalBoolean(in);
     }
 
     @Override
@@ -126,5 +137,6 @@ public class ProcessInfoEntryDefinition extends ADefinition<ProcessInfoEntryDefi
         }
 
         ObjectUtil.writeExternal(out, this.infoOpen);
+        NumberUtil.writeExternalBoolean(out, this.unsupportedDelete);
     }
 }

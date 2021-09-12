@@ -74,6 +74,11 @@ public class ProcessController extends AController {
         processCommunicationObject.put("getSignalID", processCommunication.getSignalID());
 
         processContextObject.put("getType", processContext.getType());
+        String[] identificationName = new String[processContext.getIdentifications().size()];
+        for (int i = 0; i < processContext.getIdentifications().size(); i++) {
+            identificationName[i] = processContext.getIdentifications().get(i).toString();
+        }
+        processContextObject.put("getIdentifications", identificationName.length == 0 ? "" : "/" + String.join("/", identificationName));
         processContextObject.put("getApplication", processContext.getApplication());
         processContextObject.put("getEnvironmentVariables", processContext.getEnvironmentVariables());
         processContextObject.put("getParameters", processContext.getParameters());

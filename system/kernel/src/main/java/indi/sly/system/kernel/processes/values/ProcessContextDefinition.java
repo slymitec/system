@@ -14,11 +14,13 @@ import java.util.*;
 
 public class ProcessContextDefinition extends ADefinition<ProcessContextDefinition> {
     public ProcessContextDefinition() {
+        this.identifications = new ArrayList<>();
         this.environmentVariables = new HashMap<>();
         this.workFolder = new ArrayList<>();
     }
 
     private long type;
+    private final List<IdentificationDefinition> identifications;
     private ApplicationDefinition application;
     private final Map<String, String> environmentVariables;
     private String parameters;
@@ -44,6 +46,10 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
         this.application = application;
     }
 
+    public List<IdentificationDefinition> getIdentifications() {
+        return this.identifications;
+    }
+
     public Map<String, String> getEnvironmentVariables() {
         return this.environmentVariables;
     }
@@ -65,12 +71,12 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProcessContextDefinition that = (ProcessContextDefinition) o;
-        return type == that.type && Objects.equals(application, that.application) && environmentVariables.equals(that.environmentVariables) && parameters.equals(that.parameters) && workFolder.equals(that.workFolder);
+        return type == that.type && identifications.equals(that.identifications) && Objects.equals(application, that.application) && environmentVariables.equals(that.environmentVariables) && Objects.equals(parameters, that.parameters) && workFolder.equals(that.workFolder);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, application, environmentVariables, parameters, workFolder);
+        return Objects.hash(type, identifications, application, environmentVariables, parameters, workFolder);
     }
 
     @Override
@@ -78,6 +84,7 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
         ProcessContextDefinition definition = new ProcessContextDefinition();
 
         definition.type = this.type;
+        definition.identifications.addAll(this.identifications);
         definition.application = this.application.deepClone();
         definition.environmentVariables.putAll(this.environmentVariables);
         definition.parameters = this.parameters;
@@ -91,9 +98,15 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
         super.readExternal(in);
 
         this.type = NumberUtil.readExternalLong(in);
-        this.application = ObjectUtil.readExternal(in);
 
         int valueInteger;
+
+        valueInteger = NumberUtil.readExternalInteger(in);
+        for (int i = 0; i < valueInteger; i++) {
+            this.identifications.add(ObjectUtil.readExternal(in));
+        }
+
+        this.application = ObjectUtil.readExternal(in);
 
         valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
@@ -113,6 +126,12 @@ public class ProcessContextDefinition extends ADefinition<ProcessContextDefiniti
         super.writeExternal(out);
 
         NumberUtil.writeExternalLong(out, this.type);
+
+        NumberUtil.writeExternalInteger(out, this.identifications.size());
+        for (IdentificationDefinition pair : this.identifications) {
+            ObjectUtil.writeExternal(out, pair);
+        }
+
         ObjectUtil.writeExternal(out, this.application);
 
         NumberUtil.writeExternalInteger(out, this.environmentVariables.size());

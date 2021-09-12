@@ -78,7 +78,7 @@ public class InitController extends AController {
 
         AccountAuthorizationObject accountAuthorization = userManager.authorize("Sly", null);
 
-        try {
+        //try {
             UUID handle = execInfo.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             ProcessObject processObject = processManager.create(
@@ -92,9 +92,9 @@ public class InitController extends AController {
                     null);
 
             ret = processObject.getID();
-        } catch (Exception ignored) {
-            ret = "已创建";
-        }
+//        } catch (Exception ignored) {
+//            ret = "已创建 " + ignored.getClass().getName();
+//        }
 
         return ret;
     }

@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.Provider;
+import indi.sly.system.common.lang.StatusDisabilityException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
@@ -141,6 +142,56 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         return infoOpen;
     }
 
+    public synchronized boolean isUnsupportedDelete() {
+        if (!this.isExist()) {
+            throw new StatusNotExistedException();
+        }
+
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+        long nowDateTime = dateTime.getCurrentDateTime();
+
+        boolean unsupportedDelete;
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
+            processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
+            unsupportedDelete = processInfoEntry.isUnsupportedDelete();
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+
+        return unsupportedDelete;
+    }
+
+    public synchronized void setUnsupportedDelete(boolean unsupportedDelete) {
+        if (!this.isExist()) {
+            throw new StatusNotExistedException();
+        }
+
+        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+        long nowDateTime = dateTime.getCurrentDateTime();
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
+            processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
+            processInfoEntry.setUnsupportedDelete(unsupportedDelete);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+    }
+
     public synchronized InfoObject getInfo() {
         if (!this.isExist()) {
             throw new StatusNotExistedException();
@@ -189,6 +240,11 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
             this.init();
 
             ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(index);
+
+            if (processInfoEntry.isUnsupportedDelete()) {
+                throw new StatusDisabilityException();
+            }
+
             processInfoEntry.getInfoOpen().setAttribute(InfoOpenAttributeType.CLOSE);
 
             this.value.delete(processInfoEntry.getIndex());

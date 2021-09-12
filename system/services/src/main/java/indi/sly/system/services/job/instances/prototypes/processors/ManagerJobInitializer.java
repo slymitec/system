@@ -145,7 +145,7 @@ public class ManagerJobInitializer extends AJobInitializer {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.create(accountAuthorization, parameter_EnvironmentVariables, parameter_FileIndex,
-                parameter_Limits, parameter_Parameters, parameter_Privileges, workFolder);
+                parameter_Limits, parameter_Parameters, parameter_Privileges, null, workFolder);
 
         UUID handle = process.cache(SpaceType.USER);
         content.setResult("handle", handle);
@@ -213,7 +213,7 @@ public class ManagerJobInitializer extends AJobInitializer {
     }
 
     private void userGetAccount(JobRunConsumer run, JobContentObject content) {
-       UUID parameter_AccountID = content.getParameterOrDefault(UUID.class, "accountID", null);
+        UUID parameter_AccountID = content.getParameterOrDefault(UUID.class, "accountID", null);
         String parameter_AccountName = content.getParameterOrDefault(String.class, "accountName", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);

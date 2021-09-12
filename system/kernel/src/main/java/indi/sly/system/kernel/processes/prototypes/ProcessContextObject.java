@@ -64,6 +64,52 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
         }
     }
 
+    public List<IdentificationDefinition> getIdentifications() {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            return value.getIdentifications();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+    }
+
+    public void setIdentifications(List<IdentificationDefinition> identifications) {
+        if (ObjectUtil.isAnyNull(identifications)) {
+            throw new ConditionParametersException();
+        }
+
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+                ProcessStatusType.INITIALIZATION)) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+
+        if (!process.getID().equals(this.parent.getParentID())) {
+            throw new ConditionRefuseException();
+        }
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            this.value.getIdentifications().clear();
+            this.value.getIdentifications().addAll(identifications);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+    }
+
     public ApplicationDefinition getApplication() {
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {

@@ -31,8 +31,6 @@ public class ProcessController extends AController {
         ProcessObject process = processManager.getCurrent();
         ProcessCommunicationObject processCommunication = process.getCommunication();
 
-        ret = processCommunication.receiveSignals();
-
         return ret;
     }
 

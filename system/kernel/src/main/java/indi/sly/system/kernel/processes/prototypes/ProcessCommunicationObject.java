@@ -314,8 +314,6 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        UUID signalID = this.value.getSignalID();
-
         List<IdentificationDefinition> identifications = new ArrayList<>();
         identifications.add(new IdentificationDefinition("Ports"));
         identifications.add(new IdentificationDefinition(portID));

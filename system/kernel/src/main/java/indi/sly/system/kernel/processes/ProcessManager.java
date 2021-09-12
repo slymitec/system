@@ -49,7 +49,7 @@ public class ProcessManager extends AManager {
             typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_ID,
                     kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_NAME,
                     LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
-                            TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
+                            TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN, TypeInitializerAttributeType.HAS_AUDIT,
                             TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
                             TypeInitializerAttributeType.HAS_PROPERTIES),
                     childTypes, this.factoryManager.create(PortTypeInitializer.class));

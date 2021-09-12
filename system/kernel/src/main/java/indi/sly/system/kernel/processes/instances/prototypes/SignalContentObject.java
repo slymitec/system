@@ -33,9 +33,14 @@ public class SignalContentObject extends AInfoContentObject {
     private SignalDefinition signal;
 
     public Set<UUID> getSourceProcessIDs() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return CollectionUtil.unmodifiable(this.signal.getSourceProcessIDs());
+            return CollectionUtil.unmodifiable(this.signal.getSourceProcessIDs());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {
@@ -63,6 +68,18 @@ public class SignalContentObject extends AInfoContentObject {
             this.lock(LockType.NONE);
         }
     }
+
+    public long getLimit() {
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            return this.signal.getLimit();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+    }
+
 
     public List<SignalEntryDefinition> receive() {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
@@ -120,7 +137,6 @@ public class SignalContentObject extends AInfoContentObject {
             signalEntry.setValue(value);
             signalEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
             signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
-
 
             this.signal.add(signalEntry);
 

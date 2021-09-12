@@ -232,7 +232,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
                 throw new StatusRelationshipErrorException();
             }
         } else {
-            if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
                 throw new StatusRelationshipErrorException();
             }
 

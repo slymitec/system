@@ -57,7 +57,7 @@ public class ProcessManager extends AManager {
             typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID,
                     kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_NAME,
                     LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
-                            TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
+                            TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN, TypeInitializerAttributeType.HAS_AUDIT,
                             TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
                             TypeInitializerAttributeType.HAS_PROPERTIES),
                     childTypes, this.factoryManager.create(SignalTypeInitializer.class));
@@ -120,7 +120,8 @@ public class ProcessManager extends AManager {
 
     public ProcessObject create(AccountAuthorizationObject accountAuthorization,
                                 Map<String, String> environmentVariables, UUID fileIndex, Map<Long, Integer> limits,
-                                String parameters, long privileges, List<IdentificationDefinition> workFolder) {
+                                String parameters, long privileges, UUID sessionID,
+                                List<IdentificationDefinition> workFolder) {
         ProcessCreatorDefinition processCreator = new ProcessCreatorDefinition();
 
         if (ObjectUtil.allNotNull(accountAuthorization)) {
@@ -142,6 +143,9 @@ public class ProcessManager extends AManager {
             processCreator.setParameters(parameters);
         } else {
             processCreator.setParameters(StringUtil.EMPTY);
+        }
+        if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
+            processCreator.setSessionID(sessionID);
         }
         if (ObjectUtil.allNotNull(workFolder)) {
             processCreator.setWorkFolder(workFolder);

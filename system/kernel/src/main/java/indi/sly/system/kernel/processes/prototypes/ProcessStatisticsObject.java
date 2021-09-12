@@ -86,10 +86,6 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
-            throw new StatusRelationshipErrorException();
-        }
-
         this.lock(LockType.WRITE);
         this.init();
 

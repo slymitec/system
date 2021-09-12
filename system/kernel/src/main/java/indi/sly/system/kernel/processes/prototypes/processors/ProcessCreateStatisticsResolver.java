@@ -5,7 +5,6 @@ import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessStatusObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -21,9 +20,6 @@ public class ProcessCreateStatisticsResolver extends AProcessCreateResolver {
         this.create = (process, parentProcess, processCreator) -> {
             DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
-
-            ProcessStatusObject processStatus = process.getStatus();
-            processStatus.initialize();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             processStatistics.setDate(DateTimeType.CREATE, nowDateTime);

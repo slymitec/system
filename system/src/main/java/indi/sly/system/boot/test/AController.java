@@ -1,6 +1,7 @@
 package indi.sly.system.boot.test;
 
 import indi.sly.system.common.ABase;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.FactoryManager;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.UUID;
 
 public abstract class AController extends ABase {
     @Autowired
@@ -24,6 +26,17 @@ public abstract class AController extends ABase {
     protected KernelConfigurationDefinition kernelConfiguration;
 
     public final void init(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        UUID processID = null;
+
+        String processIDText = request.getParameter("ProcessID");
+        if (!ValueUtil.isAnyNullOrEmpty(processIDText)) {
+            processID = UUIDUtil.getFromString(processIDText);
+        }
+
+        this.init(request, response, session, processID);
+    }
+
+    public final void init(HttpServletRequest request, HttpServletResponse response, HttpSession session, UUID processID) {
         if (ValueUtil.isAnyNullOrEmpty(bootController.getRet())) {
             this.bootController.Boot(request, response, session);
         }
@@ -34,9 +47,13 @@ public abstract class AController extends ABase {
                 this.kernelSpaceDefinition.getClassedHandles().getOrDefault(
                         FactoryManager.class, null).getID(), null);
 
-        factoryManager.setUserSpace(new UserSpaceDefinition());
+        this.factoryManager.setUserSpace(new UserSpaceDefinition());
 
-        ThreadManager threadManager = factoryManager.getManager(ThreadManager.class);
-        threadManager.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        if (ValueUtil.isAnyNullOrEmpty(processID)) {
+            threadManager.create(this.kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+        } else {
+            threadManager.create(processID);
+        }
     }
 }

@@ -133,6 +133,6 @@ public class SignalDefinition extends ADefinition<SignalDefinition> {
             ObjectUtil.writeExternal(out, pair);
         }
 
-        NumberUtil.writeExternalLong(out, this.limit);
+        NumberUtil.writeExternalInteger(out, this.limit);
     }
 }

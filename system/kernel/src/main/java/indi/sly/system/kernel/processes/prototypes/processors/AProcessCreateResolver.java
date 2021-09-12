@@ -13,3 +13,14 @@ import javax.inject.Named;
 public abstract class AProcessCreateResolver extends AResolver {
     public abstract void resolve(ProcessLifeProcessorMediator processorCreatorMediator);
 }
+
+/*
+ProcessCreateCheckResolver		    0
+ProcessCreateCommunicationResolver	1
+ProcessCreateContextResolver		2
+ProcessCreateInfoTableResolver		3
+ProcessCreateNotifyParentResolver	4
+ProcessCreateSessionResolver		1
+ProcessCreateStatisticsResolver		1
+ProcessCreateTokenResolver	    	1
+ */

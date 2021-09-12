@@ -11,6 +11,7 @@ import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
+import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.instances.prototypes.PortContentObject;
 import indi.sly.system.kernel.processes.instances.prototypes.SignalContentObject;
@@ -387,7 +388,18 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+        if (!this.parent.isCurrent()) {
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+                throw new StatusRelationshipErrorException();
+            }
+
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+
+            if (!process.getID().equals(parent.getParentID())) {
+                throw new ConditionRefuseException();
+            }
+        } else if (this.parent.isCurrent() && LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
@@ -431,7 +443,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             signalContent.setSourceProcessIDs(sourceProcessIDs);
             signal.close();
 
-            this.value.setSignalID(signals.getID());
+            this.value.setSignalID(signal.getID());
 
             this.fresh();
         } finally {

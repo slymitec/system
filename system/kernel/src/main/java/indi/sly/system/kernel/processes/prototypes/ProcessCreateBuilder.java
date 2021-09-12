@@ -55,7 +55,6 @@ public class ProcessCreateBuilder extends ABuilder {
         this.build();
 
         ProcessStatusObject processStatus = this.process.getStatus();
-
         processStatus.initialize();
 
         List<ProcessLifeProcessorCreateFunction> resolvers = this.processorMediator.getCreates();

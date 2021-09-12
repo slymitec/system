@@ -39,7 +39,7 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
                 ProcessInfoEntryObject parentProcessInfoEntry = parentProcessInfoTable.getByIndex(processCreator.getFileIndex());
 
                 InfoObject info = parentProcessInfoEntry.getInfo();
-                if (info.getType() != configuration.FILES_TYPES_INSTANCE_FILE_ID) {
+                if (!info.getType().equals(configuration.FILES_TYPES_INSTANCE_FILE_ID)) {
                     throw new StatusRelationshipErrorException();
                 }
 

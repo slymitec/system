@@ -68,17 +68,20 @@ public class ProcessCreateTokenRuleResolver extends AProcessCreateResolver {
                 }
             }
 
-            SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
-            SessionContentObject sessionContent = sessionManager.getAndOpen(processSession.getID());
-            long sessionContentType = sessionContent.getType();
-            if (LogicalUtil.isAnyExist(sessionContentType, SessionType.API)) {
-                roles.add(configuration.SECURITY_ROLE_API_ID);
-            } else if (LogicalUtil.isAnyExist(sessionContentType, SessionType.GUI)) {
-                roles.add(configuration.SECURITY_ROLE_GUI_ID);
-            } else if (LogicalUtil.isAnyExist(sessionContentType, SessionType.CLI)) {
-                roles.add(configuration.SECURITY_ROLE_CLI_ID);
+            UUID sessionID = processSession.getID();
+            if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
+                SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
+                SessionContentObject sessionContent = sessionManager.getAndOpen(sessionID);
+                long sessionContentType = sessionContent.getType();
+                if (LogicalUtil.isAnyExist(sessionContentType, SessionType.API)) {
+                    roles.add(configuration.SECURITY_ROLE_API_ID);
+                } else if (LogicalUtil.isAnyExist(sessionContentType, SessionType.GUI)) {
+                    roles.add(configuration.SECURITY_ROLE_GUI_ID);
+                } else if (LogicalUtil.isAnyExist(sessionContentType, SessionType.CLI)) {
+                    roles.add(configuration.SECURITY_ROLE_CLI_ID);
+                }
+                sessionContent.close();
             }
-            sessionContent.close();
 
             if (ObjectUtil.allNotNull(processCreator.getAdditionalRoles())) {
                 roles.addAll(processCreator.getAdditionalRoles());

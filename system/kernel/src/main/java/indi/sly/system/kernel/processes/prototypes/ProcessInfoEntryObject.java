@@ -173,7 +173,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         InfoObject info;
-        if (identifications.size() > 0) {
+        if (!identifications.isEmpty()) {
             info = objectManager.get(identifications.subList(0, identifications.size() - 1));
             info = info.rebuildChild(identifications.get(identifications.size() - 1), infoOpen);
         } else {

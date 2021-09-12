@@ -38,7 +38,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
 
         List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
 
-        if (infoRelations.size() > 0) {
+        if (!infoRelations.isEmpty()) {
             throw new StatusIsUsedException();
         }
     }

@@ -32,7 +32,7 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
         this.securityDescriptor = (info, type, status) -> {
             SecurityDescriptorObject securityDescriptor = this.factoryManager.create(SecurityDescriptorObject.class);
 
-            if (status.getIdentifications().size() > 0) {
+            if (!status.getIdentifications().isEmpty()) {
                 List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
                 identifications.remove(identifications.size() - 1);
 

@@ -20,7 +20,7 @@ public class InfoParentResolver extends AInfoResolver {
     public InfoParentResolver() {
         this.parent = (status) -> {
             List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
-            if (identifications.size() == 0) {
+            if (identifications.isEmpty()) {
                 throw new StatusNotExistedException();
             }
 

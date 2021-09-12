@@ -90,14 +90,14 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
             if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
                 if (!currentProcess.getID().equals(this.parent.getParentID())
                         && !currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                        && currentProcessToken.getAccountID() != processToken.getAccountID()
-                        && currentProcessSession.getID() != processSession.getID()) {
+                        && !currentProcessToken.getAccountID().equals(processToken.getAccountID())
+                        && !currentProcessSession.getID().equals(processSession.getID())) {
                     throw new ConditionRefuseException();
                 }
             } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INTERRUPTED)) {
                 if (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                        && currentProcessToken.getAccountID() != processToken.getAccountID()
-                        && currentProcessSession.getID() != processSession.getID()) {
+                        && !currentProcessToken.getAccountID().equals(processToken.getAccountID())
+                        && !currentProcessSession.getID().equals(processSession.getID())) {
                     throw new ConditionRefuseException();
                 }
             }
@@ -133,14 +133,14 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
             if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
                 if (!currentProcess.getID().equals(this.parent.getParentID())
                         && !currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                        && currentProcessToken.getAccountID() != processToken.getAccountID()
-                        && currentProcessSession.getID() != processSession.getID()) {
+                        && !currentProcessToken.getAccountID().equals(processToken.getAccountID())
+                        && !currentProcessSession.getID().equals(processSession.getID())) {
                     throw new ConditionRefuseException();
                 }
             } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INTERRUPTED)) {
                 if (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                        && currentProcessToken.getAccountID() != processToken.getAccountID()
-                        && currentProcessSession.getID() != processSession.getID()) {
+                        && !currentProcessToken.getAccountID().equals(processToken.getAccountID())
+                        && !currentProcessSession.getID().equals(processSession.getID())) {
                     throw new ConditionRefuseException();
                 }
             }

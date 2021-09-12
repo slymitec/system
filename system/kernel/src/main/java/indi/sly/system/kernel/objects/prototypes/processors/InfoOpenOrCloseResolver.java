@@ -39,7 +39,7 @@ public class InfoOpenOrCloseResolver extends AInfoResolver {
 
             info.setOpened(info.getOpened() - 1);
 
-            if (status.getIdentifications().size() > 0) {
+            if (!status.getIdentifications().isEmpty()) {
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.TEMPORARY) && info.getOpened() <= 0) {
                     List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
                     IdentificationDefinition identification = identifications.remove(identifications.size() - 1);

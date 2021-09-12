@@ -60,7 +60,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
             List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
 
-            if (infoRelations.size() > 0) {
+            if (!infoRelations.isEmpty()) {
                 throw new StatusIsUsedException();
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {

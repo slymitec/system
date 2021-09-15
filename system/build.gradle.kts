@@ -40,7 +40,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation("com.microsoft.sqlserver:mssql-jdbc:9.4.0.jre11")
+    implementation("com.microsoft.sqlserver:mssql-jdbc:9.4.0.jre16")
     implementation("javax.inject:javax.inject:1")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-aop")
@@ -65,12 +65,12 @@ tasks.bootJar {
 
 tasks.compileJava {
     options.encoding = "UTF-8"
-    options.release.set(11)
+    options.release.set(17)
 }
 
 tasks.compileTestJava {
     options.encoding = "UTF-8"
-    options.release.set(16)
+    options.release.set(17)
 }
 
 tasks.jar {

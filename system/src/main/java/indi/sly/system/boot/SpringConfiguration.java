@@ -18,14 +18,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Configuration
-@ComponentScan(basePackages = SpringConfiguration.BASEPACKAGES)
+@ComponentScan(basePackages = SpringConfiguration.BASE_PACKAGES)
 @EnableAsync
 @EnableAutoConfiguration()
-@EnableJpaRepositories(basePackages = SpringConfiguration.BASEPACKAGES)
-@EntityScan(basePackages = SpringConfiguration.BASEPACKAGES)
-@ServletComponentScan(basePackages = SpringConfiguration.BASEPACKAGES)
+@EnableJpaRepositories(basePackages = SpringConfiguration.BASE_PACKAGES)
+@EntityScan(basePackages = SpringConfiguration.BASE_PACKAGES)
+@ServletComponentScan(basePackages = SpringConfiguration.BASE_PACKAGES)
 public class SpringConfiguration extends ABase implements WebMvcConfigurer {
-    public static final String BASEPACKAGES = "indi.sly.*";
+    public static final String BASE_PACKAGES = "indi.sly.*";
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {

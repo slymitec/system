@@ -1,5 +1,6 @@
 package indi.sly.system.boot;
 
+import indi.sly.system.common.ABase;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -23,7 +24,7 @@ import java.util.List;
 @EnableJpaRepositories(basePackages = SpringConfiguration.BASEPACKAGES)
 @EntityScan(basePackages = SpringConfiguration.BASEPACKAGES)
 @ServletComponentScan(basePackages = SpringConfiguration.BASEPACKAGES)
-public class SpringConfiguration implements WebMvcConfigurer {
+public class SpringConfiguration extends ABase implements WebMvcConfigurer {
     public static final String BASEPACKAGES = "indi.sly.*";
 
     @Override

@@ -2,6 +2,8 @@ plugins {
     java
     id("org.springframework.boot") version ("2.5.4")
     id("io.spring.dependency-management") version ("1.0.11.RELEASE")
+    kotlin("jvm") version ("1.5.21")
+    kotlin("plugin.spring") version ("1.5.21")
 }
 
 allprojects {
@@ -34,6 +36,9 @@ subprojects {
 dependencies {
     implementation(project(":common"))
     implementation(project(":kernel"))
+
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     implementation("com.microsoft.sqlserver:mssql-jdbc:9.4.0.jre11")
     implementation("javax.inject:javax.inject:1")

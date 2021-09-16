@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
-import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
@@ -28,11 +27,8 @@ public class ProcessEndInfoTableResolver extends AProcessEndResolver {
                     processInfoEntry.setUnsupportedDelete(false);
                 }
 
-                try {
-                    InfoObject info = processInfoEntry.getInfo();
-                    info.close();
-                } catch (AKernelException ignored) {
-                }
+                InfoObject info = processInfoEntry.getInfo();
+                info.close();
             }
 
             return process;

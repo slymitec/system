@@ -27,7 +27,9 @@ public class ProcessController extends AController {
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject process = processManager.getCurrent();
+        ret = processManager.getCurrent().getID();
+
+        processManager.endCurrent();
 
         return ret;
     }

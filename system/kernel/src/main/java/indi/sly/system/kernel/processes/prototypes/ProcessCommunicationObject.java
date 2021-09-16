@@ -97,8 +97,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
     }
 
     public Set<UUID> getPortIDs() {
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -368,8 +367,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
     }
 
     public UUID getSignalID() {
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -452,7 +450,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             UUID signalID = this.value.getSignalID();
 
-            if (!ValueUtil.isAnyNullOrEmpty(signalID)) {
+            if (ValueUtil.isAnyNullOrEmpty(signalID)) {
                 throw new StatusAlreadyFinishedException();
             }
 
@@ -593,7 +591,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         }
 
         if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.RUNNING)) {
+                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 

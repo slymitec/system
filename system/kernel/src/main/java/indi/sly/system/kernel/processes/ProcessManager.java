@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
@@ -161,8 +162,11 @@ public class ProcessManager extends AManager {
         ProcessObject process = this.getCurrent();
         ProcessObject parentProcess = null;
 
-        if (ValueUtil.isAnyNullOrEmpty(process.getParentID())) {
-            parentProcess = this.getTarget(process.getParentID());
+        if (!ValueUtil.isAnyNullOrEmpty(process.getParentID())) {
+            try {
+                parentProcess = this.getTarget(process.getParentID());
+            } catch (StatusNotExistedException ignored) {
+            }
         }
 
         ProcessEndBuilder processEndBuilder = this.factory.createProcessEnd(parentProcess, process);

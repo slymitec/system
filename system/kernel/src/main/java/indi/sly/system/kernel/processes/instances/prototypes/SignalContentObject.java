@@ -124,7 +124,8 @@ public class SignalContentObject extends AInfoContentObject {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
 
-            if (!this.signal.getProcessID().equals(process.getID()) && !this.signal.getSourceProcessIDs().contains(process.getID())) {
+            if (!this.signal.getProcessID().equals(process.getID()) && !this.signal.getSourceProcessIDs().contains(process.getID())
+                    && !this.signal.getProcessID().equals(process.getParentID())) {
                 throw new ConditionRefuseException();
             }
 

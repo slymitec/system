@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
@@ -18,7 +19,9 @@ public class ProcessEndCommunicationResolver extends AProcessEndResolver {
             ProcessCommunicationObject processCommunication = process.getCommunication();
 
             processCommunication.deleteAllPort();
-            processCommunication.deleteSignal();
+            if (!ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalID())) {
+                processCommunication.deleteSignal();
+            }
 
             return process;
         };

@@ -13,3 +13,9 @@ import javax.inject.Named;
 public abstract class AProcessEndResolver extends AResolver {
     public abstract void resolve(ProcessLifeProcessorMediator processorCreatorMediator);
 }
+
+/*
+ProcessEndInfoTableResolver     1
+ProcessEndCommunicationResolver 2
+ProcessEndNotifyParentResolver  3
+ */

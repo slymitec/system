@@ -20,11 +20,11 @@ import java.util.UUID;
 public class InfoCheckConditionResolver extends AInfoResolver {
     public InfoCheckConditionResolver() {
         this.open = (index, info, type, status, openAttribute, arguments) -> {
-            if (LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.CLOSE)
-                    || (LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.OPEN_EXCLUSIVE) && info.getOpened() > 0)
-                    || (LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.OPEN_ONLY_READ) && info.getOpened() > 0
+            if (LogicalUtil.isAnyEqual(openAttribute, InfoOpenAttributeType.CLOSE)
+                    || (LogicalUtil.isAnyEqual(openAttribute, InfoOpenAttributeType.OPEN_EXCLUSIVE) && info.getOpened() > 0)
+                    || (LogicalUtil.isAnyEqual(openAttribute, InfoOpenAttributeType.OPEN_ONLY_READ) && info.getOpened() > 0
                     && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_SHARED_READ))
-                    || (LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.OPEN_SHARED_WRITE)
+                    || (LogicalUtil.isAnyEqual(openAttribute, InfoOpenAttributeType.OPEN_SHARED_WRITE)
                     && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN))) {
                 throw new StatusNotSupportedException();
             }

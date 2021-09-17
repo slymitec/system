@@ -29,7 +29,7 @@ public class ProcessEndCommunicationResolver extends AProcessEndResolver {
 
     @Override
     public int order() {
-        return 1;
+        return 2;
     }
 
     @Override

@@ -96,11 +96,11 @@ public class FactoryManager extends AManager {
     }
 
     public <T extends AService> T getService(Class<T> clazz) {
-        T manager = this.coreObjectRepository.getByClass(SpaceType.KERNEL, clazz);
+        T service = this.coreObjectRepository.getByClass(SpaceType.KERNEL, clazz);
 
-        manager.check();
+        service.check();
 
-        return manager;
+        return service;
     }
 
     public KernelSpaceDefinition getKernelSpace() {

@@ -20,38 +20,30 @@ import java.util.UUID;
 public class FileSystemManager extends AManager {
     @Override
     public void startup(long startup) {
-        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
-        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
+        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
 
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
             Set<UUID> childTypes = Set.of();
+            long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_EXECUTED,
+                    TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED, TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,
+                    TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CONTENT,
+                    TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
 
             typeManager.create(kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID,
-                    kernelConfiguration.FILES_TYPES_INSTANCE_FILE_NAME,
-                    LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_EXECUTED,
-                            TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
-                            TypeInitializerAttributeType.CAN_BE_SHARED_READ,
-                            TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,
-                            TypeInitializerAttributeType.HAS_AUDIT,
-                            TypeInitializerAttributeType.HAS_CONTENT,
-                            TypeInitializerAttributeType.HAS_PERMISSION,
-                            TypeInitializerAttributeType.HAS_PROPERTIES),
-                    childTypes, this.factoryManager.create(FileSystemFileTypeInitializer.class));
+                    kernelConfiguration.FILES_TYPES_INSTANCE_FILE_NAME, attribute, childTypes,
+                    this.factoryManager.create(FileSystemFileTypeInitializer.class));
 
             childTypes = Set.of(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID);
+            attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
+                    TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
+                    TypeInitializerAttributeType.HAS_CHILD, TypeInitializerAttributeType.HAS_CONTENT,
+                    TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
 
             typeManager.create(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
-                    kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_NAME,
-                    LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
-                            TypeInitializerAttributeType.CAN_BE_SHARED_READ,
-                            TypeInitializerAttributeType.HAS_AUDIT,
-                            TypeInitializerAttributeType.HAS_CHILD,
-                            TypeInitializerAttributeType.HAS_CONTENT,
-                            TypeInitializerAttributeType.HAS_PERMISSION,
-                            TypeInitializerAttributeType.HAS_PROPERTIES),
-                    childTypes, this.factoryManager.create(FileSystemFolderTypeInitializer.class));
+                    kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_NAME, attribute, childTypes,
+                    this.factoryManager.create(FileSystemFolderTypeInitializer.class));
         }
     }
 

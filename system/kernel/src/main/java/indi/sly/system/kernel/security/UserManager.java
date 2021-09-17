@@ -45,10 +45,10 @@ public class UserManager extends AManager {
 
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
-            Set<UUID> childTypes = Set.of();
             long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
                     TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_CONTENT,
                     TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
+            Set<UUID> childTypes = Set.of();
             AInfoTypeInitializer typeInitializer = this.factoryManager.create(AuditTypeInitializer.class);
 
             typeManager.create(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID,

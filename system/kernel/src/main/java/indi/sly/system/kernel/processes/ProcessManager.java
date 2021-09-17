@@ -150,8 +150,8 @@ public class ProcessManager extends AManager {
             processCreator.setWorkFolder(workFolder);
         }
 
-        ProcessObject currentProcess = this.getCurrent();
-        ProcessCreateBuilder processCreateBuilder = this.factory.createProcessCreator(currentProcess);
+        ProcessObject process = this.getCurrent();
+        ProcessCreateBuilder processCreateBuilder = this.factory.createProcessCreator(process);
 
         return processCreateBuilder.build(processCreator);
     }

@@ -41,14 +41,14 @@ public class SessionManager extends AManager {
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
             Set<UUID> childTypes = Set.of();
+            long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
+                    TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
+                    TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
+                    TypeInitializerAttributeType.HAS_PROPERTIES);
 
             typeManager.create(kernelConfiguration.PROCESSES_CONTEXT_INSTANCE_SESSION_ID,
-                    kernelConfiguration.PROCESSES_CONTEXT_INSTANCE_SESSION_NAME,
-                    LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
-                            TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
-                            TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
-                            TypeInitializerAttributeType.HAS_PROPERTIES),
-                    childTypes, this.factoryManager.create(SessionTypeInitializer.class));
+                    kernelConfiguration.PROCESSES_CONTEXT_INSTANCE_SESSION_NAME, attribute, childTypes,
+                    this.factoryManager.create(SessionTypeInitializer.class));
         }
     }
 

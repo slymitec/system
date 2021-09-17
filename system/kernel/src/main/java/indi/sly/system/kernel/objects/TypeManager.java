@@ -34,25 +34,24 @@ public class TypeManager extends AManager {
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
             Set<UUID> childTypes = Set.of(UUIDUtil.getEmpty());
+            long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
+                    TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
+                    TypeInitializerAttributeType.HAS_CHILD, TypeInitializerAttributeType.HAS_CONTENT,
+                    TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
 
             this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
-                    kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_NAME,
-                    LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
-                            TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
-                            TypeInitializerAttributeType.HAS_CHILD, TypeInitializerAttributeType.HAS_CONTENT,
-                            TypeInitializerAttributeType.HAS_PERMISSION,
-                            TypeInitializerAttributeType.HAS_PROPERTIES),
-                    childTypes, this.factoryManager.create(FolderTypeInitializer.class));
+                    kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_NAME, attribute, childTypes,
+                    this.factoryManager.create(FolderTypeInitializer.class));
+
+            attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
+                    TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.CHILD_IS_NAMELESS,
+                    TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CHILD,
+                    TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
+                    TypeInitializerAttributeType.HAS_PROPERTIES);
 
             this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                    kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_NAME,
-                    LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
-                            TypeInitializerAttributeType.CAN_BE_SHARED_READ,
-                            TypeInitializerAttributeType.CHILD_IS_NAMELESS,
-                            TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CHILD,
-                            TypeInitializerAttributeType.HAS_CONTENT,
-                            TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES),
-                    childTypes, this.factoryManager.create(NamelessFolderTypeInitializer.class));
+                    kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_NAME, attribute, childTypes,
+                    this.factoryManager.create(NamelessFolderTypeInitializer.class));
         }
     }
 

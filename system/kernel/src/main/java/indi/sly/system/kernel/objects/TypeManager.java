@@ -38,20 +38,20 @@ public class TypeManager extends AManager {
                     TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
                     TypeInitializerAttributeType.HAS_CHILD, TypeInitializerAttributeType.HAS_CONTENT,
                     TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
+            AInfoTypeInitializer typeInitializer = this.factoryManager.create(FolderTypeInitializer.class);
 
             this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
-                    kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_NAME, attribute, childTypes,
-                    this.factoryManager.create(FolderTypeInitializer.class));
+                    kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_NAME, attribute, childTypes, typeInitializer);
 
             attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
                     TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.CHILD_IS_NAMELESS,
                     TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CHILD,
                     TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
                     TypeInitializerAttributeType.HAS_PROPERTIES);
+            typeInitializer = this.factoryManager.create(NamelessFolderTypeInitializer.class);
 
             this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                    kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_NAME, attribute, childTypes,
-                    this.factoryManager.create(NamelessFolderTypeInitializer.class));
+                    kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_NAME, attribute, childTypes, typeInitializer);
         }
     }
 
@@ -66,14 +66,14 @@ public class TypeManager extends AManager {
     }
 
     public synchronized TypeObject create(UUID typeID, String typeName, long attribute, Set<UUID> childTypes,
-                                          AInfoTypeInitializer initializer) {
-        if (ObjectUtil.isAnyNull(typeID, childTypes, initializer) || StringUtil.isNameIllegal(typeName)) {
+                                          AInfoTypeInitializer typeInitializer) {
+        if (ObjectUtil.isAnyNull(typeID, childTypes, typeInitializer) || StringUtil.isNameIllegal(typeName)) {
             throw new ConditionParametersException();
         }
 
         TypeBuilder typeBuilder = this.factory.createType();
 
-        return typeBuilder.create(typeID, typeName, attribute, childTypes, initializer);
+        return typeBuilder.create(typeID, typeName, attribute, childTypes, typeInitializer);
     }
 
     public synchronized void delete(UUID typeID) {

@@ -14,6 +14,7 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -40,15 +41,15 @@ public class SessionManager extends AManager {
 
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
-            Set<UUID> childTypes = Set.of();
             long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
                     TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
                     TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
                     TypeInitializerAttributeType.HAS_PROPERTIES);
+            Set<UUID> childTypes = Set.of();
+            AInfoTypeInitializer typeInitializer = this.factoryManager.create(SessionTypeInitializer.class);
 
             typeManager.create(kernelConfiguration.PROCESSES_CONTEXT_INSTANCE_SESSION_ID,
-                    kernelConfiguration.PROCESSES_CONTEXT_INSTANCE_SESSION_NAME, attribute, childTypes,
-                    this.factoryManager.create(SessionTypeInitializer.class));
+                    kernelConfiguration.PROCESSES_CONTEXT_INSTANCE_SESSION_NAME, attribute, childTypes, typeInitializer);
         }
     }
 

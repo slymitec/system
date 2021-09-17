@@ -10,6 +10,7 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -48,10 +49,10 @@ public class UserManager extends AManager {
             long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
                     TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_CONTENT,
                     TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
+            AInfoTypeInitializer typeInitializer = this.factoryManager.create(AuditTypeInitializer.class);
 
             typeManager.create(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID,
-                    kernelConfiguration.SECURITY_INSTANCE_AUDIT_NAME, attribute, childTypes,
-                    this.factoryManager.create(AuditTypeInitializer.class));
+                    kernelConfiguration.SECURITY_INSTANCE_AUDIT_NAME, attribute, childTypes, typeInitializer);
         }
     }
 

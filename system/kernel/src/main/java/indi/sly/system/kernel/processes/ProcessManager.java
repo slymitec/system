@@ -14,6 +14,7 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.processes.instances.prototypes.processors.PortTypeInitializer;
 import indi.sly.system.kernel.processes.instances.prototypes.processors.SignalTypeInitializer;
@@ -45,19 +46,20 @@ public class ProcessManager extends AManager {
 
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
-            Set<UUID> childTypes = Set.of();
             long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
                     TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN, TypeInitializerAttributeType.HAS_AUDIT,
                     TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
                     TypeInitializerAttributeType.HAS_PROPERTIES);
+            Set<UUID> childTypes = Set.of();
+            AInfoTypeInitializer typeInitializer = this.factoryManager.create(PortTypeInitializer.class);
 
             typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_ID,
-                    kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_NAME, attribute, childTypes,
-                    this.factoryManager.create(PortTypeInitializer.class));
+                    kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_NAME, attribute, childTypes, typeInitializer);
+
+            typeInitializer = this.factoryManager.create(SignalTypeInitializer.class);
 
             typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID,
-                    kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_NAME, attribute, childTypes,
-                    this.factoryManager.create(SignalTypeInitializer.class));
+                    kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_NAME, attribute, childTypes, typeInitializer);
         }
     }
 

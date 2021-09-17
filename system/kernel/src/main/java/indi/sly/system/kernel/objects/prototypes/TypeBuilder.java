@@ -22,15 +22,15 @@ public class TypeBuilder extends ABuilder {
     protected TypeFactory factory;
 
     public TypeObject create(UUID typeID, String typeName, long attribute, Set<UUID> childTypes,
-                             AInfoTypeInitializer initializer) {
-        if (ObjectUtil.isAnyNull(typeID, childTypes, initializer) || StringUtil.isNameIllegal(typeName)) {
+                             AInfoTypeInitializer typeInitializer) {
+        if (ObjectUtil.isAnyNull(typeID, childTypes, typeInitializer) || StringUtil.isNameIllegal(typeName)) {
             throw new ConditionParametersException();
         }
 
         TypeDefinition type = new TypeDefinition();
         type.setName(typeName);
         type.setAttribute(attribute);
-        type.setInitializer(initializer);
+        type.setInitializer(typeInitializer);
         if (ObjectUtil.allNotNull(childTypes)) {
             type.getChildTypes().addAll(childTypes);
         }
@@ -43,7 +43,7 @@ public class TypeBuilder extends ABuilder {
 
         infoTypeIDs.add(typeID);
 
-        initializer.install();
+        typeInitializer.install();
 
         return this.factory.buildType(typeID, type);
     }

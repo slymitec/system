@@ -56,8 +56,8 @@ public class ProcessManager extends AManager {
                     this.factoryManager.create(PortTypeInitializer.class));
 
             typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID,
-                    kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_NAME, attribute,
-                    childTypes, this.factoryManager.create(SignalTypeInitializer.class));
+                    kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_NAME, attribute, childTypes,
+                    this.factoryManager.create(SignalTypeInitializer.class));
         }
     }
 

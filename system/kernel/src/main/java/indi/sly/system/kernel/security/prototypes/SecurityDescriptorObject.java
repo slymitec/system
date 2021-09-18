@@ -7,6 +7,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -464,6 +465,8 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
     }
 
     private void writeAudit(Set<UserIDDefinition> userIDs, long value) {
+        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
@@ -474,18 +477,18 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
             this.lock(LockType.WRITE);
             this.init();
 
-            UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().SECURITY_INSTANCE_AUDIT_ID;
+            List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Audits"), new IdentificationDefinition(accountName));
 
-            InfoObject audits = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-            audits = audits.getChild(new IdentificationDefinition(accountName));
+            InfoObject audits = objectManager.get(identifications);
 
-            InfoObject audit = audits.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
-                    InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            InfoObject audit = audits.createChildAndOpen(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID,
+                    new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             AuditContentObject auditContent = (AuditContentObject) audit.getContent();
             auditContent.setUserIDs(userIDs);
             auditContent.setAudit(value);
             auditContent.setIdentifications(this.identifications);
+
             audit.close();
 
             this.fresh();

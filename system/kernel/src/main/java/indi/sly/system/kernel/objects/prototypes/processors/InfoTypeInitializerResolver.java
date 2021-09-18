@@ -43,7 +43,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
 
             ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
 
-            type.getInitializer().openProcedure(info, processInfoEntry.getOpen(), openAttribute, arguments);
+            type.getInitializer().openProcedure(info, processInfoEntry.getOpen(), arguments);
 
             return index;
         };

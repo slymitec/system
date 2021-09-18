@@ -1,12 +1,11 @@
 package indi.sly.system.kernel.objects.prototypes;
 
-import indi.sly.system.common.lang.ConditionContextException;
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.Consumer;
-import indi.sly.system.common.lang.StatusDisabilityException;
+import indi.sly.system.common.lang.*;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
+import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -43,6 +42,10 @@ public abstract class AInfoContentObject extends AValueProcessObject<byte[], Inf
     }
 
     protected final byte[] write() {
+        if (LogicalUtil.isAnyEqual(infoOpen.getAttribute(), InfoOpenAttributeType.OPEN_ONLY_READ)) {
+            throw new ConditionRefuseException();
+        }
+
         if (ObjectUtil.allNotNull(this.funcCustomRead)) {
             this.funcCustomWrite.accept();
         }

@@ -70,8 +70,7 @@ public class BootObjectsResolver extends ABootResolver {
                     permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
                             PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
-                            PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW,
-                            PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW,
+                            PermissionType.READPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW,
                             PermissionType.DELETECHILD_ALLOW));
                     securityDescriptor.getPermissions().add(permission);
                     permission = new AccessControlDefinition();
@@ -79,8 +78,7 @@ public class BootObjectsResolver extends ABootResolver {
                     permission.getUserID().setType(UserType.GROUP);
                     permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
-                            PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.READPROPERTIES_ALLOW,
-                            PermissionType.READPERMISSIONDESCRIPTOR_ALLOW));
+                            PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.READPROPERTIES_ALLOW));
                     securityDescriptor.getPermissions().add(permission);
                     info.setSecurityDescriptor(ObjectUtil.transferToByteArray(securityDescriptor));
 
@@ -93,12 +91,10 @@ public class BootObjectsResolver extends ABootResolver {
                 InfoObject rootInfo = objectManager.get(List.of());
                 Set<InfoSummaryDefinition> infoSummaries = rootInfo.queryChild((InfoSummaryDefinition infoSummary) -> true);
 
-                String[] childFolderNames = new String[]{"Files", "Ports", "Sessions", "Signals", "Audits"};
+                String[] childFolderNames = new String[]{"Audits", "Files", "Sessions"};
                 UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
-                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,};
+                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
+                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};
 
                 boolean isExist = false;
                 for (int i = 0; i < childFolderNames.length; i++) {
@@ -108,12 +104,47 @@ public class BootObjectsResolver extends ABootResolver {
                             break;
                         }
                     }
+
                     if (!isExist) {
                         InfoObject childInfo = rootInfo.createChildAndOpen(childFolderTypes[i],
                                 new IdentificationDefinition(childFolderNames[i]), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
                         childInfo.close();
                     }
+
+                    isExist = false;
+                }
+
+                childFolderNames = new String[]{"Ports", "Signals"};
+                childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};
+
+                isExist = false;
+                for (int i = 0; i < childFolderNames.length; i++) {
+                    for (InfoSummaryDefinition infoSummary : infoSummaries) {
+                        if (childFolderNames[i].equals(infoSummary.getName())) {
+                            isExist = true;
+                            break;
+                        }
+                    }
+
+                    if (!isExist) {
+                        InfoObject childInfo = rootInfo.createChildAndOpen(childFolderTypes[i],
+                                new IdentificationDefinition(childFolderNames[i]), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+
+                        SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
+                        Set<AccessControlDefinition> permissions = new HashSet<>();
+                        AccessControlDefinition permission = new AccessControlDefinition();
+                        permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_USERS_ID);
+                        permission.getUserID().setType(UserType.GROUP);
+                        permission.setScope(AccessControlScopeType.ALL);
+                        permission.setValue(PermissionType.DELETECHILD_ALLOW);
+                        permissions.add(permission);
+                        auditSecurityDescriptor.setPermissions(permissions);
+
+                        childInfo.close();
+                    }
+
                     isExist = false;
                 }
 
@@ -122,6 +153,7 @@ public class BootObjectsResolver extends ABootResolver {
                 if (infoSummaries.isEmpty()) {
                     InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                             new IdentificationDefinition("System"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+
                     SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                     Set<AccessControlDefinition> permissions = new HashSet<>();
                     AccessControlDefinition permission = new AccessControlDefinition();
@@ -132,6 +164,7 @@ public class BootObjectsResolver extends ABootResolver {
                     permissions.add(permission);
                     auditSecurityDescriptor.setPermissions(permissions);
                     auditSecurityDescriptor.setInherit(false);
+
                     childInfo.close();
                 }
 
@@ -140,6 +173,7 @@ public class BootObjectsResolver extends ABootResolver {
                 if (infoSummaries.isEmpty()) {
                     InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
                             new IdentificationDefinition("Main"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+
                     childInfo.close();
                 }
                 parentInfo = parentInfo.getChild(new IdentificationDefinition("Main"));
@@ -147,6 +181,7 @@ public class BootObjectsResolver extends ABootResolver {
                 if (infoSummaries.isEmpty()) {
                     InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
                             new IdentificationDefinition("Home"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+
                     childInfo.close();
                 }
             }

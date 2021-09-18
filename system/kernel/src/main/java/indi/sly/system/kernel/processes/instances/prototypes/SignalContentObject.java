@@ -1,11 +1,10 @@
 package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -48,16 +47,9 @@ public class SignalContentObject extends AInfoContentObject {
             throw new ConditionParametersException();
         }
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-
         try {
             this.lock(LockType.WRITE);
             this.init();
-
-            if (!this.signal.getProcessID().equals(process.getID())) {
-                throw new ConditionRefuseException();
-            }
 
             Set<UUID> signalSourceProcessIDs = this.signal.getSourceProcessIDs();
             signalSourceProcessIDs.clear();
@@ -80,20 +72,12 @@ public class SignalContentObject extends AInfoContentObject {
         }
     }
 
-
     public List<SignalEntryDefinition> receive() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-
         List<SignalEntryDefinition> signalEntries;
 
         try {
             this.lock(LockType.WRITE);
             this.init();
-
-            if (!this.signal.getProcessID().equals(process.getID())) {
-                throw new ConditionRefuseException();
-            }
 
             DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();
@@ -123,11 +107,6 @@ public class SignalContentObject extends AInfoContentObject {
 
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
-
-            if (!this.signal.getProcessID().equals(process.getID()) && !this.signal.getSourceProcessIDs().contains(process.getID())
-                    && !this.signal.getProcessID().equals(process.getParentID())) {
-                throw new ConditionRefuseException();
-            }
 
             DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
             long nowDateTime = dateTime.getCurrentDateTime();

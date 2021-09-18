@@ -54,7 +54,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
     public void dumpProcedure(InfoEntity info, DumpDefinition dump) {
     }
 
-    public void openProcedure(InfoEntity info, InfoOpenDefinition infoOpen, long openAttribute, Object... arguments) {
+    public void openProcedure(InfoEntity info, InfoOpenDefinition infoOpen, Object[] arguments) {
     }
 
     public void closeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {

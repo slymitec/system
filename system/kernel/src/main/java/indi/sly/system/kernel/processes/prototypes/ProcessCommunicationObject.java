@@ -7,6 +7,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -122,6 +123,10 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
+        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+
+        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"));
+
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         UUID portID;
@@ -135,32 +140,41 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 throw new ConditionRefuseException();
             }
 
-            List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"));
-
             InfoObject ports = objectManager.get(identifications);
 
-            UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_PORT_ID;
+            InfoObject port = ports.createChildAndOpen(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_ID,
+                    new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
-            InfoObject port = ports.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
-                    InfoOpenAttributeType.OPEN_EXCLUSIVE);
             SecurityDescriptorObject securityDescriptor = port.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
-            permission.getUserID().setID(processToken.getAccountID());
-            permission.getUserID().setType(UserType.ACCOUNT);
-            permission.setScope(AccessControlScopeType.ALL);
+            permission.getUserID().setID(this.parent.getID());
+            permission.getUserID().setType(UserType.PROCESS);
+            permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(PermissionType.FULLCONTROL_ALLOW);
             permissions.add(permission);
             permission = new AccessControlDefinition();
-            permission.getUserID().setID(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID);
-            permission.getUserID().setType(UserType.GROUP);
-            permission.setScope(AccessControlScopeType.ALL);
+            permission.getUserID().setID(this.parent.getID());
+            permission.getUserID().setType(UserType.PARENT_PROCESS);
+            permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
             permissions.add(permission);
+            for (UUID sourceProcessID : sourceProcessIDs) {
+                permission = new AccessControlDefinition();
+                permission.getUserID().setID(sourceProcessID);
+                permission.getUserID().setType(UserType.PROCESS);
+                permission.setScope(AccessControlScopeType.THIS);
+                permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
+                permissions.add(permission);
+            }
             securityDescriptor.setPermissions(permissions);
+
             PortContentObject portContent = (PortContentObject) port.getContent();
             portContent.setSourceProcessIDs(sourceProcessIDs);
-            port.close();
+
+            ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(port.getID());
+            processInfoEntry.setUnsupportedDelete(true);
 
             portID = port.getID();
 
@@ -232,12 +246,14 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 throw new StatusNotExistedException();
             }
 
-            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+            ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
+            if (processInfoTable.containByID(portID)) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(portID);
+                processInfoEntry.setUnsupportedDelete(false);
 
-            List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"));
-
-            InfoObject ports = objectManager.get(identifications);
-            ports.deleteChild(new IdentificationDefinition(portID));
+                InfoObject info = processInfoEntry.getInfo();
+                info.close();
+            }
 
             processCommunicationPortIDs.remove(portID);
 
@@ -261,16 +277,25 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusNotExistedException();
         }
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
         List<IdentificationDefinition> identifications
                 = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         InfoObject port = objectManager.get(identifications);
-        port.open(InfoOpenAttributeType.OPEN_ONLY_READ);
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessInfoTableObject processInfoTable = process.getInfoTable();
+
+        boolean contain = processInfoTable.containByID(port.getID());
+        if (!contain) {
+            port.open(InfoOpenAttributeType.OPEN_ONLY_READ);
+        }
         PortContentObject portContent = (PortContentObject) port.getContent();
         Set<UUID> sourceProcessIDs = portContent.getSourceProcessIDs();
-        port.close();
+        if (!contain) {
+            port.close();
+        }
 
         return sourceProcessIDs;
     }
@@ -289,16 +314,49 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusNotExistedException();
         }
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
         List<IdentificationDefinition> identifications
                 = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         InfoObject port = objectManager.get(identifications);
-        port.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+
+        SecurityDescriptorObject securityDescriptor = port.getSecurityDescriptor();
+        Set<AccessControlDefinition> permissions = new HashSet<>();
+        AccessControlDefinition permission = new AccessControlDefinition();
+        permission.getUserID().setID(this.parent.getID());
+        permission.getUserID().setType(UserType.PROCESS);
+        permission.setScope(AccessControlScopeType.THIS);
+        permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+        permissions.add(permission);
+        permission = new AccessControlDefinition();
+        permission.getUserID().setID(this.parent.getID());
+        permission.getUserID().setType(UserType.PARENT_PROCESS);
+        permission.setScope(AccessControlScopeType.THIS);
+        permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
+        permissions.add(permission);
+        for (UUID sourceProcessID : sourceProcessIDs) {
+            permission = new AccessControlDefinition();
+            permission.getUserID().setID(sourceProcessID);
+            permission.getUserID().setType(UserType.PROCESS);
+            permission.setScope(AccessControlScopeType.THIS);
+            permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
+            permissions.add(permission);
+        }
+        securityDescriptor.setPermissions(permissions);
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessInfoTableObject processInfoTable = process.getInfoTable();
+
+        boolean contain = processInfoTable.containByID(port.getID());
+        if (!contain) {
+            port.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+        }
         PortContentObject portContent = (PortContentObject) port.getContent();
         portContent.setSourceProcessIDs(sourceProcessIDs);
-        port.close();
+        if (!contain) {
+            port.close();
+        }
     }
 
     public byte[] receivePort(UUID portID) {
@@ -315,17 +373,14 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusNotExistedException();
         }
 
+        List<IdentificationDefinition> identifications
+                = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
+
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
-        List<IdentificationDefinition> identifications = new ArrayList<>();
-        identifications.add(new IdentificationDefinition("Ports"));
-        identifications.add(new IdentificationDefinition(portID));
-
         InfoObject port = objectManager.get(identifications);
-        port.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+
         PortContentObject portContent = (PortContentObject) port.getContent();
         byte[] value = portContent.receive();
-        port.close();
 
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addPortReadCount(1);
@@ -349,16 +404,25 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
         List<IdentificationDefinition> identifications
                 = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         InfoObject port = objectManager.get(identifications);
-        port.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessInfoTableObject processInfoTable = process.getInfoTable();
+
+        boolean contain = processInfoTable.containByID(port.getID());
+        if (!contain) {
+            port.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+        }
         PortContentObject portContent = (PortContentObject) port.getContent();
         portContent.send(value);
-        port.close();
+        if (!contain) {
+            port.close();
+        }
 
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
         processStatistics.addPortWriteCount(1);
@@ -395,6 +459,12 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
+        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+
+        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Signals"));
+
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
         try {
             this.lock(LockType.WRITE);
             this.init();
@@ -403,41 +473,43 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 throw new StatusAlreadyFinishedException();
             }
 
-            ProcessTokenObject processToken = this.parent.getToken();
-
-            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
-            List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Signals"));
-
             InfoObject signals = objectManager.get(identifications);
 
-            UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID;
+            InfoObject signal = signals.createChildAndOpen(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID,
+                    new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_SHARED_WRITE);
 
-            InfoObject signal = signals.createChildAndOpen(typeID, new IdentificationDefinition(UUID.randomUUID()),
-                    InfoOpenAttributeType.OPEN_SHARED_WRITE);
             SecurityDescriptorObject securityDescriptor = signal.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
-            permission.getUserID().setID(processToken.getAccountID());
-            permission.getUserID().setType(UserType.ACCOUNT);
+            permission.getUserID().setID(this.parent.getID());
+            permission.getUserID().setType(UserType.PROCESS);
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(PermissionType.FULLCONTROL_ALLOW);
             permissions.add(permission);
             permission = new AccessControlDefinition();
-            permission.getUserID().setID(this.factoryManager.getKernelSpace().getConfiguration().SECURITY_GROUP_USERS_ID);
-            permission.getUserID().setType(UserType.GROUP);
+            permission.getUserID().setID(this.parent.getID());
+            permission.getUserID().setType(UserType.PARENT_PROCESS);
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
             permissions.add(permission);
+            for (UUID sourceProcessID : sourceProcessIDs) {
+                permission = new AccessControlDefinition();
+                permission.getUserID().setID(sourceProcessID);
+                permission.getUserID().setType(UserType.PROCESS);
+                permission.setScope(AccessControlScopeType.THIS);
+                permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
+                permissions.add(permission);
+            }
             securityDescriptor.setPermissions(permissions);
+
             SignalContentObject signalContent = (SignalContentObject) signal.getContent();
             signalContent.setSourceProcessIDs(sourceProcessIDs);
-
-            this.value.setSignalID(signal.getID());
 
             ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
             ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(signal.getID());
             processInfoEntry.setUnsupportedDelete(true);
+
+            this.value.setSignalID(signal.getID());
 
             this.fresh();
         } finally {
@@ -470,14 +542,6 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 info.close();
             }
 
-            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
-            List<IdentificationDefinition> identifications
-                    = List.of(new IdentificationDefinition("Signals"));
-
-            InfoObject signals = objectManager.get(identifications);
-            signals.deleteChild(new IdentificationDefinition(signalID));
-
             this.value.setSignalID(null);
 
             this.fresh();
@@ -508,11 +572,10 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusNotExistedException();
         }
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
         List<IdentificationDefinition> identifications
                 = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         InfoObject signal = objectManager.get(identifications);
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
@@ -564,6 +627,30 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
         InfoObject signal = objectManager.get(identifications);
 
+        SecurityDescriptorObject securityDescriptor = signal.getSecurityDescriptor();
+        Set<AccessControlDefinition> permissions = new HashSet<>();
+        AccessControlDefinition permission = new AccessControlDefinition();
+        permission.getUserID().setID(this.parent.getID());
+        permission.getUserID().setType(UserType.PROCESS);
+        permission.setScope(AccessControlScopeType.THIS);
+        permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+        permissions.add(permission);
+        permission = new AccessControlDefinition();
+        permission.getUserID().setID(this.parent.getID());
+        permission.getUserID().setType(UserType.PARENT_PROCESS);
+        permission.setScope(AccessControlScopeType.THIS);
+        permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
+        permissions.add(permission);
+        for (UUID sourceProcessID : sourceProcessIDs) {
+            permission = new AccessControlDefinition();
+            permission.getUserID().setID(sourceProcessID);
+            permission.getUserID().setType(UserType.PROCESS);
+            permission.setScope(AccessControlScopeType.THIS);
+            permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
+            permissions.add(permission);
+        }
+        securityDescriptor.setPermissions(permissions);
+
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
@@ -600,11 +687,10 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusNotExistedException();
         }
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
         List<IdentificationDefinition> identifications
                 = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         InfoObject signal = objectManager.get(identifications);
 
         SignalContentObject signalContent = (SignalContentObject) signal.getContent();
@@ -630,11 +716,10 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             throw new StatusRelationshipErrorException();
         }
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
         List<IdentificationDefinition> identifications
                 = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         InfoObject signal = objectManager.get(identifications);
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);

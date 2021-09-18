@@ -1,16 +1,13 @@
 package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
-import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ArrayUtil;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.values.PortDefinition;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -29,9 +26,14 @@ public class PortContentObject extends AInfoContentObject {
     private PortDefinition port;
 
     public Set<UUID> getSourceProcessIDs() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return CollectionUtil.unmodifiable(this.port.getSourceProcessIDs());
+            return CollectionUtil.unmodifiable(this.port.getSourceProcessIDs());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {
@@ -39,16 +41,9 @@ public class PortContentObject extends AInfoContentObject {
             throw new ConditionParametersException();
         }
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-
         try {
             this.lock(LockType.WRITE);
             this.init();
-
-            if (!this.port.getProcessID().equals(process.getID())) {
-                throw new ConditionRefuseException();
-            }
 
             Set<UUID> portSourceProcessIDs = this.port.getSourceProcessIDs();
             portSourceProcessIDs.clear();
@@ -61,18 +56,11 @@ public class PortContentObject extends AInfoContentObject {
     }
 
     public byte[] receive() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-
         byte[] value;
 
         try {
             this.lock(LockType.WRITE);
             this.init();
-
-            if (!this.port.getProcessID().equals(process.getID())) {
-                throw new ConditionRefuseException();
-            }
 
             value = this.port.getValue();
             this.port.setValue(ArrayUtil.EMPTY_BYTES);
@@ -96,13 +84,6 @@ public class PortContentObject extends AInfoContentObject {
 
             if (this.port.size() + value.length >= this.port.getLimit()) {
                 throw new StatusInsufficientResourcesException();
-            }
-
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrent();
-
-            if (!this.port.getProcessID().equals(process.getID()) && !this.port.getSourceProcessIDs().contains(process.getID())) {
-                throw new ConditionRefuseException();
             }
 
             this.port.setValue(ArrayUtil.combineBytes(this.port.getValue(), value));

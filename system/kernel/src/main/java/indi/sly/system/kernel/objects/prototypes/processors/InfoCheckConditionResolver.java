@@ -32,9 +32,6 @@ public class InfoCheckConditionResolver extends AInfoResolver {
             return index;
         };
 
-        this.close = (info, type, status) -> {
-        };
-
         this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
                     || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
@@ -118,7 +115,6 @@ public class InfoCheckConditionResolver extends AInfoResolver {
     }
 
     private final InfoProcessorOpenFunction open;
-    private final InfoProcessorCloseConsumer close;
     private final InfoProcessorCreateChildAndOpenFunction createChildAndOpen;
     private final InfoProcessorGetOrRebuildChildFunction getOrRebuildChild;
     private final InfoProcessorDeleteChildConsumer deleteChild;
@@ -133,7 +129,6 @@ public class InfoCheckConditionResolver extends AInfoResolver {
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
         processorMediator.getOpens().add(this.open);
-        processorMediator.getCloses().add(this.close);
         processorMediator.getCreateChildAndOpens().add(this.createChildAndOpen);
         processorMediator.getGetOrRebuildChilds().add(this.getOrRebuildChild);
         processorMediator.getDeleteChilds().add(this.deleteChild);

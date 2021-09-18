@@ -477,7 +477,8 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
             this.lock(LockType.WRITE);
             this.init();
 
-            List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Audits"), new IdentificationDefinition(accountName));
+            List<IdentificationDefinition> identifications
+                    = List.of(new IdentificationDefinition("Audits"), new IdentificationDefinition(accountName));
 
             InfoObject audits = objectManager.get(identifications);
 

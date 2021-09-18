@@ -454,7 +454,6 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 this.checkAudit(AuditType.CHANGEPERMISSIONDESCRIPTOR);
             }
 
-
             this.value.getPermissions().clear();
             this.value.getPermissions().addAll(permissions);
 

@@ -181,6 +181,7 @@ public class UserManager extends AManager {
         if (infoSummaries.isEmpty()) {
             InfoObject childInfo = parentInfo.createChildAndOpen(configuration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                     new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
@@ -191,6 +192,7 @@ public class UserManager extends AManager {
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
             auditSecurityDescriptor.setInherit(false);
+
             childInfo.close();
         }
 
@@ -200,6 +202,7 @@ public class UserManager extends AManager {
         if (infoSummaries.isEmpty()) {
             InfoObject childInfo = parentInfo.createChildAndOpen(configuration.FILES_TYPES_INSTANCE_FOLDER_ID,
                     new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
@@ -210,6 +213,7 @@ public class UserManager extends AManager {
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
             auditSecurityDescriptor.setInherit(false);
+
             childInfo.close();
         }
 

@@ -91,7 +91,6 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
             SecurityDescriptorObject securityDescriptor = this;
             do {
                 SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
-
                 if (securityDescriptor.permission) {
                     if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                             && !securityDescriptor.value.getOwners().contains(processToken.getAccountID())
@@ -105,14 +104,12 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 } else {
                     securityDescriptorSummary.setPermission(false);
                 }
-
                 if (securityDescriptor.audit) {
                     securityDescriptorSummary.setAudit(true);
                     securityDescriptorSummary.getAudits().addAll(securityDescriptor.value.getAudits());
                 } else {
                     securityDescriptorSummary.setAudit(false);
                 }
-
                 securityDescriptorSummary.getIdentifications().addAll(securityDescriptor.identifications);
 
                 securityDescriptorSummaries.add(securityDescriptorSummary);

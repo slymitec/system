@@ -266,7 +266,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
         }
     }
 
-    private boolean denyPermission(long permission, PermissionQueryDefinition permissionQuery) {
+    private boolean denyPermission(long permission, PermissionQueryDefinition permissionQueryFunc) {
         if (permission == PermissionType.NULL || LogicalUtil.isAnyExist(permission,
                 PermissionType.FULLCONTROL_DENY)) {
             throw new ConditionParametersException();
@@ -278,7 +278,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
         ProcessObject process = this.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
 
-        if ((ObjectUtil.isAnyNull(permissionQuery) || permissionQuery.isPrivilege())
+        if ((ObjectUtil.isAnyNull(permissionQueryFunc) || permissionQueryFunc.isPrivilege())
                 && processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)) {
             return false;
         }
@@ -370,7 +370,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 }
             } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.ROLE) && roles.contains(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)
-                        && (ObjectUtil.isAnyNull(permissionQuery) || permissionQuery.isRole())) {
+                        && (ObjectUtil.isAnyNull(permissionQueryFunc) || permissionQueryFunc.isRole())) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
@@ -392,8 +392,8 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                     return true;
                 }
             }
-            if (ObjectUtil.allNotNull(permissionQuery) && ObjectUtil.allNotNull(permissionQuery.getCustomDenyFunc()) &&
-                    permissionQuery.getCustomDenyFunc().test(pair.deepClone(), permission)) {
+            if (ObjectUtil.allNotNull(permissionQueryFunc) && ObjectUtil.allNotNull(permissionQueryFunc.getCustomDenyFunc()) &&
+                    permissionQueryFunc.getCustomDenyFunc().test(pair.deepClone(), permission)) {
                 return true;
             }
         }
@@ -401,12 +401,12 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
         return !allow;
     }
 
-    public void checkPermission(long permission, PermissionQueryDefinition permissionQuery) {
-        if (ObjectUtil.isAnyNull(permissionQuery)) {
+    public void checkPermission(long permission, PermissionQueryDefinition permissionQueryFunc) {
+        if (ObjectUtil.isAnyNull(permissionQueryFunc)) {
             throw new ConditionParametersException();
         }
 
-        if (this.denyPermission(permission, permissionQuery)) {
+        if (this.denyPermission(permission, permissionQueryFunc)) {
             throw new ConditionPermissionException();
         }
     }

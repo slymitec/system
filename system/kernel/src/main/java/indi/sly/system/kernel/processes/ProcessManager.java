@@ -46,10 +46,10 @@ public class ProcessManager extends AManager {
 
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
-            long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
-                    TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN, TypeInitializerAttributeType.HAS_AUDIT,
-                    TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
-                    TypeInitializerAttributeType.HAS_PROPERTIES, TypeInitializerAttributeType.TEMPORARY);
+            long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,
+                    TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CONTENT,
+                    TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES,
+                    TypeInitializerAttributeType.TEMPORARY);
             Set<UUID> childTypes = Set.of();
             AInfoTypeInitializer typeInitializer = this.factoryManager.create(PortTypeInitializer.class);
 
@@ -106,7 +106,7 @@ public class ProcessManager extends AManager {
         if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
                 && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                 && !(ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.checkAndGetResult().getID().equals(processToken.getAccountID())))
-                && !currentProcessSession.getID().equals(processSession.getID())) {
+                && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getID()) && !currentProcessSession.getID().equals(processSession.getID()))) {
             throw new ConditionRefuseException();
         }
 
@@ -117,10 +117,8 @@ public class ProcessManager extends AManager {
         return this.get(processID, null);
     }
 
-    public ProcessObject create(AccountAuthorizationObject accountAuthorization,
-                                Map<String, String> environmentVariables, UUID fileIndex, Map<Long, Integer> limits,
-                                String parameters, long privileges, UUID sessionID,
-                                List<IdentificationDefinition> workFolder) {
+    public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, Map<Long, Integer> limits,
+                                String parameters, long privileges, UUID sessionID, List<IdentificationDefinition> workFolder) {
         ProcessCreatorDefinition processCreator = new ProcessCreatorDefinition();
 
         if (ObjectUtil.allNotNull(accountAuthorization)) {
@@ -135,9 +133,6 @@ public class ProcessManager extends AManager {
 
         processCreator.setFileIndex(fileIndex);
 
-        if (ObjectUtil.allNotNull(environmentVariables) && !environmentVariables.isEmpty()) {
-            processCreator.setEnvironmentVariables(environmentVariables);
-        }
         if (!ValueUtil.isAnyNullOrEmpty(parameters)) {
             processCreator.setParameters(parameters);
         } else {

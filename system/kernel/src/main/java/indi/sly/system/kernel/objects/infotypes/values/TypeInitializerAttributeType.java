@@ -2,7 +2,7 @@ package indi.sly.system.kernel.objects.infotypes.values;
 
 public interface TypeInitializerAttributeType {
     long CAN_BE_EXECUTED = 1L;
-    long CAN_BE_SENT_AND_INHERITED = 1L << 1;
+    long CAN_BE_INHERITED = 1L << 1;
     long CAN_BE_SHARED_READ = 1L << 2;
     long CAN_BE_SHARED_WRITTEN = CAN_BE_SHARED_READ | 1L << 3;
     long CHILD_IS_NAMELESS = 1L << 4;

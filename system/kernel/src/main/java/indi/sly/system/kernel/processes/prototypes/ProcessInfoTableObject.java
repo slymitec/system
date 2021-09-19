@@ -1,9 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.lang.StatusInsufficientResourcesException;
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
@@ -13,6 +10,10 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
+import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
+import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
+import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
@@ -71,6 +72,15 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             this.init();
             processInfoTable.lock(LockType.WRITE);
             processInfoTable.init();
+
+            InfoObject info = processInfoTable.getByIndex(index).getInfo();
+
+            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+            TypeObject type = typeManager.get(info.getType());
+
+            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_INHERITED)) {
+                throw new StatusNotSupportedException();
+            }
 
             ProcessInfoEntryDefinition processInfoEntry = processInfoTable.value.getByIndex(index);
             processInfoTable.value.delete(index);

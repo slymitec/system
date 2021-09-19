@@ -39,14 +39,6 @@ public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefiniti
         this.fileIndex = fileIndex;
     }
 
-    public Map<String, String> getEnvironmentVariables() {
-        return this.environmentVariables;
-    }
-
-    public void setEnvironmentVariables(Map<String, String> environmentVariables) {
-        this.environmentVariables = environmentVariables;
-    }
-
     public String getParameters() {
         return this.parameters;
     }

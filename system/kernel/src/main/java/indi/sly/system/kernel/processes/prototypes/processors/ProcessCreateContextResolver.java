@@ -10,10 +10,13 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
+import indi.sly.system.kernel.processes.SessionManager;
+import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -32,6 +35,7 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
             KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
 
             ProcessContextObject processContext = process.getContext();
+            ProcessSessionObject processSession = process.getSession();
             ProcessContextObject parentProcessContext = parentProcess.getContext();
 
             if (!ValueUtil.isAnyNullOrEmpty(processCreator.getFileIndex())) {
@@ -53,22 +57,28 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
                 processContext.setApplication(application);
             }
 
-            if (ObjectUtil.allNotNull(processCreator.getEnvironmentVariables())) {
-                processContext.setEnvironmentVariables(processCreator.getEnvironmentVariables());
-            } else {
-                processContext.setEnvironmentVariables(parentProcessContext.getEnvironmentVariables());
+            if (ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+                SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
+                SessionContentObject sessionContent = sessionManager.getAndOpen(processSession.getID());
+
+                processContext.setEnvironmentVariables(sessionContent.getEnvironmentVariables());
+
+                sessionContent.close();
             }
+
             if (!ValueUtil.isAnyNullOrEmpty(processCreator.getParameters())) {
                 processContext.setParameters(processCreator.getParameters());
             } else {
                 processContext.setParameters(StringUtil.EMPTY);
             }
+
             List<IdentificationDefinition> processContextWorkFolder = processCreator.getWorkFolder();
             if (ObjectUtil.allNotNull(processContextWorkFolder)) {
                 ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
                 try {
                     InfoObject processContextWorkFolderInfo = objectManager.get(processContextWorkFolder);
+
                     if (!configuration.FILES_TYPES_INSTANCE_FOLDER_ID.equals(processContextWorkFolderInfo.getType())) {
                         processContextWorkFolder = null;
                     }

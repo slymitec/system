@@ -27,7 +27,7 @@ public class FileSystemManager extends AManager {
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
             long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_EXECUTED,
-                    TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED, TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,
+                    TypeInitializerAttributeType.CAN_BE_INHERITED, TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,
                     TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CONTENT,
                     TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
             Set<UUID> childTypes = Set.of();
@@ -36,7 +36,7 @@ public class FileSystemManager extends AManager {
             typeManager.create(kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID,
                     kernelConfiguration.FILES_TYPES_INSTANCE_FILE_NAME, attribute, childTypes, typeInitializer);
 
-            attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
+            attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_INHERITED,
                     TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
                     TypeInitializerAttributeType.HAS_CHILD, TypeInitializerAttributeType.HAS_CONTENT,
                     TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);

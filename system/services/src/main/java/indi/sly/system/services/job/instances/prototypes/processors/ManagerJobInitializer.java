@@ -130,8 +130,6 @@ public class ManagerJobInitializer extends AJobInitializer {
         if (ValueUtil.isAnyNullOrEmpty(parameter_accountAuthorizationID)) {
             accountAuthorization = content.getCache(parameter_accountAuthorizationID);
         }
-        Map<String, String> parameter_EnvironmentVariables = content.getParameterOrDefault(Map.class,
-                "environmentVariables", null);
         UUID parameter_FileIndex = content.getParameterOrDefault(UUID.class, "fileIndex", null);
         Map<Long, Integer> parameter_Limits = content.getParameterOrDefault(Map.class, "limits", null);
         String parameter_Parameters = content.getParameterOrDefault(String.class, "parameters", null);
@@ -144,8 +142,8 @@ public class ManagerJobInitializer extends AJobInitializer {
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject process = processManager.create(accountAuthorization, parameter_EnvironmentVariables, parameter_FileIndex,
-                parameter_Limits, parameter_Parameters, parameter_Privileges, null, workFolder);
+        ProcessObject process = processManager.create(accountAuthorization, parameter_FileIndex, parameter_Limits,
+                parameter_Parameters, parameter_Privileges, null, workFolder);
 
         UUID handle = process.cache(SpaceType.USER);
         content.setResult("handle", handle);

@@ -1,17 +1,14 @@
 package indi.sly.system.kernel.processes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.AManager;
-import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
@@ -20,9 +17,6 @@ import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.instances.prototypes.processors.SessionTypeInitializer;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -41,10 +35,10 @@ public class SessionManager extends AManager {
 
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
-            long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SENT_AND_INHERITED,
-                    TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_AUDIT,
-                    TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
-                    TypeInitializerAttributeType.HAS_PROPERTIES);
+            long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,
+                    TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CONTENT,
+                    TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES,
+                    TypeInitializerAttributeType.TEMPORARY);
             Set<UUID> childTypes = Set.of();
             AInfoTypeInitializer typeInitializer = this.factoryManager.create(SessionTypeInitializer.class);
 
@@ -59,21 +53,6 @@ public class SessionManager extends AManager {
 
     @Override
     public void check() {
-        BootObject boot = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, BootObject.class);
-
-        if (LogicalUtil.isAnyEqual(boot.getStartupStatus(), StartupType.SHUTDOWN, StartupType.STEP_INIT_SELF,
-                StartupType.STEP_AFTER_SELF, StartupType.STEP_INIT_KERNEL)) {
-            return;
-        }
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USER_SESSION)) {
-            throw new ConditionRefuseException();
-        }
     }
 
     public SessionContentObject getAndOpen(UUID id) {

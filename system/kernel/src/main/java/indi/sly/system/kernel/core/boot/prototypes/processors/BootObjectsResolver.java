@@ -91,10 +91,9 @@ public class BootObjectsResolver extends ABootResolver {
                 InfoObject rootInfo = objectManager.get(List.of());
                 Set<InfoSummaryDefinition> infoSummaries = rootInfo.queryChild((InfoSummaryDefinition infoSummary) -> true);
 
-                String[] childFolderNames = new String[]{"Audits", "Files", "Sessions"};
+                String[] childFolderNames = new String[]{"Audits", "Files"};
                 UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
-                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
-                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};
+                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID};
 
                 boolean isExist = false;
                 for (int i = 0; i < childFolderNames.length; i++) {
@@ -115,8 +114,9 @@ public class BootObjectsResolver extends ABootResolver {
                     isExist = false;
                 }
 
-                childFolderNames = new String[]{"Ports", "Signals"};
+                childFolderNames = new String[]{"Ports", "Signals", "Sessions"};
                 childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                         kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};
 
                 isExist = false;

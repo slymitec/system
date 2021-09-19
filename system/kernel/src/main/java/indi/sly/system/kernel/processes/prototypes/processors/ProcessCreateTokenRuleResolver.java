@@ -72,6 +72,7 @@ public class ProcessCreateTokenRuleResolver extends AProcessCreateResolver {
             if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
                 SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
                 SessionContentObject sessionContent = sessionManager.getAndOpen(sessionID);
+
                 long sessionContentType = sessionContent.getType();
                 if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.API)) {
                     roles.add(configuration.SECURITY_ROLE_API_ID);
@@ -80,6 +81,7 @@ public class ProcessCreateTokenRuleResolver extends AProcessCreateResolver {
                 } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.CLI)) {
                     roles.add(configuration.SECURITY_ROLE_CLI_ID);
                 }
+
                 sessionContent.close();
             }
 

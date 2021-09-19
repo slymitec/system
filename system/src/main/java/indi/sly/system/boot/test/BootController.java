@@ -38,7 +38,7 @@ public class BootController extends ABase {
 
     @RequestMapping(value = {"/Boot.action", "/Boot.do"}, method = {RequestMethod.GET})
     @Transactional
-    public String Boot(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    public String boot(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         if (!ValueUtil.isAnyNullOrEmpty(this.ret)) {
             return "----Boot-Already-Finished----";
         }

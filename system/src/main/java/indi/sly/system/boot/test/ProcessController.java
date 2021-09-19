@@ -26,6 +26,21 @@ public class ProcessController extends AController {
         Object ret = result;
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+
+        ret = process;
+
+        return ret;
+    }
+
+    @RequestMapping(value = {"/ProcessShut.action"}, method = {RequestMethod.GET})
+    @Transactional
+    public Object processShut(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        this.init(request, response, session);
+
+        Object ret;
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ret = processManager.getCurrent().getID();
 

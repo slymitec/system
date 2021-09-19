@@ -11,7 +11,7 @@ public class PermissionQueryDefinition extends ADefinition<PermissionQueryDefini
 
     private boolean privilege;
     private boolean role;
-    private PermissionCustomPredicate customDeny;
+    private PermissionCustomPredicate customDenyFunc;
 
     public boolean isPrivilege() {
         return this.privilege;
@@ -29,12 +29,12 @@ public class PermissionQueryDefinition extends ADefinition<PermissionQueryDefini
         this.role = role;
     }
 
-    public PermissionCustomPredicate getCustomDeny() {
-        return this.customDeny;
+    public PermissionCustomPredicate getCustomDenyFunc() {
+        return this.customDenyFunc;
 
     }
 
-    public void setCustomDeny(PermissionCustomPredicate customDeny) {
-        this.customDeny = customDeny;
+    public void setCustomDenyFunc(PermissionCustomPredicate customDenyFunc) {
+        this.customDenyFunc = customDenyFunc;
     }
 }

@@ -1,6 +1,8 @@
 package indi.sly.system.boot.test;
 
 import indi.sly.system.common.ABase;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.FactoryManager;
@@ -31,6 +33,10 @@ public abstract class AController extends ABase {
         String processIDText = request.getParameter("ProcessID");
         if (!ValueUtil.isAnyNullOrEmpty(processIDText)) {
             processID = UUIDUtil.getFromString(processIDText);
+
+            if (ObjectUtil.isAnyNull(processID)) {
+                throw new ConditionParametersException();
+            }
         }
 
         this.init(request, response, session, processID);
@@ -38,7 +44,7 @@ public abstract class AController extends ABase {
 
     public final void init(HttpServletRequest request, HttpServletResponse response, HttpSession session, UUID processID) {
         if (ValueUtil.isAnyNullOrEmpty(bootController.getRet())) {
-            this.bootController.Boot(request, response, session);
+            this.bootController.boot(request, response, session);
         }
 
         this.kernelConfiguration = this.kernelSpaceDefinition.getConfiguration();

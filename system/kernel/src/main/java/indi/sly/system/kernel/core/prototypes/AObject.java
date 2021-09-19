@@ -55,27 +55,7 @@ public class AObject extends APrototype {
     }
 
     public final UUID cache(long space) {
-        if (LogicalUtil.isAnyEqual(space, SpaceType.KERNEL)) {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrent();
-            ProcessTokenObject processToken = process.getToken();
-
-            if (!processToken.isPrivileges(PrivilegeType.CORE_CACHE_OBJECT_IN_KERNEL_SPACE)) {
-                throw new ConditionRefuseException();
-            }
-        }
-
-        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
-
-        if (!ValueUtil.isAnyNullOrEmpty(this.handle)) {
-            throw new StatusAlreadyFinishedException();
-        }
-
-        this.handle = UUIDUtil.createRandom();
-
-        coreObjectRepository.addByHandle(space, this.handle, this);
-
-        return this.handle;
+        return this.cache(space, UUIDUtil.createRandom());
     }
 
     public final void uncache(long space) {

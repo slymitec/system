@@ -31,7 +31,6 @@ public class PermissionQueryDefinition extends ADefinition<PermissionQueryDefini
 
     public PermissionCustomPredicate getCustomDenyFunc() {
         return this.customDenyFunc;
-
     }
 
     public void setCustomDenyFunc(PermissionCustomPredicate customDenyFunc) {

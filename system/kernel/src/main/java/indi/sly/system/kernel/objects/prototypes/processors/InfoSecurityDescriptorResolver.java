@@ -8,6 +8,7 @@ import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -56,7 +57,9 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
 
                 info.setSecurityDescriptor(source);
             });
-            securityDescriptor.setLock((lock) -> type.getInitializer().lockProcedure(info, lock));
+
+            AInfoTypeInitializer infoTypeInitializer = type.getInitializer();
+            securityDescriptor.setLock((lock) -> infoTypeInitializer.lockProcedure(info, lock));
 
             securityDescriptor.setIdentifications(status.getIdentifications());
             securityDescriptor.setPermission(type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION));
@@ -103,7 +106,7 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             return index;
         };
 
-        this.createChildAndOpen = (childInfo, info, type, status, childTypeID, identification) -> {
+        this.createChild = (childInfo, info, type, status, childTypeID, identification) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
@@ -259,7 +262,7 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
     private final InfoProcessorSecurityDescriptorFunction securityDescriptor;
     private final InfoProcessorDumpFunction dump;
     private final InfoProcessorOpenFunction open;
-    private final InfoProcessorCreateChildAndOpenFunction createChildAndOpen;
+    private final InfoProcessorCreateChildFunction createChild;
     private final InfoProcessorGetOrRebuildChildFunction getOrRebuildChild;
     private final InfoProcessorDeleteChildConsumer deleteChild;
     private final InfoProcessorQueryChildFunction queryChild;
@@ -284,7 +287,7 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
         processorMediator.setSecurityDescriptor(this.securityDescriptor);
         processorMediator.getDumps().add(this.dump);
         processorMediator.getOpens().add(this.open);
-        processorMediator.getCreateChildAndOpens().add(this.createChildAndOpen);
+        processorMediator.getCreateChilds().add(this.createChild);
         processorMediator.getGetOrRebuildChilds().add(this.getOrRebuildChild);
         processorMediator.getDeleteChilds().add(this.deleteChild);
         processorMediator.getQueryChilds().add(this.queryChild);

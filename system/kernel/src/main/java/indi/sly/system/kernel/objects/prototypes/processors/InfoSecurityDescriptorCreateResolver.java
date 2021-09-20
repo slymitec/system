@@ -4,7 +4,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
-import indi.sly.system.kernel.objects.lang.InfoProcessorCreateChildAndOpenFunction;
+import indi.sly.system.kernel.objects.lang.InfoProcessorCreateChildFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -19,7 +19,7 @@ import javax.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoSecurityDescriptorCreateResolver extends AInfoResolver {
     public InfoSecurityDescriptorCreateResolver() {
-        this.createChildAndOpen = (childInfo, info, type, status, childTypeID, identification) -> {
+        this.createChild = (childInfo, info, type, status, childTypeID, identification) -> {
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
             TypeObject childType = typeManager.get(childTypeID);
 
@@ -45,7 +45,7 @@ public class InfoSecurityDescriptorCreateResolver extends AInfoResolver {
         };
     }
 
-    private final InfoProcessorCreateChildAndOpenFunction createChildAndOpen;
+    private final InfoProcessorCreateChildFunction createChild;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
@@ -58,7 +58,7 @@ public class InfoSecurityDescriptorCreateResolver extends AInfoResolver {
             }
         }
 
-        processorMediator.getCreateChildAndOpens().add(this.createChildAndOpen);
+        processorMediator.getCreateChilds().add(this.createChild);
     }
 
     @Override

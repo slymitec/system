@@ -210,11 +210,11 @@ public class InfoObject extends AObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject typeObject = typeManager.get(this.getType());
 
-        List<InfoProcessorCreateChildAndOpenFunction> resolvers = this.processorMediator.getCreateChildAndOpens();
+        List<InfoProcessorCreateChildFunction> resolvers = this.processorMediator.getCreateChilds();
 
         InfoEntity childInfo = null;
 
-        for (InfoProcessorCreateChildAndOpenFunction resolver : resolvers) {
+        for (InfoProcessorCreateChildFunction resolver : resolvers) {
             childInfo = resolver.apply(childInfo, info, typeObject, this.status, type, identification);
         }
 

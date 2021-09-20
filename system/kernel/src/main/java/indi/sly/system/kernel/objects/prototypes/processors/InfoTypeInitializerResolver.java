@@ -58,7 +58,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             type.getInitializer().closeProcedure(info, processInfoEntry.getOpen());
         };
 
-        this.createChildAndOpen = (childInfo, info, type, status, childType, identification) -> {
+        this.createChild = (childInfo, info, type, status, childType, identification) -> {
             if (ObjectUtil.isAnyNull(childInfo)) {
                 childInfo = new InfoEntity();
             }
@@ -254,7 +254,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
     private final InfoProcessorDumpFunction dump;
     private final InfoProcessorOpenFunction open;
     private final InfoProcessorCloseConsumer close;
-    private final InfoProcessorCreateChildAndOpenFunction createChildAndOpen;
+    private final InfoProcessorCreateChildFunction createChild;
     private final InfoProcessorGetOrRebuildChildFunction getOrRebuildChild;
     private final InfoProcessorDeleteChildConsumer deleteChild;
     private final InfoProcessorQueryChildFunction queryChild;
@@ -270,7 +270,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
         processorMediator.getDumps().add(this.dump);
         processorMediator.getOpens().add(this.open);
         processorMediator.getCloses().add(this.close);
-        processorMediator.getCreateChildAndOpens().add(this.createChildAndOpen);
+        processorMediator.getCreateChilds().add(this.createChild);
         processorMediator.getGetOrRebuildChilds().add(this.getOrRebuildChild);
         processorMediator.getDeleteChilds().add(this.deleteChild);
         processorMediator.getQueryChilds().add(this.queryChild);

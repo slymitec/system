@@ -16,7 +16,7 @@ public class InfoProcessorMediator extends AMediator {
         this.dumps = new ArrayList<>();
         this.opens = new ArrayList<>();
         this.closes = new ArrayList<>();
-        this.createChildAndOpens = new ArrayList<>();
+        this.createChilds = new ArrayList<>();
         this.getOrRebuildChilds = new ArrayList<>();
         this.deleteChilds = new ArrayList<>();
         this.queryChilds = new ArrayList<>();
@@ -34,7 +34,7 @@ public class InfoProcessorMediator extends AMediator {
     private final List<InfoProcessorDumpFunction> dumps;
     private final List<InfoProcessorOpenFunction> opens;
     private final List<InfoProcessorCloseConsumer> closes;
-    private final List<InfoProcessorCreateChildAndOpenFunction> createChildAndOpens;
+    private final List<InfoProcessorCreateChildFunction> createChilds;
     private final List<InfoProcessorGetOrRebuildChildFunction> getOrRebuildChilds;
     private final List<InfoProcessorDeleteChildConsumer> deleteChilds;
     private final List<InfoProcessorQueryChildFunction> queryChilds;
@@ -81,8 +81,8 @@ public class InfoProcessorMediator extends AMediator {
         return this.closes;
     }
 
-    public List<InfoProcessorCreateChildAndOpenFunction> getCreateChildAndOpens() {
-        return this.createChildAndOpens;
+    public List<InfoProcessorCreateChildFunction> getCreateChilds() {
+        return this.createChilds;
     }
 
     public List<InfoProcessorGetOrRebuildChildFunction> getGetOrRebuildChilds() {

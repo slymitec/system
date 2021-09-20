@@ -9,6 +9,6 @@ import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 import java.util.UUID;
 
 @FunctionalInterface
-public interface InfoProcessorCreateChildAndOpenFunction extends Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject,
+public interface InfoProcessorCreateChildFunction extends Function6<InfoEntity, InfoEntity, InfoEntity, TypeObject,
         InfoStatusDefinition, UUID, IdentificationDefinition> {
 }

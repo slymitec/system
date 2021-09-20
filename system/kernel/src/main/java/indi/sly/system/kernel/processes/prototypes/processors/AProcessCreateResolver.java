@@ -16,10 +16,10 @@ public abstract class AProcessCreateResolver extends AResolver {
 
 /*
 ProcessCreateCheckResolver		    0
-ProcessCreateContextResolver		2
-ProcessCreateInfoTableResolver		3
-ProcessCreateNotifyParentResolver	4
 ProcessCreateSessionResolver		1
 ProcessCreateStatisticsResolver		1
 ProcessCreateTokenResolver	    	1
+ProcessCreateContextResolver		2
+ProcessCreateInfoTableResolver		3
+ProcessCreateNotifyParentResolver	4
  */

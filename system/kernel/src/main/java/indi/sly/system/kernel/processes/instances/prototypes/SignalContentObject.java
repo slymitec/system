@@ -33,7 +33,7 @@ public class SignalContentObject extends AInfoContentObject {
 
     public Set<UUID> getSourceProcessIDs() {
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             return CollectionUtil.unmodifiable(this.signal.getSourceProcessIDs());
@@ -63,7 +63,7 @@ public class SignalContentObject extends AInfoContentObject {
 
     public long getLimit() {
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             return this.signal.getLimit();

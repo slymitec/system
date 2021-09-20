@@ -6,9 +6,11 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.*;
@@ -149,16 +151,23 @@ public class InfoObject extends AObject {
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
+        AInfoTypeInitializer infoTypeInitializer = type.getInitializer();
 
         List<InfoProcessorOpenFunction> resolvers = this.processorMediator.getOpens();
 
         UUID index = UUIDUtil.getEmpty();
 
-        for (InfoProcessorOpenFunction resolver : resolvers) {
-            index = resolver.apply(index, info, type, this.status, openAttribute, arguments);
-            if (ObjectUtil.isAnyNull(index)) {
-                throw new StatusUnexpectedException();
+        try {
+            infoTypeInitializer.lockProcedure(info, LockType.WRITE);
+
+            for (InfoProcessorOpenFunction resolver : resolvers) {
+                index = resolver.apply(index, info, type, this.status, openAttribute, arguments);
+                if (ObjectUtil.isAnyNull(index)) {
+                    throw new StatusUnexpectedException();
+                }
             }
+        } finally {
+            infoTypeInitializer.lockProcedure(info, LockType.NONE);
         }
 
         return index;
@@ -169,11 +178,18 @@ public class InfoObject extends AObject {
 
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
+        AInfoTypeInitializer infoTypeInitializer = type.getInitializer();
 
         List<InfoProcessorCloseConsumer> resolvers = this.processorMediator.getCloses();
 
-        for (InfoProcessorCloseConsumer resolver : resolvers) {
-            resolver.accept(info, type, this.status);
+        try {
+            infoTypeInitializer.lockProcedure(info, LockType.WRITE);
+
+            for (InfoProcessorCloseConsumer resolver : resolvers) {
+                resolver.accept(info, type, this.status);
+            }
+        } finally {
+            infoTypeInitializer.lockProcedure(info, LockType.NONE);
         }
     }
 

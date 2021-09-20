@@ -23,7 +23,7 @@ public class SessionContentObject extends AInfoContentObject {
 
     public long getType() {
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             return this.session.getType();
@@ -47,7 +47,7 @@ public class SessionContentObject extends AInfoContentObject {
 
     public UUID getAccountID() {
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             return this.session.getAccountID();
@@ -58,7 +58,7 @@ public class SessionContentObject extends AInfoContentObject {
 
     public Set<UUID> getProcessIDs() {
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             return CollectionUtil.unmodifiable(this.session.getProcessIDs());
@@ -107,7 +107,7 @@ public class SessionContentObject extends AInfoContentObject {
 
     public Map<String, String> getEnvironmentVariables() {
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             return CollectionUtil.unmodifiable(this.session.getEnvironmentVariables());
@@ -136,7 +136,7 @@ public class SessionContentObject extends AInfoContentObject {
 
     public Map<String, String> getParameters() {
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
 

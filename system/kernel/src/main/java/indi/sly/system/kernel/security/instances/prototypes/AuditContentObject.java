@@ -27,21 +27,36 @@ public class AuditContentObject extends AInfoContentObject {
     private AuditDefinition audit;
 
     public UUID getProcessID() {
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        return this.audit.getProcessID();
+            return this.audit.getProcessID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public UUID getAccountID() {
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        return this.audit.getAccountID();
+            return this.audit.getAccountID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public List<IdentificationDefinition> getIdentifications() {
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        return CollectionUtil.unmodifiable(this.audit.getIdentifications());
+            return CollectionUtil.unmodifiable(this.audit.getIdentifications());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setIdentifications(List<IdentificationDefinition> identifications) {
@@ -63,9 +78,14 @@ public class AuditContentObject extends AInfoContentObject {
     }
 
     public Set<UserIDDefinition> getUserIDs() {
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        return CollectionUtil.unmodifiable(this.audit.getUserIDs());
+            return CollectionUtil.unmodifiable(this.audit.getUserIDs());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setUserIDs(Set<UserIDDefinition> userUDs) {
@@ -87,9 +107,14 @@ public class AuditContentObject extends AInfoContentObject {
     }
 
     public long getAudit() {
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        return this.audit.getAudit();
+            return this.audit.getAudit();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setAudit(long audit) {

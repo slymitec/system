@@ -32,7 +32,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
 
     public long length() {
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             long length = -1;
@@ -63,7 +63,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
         byte[] value = null;
 
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {

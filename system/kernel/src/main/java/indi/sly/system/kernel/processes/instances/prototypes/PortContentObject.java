@@ -27,7 +27,7 @@ public class PortContentObject extends AInfoContentObject {
 
     public Set<UUID> getSourceProcessIDs() {
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             return CollectionUtil.unmodifiable(this.port.getSourceProcessIDs());

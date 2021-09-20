@@ -1,8 +1,10 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeCounterObject;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.lang.InfoProcessorCloseConsumer;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
@@ -26,7 +28,10 @@ public class InfoOpenOrCloseResolver extends AInfoResolver {
                 typeCount.addTotalOccupiedCount();
             }
 
+            AInfoTypeInitializer infoTypeInitializer = type.getInitializer();
+            infoTypeInitializer.lockProcedure(info, LockType.WRITE);
             info.setOpened(info.getOpened() + 1);
+            infoTypeInitializer.lockProcedure(info, LockType.NONE);
 
             return index;
         };
@@ -37,7 +42,10 @@ public class InfoOpenOrCloseResolver extends AInfoResolver {
                 typeCount.minusTotalOccupiedCount();
             }
 
+            AInfoTypeInitializer infoTypeInitializer = type.getInitializer();
+            infoTypeInitializer.lockProcedure(info, LockType.WRITE);
             info.setOpened(info.getOpened() - 1);
+            infoTypeInitializer.lockProcedure(info, LockType.NONE);
 
             if (!status.getIdentifications().isEmpty()) {
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.TEMPORARY) && info.getOpened() <= 0) {

@@ -13,16 +13,17 @@ import javax.inject.Named;
 public abstract class AInfoResolver extends AResolver {
     public abstract void resolve(InfoEntity info, InfoProcessorMediator processorMediator);
 }
-
-//InfoSelfResolver			                0
-//InfoParentResolver		            	0
-//InfoCheckConditionResolver	        	0
-//InfoProcessInfoTableResolver	    	    1
-//InfoOpenOrCloseResolver		    	    1
-//InfoSecurityDescriptorResolver	    	1
-//InfoDumpResolver		                	2
-//InfoTypeInitializerResolver	            2
-//InfoProcessInfoTableCloseResolver         3
-//InfoProcessAndThreadStatisticsResolver    3
-//InfoDateResolver		                	3
-//InfoSecurityDescriptorCreateResolver  	3
+/*
+InfoSelfResolver                        0
+InfoParentResolver		            	0
+InfoCheckConditionResolver              0
+InfoProcessInfoTableResolver            1
+InfoOpenOrCloseResolver		    	    1
+InfoSecurityDescriptorResolver	    	1
+InfoDumpResolver                        2
+InfoTypeInitializerResolver	            2
+InfoProcessInfoTableCloseResolver       3
+InfoProcessAndThreadStatisticsResolver  3
+InfoDateResolver                        3
+InfoSecurityDescriptorCreateResolver  	3
+ */

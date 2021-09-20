@@ -29,6 +29,10 @@ public class InfoCheckConditionResolver extends AInfoResolver {
                 throw new StatusNotSupportedException();
             }
 
+            if (status.getIdentifications().isEmpty()) {
+                throw new StatusNotSupportedException();
+            }
+
             return index;
         };
 

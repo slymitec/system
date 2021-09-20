@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusNotReadyException;
-import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.kernel.objects.lang.InfoProcessorExecuteContentConsumer;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorReadContentFunction;
@@ -25,10 +24,6 @@ public class InfoProcessInfoTableResolver extends AInfoResolver {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
-
-            if (status.getIdentifications().isEmpty()) {
-                throw new StatusNotSupportedException();
-            }
 
             ProcessInfoEntryObject processInfoEntry = processInfoTable.create(info.getID(), status, openAttribute);
 

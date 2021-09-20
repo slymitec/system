@@ -6,7 +6,7 @@ public abstract class LogicalUtil {
             throw new NullPointerException();
         }
 
-        long result = -1;
+        long result = -1L;
 
         for (long value : values) {
             result = result & value;
@@ -20,7 +20,7 @@ public abstract class LogicalUtil {
             throw new NullPointerException();
         }
 
-        long result = 0;
+        long result = 0L;
 
         for (long value : values) {
             result = result | value;
@@ -30,7 +30,7 @@ public abstract class LogicalUtil {
     }
 
     public static boolean isAllExist(long source, long values) {
-        if (values == 0) {
+        if (values == 0L) {
             return source == values;
         } else if ((source & values) == values) {
             return true;
@@ -40,9 +40,9 @@ public abstract class LogicalUtil {
     }
 
     public static boolean isAnyExist(long source, long values) {
-        if (values == 0) {
+        if (values == 0L) {
             return source == values;
-        } else if ((source & values) == 0) {
+        } else if ((source & values) == 0L) {
             return false;
         } else {
             return true;
@@ -83,7 +83,7 @@ public abstract class LogicalUtil {
         }
 
         for (long value : values) {
-            if (value == 0 || ((value) & (value - 1)) != 0) {
+            if (value == 0L || ((value) & (value - 1)) != 0L) {
                 return false;
             }
         }

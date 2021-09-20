@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
+import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
@@ -27,8 +28,11 @@ public class ProcessEndNotifyParentResolver extends AProcessEndResolver {
                 UUID signalID = parentProcessCommunication.getSignalID();
 
                 if (!ValueUtil.isAnyNullOrEmpty(signalID)) {
-                    processCommunication.sendSignal(signalID, SignalType.TYPE_PROCESS,
-                            LogicalUtil.or(SignalType.ACTION_DELETE, SignalType.RESULT_SUCCESS));
+                    try {
+                        processCommunication.sendSignal(signalID, SignalType.TYPE_PROCESS,
+                                LogicalUtil.or(SignalType.ACTION_DELETE, SignalType.RESULT_SUCCESS));
+                    } catch (AKernelException ignored) {
+                    }
                 }
             }
 

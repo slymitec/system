@@ -1,9 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.lang.StatusAlreadyFinishedException;
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
@@ -268,6 +265,33 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
                     new IdentificationDefinition(sessionID));
 
             InfoObject sessionInfo = objectManager.get(identifications);
+
+            SecurityDescriptorObject sessionSecurityDescriptor = sessionInfo.getSecurityDescriptor();
+
+            boolean allow;
+            try {
+                sessionSecurityDescriptor.checkPermission(PermissionType.LISTCHILD_READDATA_ALLOW);
+                sessionSecurityDescriptor.checkPermission(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
+
+                allow = true;
+            } catch (AKernelException ignored) {
+                allow = false;
+            }
+
+            if (!allow) {
+                ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+                ProcessObject process = processManager.getCurrent();
+                ProcessTokenObject processToken = process.getToken();
+
+                Set<AccessControlDefinition> permissions = new HashSet<>();
+                AccessControlDefinition permission = new AccessControlDefinition();
+                permission.getUserID().setID(processToken.getAccountID());
+                permission.getUserID().setType(UserType.ACCOUNT);
+                permission.setScope(AccessControlScopeType.THIS);
+                permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
+                permissions.add(permission);
+                sessionSecurityDescriptor.setPermissions(permissions);
+            }
 
             return (SessionContentObject) sessionInfo.getContent();
         } finally {

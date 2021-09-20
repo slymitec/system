@@ -1,5 +1,7 @@
 package indi.sly.system.boot.test;
 
+import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.*;
@@ -13,13 +15,14 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @Transactional
 public class ProcessController extends AController {
-    @RequestMapping(value = {"/ProcessTest.action"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/ProcessSession.action"}, method = {RequestMethod.GET})
     @Transactional
-    public Object processTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    public Object processSession(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init(request, response, session);
 
         Map<String, Object> result = new HashMap<>();
@@ -27,8 +30,13 @@ public class ProcessController extends AController {
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
+        ProcessSessionObject processSession = process.getSession();
 
-        ret = process;
+        if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+            processSession.close();
+        }
+
+        ret = processSession.getID();
 
         return ret;
     }
@@ -42,9 +50,18 @@ public class ProcessController extends AController {
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ret = processManager.getCurrent().getID();
+        UUID processID = processManager.getCurrent().getID();
+
+        if (processID.equals(this.kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID)) {
+            String processIDText = request.getParameter("override");
+            if (!"true".equals(processIDText)) {
+                throw new ConditionRefuseException();
+            }
+        }
 
         processManager.endCurrent();
+
+        ret = processID;
 
         return ret;
     }

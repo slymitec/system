@@ -76,4 +76,18 @@ public abstract class LogicalUtil {
 
         return true;
     }
+
+    public static boolean isAllSingleValue(long... values) {
+        if (ObjectUtil.isAnyNull(values) || values.length == 0) {
+            return false;
+        }
+
+        for (long value : values) {
+            if (value == 0 || ((value) & (value - 1)) != 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

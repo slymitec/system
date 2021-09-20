@@ -34,7 +34,8 @@ public class InitController extends AController {
     public Object initTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init(request, response, session);
 
-        Object ret = "finished";
+        Map<String, Object> result = new HashMap<>();
+        Object ret = result;
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -78,16 +79,12 @@ public class InitController extends AController {
 
         AccountAuthorizationObject accountAuthorization = userManager.authorize("Sly", null);
 
-        //try {
         UUID handle = execInfo.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
-        ProcessObject processObject = processManager.create(accountAuthorization, PrivilegeType.NULL, null,
+        ProcessObject process = processManager.create(accountAuthorization, PrivilegeType.NULL, null,
                 handle, null, null);
 
-        ret = processObject.getID();
-//        } catch (Exception ignored) {
-//            ret = "已创建 " + ignored.getClass().getName();
-//        }
+        result.put("ProcessID", process.getID());
 
         return ret;
     }

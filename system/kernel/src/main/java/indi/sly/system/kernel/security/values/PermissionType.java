@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.security.values;
 
 public interface PermissionType {
-    long NULL = 0;
+    long NULL = 0L;
 
     long LISTCHILD_READDATA_ALLOW = 1L;
     long TRAVERSE_EXECUTE_ALLOW = 1L << 2;

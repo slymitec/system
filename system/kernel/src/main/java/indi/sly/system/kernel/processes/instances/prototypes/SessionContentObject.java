@@ -1,16 +1,12 @@
 package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
 
 import java.util.Map;
@@ -26,9 +22,14 @@ public class SessionContentObject extends AInfoContentObject {
     private SessionDefinition session;
 
     public long getType() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.session.getType();
+            return this.session.getType();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setType(long type) {
@@ -45,24 +46,25 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public UUID getAccountID() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return this.session.getAccountID();
+            return this.session.getAccountID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public Set<UUID> getProcessIDs() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessTokenObject processToken = process.getToken();
-
-        if (!processToken.getAccountID().equals(this.session.getAccountID())) {
-            throw new ConditionRefuseException();
+            return CollectionUtil.unmodifiable(this.session.getProcessIDs());
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        return CollectionUtil.unmodifiable(this.session.getProcessIDs());
     }
 
     public void addProcessID(UUID processID) {
@@ -104,9 +106,14 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public Map<String, String> getEnvironmentVariables() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return CollectionUtil.unmodifiable(this.session.getEnvironmentVariables());
+            return CollectionUtil.unmodifiable(this.session.getEnvironmentVariables());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setEnvironmentVariables(Map<String, String> environment) {
@@ -128,9 +135,15 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     public Map<String, String> getParameters() {
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        return CollectionUtil.unmodifiable(this.session.getParameters());
+
+            return CollectionUtil.unmodifiable(this.session.getParameters());
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setParameters(Map<String, String> parameters) {

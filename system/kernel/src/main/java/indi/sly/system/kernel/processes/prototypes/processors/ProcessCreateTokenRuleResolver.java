@@ -67,7 +67,7 @@ public class ProcessCreateTokenRuleResolver extends AProcessCreateResolver {
             }
 
             if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-                long sessionContentType = processSession.getType();
+                long sessionContentType = processSession.getContent().getType();
                 if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.API)) {
                     roles.add(configuration.SECURITY_ROLE_API_ID);
                 } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.GUI)) {

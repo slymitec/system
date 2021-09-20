@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
+import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
@@ -13,7 +14,6 @@ import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.SessionManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
@@ -61,21 +61,15 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             SecurityDescriptorObject securityDescriptor = sessionInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
-            permission.getUserID().setID(this.parent.getID());
-            permission.getUserID().setType(UserType.PROCESS);
-            permission.setScope(AccessControlScopeType.THIS);
-            permission.setValue(PermissionType.FULLCONTROL_ALLOW);
-            permissions.add(permission);
-            permission = new AccessControlDefinition();
             permission.getUserID().setID(processToken.getAccountID());
             permission.getUserID().setType(UserType.ACCOUNT);
             permission.setScope(AccessControlScopeType.THIS);
-            permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
+            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
             permissions.add(permission);
             securityDescriptor.setPermissions(permissions);
 
             SessionContentObject sessionContent = (SessionContentObject) sessionInfo.getContent();
-            //signalContent.setSourceProcessIDs(sourceProcessIDs);
+            sessionContent.addProcessID(this.parent.getID());
 
             ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
             ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(sessionInfo.getID());
@@ -89,7 +83,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
         }
     }
 
-    public void delete() {
+    public void close() {
         if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
@@ -104,6 +98,15 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
                 throw new StatusAlreadyFinishedException();
             }
+
+            List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
+                    new IdentificationDefinition(sessionID));
+
+            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+            InfoObject sessionInfo = objectManager.get(identifications);
+
+            SessionContentObject sessionContent = (SessionContentObject) sessionInfo.getContent();
+            sessionContent.deleteProcessID(this.parent.getID());
 
             ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
             if (processInfoTable.containByID(sessionID)) {
@@ -151,51 +154,28 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             this.lock(LockType.WRITE);
             this.init();
 
-            this.value.setSessionID(process.getSession().getID());
+            if (!ValueUtil.isAnyNullOrEmpty(this.value.getSessionID())) {
+                throw new StatusAlreadyFinishedException();
+            }
 
-            this.fresh();
-        } finally {
-            this.lock(LockType.NONE);
-        }
-    }
+            UUID sessionID = process.getSession().getID();
 
-    public void setID(UUID sessionID) {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
-                ProcessStatusType.RUNNING)) {
-            throw new StatusRelationshipErrorException();
-        }
+            if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
+                List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
+                        new IdentificationDefinition(sessionID));
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-        ProcessTokenObject processToken = process.getToken();
+                ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+                InfoObject sessionInfo = objectManager.get(identifications);
 
-        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
-                new IdentificationDefinition(sessionID));
+                sessionInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+                SessionContentObject sessionContent = (SessionContentObject) sessionInfo.getContent();
+                sessionContent.addProcessID(this.parent.getID());
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            InfoObject sessionInfo = objectManager.get(identifications);
-
-
-
-            this.fresh();
-        } finally {
-            this.lock(LockType.NONE);
-        }
-
-        SessionManager sessionManager = new SessionManager();
-        SessionContentObject sessionContent = sessionManager.getAndOpen(sessionID);
-        if (!sessionContent.getAccountID().equals(processToken.getAccountID())) {
-            throw new ConditionRefuseException();
-        }
-
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+                ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(sessionInfo.getID());
+                processInfoEntry.setUnsupportedDelete(true);
+            }
 
             this.value.setSessionID(sessionID);
 
@@ -205,11 +185,91 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
         }
     }
 
-    public Map<String, String> getEnvironmentVariables() {
-        return null;
+    public void setID(UUID sessionID) {
+        if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
+            throw new ConditionParametersException();
+        }
+
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.RUNNING)) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            List<IdentificationDefinition> newIdentifications = List.of(new IdentificationDefinition("Sessions"),
+                    new IdentificationDefinition(sessionID));
+
+            InfoObject newSessionInfo = objectManager.get(newIdentifications);
+
+            newSessionInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+
+            if (!ValueUtil.isAnyNullOrEmpty(this.value.getSessionID())) {
+                List<IdentificationDefinition> oldIdentifications = List.of(new IdentificationDefinition("Sessions"),
+                        new IdentificationDefinition(this.value.getSessionID()));
+
+                InfoObject oldSessionInfo = objectManager.get(oldIdentifications);
+
+                SessionContentObject sessionContent = (SessionContentObject) oldSessionInfo.getContent();
+                sessionContent.deleteProcessID(this.parent.getID());
+
+                ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
+                if (processInfoTable.containByID(sessionID)) {
+                    ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(sessionID);
+                    processInfoEntry.setUnsupportedDelete(false);
+
+                    InfoObject info = processInfoEntry.getInfo();
+                    info.close();
+                }
+
+                this.value.setSessionID(null);
+            }
+
+            SessionContentObject sessionContent = (SessionContentObject) newSessionInfo.getContent();
+            sessionContent.addProcessID(this.parent.getID());
+
+            ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(newSessionInfo.getID());
+            processInfoEntry.setUnsupportedDelete(true);
+
+            this.value.setSessionID(sessionID);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
-    public long getType() {
-        return 0;
+    public SessionContentObject getContent() {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
+                ProcessStatusType.RUNNING)) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            UUID sessionID = this.value.getSessionID();
+
+            if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
+                throw new StatusAlreadyFinishedException();
+            }
+
+            List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
+                    new IdentificationDefinition(sessionID));
+
+            InfoObject sessionInfo = objectManager.get(identifications);
+
+            return (SessionContentObject) sessionInfo.getContent();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 }

@@ -56,7 +56,7 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
             }
 
             if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-                processContext.setEnvironmentVariables(processSession.getEnvironmentVariables());
+                processContext.setEnvironmentVariables(processSession.getContent().getEnvironmentVariables());
             }
 
             if (!ValueUtil.isAnyNullOrEmpty(processCreator.getParameters())) {

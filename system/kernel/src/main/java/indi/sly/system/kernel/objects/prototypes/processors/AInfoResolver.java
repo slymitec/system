@@ -13,6 +13,7 @@ import javax.inject.Named;
 public abstract class AInfoResolver extends AResolver {
     public abstract void resolve(InfoEntity info, InfoProcessorMediator processorMediator);
 }
+
 /*
 InfoSelfResolver                        0
 InfoParentResolver		            	0

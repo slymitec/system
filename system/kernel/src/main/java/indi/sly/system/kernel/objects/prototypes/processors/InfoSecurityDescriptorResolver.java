@@ -3,7 +3,6 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.StatusDisabilityException;
 import indi.sly.system.common.lang.StatusOverflowException;
-import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -172,11 +171,12 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    securityDescriptor.checkPermission(LogicalUtil.or(PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.DELETECHILD_ALLOW));
+                    securityDescriptor.checkPermission(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
+                    securityDescriptor.checkPermission(PermissionType.DELETECHILD_ALLOW);
                 }
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)) {
-                    securityDescriptor.checkAudit(LogicalUtil.or(AuditType.CREATECHILD_WRITEDATA,
-                            AuditType.DELETECHILD));
+                    securityDescriptor.checkAudit(AuditType.CREATECHILD_WRITEDATA);
+                    securityDescriptor.checkAudit(AuditType.DELETECHILD);
                 }
             }
         };

@@ -494,7 +494,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
     }
 
     public void checkAudit(long audit) {
-        if (LogicalUtil.isAllExist(audit, AuditType.NULL)) {
+        if (!LogicalUtil.isAllSingleValue(audit)) {
             throw new ConditionParametersException();
         }
         if (!this.audit) {

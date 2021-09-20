@@ -154,11 +154,13 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             this.lock(LockType.WRITE);
             this.init();
 
-            if (!ValueUtil.isAnyNullOrEmpty(this.value.getSessionID())) {
+            UUID sessionID = this.value.getSessionID();
+
+            if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
                 throw new StatusAlreadyFinishedException();
             }
 
-            UUID sessionID = process.getSession().getID();
+            sessionID = process.getSession().getID();
 
             if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
                 List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
@@ -208,18 +210,21 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
 
             newSessionInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
 
+            SessionContentObject newSessionContent = (SessionContentObject) newSessionInfo.getContent();
+            newSessionContent.addProcessID(this.parent.getID());
+
             if (!ValueUtil.isAnyNullOrEmpty(this.value.getSessionID())) {
                 List<IdentificationDefinition> oldIdentifications = List.of(new IdentificationDefinition("Sessions"),
                         new IdentificationDefinition(this.value.getSessionID()));
 
                 InfoObject oldSessionInfo = objectManager.get(oldIdentifications);
 
-                SessionContentObject sessionContent = (SessionContentObject) oldSessionInfo.getContent();
-                sessionContent.deleteProcessID(this.parent.getID());
+                SessionContentObject oldSessionContent = (SessionContentObject) oldSessionInfo.getContent();
+                oldSessionContent.deleteProcessID(this.parent.getID());
 
                 ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
-                if (processInfoTable.containByID(sessionID)) {
-                    ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(sessionID);
+                if (processInfoTable.containByID(this.value.getSessionID())) {
+                    ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(this.value.getSessionID());
                     processInfoEntry.setUnsupportedDelete(false);
 
                     InfoObject info = processInfoEntry.getInfo();
@@ -228,9 +233,6 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
 
                 this.value.setSessionID(null);
             }
-
-            SessionContentObject sessionContent = (SessionContentObject) newSessionInfo.getContent();
-            sessionContent.addProcessID(this.parent.getID());
 
             ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
             ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(newSessionInfo.getID());

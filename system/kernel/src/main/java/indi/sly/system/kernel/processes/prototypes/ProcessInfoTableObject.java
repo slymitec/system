@@ -33,8 +33,7 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfoTableDefinition, ProcessObject> {
     public synchronized Set<UUID> list() {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
-                ProcessStatusType.DIED)) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -53,8 +52,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new ConditionParametersException();
         }
 
-        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.INITIALIZATION)) {
+        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -99,8 +97,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
-                ProcessStatusType.DIED)) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -119,8 +116,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new ConditionParametersException();
         }
 
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING,
-                ProcessStatusType.DIED)) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -139,8 +135,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -174,8 +169,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -206,8 +200,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 

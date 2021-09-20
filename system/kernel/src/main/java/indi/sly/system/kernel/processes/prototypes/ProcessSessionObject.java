@@ -283,6 +283,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
                 ProcessObject process = processManager.getCurrent();
                 ProcessTokenObject processToken = process.getToken();
 
+                sessionSecurityDescriptor.setInherit(true);
                 Set<AccessControlDefinition> permissions = new HashSet<>();
                 AccessControlDefinition permission = new AccessControlDefinition();
                 permission.getUserID().setID(processToken.getAccountID());

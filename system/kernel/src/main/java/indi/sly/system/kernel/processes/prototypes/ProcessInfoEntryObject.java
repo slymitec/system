@@ -1,9 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.Provider;
-import indi.sly.system.common.lang.StatusDisabilityException;
-import indi.sly.system.common.lang.StatusNotExistedException;
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
@@ -33,31 +30,24 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
     protected UUID index;
 
     private boolean isExist() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            if (ValueUtil.isAnyNullOrEmpty(this.index)) {
-                return false;
-            } else {
-                return this.value.containByIndex(index);
-            }
-        } finally {
-            this.lock(LockType.NONE);
+        if (ValueUtil.isAnyNullOrEmpty(this.index)) {
+            return false;
+        } else {
+            return this.value.containByIndex(index);
         }
     }
 
     public synchronized UUID getIndex() {
-        if (!this.isExist()) {
-            throw new StatusNotExistedException();
-        }
-
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
         try {
             this.lock(LockType.WRITE);
             this.init();
+
+            if (!this.isExist()) {
+                throw new StatusNotExistedException();
+            }
 
             ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
@@ -71,13 +61,13 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
     }
 
     public synchronized Map<Long, Long> getDate() {
-        if (!this.isExist()) {
-            throw new StatusNotExistedException();
-        }
-
         try {
             this.lock(LockType.READ);
             this.init();
+
+            if (!this.isExist()) {
+                throw new StatusNotExistedException();
+            }
 
             ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
             Map<Long, Long> processInfoEntryDate = processInfoEntry.getDate();
@@ -89,10 +79,6 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
     }
 
     public synchronized List<IdentificationDefinition> getIdentifications() {
-        if (!this.isExist()) {
-            throw new StatusNotExistedException();
-        }
-
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -101,6 +87,10 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         try {
             this.lock(LockType.WRITE);
             this.init();
+
+            if (!this.isExist()) {
+                throw new StatusNotExistedException();
+            }
 
             ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
@@ -116,10 +106,6 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
     }
 
     public synchronized InfoOpenDefinition getOpen() {
-        if (!this.isExist()) {
-            throw new StatusNotExistedException();
-        }
-
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -128,6 +114,10 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         try {
             this.lock(LockType.WRITE);
             this.init();
+
+            if (!this.isExist()) {
+                throw new StatusNotExistedException();
+            }
 
             ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
@@ -143,10 +133,6 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
     }
 
     public synchronized boolean isUnsupportedDelete() {
-        if (!this.isExist()) {
-            throw new StatusNotExistedException();
-        }
-
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
@@ -155,6 +141,10 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         try {
             this.lock(LockType.WRITE);
             this.init();
+
+            if (!this.isExist()) {
+                throw new StatusNotExistedException();
+            }
 
             ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
@@ -170,16 +160,16 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
     }
 
     public synchronized void setUnsupportedDelete(boolean unsupportedDelete) {
-        if (!this.isExist()) {
-            throw new StatusNotExistedException();
-        }
-
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
         try {
             this.lock(LockType.WRITE);
             this.init();
+
+            if (!this.isExist()) {
+                throw new StatusNotExistedException();
+            }
 
             ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
@@ -193,9 +183,6 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
     }
 
     public synchronized InfoObject getInfo() {
-        if (!this.isExist()) {
-            throw new StatusNotExistedException();
-        }
         if (!this.isProcessCurrent.acquire()) {
             throw new StatusRelationshipErrorException();
         }
@@ -209,6 +196,10 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         try {
             this.lock(LockType.WRITE);
             this.init();
+
+            if (!this.isExist()) {
+                throw new StatusNotExistedException();
+            }
 
             ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(this.index);
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
@@ -238,6 +229,10 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         try {
             this.lock(LockType.WRITE);
             this.init();
+
+            if (!this.isExist()) {
+                throw new StatusAlreadyFinishedException();
+            }
 
             ProcessInfoEntryDefinition processInfoEntry = this.value.getByIndex(index);
 

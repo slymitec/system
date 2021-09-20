@@ -1,9 +1,9 @@
 package indi.sly.system.boot.test;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.prototypes.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,11 +32,27 @@ public class ProcessController extends AController {
         ProcessObject process = processManager.getCurrent();
         ProcessSessionObject processSession = process.getSession();
 
-        if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-            processSession.close();
-        }
+//        if (ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+//            processSession.create();
+//        }
 
-        ret = processSession.getID();
+        SessionContentObject sessionContent = processSession.getContent();
+
+
+
+        Map<String, String> parameters = new HashMap<>(sessionContent.getParameters());
+
+//        parameters.put("k1", "v1");
+//
+        sessionContent.setParameters(new HashMap<>());
+
+        result.put("sessionContentParameters", parameters);
+
+//        if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+//            processSession.close();
+//        }
+
+        //ret = processSession.getID();
 
         return ret;
     }

@@ -150,6 +150,10 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             this.lock(LockType.WRITE);
             this.init();
 
+            if (!this.containByIndex(index)) {
+                throw new StatusNotExistedException();
+            }
+
             processInfoEntry.setParent(this);
             processInfoEntry.setSource(() -> this.value, (ProcessInfoTableDefinition source) -> {
             });
@@ -213,6 +217,9 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             this.lock(LockType.READ);
             this.init();
 
+            if (this.containByID(id)) {
+                throw new StatusAlreadyExistedException();
+            }
             if (this.value.size() >= this.parent.getToken().getLimits().get(ProcessTokenLimitType.INDEX_MAX)) {
                 throw new StatusInsufficientResourcesException();
             }

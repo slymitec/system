@@ -1,8 +1,11 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.lang.StatusNotReadyException;
-import indi.sly.system.kernel.objects.lang.*;
+import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.kernel.objects.lang.InfoProcessorExecuteContentConsumer;
+import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
+import indi.sly.system.kernel.objects.lang.InfoProcessorReadContentFunction;
+import indi.sly.system.kernel.objects.lang.InfoProcessorWriteContentConsumer;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -23,8 +26,8 @@ public class InfoProcessInfoTableResolver extends AInfoResolver {
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (processInfoTable.containByID(info.getID())) {
-                throw new StatusAlreadyFinishedException();
+            if (status.getIdentifications().isEmpty()) {
+                throw new StatusNotSupportedException();
             }
 
             ProcessInfoEntryObject processInfoEntry = processInfoTable.create(info.getID(), status, openAttribute);

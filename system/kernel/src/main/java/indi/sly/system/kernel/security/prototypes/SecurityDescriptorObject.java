@@ -267,8 +267,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
     }
 
     private boolean denyPermission(long permission, PermissionQueryDefinition permissionQueryFunc) {
-        if (LogicalUtil.isAnyEqual(permission, PermissionType.NULL) || LogicalUtil.isAnyExist(permission,
-                PermissionType.FULLCONTROL_DENY) || !LogicalUtil.isAllSingleValue(permission)) {
+        if (!LogicalUtil.isAllSingleValue(permission) || LogicalUtil.isAnyExist(permission, PermissionType.FULLCONTROL_DENY)) {
             throw new ConditionParametersException();
         }
 

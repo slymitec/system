@@ -220,6 +220,6 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
 
     @Override
     public int order() {
-        return 3;
+        return 4;
     }
 }

@@ -1,20 +1,15 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeCounterObject;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.lang.InfoProcessorCloseConsumer;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
-import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -38,18 +33,6 @@ public class InfoOpenOrCloseResolver extends AInfoResolver {
             }
 
             info.setOpened(info.getOpened() - 1);
-
-            if (!status.getIdentifications().isEmpty()) {
-                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.TEMPORARY) && info.getOpened() <= 0) {
-                    List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
-                    IdentificationDefinition identification = identifications.remove(identifications.size() - 1);
-
-                    ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-                    InfoObject parentInfo = objectManager.get(identifications);
-
-                    parentInfo.deleteChild(identification);
-                }
-            }
         };
     }
 

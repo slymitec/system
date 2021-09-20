@@ -24,7 +24,8 @@ InfoSecurityDescriptorResolver	    	1
 InfoDumpResolver                        2
 InfoTypeInitializerResolver	            2
 InfoProcessInfoTableCloseResolver       3
-InfoProcessAndThreadStatisticsResolver  3
 InfoDateResolver                        3
 InfoSecurityDescriptorCreateResolver  	3
+InfoCloseThenDeleteIfTemporaryResolver  4
+InfoProcessAndThreadStatisticsResolver  4
  */

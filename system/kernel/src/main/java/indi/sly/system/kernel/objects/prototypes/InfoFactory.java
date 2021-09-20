@@ -40,6 +40,7 @@ public class InfoFactory extends AFactory {
     @Override
     public void init() {
         this.infoResolvers.add(this.factoryManager.create(InfoCheckConditionResolver.class));
+        this.infoResolvers.add(this.factoryManager.create(InfoCloseThenDeleteIfTemporaryResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoDateResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoDumpResolver.class));
         this.infoResolvers.add(this.factoryManager.create(InfoOpenOrCloseResolver.class));

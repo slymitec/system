@@ -2,6 +2,7 @@ package indi.sly.system.kernel.objects.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.Consumer1;
+import indi.sly.system.common.lang.Function1;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
@@ -121,6 +122,14 @@ public class InfoFactory extends AFactory {
         return this.buildInfo(info, poolID, parentInfo);
     }
 
+    public InfoObject buildInfo(InfoEntity info, InfoObject parentInfo,
+                                Function1<InfoObject, InfoObject> additionalProcess) {
+        if (ObjectUtil.isAnyNull(additionalProcess)) {
+            throw new ConditionParametersException();
+        }
+
+        return additionalProcess.apply(this.buildInfo(info, parentInfo));
+    }
 
     private DumpObject buildDump(InfoObject info, Provider<DumpDefinition> funcRead, Consumer1<DumpDefinition> funcWrite) {
         DumpObject dump = this.factoryManager.create(DumpObject.class);

@@ -222,11 +222,11 @@ public class InfoObject extends AObject {
             throw new StatusUnexpectedException();
         }
 
-        InfoObject childInfoObject = this.factory.buildInfo(childInfo, this);
-
-        childInfoObject.open(openAttribute, arguments);
-
-        return childInfoObject;
+        Object[] additionalArguments = arguments;
+        return this.factory.buildInfo(childInfo, this, additionalChildInfo -> {
+            additionalChildInfo.open(openAttribute, additionalArguments);
+            return additionalChildInfo;
+        });
     }
 
     public synchronized InfoObject getChild(IdentificationDefinition identification) {

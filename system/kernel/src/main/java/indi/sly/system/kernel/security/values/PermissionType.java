@@ -3,8 +3,6 @@ package indi.sly.system.kernel.security.values;
 public interface PermissionType {
     long NULL = 0;
 
-    /* Kernel: 0~31, User: 32~63 */
-
     long LISTCHILD_READDATA_ALLOW = 1L;
     long TRAVERSE_EXECUTE_ALLOW = 1L << 2;
     long CREATECHILD_WRITEDATA_ALLOW = 1L << 4;

@@ -1,60 +1,25 @@
 package indi.sly.system.kernel.processes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.kernel.core.AManager;
-import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.objects.ObjectManager;
-import indi.sly.system.kernel.objects.TypeManager;
-import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
-import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
-import indi.sly.system.kernel.processes.instances.prototypes.processors.SessionTypeInitializer;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SessionManager extends AManager {
-    @Override
-    public void startup(long startup) {
-        if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
-            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
-
-            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
-
-            long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,
-                    TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CONTENT,
-                    TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES,
-                    TypeInitializerAttributeType.TEMPORARY);
-            Set<UUID> childTypes = Set.of();
-            AInfoTypeInitializer typeInitializer = this.factoryManager.create(SessionTypeInitializer.class);
-
-            typeManager.create(kernelConfiguration.PROCESSES_CONTEXT_INSTANCE_SESSION_ID,
-                    kernelConfiguration.PROCESSES_CONTEXT_INSTANCE_SESSION_NAME, attribute, childTypes, typeInitializer);
-        }
-    }
-
-    @Override
-    public void shutdown() {
-    }
-
-    @Override
-    public void check() {
-    }
-
+public class SessionManager extends APrototype {
     public SessionContentObject getAndOpen(UUID id) {
         if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
@@ -80,13 +45,12 @@ public class SessionManager extends AManager {
     }
 
     public UUID create() {
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"));
 
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         InfoObject sessions = objectManager.get(identifications);
 
-        UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_CONTEXT_INSTANCE_SESSION_ID;
+        UUID typeID = this.factoryManager.getKernelSpace().getConfiguration().PROCESSES_SESSION_INSTANCE_ID;
 
         InfoObject session = sessions.createChildAndOpen(typeID, new IdentificationDefinition(UUIDUtil.createRandom()),
                 InfoOpenAttributeType.OPEN_SHARED_WRITE);

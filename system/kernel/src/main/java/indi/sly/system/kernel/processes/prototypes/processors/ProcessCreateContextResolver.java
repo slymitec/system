@@ -10,8 +10,6 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.processes.SessionManager;
-import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
@@ -57,13 +55,8 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
                 processContext.setApplication(application);
             }
 
-            if (ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-                SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
-                SessionContentObject sessionContent = sessionManager.getAndOpen(processSession.getID());
-
-                processContext.setEnvironmentVariables(sessionContent.getEnvironmentVariables());
-
-                sessionContent.close();
+            if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+                processContext.setEnvironmentVariables(processSession.getEnvironmentVariables());
             }
 
             if (!ValueUtil.isAnyNullOrEmpty(processCreator.getParameters())) {

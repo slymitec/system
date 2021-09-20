@@ -34,9 +34,9 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
     public final UUID PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID
             = UUIDUtil.getFormLongs(1995202583338893550L, -6724752038670449403L);
     public final String PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_NAME = "Signal";
-    public final UUID PROCESSES_CONTEXT_INSTANCE_SESSION_ID
+    public final UUID PROCESSES_SESSION_INSTANCE_ID
             = UUIDUtil.getFormLongs(-6729493064232579129L, -6576183935232554309L);
-    public final String PROCESSES_CONTEXT_INSTANCE_SESSION_NAME = "Session";
+    public final String PROCESSES_SESSION_INSTANCE_NAME = "Session";
     public final UUID PROCESSES_PROTOTYPE_SYSTEM_ID
             = UUIDUtil.getFormLongs(-7191269949502635218L, -6103845440396733665L);
     public final Map<Long, Integer> PROCESSES_TOKEN_DEFAULT_LIMIT = Map.of(

@@ -10,11 +10,8 @@ import java.util.Set;
 import java.util.UUID;
 
 public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefinition> {
-    private UUID sessionID;
-
     private UUID fileIndex;
 
-    private Map<String, String> environmentVariables;
     private String parameters;
     private List<IdentificationDefinition> workFolder;
 
@@ -22,14 +19,6 @@ public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefiniti
     private Set<UUID> additionalRoles;
     private Map<Long, Integer> limits;
     private long privileges;
-
-    public UUID getSessionID() {
-        return this.sessionID;
-    }
-
-    public void setSessionID(UUID sessionID) {
-        this.sessionID = sessionID;
-    }
 
     public UUID getFileIndex() {
         return this.fileIndex;

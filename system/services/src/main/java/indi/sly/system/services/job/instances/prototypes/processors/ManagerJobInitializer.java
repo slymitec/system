@@ -11,8 +11,6 @@ import indi.sly.system.kernel.core.prototypes.SystemVersionObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.SessionManager;
-import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
@@ -142,8 +140,8 @@ public class ManagerJobInitializer extends AJobInitializer {
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject process = processManager.create(accountAuthorization, parameter_FileIndex, parameter_Limits,
-                parameter_Parameters, parameter_Privileges, null, workFolder);
+        ProcessObject process = processManager.create(accountAuthorization, parameter_Privileges, parameter_Limits,
+                parameter_FileIndex, parameter_Parameters, workFolder);
 
         UUID handle = process.cache(SpaceType.USER);
         content.setResult("handle", handle);
@@ -172,33 +170,33 @@ public class ManagerJobInitializer extends AJobInitializer {
 //    }
 
     private void sessionGetAndOpen(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_SessionID = content.getParameterOrDefault(UUID.class, "sessionID", null);
-        if (ValueUtil.isAnyNullOrEmpty(parameter_SessionID)) {
-            throw new ConditionParametersException();
-        }
-
-        SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
-
-        SessionContentObject sessionContent = sessionManager.getAndOpen(parameter_SessionID);
-
-        UUID handle = sessionContent.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+//        UUID parameter_SessionID = content.getParameterOrDefault(UUID.class, "sessionID", null);
+//        if (ValueUtil.isAnyNullOrEmpty(parameter_SessionID)) {
+//            throw new ConditionParametersException();
+//        }
+//
+//        SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
+//
+//        SessionContentObject sessionContent = sessionManager.getAndOpen(parameter_SessionID);
+//
+//        UUID handle = sessionContent.cache(SpaceType.USER);
+//        content.setResult("handle", handle);
     }
 
     private void sessionClose(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_SessionContentID = content.getParameterOrDefault(UUID.class, "sessionContentID", null);
-        SessionContentObject sessionContent;
-        if (ValueUtil.isAnyNullOrEmpty(parameter_SessionContentID)) {
-            throw new ConditionParametersException();
-        } else {
-            sessionContent = content.getCache(parameter_SessionContentID);
-        }
-
-        SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
-
-        sessionManager.close(sessionContent);
-
-        content.deleteCache(parameter_SessionContentID);
+//        UUID parameter_SessionContentID = content.getParameterOrDefault(UUID.class, "sessionContentID", null);
+//        SessionContentObject sessionContent;
+//        if (ValueUtil.isAnyNullOrEmpty(parameter_SessionContentID)) {
+//            throw new ConditionParametersException();
+//        } else {
+//            sessionContent = content.getCache(parameter_SessionContentID);
+//        }
+//
+//        SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
+//
+//        sessionManager.close(sessionContent);
+//
+//        content.deleteCache(parameter_SessionContentID);
     }
 
     private void userGetCurrentAccount(JobRunConsumer run, JobContentObject content) {

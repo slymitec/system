@@ -81,14 +81,8 @@ public class InitController extends AController {
         //try {
         UUID handle = execInfo.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
-        ProcessObject processObject = processManager.create(
-                accountAuthorization,
-                handle,
-                null,
-                null,
-                PrivilegeType.NULL,
-                null,
-                null);
+        ProcessObject processObject = processManager.create(accountAuthorization, PrivilegeType.NULL, null,
+                handle, null, null);
 
         ret = processObject.getID();
 //        } catch (Exception ignored) {

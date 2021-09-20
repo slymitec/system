@@ -21,7 +21,6 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.SessionManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -52,7 +51,6 @@ public class FactoryManager extends AManager {
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(MemoryManager.class));
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(ObjectManager.class));
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(ProcessManager.class));
-            this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(SessionManager.class));
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(ThreadManager.class));
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(TypeManager.class));
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(UserManager.class));

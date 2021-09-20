@@ -50,19 +50,6 @@ public class SessionContentObject extends AInfoContentObject {
         return this.session.getAccountID();
     }
 
-    public void setAccountID(UUID accountID) {
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            this.session.setAccountID(accountID);
-
-            this.fresh();
-        } finally {
-            this.lock(LockType.NONE);
-        }
-    }
-
     public Set<UUID> getProcessIDs() {
         this.init();
 

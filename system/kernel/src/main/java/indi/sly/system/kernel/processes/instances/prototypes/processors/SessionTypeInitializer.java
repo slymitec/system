@@ -5,8 +5,11 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeI
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
+import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -23,7 +26,15 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
 
     @Override
     public void createProcedure(InfoEntity info) {
-        info.setContent(ObjectUtil.transferToByteArray(new SessionDefinition()));
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessTokenObject processToken = process.getToken();
+
+        SessionDefinition session = new SessionDefinition();
+
+        session.setAccountID(processToken.getAccountID());
+
+        info.setContent(ObjectUtil.transferToByteArray(session));
     }
 
     @Override

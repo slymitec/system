@@ -13,5 +13,4 @@ public interface PrivilegeType {
     long PROCESSES_MODIFY_LIMITS = 1L << 5;
     long SECURITY_DO_WITH_ANY_ACCOUNT = 1L << 6;
     long SECURITY_MODIFY_ACCOUNT_AND_GROUP = 1L << 7;
-    long SESSION_MODIFY_USER_SESSION = 1L << 8;
 }

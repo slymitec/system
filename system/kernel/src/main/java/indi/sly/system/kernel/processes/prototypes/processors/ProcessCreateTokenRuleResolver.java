@@ -4,8 +4,6 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
-import indi.sly.system.kernel.processes.SessionManager;
-import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
@@ -68,12 +66,8 @@ public class ProcessCreateTokenRuleResolver extends AProcessCreateResolver {
                 }
             }
 
-            UUID sessionID = processSession.getID();
-            if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
-                SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
-                SessionContentObject sessionContent = sessionManager.getAndOpen(sessionID);
-
-                long sessionContentType = sessionContent.getType();
+            if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+                long sessionContentType = processSession.getType();
                 if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.API)) {
                     roles.add(configuration.SECURITY_ROLE_API_ID);
                 } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.GUI)) {
@@ -81,8 +75,6 @@ public class ProcessCreateTokenRuleResolver extends AProcessCreateResolver {
                 } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.CLI)) {
                     roles.add(configuration.SECURITY_ROLE_CLI_ID);
                 }
-
-                sessionContent.close();
             }
 
             if (ObjectUtil.allNotNull(processCreator.getAdditionalRoles())) {

@@ -140,12 +140,12 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 throw new ConditionRefuseException();
             }
 
-            InfoObject ports = objectManager.get(identifications);
+            InfoObject portsInfo = objectManager.get(identifications);
 
-            InfoObject port = ports.createChildAndOpen(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_ID,
+            InfoObject portInfo = portsInfo.createChildAndOpen(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_ID,
                     new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
-            SecurityDescriptorObject securityDescriptor = port.getSecurityDescriptor();
+            SecurityDescriptorObject securityDescriptor = portInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
             permission.getUserID().setID(this.parent.getID());
@@ -169,14 +169,14 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             }
             securityDescriptor.setPermissions(permissions);
 
-            PortContentObject portContent = (PortContentObject) port.getContent();
+            PortContentObject portContent = (PortContentObject) portInfo.getContent();
             portContent.setSourceProcessIDs(sourceProcessIDs);
 
             ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(port.getID());
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(portInfo.getID());
             processInfoEntry.setUnsupportedDelete(true);
 
-            portID = port.getID();
+            portID = portInfo.getID();
 
             this.value.getPortIDs().add(portID);
 
@@ -212,9 +212,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             for (UUID processCommunicationPortID : processCommunicationPortIDs) {
                 List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"));
 
-                InfoObject ports = objectManager.get(identifications);
+                InfoObject portsInfo = objectManager.get(identifications);
                 try {
-                    ports.deleteChild(new IdentificationDefinition(processCommunicationPortID));
+                    portsInfo.deleteChild(new IdentificationDefinition(processCommunicationPortID));
                 } catch (StatusNotExistedException ignored) {
                 }
 
@@ -281,20 +281,20 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        InfoObject port = objectManager.get(identifications);
+        InfoObject portInfo = objectManager.get(identifications);
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-        boolean contain = processInfoTable.containByID(port.getID());
+        boolean contain = processInfoTable.containByID(portInfo.getID());
         if (!contain) {
-            port.open(InfoOpenAttributeType.OPEN_ONLY_READ);
+            portInfo.open(InfoOpenAttributeType.OPEN_ONLY_READ);
         }
-        PortContentObject portContent = (PortContentObject) port.getContent();
+        PortContentObject portContent = (PortContentObject) portInfo.getContent();
         Set<UUID> sourceProcessIDs = portContent.getSourceProcessIDs();
         if (!contain) {
-            port.close();
+            portInfo.close();
         }
 
         return sourceProcessIDs;
@@ -318,9 +318,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        InfoObject port = objectManager.get(identifications);
+        InfoObject portInfo = objectManager.get(identifications);
 
-        SecurityDescriptorObject securityDescriptor = port.getSecurityDescriptor();
+        SecurityDescriptorObject securityDescriptor = portInfo.getSecurityDescriptor();
         Set<AccessControlDefinition> permissions = new HashSet<>();
         AccessControlDefinition permission = new AccessControlDefinition();
         permission.getUserID().setID(this.parent.getID());
@@ -348,14 +348,14 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         ProcessObject process = processManager.getCurrent();
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-        boolean contain = processInfoTable.containByID(port.getID());
+        boolean contain = processInfoTable.containByID(portInfo.getID());
         if (!contain) {
-            port.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+            portInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
         }
-        PortContentObject portContent = (PortContentObject) port.getContent();
+        PortContentObject portContent = (PortContentObject) portInfo.getContent();
         portContent.setSourceProcessIDs(sourceProcessIDs);
         if (!contain) {
-            port.close();
+            portInfo.close();
         }
     }
 
@@ -377,9 +377,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        InfoObject port = objectManager.get(identifications);
+        InfoObject portInfo = objectManager.get(identifications);
 
-        PortContentObject portContent = (PortContentObject) port.getContent();
+        PortContentObject portContent = (PortContentObject) portInfo.getContent();
         byte[] value = portContent.receive();
 
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
@@ -408,20 +408,20 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 = List.of(new IdentificationDefinition("Ports"), new IdentificationDefinition(portID));
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        InfoObject port = objectManager.get(identifications);
+        InfoObject portInfo = objectManager.get(identifications);
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-        boolean contain = processInfoTable.containByID(port.getID());
+        boolean contain = processInfoTable.containByID(portInfo.getID());
         if (!contain) {
-            port.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+            portInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
         }
-        PortContentObject portContent = (PortContentObject) port.getContent();
+        PortContentObject portContent = (PortContentObject) portInfo.getContent();
         portContent.send(value);
         if (!contain) {
-            port.close();
+            portInfo.close();
         }
 
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
@@ -473,12 +473,12 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 throw new StatusAlreadyFinishedException();
             }
 
-            InfoObject signals = objectManager.get(identifications);
+            InfoObject signalsInfo = objectManager.get(identifications);
 
-            InfoObject signal = signals.createChildAndOpen(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID,
+            InfoObject signalInfo = signalsInfo.createChildAndOpen(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID,
                     new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_SHARED_WRITE);
 
-            SecurityDescriptorObject securityDescriptor = signal.getSecurityDescriptor();
+            SecurityDescriptorObject securityDescriptor = signalInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
             permission.getUserID().setID(this.parent.getID());
@@ -502,14 +502,14 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             }
             securityDescriptor.setPermissions(permissions);
 
-            SignalContentObject signalContent = (SignalContentObject) signal.getContent();
+            SignalContentObject signalContent = (SignalContentObject) signalInfo.getContent();
             signalContent.setSourceProcessIDs(sourceProcessIDs);
 
             ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(signal.getID());
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(signalInfo.getID());
             processInfoEntry.setUnsupportedDelete(true);
 
-            this.value.setSignalID(signal.getID());
+            this.value.setSignalID(signalInfo.getID());
 
             this.fresh();
         } finally {
@@ -576,20 +576,20 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        InfoObject signal = objectManager.get(identifications);
+        InfoObject signalInfo = objectManager.get(identifications);
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-        boolean contain = processInfoTable.containByID(signal.getID());
+        boolean contain = processInfoTable.containByID(signalInfo.getID());
         if (!contain) {
-            signal.open(InfoOpenAttributeType.OPEN_ONLY_READ);
+            signalInfo.open(InfoOpenAttributeType.OPEN_ONLY_READ);
         }
-        SignalContentObject signalContent = (SignalContentObject) signal.getContent();
+        SignalContentObject signalContent = (SignalContentObject) signalInfo.getContent();
         Set<UUID> sourceProcessIDs = signalContent.getSourceProcessIDs();
         if (!contain) {
-            signal.close();
+            signalInfo.close();
         }
 
         return sourceProcessIDs;
@@ -625,9 +625,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         List<IdentificationDefinition> identifications
                 = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
-        InfoObject signal = objectManager.get(identifications);
+        InfoObject signalInfo = objectManager.get(identifications);
 
-        SecurityDescriptorObject securityDescriptor = signal.getSecurityDescriptor();
+        SecurityDescriptorObject securityDescriptor = signalInfo.getSecurityDescriptor();
         Set<AccessControlDefinition> permissions = new HashSet<>();
         AccessControlDefinition permission = new AccessControlDefinition();
         permission.getUserID().setID(this.parent.getID());
@@ -655,14 +655,14 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         ProcessObject process = processManager.getCurrent();
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-        boolean contain = processInfoTable.containByID(signal.getID());
+        boolean contain = processInfoTable.containByID(signalInfo.getID());
         if (!contain) {
-            signal.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+            signalInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
         }
-        SignalContentObject signalContent = (SignalContentObject) signal.getContent();
+        SignalContentObject signalContent = (SignalContentObject) signalInfo.getContent();
         signalContent.setSourceProcessIDs(sourceProcessIDs);
         if (!contain) {
-            signal.close();
+            signalInfo.close();
         }
     }
 
@@ -691,9 +691,9 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        InfoObject signal = objectManager.get(identifications);
+        InfoObject signalInfo = objectManager.get(identifications);
 
-        SignalContentObject signalContent = (SignalContentObject) signal.getContent();
+        SignalContentObject signalContent = (SignalContentObject) signalInfo.getContent();
         List<SignalEntryDefinition> signalEntries = signalContent.receive();
 
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
@@ -720,20 +720,20 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
                 = List.of(new IdentificationDefinition("Signals"), new IdentificationDefinition(signalID));
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        InfoObject signal = objectManager.get(identifications);
+        InfoObject signalInfo = objectManager.get(identifications);
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-        boolean contain = processInfoTable.containByID(signal.getID());
+        boolean contain = processInfoTable.containByID(signalInfo.getID());
         if (!contain) {
-            signal.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+            signalInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
         }
-        SignalContentObject signalContent = (SignalContentObject) signal.getContent();
+        SignalContentObject signalContent = (SignalContentObject) signalInfo.getContent();
         signalContent.send(key, value);
         if (!contain) {
-            signal.close();
+            signalInfo.close();
         }
 
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();

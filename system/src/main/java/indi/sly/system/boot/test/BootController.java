@@ -11,7 +11,6 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.SessionManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +50,6 @@ public class BootController extends ABase {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
@@ -71,7 +69,6 @@ public class BootController extends ABase {
             typeManager.startup(startup);
             userManager.startup(startup);
             objectManager.startup(startup);
-            sessionManager.startup(startup);
             fileSystemManager.startup(startup);
         }
 

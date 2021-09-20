@@ -16,10 +16,10 @@ public class ProcessCreateSessionResolver extends AProcessCreateResolver {
 
     public ProcessCreateSessionResolver() {
         this.create = (process, parentProcess, processCreator) -> {
+            ProcessSessionObject parentProcessSession = parentProcess.getSession();
             ProcessSessionObject processSession = process.getSession();
-            if (!ValueUtil.isAnyNullOrEmpty(processCreator.getSessionID())) {
-                processSession.setID(processCreator.getSessionID());
-            } else {
+
+            if (!ValueUtil.isAnyNullOrEmpty(parentProcessSession.getID())) {
                 processSession.inheritID();
             }
 

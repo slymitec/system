@@ -3,7 +3,6 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
@@ -25,6 +24,10 @@ public class ProcessCreateCheckResolver extends AProcessCreateResolver {
         this.create = (process, parentProcess, processCreator) -> {
             ProcessTokenObject parentProcessToken = parentProcess.getToken();
 
+            if (LogicalUtil.allNotEqual(processCreator.getPrivileges(), PrivilegeType.NULL) && !parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
+                throw new ConditionRefuseException();
+            }
+
             Map<Long, Integer> limits = processCreator.getLimits();
             if (ObjectUtil.allNotNull(limits) && !limits.isEmpty() && !parentProcessToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
                 throw new ConditionRefuseException();
@@ -32,14 +35,6 @@ public class ProcessCreateCheckResolver extends AProcessCreateResolver {
 
             Set<UUID> additionalRoles = processCreator.getAdditionalRoles();
             if (ObjectUtil.allNotNull(additionalRoles) && !additionalRoles.isEmpty() && !parentProcessToken.isPrivileges(PrivilegeType.PROCESSES_ADD_ROLES)) {
-                throw new ConditionRefuseException();
-            }
-
-            if (LogicalUtil.allNotEqual(processCreator.getPrivileges(), PrivilegeType.NULL) && !parentProcessToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-                throw new ConditionRefuseException();
-            }
-
-            if (!ValueUtil.isAnyNullOrEmpty(processCreator.getSessionID()) && !parentProcessToken.isPrivileges(PrivilegeType.SESSION_MODIFY_USER_SESSION)) {
                 throw new ConditionRefuseException();
             }
 

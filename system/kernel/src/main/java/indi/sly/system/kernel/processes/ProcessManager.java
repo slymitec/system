@@ -17,6 +17,7 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.processes.instances.prototypes.processors.PortTypeInitializer;
+import indi.sly.system.kernel.processes.instances.prototypes.processors.SessionTypeInitializer;
 import indi.sly.system.kernel.processes.instances.prototypes.processors.SignalTypeInitializer;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
@@ -60,6 +61,11 @@ public class ProcessManager extends AManager {
 
             typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID,
                     kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_NAME, attribute, childTypes, typeInitializer);
+
+            typeInitializer = this.factoryManager.create(SessionTypeInitializer.class);
+
+            typeManager.create(kernelConfiguration.PROCESSES_SESSION_INSTANCE_ID,
+                    kernelConfiguration.PROCESSES_SESSION_INSTANCE_NAME, attribute, childTypes, typeInitializer);
         }
     }
 
@@ -117,8 +123,8 @@ public class ProcessManager extends AManager {
         return this.get(processID, null);
     }
 
-    public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, Map<Long, Integer> limits,
-                                String parameters, long privileges, UUID sessionID, List<IdentificationDefinition> workFolder) {
+    public ProcessObject create(AccountAuthorizationObject accountAuthorization, long privileges, Map<Long, Integer> limits,
+                                UUID fileIndex, String parameters, List<IdentificationDefinition> workFolder) {
         ProcessCreatorDefinition processCreator = new ProcessCreatorDefinition();
 
         if (ObjectUtil.allNotNull(accountAuthorization)) {
@@ -137,9 +143,6 @@ public class ProcessManager extends AManager {
             processCreator.setParameters(parameters);
         } else {
             processCreator.setParameters(StringUtil.EMPTY);
-        }
-        if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
-            processCreator.setSessionID(sessionID);
         }
         if (ObjectUtil.allNotNull(workFolder)) {
             processCreator.setWorkFolder(workFolder);

@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
-import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -11,16 +11,15 @@ import javax.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessEndCommunicationResolver extends AProcessEndResolver {
+public class ProcessEndSessionResolver extends AProcessEndResolver {
     private final ProcessLifeProcessorEndFunction end;
 
-    public ProcessEndCommunicationResolver() {
+    public ProcessEndSessionResolver() {
         this.end = (process, parentProcess) -> {
-            ProcessCommunicationObject processCommunication = process.getCommunication();
+            ProcessSessionObject processSession = process.getSession();
 
-            processCommunication.deleteAllPort();
-            if (!ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalID())) {
-                processCommunication.deleteSignal();
+            if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+                processSession.close();
             }
 
             return process;

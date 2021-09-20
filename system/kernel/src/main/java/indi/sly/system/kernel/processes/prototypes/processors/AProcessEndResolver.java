@@ -15,7 +15,8 @@ public abstract class AProcessEndResolver extends AResolver {
 }
 
 /*
-ProcessEndInfoTableResolver     1
-ProcessEndCommunicationResolver 2
+ProcessEndCommunicationResolver 1
+ProcessEndSessionResolver       1
+ProcessEndInfoTableResolver     2
 ProcessEndNotifyParentResolver  3
  */

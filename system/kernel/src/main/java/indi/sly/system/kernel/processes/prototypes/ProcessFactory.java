@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessFactory extends AFactory {
-    public ProcessFactory(){
+    public ProcessFactory() {
         this.processResolvers = new CopyOnWriteArrayList<>();
         this.processCreatorResolvers = new CopyOnWriteArrayList<>();
         this.processEndResolvers = new CopyOnWriteArrayList<>();
@@ -43,6 +43,7 @@ public class ProcessFactory extends AFactory {
         this.processCreatorResolvers.add(this.factoryManager.create(ProcessCreateTokenResolver.class));
         this.processCreatorResolvers.add(this.factoryManager.create(ProcessCreateTokenRuleResolver.class));
         this.processEndResolvers.add(this.factoryManager.create(ProcessEndCommunicationResolver.class));
+        this.processEndResolvers.add(this.factoryManager.create(ProcessEndSessionResolver.class));
         this.processEndResolvers.add(this.factoryManager.create(ProcessEndInfoTableResolver.class));
         this.processEndResolvers.add(this.factoryManager.create(ProcessEndNotifyParentResolver.class));
         this.processResolvers.add(this.factoryManager.create(ProcessMemberResolver.class));

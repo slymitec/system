@@ -37,7 +37,7 @@ public class ProcessEndInfoTableResolver extends AProcessEndResolver {
 
     @Override
     public int order() {
-        return 1;
+        return 2;
     }
 
     @Override

@@ -270,7 +270,6 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
         if (!LogicalUtil.isAllSingleValue(permission) || LogicalUtil.isAnyExist(permission, PermissionType.FULLCONTROL_DENY)) {
             throw new ConditionParametersException();
         }
-
         if (!this.permission) {
             throw new StatusDisabilityException();
         }

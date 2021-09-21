@@ -255,7 +255,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
 
     private final InfoProcessorDumpFunction dump;
     private final InfoProcessorOpenFunction open;
-    private final InfoProcessorCloseConsumer close;
+    private final InfoProcessorCloseFunction close;
     private final InfoProcessorCreateChildFunction createChild;
     private final InfoProcessorGetOrRebuildChildFunction getOrRebuildChild;
     private final InfoProcessorDeleteChildConsumer deleteChild;

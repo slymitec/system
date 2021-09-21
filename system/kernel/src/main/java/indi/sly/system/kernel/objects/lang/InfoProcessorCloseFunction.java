@@ -6,5 +6,5 @@ import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
 
 @FunctionalInterface
-public interface InfoProcessorCloseConsumer extends Function3<InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition> {
+public interface InfoProcessorCloseFunction extends Function3<InfoEntity, InfoEntity, TypeObject, InfoStatusDefinition> {
 }

@@ -2,7 +2,7 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeCounterObject;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
-import indi.sly.system.kernel.objects.lang.InfoProcessorCloseConsumer;
+import indi.sly.system.kernel.objects.lang.InfoProcessorCloseFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -39,7 +39,7 @@ public class InfoOpenOrCloseResolver extends AInfoResolver {
     }
 
     private final InfoProcessorOpenFunction open;
-    private final InfoProcessorCloseConsumer close;
+    private final InfoProcessorCloseFunction close;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {

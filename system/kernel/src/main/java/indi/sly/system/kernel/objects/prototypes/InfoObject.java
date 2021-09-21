@@ -180,12 +180,12 @@ public class InfoObject extends AObject {
         TypeObject type = typeManager.get(this.getType());
         AInfoTypeInitializer infoTypeInitializer = type.getInitializer();
 
-        List<InfoProcessorCloseConsumer> resolvers = this.processorMediator.getCloses();
+        List<InfoProcessorCloseFunction> resolvers = this.processorMediator.getCloses();
 
         try {
             infoTypeInitializer.lockProcedure(info, LockType.WRITE);
 
-            for (InfoProcessorCloseConsumer resolver : resolvers) {
+            for (InfoProcessorCloseFunction resolver : resolvers) {
                 info = resolver.apply(info, type, this.status);
             }
         } finally {

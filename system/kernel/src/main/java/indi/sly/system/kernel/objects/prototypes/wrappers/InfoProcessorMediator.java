@@ -33,7 +33,7 @@ public class InfoProcessorMediator extends AMediator {
     private InfoProcessorSecurityDescriptorFunction securityDescriptor;
     private final List<InfoProcessorDumpFunction> dumps;
     private final List<InfoProcessorOpenFunction> opens;
-    private final List<InfoProcessorCloseConsumer> closes;
+    private final List<InfoProcessorCloseFunction> closes;
     private final List<InfoProcessorCreateChildFunction> createChilds;
     private final List<InfoProcessorGetOrRebuildChildFunction> getOrRebuildChilds;
     private final List<InfoProcessorDeleteChildConsumer> deleteChilds;
@@ -77,7 +77,7 @@ public class InfoProcessorMediator extends AMediator {
         return this.opens;
     }
 
-    public List<InfoProcessorCloseConsumer> getCloses() {
+    public List<InfoProcessorCloseFunction> getCloses() {
         return this.closes;
     }
 

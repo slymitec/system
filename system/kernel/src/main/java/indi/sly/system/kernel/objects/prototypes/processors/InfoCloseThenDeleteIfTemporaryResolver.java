@@ -3,7 +3,7 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
-import indi.sly.system.kernel.objects.lang.InfoProcessorCloseConsumer;
+import indi.sly.system.kernel.objects.lang.InfoProcessorCloseFunction;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -37,7 +37,7 @@ public class InfoCloseThenDeleteIfTemporaryResolver extends AInfoResolver {
         };
     }
 
-    private final InfoProcessorCloseConsumer close;
+    private final InfoProcessorCloseFunction close;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {

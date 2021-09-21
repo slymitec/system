@@ -1,7 +1,9 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
@@ -50,6 +52,11 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
                 long infoContentLength = infoContent.length();
                 byte[] applicationSource = infoContent.read(0, (int) infoContentLength);
                 ApplicationDefinition application = ObjectUtil.transferFromString(ApplicationDefinition.class, StringUtil.readFormBytes(applicationSource));
+
+                if (!ValueUtil.isAnyNullOrEmpty(processSession.getID()) &&
+                        LogicalUtil.allNotEqual(application.getSupportedSession(), processSession.getContent().getType())) {
+                    throw new StatusNotSupportedException();
+                }
 
                 processContext.setIdentifications(info.getIdentifications());
                 processContext.setApplication(application);

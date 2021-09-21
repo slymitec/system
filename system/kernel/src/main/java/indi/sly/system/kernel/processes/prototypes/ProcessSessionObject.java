@@ -258,7 +258,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             UUID sessionID = this.value.getSessionID();
 
             if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
-                throw new StatusAlreadyFinishedException();
+                throw new StatusRelationshipErrorException();
             }
 
             List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),

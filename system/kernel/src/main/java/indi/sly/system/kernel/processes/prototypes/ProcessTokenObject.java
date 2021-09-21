@@ -331,6 +331,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
                 throw new ConditionRefuseException();
             }
 
+            this.value.getRoles().clear();
             this.value.getRoles().addAll(roles);
 
         } finally {

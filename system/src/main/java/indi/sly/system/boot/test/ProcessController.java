@@ -36,6 +36,7 @@ public class ProcessController extends AController {
 //            processSession.create();
 //        }
 
+
         if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
             processSession.close();
         }

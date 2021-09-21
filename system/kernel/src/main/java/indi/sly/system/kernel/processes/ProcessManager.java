@@ -137,7 +137,7 @@ public class ProcessManager extends AManager {
         } else {
             processCreator.setParameters(StringUtil.EMPTY);
         }
-        if (ObjectUtil.allNotNull(workFolder)) {
+        if (ObjectUtil.allNotNull(workFolder) && !workFolder.isEmpty()) {
             processCreator.setWorkFolder(workFolder);
         }
 

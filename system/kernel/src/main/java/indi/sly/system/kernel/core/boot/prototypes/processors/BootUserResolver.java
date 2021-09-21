@@ -9,10 +9,7 @@ import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
-import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
-import indi.sly.system.kernel.security.values.AccountEntity;
-import indi.sly.system.kernel.security.values.GroupEntity;
-import indi.sly.system.kernel.security.values.PrivilegeType;
+import indi.sly.system.kernel.security.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -39,10 +36,10 @@ public class BootUserResolver extends ABootResolver {
                     GroupEntity group = new GroupEntity();
                     group.setID(groupID);
                     group.setName(groupName);
-                    AccountAuthorizationTokenDefinition accountGroupToken = new AccountAuthorizationTokenDefinition();
-                    accountGroupToken.setPrivileges(PrivilegeType.FULL);
-                    accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
-                    group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
+                    UserTokenDefinition userToken = new UserTokenDefinition();
+                    userToken.setPrivileges(PrivilegeType.FULL);
+                    userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
+                    group.setToken(ObjectUtil.transferToByteArray(userToken));
 
                     userRepository.add(group);
                 }
@@ -52,12 +49,12 @@ public class BootUserResolver extends ABootResolver {
                     GroupEntity group = new GroupEntity();
                     group.setID(groupID);
                     group.setName(groupName);
-                    AccountAuthorizationTokenDefinition accountGroupToken = new AccountAuthorizationTokenDefinition();
-                    accountGroupToken.setPrivileges(LogicalUtil.or(PrivilegeType.CORE_MODIFY_DATETIME,
+                    UserTokenDefinition userToken = new UserTokenDefinition();
+                    userToken.setPrivileges(LogicalUtil.or(PrivilegeType.CORE_MODIFY_DATETIME,
                             PrivilegeType.FILE_SYSTEM_ACCESS_MODIFY_MAPPING, PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT,
                             PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP));
-                    accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
-                    group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
+                    userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
+                    group.setToken(ObjectUtil.transferToByteArray(userToken));
 
                     userRepository.add(group);
                 }
@@ -67,9 +64,9 @@ public class BootUserResolver extends ABootResolver {
                     GroupEntity group = new GroupEntity();
                     group.setID(groupID);
                     group.setName(groupName);
-                    AccountAuthorizationTokenDefinition accountGroupToken = new AccountAuthorizationTokenDefinition();
-                    accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
-                    group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
+                    UserTokenDefinition userToken = new UserTokenDefinition();
+                    userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
+                    group.setToken(ObjectUtil.transferToByteArray(userToken));
 
                     userRepository.add(group);
                 }
@@ -82,7 +79,7 @@ public class BootUserResolver extends ABootResolver {
                     account.setName("System");
                     account.setPassword(StringUtil.EMPTY);
                     account.setGroups(new ArrayList<>(List.of(group)));
-                    account.setToken(ObjectUtil.transferToByteArray(new AccountAuthorizationTokenDefinition()));
+                    account.setToken(ObjectUtil.transferToByteArray(new UserTokenDefinition()));
 
                     userRepository.add(account);
                 }

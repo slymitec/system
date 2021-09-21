@@ -13,17 +13,17 @@ import javax.transaction.Transactional;
 
 @RestController
 @Transactional
-public class SecurityController extends AController {
-    @RequestMapping(value = {"/SecurityTest.action"}, method = {RequestMethod.GET})
+public class TestController extends AController {
+    @RequestMapping(value = {"/Test.action"}, method = {RequestMethod.GET})
     @Transactional
-    public Object createUser(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    public Object test(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init(request, response, session);
 
         Object ret = "finished";
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        AccountAuthorizationObject authorize = userManager.authorize("Sly", null);
+        AccountAuthorizationObject authorize = userManager.authorize("System", null);
 
         ret = authorize.checkAndGetSummary();
 

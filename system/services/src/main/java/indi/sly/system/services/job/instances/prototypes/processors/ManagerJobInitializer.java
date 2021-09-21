@@ -140,8 +140,7 @@ public class ManagerJobInitializer extends AJobInitializer {
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject process = processManager.create(accountAuthorization, parameter_Privileges, parameter_Limits,
-                parameter_FileIndex, parameter_Parameters, workFolder);
+        ProcessObject process = processManager.create(accountAuthorization, parameter_FileIndex, parameter_Parameters, workFolder);
 
         UUID handle = process.cache(SpaceType.USER);
         content.setResult("handle", handle);

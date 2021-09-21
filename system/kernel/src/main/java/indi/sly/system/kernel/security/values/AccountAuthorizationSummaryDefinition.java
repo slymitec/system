@@ -2,8 +2,8 @@ package indi.sly.system.kernel.security.values;
 
 import java.util.UUID;
 
-public class AccountAuthorizationResultDefinition {
-    public AccountAuthorizationResultDefinition() {
+public class AccountAuthorizationSummaryDefinition {
+    public AccountAuthorizationSummaryDefinition() {
         this.token = new AccountAuthorizationTokenDefinition();
     }
 

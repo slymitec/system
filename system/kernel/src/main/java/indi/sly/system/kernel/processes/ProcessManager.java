@@ -28,7 +28,6 @@ import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -111,7 +110,7 @@ public class ProcessManager extends AManager {
 
         if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
                 && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                && !(ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.checkAndGetResult().getID().equals(processToken.getAccountID())))
+                && !(ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.checkAndGetSummary().getID().equals(processToken.getAccountID())))
                 && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getID()) && !currentProcessSession.getID().equals(processSession.getID()))) {
             throw new ConditionRefuseException();
         }
@@ -123,18 +122,12 @@ public class ProcessManager extends AManager {
         return this.get(processID, null);
     }
 
-    public ProcessObject create(AccountAuthorizationObject accountAuthorization, long privileges, Map<Long, Integer> limits,
-                                UUID fileIndex, String parameters, List<IdentificationDefinition> workFolder) {
+    public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, String parameters,
+                                List<IdentificationDefinition> workFolder) {
         ProcessCreatorDefinition processCreator = new ProcessCreatorDefinition();
 
         if (ObjectUtil.allNotNull(accountAuthorization)) {
             processCreator.setAccountAuthorization(accountAuthorization);
-        }
-        if (LogicalUtil.allNotEqual(privileges, PrivilegeType.NULL)) {
-            processCreator.setPrivileges(privileges);
-        }
-        if (ObjectUtil.allNotNull(limits) && !limits.isEmpty()) {
-            processCreator.setLimits(limits);
         }
 
         processCreator.setFileIndex(fileIndex);

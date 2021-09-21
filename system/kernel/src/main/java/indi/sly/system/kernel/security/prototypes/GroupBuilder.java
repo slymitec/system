@@ -12,9 +12,9 @@ import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import indi.sly.system.kernel.security.values.GroupEntity;
 import indi.sly.system.kernel.security.values.PrivilegeType;
+import indi.sly.system.kernel.security.values.UserTokenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -42,10 +42,10 @@ public class GroupBuilder extends ABuilder {
         GroupEntity group = new GroupEntity();
         group.setID(UUID.randomUUID());
         group.setName(groupName);
-        AccountAuthorizationTokenDefinition accountGroupToken = new AccountAuthorizationTokenDefinition();
+        UserTokenDefinition userToken = new UserTokenDefinition();
         KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
-        accountGroupToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
-        group.setToken(ObjectUtil.transferToByteArray(accountGroupToken));
+        userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
+        group.setToken(ObjectUtil.transferToByteArray(userToken));
 
         try {
             userRepository.getGroup(groupName);

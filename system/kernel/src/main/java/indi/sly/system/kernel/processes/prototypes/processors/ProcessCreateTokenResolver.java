@@ -1,12 +1,10 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
-import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
-import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -25,17 +23,8 @@ public class ProcessCreateTokenResolver extends AProcessCreateResolver {
                 processToken.setAccountAuthorization(accountAuthorization);
             } else {
                 processToken.inheritAccountID();
-
-                if (LogicalUtil.allNotEqual(processCreator.getPrivileges(), PrivilegeType.NULL)) {
-                    processToken.inheritPrivileges(processCreator.getPrivileges());
-                } else {
-                    processToken.inheritPrivileges();
-                }
-                if (ObjectUtil.allNotNull(processCreator.getLimits())) {
-                    processToken.setLimits(processCreator.getLimits());
-                } else {
-                    processToken.inheritLimits();
-                }
+                processToken.inheritPrivileges();
+                processToken.inheritLimits();
             }
 
             return process;

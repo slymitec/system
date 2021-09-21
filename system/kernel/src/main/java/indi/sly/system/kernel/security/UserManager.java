@@ -278,12 +278,17 @@ public class UserManager extends AManager {
 
         AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
 
-        accountAuthorization.setSource(() -> this.getTargetAccount(account.getID()), account.getPassword());
+        accountAuthorization.setAccount(() -> this.getTargetAccount(account.getID()), account.getPassword());
 
         return accountAuthorization;
     }
 
     public AccountAuthorizationObject authorize(String accountName, String accountPassword) {
+        return this.authorize(accountName, accountPassword, null);
+    }
+
+    public AccountAuthorizationObject authorize(String accountName, String accountPassword,
+                                                AccountAuthorizationTokenDefinition accountAuthorizationToken) {
         if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }
@@ -304,7 +309,10 @@ public class UserManager extends AManager {
 
         AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
 
-        accountAuthorization.setSource(() -> this.getTargetAccount(account.getID()), account.getPassword());
+        accountAuthorization.setAccount(() -> this.getTargetAccount(account.getID()), account.getPassword());
+        if (ObjectUtil.allNotNull(accountAuthorizationToken)) {
+            accountAuthorization.setToken(processToken, accountAuthorizationToken);
+        }
 
         return accountAuthorization;
     }

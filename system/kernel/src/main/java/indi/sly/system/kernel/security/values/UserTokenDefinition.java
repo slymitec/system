@@ -1,32 +1,22 @@
-package indi.sly.system.kernel.processes.values;
+package indi.sly.system.kernel.security.values;
 
 import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> {
-    public ProcessTokenDefinition() {
+public class UserTokenDefinition extends ADefinition<UserTokenDefinition> {
+    public UserTokenDefinition() {
         this.limits = new HashMap<>();
-        this.roles = new HashSet<>();
     }
 
-    private UUID accountID;
     private long privileges;
     private final Map<Long, Integer> limits;
-    private final Set<UUID> roles;
-
-    public UUID getAccountID() {
-        return this.accountID;
-    }
-
-    public void setAccountID(UUID accountID) {
-        this.accountID = accountID;
-    }
 
     public long getPrivileges() {
         return this.privileges;
@@ -34,10 +24,6 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
 
     public void setPrivileges(long privileges) {
         this.privileges = privileges;
-    }
-
-    public Set<UUID> getRoles() {
-        return this.roles;
     }
 
     public Map<Long, Integer> getLimits() {
@@ -48,26 +34,21 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProcessTokenDefinition that = (ProcessTokenDefinition) o;
-        return privileges == that.privileges &&
-                Objects.equals(accountID, that.accountID) &&
-                limits.equals(that.limits) &&
-                roles.equals(that.roles);
+        UserTokenDefinition that = (UserTokenDefinition) o;
+        return privileges == that.privileges && limits.equals(that.limits);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountID, privileges, limits, roles);
+        return Objects.hash(privileges, limits);
     }
 
     @Override
-    public ProcessTokenDefinition deepClone() {
-        ProcessTokenDefinition definition = new ProcessTokenDefinition();
+    public UserTokenDefinition deepClone() {
+        UserTokenDefinition definition = new UserTokenDefinition();
 
-        definition.accountID = this.accountID;
         definition.privileges = this.privileges;
         definition.limits.putAll(this.limits);
-        definition.roles.addAll(this.roles);
 
         return definition;
     }
@@ -76,7 +57,6 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         super.readExternal(in);
 
-        this.accountID = UUIDUtil.readExternal(in);
         this.privileges = NumberUtil.readExternalLong(in);
 
         int valueInteger;
@@ -85,29 +65,18 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
         for (int i = 0; i < valueInteger; i++) {
             this.limits.put(NumberUtil.readExternalLong(in), NumberUtil.readExternalInteger(in));
         }
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.roles.add(UUIDUtil.readExternal(in));
-        }
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
 
-        UUIDUtil.writeExternal(out, this.accountID);
         NumberUtil.writeExternalLong(out, this.privileges);
 
         NumberUtil.writeExternalInteger(out, this.limits.size());
         for (Map.Entry<Long, Integer> pair : this.limits.entrySet()) {
             NumberUtil.writeExternalLong(out, pair.getKey());
             NumberUtil.writeExternalInteger(out, pair.getValue());
-        }
-
-        NumberUtil.writeExternalInteger(out, this.roles.size());
-        for (UUID pair : this.roles) {
-            UUIDUtil.writeExternal(out, pair);
         }
     }
 }

@@ -15,7 +15,6 @@ import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.AccountObject;
 import indi.sly.system.kernel.security.prototypes.GroupObject;
-import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -81,8 +80,7 @@ public class InitController extends AController {
 
         UUID handle = execInfo.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
-        ProcessObject process = processManager.create(accountAuthorization, PrivilegeType.NULL, null,
-                handle, null, null);
+        ProcessObject process = processManager.create(accountAuthorization, handle, null, null);
 
         result.put("ProcessID", process.getID());
 

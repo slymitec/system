@@ -6,19 +6,27 @@ import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.instances.values.SessionType;
+import indi.sly.system.kernel.processes.values.ApplicationDefinition;
+import indi.sly.system.kernel.processes.values.ProcessContextType;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.processes.values.ProcessTokenDefinition;
+import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
-import indi.sly.system.kernel.security.values.AccountAuthorizationResultDefinition;
+import indi.sly.system.kernel.security.prototypes.AccountObject;
+import indi.sly.system.kernel.security.values.AccountAuthorizationSummaryDefinition;
 import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -31,23 +39,48 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             throw new ConditionParametersException();
         }
 
-        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.INITIALIZATION)) {
-            throw new StatusRelationshipErrorException();
+        if (this.parent.isCurrent()) {
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+                throw new StatusRelationshipErrorException();
+            }
+        } else {
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+                throw new StatusRelationshipErrorException();
+            }
+
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+
+            if (!process.getID().equals(parent.getParentID())) {
+                throw new ConditionRefuseException();
+            }
         }
 
-        AccountAuthorizationResultDefinition accountAuthorizationResult = accountAuthorization.checkAndGetResult();
+        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+
+        AccountAuthorizationSummaryDefinition accountAuthorizationSummary = accountAuthorization.checkAndGetSummary();
 
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            this.value.setAccountID(accountAuthorizationResult.getID());
-            AccountAuthorizationTokenDefinition accountAuthorizationResultToken = accountAuthorizationResult.getToken();
-            this.value.setPrivileges(accountAuthorizationResultToken.getPrivileges());
+            if (!ValueUtil.isAnyNullOrEmpty(this.value.getAccountID())
+                    && !this.value.getAccountID().equals(accountAuthorizationSummary.getID())) {
+                throw new ConditionRefuseException();
+            }
+
+            this.value.setAccountID(accountAuthorizationSummary.getID());
+            AccountAuthorizationTokenDefinition accountAuthorizationToken = accountAuthorizationSummary.getToken();
+            this.value.setPrivileges(accountAuthorizationToken.getPrivileges());
             Map<Long, Integer> processTokenLimits = this.value.getLimits();
             processTokenLimits.clear();
-            processTokenLimits.putAll(accountAuthorizationResultToken.getLimits());
+            processTokenLimits.putAll(accountAuthorizationToken.getLimits());
+            Set<UUID> processTokenRoles = this.value.getRoles();
+            processTokenRoles.clear();
+            processTokenRoles.addAll(accountAuthorizationToken.getRoles());
+            if (ValueUtil.isAnyNullOrEmpty(accountAuthorizationSummary.getPassword())) {
+                processTokenRoles.add(kernelConfiguration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
+            }
 
             this.fresh();
         } finally {
@@ -129,33 +162,6 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             this.init();
 
             this.value.setPrivileges(processToken.getPrivileges());
-
-            this.fresh();
-        } finally {
-            this.lock(LockType.NONE);
-        }
-    }
-
-    public void inheritPrivileges(long privileges) {
-        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.INITIALIZATION)) {
-            throw new StatusRelationshipErrorException();
-        }
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-
-        if (!process.getID().equals(parent.getParentID())) {
-            throw new ConditionRefuseException();
-        }
-
-        ProcessTokenObject processToken = process.getToken();
-
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            this.value.setPrivileges(LogicalUtil.and(privileges, processToken.getPrivileges()));
 
             this.fresh();
         } finally {
@@ -310,19 +316,15 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
         }
     }
 
-    public void setRoles(Set<UUID> roles) {
-        if (ObjectUtil.isAnyNull(roles)) {
-            throw new ConditionParametersException();
-        }
-
-        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.INITIALIZATION)) {
-            throw new StatusRelationshipErrorException();
-        }
-
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+    public void initDefaultRoles() {
+        if (this.parent.isCurrent()) {
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+                throw new StatusRelationshipErrorException();
+            }
+        } else {
+            if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+                throw new StatusRelationshipErrorException();
+            }
 
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
@@ -330,10 +332,57 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             if (!process.getID().equals(parent.getParentID())) {
                 throw new ConditionRefuseException();
             }
+        }
 
-            this.value.getRoles().clear();
+        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+
+        ProcessContextObject processContext = this.parent.getContext();
+        ProcessSessionObject processSession = this.parent.getSession();
+
+        Set<UUID> roles = new HashSet<>();
+        long processContextType = processContext.getType();
+        if (LogicalUtil.isAllExist(processContextType, ProcessContextType.SERVICE)) {
+            ApplicationDefinition processContextApplication = processContext.getApplication();
+            if (ObjectUtil.allNotNull(processContextApplication)) {
+                roles.add(processContextApplication.getID());
+            }
+        } else if (LogicalUtil.isAllExist(processContextType, ProcessContextType.BATCH)) {
+            roles.add(kernelConfiguration.SECURITY_ROLE_BATCHES_ID);
+        } else if (LogicalUtil.isAllExist(processContextType, ProcessContextType.EXECUTABLE)) {
+            roles.add(kernelConfiguration.SECURITY_ROLE_EXECUTABLE_ID);
+        }
+
+        if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+            long sessionContentType = processSession.getContent().getType();
+            if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.API)) {
+                roles.add(kernelConfiguration.SECURITY_ROLE_API_ID);
+            } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.GUI)) {
+                roles.add(kernelConfiguration.SECURITY_ROLE_GUI_ID);
+            } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.CLI)) {
+                roles.add(kernelConfiguration.SECURITY_ROLE_CLI_ID);
+            }
+        }
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessTokenObject processToken = process.getToken();
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            if (processToken.getAccountID().equals(this.value.getAccountID())) {
+                UserManager userManager = this.factoryManager.getManager(UserManager.class);
+
+                AccountObject account = userManager.getCurrentAccount();
+                if (ValueUtil.isAnyNullOrEmpty(account.getPassword())) {
+                    roles.add(kernelConfiguration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
+                }
+            }
+
             this.value.getRoles().addAll(roles);
 
+            this.fresh();
         } finally {
             this.lock(LockType.NONE);
         }

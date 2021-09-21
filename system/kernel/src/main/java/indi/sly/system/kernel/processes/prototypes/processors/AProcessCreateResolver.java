@@ -21,5 +21,6 @@ ProcessCreateStatisticsResolver		1
 ProcessCreateTokenResolver	    	1
 ProcessCreateContextResolver		2
 ProcessCreateInfoTableResolver		3
+ProcessCreateTokenRuleResolver      3
 ProcessCreateNotifyParentResolver	4
  */

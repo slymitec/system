@@ -12,6 +12,7 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
+import indi.sly.system.kernel.processes.instances.values.SessionType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
@@ -54,7 +55,7 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
                 ApplicationDefinition application = ObjectUtil.transferFromString(ApplicationDefinition.class, StringUtil.readFormBytes(applicationSource));
 
                 if (!ValueUtil.isAnyNullOrEmpty(processSession.getID()) &&
-                        LogicalUtil.allNotEqual(application.getSupportedSession(), processSession.getContent().getType())) {
+                        LogicalUtil.allNotEqual(processSession.getContent().getType(), application.getSupportedSession(), SessionType.KNOWN)) {
                     throw new StatusNotSupportedException();
                 }
 

@@ -59,6 +59,8 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             ThreadStatisticsObject threadStatistics = thread.getStatistics();
             processStatistics.addInfoClose(1);
             threadStatistics.addInfoClose(1);
+
+            return info;
         };
 
         this.createChild = (childInfo, info, type, status, childType, identification) -> {

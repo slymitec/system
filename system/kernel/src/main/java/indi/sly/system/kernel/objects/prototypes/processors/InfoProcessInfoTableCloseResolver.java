@@ -29,6 +29,8 @@ public class InfoProcessInfoTableCloseResolver extends AInfoResolver {
             ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
 
             processInfoEntry.delete();
+
+            return info;
         };
     }
 

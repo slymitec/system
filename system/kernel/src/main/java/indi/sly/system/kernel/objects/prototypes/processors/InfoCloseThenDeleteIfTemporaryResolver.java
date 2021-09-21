@@ -19,17 +19,21 @@ import java.util.List;
 public class InfoCloseThenDeleteIfTemporaryResolver extends AInfoResolver {
     public InfoCloseThenDeleteIfTemporaryResolver() {
         this.close = (info, type, status) -> {
-            if (!status.getIdentifications().isEmpty()) {
-                if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.TEMPORARY) && info.getOpened() <= 0) {
-                    List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
-                    IdentificationDefinition identification = identifications.remove(identifications.size() - 1);
+            if (!status.getIdentifications().isEmpty()
+                    && type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.TEMPORARY) && info.getOpened() <= 0) {
+                List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
+                IdentificationDefinition identification = identifications.remove(identifications.size() - 1);
 
-                    ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-                    InfoObject parentInfo = objectManager.get(identifications);
+                ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+                InfoObject parentInfo = objectManager.get(identifications);
 
-                    parentInfo.deleteChild(identification);
-                }
+                parentInfo.deleteChild(identification);
+
+                info = null;
             }
+
+            return info;
+
         };
     }
 

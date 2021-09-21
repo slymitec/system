@@ -33,6 +33,8 @@ public class InfoOpenOrCloseResolver extends AInfoResolver {
             }
 
             info.setOpened(info.getOpened() - 1);
+
+            return info;
         };
     }
 

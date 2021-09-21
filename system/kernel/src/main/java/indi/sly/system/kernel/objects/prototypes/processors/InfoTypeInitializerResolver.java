@@ -56,6 +56,8 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
 
             type.getInitializer().closeProcedure(info, processInfoEntry.getOpen());
+
+            return info;
         };
 
         this.createChild = (childInfo, info, type, status, childType, identification) -> {

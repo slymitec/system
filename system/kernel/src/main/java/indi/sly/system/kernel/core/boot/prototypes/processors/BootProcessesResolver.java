@@ -3,7 +3,6 @@ package indi.sly.system.kernel.core.boot.prototypes.processors;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.boot.lang.BootStartConsumer;
 import indi.sly.system.kernel.core.boot.prototypes.wrappers.BootProcessorMediator;
 import indi.sly.system.kernel.core.boot.values.StartupType;
@@ -37,7 +36,7 @@ public class BootProcessesResolver extends ABootResolver {
 
                     process.setID(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
                     process.setStatus(ProcessStatusType.RUNNING);
-                    process.setSessionID(UUIDUtil.getEmpty());
+                    process.setSessionID(null);
                     process.setCommunication(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));
                     ProcessContextDefinition context = new ProcessContextDefinition();
                     context.setType(ProcessContextType.EXECUTABLE);

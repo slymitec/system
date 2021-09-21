@@ -186,10 +186,12 @@ public class InfoObject extends AObject {
             infoTypeInitializer.lockProcedure(info, LockType.WRITE);
 
             for (InfoProcessorCloseConsumer resolver : resolvers) {
-                resolver.accept(info, type, this.status);
+                info = resolver.apply(info, type, this.status);
             }
         } finally {
-            infoTypeInitializer.lockProcedure(info, LockType.NONE);
+            if (ObjectUtil.allNotNull(info)) {
+                infoTypeInitializer.lockProcedure(info, LockType.NONE);
+            }
         }
     }
 

@@ -37,7 +37,7 @@ public class ProcessCreateNotifyParentResolver extends AProcessCreateResolver {
 
     @Override
     public int order() {
-        return 4;
+        return 5;
     }
 
     @Override

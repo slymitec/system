@@ -33,7 +33,7 @@ public class ProcessCreateInfoTableResolver extends AProcessCreateResolver {
 
     @Override
     public int order() {
-        return 3;
+        return 4;
     }
 
     @Override

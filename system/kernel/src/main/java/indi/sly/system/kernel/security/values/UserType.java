@@ -6,4 +6,5 @@ public interface UserType {
     long PARENT_PROCESS = 3L;
     long PROCESS = 4L;
     long ROLE = 5L;
+    long SESSION = 6L;
 }

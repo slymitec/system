@@ -14,6 +14,7 @@ import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.instances.prototypes.AuditContentObject;
@@ -276,6 +277,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
         ProcessObject process = this.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
+        ProcessSessionObject processSession = process.getSession();
 
         if ((ObjectUtil.isAnyNull(permissionQueryFunc) || permissionQueryFunc.isPrivilege())
                 && processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)) {
@@ -384,6 +386,14 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 }
             } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.PARENT_PROCESS)
                     && !ValueUtil.isAnyNullOrEmpty(process.getParentID()) && process.getParentID().equals(pairUserID.getID())) {
+                if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
+                    allow = true;
+                }
+                if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
+                    return true;
+                }
+            } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.SESSION)
+                    && !ValueUtil.isAnyNullOrEmpty(processSession.getID()) && processSession.getID().equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
                 }
@@ -503,6 +513,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
         ProcessObject process = this.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
+        ProcessSessionObject processSession = process.getSession();
 
         List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
 
@@ -588,6 +599,11 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 }
             } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.PARENT_PROCESS)
                     && !ValueUtil.isAnyNullOrEmpty(process.getParentID()) && process.getParentID().equals(pairUserID.getID())) {
+                if (LogicalUtil.isAllExist(audit, pair.getValue())) {
+                    userIDs.add(pairUserID);
+                }
+            } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.SESSION)
+                    && !ValueUtil.isAnyNullOrEmpty(processSession.getID()) && processSession.getID().equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
                     userIDs.add(pairUserID);
                 }

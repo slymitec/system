@@ -63,6 +63,12 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
             permissions.add(permission);
+            permission = new AccessControlDefinition();
+            permission.getUserID().setID(sessionInfo.getID());
+            permission.getUserID().setType(UserType.SESSION);
+            permission.setScope(AccessControlScopeType.THIS);
+            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
+            permissions.add(permission);
             securityDescriptor.setPermissions(permissions);
 
             SessionContentObject sessionContent = (SessionContentObject) sessionInfo.getContent();

@@ -355,21 +355,21 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
         for (AccessControlDefinition pair : effectivePermissions) {
             UserIDDefinition pairUserID = pair.getUserID();
-            if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.GROUP) && groupIDs.contains(pairUserID.getID())) {
+            if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.GROUP) && groupIDs.contains(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.ACCOUNT) && accountID.equals(pairUserID.getID())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.ACCOUNT) && accountID.equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.ROLE) && roles.contains(pairUserID.getID())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.ROLE) && roles.contains(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)
                         && (ObjectUtil.isAnyNull(permissionQueryFunc) || permissionQueryFunc.isRole())) {
                     allow = true;
@@ -377,14 +377,14 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.PROCESS) && process.getID().equals(pairUserID.getID())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.PROCESS) && process.getID().equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.PARENT_PROCESS)
+            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.PARENT_PROCESS)
                     && !ValueUtil.isAnyNullOrEmpty(process.getParentID()) && process.getParentID().equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
@@ -392,7 +392,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.SESSION)
+            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.SESSION)
                     && !ValueUtil.isAnyNullOrEmpty(processSession.getID()) && processSession.getID().equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
@@ -581,28 +581,28 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
         for (AccessControlDefinition pair : effectiveAudits) {
             UserIDDefinition pairUserID = pair.getUserID();
-            if (pairUserID.getType() == UserType.GROUP && groupIDs.contains(pairUserID.getID())) {
+            if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.GROUP) && groupIDs.contains(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
                     userIDs.add(pairUserID);
                 }
-            } else if (pairUserID.getType() == UserType.ACCOUNT && accountID.equals(pairUserID.getID())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.ACCOUNT) && accountID.equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
                     userIDs.add(pairUserID);
                 }
-            } else if (pairUserID.getType() == UserType.ROLE && roles.contains(pairUserID.getID())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.ROLE) && roles.contains(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
                     userIDs.add(pairUserID);
                 }
-            } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.PROCESS) && process.getID().equals(pairUserID.getID())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.PROCESS) && process.getID().equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
                     userIDs.add(pairUserID);
                 }
-            } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.PARENT_PROCESS)
+            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.PARENT_PROCESS)
                     && !ValueUtil.isAnyNullOrEmpty(process.getParentID()) && process.getParentID().equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
                     userIDs.add(pairUserID);
                 }
-            } else if (LogicalUtil.isAllExist(pairUserID.getType(), UserType.SESSION)
+            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.SESSION)
                     && !ValueUtil.isAnyNullOrEmpty(processSession.getID()) && processSession.getID().equals(pairUserID.getID())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
                     userIDs.add(pairUserID);

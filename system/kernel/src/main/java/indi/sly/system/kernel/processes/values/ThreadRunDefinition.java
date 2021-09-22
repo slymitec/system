@@ -12,15 +12,15 @@ public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
         this.results = new HashMap<>();
     }
 
-    private final Map<String, Object> parameters;
-    private final Map<String, Object> results;
+    private final Map<String, String> parameters;
+    private final Map<String, String> results;
     private AKernelException exception;
 
-    public Map<String, Object> getParameters() {
+    public Map<String, String> getParameters() {
         return this.parameters;
     }
 
-    public Map<String, Object> getResults() {
+    public Map<String, String> getResults() {
         return this.results;
     }
 

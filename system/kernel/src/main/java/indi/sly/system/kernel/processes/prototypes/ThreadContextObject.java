@@ -34,17 +34,17 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
         this.lock(LockType.NONE);
     }
 
-    public Map<String, Object> getParameters() {
+    public Map<String, String> getParameters() {
         this.lock(LockType.READ);
         this.init();
 
-        Map<String, Object> parameters = this.value.getRun().getParameters();
+        Map<String, String> parameters = this.value.getRun().getParameters();
 
         this.lock(LockType.NONE);
         return CollectionUtil.unmodifiable(parameters);
     }
 
-    public void setParameters(Map<String, Object> parameters) {
+    public void setParameters(Map<String, String> parameters) {
         this.lock(LockType.WRITE);
         this.init();
 
@@ -55,17 +55,17 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
         this.lock(LockType.NONE);
     }
 
-    public Map<String, Object> getResults() {
+    public Map<String, String> getResults() {
         this.lock(LockType.READ);
         this.init();
 
-        Map<String, Object> results = this.value.getRun().getResults();
+        Map<String, String> results = this.value.getRun().getResults();
 
         this.lock(LockType.NONE);
         return CollectionUtil.unmodifiable(results);
     }
 
-    public void setResults(Map<String, Object> results) {
+    public void setResults(Map<String, String> results) {
         this.lock(LockType.WRITE);
         this.init();
 

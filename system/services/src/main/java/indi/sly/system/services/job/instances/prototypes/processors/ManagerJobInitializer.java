@@ -16,6 +16,7 @@ import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.AccountObject;
 import indi.sly.system.kernel.security.prototypes.GroupObject;
+import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import indi.sly.system.services.job.lang.JobRunConsumer;
 import indi.sly.system.services.job.prototypes.JobContentObject;
 import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
@@ -26,7 +27,6 @@ import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Named
@@ -42,10 +42,6 @@ public class ManagerJobInitializer extends AJobInitializer {
         this.register("processGet", this::processGet, JobTransactionType.INDEPENDENCE);
         this.register("processCreate", this::processCreate, JobTransactionType.INDEPENDENCE);
         this.register("processEndCurrent", this::processEndCurrent, JobTransactionType.INDEPENDENCE);
-        //this.register("processEnd", this::processEnd, JobTransactionType.INDEPENDENCE);
-
-        this.register("sessionGetAndOpen", this::sessionGetAndOpen, JobTransactionType.INDEPENDENCE);
-        this.register("sessionEnd", this::sessionClose, JobTransactionType.INDEPENDENCE);
 
         this.register("userGetCurrentAccount", this::userGetCurrentAccount, JobTransactionType.INDEPENDENCE);
         this.register("userGetAccount", this::userGetAccount, JobTransactionType.INDEPENDENCE);
@@ -101,37 +97,28 @@ public class ManagerJobInitializer extends AJobInitializer {
     }
 
     private void processGet(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_ProcessID = content.getParameterOrDefault(UUID.class, "processID", null);
-        if (ValueUtil.isAnyNullOrEmpty(parameter_ProcessID)) {
+        UUID processID = content.getParameterOrDefaultProvider(UUID.class, "processID", () -> {
             throw new ConditionParametersException();
-        }
+        });
+        AccountAuthorizationObject accountAuthorization = content.getCacheFromParameter("accountAuthorizationID");
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject process;
-        UUID parameter_accountAuthorizationID = content.getParameterOrDefault(UUID.class, "accountAuthorizationID", null);
-        if (ValueUtil.isAnyNullOrEmpty(parameter_accountAuthorizationID)) {
-            process = processManager.get(parameter_ProcessID);
+        if (ObjectUtil.isAnyNull(accountAuthorization)) {
+            process = processManager.get(processID);
         } else {
-            AccountAuthorizationObject accountAuthorization = content.getCache(parameter_accountAuthorizationID);
-            process = processManager.get(parameter_ProcessID, accountAuthorization);
+            process = processManager.get(processID, accountAuthorization);
         }
 
         UUID handle = process.cache(SpaceType.USER);
         content.setResult("handle", handle);
     }
 
-    @SuppressWarnings("unchecked")
     private void processCreate(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_accountAuthorizationID = content.getParameterOrDefault(UUID.class, "accountAuthorizationID", null);
-        AccountAuthorizationObject accountAuthorization = null;
-        if (ValueUtil.isAnyNullOrEmpty(parameter_accountAuthorizationID)) {
-            accountAuthorization = content.getCache(parameter_accountAuthorizationID);
-        }
-        UUID parameter_FileIndex = content.getParameterOrDefault(UUID.class, "fileIndex", null);
-        Map<Long, Integer> parameter_Limits = content.getParameterOrDefault(Map.class, "limits", null);
-        String parameter_Parameters = content.getParameterOrDefault(String.class, "parameters", null);
-        long parameter_Privileges = content.getParameterOrDefault(Long.class, "privileges", null);
+        AccountAuthorizationObject accountAuthorization = content.getCacheFromParameter("accountAuthorizationID");
+        UUID fileIndex = content.getParameterOrDefault(UUID.class, "fileIndex", null);
+        String parameters = content.getParameterOrDefault(String.class, "parameters", null);
         String parameter_WorkFolder = content.getParameterOrDefault(String.class, "workFolder", null);
         List<IdentificationDefinition> workFolder = null;
         if (ObjectUtil.allNotNull(parameter_WorkFolder)) {
@@ -140,7 +127,7 @@ public class ManagerJobInitializer extends AJobInitializer {
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        ProcessObject process = processManager.create(accountAuthorization, parameter_FileIndex, parameter_Parameters, workFolder);
+        ProcessObject process = processManager.create(accountAuthorization, fileIndex, parameters, workFolder);
 
         UUID handle = process.cache(SpaceType.USER);
         content.setResult("handle", handle);
@@ -149,53 +136,6 @@ public class ManagerJobInitializer extends AJobInitializer {
     private void processEndCurrent(JobRunConsumer run, JobContentObject content) {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         processManager.endCurrent();
-    }
-
-//    private void processEnd(JobRunConsumer run, JobContentObject content) {
-//        UUID parameter_ProcessID = content.getParameterOrDefault(UUID.class, "processID", null);
-//        if (ValueUtil.isAnyNullOrEmpty(parameter_ProcessID)) {
-//            throw new ConditionParametersException();
-//        }
-//
-//        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-//
-//        UUID parameter_accountAuthorizationID = content.getParameterOrDefault(UUID.class, "accountAuthorizationID", null);
-//        if (ValueUtil.isAnyNullOrEmpty(parameter_accountAuthorizationID)) {
-//            processManager.end(parameter_ProcessID);
-//        } else {
-//            AccountAuthorizationObject accountAuthorization = content.getCache(parameter_accountAuthorizationID);
-//            processManager.end(parameter_ProcessID, accountAuthorization);
-//        }
-//    }
-
-    private void sessionGetAndOpen(JobRunConsumer run, JobContentObject content) {
-//        UUID parameter_SessionID = content.getParameterOrDefault(UUID.class, "sessionID", null);
-//        if (ValueUtil.isAnyNullOrEmpty(parameter_SessionID)) {
-//            throw new ConditionParametersException();
-//        }
-//
-//        SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
-//
-//        SessionContentObject sessionContent = sessionManager.getAndOpen(parameter_SessionID);
-//
-//        UUID handle = sessionContent.cache(SpaceType.USER);
-//        content.setResult("handle", handle);
-    }
-
-    private void sessionClose(JobRunConsumer run, JobContentObject content) {
-//        UUID parameter_SessionContentID = content.getParameterOrDefault(UUID.class, "sessionContentID", null);
-//        SessionContentObject sessionContent;
-//        if (ValueUtil.isAnyNullOrEmpty(parameter_SessionContentID)) {
-//            throw new ConditionParametersException();
-//        } else {
-//            sessionContent = content.getCache(parameter_SessionContentID);
-//        }
-//
-//        SessionManager sessionManager = this.factoryManager.getManager(SessionManager.class);
-//
-//        sessionManager.close(sessionContent);
-//
-//        content.deleteCache(parameter_SessionContentID);
     }
 
     private void userGetCurrentAccount(JobRunConsumer run, JobContentObject content) {
@@ -208,16 +148,16 @@ public class ManagerJobInitializer extends AJobInitializer {
     }
 
     private void userGetAccount(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_AccountID = content.getParameterOrDefault(UUID.class, "accountID", null);
-        String parameter_AccountName = content.getParameterOrDefault(String.class, "accountName", null);
+        UUID accountID = content.getParameterOrDefault(UUID.class, "accountID", null);
+        String accountName = content.getParameterOrDefault(String.class, "accountName", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         AccountObject account;
-        if (!ValueUtil.isAnyNullOrEmpty(parameter_AccountID)) {
-            account = userManager.getAccount(parameter_AccountID);
-        } else if (!StringUtil.isNameIllegal(parameter_AccountName)) {
-            account = userManager.getAccount(parameter_AccountName);
+        if (!ValueUtil.isAnyNullOrEmpty(accountID)) {
+            account = userManager.getAccount(accountID);
+        } else if (!StringUtil.isNameIllegal(accountName)) {
+            account = userManager.getAccount(accountName);
         } else {
             throw new ConditionParametersException();
         }
@@ -227,16 +167,16 @@ public class ManagerJobInitializer extends AJobInitializer {
     }
 
     private void userGetGroup(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_GroupID = content.getParameterOrDefault(UUID.class, "groupID", null);
-        String parameter_GroupName = content.getParameterOrDefault(String.class, "groupName", null);
+        UUID groupID = content.getParameterOrDefault(UUID.class, "groupID", null);
+        String groupName = content.getParameterOrDefault(String.class, "groupName", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         GroupObject group;
-        if (!ValueUtil.isAnyNullOrEmpty(parameter_GroupID)) {
-            group = userManager.getGroup(parameter_GroupID);
-        } else if (!StringUtil.isNameIllegal(parameter_GroupName)) {
-            group = userManager.getGroup(parameter_GroupName);
+        if (!ValueUtil.isAnyNullOrEmpty(groupID)) {
+            group = userManager.getGroup(groupID);
+        } else if (!StringUtil.isNameIllegal(groupName)) {
+            group = userManager.getGroup(groupName);
         } else {
             throw new ConditionParametersException();
         }
@@ -246,56 +186,61 @@ public class ManagerJobInitializer extends AJobInitializer {
     }
 
     private void userCreateAccount(JobRunConsumer run, JobContentObject content) {
-        String parameter_AccountName = content.getParameterOrDefault(String.class, "accountName", null);
-        String parameter_AccountPassword = content.getParameterOrDefault(String.class, "accountPassword", null);
+        String accountName = content.getParameterOrDefault(String.class, "accountName", null);
+        String accountPassword = content.getParameterOrDefault(String.class, "accountPassword", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        AccountObject account = userManager.createAccount(parameter_AccountName, parameter_AccountPassword);
+        AccountObject account = userManager.createAccount(accountName, accountPassword);
 
         UUID handle = account.cache(SpaceType.USER);
         content.setResult("handle", handle);
     }
 
     private void userCreateGroup(JobRunConsumer run, JobContentObject content) {
-        String parameter_GroupName = content.getParameterOrDefault(String.class, "groupName", null);
+        String groupName = content.getParameterOrDefault(String.class, "groupName", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        GroupObject group = userManager.createGroup(parameter_GroupName);
+        GroupObject group = userManager.createGroup(groupName);
 
         UUID handle = group.cache(SpaceType.USER);
         content.setResult("handle", handle);
     }
 
     private void userDeleteAccount(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_AccountID = content.getParameterOrDefault(UUID.class, "accountID", null);
+        UUID accountID = content.getParameterOrDefault(UUID.class, "accountID", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        userManager.deleteAccount(parameter_AccountID);
+        userManager.deleteAccount(accountID);
     }
 
     private void userDeleteGroup(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_GroupID = content.getParameterOrDefault(UUID.class, "groupID", null);
+        UUID groupID = content.getParameterOrDefault(UUID.class, "groupID", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        userManager.deleteGroup(parameter_GroupID);
+        userManager.deleteGroup(groupID);
     }
 
     private void userAuthorize(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_AccountID = content.getParameterOrDefault(UUID.class, "accountID", null);
-        String parameter_AccountName = content.getParameterOrDefault(String.class, "accountName", null);
-        String parameter_AccountPassword = content.getParameterOrDefault(String.class, "accountPassword", null);
+        UUID accountID = content.getParameterOrDefault(UUID.class, "accountID", null);
+        String accountName = content.getParameterOrDefault(String.class, "accountName", null);
+        String accountPassword = content.getParameterOrDefault(String.class, "accountPassword", null);
+        AccountAuthorizationTokenDefinition accountAuthorizationToken = content.getParameterOrDefault(AccountAuthorizationTokenDefinition.class, "accountAuthorizationToken", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         AccountAuthorizationObject accountAuthorization;
-        if (!ValueUtil.isAnyNullOrEmpty(parameter_AccountID)) {
-            accountAuthorization = userManager.authorize(parameter_AccountID);
-        } else if (!StringUtil.isNameIllegal(parameter_AccountName)) {
-            accountAuthorization = userManager.authorize(parameter_AccountName, parameter_AccountPassword);
+        if (!ValueUtil.isAnyNullOrEmpty(accountID)) {
+            accountAuthorization = userManager.authorize(accountID);
+        } else if (!StringUtil.isNameIllegal(accountName)) {
+            if (ObjectUtil.allNotNull(accountAuthorizationToken)) {
+                accountAuthorization = userManager.authorize(accountName, accountPassword, accountAuthorizationToken);
+            } else {
+                accountAuthorization = userManager.authorize(accountName, accountPassword);
+            }
         } else {
             throw new ConditionParametersException();
         }

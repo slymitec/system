@@ -26,8 +26,7 @@ public class TestController extends AController {
         AccountAuthorizationObject authorize = userManager.authorize("System", null);
 
         ret = authorize.checkAndGetSummary();
-
-
+        
         return ret;
     }
 }

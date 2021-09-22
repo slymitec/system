@@ -22,13 +22,13 @@ public class JobContentObject extends AObject {
     protected ThreadContextObject threadContext;
 
     public Set<String> getParameterNames() {
-        Map<String, Object> threadContextData = this.threadContext.getParameters();
+        Map<String, String> threadContextData = this.threadContext.getParameters();
 
         return CollectionUtil.unmodifiable(threadContextData.keySet());
     }
 
     public Set<String> getResultNames() {
-        Map<String, Object> threadContextData = this.threadContext.getResults();
+        Map<String, String> threadContextData = this.threadContext.getResults();
 
         return CollectionUtil.unmodifiable(threadContextData.keySet());
     }
@@ -69,14 +69,13 @@ public class JobContentObject extends AObject {
         return this.getParameterOrDefaultProvider(clazz, name, () -> defaultValue);
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T getParameterOrDefaultProvider(Class<T> clazz, String name, Provider<T> defaultValue) {
         if (ObjectUtil.isAnyNull(clazz, defaultValue) || StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
 
-        Map<String, Object> threadContextParameters = this.threadContext.getParameters();
-        Object value = threadContextParameters.getOrDefault(name, null);
+        Map<String, String> threadContextParameters = this.threadContext.getParameters();
+        String value = threadContextParameters.getOrDefault(name, null);
 
         if (ObjectUtil.isAnyNull(value)) {
             return defaultValue.acquire();
@@ -85,8 +84,22 @@ public class JobContentObject extends AObject {
                 throw new StatusRelationshipErrorException();
             }
 
-            return (T) value;
+            try {
+                return ObjectUtil.transferFromString(clazz, value);
+            } catch (RuntimeException ignored) {
+                throw new StatusUnreadableException();
+            }
         }
+    }
+
+    public <T extends AObject> T getCacheFromParameter(String name) {
+        UUID handle = this.getParameterOrDefaultProvider(UUID.class, name, null);
+
+        if (ValueUtil.isAnyNullOrEmpty(handle)) {
+            return null;
+        }
+
+        return this.getCache(handle);
     }
 
     public <T extends APrototype> void setParameter(Class<T> clazz, String name, Object value) {
@@ -94,8 +107,8 @@ public class JobContentObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        Map<String, Object> threadContextParameters = this.threadContext.getParameters();
-        threadContextParameters.put(name, value);
+        Map<String, String> threadContextParameters = this.threadContext.getParameters();
+        threadContextParameters.put(name, ObjectUtil.transferToString(value));
     }
 
     public void setResult(String name, Object value) {
@@ -103,8 +116,8 @@ public class JobContentObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        Map<String, Object> threadContextResults = new HashMap<>(this.threadContext.getResults());
-        threadContextResults.put(name, value);
+        Map<String, String> threadContextResults = new HashMap<>(this.threadContext.getResults());
+        threadContextResults.put(name, ObjectUtil.transferToString(value));
         this.threadContext.setResults(threadContextResults);
     }
 

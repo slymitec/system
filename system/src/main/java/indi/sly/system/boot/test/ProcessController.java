@@ -32,16 +32,13 @@ public class ProcessController extends AController {
         ProcessObject process = processManager.getCurrent();
         ProcessSessionObject processSession = process.getSession();
 
-//        if (ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-//            processSession.create();
-//        }
-
-
-        if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+        if (ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+            processSession.create();
+        } else {
             processSession.close();
         }
 
-        //ret = processSession.getID();
+        ret = processSession.getID();
 
         return ret;
     }

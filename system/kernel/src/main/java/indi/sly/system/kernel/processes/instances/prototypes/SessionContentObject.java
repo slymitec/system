@@ -139,7 +139,6 @@ public class SessionContentObject extends AInfoContentObject {
             this.lock(LockType.WRITE);
             this.init();
 
-
             return CollectionUtil.unmodifiable(this.session.getParameters());
         } finally {
             this.lock(LockType.NONE);

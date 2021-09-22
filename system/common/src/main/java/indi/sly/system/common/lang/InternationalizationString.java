@@ -17,8 +17,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public final class InternationalizationString implements ISerializeCapable<InternationalizationString>, Map<Locale, String> {
-    private static final long serialVersionUID = 1L;
-
     public InternationalizationString() {
         this.text = new HashMap<>();
     }

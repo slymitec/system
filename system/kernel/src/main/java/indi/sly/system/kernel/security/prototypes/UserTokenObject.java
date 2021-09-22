@@ -20,13 +20,14 @@ import java.util.Map;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserTokenObject extends AIndependentBytesValueProcessObject<UserTokenDefinition> {
     public long getPrivileges() {
-        this.lock(LockType.READ);
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        long privileges = this.value.getPrivileges();
-
-        this.lock(LockType.NONE);
-        return privileges;
+            return this.value.getPrivileges();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setPrivileges(long privileges) {
@@ -39,17 +40,27 @@ public class UserTokenObject extends AIndependentBytesValueProcessObject<UserTok
             throw new ConditionRefuseException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        this.value.setPrivileges(privileges);
+            this.value.setPrivileges(privileges);
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public Map<Long, Integer> getLimits() {
-        return this.value.getLimits();
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            return this.value.getLimits();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setLimits(Map<Long, Integer> limits) {
@@ -66,14 +77,17 @@ public class UserTokenObject extends AIndependentBytesValueProcessObject<UserTok
             throw new ConditionRefuseException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        Map<Long, Integer> accountGroupTokenLimits = this.value.getLimits();
-        accountGroupTokenLimits.clear();
-        accountGroupTokenLimits.putAll(limits);
+            Map<Long, Integer> accountGroupTokenLimits = this.value.getLimits();
+            accountGroupTokenLimits.clear();
+            accountGroupTokenLimits.putAll(limits);
 
-        this.fresh();
-        this.lock(LockType.NONE);
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 }

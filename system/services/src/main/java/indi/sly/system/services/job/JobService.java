@@ -12,7 +12,7 @@ import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensio
 import indi.sly.system.services.job.prototypes.JobBuilder;
 import indi.sly.system.services.job.prototypes.JobFactory;
 import indi.sly.system.services.job.prototypes.JobObject;
-import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
+import indi.sly.system.services.job.instances.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.values.JobDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

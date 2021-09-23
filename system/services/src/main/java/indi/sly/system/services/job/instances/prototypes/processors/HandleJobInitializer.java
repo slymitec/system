@@ -11,7 +11,6 @@ import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.services.job.lang.JobRunConsumer;
 import indi.sly.system.services.job.prototypes.JobContentObject;
-import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.values.JobDefinition;
 import indi.sly.system.services.job.values.JobTransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -42,22 +41,22 @@ public class HandleJobInitializer extends AJobInitializer {
     }
 
     private void customHandle(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_HandleID = content.getParameterOrDefault(UUID.class, "handleID", null);
-        String parameter_MethodName = content.getParameterOrDefault(String.class, "methodName", null);
-        if (ValueUtil.isAnyNullOrEmpty(parameter_HandleID) || StringUtil.isNameIllegal(parameter_MethodName)) {
+        UUID handleID = content.getParameterOrDefault(UUID.class, "handleID", null);
+        String methodName = content.getParameterOrDefault(String.class, "methodName", null);
+        if (ValueUtil.isAnyNullOrEmpty(handleID) || StringUtil.isNameIllegal(methodName)) {
             throw new ConditionParametersException();
         }
-        Class<?>[] parameter_MethodParameters = content.getParameterOrDefault(Class[].class, "methodParameterTypes", null);
+        Class<?>[] methodParameters = content.getParameterOrDefault(Class[].class, "methodParameterTypes", null);
 
-        AObject object = content.getCache(parameter_HandleID);
+        AObject object = content.getCache(handleID);
 
         Class<? extends AObject> clazz = object.getClass();
         Method method;
         try {
-            if (ObjectUtil.notNull(parameter_MethodParameters)) {
-                method = clazz.getMethod(parameter_MethodName, parameter_MethodParameters);
+            if (ObjectUtil.notNull(methodParameters)) {
+                method = clazz.getMethod(methodName, methodParameters);
             } else {
-                method = clazz.getMethod(parameter_MethodName);
+                method = clazz.getMethod(methodName);
             }
         } catch (NoSuchMethodException e) {
             throw new StatusNotExistedException();
@@ -99,12 +98,12 @@ public class HandleJobInitializer extends AJobInitializer {
     }
 
     private void deleteHandle(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_handleID = content.getParameterOrDefault(UUID.class, "handleID", null);
-        if (ValueUtil.isAnyNullOrEmpty(parameter_handleID)) {
+        UUID handleID = content.getParameterOrDefault(UUID.class, "handleID", null);
+        if (ValueUtil.isAnyNullOrEmpty(handleID)) {
             throw new ConditionParametersException();
         }
 
-        content.deleteCache(parameter_handleID);
+        content.deleteCache(handleID);
     }
 
     private void deleteAllHandle(JobRunConsumer run, JobContentObject content) {

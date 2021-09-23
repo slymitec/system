@@ -1,7 +1,7 @@
 package indi.sly.system.services.job.values;
 
 import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
+import indi.sly.system.services.job.instances.prototypes.processors.AJobInitializer;
 
 import java.util.UUID;
 

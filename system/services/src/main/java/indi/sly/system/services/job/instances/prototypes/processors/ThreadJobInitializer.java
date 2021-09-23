@@ -10,7 +10,6 @@ import indi.sly.system.kernel.processes.prototypes.ThreadStatusObject;
 import indi.sly.system.kernel.processes.values.ThreadContextType;
 import indi.sly.system.services.job.lang.JobRunConsumer;
 import indi.sly.system.services.job.prototypes.JobContentObject;
-import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.values.JobDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,7 +34,7 @@ public class ThreadJobInitializer extends AJobInitializer {
     }
 
     private void createThread(JobRunConsumer run, JobContentObject content) {
-        UUID parameter_ProcessID = content.getParameter(UUID.class, "Processes_Process_ID");
+        UUID processID = content.getParameter(UUID.class, "ProcessID");
 
         //
 
@@ -47,7 +46,7 @@ public class ThreadJobInitializer extends AJobInitializer {
             throw new StatusAlreadyExistedException();
         }
 
-        ThreadObject thread = threadManager.create(parameter_ProcessID);
+        ThreadObject thread = threadManager.create(processID);
 
         ThreadStatusObject threadStatus = thread.getStatus();
         threadStatus.running();

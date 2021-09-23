@@ -3,7 +3,6 @@ package indi.sly.system.services.job.instances.prototypes.processors;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.services.job.lang.JobRunConsumer;
 import indi.sly.system.services.job.prototypes.JobContentObject;
-import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.values.JobDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

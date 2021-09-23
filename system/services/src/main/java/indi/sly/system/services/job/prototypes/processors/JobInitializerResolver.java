@@ -2,6 +2,7 @@ package indi.sly.system.services.job.prototypes.processors;
 
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.services.job.instances.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.lang.*;
 import indi.sly.system.services.job.prototypes.JobContentObject;
 import indi.sly.system.services.job.prototypes.wrappers.JobProcessorMediator;

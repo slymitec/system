@@ -19,7 +19,6 @@ import indi.sly.system.kernel.security.prototypes.GroupObject;
 import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import indi.sly.system.services.job.lang.JobRunConsumer;
 import indi.sly.system.services.job.prototypes.JobContentObject;
-import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.values.JobDefinition;
 import indi.sly.system.services.job.values.JobTransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

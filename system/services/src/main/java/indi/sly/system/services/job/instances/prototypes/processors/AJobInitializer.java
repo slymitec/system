@@ -1,4 +1,4 @@
-package indi.sly.system.services.job.prototypes.processors;
+package indi.sly.system.services.job.instances.prototypes.processors;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusNotExistedException;

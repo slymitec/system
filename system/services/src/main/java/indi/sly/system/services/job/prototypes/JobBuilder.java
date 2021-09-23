@@ -6,7 +6,7 @@ import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
-import indi.sly.system.services.job.prototypes.processors.AJobInitializer;
+import indi.sly.system.services.job.instances.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.values.JobAttributeType;
 import indi.sly.system.services.job.values.JobDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

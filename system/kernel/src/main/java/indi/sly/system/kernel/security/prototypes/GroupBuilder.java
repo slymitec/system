@@ -55,7 +55,7 @@ public class GroupBuilder extends ABuilder {
             userRepository.add(group);
         }
 
-        return this.factory.buildGroup(group);
+        return this.factory.buildGroup(group.getID());
     }
 
     public void delete(UUID groupID) {

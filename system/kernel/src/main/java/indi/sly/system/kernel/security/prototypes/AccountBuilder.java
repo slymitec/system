@@ -59,7 +59,7 @@ public class AccountBuilder extends ABuilder {
             userRepository.add(account);
         }
 
-        return this.factory.buildAccount(account);
+        return this.factory.buildAccount(account.getID());
     }
 
     public void delete(UUID accountID) {

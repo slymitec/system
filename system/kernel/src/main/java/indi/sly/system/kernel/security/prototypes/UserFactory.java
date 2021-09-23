@@ -3,7 +3,7 @@ package indi.sly.system.kernel.security.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.Consumer1;
 import indi.sly.system.common.lang.Provider;
-import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
@@ -34,12 +34,10 @@ public class UserFactory extends AFactory {
         return account;
     }
 
-    public AccountObject buildAccount(AccountEntity account) {
-        if (ObjectUtil.isAnyNull(account)) {
+    public AccountObject buildAccount(UUID accountID) {
+        if (ValueUtil.isAnyNullOrEmpty(accountID)) {
             throw new ConditionParametersException();
         }
-
-        UUID accountID = account.getID();
 
         Provider<AccountEntity> funcRead = () -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
@@ -69,12 +67,10 @@ public class UserFactory extends AFactory {
         return group;
     }
 
-    public GroupObject buildGroup(GroupEntity group) {
-        if (ObjectUtil.isAnyNull(group)) {
+    public GroupObject buildGroup(UUID groupID) {
+        if (ValueUtil.isAnyNullOrEmpty(groupID)) {
             throw new ConditionParametersException();
         }
-
-        UUID groupID = group.getID();
 
         Provider<GroupEntity> funcRead = () -> {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);

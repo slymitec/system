@@ -68,9 +68,11 @@ public class UserManager extends AManager {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
-        AccountEntity account = userRepository.getAccount(accountID);
+        if (!userRepository.containAccount(accountID)) {
+            throw new StatusNotExistedException();
+        }
 
-        return this.factory.buildAccount(account);
+        return this.factory.buildAccount(accountID);
     }
 
     private AccountObject getTargetAccount(String accountName) {
@@ -83,7 +85,7 @@ public class UserManager extends AManager {
 
         AccountEntity account = userRepository.getAccount(accountName);
 
-        return this.factory.buildAccount(account);
+        return this.factory.buildAccount(account.getID());
     }
 
     public AccountObject getCurrentAccount() {
@@ -149,9 +151,11 @@ public class UserManager extends AManager {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
-        GroupEntity group = userRepository.getGroup(groupID);
+        if (!userRepository.containGroup(groupID)) {
+            throw new StatusNotExistedException();
+        }
 
-        return this.factory.buildGroup(group);
+        return this.factory.buildGroup(groupID);
     }
 
     public GroupObject getGroup(String groupName) {
@@ -164,7 +168,7 @@ public class UserManager extends AManager {
 
         GroupEntity group = userRepository.getGroup(groupName);
 
-        return this.factory.buildGroup(group);
+        return this.factory.buildGroup(group.getID());
     }
 
     public AccountObject createAccount(String accountName, String accountPassword) {

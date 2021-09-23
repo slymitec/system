@@ -24,10 +24,10 @@ public abstract class AProcessObject<T1, T2> extends AObject {
         this.parent = parent;
 
         if (ObjectUtil.allNotNull(this.parent)) {
-            if (this.parent instanceof AProcessObject) {
-                this.funcParentInit = ((AProcessObject<?, ?>) this.parent)::init;
-                this.funcParentFresh = ((AProcessObject<?, ?>) this.parent)::fresh;
-                this.funcParentLock = ((AProcessObject<?, ?>) this.parent)::lock;
+            if (this.parent instanceof AProcessObject parentProcess) {
+                this.funcParentInit = parentProcess::init;
+                this.funcParentFresh = parentProcess::fresh;
+                this.funcParentLock = parentProcess::lock;
             }
         } else {
             this.funcParentInit = null;

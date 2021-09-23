@@ -54,7 +54,7 @@ public class UserIDDefinition extends ADefinition<UserIDDefinition> {
     }
 
     @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+    public void readExternal(ObjectInput in) throws IOException {
         this.id = UUIDUtil.readExternal(in);
         this.type = NumberUtil.readExternalLong(in);
     }

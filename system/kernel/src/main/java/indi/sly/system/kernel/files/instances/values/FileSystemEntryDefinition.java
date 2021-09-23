@@ -58,7 +58,7 @@ public class FileSystemEntryDefinition extends ADefinition<FileSystemEntryDefini
     }
 
     @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+    public void readExternal(ObjectInput in) throws IOException {
         this.type = NumberUtil.readExternalLong(in);
         this.value = NumberUtil.readExternalBytes(in);
     }

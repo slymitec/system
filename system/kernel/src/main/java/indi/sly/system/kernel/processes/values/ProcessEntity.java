@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "Kernel_Processes")
 public class ProcessEntity extends AEntity<ProcessEntity> {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id

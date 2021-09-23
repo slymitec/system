@@ -7,11 +7,13 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Serial;
 import java.util.*;
 
 @Entity
 @Table(name = "Kernel_Accounts")
 public class AccountEntity extends AEntity<AccountEntity> {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public AccountEntity() {

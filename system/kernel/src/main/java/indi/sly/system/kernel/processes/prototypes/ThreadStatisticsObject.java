@@ -22,11 +22,12 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
 
         Long value = this.value.getDate().getOrDefault(dataTime, null);
 
+        this.lock(LockType.NONE);
+
         if (ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.NONE);
         return value;
     }
 

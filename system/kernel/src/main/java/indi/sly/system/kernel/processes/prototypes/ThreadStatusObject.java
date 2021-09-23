@@ -15,54 +15,64 @@ import javax.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, ThreadObject> {
     public long get() {
-        this.lock(LockType.READ);
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        long status = this.value.getStatus();
-
-        this.lock(LockType.NONE);
-        return status;
+            return this.value.getStatus();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void initialize() {
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        if (LogicalUtil.allNotEqual(this.value.getStatus(), ThreadStatusType.NULL)) {
-            throw new StatusRelationshipErrorException();
+            if (LogicalUtil.allNotEqual(this.value.getStatus(), ThreadStatusType.NULL)) {
+                throw new StatusRelationshipErrorException();
+            }
+
+            this.value.setStatus(ThreadStatusType.INITIALIZATION);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        this.value.setStatus(ThreadStatusType.INITIALIZATION);
-
-        this.fresh();
-        this.lock(LockType.NONE);
     }
 
     public void running() {
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        if (LogicalUtil.allNotEqual(this.value.getStatus(), ThreadStatusType.INITIALIZATION)) {
-            throw new StatusRelationshipErrorException();
+            if (LogicalUtil.allNotEqual(this.value.getStatus(), ThreadStatusType.INITIALIZATION)) {
+                throw new StatusRelationshipErrorException();
+            }
+
+            this.value.setStatus(ThreadStatusType.RUNNING);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        this.value.setStatus(ThreadStatusType.RUNNING);
-
-        this.fresh();
-        this.lock(LockType.NONE);
     }
 
     public void die() {
-        this.lock(LockType.WRITE);
-        this.init();
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
 
-        if (LogicalUtil.allNotEqual(this.value.getStatus(), ThreadStatusType.RUNNING)) {
-            throw new StatusRelationshipErrorException();
+            if (LogicalUtil.allNotEqual(this.value.getStatus(), ThreadStatusType.RUNNING)) {
+                throw new StatusRelationshipErrorException();
+            }
+
+            this.value.setStatus(ThreadStatusType.DIED);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        this.value.setStatus(ThreadStatusType.DIED);
-
-        this.fresh();
-        this.lock(LockType.NONE);
     }
 }

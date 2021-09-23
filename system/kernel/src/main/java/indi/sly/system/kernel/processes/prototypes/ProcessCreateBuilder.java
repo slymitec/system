@@ -52,6 +52,10 @@ public class ProcessCreateBuilder extends ABuilder {
             throw new ConditionParametersException();
         }
 
+        if (ObjectUtil.allNotNull(this.process)) {
+            return this.process;
+        }
+
         this.build();
 
         ProcessStatusObject processStatus = this.process.getStatus();

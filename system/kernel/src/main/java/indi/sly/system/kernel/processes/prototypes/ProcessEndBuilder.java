@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
@@ -21,6 +22,10 @@ public class ProcessEndBuilder extends ABuilder {
     protected ProcessObject parentProcess;
 
     public void build() {
+        if (ObjectUtil.isAnyNull(this.process)) {
+            return;
+        }
+
         ProcessStatusObject processStatus = this.process.getStatus();
 
         processStatus.die();
@@ -36,6 +41,7 @@ public class ProcessEndBuilder extends ABuilder {
         this.delete();
 
         this.process = null;
+        this.parentProcess = null;
     }
 
     private void delete() {

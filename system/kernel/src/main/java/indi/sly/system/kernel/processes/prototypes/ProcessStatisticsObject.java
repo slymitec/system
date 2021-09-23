@@ -23,11 +23,12 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
 
         Long value = this.value.getDate().getOrDefault(dataTime, null);
 
+        this.lock(LockType.NONE);
+
         if (ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.NONE);
         return value;
     }
 

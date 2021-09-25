@@ -110,6 +110,5 @@ public class UserFactory extends AFactory {
         groupBuilder.processToken = process.getToken();
 
         return groupBuilder;
-
     }
 }

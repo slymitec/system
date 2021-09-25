@@ -36,6 +36,7 @@ subprojects {
 dependencies {
     implementation(project(":common"))
     implementation(project(":kernel"))
+    implementation(project(":services"))
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")

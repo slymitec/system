@@ -13,6 +13,7 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
+import indi.sly.system.services.job.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,11 +55,17 @@ public class BootController extends ABase {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
+        this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL, this.factoryManager.create(JobService.class));
+
+        JobService jobService = this.factoryManager.getService(JobService.class);
+
         Long[] startups = new Long[]{
                 StartupType.STEP_INIT_SELF,
                 StartupType.STEP_AFTER_SELF,
                 StartupType.STEP_INIT_KERNEL,
-                StartupType.STEP_AFTER_KERNEL
+                StartupType.STEP_AFTER_KERNEL,
+                StartupType.STEP_INIT_SERVICE,
+                StartupType.STEP_AFTER_SERVICE
         };
 
         for (Long startup : startups) {
@@ -70,6 +77,8 @@ public class BootController extends ABase {
             userManager.startup(startup);
             objectManager.startup(startup);
             fileSystemManager.startup(startup);
+
+            jobService.startup(startup);
         }
 
         this.ret = "----Boot-Finished----";

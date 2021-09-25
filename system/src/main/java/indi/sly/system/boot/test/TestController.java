@@ -1,7 +1,9 @@
 package indi.sly.system.boot.test;
 
-import indi.sly.system.kernel.security.UserManager;
-import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
+import indi.sly.system.services.job.JobService;
+import indi.sly.system.services.job.instances.prototypes.processors.ManagerJobInitializer;
+import indi.sly.system.services.job.prototypes.JobObject;
+import indi.sly.system.services.job.values.JobAttributeType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @Transactional
@@ -19,14 +23,18 @@ public class TestController extends AController {
     public Object test(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init(request, response, session);
 
-        Object ret = "finished";
+        Map<String, Object> result = new HashMap<>();
+        Object ret = result;
 
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+        JobService jobService = this.factoryManager.getService(JobService.class);
 
-        AccountAuthorizationObject authorize = userManager.authorize("System", null);
+        JobObject managers = jobService.createJob("Managers", JobAttributeType.NULL, null,
+                this.factoryManager.create(ManagerJobInitializer.class));
 
-        ret = authorize.checkAndGetSummary();
-        
+        managers.start();
+
+        managers.finish();
+
         return ret;
     }
 }

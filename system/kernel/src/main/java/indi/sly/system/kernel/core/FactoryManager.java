@@ -44,7 +44,7 @@ public class FactoryManager extends AManager {
 
             this.setUserSpace(new UserSpaceDefinition());
 
-            this.coreObjectRepository = this.create(CoreObjectRepositoryObject.class);
+            this.coreObjectRepository = this.factoryManager.create(CoreObjectRepositoryObject.class);
             this.coreObjectRepository.setLimit(SpaceType.KERNEL, Long.MAX_VALUE);
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this);
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(FileSystemManager.class));

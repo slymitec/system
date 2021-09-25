@@ -39,8 +39,8 @@ public class FactoryManager extends AManager {
             this.factoryManager = this;
             this.factoryManager.check();
 
-            this.corePrototypeValue = SpringHelper.getInstance(CorePrototypeValueBuilder.class);
-            this.corePrototypeValue.setFactoryManager(this);
+            this.corePrototypeValueBuilder = SpringHelper.getInstance(CorePrototypeValueBuilder.class);
+            this.corePrototypeValueBuilder.setFactoryManager(this);
 
             this.setUserSpace(new UserSpaceDefinition());
 
@@ -74,7 +74,7 @@ public class FactoryManager extends AManager {
         }
     }
 
-    private CorePrototypeValueBuilder corePrototypeValue;
+    private CorePrototypeValueBuilder corePrototypeValueBuilder;
     private CoreObjectRepositoryObject coreObjectRepository;
 
     public CoreObjectRepositoryObject getCoreObjectRepository() {
@@ -82,7 +82,7 @@ public class FactoryManager extends AManager {
     }
 
     public <T extends APrototype> T create(Class<T> clazz) {
-        return this.corePrototypeValue.createPrototype(clazz);
+        return this.corePrototypeValueBuilder.createPrototype(clazz);
     }
 
     public <T extends AManager> T getManager(Class<T> clazz) {

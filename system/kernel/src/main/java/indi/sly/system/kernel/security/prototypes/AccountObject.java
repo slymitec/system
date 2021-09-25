@@ -25,33 +25,36 @@ import java.util.*;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AccountObject extends AIndependentValueProcessObject<AccountEntity> {
     public UUID getID() {
-        this.lock(LockType.READ);
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        UUID id = this.value.getID();
-
-        this.lock(LockType.NONE);
-        return id;
+            return this.value.getID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public String getName() {
-        this.lock(LockType.READ);
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        String name = this.value.getName();
-
-        this.lock(LockType.NONE);
-        return name;
+            return this.value.getName();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public String getPassword() {
-        this.lock(LockType.READ);
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        String password = this.value.getPassword();
-
-        this.lock(LockType.NONE);
-        return password;
+            return this.value.getPassword();
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 
     public void setPassword(String password) {
@@ -79,17 +82,20 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
     public Set<GroupObject> getGroups() {
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        this.lock(LockType.READ);
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        Set<GroupObject> groups = new HashSet<>();
+            Set<GroupObject> groups = new HashSet<>();
 
-        for (GroupEntity group : this.value.getGroups()) {
-            groups.add(userManager.getGroup(group.getID()));
+            for (GroupEntity group : this.value.getGroups()) {
+                groups.add(userManager.getGroup(group.getID()));
+            }
+
+            return CollectionUtil.unmodifiable(groups);
+        } finally {
+            this.lock(LockType.NONE);
         }
-
-        this.lock(LockType.NONE);
-        return CollectionUtil.unmodifiable(groups);
     }
 
     public void setGroups(Set<GroupObject> groups) {
@@ -130,15 +136,18 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
     }
 
     public UserTokenObject getToken() {
-        this.lock(LockType.READ);
-        this.init();
+        try {
+            this.lock(LockType.READ);
+            this.init();
 
-        UserTokenObject accountGroupToken = this.factoryManager.create(UserTokenObject.class);
+            UserTokenObject accountGroupToken = this.factoryManager.create(UserTokenObject.class);
 
-        accountGroupToken.setParent(this);
-        accountGroupToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
+            accountGroupToken.setParent(this);
+            accountGroupToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
 
-        this.lock(LockType.NONE);
-        return accountGroupToken;
+            return accountGroupToken;
+        } finally {
+            this.lock(LockType.NONE);
+        }
     }
 }

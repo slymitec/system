@@ -29,6 +29,8 @@ public class JobService extends AService {
             this.factoryManager.getKernelSpace().setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
             this.factoryManager.getUserSpace().setServiceSpace(new ServiceUserSpaceExtensionDefinition());
         } else if (startup == StartupType.STEP_INIT_SERVICE) {
+            this.factory = this.factoryManager.create(JobFactory.class);
+            this.factory.init();
         }
     }
 

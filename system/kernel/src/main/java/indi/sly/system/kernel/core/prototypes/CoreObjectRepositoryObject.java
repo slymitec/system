@@ -194,7 +194,7 @@ public class CoreObjectRepositoryObject extends AObject {
 
             Map<UUID, HandleEntryDefinition> handledHandles = this.getSpace(space).getHandledHandles();
 
-            if (handledHandles.size() > this.getSpace(space).getCoreObjectLimit()) {
+            if (handledHandles.size() >= this.getSpace(space).getCoreObjectLimit()) {
                 throw new StatusInsufficientResourcesException();
             }
             if (handledHandles.containsKey(handle)) {

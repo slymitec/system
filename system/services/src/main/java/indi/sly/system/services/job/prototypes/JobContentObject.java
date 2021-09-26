@@ -1,10 +1,12 @@
 package indi.sly.system.services.job.prototypes;
 
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.*;
+import indi.sly.system.common.supports.CollectionUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AObject;
-import indi.sly.system.kernel.core.prototypes.APrototype;
 import indi.sly.system.kernel.core.prototypes.CoreObjectRepositoryObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -102,7 +104,7 @@ public class JobContentObject extends AObject {
         return this.getCache(handle);
     }
 
-    public <T extends APrototype> void setParameter(Class<T> clazz, String name, Object value) {
+    public <T> void setParameter(Class<T> clazz, String name, Object value) {
         if (ObjectUtil.isAnyNull(clazz) || StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }

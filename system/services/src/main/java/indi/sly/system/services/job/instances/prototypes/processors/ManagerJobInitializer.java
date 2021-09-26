@@ -20,7 +20,7 @@ import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinitio
 import indi.sly.system.services.job.lang.JobRunConsumer;
 import indi.sly.system.services.job.prototypes.JobContentObject;
 import indi.sly.system.services.job.values.JobDefinition;
-import indi.sly.system.services.job.values.JobTransactionType;
+import indi.sly.system.services.core.values.TransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -32,24 +32,24 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ManagerJobInitializer extends AJobInitializer {
     public ManagerJobInitializer() {
-        this.register("coreGetDate", this::coreGetDate, JobTransactionType.INDEPENDENCE);
-        this.register("coreGetVersion", this::coreGetVersion, JobTransactionType.INDEPENDENCE);
+        this.register("coreGetDate", this::coreGetDate, TransactionType.INDEPENDENCE);
+        this.register("coreGetVersion", this::coreGetVersion, TransactionType.INDEPENDENCE);
 
-        this.register("objectGet", this::objectGet, JobTransactionType.INDEPENDENCE);
+        this.register("objectGet", this::objectGet, TransactionType.INDEPENDENCE);
 
-        this.register("processGetCurrent", this::processGetCurrent, JobTransactionType.INDEPENDENCE);
-        this.register("processGet", this::processGet, JobTransactionType.INDEPENDENCE);
-        this.register("processCreate", this::processCreate, JobTransactionType.INDEPENDENCE);
-        this.register("processEndCurrent", this::processEndCurrent, JobTransactionType.INDEPENDENCE);
+        this.register("processGetCurrent", this::processGetCurrent, TransactionType.INDEPENDENCE);
+        this.register("processGet", this::processGet, TransactionType.INDEPENDENCE);
+        this.register("processCreate", this::processCreate, TransactionType.INDEPENDENCE);
+        this.register("processEndCurrent", this::processEndCurrent, TransactionType.INDEPENDENCE);
 
-        this.register("userGetCurrentAccount", this::userGetCurrentAccount, JobTransactionType.INDEPENDENCE);
-        this.register("userGetAccount", this::userGetAccount, JobTransactionType.INDEPENDENCE);
-        this.register("userGetGroup", this::userGetGroup, JobTransactionType.INDEPENDENCE);
-        this.register("userCreateAccount", this::userCreateAccount, JobTransactionType.INDEPENDENCE);
-        this.register("userCreateGroup", this::userCreateGroup, JobTransactionType.INDEPENDENCE);
-        this.register("userDeleteAccount", this::userDeleteAccount, JobTransactionType.INDEPENDENCE);
-        this.register("userDeleteGroup", this::userDeleteGroup, JobTransactionType.INDEPENDENCE);
-        this.register("userAuthorize", this::userAuthorize, JobTransactionType.INDEPENDENCE);
+        this.register("userGetCurrentAccount", this::userGetCurrentAccount, TransactionType.INDEPENDENCE);
+        this.register("userGetAccount", this::userGetAccount, TransactionType.INDEPENDENCE);
+        this.register("userGetGroup", this::userGetGroup, TransactionType.INDEPENDENCE);
+        this.register("userCreateAccount", this::userCreateAccount, TransactionType.INDEPENDENCE);
+        this.register("userCreateGroup", this::userCreateGroup, TransactionType.INDEPENDENCE);
+        this.register("userDeleteAccount", this::userDeleteAccount, TransactionType.INDEPENDENCE);
+        this.register("userDeleteGroup", this::userDeleteGroup, TransactionType.INDEPENDENCE);
+        this.register("userAuthorize", this::userAuthorize, TransactionType.INDEPENDENCE);
     }
 
     @Override

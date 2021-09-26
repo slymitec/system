@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 
 @RestController
 @Transactional
-public class SecurityController extends AController {
+public class SecurityController extends ATController {
     @RequestMapping(value = {"/SecurityTest.action"}, method = {RequestMethod.GET})
     @Transactional
     public Object createUser(HttpServletRequest request, HttpServletResponse response, HttpSession session) {

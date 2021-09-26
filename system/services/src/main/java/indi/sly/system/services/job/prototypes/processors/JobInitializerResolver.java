@@ -1,7 +1,9 @@
 package indi.sly.system.services.job.prototypes.processors;
 
 import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.services.core.prototypes.TransactionalActionObject;
 import indi.sly.system.services.job.instances.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.lang.*;
 import indi.sly.system.services.job.prototypes.JobContentObject;
@@ -9,7 +11,7 @@ import indi.sly.system.services.job.prototypes.wrappers.JobProcessorMediator;
 import indi.sly.system.services.job.values.JobAttributeType;
 import indi.sly.system.services.job.values.JobDefinition;
 import indi.sly.system.services.job.values.JobInitializerRunSummaryDefinition;
-import indi.sly.system.services.job.values.JobTransactionType;
+import indi.sly.system.services.core.values.TransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -37,18 +39,17 @@ public class JobInitializerResolver extends AJobResolver {
             JobInitializerRunSummaryDefinition initializerRun = initializer.getRun(name);
 
             try {
-                long initializerRunTransaction = JobTransactionType.WHATEVER;
-                if (LogicalUtil.isAllExist(job.getAttribute(), JobAttributeType.HAS_NOT_TRANSACTION)) {
+                long initializerRunTransaction = TransactionType.WHATEVER;
+                if (!LogicalUtil.isAnyExist(job.getAttribute(), JobAttributeType.HAS_NOT_TRANSACTION)) {
                     initializerRunTransaction = initializerRun.getTransaction();
                 }
 
-                if (initializerRunTransaction == JobTransactionType.INDEPENDENCE) {
-                    this.runEntryWithIndependentTransactional(initializerRun.getMethod(), run, content);
-                } else if (initializerRunTransaction == JobTransactionType.PROHIBITED) {
-                    this.runEntryWithoutTransactional(initializerRun.getMethod(), run, content);
-                } else if (initializerRunTransaction == JobTransactionType.WHATEVER) {
-                    this.runEntry(initializerRun.getMethod(), run, content);
-                }
+                TransactionalActionObject transactionalAction = this.factoryManager.create(TransactionalActionObject.class);
+                transactionalAction.run(initializerRunTransaction, (Provider<Void>) () -> {
+                    initializerRun.getMethod().accept(run, content);
+
+                    return null;
+                });
             } catch (AKernelException exception) {
                 content.setException(exception);
             }

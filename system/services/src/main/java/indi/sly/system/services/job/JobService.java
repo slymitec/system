@@ -8,11 +8,10 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
-import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
+import indi.sly.system.services.job.instances.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.prototypes.JobBuilder;
 import indi.sly.system.services.job.prototypes.JobFactory;
 import indi.sly.system.services.job.prototypes.JobObject;
-import indi.sly.system.services.job.instances.prototypes.processors.AJobInitializer;
 import indi.sly.system.services.job.values.JobDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -27,7 +26,6 @@ public class JobService extends AService {
     public void startup(long startup) {
         if (startup == StartupType.STEP_INIT_SELF) {
             this.factoryManager.getKernelSpace().setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
-            this.factoryManager.getUserSpace().setServiceSpace(new ServiceUserSpaceExtensionDefinition());
         } else if (startup == StartupType.STEP_INIT_SERVICE) {
             this.factory = this.factoryManager.create(JobFactory.class);
             this.factory.init();

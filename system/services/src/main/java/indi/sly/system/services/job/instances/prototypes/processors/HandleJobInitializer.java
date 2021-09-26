@@ -12,7 +12,7 @@ import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.services.job.lang.JobRunConsumer;
 import indi.sly.system.services.job.prototypes.JobContentObject;
 import indi.sly.system.services.job.values.JobDefinition;
-import indi.sly.system.services.job.values.JobTransactionType;
+import indi.sly.system.services.core.values.TransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -26,10 +26,10 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class HandleJobInitializer extends AJobInitializer {
     public HandleJobInitializer() {
-        this.register("getAllHandle", this::getAllHandle, JobTransactionType.INDEPENDENCE);
-        this.register("deleteHandle", this::deleteHandle, JobTransactionType.INDEPENDENCE);
-        this.register("deleteAllHandle", this::deleteAllHandle, JobTransactionType.INDEPENDENCE);
-        this.register("customHandle", this::customHandle, JobTransactionType.INDEPENDENCE);
+        this.register("getAllHandle", this::getAllHandle, TransactionType.INDEPENDENCE);
+        this.register("deleteHandle", this::deleteHandle, TransactionType.INDEPENDENCE);
+        this.register("deleteAllHandle", this::deleteAllHandle, TransactionType.INDEPENDENCE);
+        this.register("customHandle", this::customHandle, TransactionType.INDEPENDENCE);
     }
 
     @Override

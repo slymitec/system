@@ -6,6 +6,7 @@ import indi.sly.system.kernel.core.FactoryManager;
 import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.files.FileSystemManager;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -45,6 +46,8 @@ public class BootController extends ABase {
 
         this.factoryManager.startup(StartupType.STEP_INIT_SELF);
         this.factoryManager.startup(StartupType.STEP_AFTER_SELF);
+
+        this.factoryManager.setUserSpace(new UserSpaceDefinition());
 
         BootObject boot = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, BootObject.class);
         FileSystemManager fileSystemManager = this.factoryManager.getManager(FileSystemManager.class);

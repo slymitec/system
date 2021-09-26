@@ -1,6 +1,8 @@
 package indi.sly.system.boot.test;
 
-import indi.sly.system.kernel.core.prototypes.AObject;
+import indi.sly.system.common.supports.SpringHelper;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.services.job.JobService;
 import indi.sly.system.services.job.instances.prototypes.processors.ManagerJobInitializer;
 import indi.sly.system.services.job.prototypes.JobContentObject;
@@ -13,45 +15,55 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 @RestController
-public class TestController extends AController {
+public class TestController extends ATController {
     @RequestMapping(value = {"/Test.action"}, method = {RequestMethod.GET})
-    @Transactional
     public Object test(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        this.init(request, response, session);
+        TranObject instance = SpringHelper.getInstance(TranObject.class);
+        instance.doo(() -> {
+            this.init(request, response, session);
+
+            return null;
+        });
+
 
         Map<String, Object> result = new HashMap<>();
-        Object ret = result;
+        Object ret = instance.getClass().getName();
 
         JobService jobService = this.factoryManager.getService(JobService.class);
 
-        JobObject managers = jobService.createJob("Managers", JobAttributeType.NULL, null,
+        JobObject job = jobService.createJob("Managers", JobAttributeType.NULL, null,
                 this.factoryManager.create(ManagerJobInitializer.class));
 
-        managers.start();
+        instance.doo(() -> {
+            job.start();
 
-        managers.run("processGetCurrent");
+            return null;
+        });
 
-        JobContentObject content = managers.getContent();
+        new RuntimeException();
 
-        ret = content.getResultNames();
+        JobContentObject content = job.getContent();
+        content.setParameter(UUID.class, "ProcessID", this.kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
 
-        Set<UUID> allHandle = content.getAllHandle();
+        job.run("createThread");
 
-        for (UUID handle : allHandle) {
+        instance.doo(() -> {
+            job.finish();
 
-            AObject process = content.getCache(handle);
+            return null;
+        });
 
-            ret = process.getClass().getName();
-        }
 
-        managers.finish();
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessObject process = processManager.getCurrent();
+
+        ret = process.getID();
 
         return ret;
     }

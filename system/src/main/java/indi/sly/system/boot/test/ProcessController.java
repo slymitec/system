@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @RestController
 @Transactional
-public class ProcessController extends AController {
+public class ProcessController extends ATController {
     @RequestMapping(value = {"/ProcessSession.action"}, method = {RequestMethod.GET})
     @Transactional
     public Object processSession(HttpServletRequest request, HttpServletResponse response, HttpSession session) {

@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @RestController
 @Transactional
-public class ObjectController extends AController {
+public class ObjectController extends ATController {
     @RequestMapping(value = {"/ObjectTest.action"}, method = {RequestMethod.GET})
     @Transactional
     public Object objectTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {

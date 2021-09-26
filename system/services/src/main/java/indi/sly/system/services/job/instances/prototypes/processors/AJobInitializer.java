@@ -9,7 +9,7 @@ import indi.sly.system.services.job.lang.JobInitializerRunMethodConsumer;
 import indi.sly.system.services.job.values.JobDefinition;
 import indi.sly.system.services.job.values.JobInitializerRunDefinition;
 import indi.sly.system.services.job.values.JobInitializerRunSummaryDefinition;
-import indi.sly.system.services.job.values.JobTransactionType;
+import indi.sly.system.services.core.values.TransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -27,7 +27,7 @@ public abstract class AJobInitializer extends AInitializer {
     private final Map<String, JobInitializerRunDefinition> runs;
 
     protected final void register(String name, JobInitializerRunMethodConsumer runMethod) {
-        this.register(name, runMethod, JobTransactionType.INDEPENDENCE);
+        this.register(name, runMethod, TransactionType.INDEPENDENCE);
     }
 
     protected final void register(String name, JobInitializerRunMethodConsumer runMethod, long runTransaction) {

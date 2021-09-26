@@ -8,6 +8,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.FactoryManager;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.processes.ThreadManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
-public abstract class AController extends ABase {
+public abstract class ATController extends ABase {
     @Autowired
     private KernelSpaceDefinition kernelSpaceDefinition;
 
@@ -54,10 +55,11 @@ public abstract class AController extends ABase {
                         FactoryManager.class, null).getID(), null);
 
         this.factoryManager.setUserSpace(new UserSpaceDefinition());
+        this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, 16L);
 
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
         if (ValueUtil.isAnyNullOrEmpty(processID)) {
-            threadManager.create(this.kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+            //threadManager.create(this.kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
         } else {
             threadManager.create(processID);
         }

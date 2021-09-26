@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefinition> {
+    public final long CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT = 16L;
+
     public final UUID FILES_TYPES_INSTANCE_FILE_ID
             = UUIDUtil.getFormLongs(5141458603474635654L, -6744682139694385633L);
     public final String FILES_TYPES_INSTANCE_FILE_NAME = "File";

@@ -42,8 +42,6 @@ public class FactoryManager extends AManager {
             this.corePrototypeValueBuilder = SpringHelper.getInstance(CorePrototypeValueBuilder.class);
             this.corePrototypeValueBuilder.setFactoryManager(this);
 
-            this.setUserSpace(new UserSpaceDefinition());
-
             this.coreObjectRepository = this.factoryManager.create(CoreObjectRepositoryObject.class);
             this.coreObjectRepository.setLimit(SpaceType.KERNEL, Long.MAX_VALUE);
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this);

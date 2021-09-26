@@ -19,6 +19,7 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
+import indi.sly.system.services.auxiliary.AuxiliaryService;
 import indi.sly.system.services.job.JobService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +36,6 @@ public class StartUpController extends AController {
     @Transactional
     public UserContentResponseDefinition startup(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         UserContentDefinition userContent = this.init(request, response, session);
-        UserContentResponseDefinition userContentResponse = userContent.getResponse();
 
         if (ObjectUtil.isAnyNull(this.factoryManager)) {
             this.factoryManager = SpringHelper.createInstance(FactoryManager.class);
@@ -58,8 +58,10 @@ public class StartUpController extends AController {
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
             UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
+            this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL, this.factoryManager.create(AuxiliaryService.class));
             this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL, this.factoryManager.create(JobService.class));
 
+            AuxiliaryService auxiliaryService = this.factoryManager.getService(AuxiliaryService.class);
             JobService jobService = this.factoryManager.getService(JobService.class);
 
             Long[] startups = new Long[]{
@@ -81,10 +83,11 @@ public class StartUpController extends AController {
                 objectManager.startup(startup);
                 fileSystemManager.startup(startup);
 
+                auxiliaryService.startup(startup);
                 jobService.startup(startup);
             }
         }
 
-        return userContentResponse;
+        return userContent.getResponse();
     }
 }

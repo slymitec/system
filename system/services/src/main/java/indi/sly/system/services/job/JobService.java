@@ -24,9 +24,7 @@ import java.util.UUID;
 public class JobService extends AService {
     @Override
     public void startup(long startup) {
-        if (startup == StartupType.STEP_INIT_SELF) {
-            this.factoryManager.getKernelSpace().setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
-        } else if (startup == StartupType.STEP_INIT_SERVICE) {
+        if (startup == StartupType.STEP_INIT_SERVICE) {
             this.factory = this.factoryManager.create(JobFactory.class);
             this.factory.init();
         }

@@ -2,6 +2,7 @@ package indi.sly.system.services.auxiliary.prototypes.wrappers;
 
 import indi.sly.system.kernel.core.prototypes.wrappers.AMediator;
 import indi.sly.system.services.auxiliary.lang.UserContextProcessorCreateFunction;
+import indi.sly.system.services.auxiliary.lang.UserContextProcessorFinishFunction;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -15,11 +16,17 @@ public class AuxiliaryProcessorMediator extends AMediator {
 
     public AuxiliaryProcessorMediator() {
         this.creates = new ArrayList<>();
+        this.finishes = new ArrayList<>();
     }
 
     private final List<UserContextProcessorCreateFunction> creates;
+    private final List<UserContextProcessorFinishFunction> finishes;
 
     public List<UserContextProcessorCreateFunction> getCreates() {
         return this.creates;
+    }
+
+    public List<UserContextProcessorFinishFunction> getFinishes() {
+        return this.finishes;
     }
 }

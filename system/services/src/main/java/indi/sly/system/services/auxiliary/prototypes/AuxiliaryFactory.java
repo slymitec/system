@@ -5,9 +5,7 @@ import indi.sly.system.common.lang.Consumer1;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.AFactory;
-import indi.sly.system.services.auxiliary.prototypes.processors.AUserContextCreateResolver;
-import indi.sly.system.services.auxiliary.prototypes.processors.UserContextCreateContent;
-import indi.sly.system.services.auxiliary.prototypes.processors.UserContextCreateProcessAndThread;
+import indi.sly.system.services.auxiliary.prototypes.processors.*;
 import indi.sly.system.services.auxiliary.prototypes.wrappers.AuxiliaryProcessorMediator;
 import indi.sly.system.services.auxiliary.values.UserContextDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -21,16 +19,23 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AuxiliaryFactory extends AFactory {
-    protected List<AUserContextCreateResolver> userContextCreateResolvers;
+    public AuxiliaryFactory() {
+        this.userContextCreateResolvers = new CopyOnWriteArrayList<>();
+        this.userContextFinishResolvers = new CopyOnWriteArrayList<>();
+    }
+
+    protected final List<AUserContextCreateResolver> userContextCreateResolvers;
+    protected final List<AUserContextFinishResolver> userContextFinishResolvers;
 
     @Override
     public void init() {
-        this.userContextCreateResolvers = new CopyOnWriteArrayList<>();
-
         this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateContent.class));
         this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateProcessAndThread.class));
 
+        this.userContextFinishResolvers.add(this.factoryManager.create(UserContextFinishProcessAndThread.class));
+
         Collections.sort(this.userContextCreateResolvers);
+        Collections.sort(this.userContextFinishResolvers);
     }
 
     private UserContextObject buildUserContext(Provider<UserContextDefinition> funcRead, Consumer1<UserContextDefinition> funcWrite) {
@@ -50,18 +55,33 @@ public class AuxiliaryFactory extends AFactory {
         });
     }
 
-    public UserContextBuilder createUserContext() {
+    public UserContextCreateBuilder createUserContextCreator() {
         AuxiliaryProcessorMediator processorMediator = this.factoryManager.create(AuxiliaryProcessorMediator.class);
 
-        for (AUserContextCreateResolver userContextResolver : this.userContextCreateResolvers) {
-            userContextResolver.resolve(processorMediator);
+        for (AUserContextCreateResolver userContextCreateResolver : this.userContextCreateResolvers) {
+            userContextCreateResolver.resolve(processorMediator);
         }
 
-        UserContextBuilder userContextBuilder = this.factoryManager.create(UserContextBuilder.class);
+        UserContextCreateBuilder userContextCreateBuilder = this.factoryManager.create(UserContextCreateBuilder.class);
 
-        userContextBuilder.processorMediator = processorMediator;
-        userContextBuilder.factory = this;
+        userContextCreateBuilder.processorMediator = processorMediator;
+        userContextCreateBuilder.factory = this;
 
-        return userContextBuilder;
+        return userContextCreateBuilder;
+    }
+
+    public UserContextFinishBuilder createUserContextFinish() {
+        AuxiliaryProcessorMediator processorMediator = this.factoryManager.create(AuxiliaryProcessorMediator.class);
+
+        for (AUserContextFinishResolver userContextFinishResolver : this.userContextFinishResolvers) {
+            userContextFinishResolver.resolve(processorMediator);
+        }
+
+        UserContextFinishBuilder userContextFinishBuilder = this.factoryManager.create(UserContextFinishBuilder.class);
+
+        userContextFinishBuilder.processorMediator = processorMediator;
+        userContextFinishBuilder.factory = this;
+
+        return userContextFinishBuilder;
     }
 }

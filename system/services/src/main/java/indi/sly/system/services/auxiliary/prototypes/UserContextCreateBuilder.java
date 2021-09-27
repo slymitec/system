@@ -15,11 +15,11 @@ import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserContextBuilder extends ABuilder {
+public class UserContextCreateBuilder extends ABuilder {
     protected AuxiliaryFactory factory;
     protected AuxiliaryProcessorMediator processorMediator;
 
-    public UserContextObject create(UserContextRequestRawDefinition userContextRequestRaw) {
+    public UserContextObject build(UserContextRequestRawDefinition userContextRequestRaw) {
         UserContextDefinition userContext = new UserContextDefinition();
 
         if (ValueUtil.isAnyNullOrEmpty(userContextRequestRaw)) {

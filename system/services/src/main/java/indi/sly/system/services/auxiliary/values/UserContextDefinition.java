@@ -9,15 +9,15 @@ public class UserContextDefinition extends ADefinition<UserContextDefinition> {
         this.content = new UserContentDefinition();
     }
 
-    private UUID processID;
+    private UUID threadID;
     private final UserContentDefinition content;
 
-    public UUID getProcessID() {
-        return this.processID;
+    public UUID getThreadID() {
+        return this.threadID;
     }
 
-    public void setProcessID(UUID processID) {
-        this.processID = processID;
+    public void setThreadID(UUID threadID) {
+        this.threadID = threadID;
     }
 
     public UserContentDefinition getContent() {

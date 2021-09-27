@@ -6,7 +6,8 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.services.auxiliary.prototypes.AuxiliaryFactory;
-import indi.sly.system.services.auxiliary.prototypes.UserContextBuilder;
+import indi.sly.system.services.auxiliary.prototypes.UserContextCreateBuilder;
+import indi.sly.system.services.auxiliary.prototypes.UserContextFinishBuilder;
 import indi.sly.system.services.auxiliary.prototypes.UserContextObject;
 import indi.sly.system.services.auxiliary.values.UserContextRequestRawDefinition;
 import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
@@ -51,8 +52,14 @@ public class AuxiliaryService extends AService {
             throw new StatusUnreadableException();
         }
 
-        UserContextBuilder userContextBuilder = this.factory.createUserContext();
+        UserContextCreateBuilder userContextCreateBuilder = this.factory.createUserContextCreator();
 
-        return userContextBuilder.create(userContextRequestRaw);
+        return userContextCreateBuilder.build(userContextRequestRaw);
+    }
+
+    public void finish(UserContextObject userContext){
+        UserContextFinishBuilder userContextFinishBuilder = this.factory.createUserContextFinish();
+
+        userContextFinishBuilder.build(userContext);
     }
 }

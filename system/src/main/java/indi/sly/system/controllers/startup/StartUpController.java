@@ -18,7 +18,6 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.services.auxiliary.AuxiliaryService;
-import indi.sly.system.services.auxiliary.prototypes.UserContentObject;
 import indi.sly.system.services.auxiliary.prototypes.UserContextObject;
 import indi.sly.system.services.auxiliary.values.UserContentResponseRawDefinition;
 import indi.sly.system.services.job.JobService;
@@ -88,9 +87,8 @@ public class StartUpController extends AController {
         }
 
         AuxiliaryService auxiliaryService = this.factoryManager.getService(AuxiliaryService.class);
-        UserContextObject userContent = auxiliaryService.create(request.getParameter("Data"));
-        UserContentObject userContentContent = userContent.getContent();
+        UserContextObject userContext = auxiliaryService.create(request.getParameter("Data"));
 
-        return userContentContent.getResponse();
+        return userContext.getResponse();
     }
 }

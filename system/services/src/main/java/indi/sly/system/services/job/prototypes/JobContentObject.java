@@ -23,18 +23,6 @@ import java.util.UUID;
 public class JobContentObject extends AObject {
     protected ThreadContextObject threadContext;
 
-    public Set<String> getParameterNames() {
-        Map<String, String> threadContextData = this.threadContext.getParameters();
-
-        return CollectionUtil.unmodifiable(threadContextData.keySet());
-    }
-
-    public Set<String> getResultNames() {
-        Map<String, String> threadContextData = this.threadContext.getResults();
-
-        return CollectionUtil.unmodifiable(threadContextData.keySet());
-    }
-
     public Set<UUID> getAllHandle() {
         CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
 
@@ -111,6 +99,12 @@ public class JobContentObject extends AObject {
 
         Map<String, String> threadContextParameters = this.threadContext.getParameters();
         threadContextParameters.put(name, value);
+    }
+
+    public Map<String, String> getResult() {
+        Map<String, String> threadContextData = this.threadContext.getResults();
+
+        return CollectionUtil.unmodifiable(threadContextData);
     }
 
     public void setResult(String name, Object value) {

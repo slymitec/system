@@ -8,7 +8,6 @@ import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.services.auxiliary.prototypes.processors.AUserContextCreateResolver;
 import indi.sly.system.services.auxiliary.prototypes.processors.UserContextCreateContent;
 import indi.sly.system.services.auxiliary.prototypes.processors.UserContextCreateProcessAndThread;
-import indi.sly.system.services.auxiliary.prototypes.processors.UserContextCreateUserSpace;
 import indi.sly.system.services.auxiliary.prototypes.wrappers.AuxiliaryProcessorMediator;
 import indi.sly.system.services.auxiliary.values.UserContextDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -30,7 +29,6 @@ public class AuxiliaryFactory extends AFactory {
 
         this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateContent.class));
         this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateProcessAndThread.class));
-        this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateUserSpace.class));
 
         Collections.sort(this.userContextCreateResolvers);
     }

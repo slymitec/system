@@ -12,9 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -54,20 +52,14 @@ public class UserContentObject extends AIndependentValueProcessObject<UserConten
             UserContentExceptionDefinition userContentException = this.value.getException();
 
             userContentException.setName(kernelException.getClass().getSimpleName());
-            StackTraceElement[] stackTrace = kernelException.getStackTrace();
-            if (stackTrace.length != 0) {
-                userContentException.setClazz(kernelException.getStackTrace()[0].getClassName());
-                userContentException.setMethod(kernelException.getStackTrace()[0].getMethodName());
+            StackTraceElement[] kernelExceptionStackTrace = kernelException.getStackTrace();
+            if (kernelExceptionStackTrace.length != 0) {
+                userContentException.setClazz(kernelExceptionStackTrace[0].getClassName());
+                userContentException.setMethod(kernelExceptionStackTrace[0].getMethodName());
             }
             userContentException.setMessage(kernelException.getMessage());
         } else {
-            Set<String> resultNames = jobContent.getResultNames();
-
-            Map<String,String> results = new HashMap<>();
-
-            for (String resultName : resultNames) {
-                //??
-            }
+            this.value.getResponse().putAll(jobContent.getResult());
         }
 
         job.finish();
@@ -76,6 +68,17 @@ public class UserContentObject extends AIndependentValueProcessObject<UserConten
     }
 
     public UserContentResponseRawDefinition getResponse() {
-        return null;
+        this.init();
+
+        UserContentResponseRawDefinition responseRaw = new UserContentResponseRawDefinition();
+
+        responseRaw.getResponse().putAll(this.value.getResponse());
+        UserContentExceptionDefinition exception = this.value.getException();
+        responseRaw.getException().setName(exception.getName());
+        responseRaw.getException().setClazz(exception.getClazz());
+        responseRaw.getException().setMethod(exception.getMethod());
+        responseRaw.getException().setMessage(exception.getMessage());
+
+        return responseRaw;
     }
 }

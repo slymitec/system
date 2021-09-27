@@ -54,12 +54,12 @@ public class AuxiliaryService extends AService {
 
         UserContextCreateBuilder userContextCreateBuilder = this.factory.createUserContextCreator();
 
-        return userContextCreateBuilder.build(userContextRequestRaw);
+        return userContextCreateBuilder.create(userContextRequestRaw);
     }
 
     public void finish(UserContextObject userContext){
         UserContextFinishBuilder userContextFinishBuilder = this.factory.createUserContextFinish();
 
-        userContextFinishBuilder.build(userContext);
+        userContextFinishBuilder.finish(userContext);
     }
 }

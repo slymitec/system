@@ -17,7 +17,7 @@ public class UserContextFinishBuilder extends ABuilder {
     protected AuxiliaryFactory factory;
     protected AuxiliaryProcessorMediator processorMediator;
 
-    public void build(UserContextObject userContext) {
+    public void finish(UserContextObject userContext) {
         if (ObjectUtil.isAnyNull(userContext)) {
             throw new ConditionParametersException();
         }

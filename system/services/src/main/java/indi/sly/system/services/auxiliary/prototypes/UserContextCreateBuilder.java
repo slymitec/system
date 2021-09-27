@@ -19,7 +19,7 @@ public class UserContextCreateBuilder extends ABuilder {
     protected AuxiliaryFactory factory;
     protected AuxiliaryProcessorMediator processorMediator;
 
-    public UserContextObject build(UserContextRequestRawDefinition userContextRequestRaw) {
+    public UserContextObject create(UserContextRequestRawDefinition userContextRequestRaw) {
         UserContextDefinition userContext = new UserContextDefinition();
 
         if (ValueUtil.isAnyNullOrEmpty(userContextRequestRaw)) {

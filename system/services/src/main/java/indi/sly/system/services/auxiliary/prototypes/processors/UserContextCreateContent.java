@@ -18,11 +18,11 @@ import java.util.Map;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserContextCreateContent extends AUserContextCreateResolver {
     public UserContextCreateContent() {
-        this.create = (userContext, userRequest) -> {
+        this.create = (userContext, userContextRequestRaw) -> {
             UserContentRequestRawDefinition contentRequestRaw;
             try {
                 contentRequestRaw = ObjectUtil.transferFromString(
-                        UserContentRequestRawDefinition.class, userRequest.getOrDefault("Content", null));
+                        UserContentRequestRawDefinition.class, userContextRequestRaw.getValue().getOrDefault("Content", null));
             } catch (RuntimeException ignored) {
                 throw new StatusUnreadableException();
             }

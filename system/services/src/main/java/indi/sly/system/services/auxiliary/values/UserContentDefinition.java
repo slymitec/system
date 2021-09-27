@@ -9,12 +9,14 @@ public class UserContentDefinition extends ADefinition<UserContentDefinition> {
     public UserContentDefinition() {
         this.request = new HashMap<>();
         this.response = new HashMap<>();
+        this.exception = new UserContentExceptionDefinition();
     }
 
     private String job;
     private String method;
     private final Map<String, String> request;
     private final Map<String, String> response;
+    private final UserContentExceptionDefinition exception;
 
     public String getJob() {
         return this.job;
@@ -38,5 +40,9 @@ public class UserContentDefinition extends ADefinition<UserContentDefinition> {
 
     public Map<String, String> getResponse() {
         return this.response;
+    }
+
+    public UserContentExceptionDefinition getException() {
+        return this.exception;
     }
 }

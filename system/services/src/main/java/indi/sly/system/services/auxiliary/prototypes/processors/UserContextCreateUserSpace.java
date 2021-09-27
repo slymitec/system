@@ -15,7 +15,7 @@ import javax.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserContextCreateUserSpace extends AUserContextCreateResolver {
     public UserContextCreateUserSpace() {
-        this.create = (userContext, userRequest) -> {
+        this.create = (userContext, userContextRequestRaw) -> {
             KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 

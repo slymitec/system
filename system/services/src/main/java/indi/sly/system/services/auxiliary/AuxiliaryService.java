@@ -1,12 +1,14 @@
 package indi.sly.system.services.auxiliary;
 
-import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusUnreadableException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.services.auxiliary.prototypes.UserContextBuilder;
 import indi.sly.system.services.auxiliary.prototypes.AuxiliaryFactory;
+import indi.sly.system.services.auxiliary.prototypes.UserContextBuilder;
 import indi.sly.system.services.auxiliary.prototypes.UserContextObject;
+import indi.sly.system.services.auxiliary.values.UserContextRequestRawDefinition;
 import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -36,17 +38,21 @@ public class AuxiliaryService extends AService {
 
     protected AuxiliaryFactory factory;
 
-    public UserContextObject create(String userRequest) {
-        if (ValueUtil.isAnyNullOrEmpty(userRequest)) {
-            throw new ConditionParametersException();
+    public UserContextObject create(String userContextRequest) {
+        UserContextRequestRawDefinition userContextRequestRaw;
+
+        if (ValueUtil.isAnyNullOrEmpty(userContextRequest)) {
+            throw new StatusUnreadableException();
+        }
+
+        try {
+            userContextRequestRaw = ObjectUtil.transferFromString(UserContextRequestRawDefinition.class, userContextRequest);
+        } catch (RuntimeException ignored) {
+            throw new StatusUnreadableException();
         }
 
         UserContextBuilder userContextBuilder = this.factory.createUserContext();
 
-        return userContextBuilder.create(userRequest);
+        return userContextBuilder.create(userContextRequestRaw);
     }
-
-    //维护 UserContentDefinition
-    //建立销毁 Thread
-    //维护 UserSpaceDefinition
 }

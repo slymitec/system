@@ -18,11 +18,11 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserContextCreateProcessAndThread extends AUserContextCreateResolver {
     public UserContextCreateProcessAndThread() {
-        this.create = (userContext, userRequest) -> {
+        this.create = (userContext, userContextRequestRaw) -> {
             UserContextProcessIDRawDefinition processIDRaw;
             try {
                 processIDRaw = ObjectUtil.transferFromString(
-                        UserContextProcessIDRawDefinition.class, userRequest.getOrDefault("Request", null));
+                        UserContextProcessIDRawDefinition.class, userContextRequestRaw.getValue().getOrDefault("Request", null));
             } catch (RuntimeException ignored) {
                 throw new StatusUnreadableException();
             }

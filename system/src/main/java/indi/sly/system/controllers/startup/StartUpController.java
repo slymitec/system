@@ -3,8 +3,6 @@ package indi.sly.system.controllers.startup;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.controllers.AController;
-import indi.sly.system.controllers.values.UserContentDefinition;
-import indi.sly.system.controllers.values.UserContentResponseDefinition;
 import indi.sly.system.kernel.core.FactoryManager;
 import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
@@ -20,6 +18,9 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.services.auxiliary.AuxiliaryService;
+import indi.sly.system.services.auxiliary.prototypes.UserContentObject;
+import indi.sly.system.services.auxiliary.prototypes.UserContextObject;
+import indi.sly.system.services.auxiliary.values.UserContentResponseRawDefinition;
 import indi.sly.system.services.job.JobService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,9 +35,7 @@ import javax.transaction.Transactional;
 public class StartUpController extends AController {
     @RequestMapping(value = {"/StartUp.action"}, method = {RequestMethod.GET})
     @Transactional
-    public UserContentResponseDefinition startup(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        UserContentDefinition userContent = this.init(request, response, session);
-
+    public UserContentResponseRawDefinition startup(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         if (ObjectUtil.isAnyNull(this.factoryManager)) {
             this.factoryManager = SpringHelper.createInstance(FactoryManager.class);
 
@@ -88,6 +87,10 @@ public class StartUpController extends AController {
             }
         }
 
-        return userContent.getResponse();
+        AuxiliaryService auxiliaryService = this.factoryManager.getService(AuxiliaryService.class);
+        UserContextObject userContent = auxiliaryService.create(request.getParameter("Data"));
+        UserContentObject userContentContent = userContent.getContent();
+
+        return userContentContent.getResponse();
     }
 }

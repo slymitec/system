@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserContextCreateContent extends AUserContextCreatetesolver {
+public class UserContextCreateContent extends AUserContextCreateResolver {
     public UserContextCreateContent() {
         this.create = (userContext, userRequest) -> {
             UserContentRequestRawDefinition contentRequestRaw;
@@ -54,6 +54,6 @@ public class UserContextCreateContent extends AUserContextCreatetesolver {
 
     @Override
     public int order() {
-        return 0;
+        return 1;
     }
 }

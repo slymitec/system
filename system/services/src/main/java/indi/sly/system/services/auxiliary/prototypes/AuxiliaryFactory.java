@@ -5,7 +5,10 @@ import indi.sly.system.common.lang.Consumer1;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.AFactory;
-import indi.sly.system.services.auxiliary.prototypes.processors.AUserContextCreatetesolver;
+import indi.sly.system.services.auxiliary.prototypes.processors.AUserContextCreateResolver;
+import indi.sly.system.services.auxiliary.prototypes.processors.UserContextCreateContent;
+import indi.sly.system.services.auxiliary.prototypes.processors.UserContextCreateProcessAndThread;
+import indi.sly.system.services.auxiliary.prototypes.processors.UserContextCreateUserSpace;
 import indi.sly.system.services.auxiliary.prototypes.wrappers.AuxiliaryProcessorMediator;
 import indi.sly.system.services.auxiliary.values.UserContextDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -19,11 +22,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AuxiliaryFactory extends AFactory {
-    protected List<AUserContextCreatetesolver> userContextCreateResolvers;
+    protected List<AUserContextCreateResolver> userContextCreateResolvers;
 
     @Override
     public void init() {
         this.userContextCreateResolvers = new CopyOnWriteArrayList<>();
+
+        this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateContent.class));
+        this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateProcessAndThread.class));
+        this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateUserSpace.class));
 
         Collections.sort(this.userContextCreateResolvers);
     }
@@ -48,7 +55,7 @@ public class AuxiliaryFactory extends AFactory {
     public UserContextBuilder createUserContext() {
         AuxiliaryProcessorMediator processorMediator = this.factoryManager.create(AuxiliaryProcessorMediator.class);
 
-        for (AUserContextCreatetesolver userContextResolver : this.userContextCreateResolvers) {
+        for (AUserContextCreateResolver userContextResolver : this.userContextCreateResolvers) {
             userContextResolver.resolve(processorMediator);
         }
 

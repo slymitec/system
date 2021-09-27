@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserContextCreateProcessAndThread extends AUserContextCreatetesolver {
+public class UserContextCreateProcessAndThread extends AUserContextCreateResolver {
     public UserContextCreateProcessAndThread() {
         this.create = (userContext, userRequest) -> {
             UserContextProcessIDRawDefinition processIDRaw;
@@ -55,6 +55,6 @@ public class UserContextCreateProcessAndThread extends AUserContextCreatetesolve
 
     @Override
     public int order() {
-        return 1;
+        return 2;
     }
 }

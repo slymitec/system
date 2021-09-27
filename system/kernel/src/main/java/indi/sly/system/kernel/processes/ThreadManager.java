@@ -62,7 +62,7 @@ public class ThreadManager extends AManager {
         UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
 
-        return threads.size();
+        return ObjectUtil.isAnyNull(threads) ? 0 : threads.size();
     }
 
     public ThreadObject create(UUID processID) {

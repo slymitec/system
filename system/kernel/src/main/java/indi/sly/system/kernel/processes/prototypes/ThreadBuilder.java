@@ -3,6 +3,7 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -25,6 +26,10 @@ public class ThreadBuilder extends ABuilder {
     public ThreadObject create(UUID processID) {
         UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
+        if (ObjectUtil.isAnyNull(threads)) {
+            threads = new Stack<>();
+            userSpace.setThreads(threads);
+        }
 
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
@@ -53,7 +58,7 @@ public class ThreadBuilder extends ABuilder {
         UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
 
-        if (threads.isEmpty()) {
+        if (ObjectUtil.isAnyNull(threads) || threads.isEmpty()) {
             throw new StatusAlreadyFinishedException();
         }
 

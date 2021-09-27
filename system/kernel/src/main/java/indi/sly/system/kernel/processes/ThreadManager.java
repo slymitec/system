@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes;
 
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
@@ -45,7 +46,7 @@ public class ThreadManager extends AManager {
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
 
-        if (threads.isEmpty()) {
+        if (ObjectUtil.isAnyNull(threads) || threads.isEmpty()) {
             throw new StatusNotExistedException();
         }
 

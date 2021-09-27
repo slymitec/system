@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 public class TestController extends ATController {
@@ -48,7 +47,7 @@ public class TestController extends ATController {
         new RuntimeException();
 
         JobContentObject content = job.getContent();
-        content.setParameter(UUID.class, "ProcessID", this.kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+        //content.setParameter("ProcessID", this.kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
 
         job.run("createThread");
 

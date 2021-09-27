@@ -104,13 +104,13 @@ public class JobContentObject extends AObject {
         return this.getCache(handle);
     }
 
-    public <T> void setParameter(Class<T> clazz, String name, Object value) {
-        if (ObjectUtil.isAnyNull(clazz) || StringUtil.isNameIllegal(name)) {
+    public void setParameter(String name, String value) {
+        if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
 
         Map<String, String> threadContextParameters = this.threadContext.getParameters();
-        threadContextParameters.put(name, ObjectUtil.transferToString(value));
+        threadContextParameters.put(name, value);
     }
 
     public void setResult(String name, Object value) {

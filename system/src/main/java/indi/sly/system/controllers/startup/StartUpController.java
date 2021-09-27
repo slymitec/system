@@ -44,7 +44,8 @@ public class StartUpController extends AController {
             KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
-            this.factoryManager.setUserSpace(new UserSpaceDefinition());
+            UserSpaceDefinition userSpace = new UserSpaceDefinition();
+            this.factoryManager.setUserSpace(() -> userSpace);
             this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
             BootObject boot = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, BootObject.class);

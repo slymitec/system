@@ -48,7 +48,8 @@ public class BootController extends ABase {
         this.factoryManager.startup(StartupType.STEP_INIT_SELF);
         this.factoryManager.startup(StartupType.STEP_AFTER_SELF);
 
-        this.factoryManager.setUserSpace(new UserSpaceDefinition());
+        UserSpaceDefinition userSpace = new UserSpaceDefinition();
+        this.factoryManager.setUserSpace(() -> userSpace);
 
         BootObject boot = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, BootObject.class);
         FileSystemManager fileSystemManager = this.factoryManager.getManager(FileSystemManager.class);

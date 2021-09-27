@@ -54,7 +54,8 @@ public abstract class ATController extends ABase {
                 this.kernelSpaceDefinition.getClassedHandles().getOrDefault(
                         FactoryManager.class, null).getID(), null);
 
-        this.factoryManager.setUserSpace(new UserSpaceDefinition());
+        UserSpaceDefinition userSpace = new UserSpaceDefinition();
+        this.factoryManager.setUserSpace(() -> userSpace);
         this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, 16L);
 
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);

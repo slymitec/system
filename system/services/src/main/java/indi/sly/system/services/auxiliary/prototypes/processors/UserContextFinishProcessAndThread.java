@@ -21,6 +21,10 @@ public class UserContextFinishProcessAndThread extends AUserContextFinishResolve
 
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
             transactionalAction.run(TransactionType.INDEPENDENCE, () -> {
+                if (threadManager.size() == 0) {
+                    throw new StatusRelationshipErrorException();
+                }
+
                 ThreadObject thread = threadManager.getCurrent();
 
                 if (!thread.getID().equals(userContext.getThreadID())) {

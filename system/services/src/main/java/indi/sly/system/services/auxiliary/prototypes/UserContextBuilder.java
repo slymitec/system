@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.List;
+import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -18,7 +19,7 @@ public class UserContextBuilder extends ABuilder {
     protected AuxiliaryFactory factory;
     protected AuxiliaryProcessorMediator processorMediator;
 
-    public UserContextObject create(String userRequest) {
+    public UserContextObject create(Map<String, String> userRequest) {
         if (ValueUtil.isAnyNullOrEmpty(userRequest)) {
             throw new ConditionParametersException();
         }

@@ -37,7 +37,7 @@ public class JobService extends AService {
         } else if (startup == StartupType.STEP_INIT_SERVICE) {
             this.factoryManager.getKernelSpace().setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
 
-            this.createJob("Manager", TaskAttributeType.NULL, null, this.factoryManager.create(ManagerTaskInitializer.class));
+            this.createTask("Manager", TaskAttributeType.NULL, null, this.factoryManager.create(ManagerTaskInitializer.class));
         }
     }
 
@@ -51,14 +51,14 @@ public class JobService extends AService {
 
     protected JobFactory factory;
 
-    public TaskObject createJob(String name, long attribute, UUID processID, ATaskInitializer initializer) {
+    public void createTask(String name, long attribute, UUID processID, ATaskInitializer initializer) {
         if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(initializer)) {
             throw new ConditionParametersException();
         }
 
         TaskBuilder taskBuilder = this.factory.createTask();
 
-        return taskBuilder.create(name, attribute, processID, initializer);
+        taskBuilder.create(name, attribute, processID, initializer);
     }
 
     public void deleteTask(String name) {

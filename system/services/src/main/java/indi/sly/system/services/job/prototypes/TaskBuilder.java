@@ -20,7 +20,7 @@ import java.util.UUID;
 public class TaskBuilder extends ABuilder {
     protected JobFactory factory;
 
-    public TaskObject create(String name, long attribute, UUID processID, ATaskInitializer initializer) {
+    public void create(String name, long attribute, UUID processID, ATaskInitializer initializer) {
         if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(initializer)) {
             throw new ConditionParametersException();
         }
@@ -44,8 +44,6 @@ public class TaskBuilder extends ABuilder {
 
         serviceSpace.getTasks().put(task.getID(), task);
         serviceSpace.getNamedTaskIDs().put(task.getName(), task.getID());
-
-        return this.factory.buildTask(task);
     }
 
     public void delete(String name) {

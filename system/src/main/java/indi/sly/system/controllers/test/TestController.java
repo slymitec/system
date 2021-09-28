@@ -6,7 +6,6 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
-import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.services.job.JobService;
 import indi.sly.system.services.job.prototypes.UserContentObject;
 import indi.sly.system.services.job.prototypes.UserContextObject;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 public class TestController extends AController {
@@ -76,9 +74,6 @@ public class TestController extends AController {
         Map<String, Object> ret = new HashMap<>();
 
         ret.put("response", userContext.getResponse());
-
-        UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
-        Map<UUID, AObject> coreObjects = userSpace.getCoreObjects();
 
 
         return ret;

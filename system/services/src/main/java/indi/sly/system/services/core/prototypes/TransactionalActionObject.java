@@ -15,13 +15,14 @@ import javax.transaction.Transactional;
 public class TransactionalActionObject extends APrototype {
     public <R> R run(long type, Provider<R> provider) {
         if (LogicalUtil.isAnyEqual(type, TransactionType.INDEPENDENCE)) {
-            this.runWithIndependentTransactional(provider);
+            return this.runWithIndependentTransactional(provider);
         } else if (LogicalUtil.isAnyEqual(type, TransactionType.PROHIBITED)) {
-            this.runWithoutTransactional(provider);
+            return this.runWithoutTransactional(provider);
         } else if (LogicalUtil.isAnyEqual(type, TransactionType.WHATEVER)) {
-            this.runWithWhatever(provider);
+            return this.runWithWhatever(provider);
+        } else {
+            return provider.acquire();
         }
-        return provider.acquire();
     }
 
     @Transactional(value = Transactional.TxType.SUPPORTS)

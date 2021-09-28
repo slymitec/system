@@ -1,14 +1,13 @@
 package indi.sly.system.services.job.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusUnreadableException;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
-import indi.sly.system.services.job.lang.UserContextProcessorCreateFunction;
-import indi.sly.system.services.job.prototypes.wrappers.UserContextProcessorMediator;
-import indi.sly.system.services.job.values.UserContextProcessIDRawDefinition;
 import indi.sly.system.services.core.prototypes.TransactionalActionObject;
 import indi.sly.system.services.core.values.TransactionType;
+import indi.sly.system.services.job.lang.UserContextProcessorCreateFunction;
+import indi.sly.system.services.job.prototypes.wrappers.UserContextProcessorMediator;
+import indi.sly.system.services.job.values.UserContextRequestProcessIDRawDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -20,10 +19,9 @@ import java.util.UUID;
 public class UserContextCreateProcessAndThreadResolver extends AUserContextCreateResolver {
     public UserContextCreateProcessAndThreadResolver() {
         this.create = (userContext, userContextRequestRaw) -> {
-            UserContextProcessIDRawDefinition processIDRaw;
+            UserContextRequestProcessIDRawDefinition processIDRaw;
             try {
-                processIDRaw = ObjectUtil.transferFromString(
-                        UserContextProcessIDRawDefinition.class, userContextRequestRaw.getValue().getOrDefault("Request", null));
+                processIDRaw = userContextRequestRaw.getProcessID();
             } catch (RuntimeException ignored) {
                 throw new StatusUnreadableException();
             }

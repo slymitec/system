@@ -2,17 +2,20 @@ package indi.sly.system.services.job.values;
 
 import indi.sly.system.common.values.ADefinition;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class UserContextRequestRawDefinition extends ADefinition<UserContextRequestRawDefinition> {
     public UserContextRequestRawDefinition() {
-        this.value = new HashMap<>();
+        this.processID = new UserContextRequestProcessIDRawDefinition();
+        this.content = new UserContextRequestContentRawDefinition();
     }
 
-    private final Map<String, String> value;
+    private final UserContextRequestProcessIDRawDefinition processID;
+    private final UserContextRequestContentRawDefinition content;
 
-    public Map<String, String> getValue() {
-        return this.value;
+    public UserContextRequestProcessIDRawDefinition getProcessID() {
+        return this.processID;
+    }
+
+    public UserContextRequestContentRawDefinition getContent() {
+        return this.content;
     }
 }

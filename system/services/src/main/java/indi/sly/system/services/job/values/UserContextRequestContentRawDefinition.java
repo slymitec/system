@@ -5,8 +5,8 @@ import indi.sly.system.common.values.ADefinition;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserContentRequestRawDefinition extends ADefinition<UserContentRequestRawDefinition> {
-    public UserContentRequestRawDefinition() {
+public class UserContextRequestContentRawDefinition extends ADefinition<UserContextRequestContentRawDefinition> {
+    public UserContextRequestContentRawDefinition() {
         this.request = new HashMap<>();
     }
 

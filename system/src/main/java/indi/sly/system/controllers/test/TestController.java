@@ -6,6 +6,7 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.services.job.JobService;
 import indi.sly.system.services.job.prototypes.UserContentObject;
 import indi.sly.system.services.job.prototypes.UserContextObject;
@@ -17,8 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import javax.websocket.OnError;
-import javax.websocket.Session;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 public class TestController extends AController {
@@ -26,7 +28,6 @@ public class TestController extends AController {
     }
 
     private UserSpaceDefinition userSpace;
-
 
     @RequestMapping(value = {"/TestWS.action"}, method = {RequestMethod.GET})
     @Transactional
@@ -37,23 +38,28 @@ public class TestController extends AController {
             return "系统未启动。";
         }
 
-//        UserContentRequestRawDefinition userContentRequestRaw = new UserContentRequestRawDefinition();
+        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+
+//        UserContextRequestRawDefinition userContextRequestRaw = new UserContextRequestRawDefinition();
 //
-//        userContentRequestRaw.setTask("Manager");
-//        userContentRequestRaw.setMethod("processGetCurrent");
+//        userContextRequestRaw.getProcessID().setProcessID(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+//
+//        UserContextRequestContentRawDefinition userContextRequestContentRaw = userContextRequestRaw.getContent();
+//
+//        userContextRequestContentRaw.setTask("Manager");
+//        userContextRequestContentRaw.setMethod("processGetCurrent");
 //
 //        if (2 > 1) {
-//            return userContentRequestRaw;
+//            return ObjectUtil.transferToString(userContextRequestRaw);
 //        }
 
         String requestText = """
-                {"task":"Manager","method":"processGetCurrent","request":{}}
+                {"processID":{"processID":"9c337a14-f7f4-432e-ab4a-c8e95943d31f"},"content":{"task":"Manager","method":"processGetCurrent","request":{}}}
                 """;
 
         this.userSpace = new UserSpaceDefinition();
 
-        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
-        KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
         kernelSpace.getUserSpace().set(this.userSpace);
         this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
@@ -67,10 +73,16 @@ public class TestController extends AController {
 
         userContextContent.run();
 
-        return userContext.getResponse();
+        Map<String, Object> ret = new HashMap<>();
+
+        ret.put("response", userContext.getResponse());
+
+        UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
+        Map<UUID, AObject> coreObjects = userSpace.getCoreObjects();
+
+
+        return ret;
     }
 
-    @OnError
-    public void onError(Session session, Throwable error) {
-    }
+
 }

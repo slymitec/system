@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @Transactional
 public class FileController extends ATController {
-    @RequestMapping(value = {"/FRTest.action"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/TFRTest.action"}, method = {RequestMethod.GET})
     @Transactional
     public Object fRTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init(request, response, session);

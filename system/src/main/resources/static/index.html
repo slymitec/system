@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>SLY System</title>
+</head>
+
+<body>
+<input id="text" type="text"/>
+<button onclick="send()">发送</button>
+<button onclick="closeWebSocket()">断开</button>
+<div id="message"></div>
+</body>
+
+<script type="text/javascript">
+    function setMessageInnerHTML(innerHTML) {
+        var text = document.getElementById('message').innerHTML;
+        document.getElementById('message').innerHTML = innerHTML + '<br/>' + text;
+    }
+
+    var websocket = null;
+
+    if ('WebSocket' in window) {
+        websocket = new WebSocket("ws://localhost:8080/Call");
+        setMessageInnerHTML("准备中……");
+    } else {
+        alert('浏览器不支持……')
+    }
+
+    websocket.onerror = function () {
+        setMessageInnerHTML("--错误--");
+    };
+
+    websocket.onopen = function (event) {
+        setMessageInnerHTML("--连接--");
+    }
+
+    websocket.onmessage = function (event) {
+        setMessageInnerHTML(event.data);
+    }
+
+    websocket.onclose = function () {
+        setMessageInnerHTML("--关闭--");
+    }
+
+    window.onbeforeunload = function () {
+        websocket.close();
+    }
+
+    function closeWebSocket() {
+        websocket.close();
+    }
+
+    function send() {
+        var message = document.getElementById('text').value;
+        websocket.send(message);
+    }
+</script>
+</html>

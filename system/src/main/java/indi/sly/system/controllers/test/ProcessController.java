@@ -1,9 +1,13 @@
-package indi.sly.system.boot.test;
+package indi.sly.system.controllers.test;
 
-import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.controllers.AController;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,63 +19,23 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
-@Transactional
-public class ProcessController extends ATController {
-    @RequestMapping(value = {"/ProcessSession.action"}, method = {RequestMethod.GET})
-    @Transactional
-    public Object processSession(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        this.init(request, response, session);
-
-        Map<String, Object> result = new HashMap<>();
-        Object ret = result;
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-        ProcessSessionObject processSession = process.getSession();
-
-        if (ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-            processSession.create();
-        } else {
-            processSession.close();
-        }
-
-        ret = processSession.getID();
-
-        return ret;
-    }
-
-    @RequestMapping(value = {"/ProcessShut.action"}, method = {RequestMethod.GET})
-    @Transactional
-    public Object processShut(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        this.init(request, response, session);
-
-        Object ret;
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        UUID processID = processManager.getCurrent().getID();
-
-        if (processID.equals(this.kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID)) {
-            String processIDText = request.getParameter("override");
-            if (!"true".equals(processIDText)) {
-                throw new ConditionRefuseException();
-            }
-        }
-
-        processManager.endCurrent();
-
-        ret = processID;
-
-        return ret;
-    }
-
+public class ProcessController extends AController {
     @RequestMapping(value = {"/ProcessDisplay.action"}, method = {RequestMethod.GET})
     @Transactional
     public Object processDisplay(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        this.init(request, response, session);
+        this.init();
+
+        UserSpaceDefinition userSpace = new UserSpaceDefinition();
+        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+
+        kernelSpace.getUserSpace().set(userSpace);
+        this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        threadManager.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
@@ -133,39 +97,5 @@ public class ProcessController extends ATController {
         processTokenObject.put("getRoles", processToken.getRoles());
 
         return processObject;
-    }
-
-    @RequestMapping(value = {"/ProcessStatus.action"}, method = {RequestMethod.GET})
-    @Transactional
-    public Object processStatus(int i, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        this.init(request, response, session);
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessStatusObject processStatus = process.getStatus();
-
-        if (i == 3) {
-            processStatus.interrupt();
-        } else if (i == 2) {
-            processStatus.run();
-        }
-
-        return "finished";
-    }
-
-    @RequestMapping(value = {"/ProcessSignal.action"}, method = {RequestMethod.GET})
-    @Transactional
-    public Object processSignal(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        this.init(request, response, session);
-        Object ret = "finished";
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-        ProcessCommunicationObject processCommunication = process.getCommunication();
-
-        ret = processCommunication.receiveSignals();
-
-        return ret;
     }
 }

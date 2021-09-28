@@ -18,7 +18,6 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.services.job.JobService;
-import indi.sly.system.services.job.prototypes.UserContextObject;
 import indi.sly.system.services.job.values.UserContentResponseRawDefinition;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,6 +33,8 @@ public class StartUpController extends AController {
     @RequestMapping(value = {"/StartUp.action"}, method = {RequestMethod.GET})
     @Transactional
     public UserContentResponseRawDefinition startup(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        this.init();
+
         if (ObjectUtil.isAnyNull(this.factoryManager)) {
             this.factoryManager = SpringHelper.createInstance(FactoryManager.class);
 
@@ -44,7 +45,7 @@ public class StartUpController extends AController {
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
             UserSpaceDefinition userSpace = new UserSpaceDefinition();
-            this.factoryManager.setUserSpace(() -> userSpace);
+            this.factoryManager.setUserSpace(userSpace);
             this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
             BootObject boot = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, BootObject.class);
@@ -81,11 +82,16 @@ public class StartUpController extends AController {
 
                 jobService.startup(startup);
             }
+
+            return new UserContentResponseRawDefinition();
+        } else {
+            UserContentResponseRawDefinition userContentResponseRaw = new UserContentResponseRawDefinition();
+
+            userContentResponseRaw.getException().setName("StatusAlreadyFinishedException");
+            userContentResponseRaw.getException().setClazz(StartUpController.class.getName());
+            userContentResponseRaw.getException().setMethod("startup");
+
+            return userContentResponseRaw;
         }
-
-        JobService jobService = this.factoryManager.getService(JobService.class);
-        UserContextObject userContext = jobService.createUserContext(request.getParameter("Data"));
-
-        return userContext.getResponse();
     }
 }

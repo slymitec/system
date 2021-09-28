@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class TestController extends ATController {
-    @RequestMapping(value = {"/Test.action"}, method = {RequestMethod.GET})
+public class TTestController extends ATController {
+    @RequestMapping(value = {"/TTest.action"}, method = {RequestMethod.GET})
     public Object test(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         TranObject instance = SpringHelper.getInstance(TranObject.class);
         instance.doo(() -> {

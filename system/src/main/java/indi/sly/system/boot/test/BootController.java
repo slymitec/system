@@ -37,7 +37,7 @@ public class BootController extends ABase {
         return this.ret;
     }
 
-    @RequestMapping(value = {"/Boot.action", "/Boot.do"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/TBoot.action", "/Boot.do"}, method = {RequestMethod.GET})
     @Transactional
     public String boot(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         if (!ValueUtil.isAnyNullOrEmpty(this.ret)) {
@@ -48,7 +48,7 @@ public class BootController extends ABase {
         this.factoryManager.startup(StartupType.STEP_AFTER_SELF);
 
         UserSpaceDefinition userSpace = new UserSpaceDefinition();
-        this.factoryManager.setUserSpace(() -> userSpace);
+        this.factoryManager.setUserSpace(userSpace);
 
         BootObject boot = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, BootObject.class);
         FileSystemManager fileSystemManager = this.factoryManager.getManager(FileSystemManager.class);

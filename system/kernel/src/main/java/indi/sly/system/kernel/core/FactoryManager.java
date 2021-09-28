@@ -2,7 +2,6 @@ package indi.sly.system.kernel.core;
 
 import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
@@ -105,14 +104,14 @@ public class FactoryManager extends AManager {
     }
 
     public UserSpaceDefinition getUserSpace() {
-        return this.getKernelSpace().getUserSpace().acquire();
+        return this.getKernelSpace().getUserSpace().get();
     }
 
-    public void setUserSpace(Provider<UserSpaceDefinition> userSpace) {
+    public void setUserSpace(UserSpaceDefinition userSpace) {
         if (ObjectUtil.isAnyNull(userSpace)) {
             throw new ConditionParametersException();
         }
 
-        this.getKernelSpace().setUserSpace(userSpace);
+        this.getKernelSpace().getUserSpace().set(userSpace);
     }
 }

@@ -1,7 +1,5 @@
 package indi.sly.system.kernel.core.enviroment.values;
 
-import indi.sly.system.common.lang.Provider;
-
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Set;
@@ -15,11 +13,13 @@ public class KernelSpaceDefinition extends ASpaceDefinition<KernelSpaceDefinitio
         this.configuration = new KernelConfigurationDefinition();
 
         this.infoTypeIDs = new ConcurrentSkipListSet<>();
+
+        this.userSpace = new ThreadLocal<>();
     }
 
     private final KernelConfigurationDefinition configuration;
     private final Set<UUID> infoTypeIDs;
-    private Provider<UserSpaceDefinition> userSpace;
+    private final ThreadLocal<UserSpaceDefinition> userSpace;
     private AKernelSpaceExtensionDefinition<?> serviceSpace;
 
     public KernelConfigurationDefinition getConfiguration() {
@@ -30,12 +30,8 @@ public class KernelSpaceDefinition extends ASpaceDefinition<KernelSpaceDefinitio
         return this.infoTypeIDs;
     }
 
-    public Provider<UserSpaceDefinition> getUserSpace() {
+    public ThreadLocal<UserSpaceDefinition> getUserSpace() {
         return this.userSpace;
-    }
-
-    public void setUserSpace(Provider<UserSpaceDefinition> userSpace) {
-        this.userSpace = userSpace;
     }
 
     public AKernelSpaceExtensionDefinition<?> getServiceSpace() {

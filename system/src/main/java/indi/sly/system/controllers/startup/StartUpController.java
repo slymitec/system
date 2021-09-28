@@ -17,10 +17,9 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
-import indi.sly.system.services.auxiliary.AuxiliaryService;
-import indi.sly.system.services.auxiliary.prototypes.UserContextObject;
-import indi.sly.system.services.auxiliary.values.UserContentResponseRawDefinition;
 import indi.sly.system.services.job.JobService;
+import indi.sly.system.services.job.prototypes.UserContextObject;
+import indi.sly.system.services.job.values.UserContentResponseRawDefinition;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,10 +56,8 @@ public class StartUpController extends AController {
             TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
             UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-            this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL, this.factoryManager.create(AuxiliaryService.class));
             this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL, this.factoryManager.create(JobService.class));
 
-            AuxiliaryService auxiliaryService = this.factoryManager.getService(AuxiliaryService.class);
             JobService jobService = this.factoryManager.getService(JobService.class);
 
             Long[] startups = new Long[]{
@@ -82,13 +79,12 @@ public class StartUpController extends AController {
                 objectManager.startup(startup);
                 fileSystemManager.startup(startup);
 
-                auxiliaryService.startup(startup);
                 jobService.startup(startup);
             }
         }
 
-        AuxiliaryService auxiliaryService = this.factoryManager.getService(AuxiliaryService.class);
-        UserContextObject userContext = auxiliaryService.create(request.getParameter("Data"));
+        JobService jobService = this.factoryManager.getService(JobService.class);
+        UserContextObject userContext = jobService.createUserContext(request.getParameter("Data"));
 
         return userContext.getResponse();
     }

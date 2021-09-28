@@ -14,7 +14,6 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
-import indi.sly.system.services.auxiliary.AuxiliaryService;
 import indi.sly.system.services.job.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,10 +59,8 @@ public class BootController extends ABase {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
-        this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL, this.factoryManager.create(AuxiliaryService.class));
         this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL, this.factoryManager.create(JobService.class));
 
-        AuxiliaryService auxiliaryService = this.factoryManager.getService(AuxiliaryService.class);
         JobService jobService = this.factoryManager.getService(JobService.class);
 
         Long[] startups = new Long[]{
@@ -85,7 +82,6 @@ public class BootController extends ABase {
             objectManager.startup(startup);
             fileSystemManager.startup(startup);
 
-            auxiliaryService.startup(startup);
             jobService.startup(startup);
         }
 

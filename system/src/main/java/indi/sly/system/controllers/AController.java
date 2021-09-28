@@ -5,8 +5,8 @@ import indi.sly.system.kernel.core.FactoryManager;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.prototypes.APrototype;
-import indi.sly.system.services.auxiliary.AuxiliaryService;
-import indi.sly.system.services.auxiliary.prototypes.UserContextObject;
+import indi.sly.system.services.job.JobService;
+import indi.sly.system.services.job.prototypes.UserContextObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,9 +26,9 @@ public abstract class AController extends APrototype {
         UserContextObject userContext = null;
 
         if (ObjectUtil.allNotNull(this.factoryManager)) {
-            AuxiliaryService auxiliaryService = this.factoryManager.getService(AuxiliaryService.class);
+            JobService jobService = this.factoryManager.getService(JobService.class);
 
-            userContext = auxiliaryService.create(request.getParameter("Data"));
+            userContext = jobService.createUserContext(request.getParameter("Data"));
         }
 
         return userContext;

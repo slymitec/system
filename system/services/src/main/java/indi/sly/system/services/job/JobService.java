@@ -8,6 +8,7 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
+import indi.sly.system.services.job.instances.prototypes.processors.ManagerTaskInitializer;
 import indi.sly.system.services.job.prototypes.UserContextCreateBuilder;
 import indi.sly.system.services.job.prototypes.UserContextFinishBuilder;
 import indi.sly.system.services.job.prototypes.UserContextObject;
@@ -16,6 +17,7 @@ import indi.sly.system.services.job.instances.prototypes.processors.ATaskInitial
 import indi.sly.system.services.job.prototypes.TaskBuilder;
 import indi.sly.system.services.job.prototypes.JobFactory;
 import indi.sly.system.services.job.prototypes.TaskObject;
+import indi.sly.system.services.job.values.TaskAttributeType;
 import indi.sly.system.services.job.values.TaskDefinition;
 import indi.sly.system.services.job.values.UserContextRequestRawDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -34,6 +36,8 @@ public class JobService extends AService {
             this.factory.init();
         } else if (startup == StartupType.STEP_INIT_SERVICE) {
             this.factoryManager.getKernelSpace().setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
+
+            this.createJob("Manager", TaskAttributeType.NULL, null, this.factoryManager.create(ManagerTaskInitializer.class));
         }
     }
 

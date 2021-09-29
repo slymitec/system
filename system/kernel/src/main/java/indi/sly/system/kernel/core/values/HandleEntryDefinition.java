@@ -9,6 +9,7 @@ import indi.sly.system.kernel.core.prototypes.AObject;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Objects;
 import java.util.UUID;
 
 public class HandleEntryDefinition extends ADefinition<HandleEntryDefinition> {
@@ -48,6 +49,19 @@ public class HandleEntryDefinition extends ADefinition<HandleEntryDefinition> {
 
     public void setID(UUID id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HandleEntryDefinition that = (HandleEntryDefinition) o;
+        return space == that.space && Objects.equals(handle, that.handle) && Objects.equals(type, that.type) && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(handle, space, type, id);
     }
 
     @Override

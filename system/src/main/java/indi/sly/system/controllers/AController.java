@@ -23,5 +23,6 @@ public abstract class AController extends APrototype {
             return;
         }
         this.factoryManager = (FactoryManager) kernelSpace.getCoreObjects().getOrDefault(factoryManagerID, null);
+        this.factoryManager.check();
     }
 }

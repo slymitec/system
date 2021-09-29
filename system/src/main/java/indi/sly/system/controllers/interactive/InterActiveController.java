@@ -6,6 +6,7 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
 import indi.sly.system.services.job.JobService;
 import indi.sly.system.services.job.prototypes.UserContentObject;
 import indi.sly.system.services.job.prototypes.UserContextObject;
@@ -38,6 +39,7 @@ public class InterActiveController extends AController {
         }
 
         this.userSpace = new UserSpaceDefinition();
+        this.userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
 
         KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();

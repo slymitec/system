@@ -10,17 +10,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServiceKernelSpaceExtensionDefinition extends AKernelSpaceExtensionDefinition<ServiceKernelSpaceExtensionDefinition> {
     public ServiceKernelSpaceExtensionDefinition() {
         this.tasks = new ConcurrentHashMap<>();
-        this.namedJobIDs = new ConcurrentHashMap<>();
+        this.namedTaskIDs = new ConcurrentHashMap<>();
     }
 
     private final Map<UUID, TaskDefinition> tasks;
-    private final Map<String, UUID> namedJobIDs;
+    private final Map<String, UUID> namedTaskIDs;
 
     public Map<UUID, TaskDefinition> getTasks() {
         return this.tasks;
     }
 
     public Map<String, UUID> getNamedTaskIDs() {
-        return this.namedJobIDs;
+        return this.namedTaskIDs;
     }
 }

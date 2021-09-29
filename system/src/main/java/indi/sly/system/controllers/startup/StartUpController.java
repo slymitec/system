@@ -17,6 +17,7 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
+import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
 import indi.sly.system.services.job.JobService;
 import indi.sly.system.services.job.values.UserContentResponseRawDefinition;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,7 @@ public class StartUpController extends AController {
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
             UserSpaceDefinition userSpace = new UserSpaceDefinition();
+            userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
             this.factoryManager.setUserSpace(userSpace);
             this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 

@@ -50,7 +50,9 @@ public class InterActiveController extends AController {
     public void onClose(Session session, CloseReason closeReason) {
         this.userSpace = null;
 
-        this.factoryManager.getKernelSpace().getUserSpace().set(null);
+        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+
+        kernelSpace.getUserSpace().set(this.userSpace);
     }
 
     @OnMessage

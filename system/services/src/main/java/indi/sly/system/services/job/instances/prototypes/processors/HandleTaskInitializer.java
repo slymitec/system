@@ -41,70 +41,63 @@ public class HandleTaskInitializer extends ATaskInitializer {
     }
 
     private void customHandle(TaskRunConsumer run, TaskContentObject content) {
+        UUID handleID = content.getParameterOrDefault(UUID.class, "handleID", null);
+        String methodName = content.getParameterOrDefault(String.class, "method", null);
+        if (ValueUtil.isAnyNullOrEmpty(handleID) || StringUtil.isNameIllegal(methodName)) {
+            throw new ConditionParametersException();
+        }
+        String[] methodParameters = content.getParameterOrDefault(String[].class, "methodParameterTypes", null);
+        Class<?>[] methodParameterTypes;
+        if (ArrayUtil.isNullOrEmpty(methodParameters)) {
+            methodParameterTypes = new Class[0];
+        } else {
+            methodParameterTypes = new Class[methodParameters.length];
+
+            try {
+                for (int i = 0; i < methodParameters.length; i++) {
+                    methodParameterTypes[i] = Class.forName(methodParameters[i]);
+                }
+            } catch (ClassNotFoundException e) {
+                throw new StatusUnreadableException();
+            }
+        }
+
+        AObject object = content.getCache(handleID);
+
+        Class<? extends AObject> clazz = object.getClass();
+        Method method;
         try {
+            method = clazz.getMethod(methodName, methodParameterTypes);
+        } catch (NoSuchMethodException e) {
+            throw new StatusNotExistedException();
+        }
+        methodParameterTypes = method.getParameterTypes();
+        Object[] methodParameterValues = new Object[methodParameterTypes.length];
+        Class<?> methodReturnType = method.getReturnType();
 
-            UUID handleID = content.getParameterOrDefault(UUID.class, "handleID", null);
-            String methodName = content.getParameterOrDefault(String.class, "method", null);
-            if (ValueUtil.isAnyNullOrEmpty(handleID) || StringUtil.isNameIllegal(methodName)) {
-                throw new ConditionParametersException();
-            }
-            String[] methodParameters = content.getParameterOrDefault(String[].class, "methodParameterTypes", null);
-            Class<?>[] methodParameterTypes;
-            if (ArrayUtil.isNullOrEmpty(methodParameters)) {
-                methodParameterTypes = new Class[0];
+        for (int i = 0; i < methodParameterTypes.length; i++) {
+            if (ClassUtil.isThisOrSuperContain(methodParameterTypes[i], AObject.class)) {
+                UUID handle = content.getParameterOrDefault(UUID.class, "methodParameter" + i, null);
+                methodParameterValues[i] = content.getCache(handle);
             } else {
-                methodParameterTypes = new Class[methodParameters.length];
-
-                try {
-                    for (int i = 0; i < methodParameters.length; i++) {
-                        methodParameterTypes[i] = Class.forName(methodParameters[i]);
-                    }
-                } catch (ClassNotFoundException e) {
-                    throw new StatusUnreadableException();
-                }
+                methodParameterValues[i] = content.getParameterOrDefault(Object.class, "methodParameter" + i, null);
             }
+        }
 
-            AObject object = content.getCache(handleID);
-
-            Class<? extends AObject> clazz = object.getClass();
-            Method method;
-            try {
-                method = clazz.getMethod(methodName, methodParameterTypes);
-            } catch (NoSuchMethodException e) {
-                throw new StatusNotExistedException();
+        Object result;
+        try {
+            result = method.invoke(object, methodParameterValues);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new StatusUnexpectedException();
+        }
+        if (methodReturnType != void.class) {
+            if (ClassUtil.isThisOrSuperContain(methodReturnType, AObject.class)) {
+                AObject resultObject = (AObject) result;
+                UUID handle = resultObject.cache(SpaceType.USER);
+                content.setResult("result", handle);
+            } else {
+                content.setResult("result", result);
             }
-            methodParameterTypes = method.getParameterTypes();
-            Object[] methodParameterValues = new Object[methodParameterTypes.length];
-            Class<?> methodReturnType = method.getReturnType();
-
-            for (int i = 0; i < methodParameterTypes.length; i++) {
-                if (ClassUtil.isThisOrSuperContain(methodParameterTypes[i], AObject.class)) {
-                    UUID handle = content.getParameterOrDefault(UUID.class, "methodParameter" + i, null);
-                    methodParameterValues[i] = content.getCache(handle);
-                } else {
-                    methodParameterValues[i] = content.getParameterOrDefault(Object.class, "methodParameter" + i, null);
-                }
-            }
-
-            Object result;
-            try {
-                result = method.invoke(object, methodParameterValues);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new StatusUnexpectedException();
-            }
-            if (methodReturnType != void.class) {
-                if (ClassUtil.isThisOrSuperContain(methodReturnType, AObject.class)) {
-                    AObject resultObject = (AObject) result;
-                    UUID handle = resultObject.cache(SpaceType.USER);
-                    content.setResult("result", handle);
-                } else {
-                    content.setResult("result", result);
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
         }
     }
 

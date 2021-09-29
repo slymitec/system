@@ -36,7 +36,7 @@ public class StartUpController extends AController {
         this.init();
 
         if (ObjectUtil.isAnyNull(this.factoryManager)) {
-            this.factoryManager = SpringHelper.createInstance(FactoryManager.class);
+            this.factoryManager = SpringHelper.getInstance(FactoryManager.class);
 
             this.factoryManager.startup(StartupType.STEP_INIT_SELF);
             this.factoryManager.startup(StartupType.STEP_AFTER_SELF);

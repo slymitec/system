@@ -73,7 +73,6 @@ public class TestController extends AController {
 
         ret.put("response", userContext.getResponse());
 
-
         return ret;
     }
 

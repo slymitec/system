@@ -10,6 +10,7 @@ import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensio
 import indi.sly.system.services.job.JobService;
 import indi.sly.system.services.job.prototypes.UserContentObject;
 import indi.sly.system.services.job.prototypes.UserContextObject;
+import indi.sly.system.services.job.values.UserContentExceptionDefinition;
 import indi.sly.system.services.job.values.UserContentResponseRawDefinition;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,19 +60,35 @@ public class InterActiveController extends AController {
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        this.factoryManager.getKernelSpace().getUserSpace().set(this.userSpace);
+        try {
+            this.factoryManager.getKernelSpace().getUserSpace().set(this.userSpace);
 
-        JobService jobService = this.factoryManager.getService(JobService.class);
+            JobService jobService = this.factoryManager.getService(JobService.class);
 
-        UserContextObject userContext = jobService.createUserContext(message);
+            UserContextObject userContext = jobService.createUserContext(message);
 
-        UserContentObject userContent = userContext.getContent();
+            UserContentObject userContent = userContext.getContent();
 
-        userContent.run();
+            userContent.run();
 
-        UserContentResponseRawDefinition userContentResponseRaw = userContext.getResponse();
+            UserContentResponseRawDefinition userContentResponseRaw = userContext.getResponse();
 
-        session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponseRaw));
+            session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponseRaw));
+        } catch (RuntimeException exception) {
+            UserContentResponseRawDefinition userContentResponseRaw = new UserContentResponseRawDefinition();
+
+            UserContentExceptionDefinition userContentResponseExceptionRaw = userContentResponseRaw.getException();
+
+            userContentResponseExceptionRaw.setName(exception.getClass().getSimpleName());
+            StackTraceElement[] kernelExceptionStackTrace = exception.getStackTrace();
+            if (kernelExceptionStackTrace.length != 0) {
+                userContentResponseExceptionRaw.setClazz(kernelExceptionStackTrace[0].getClassName());
+                userContentResponseExceptionRaw.setMethod(kernelExceptionStackTrace[0].getMethodName());
+            }
+            userContentResponseExceptionRaw.setMessage(exception.getMessage());
+
+            session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponseRaw));
+        }
     }
 
     @OnError

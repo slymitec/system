@@ -11,7 +11,7 @@ import indi.sly.system.kernel.core.values.HandleEntryDefinition;
 import java.util.UUID;
 
 public abstract class AController extends APrototype {
-    public void init() {
+    public final void init() {
         KernelSpaceDefinition kernelSpace = SpringHelper.getInstance(KernelSpaceDefinition.class);
 
         HandleEntryDefinition factoryManagerHandleEntry = kernelSpace.getClassedHandles().getOrDefault(FactoryManager.class, null);

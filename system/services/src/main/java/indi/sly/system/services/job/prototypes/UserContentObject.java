@@ -1,16 +1,11 @@
 package indi.sly.system.services.job.prototypes;
 
 import indi.sly.system.common.lang.AKernelException;
-import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
-import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
 import indi.sly.system.services.job.JobService;
-import indi.sly.system.services.job.values.TaskDefinition;
 import indi.sly.system.services.job.values.UserContentDefinition;
 import indi.sly.system.services.job.values.UserContentExceptionDefinition;
 import indi.sly.system.services.job.values.UserContextDefinition;
@@ -19,7 +14,6 @@ import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
 import java.util.Map;
-import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -92,7 +86,11 @@ public class UserContentObject extends AIndependentValueProcessObject<UserContex
                 userContentException.setClazz(kernelExceptionStackTrace[0].getClassName());
                 userContentException.setMethod(kernelExceptionStackTrace[0].getMethodName());
             }
-            userContentException.setMessage(kernelException.getMessage());
+            String[] kernelExceptionStackTraceMessage = new String[kernelExceptionStackTrace.length];
+            for (int i = 0; i < kernelExceptionStackTrace.length; i++) {
+                kernelExceptionStackTraceMessage[i] = kernelExceptionStackTrace[i].getClassName() + "." + kernelExceptionStackTrace[i].getMethodName() + "(...)";
+            }
+            userContentException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
         } else {
             userContent.getResponse().putAll(taskContent.getResult());
         }

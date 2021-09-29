@@ -11,10 +11,10 @@ public class UserContentResponseRawDefinition extends ADefinition<UserContentRes
         this.exception = new UserContentExceptionDefinition();
     }
 
-    private final Map<String, String> response;
+    private final Map<String, Object> response;
     private final UserContentExceptionDefinition exception;
 
-    public Map<String, String> getResponse() {
+    public Map<String, Object> getResponse() {
         return this.response;
     }
 

@@ -13,14 +13,14 @@ public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
     }
 
     private final Map<String, String> parameters;
-    private final Map<String, String> results;
+    private final Map<String, Object> results;
     private AKernelException exception;
 
     public Map<String, String> getParameters() {
         return this.parameters;
     }
 
-    public Map<String, String> getResults() {
+    public Map<String, Object> getResults() {
         return this.results;
     }
 

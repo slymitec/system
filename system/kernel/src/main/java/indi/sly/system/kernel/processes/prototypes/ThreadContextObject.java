@@ -55,17 +55,17 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
         this.lock(LockType.NONE);
     }
 
-    public Map<String, String> getResults() {
+    public Map<String, Object> getResults() {
         this.lock(LockType.READ);
         this.init();
 
-        Map<String, String> results = this.value.getRun().getResults();
+        Map<String, Object> results = this.value.getRun().getResults();
 
         this.lock(LockType.NONE);
         return CollectionUtil.unmodifiable(results);
     }
 
-    public void setResults(Map<String, String> results) {
+    public void setResults(Map<String, Object> results) {
         this.lock(LockType.WRITE);
         this.init();
 

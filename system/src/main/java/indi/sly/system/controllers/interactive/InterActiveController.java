@@ -85,7 +85,11 @@ public class InterActiveController extends AController {
                 userContentResponseExceptionRaw.setClazz(kernelExceptionStackTrace[0].getClassName());
                 userContentResponseExceptionRaw.setMethod(kernelExceptionStackTrace[0].getMethodName());
             }
-            userContentResponseExceptionRaw.setMessage(exception.getMessage());
+            String[] kernelExceptionStackTraceMessage = new String[kernelExceptionStackTrace.length];
+            for (int i = 0; i < kernelExceptionStackTrace.length; i++) {
+                kernelExceptionStackTraceMessage[i] = kernelExceptionStackTrace[i].getClassName() + "." + kernelExceptionStackTrace[i].getMethodName() + "(...)";
+            }
+            userContentResponseExceptionRaw.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
 
             session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponseRaw));
         }

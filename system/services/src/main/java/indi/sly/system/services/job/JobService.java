@@ -10,6 +10,7 @@ import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
 import indi.sly.system.services.job.instances.prototypes.processors.ATaskInitializer;
+import indi.sly.system.services.job.instances.prototypes.processors.HandleTaskInitializer;
 import indi.sly.system.services.job.instances.prototypes.processors.ManagerTaskInitializer;
 import indi.sly.system.services.job.prototypes.*;
 import indi.sly.system.services.job.values.TaskAttributeType;
@@ -33,6 +34,7 @@ public class JobService extends AService {
             this.factoryManager.getKernelSpace().setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
 
             this.createTask("Manager", TaskAttributeType.NULL, null, this.factoryManager.create(ManagerTaskInitializer.class));
+            this.createTask("Handle", TaskAttributeType.NULL, null, this.factoryManager.create(HandleTaskInitializer.class));
         }
     }
 

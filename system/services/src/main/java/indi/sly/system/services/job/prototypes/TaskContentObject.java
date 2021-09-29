@@ -1,7 +1,6 @@
 package indi.sly.system.services.job.prototypes;
 
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
@@ -79,10 +78,6 @@ public class TaskContentObject extends AObject {
         if (ObjectUtil.isAnyNull(value)) {
             return defaultValue.acquire();
         } else {
-            if (value.getClass() != clazz) {
-                throw new StatusRelationshipErrorException();
-            }
-
             try {
                 return ObjectUtil.transferFromString(clazz, value);
             } catch (RuntimeException ignored) {
@@ -96,11 +91,12 @@ public class TaskContentObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        Map<String, String> threadContextParameters = this.threadContext.getParameters();
+        Map<String, String> threadContextParameters = new HashMap<>(this.threadContext.getParameters());
         threadContextParameters.put(name, value);
+        this.threadContext.setParameters(threadContextParameters);
     }
 
-    public Map<String, String> getResult() {
+    public Map<String, Object> getResult() {
         return this.threadContext.getResults();
     }
 
@@ -109,8 +105,8 @@ public class TaskContentObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        Map<String, String> threadContextResults = new HashMap<>(this.threadContext.getResults());
-        threadContextResults.put(name, ObjectUtil.transferToString(value));
+        Map<String, Object> threadContextResults = new HashMap<>(this.threadContext.getResults());
+        threadContextResults.put(name, value);
         this.threadContext.setResults(threadContextResults);
     }
 

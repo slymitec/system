@@ -15,7 +15,7 @@ public class UserContentDefinition extends ADefinition<UserContentDefinition> {
     private String task;
     private String method;
     private final Map<String, String> request;
-    private final Map<String, String> response;
+    private final Map<String, Object> response;
     private final UserContentExceptionDefinition exception;
 
     public String getTask() {
@@ -38,7 +38,7 @@ public class UserContentDefinition extends ADefinition<UserContentDefinition> {
         return this.request;
     }
 
-    public Map<String, String> getResponse() {
+    public Map<String, Object> getResponse() {
         return this.response;
     }
 

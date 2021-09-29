@@ -1,6 +1,5 @@
 package indi.sly.system.services.job.prototypes.processors;
 
-import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.services.core.prototypes.TransactionalActionObject;
@@ -18,16 +17,11 @@ import java.util.UUID;
 public class UserContextCreateProcessAndThreadResolver extends AUserContextCreateResolver {
     public UserContextCreateProcessAndThreadResolver() {
         this.create = (userContext, userContextRequestRaw) -> {
-            UserContextRequestProcessIDRawDefinition processIDRaw;
-            try {
-                processIDRaw = userContextRequestRaw.getProcessID();
-            } catch (RuntimeException ignored) {
-                throw new StatusUnreadableException();
-            }
+            UserContextRequestProcessIDRawDefinition processIDRaw = userContextRequestRaw.getProcessID();
 
 //            userContentProcessIDRaw.getVerification();
 
-            UUID processID = processIDRaw.getProcessID();
+            UUID processID = processIDRaw.getID();
 
             TransactionalActionObject transactionalAction = this.factoryManager.create(TransactionalActionObject.class);
 

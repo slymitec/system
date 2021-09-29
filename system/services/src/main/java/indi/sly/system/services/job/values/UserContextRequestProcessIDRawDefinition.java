@@ -5,15 +5,15 @@ import indi.sly.system.common.values.ADefinition;
 import java.util.UUID;
 
 public class UserContextRequestProcessIDRawDefinition extends ADefinition<UserContextRequestProcessIDRawDefinition> {
-    private UUID processID;
+    private UUID id;
     private String verification;
 
-    public UUID getProcessID() {
-        return this.processID;
+    public UUID getID() {
+        return this.id;
     }
 
-    public void setProcessID(UUID processID) {
-        this.processID = processID;
+    public void setID(UUID id) {
+        this.id = id;
     }
 
     public String getVerification() {

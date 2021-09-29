@@ -1,7 +1,6 @@
 package indi.sly.system.services.job.prototypes.processors;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.services.job.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.job.prototypes.wrappers.UserContextProcessorMediator;
@@ -17,12 +16,7 @@ import javax.inject.Named;
 public class UserContextCreateContentResolver extends AUserContextCreateResolver {
     public UserContextCreateContentResolver() {
         this.create = (userContext, userContextRequestRaw) -> {
-            UserContextRequestContentRawDefinition contentRaw;
-            try {
-                contentRaw = userContextRequestRaw.getContent();
-            } catch (RuntimeException ignored) {
-                throw new StatusUnreadableException();
-            }
+            UserContextRequestContentRawDefinition contentRaw = userContextRequestRaw.getContent();
 
             if (ValueUtil.isAnyNullOrEmpty(contentRaw.getTask(), contentRaw.getMethod())) {
                 throw new ConditionParametersException();

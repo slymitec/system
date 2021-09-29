@@ -4,19 +4,19 @@ import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.services.core.prototypes.TransactionalActionObject;
+import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.job.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.job.lang.*;
-import indi.sly.system.services.job.prototypes.TaskContentObject;
+import indi.sly.system.services.job.lang.TaskProcessorFinishConsumer;
+import indi.sly.system.services.job.lang.TaskProcessorRunConsumer;
+import indi.sly.system.services.job.lang.TaskProcessorStartFunction;
 import indi.sly.system.services.job.prototypes.wrappers.TaskProcessorMediator;
 import indi.sly.system.services.job.values.TaskAttributeType;
 import indi.sly.system.services.job.values.TaskDefinition;
 import indi.sly.system.services.job.values.TaskInitializerRunSummaryDefinition;
-import indi.sly.system.services.core.values.TransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import javax.transaction.Transactional;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -44,12 +44,24 @@ public class TaskInitializerResolver extends ATaskResolver {
                     initializerRunTransaction = initializerRun.getTransaction();
                 }
 
-                TransactionalActionObject transactionalAction = this.factoryManager.create(TransactionalActionObject.class);
-                transactionalAction.run(initializerRunTransaction, (Provider<Void>) () -> {
+                Provider<Void> provider = () -> {
                     initializerRun.getMethod().accept(run, content);
 
                     return null;
-                });
+                };
+
+
+                TransactionalActionObject transactionalAction = this.factoryManager.create(TransactionalActionObject.class);
+
+                if (LogicalUtil.isAnyEqual(initializerRunTransaction, TransactionType.INDEPENDENCE)) {
+                    transactionalAction.runWithIndependentTransactional(provider);
+                } else if (LogicalUtil.isAnyEqual(initializerRunTransaction, TransactionType.MIX)) {
+                    transactionalAction.runWithTransactional(provider);
+                } else if (LogicalUtil.isAnyEqual(initializerRunTransaction, TransactionType.PROHIBITED)) {
+                    transactionalAction.runWithoutTransactional(provider);
+                } else if (LogicalUtil.isAnyEqual(initializerRunTransaction, TransactionType.WHATEVER)) {
+                    transactionalAction.runWithWhatever(provider);
+                }
             } catch (AKernelException exception) {
                 content.setException(exception);
             }
@@ -64,24 +76,6 @@ public class TaskInitializerResolver extends ATaskResolver {
     private final TaskProcessorStartFunction start;
     private final TaskProcessorFinishConsumer finish;
     private final TaskProcessorRunConsumer run;
-
-    @Transactional(value = Transactional.TxType.SUPPORTS)
-    protected void runEntry(TaskInitializerRunMethodConsumer initializerRunMethodEntry,
-                            TaskRunConsumer run, TaskContentObject content) {
-        initializerRunMethodEntry.accept(run, content);
-    }
-
-    @Transactional(value = Transactional.TxType.REQUIRES_NEW)
-    protected void runEntryWithIndependentTransactional(TaskInitializerRunMethodConsumer initializerRunMethodEntry,
-                                                        TaskRunConsumer run, TaskContentObject content) {
-        initializerRunMethodEntry.accept(run, content);
-    }
-
-    @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-    protected void runEntryWithoutTransactional(TaskInitializerRunMethodConsumer initializerRunMethodEntry,
-                                                TaskRunConsumer run, TaskContentObject content) {
-        initializerRunMethodEntry.accept(run, content);
-    }
 
     @Override
     public void resolve(TaskDefinition task, TaskProcessorMediator processorMediator) {

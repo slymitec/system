@@ -3,10 +3,9 @@ package indi.sly.system.services.job.prototypes.processors;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
+import indi.sly.system.services.core.prototypes.TransactionalActionObject;
 import indi.sly.system.services.job.lang.UserContextProcessorFinishFunction;
 import indi.sly.system.services.job.prototypes.wrappers.UserContextProcessorMediator;
-import indi.sly.system.services.core.prototypes.TransactionalActionObject;
-import indi.sly.system.services.core.values.TransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -20,7 +19,7 @@ public class UserContextFinishProcessAndThreadResolver extends AUserContextFinis
             TransactionalActionObject transactionalAction = this.factoryManager.create(TransactionalActionObject.class);
 
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
-            transactionalAction.run(TransactionType.INDEPENDENCE, () -> {
+            transactionalAction.runWithTransactional(() -> {
                 if (threadManager.size() == 0) {
                     throw new StatusRelationshipErrorException();
                 }

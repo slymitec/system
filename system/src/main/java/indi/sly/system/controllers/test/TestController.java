@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +27,6 @@ public class TestController extends AController {
     private UserSpaceDefinition userSpace;
 
     @RequestMapping(value = {"/TestWS.action"}, method = {RequestMethod.GET})
-    @Transactional
     public Object Test(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init();
 

@@ -1,11 +1,12 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="en">
 <head>
     <title>SLY System</title>
 </head>
 
 <body>
-<input id="text" type="text"/>
+<label for="text">输入：</label><input id="text" type="text" style="width: 100%"/>
+<br/>
 <button onclick="send()">发送</button>
 <button onclick="closeWebSocket()">断开</button>
 <div id="message"></div>
@@ -13,11 +14,11 @@
 
 <script type="text/javascript">
     function setMessageInnerHTML(innerHTML) {
-        var text = document.getElementById('message').innerHTML;
+        const text = document.getElementById('message').innerHTML;
         document.getElementById('message').innerHTML = innerHTML + '<br/>' + text;
     }
 
-    var websocket = null;
+    let websocket = null;
 
     if ('WebSocket' in window) {
         websocket = new WebSocket("ws://localhost:8080/Call");
@@ -51,7 +52,7 @@
     }
 
     function send() {
-        var message = document.getElementById('text').value;
+        const message = document.getElementById('text').value;
         websocket.send(message);
     }
 </script>

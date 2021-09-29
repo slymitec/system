@@ -4,7 +4,6 @@ import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.services.core.prototypes.TransactionalActionObject;
-import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.job.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.job.prototypes.wrappers.UserContextProcessorMediator;
 import indi.sly.system.services.job.values.UserContextRequestProcessIDRawDefinition;
@@ -33,7 +32,7 @@ public class UserContextCreateProcessAndThreadResolver extends AUserContextCreat
             TransactionalActionObject transactionalAction = this.factoryManager.create(TransactionalActionObject.class);
 
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
-            ThreadObject thread = transactionalAction.run(TransactionType.INDEPENDENCE, () -> threadManager.create(processID));
+            ThreadObject thread = transactionalAction.runWithTransactional(() -> threadManager.create(processID));
 
             userContext.setThreadID(thread.getID());
 

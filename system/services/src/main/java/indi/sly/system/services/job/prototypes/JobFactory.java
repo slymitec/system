@@ -100,33 +100,18 @@ public class JobFactory extends AFactory {
         });
     }
 
-    public UserContextCreateBuilder createUserContextCreator() {
+    public UserContextBuilder createUserContext() {
         UserContextProcessorMediator processorMediator = this.factoryManager.create(UserContextProcessorMediator.class);
 
         for (AUserContextCreateResolver userContextCreateResolver : this.userContextCreateResolvers) {
             userContextCreateResolver.resolve(processorMediator);
         }
 
-        UserContextCreateBuilder userContextCreateBuilder = this.factoryManager.create(UserContextCreateBuilder.class);
+        UserContextBuilder userContextBuilder = this.factoryManager.create(UserContextBuilder.class);
 
-        userContextCreateBuilder.processorMediator = processorMediator;
-        userContextCreateBuilder.factory = this;
+        userContextBuilder.processorMediator = processorMediator;
+        userContextBuilder.factory = this;
 
-        return userContextCreateBuilder;
-    }
-
-    public UserContextFinishBuilder createUserContextFinish() {
-        UserContextProcessorMediator processorMediator = this.factoryManager.create(UserContextProcessorMediator.class);
-
-        for (AUserContextFinishResolver userContextFinishResolver : this.userContextFinishResolvers) {
-            userContextFinishResolver.resolve(processorMediator);
-        }
-
-        UserContextFinishBuilder userContextFinishBuilder = this.factoryManager.create(UserContextFinishBuilder.class);
-
-        userContextFinishBuilder.processorMediator = processorMediator;
-        userContextFinishBuilder.factory = this;
-
-        return userContextFinishBuilder;
+        return userContextBuilder;
     }
 }

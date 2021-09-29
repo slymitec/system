@@ -8,15 +8,10 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.services.job.instances.prototypes.processors.ManagerTaskInitializer;
-import indi.sly.system.services.job.prototypes.UserContextCreateBuilder;
-import indi.sly.system.services.job.prototypes.UserContextFinishBuilder;
-import indi.sly.system.services.job.prototypes.UserContextObject;
 import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
 import indi.sly.system.services.job.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.job.prototypes.TaskBuilder;
-import indi.sly.system.services.job.prototypes.JobFactory;
-import indi.sly.system.services.job.prototypes.TaskObject;
+import indi.sly.system.services.job.instances.prototypes.processors.ManagerTaskInitializer;
+import indi.sly.system.services.job.prototypes.*;
 import indi.sly.system.services.job.values.TaskAttributeType;
 import indi.sly.system.services.job.values.TaskDefinition;
 import indi.sly.system.services.job.values.UserContextRequestRawDefinition;
@@ -106,9 +101,9 @@ public class JobService extends AService {
             throw new StatusUnreadableException();
         }
 
-        UserContextCreateBuilder userContextCreateBuilder = this.factory.createUserContextCreator();
+        UserContextBuilder userContextBuilder = this.factory.createUserContext();
 
-        return userContextCreateBuilder.create(userContextRequestRaw);
+        return userContextBuilder.create(userContextRequestRaw);
     }
 
     public void finishUserContext(UserContextObject userContext) {
@@ -116,8 +111,8 @@ public class JobService extends AService {
             throw new ConditionParametersException();
         }
 
-        UserContextFinishBuilder userContextFinishBuilder = this.factory.createUserContextFinish();
+        UserContextBuilder userContextBuilder = this.factory.createUserContext();
 
-        userContextFinishBuilder.finish(userContext);
+        userContextBuilder.finish(userContext);
     }
 }

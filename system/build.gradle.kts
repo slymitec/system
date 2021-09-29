@@ -38,8 +38,8 @@ dependencies {
     implementation(project(":kernel"))
     implementation(project(":services"))
 
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+//    implementation("org.jetbrains.kotlin:kotlin-reflect")
+//    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     implementation("com.microsoft.sqlserver:mssql-jdbc:9.4.0.jre16")
     implementation("javax.inject:javax.inject:1")
@@ -84,12 +84,12 @@ tasks.jar {
     }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "16"
-    }
-}
+//tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+//    kotlinOptions {
+//        freeCompilerArgs = listOf("-Xjsr305=strict")
+//        jvmTarget = "16"
+//    }
+//}
 
 tasks.test {
     useJUnitPlatform()

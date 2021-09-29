@@ -63,9 +63,9 @@ public class InterActiveController extends AController {
 
         UserContextObject userContext = jobService.createUserContext(message);
 
-        UserContentObject userContextContent = userContext.getContent();
+        UserContentObject userContent = userContext.getContent();
 
-        userContextContent.run();
+        userContent.run();
 
         UserContentResponseRawDefinition userContentResponseRaw = userContext.getResponse();
 

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -28,8 +27,8 @@ public class UserContextCreateContentResolver extends AUserContextCreateResolver
             if (ValueUtil.isAnyNullOrEmpty(contentRaw.getTask(), contentRaw.getMethod())) {
                 throw new ConditionParametersException();
             }
-            for (Map.Entry<String, String> pair : contentRaw.getRequest().entrySet()) {
-                if (ValueUtil.isAnyNullOrEmpty(pair.getKey())) {
+            for (String key : contentRaw.getRequest().keySet()) {
+                if (ValueUtil.isAnyNullOrEmpty(key)) {
                     throw new ConditionParametersException();
                 }
             }

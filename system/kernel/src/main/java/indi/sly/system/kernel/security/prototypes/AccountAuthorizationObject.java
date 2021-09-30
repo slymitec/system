@@ -7,10 +7,18 @@ import indi.sly.system.common.lang.StatusExpiredException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AObject;
+import indi.sly.system.kernel.objects.ObjectManager;
+import indi.sly.system.kernel.objects.prototypes.InfoObject;
+import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
+import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.lang.AccountAuthorizationGetAccount;
 import indi.sly.system.kernel.security.values.AccountAuthorizationSummaryDefinition;
@@ -123,6 +131,7 @@ public class AccountAuthorizationObject extends AObject {
         accountAuthorization.setID(account.getID());
         accountAuthorization.setName(account.getName());
         accountAuthorization.setPassword(account.getPassword());
+
         AccountAuthorizationTokenDefinition accountAuthorizationToken = accountAuthorization.getToken();
         Map<Long, Integer> accountAuthorizationTokenLimits = accountAuthorizationToken.getLimits();
         for (UserTokenObject userToken : userTokens) {
@@ -134,7 +143,6 @@ public class AccountAuthorizationObject extends AObject {
                 accountAuthorizationTokenLimits.put(pair.getKey(), Integer.min(value, pair.getValue()));
             }
         }
-
         if (ObjectUtil.allNotNull(this.processToken, this.accountAuthorizationToken)) {
             if (this.processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
                 accountAuthorizationToken.setPrivileges(LogicalUtil.or(accountAuthorizationToken.getPrivileges(),
@@ -164,6 +172,29 @@ public class AccountAuthorizationObject extends AObject {
             }
 
             accountAuthorizationToken.getRoles().addAll(this.accountAuthorizationToken.getRoles());
+        }
+
+        Map<UUID, String> accountAuthorizationSessions = accountAuthorization.getSessions();
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessInfoTableObject processInfoTable = process.getInfoTable();
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        InfoObject sessionsInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
+                new IdentificationDefinition(processToken.getAccountID())));
+        Set<InfoSummaryDefinition> infoSummaries = sessionsInfo.queryChild(infoSummaryDefinition -> true);
+        for (InfoSummaryDefinition infoSummary : infoSummaries) {
+            InfoObject sessionInfo = sessionsInfo.getChild(new IdentificationDefinition(infoSummary.getID()));
+
+            boolean contain = processInfoTable.containByID(sessionInfo.getID());
+            if (!contain) {
+                sessionInfo.open(InfoOpenAttributeType.OPEN_ONLY_READ);
+            }
+
+            accountAuthorizationSessions.put(sessionInfo.getID(), sessionInfo.getName());
+
+            if (!contain) {
+                sessionInfo.close();
+            }
         }
 
         return accountAuthorization;

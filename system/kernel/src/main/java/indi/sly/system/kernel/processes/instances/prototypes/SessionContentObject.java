@@ -5,6 +5,7 @@ import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
@@ -20,6 +21,34 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     private SessionDefinition session;
+
+    public String getName() {
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            return this.session.getName();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+    }
+
+    public void setName(String name) {
+        if (StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        try {
+            this.lock(LockType.WRITE);
+            this.init();
+
+            this.session.setName(name);
+
+            this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+    }
 
     public long getType() {
         try {

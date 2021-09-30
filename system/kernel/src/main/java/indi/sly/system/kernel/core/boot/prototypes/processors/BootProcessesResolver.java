@@ -36,13 +36,13 @@ public class BootProcessesResolver extends ABootResolver {
 
                     process.setID(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
                     process.setStatus(ProcessStatusType.RUNNING);
-                    process.setSessionID(null);
                     process.setCommunication(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));
                     ProcessContextDefinition context = new ProcessContextDefinition();
                     context.setType(ProcessContextType.EXECUTABLE);
                     context.setParameters(StringUtil.EMPTY);
                     process.setContext(ObjectUtil.transferToByteArray(context));
                     process.setInfoTable(ObjectUtil.transferToByteArray(new ProcessInfoTableDefinition()));
+                    process.setSession(ObjectUtil.transferToByteArray(new ProcessSessionDefinition()));
                     ProcessStatisticsDefinition processStatistics = new ProcessStatisticsDefinition();
                     DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
                     processStatistics.getDate().put(DateTimeType.CREATE, dateTime.getCurrentDateTime());

@@ -7,13 +7,13 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
-import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
-import indi.sly.system.kernel.processes.values.ProcessEntity;
+import indi.sly.system.kernel.processes.values.ProcessSessionDefinition;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.AccessControlDefinition;
@@ -31,7 +31,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, ProcessObject> {
+public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessionDefinition, ProcessObject> {
     public void create(String name) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
@@ -43,6 +43,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
         }
 
         ProcessTokenObject processToken = this.parent.getToken();
+        UUID accountID = processToken.getAccountID();
 
         KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
@@ -59,7 +60,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             }
 
             InfoObject sessionsInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
-                    new IdentificationDefinition(processToken.getAccountID())));
+                    new IdentificationDefinition(accountID)));
 
             InfoObject sessionInfo = sessionsInfo.createChildAndOpen(kernelConfiguration.PROCESSES_SESSION_INSTANCE_ID,
                     new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_SHARED_WRITE);
@@ -67,7 +68,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             SecurityDescriptorObject securityDescriptor = sessionInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
-            permission.getUserID().setID(processToken.getAccountID());
+            permission.getUserID().setID(accountID);
             permission.getUserID().setType(UserType.ACCOUNT);
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
@@ -81,6 +82,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             securityDescriptor.setPermissions(permissions);
 
             SessionContentObject sessionContent = (SessionContentObject) sessionInfo.getContent();
+            sessionContent.setName(name);
             sessionContent.addProcessID(this.parent.getID());
 
             ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
@@ -89,6 +91,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
 
             sessionID = sessionInfo.getID();
 
+            this.value.setAccountID(accountID);
             this.value.setSessionID(sessionID);
 
             this.fresh();
@@ -107,6 +110,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             this.lock(LockType.WRITE);
             this.init();
 
+            UUID accountID = this.value.getAccountID();
             UUID sessionID = this.value.getSessionID();
 
             if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
@@ -114,7 +118,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             }
 
             List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
-                    new IdentificationDefinition(sessionID));
+                    new IdentificationDefinition(accountID), new IdentificationDefinition(sessionID));
 
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
             InfoObject sessionInfo = objectManager.get(identifications);
@@ -131,6 +135,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
                 info.close();
             }
 
+            this.value.setAccountID(null);
             this.value.setSessionID(null);
 
             this.fresh();
@@ -168,6 +173,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             this.lock(LockType.WRITE);
             this.init();
 
+            UUID accountID = this.value.getAccountID();
             UUID sessionID = this.value.getSessionID();
 
             if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
@@ -178,7 +184,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
 
             if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
                 List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
-                        new IdentificationDefinition(sessionID));
+                        new IdentificationDefinition(accountID), new IdentificationDefinition(sessionID));
 
                 ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
                 InfoObject sessionInfo = objectManager.get(identifications);
@@ -193,6 +199,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
                 processInfoEntry.setUnsupportedDelete(true);
             }
 
+            this.value.setAccountID(accountID);
             this.value.setSessionID(sessionID);
 
             this.fresh();
@@ -211,6 +218,9 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             throw new StatusRelationshipErrorException();
         }
 
+        ProcessTokenObject processToken = this.parent.getToken();
+        UUID accountID = processToken.getAccountID();
+
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         try {
@@ -218,7 +228,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             this.init();
 
             List<IdentificationDefinition> newIdentifications = List.of(new IdentificationDefinition("Sessions"),
-                    new IdentificationDefinition(sessionID));
+                    new IdentificationDefinition(accountID), new IdentificationDefinition(sessionID));
 
             InfoObject newSessionInfo = objectManager.get(newIdentifications);
 
@@ -229,7 +239,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
 
             if (!ValueUtil.isAnyNullOrEmpty(this.value.getSessionID())) {
                 List<IdentificationDefinition> oldIdentifications = List.of(new IdentificationDefinition("Sessions"),
-                        new IdentificationDefinition(this.value.getSessionID()));
+                        new IdentificationDefinition(accountID), new IdentificationDefinition(this.value.getSessionID()));
 
                 InfoObject oldSessionInfo = objectManager.get(oldIdentifications);
 
@@ -245,6 +255,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
                     info.close();
                 }
 
+                this.value.setAccountID(null);
                 this.value.setSessionID(null);
             }
 
@@ -252,6 +263,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(newSessionInfo.getID());
             processInfoEntry.setUnsupportedDelete(true);
 
+            this.value.setAccountID(accountID);
             this.value.setSessionID(sessionID);
 
             this.fresh();
@@ -272,6 +284,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             this.lock(LockType.READ);
             this.init();
 
+            UUID accountID = this.value.getAccountID();
             UUID sessionID = this.value.getSessionID();
 
             if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
@@ -279,7 +292,7 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             }
 
             List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
-                    new IdentificationDefinition(sessionID));
+                    new IdentificationDefinition(accountID), new IdentificationDefinition(sessionID));
 
             InfoObject sessionInfo = objectManager.get(identifications);
 
@@ -296,14 +309,10 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             }
 
             if (!allow) {
-                ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-                ProcessObject process = processManager.getCurrent();
-                ProcessTokenObject processToken = process.getToken();
-
                 sessionSecurityDescriptor.setInherit(true);
                 Set<AccessControlDefinition> permissions = new HashSet<>();
                 AccessControlDefinition permission = new AccessControlDefinition();
-                permission.getUserID().setID(processToken.getAccountID());
+                permission.getUserID().setID(accountID);
                 permission.getUserID().setType(UserType.ACCOUNT);
                 permission.setScope(AccessControlScopeType.THIS);
                 permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));

@@ -35,10 +35,10 @@ public class ProcessCreateBuilder extends ABuilder {
         if (ObjectUtil.allNotNull(this.parentProcess)) {
             process.setParentProcessID(parentProcess.getID());
         }
-        process.setSessionID(null);
         process.setCommunication(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));
         process.setContext(ObjectUtil.transferToByteArray(new ProcessContextDefinition()));
         process.setInfoTable(ObjectUtil.transferToByteArray(new ProcessInfoTableDefinition()));
+        process.setSession(ObjectUtil.transferToByteArray(new ProcessSessionDefinition()));
         process.setStatistics(ObjectUtil.transferToByteArray(new ProcessStatisticsDefinition()));
         process.setToken(ObjectUtil.transferToByteArray(new ProcessTokenDefinition()));
 

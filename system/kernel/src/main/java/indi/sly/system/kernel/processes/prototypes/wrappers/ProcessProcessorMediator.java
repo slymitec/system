@@ -21,6 +21,8 @@ public class ProcessProcessorMediator extends AMediator {
         this.writeProcessContexts = new HashSet<>();
         this.readProcessInfoTables = new HashSet<>();
         this.writeProcessInfoTables = new HashSet<>();
+        this.readProcessSessions = new HashSet<>();
+        this.writeProcessSessions = new HashSet<>();
         this.readProcessStatistics = new HashSet<>();
         this.writeProcessStatistics = new HashSet<>();
         this.readProcessTokens = new HashSet<>();
@@ -36,6 +38,8 @@ public class ProcessProcessorMediator extends AMediator {
     private final Set<ProcessProcessorWriteComponentConsumer> writeProcessContexts;
     private final Set<ProcessProcessorReadComponentFunction> readProcessInfoTables;
     private final Set<ProcessProcessorWriteComponentConsumer> writeProcessInfoTables;
+    private final Set<ProcessProcessorReadComponentFunction> readProcessSessions;
+    private final Set<ProcessProcessorWriteComponentConsumer> writeProcessSessions;
     private final Set<ProcessProcessorReadComponentFunction> readProcessStatistics;
     private final Set<ProcessProcessorWriteComponentConsumer> writeProcessStatistics;
     private final Set<ProcessProcessorReadComponentFunction> readProcessTokens;
@@ -79,6 +83,14 @@ public class ProcessProcessorMediator extends AMediator {
 
     public Set<ProcessProcessorWriteComponentConsumer> getWriteProcessInfoTables() {
         return this.writeProcessInfoTables;
+    }
+
+    public Set<ProcessProcessorReadComponentFunction> getReadProcessSessions() {
+        return this.readProcessSessions;
+    }
+
+    public Set<ProcessProcessorWriteComponentConsumer> getWriteProcessSessions() {
+        return this.writeProcessSessions;
     }
 
     public Set<ProcessProcessorReadComponentFunction> getReadProcessStatistics() {

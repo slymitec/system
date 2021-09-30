@@ -175,8 +175,27 @@ public class ProcessObject extends AObject {
         ProcessSessionObject processSession = this.factoryManager.create(ProcessSessionObject.class);
 
         processSession.setParent(this);
-        processSession.setSource(this::getSelf, (processEntity -> {
-        }));
+        processSession.setSource(() -> {
+            ProcessEntity process = this.getSelf();
+
+            Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessSessions();
+
+            byte[] source = null;
+
+            for (ProcessProcessorReadComponentFunction resolver : resolvers) {
+                source = resolver.apply(source, process);
+            }
+
+            return source;
+        }, (byte[] source) -> {
+            ProcessEntity process = this.getSelf();
+
+            Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessSessions();
+
+            for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
+                resolver.accept(process, source);
+            }
+        });
         processSession.setLock((lock) -> {
             ProcessEntity process = this.getSelf();
 

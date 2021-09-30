@@ -30,15 +30,15 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
     protected long status;
     @Column(columnDefinition = "uniqueidentifier", name = "Parent_ProcessID", nullable = true)
     protected UUID parentProcessID;
-    @Column(columnDefinition = "uniqueidentifier", name = "SessionID", nullable = true)
-    protected UUID sessionID;
     @Column(length = 4096, name = "Communication", nullable = false)
     protected byte[] communication;
     @Column(length = 4096, name = "Context", nullable = false)
     protected byte[] context;
     @Column(length = 4096, name = "Info_Table", nullable = false)
     protected byte[] infoTable;
-    @Column(length = 4096, name = "Counter_Statistics", nullable = false)
+    @Column(length = 4096, name = "SessionInfo", nullable = false)
+    protected byte[] session;
+    @Column(length = 4096, name = "StatisticsInfo", nullable = false)
     protected byte[] statistics;
     @Column(length = 4096, name = "Token", nullable = false)
     protected byte[] token;
@@ -67,14 +67,6 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
         this.parentProcessID = parentProcessID;
     }
 
-    public UUID getSessionID() {
-        return this.sessionID;
-    }
-
-    public void setSessionID(UUID sessionID) {
-        this.sessionID = sessionID;
-    }
-
     public byte[] getCommunication() {
         return this.communication;
     }
@@ -97,6 +89,14 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
 
     public void setInfoTable(byte[] infoTable) {
         this.infoTable = infoTable;
+    }
+
+    public byte[] getSession() {
+        return this.session;
+    }
+
+    public void setSession(byte[] session) {
+        this.session = session;
     }
 
     public byte[] getStatistics() {
@@ -123,20 +123,21 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
         return status == that.status &&
                 id.equals(that.id) &&
                 Objects.equals(parentProcessID, that.parentProcessID) &&
-                Objects.equals(sessionID, that.sessionID) &&
                 Arrays.equals(communication, that.communication) &&
                 Arrays.equals(context, that.context) &&
                 Arrays.equals(infoTable, that.infoTable) &&
+                Arrays.equals(session, that.session) &&
                 Arrays.equals(statistics, that.statistics) &&
                 Arrays.equals(token, that.token);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, status, parentProcessID, sessionID);
+        int result = Objects.hash(id, status, parentProcessID);
         result = 31 * result + Arrays.hashCode(communication);
         result = 31 * result + Arrays.hashCode(context);
         result = 31 * result + Arrays.hashCode(infoTable);
+        result = 31 * result + Arrays.hashCode(session);
         result = 31 * result + Arrays.hashCode(statistics);
         result = 31 * result + Arrays.hashCode(token);
         return result;
@@ -149,10 +150,10 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
         process.id = this.id;
         process.status = this.status;
         process.parentProcessID = this.parentProcessID;
-        process.sessionID = this.sessionID;
         process.communication = ArrayUtil.copyBytes(this.communication);
         process.context = ArrayUtil.copyBytes(this.context);
         process.infoTable = ArrayUtil.copyBytes(this.infoTable);
+        process.session = ArrayUtil.copyBytes(this.session);
         process.statistics = ArrayUtil.copyBytes(this.statistics);
         process.token = ArrayUtil.copyBytes(this.token);
 
@@ -166,10 +167,10 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
         this.id = UUIDUtil.readExternal(in);
         this.status = NumberUtil.readExternalLong(in);
         this.parentProcessID = UUIDUtil.readExternal(in);
-        this.sessionID = UUIDUtil.readExternal(in);
         this.communication = NumberUtil.readExternalBytes(in);
         this.context = NumberUtil.readExternalBytes(in);
         this.infoTable = NumberUtil.readExternalBytes(in);
+        this.session = NumberUtil.readExternalBytes(in);
         this.statistics = NumberUtil.readExternalBytes(in);
         this.token = NumberUtil.readExternalBytes(in);
     }
@@ -181,10 +182,10 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
         UUIDUtil.writeExternal(out, this.id);
         NumberUtil.writeExternalLong(out, this.status);
         UUIDUtil.writeExternal(out, this.parentProcessID);
-        UUIDUtil.writeExternal(out, this.sessionID);
         NumberUtil.writeExternalBytes(out, this.communication);
         NumberUtil.writeExternalBytes(out, this.context);
         NumberUtil.writeExternalBytes(out, this.infoTable);
+        NumberUtil.writeExternalBytes(out, this.session);
         NumberUtil.writeExternalBytes(out, this.statistics);
         NumberUtil.writeExternalBytes(out, this.token);
     }

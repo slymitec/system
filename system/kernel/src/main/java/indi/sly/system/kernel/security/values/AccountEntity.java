@@ -33,6 +33,8 @@ public class AccountEntity extends AEntity<AccountEntity> {
     protected List<GroupEntity> groups;
     @Column(length = 4096, name = "Token", nullable = false)
     protected byte[] token;
+    @Column(length = 4096, name = "Session", nullable = false)
+    protected byte[] session;
 
     public UUID getID() {
         return this.id;
@@ -74,18 +76,27 @@ public class AccountEntity extends AEntity<AccountEntity> {
         this.token = token;
     }
 
+    public byte[] getSession() {
+        return session;
+    }
+
+    public void setSession(byte[] session) {
+        this.session = session;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccountEntity that = (AccountEntity) o;
-        return id.equals(that.id) && name.equals(that.name) && password.equals(that.password) && groups.equals(that.groups) && Arrays.equals(token, that.token);
+        return id.equals(that.id) && name.equals(that.name) && Objects.equals(password, that.password) && groups.equals(that.groups) && Arrays.equals(token, that.token) && Arrays.equals(session, that.session);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(id, name, password, groups);
         result = 31 * result + Arrays.hashCode(token);
+        result = 31 * result + Arrays.hashCode(session);
         return result;
     }
 
@@ -98,6 +109,7 @@ public class AccountEntity extends AEntity<AccountEntity> {
         account.password = this.password;
         account.groups = this.groups;
         account.token = ArrayUtil.copyBytes(this.token);
+        account.session = ArrayUtil.copyBytes(this.session);
 
         return account;
     }
@@ -118,6 +130,7 @@ public class AccountEntity extends AEntity<AccountEntity> {
         }
 
         this.token = NumberUtil.readExternalBytes(in);
+        this.session = NumberUtil.readExternalBytes(in);
     }
 
     @Override
@@ -134,5 +147,6 @@ public class AccountEntity extends AEntity<AccountEntity> {
         }
 
         NumberUtil.writeExternalBytes(out, this.token);
+        NumberUtil.writeExternalBytes(out, this.session);
     }
 }

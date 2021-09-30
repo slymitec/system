@@ -33,9 +33,9 @@ public class TProcessController extends ATController {
         ProcessSessionObject processSession = process.getSession();
 
         if (ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-            processSession.create();
+            processSession.create("test");
         } else {
-            processSession.close();
+            //processSession.close();
         }
 
         ret = processSession.getID();

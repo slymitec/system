@@ -19,7 +19,6 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
 
     public final UUID MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID
             = UUIDUtil.getFormLongs(8953595201274071621L, -4864294792184025833L);
-    public final long MEMORY_CACHES_USERSPACE_INFOOBJECT_EXPIRED_TIME = 1048576L;
 
     public final UUID OBJECTS_PROTOTYPE_ROOT_ID
             = UUIDUtil.getFormLongs(-6865430042473446686L, -4838027132975818569L);
@@ -59,6 +58,7 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
     );
 
     public final long SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME = 65536L;
+    public final long SECURITY_ACCOUNT_SESSION_DEFAULT_LIMIT = 4L;
     public final UUID SECURITY_ACCOUNT_SYSTEM_ID
             = UUIDUtil.getFormLongs(5081613797628857462L, -8788797059387809235L);
     public final UUID SECURITY_GROUP_ADMINISTRATORS_ID

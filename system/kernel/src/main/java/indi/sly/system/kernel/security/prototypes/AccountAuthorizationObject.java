@@ -165,6 +165,8 @@ public class AccountAuthorizationObject extends AObject {
 
             accountAuthorizationToken.getRoles().addAll(this.accountAuthorizationToken.getRoles());
         }
+        UserSessionObject accountSession = account.getSession();
+        accountAuthorization.getSessionNames().addAll(accountSession.getAllNames());
 
         return accountAuthorization;
     }

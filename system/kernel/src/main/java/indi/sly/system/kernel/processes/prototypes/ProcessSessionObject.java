@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
@@ -14,7 +15,10 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
+import indi.sly.system.kernel.security.UserManager;
+import indi.sly.system.kernel.security.prototypes.AccountObject;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
+import indi.sly.system.kernel.security.prototypes.UserSessionObject;
 import indi.sly.system.kernel.security.values.AccessControlDefinition;
 import indi.sly.system.kernel.security.values.AccessControlScopeType;
 import indi.sly.system.kernel.security.values.PermissionType;
@@ -23,12 +27,19 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, ProcessObject> {
-    public void create() {
+    public void create(String name) {
+        if (StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
         if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
@@ -41,6 +52,8 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"));
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
+        UUID sessionID;
 
         try {
             this.lock(LockType.WRITE);
@@ -78,17 +91,25 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
             ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(sessionInfo.getID());
             processInfoEntry.setUnsupportedDelete(true);
 
-            this.value.setSessionID(sessionInfo.getID());
+            sessionID = sessionInfo.getID();
+
+            this.value.setSessionID(sessionID);
 
             this.fresh();
         } finally {
             this.lock(LockType.NONE);
         }
+
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+
+        AccountObject account = userManager.getCurrentAccount();
+        UserSessionObject accountSession = account.getSession();
+        accountSession.add(name);
     }
 
     public void close() {
         if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+                ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 

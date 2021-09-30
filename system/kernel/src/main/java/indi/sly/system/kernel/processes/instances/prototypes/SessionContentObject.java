@@ -56,7 +56,7 @@ public class SessionContentObject extends AInfoContentObject {
         }
     }
 
-    public Set<UUID> getProcessIDs() {
+    public Set<UUID> listProcessID() {
         try {
             this.lock(LockType.WRITE);
             this.init();

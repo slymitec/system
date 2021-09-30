@@ -122,12 +122,16 @@ public class ProcessManager extends AManager {
         return this.get(processID, null);
     }
 
-    public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, String parameters,
-                                List<IdentificationDefinition> workFolder) {
+    public ProcessObject create(AccountAuthorizationObject accountAuthorization, String sessionName, UUID fileIndex,
+                                String parameters, List<IdentificationDefinition> workFolder) {
         ProcessCreatorDefinition processCreator = new ProcessCreatorDefinition();
 
         if (ObjectUtil.allNotNull(accountAuthorization)) {
             processCreator.setAccountAuthorization(accountAuthorization);
+        }
+
+        if (!StringUtil.isNameIllegal(sessionName)) {
+            processCreator.setSessionName(sessionName);
         }
 
         processCreator.setFileIndex(fileIndex);

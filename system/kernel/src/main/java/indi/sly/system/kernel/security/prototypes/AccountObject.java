@@ -113,7 +113,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
             throw new ConditionRefuseException();
         }
 
-        UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         try {
             this.lock(LockType.WRITE);
@@ -126,7 +126,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
             }
 
             for (GroupObject group : groups) {
-                this.value.getGroups().add(accountGroupRepository.getGroup(group.getID()));
+                this.value.getGroups().add(userRepository.getGroup(group.getID()));
             }
 
             this.fresh();
@@ -140,12 +140,28 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
             this.lock(LockType.READ);
             this.init();
 
-            UserTokenObject accountGroupToken = this.factoryManager.create(UserTokenObject.class);
+            UserTokenObject userToken = this.factoryManager.create(UserTokenObject.class);
 
-            accountGroupToken.setParent(this);
-            accountGroupToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
+            userToken.setParent(this);
+            userToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
 
-            return accountGroupToken;
+            return userToken;
+        } finally {
+            this.lock(LockType.NONE);
+        }
+    }
+
+    public UserSessionObject getSession() {
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            UserSessionObject userSession = this.factoryManager.create(UserSessionObject.class);
+
+            userSession.setParent(this);
+            userSession.setSource(() -> this.value.getSession(), (byte[] source) -> this.value.setSession(source));
+
+            return userSession;
         } finally {
             this.lock(LockType.NONE);
         }

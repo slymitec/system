@@ -24,7 +24,6 @@ public class ProcessCreateSessionResolver extends AProcessCreateResolver {
             ProcessSessionObject parentProcessSession = parentProcess.getSession();
             ProcessSessionObject processSession = process.getSession();
 
-
             String sessionName = processCreator.getSessionName();
 
             if (!StringUtil.isNameIllegal(sessionName)) {
@@ -32,7 +31,6 @@ public class ProcessCreateSessionResolver extends AProcessCreateResolver {
 
                 if (ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.isLegal()) {
                     AccountAuthorizationSummaryDefinition accountAuthorizationSummary = accountAuthorization.checkAndGetSummary();
-
 
                     if(!accountAuthorizationSummary.getSessionNames().contains(sessionName)){
                         throw new StatusNotExistedException();

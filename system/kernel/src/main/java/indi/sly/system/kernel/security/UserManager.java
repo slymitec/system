@@ -180,11 +180,31 @@ public class UserManager extends AManager {
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions")));
+        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getID().equals(infoSummary.getID()));
         if (infoSummaries.isEmpty()) {
             InfoObject childInfo = parentInfo.createChildAndOpen(configuration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                    new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    new IdentificationDefinition(account.getID()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+
+            SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
+            Set<AccessControlDefinition> permissions = new HashSet<>();
+            AccessControlDefinition permission = new AccessControlDefinition();
+            permission.getUserID().setID(account.getID());
+            permission.getUserID().setType(UserType.ACCOUNT);
+            permission.setScope(AccessControlScopeType.ALL);
+            permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+            permissions.add(permission);
+            auditSecurityDescriptor.setPermissions(permissions);
+            auditSecurityDescriptor.setInherit(true);
+
+            childInfo.close();
+        }
+
+        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
+        infoSummaries = parentInfo.queryChild(infoSummary -> account.getID().equals(infoSummary.getID()));
+        if (infoSummaries.isEmpty()) {
+            InfoObject childInfo = parentInfo.createChildAndOpen(configuration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+                    new IdentificationDefinition(account.getID()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -237,21 +257,25 @@ public class UserManager extends AManager {
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"),
+        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"), new IdentificationDefinition(account.getID())));
+        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> true);
+        if (!infoSummaries.isEmpty()) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"),
                 new IdentificationDefinition("Main"), new IdentificationDefinition("Home")));
-        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
         if (!infoSummaries.isEmpty()) {
             parentInfo.renameChild(new IdentificationDefinition(account.getName()),
                     new IdentificationDefinition(account.getName() + "_Deleted"));
         }
 
-        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-        infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits"), new IdentificationDefinition(account.getID())));
+        infoSummaries = parentInfo.queryChild(infoSummary -> true);
         if (!infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.getChild(new IdentificationDefinition(account.getName()));
-            Set<InfoSummaryDefinition> auditInfoSummaries = childInfo.queryChild(infoSummary -> true);
-            for (InfoSummaryDefinition auditInfoSummary : auditInfoSummaries) {
-                childInfo.deleteChild(new IdentificationDefinition(auditInfoSummary.getID()));
+            for (InfoSummaryDefinition auditInfoSummary : infoSummaries) {
+                parentInfo.deleteChild(new IdentificationDefinition(auditInfoSummary.getID()));
             }
             parentInfo.deleteChild(new IdentificationDefinition(account.getName()));
         }

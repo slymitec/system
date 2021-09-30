@@ -92,7 +92,7 @@ public class BootObjectsResolver extends ABootResolver {
                 Set<InfoSummaryDefinition> infoSummaries = rootInfo.queryChild((InfoSummaryDefinition infoSummary) -> true);
 
                 String[] childFolderNames = new String[]{"Audits", "Files"};
-                UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
+                UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                         kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID};
 
                 boolean isExist = false;
@@ -148,11 +148,29 @@ public class BootObjectsResolver extends ABootResolver {
                     isExist = false;
                 }
 
-                InfoObject parentInfo = rootInfo.getChild(new IdentificationDefinition("Audits"));
-                infoSummaries = parentInfo.queryChild(infoSummary -> "System".equals(infoSummary.getName()));
+                InfoObject parentInfo = rootInfo.getChild(new IdentificationDefinition("Sessions"));
+                infoSummaries = parentInfo.queryChild(infoSummary -> kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID.equals(infoSummary.getID()));
                 if (infoSummaries.isEmpty()) {
                     InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                            new IdentificationDefinition("System"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                            new IdentificationDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+
+                    SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
+                    Set<AccessControlDefinition> permissions = new HashSet<>();
+                    AccessControlDefinition permission = new AccessControlDefinition();
+                    permission.getUserID().setID(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
+                    permission.getUserID().setType(UserType.ACCOUNT);
+                    permission.setScope(AccessControlScopeType.ALL);
+                    permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+                    permissions.add(permission);
+                    auditSecurityDescriptor.setPermissions(permissions);
+                    auditSecurityDescriptor.setInherit(true);
+                }
+
+                parentInfo = rootInfo.getChild(new IdentificationDefinition("Audits"));
+                infoSummaries = parentInfo.queryChild(infoSummary -> kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID.equals(infoSummary.getID()));
+                if (infoSummaries.isEmpty()) {
+                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+                            new IdentificationDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
                     SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                     Set<AccessControlDefinition> permissions = new HashSet<>();

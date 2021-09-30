@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
@@ -111,7 +112,9 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             this.init();
 
             SessionContentObject sessionContent = this.getContent();
-            sessionContent.deleteProcessID(this.parent.getID());
+            if (ObjectUtil.allNotNull(sessionContent)) {
+                sessionContent.deleteProcessID(this.parent.getID());
+            }
 
             UUID sessionID = this.value.getSessionID();
 
@@ -277,37 +280,14 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             InfoObject sessionInfo = objectManager.get(identifications);
 
-            SecurityDescriptorObject sessionSecurityDescriptor = sessionInfo.getSecurityDescriptor();
-
-            boolean allow;
+            SessionContentObject sessionContent;
             try {
-                sessionSecurityDescriptor.checkPermission(PermissionType.LISTCHILD_READDATA_ALLOW);
-                sessionSecurityDescriptor.checkPermission(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
-
-                allow = true;
+                sessionContent = (SessionContentObject) sessionInfo.getContent();
             } catch (AKernelException ignored) {
-                allow = false;
+                sessionContent = null;
             }
 
-            if (!allow) {
-                sessionSecurityDescriptor.setInherit(true);
-                Set<AccessControlDefinition> permissions = new HashSet<>();
-                AccessControlDefinition permission = new AccessControlDefinition();
-                permission.getUserID().setID(accountID);
-                permission.getUserID().setType(UserType.ACCOUNT);
-                permission.setScope(AccessControlScopeType.THIS);
-                permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
-                permissions.add(permission);
-                permission = new AccessControlDefinition();
-                permission.getUserID().setID(sessionInfo.getID());
-                permission.getUserID().setType(UserType.SESSION);
-                permission.setScope(AccessControlScopeType.THIS);
-                permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
-                permissions.add(permission);
-                sessionSecurityDescriptor.setPermissions(permissions);
-            }
-
-            return (SessionContentObject) sessionInfo.getContent();
+            return sessionContent;
         } finally {
             this.lock(LockType.NONE);
         }

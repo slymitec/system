@@ -11,6 +11,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionType;
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
 import indi.sly.system.kernel.processes.values.ProcessContextType;
@@ -353,13 +354,16 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
         }
 
         if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-            long sessionContentType = processSession.getContent().getType();
-            if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.API)) {
-                roles.add(kernelConfiguration.SECURITY_ROLE_API_ID);
-            } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.GUI)) {
-                roles.add(kernelConfiguration.SECURITY_ROLE_GUI_ID);
-            } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.CLI)) {
-                roles.add(kernelConfiguration.SECURITY_ROLE_CLI_ID);
+            SessionContentObject sessionContent = processSession.getContent();
+            if (ObjectUtil.allNotNull(sessionContent)) {
+                long sessionContentType = sessionContent.getType();
+                if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.API)) {
+                    roles.add(kernelConfiguration.SECURITY_ROLE_API_ID);
+                } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.GUI)) {
+                    roles.add(kernelConfiguration.SECURITY_ROLE_GUI_ID);
+                } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.CLI)) {
+                    roles.add(kernelConfiguration.SECURITY_ROLE_CLI_ID);
+                }
             }
         }
 

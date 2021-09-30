@@ -12,6 +12,7 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
+import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
@@ -54,9 +55,11 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
                 byte[] applicationSource = infoContent.read(0, (int) infoContentLength);
                 ApplicationDefinition application = ObjectUtil.transferFromString(ApplicationDefinition.class, StringUtil.readFormBytes(applicationSource));
 
-                if (!ValueUtil.isAnyNullOrEmpty(processSession.getID()) &&
-                        LogicalUtil.allNotEqual(processSession.getContent().getType(), application.getSupportedSession(), SessionType.KNOWN)) {
-                    throw new StatusNotSupportedException();
+                if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+                    SessionContentObject sessionContent = processSession.getContent();
+                    if (ObjectUtil.allNotNull(sessionContent) && LogicalUtil.allNotEqual(sessionContent.getType(), application.getSupportedSession(), SessionType.KNOWN)) {
+                        throw new StatusNotSupportedException();
+                    }
                 }
 
                 processContext.setIdentifications(info.getIdentifications());
@@ -64,7 +67,10 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
             }
 
             if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-                processContext.setEnvironmentVariables(processSession.getContent().getEnvironmentVariables());
+                SessionContentObject sessionContent = processSession.getContent();
+                if (ObjectUtil.allNotNull()) {
+                    processContext.setEnvironmentVariables(sessionContent.getEnvironmentVariables());
+                }
             }
 
             if (!ValueUtil.isAnyNullOrEmpty(processCreator.getParameters())) {

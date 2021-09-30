@@ -1,7 +1,12 @@
 package indi.sly.system.kernel.security;
 
-import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.*;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
@@ -19,8 +24,8 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.instances.prototypes.processors.AuditTypeInitializer;
-import indi.sly.system.kernel.security.values.*;
 import indi.sly.system.kernel.security.prototypes.*;
+import indi.sly.system.kernel.security.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -176,14 +181,14 @@ public class UserManager extends AManager {
 
         AccountObject account = accountBuilder.create(accountName, accountPassword);
 
-        KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
+        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions")));
         Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getID().equals(infoSummary.getID()));
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(configuration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                     new IdentificationDefinition(account.getID()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
@@ -192,7 +197,15 @@ public class UserManager extends AManager {
             permission.getUserID().setID(account.getID());
             permission.getUserID().setType(UserType.ACCOUNT);
             permission.setScope(AccessControlScopeType.ALL);
-            permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
+                    PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
+                    PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW,
+                    PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
+            permissions.add(permission);
+            permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_USERS_ID);
+            permission.getUserID().setType(UserType.GROUP);
+            permission.setScope(AccessControlScopeType.ALL);
+            permission.setValue(PermissionType.DELETECHILD_ALLOW);
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
             auditSecurityDescriptor.setInherit(true);
@@ -203,7 +216,7 @@ public class UserManager extends AManager {
         parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
         infoSummaries = parentInfo.queryChild(infoSummary -> account.getID().equals(infoSummary.getID()));
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(configuration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                     new IdentificationDefinition(account.getID()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
@@ -212,7 +225,10 @@ public class UserManager extends AManager {
             permission.getUserID().setID(account.getID());
             permission.getUserID().setType(UserType.ACCOUNT);
             permission.setScope(AccessControlScopeType.ALL);
-            permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
+                    PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
+                    PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW,
+                    PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
             auditSecurityDescriptor.setInherit(false);
@@ -224,7 +240,7 @@ public class UserManager extends AManager {
                 new IdentificationDefinition("Main"), new IdentificationDefinition("Home")));
         infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(configuration.FILES_TYPES_INSTANCE_FOLDER_ID,
+            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
                     new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
@@ -233,7 +249,10 @@ public class UserManager extends AManager {
             permission.getUserID().setID(account.getID());
             permission.getUserID().setType(UserType.ACCOUNT);
             permission.setScope(AccessControlScopeType.ALL);
-            permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
+                    PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
+                    PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW,
+                    PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
             auditSecurityDescriptor.setInherit(false);
@@ -257,10 +276,22 @@ public class UserManager extends AManager {
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"), new IdentificationDefinition(account.getID())));
-        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> true);
+        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions")));
+        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getID().equals(infoSummary.getID()));
         if (!infoSummaries.isEmpty()) {
-            throw new StatusRelationshipErrorException();
+            parentInfo.deleteChild(new IdentificationDefinition(account.getID()));
+        }
+
+        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
+        infoSummaries = parentInfo.queryChild(infoSummary -> account.getID().equals(infoSummary.getID()));
+        if (!infoSummaries.isEmpty()) {
+            InfoObject childInfo = parentInfo.getChild(new IdentificationDefinition(account.getID()));
+
+            infoSummaries = childInfo.queryChild(infoSummaryDefinition -> true);
+            for (InfoSummaryDefinition auditInfoSummary : infoSummaries) {
+                childInfo.deleteChild(new IdentificationDefinition(auditInfoSummary.getID()));
+            }
+            parentInfo.deleteChild(new IdentificationDefinition(account.getID()));
         }
 
         parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"),
@@ -269,15 +300,6 @@ public class UserManager extends AManager {
         if (!infoSummaries.isEmpty()) {
             parentInfo.renameChild(new IdentificationDefinition(account.getName()),
                     new IdentificationDefinition(account.getName() + "_Deleted"));
-        }
-
-        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits"), new IdentificationDefinition(account.getID())));
-        infoSummaries = parentInfo.queryChild(infoSummary -> true);
-        if (!infoSummaries.isEmpty()) {
-            for (InfoSummaryDefinition auditInfoSummary : infoSummaries) {
-                parentInfo.deleteChild(new IdentificationDefinition(auditInfoSummary.getID()));
-            }
-            parentInfo.deleteChild(new IdentificationDefinition(account.getName()));
         }
 
         accountBuilder.delete(accountID);

@@ -91,9 +91,10 @@ public class BootObjectsResolver extends ABootResolver {
                 InfoObject rootInfo = objectManager.get(List.of());
                 Set<InfoSummaryDefinition> infoSummaries = rootInfo.queryChild((InfoSummaryDefinition infoSummary) -> true);
 
-                String[] childFolderNames = new String[]{"Audits", "Files"};
+                String[] childFolderNames = new String[]{"Audits", "Files", "Sessions"};
                 UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID};
+                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
+                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};
 
                 boolean isExist = false;
                 for (int i = 0; i < childFolderNames.length; i++) {
@@ -114,9 +115,8 @@ public class BootObjectsResolver extends ABootResolver {
                     isExist = false;
                 }
 
-                childFolderNames = new String[]{"Ports", "Signals", "Sessions"};
+                childFolderNames = new String[]{"Ports", "Signals"};
                 childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                         kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};
 
                 isExist = false;
@@ -160,10 +160,20 @@ public class BootObjectsResolver extends ABootResolver {
                     permission.getUserID().setID(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
                     permission.getUserID().setType(UserType.ACCOUNT);
                     permission.setScope(AccessControlScopeType.ALL);
-                    permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
+                            PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
+                            PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW,
+                            PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
+                    permissions.add(permission);
+                    permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_USERS_ID);
+                    permission.getUserID().setType(UserType.GROUP);
+                    permission.setScope(AccessControlScopeType.ALL);
+                    permission.setValue(PermissionType.DELETECHILD_ALLOW);
                     permissions.add(permission);
                     auditSecurityDescriptor.setPermissions(permissions);
                     auditSecurityDescriptor.setInherit(true);
+
+                    childInfo.close();
                 }
 
                 parentInfo = rootInfo.getChild(new IdentificationDefinition("Audits"));
@@ -178,7 +188,10 @@ public class BootObjectsResolver extends ABootResolver {
                     permission.getUserID().setID(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
                     permission.getUserID().setType(UserType.ACCOUNT);
                     permission.setScope(AccessControlScopeType.ALL);
-                    permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
+                            PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
+                            PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW,
+                            PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
                     permissions.add(permission);
                     auditSecurityDescriptor.setPermissions(permissions);
                     auditSecurityDescriptor.setInherit(false);

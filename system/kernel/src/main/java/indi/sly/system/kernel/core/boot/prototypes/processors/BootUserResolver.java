@@ -80,9 +80,6 @@ public class BootUserResolver extends ABootResolver {
                     account.setPassword(StringUtil.EMPTY);
                     account.setGroups(new ArrayList<>(List.of(group)));
                     account.setToken(ObjectUtil.transferToByteArray(new UserTokenDefinition()));
-                    UserSessionDefinition userSession = new UserSessionDefinition();
-                    userSession.setLimit(0L);
-                    account.setSession(ObjectUtil.transferToByteArray(userSession));
 
                     userRepository.add(account);
                 }

@@ -15,10 +15,7 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
-import indi.sly.system.kernel.security.UserManager;
-import indi.sly.system.kernel.security.prototypes.AccountObject;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
-import indi.sly.system.kernel.security.prototypes.UserSessionObject;
 import indi.sly.system.kernel.security.values.AccessControlDefinition;
 import indi.sly.system.kernel.security.values.AccessControlScopeType;
 import indi.sly.system.kernel.security.values.PermissionType;
@@ -49,8 +46,6 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
 
         KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
-        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"));
-
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         UUID sessionID;
@@ -63,7 +58,8 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
                 throw new StatusAlreadyFinishedException();
             }
 
-            InfoObject sessionsInfo = objectManager.get(identifications);
+            InfoObject sessionsInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
+                    new IdentificationDefinition(processToken.getAccountID())));
 
             InfoObject sessionInfo = sessionsInfo.createChildAndOpen(kernelConfiguration.PROCESSES_SESSION_INSTANCE_ID,
                     new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_SHARED_WRITE);
@@ -99,12 +95,6 @@ public class ProcessSessionObject extends AValueProcessObject<ProcessEntity, Pro
         } finally {
             this.lock(LockType.NONE);
         }
-
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
-
-        AccountObject account = userManager.getCurrentAccount();
-        UserSessionObject accountSession = account.getSession();
-        accountSession.add(name);
     }
 
     public void close() {

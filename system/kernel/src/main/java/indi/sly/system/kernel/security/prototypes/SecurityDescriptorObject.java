@@ -476,26 +476,25 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         AccountObject account = userManager.getCurrentAccount();
-        String accountName = account.getName();
 
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            List<IdentificationDefinition> identifications
-                    = List.of(new IdentificationDefinition("Audits"), new IdentificationDefinition(accountName));
+            try {
+                InfoObject auditsInfo = objectManager.get(List.of(new IdentificationDefinition("Audits"), new IdentificationDefinition(account.getID())));
 
-            InfoObject auditsInfo = objectManager.get(identifications);
+                InfoObject auditInfo = auditsInfo.createChildAndOpen(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID,
+                        new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
-            InfoObject auditInfo = auditsInfo.createChildAndOpen(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID,
-                    new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                AuditContentObject auditContent = (AuditContentObject) auditInfo.getContent();
+                auditContent.setUserIDs(userIDs);
+                auditContent.setAudit(value);
+                auditContent.setIdentifications(this.identifications);
 
-            AuditContentObject auditContent = (AuditContentObject) auditInfo.getContent();
-            auditContent.setUserIDs(userIDs);
-            auditContent.setAudit(value);
-            auditContent.setIdentifications(this.identifications);
-
-            auditInfo.close();
+                auditInfo.close();
+            } catch (AKernelException ignored) {
+            }
 
             this.fresh();
         } finally {

@@ -150,20 +150,4 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
             this.lock(LockType.NONE);
         }
     }
-
-    public UserSessionObject getSession() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            UserSessionObject userSession = this.factoryManager.create(UserSessionObject.class);
-
-            userSession.setParent(this);
-            userSession.setSource(() -> this.value.getSession(), (byte[] source) -> this.value.setSession(source));
-
-            return userSession;
-        } finally {
-            this.lock(LockType.NONE);
-        }
-    }
 }

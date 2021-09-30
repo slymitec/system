@@ -110,21 +110,10 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             this.lock(LockType.WRITE);
             this.init();
 
-            UUID accountID = this.value.getAccountID();
-            UUID sessionID = this.value.getSessionID();
-
-            if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
-                throw new StatusAlreadyFinishedException();
-            }
-
-            List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
-                    new IdentificationDefinition(accountID), new IdentificationDefinition(sessionID));
-
-            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-            InfoObject sessionInfo = objectManager.get(identifications);
-
-            SessionContentObject sessionContent = (SessionContentObject) sessionInfo.getContent();
+            SessionContentObject sessionContent = this.getContent();
             sessionContent.deleteProcessID(this.parent.getID());
+
+            UUID sessionID = this.value.getSessionID();
 
             ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
             if (processInfoTable.containByID(sessionID)) {
@@ -139,7 +128,6 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             this.value.setSessionID(null);
 
             this.fresh();
-            this.lock(LockType.NONE);
         } finally {
             this.lock(LockType.NONE);
         }
@@ -280,7 +268,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             UUID accountID = this.value.getAccountID();
             UUID sessionID = this.value.getSessionID();
 
-            if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
+            if (ValueUtil.isAnyNullOrEmpty(accountID, sessionID)) {
                 throw new StatusRelationshipErrorException();
             }
 

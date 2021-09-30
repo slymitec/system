@@ -23,6 +23,8 @@ public class ProcessMemberResolver extends AProcessResolver {
     private final ProcessProcessorWriteComponentConsumer writeProcessContext;
     private final ProcessProcessorReadComponentFunction readProcessInfoTable;
     private final ProcessProcessorWriteComponentConsumer writeProcessInfoTable;
+    private final ProcessProcessorReadComponentFunction readProcessSession;
+    private final ProcessProcessorWriteComponentConsumer writeProcessSession;
     private final ProcessProcessorReadComponentFunction readProcessStatistics;
     private final ProcessProcessorWriteComponentConsumer writeProcessStatistics;
     private final ProcessProcessorReadComponentFunction readProcessToken;
@@ -59,6 +61,15 @@ public class ProcessMemberResolver extends AProcessResolver {
             process.setInfoTable(infoTable);
         };
 
+        this.readProcessSession = (session, process) -> process.getSession();
+        this.writeProcessSession = (process, session) -> {
+            if (session.length > 4096) {
+                throw new StatusOverflowException();
+            }
+
+            process.setSession(session);
+        };
+
         this.readProcessStatistics = (statistics, process) -> process.getStatistics();
         this.writeProcessStatistics = (process, statistics) -> {
             if (statistics.length > 4096) {
@@ -91,6 +102,9 @@ public class ProcessMemberResolver extends AProcessResolver {
 
         processorMediator.getReadProcessInfoTables().add(this.readProcessInfoTable);
         processorMediator.getWriteProcessInfoTables().add(this.writeProcessInfoTable);
+
+        processorMediator.getReadProcessSessions().add(this.readProcessSession);
+        processorMediator.getWriteProcessSessions().add(this.writeProcessSession);
 
         processorMediator.getReadProcessStatistics().add(this.readProcessStatistics);
         processorMediator.getWriteProcessStatistics().add(this.writeProcessStatistics);

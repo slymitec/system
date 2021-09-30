@@ -169,24 +169,21 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             throw new ConditionRefuseException();
         }
 
+        ProcessSessionObject processSession = process.getSession();
+        ProcessTokenObject processToken = process.getToken();
+        UUID accountID = processToken.getAccountID();
+        UUID sessionID = processSession.getID();
+
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
         try {
             this.lock(LockType.WRITE);
             this.init();
-
-            UUID accountID = this.value.getAccountID();
-            UUID sessionID = this.value.getSessionID();
-
-            if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
-                throw new StatusAlreadyFinishedException();
-            }
-
-            sessionID = process.getSession().getID();
 
             if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
                 List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
                         new IdentificationDefinition(accountID), new IdentificationDefinition(sessionID));
 
-                ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
                 InfoObject sessionInfo = objectManager.get(identifications);
 
                 sessionInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
@@ -227,21 +224,17 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             this.lock(LockType.WRITE);
             this.init();
 
-            List<IdentificationDefinition> newIdentifications = List.of(new IdentificationDefinition("Sessions"),
-                    new IdentificationDefinition(accountID), new IdentificationDefinition(sessionID));
-
-            InfoObject newSessionInfo = objectManager.get(newIdentifications);
+            InfoObject newSessionInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
+                    new IdentificationDefinition(accountID), new IdentificationDefinition(sessionID)));
 
             newSessionInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
 
             SessionContentObject newSessionContent = (SessionContentObject) newSessionInfo.getContent();
             newSessionContent.addProcessID(this.parent.getID());
 
-            if (!ValueUtil.isAnyNullOrEmpty(this.value.getSessionID())) {
-                List<IdentificationDefinition> oldIdentifications = List.of(new IdentificationDefinition("Sessions"),
-                        new IdentificationDefinition(accountID), new IdentificationDefinition(this.value.getSessionID()));
-
-                InfoObject oldSessionInfo = objectManager.get(oldIdentifications);
+            if (!ValueUtil.isAnyNullOrEmpty(this.value.getAccountID(), this.value.getSessionID())) {
+                InfoObject oldSessionInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
+                        new IdentificationDefinition(this.value.getAccountID()), new IdentificationDefinition(this.value.getSessionID())));
 
                 SessionContentObject oldSessionContent = (SessionContentObject) oldSessionInfo.getContent();
                 oldSessionContent.deleteProcessID(this.parent.getID());

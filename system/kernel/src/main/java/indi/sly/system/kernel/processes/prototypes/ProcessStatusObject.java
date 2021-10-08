@@ -137,7 +137,7 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
                         && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getID()) && !currentProcessSession.getID().equals(processSession.getID()))) {
                     throw new ConditionRefuseException();
                 }
-            } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INTERRUPTED)) {
+            } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
                 if (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                         && !currentProcessToken.getAccountID().equals(processToken.getAccountID())
                         && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getID()) && !currentProcessSession.getID().equals(processSession.getID()))) {

@@ -110,12 +110,17 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             this.lock(LockType.WRITE);
             this.init();
 
-            SessionContentObject sessionContent = this.getContent();
+            UUID accountID = this.value.getAccountID();
+            UUID sessionID = this.value.getSessionID();
+
+            if (ValueUtil.isAnyNullOrEmpty(accountID, sessionID)) {
+                throw new StatusRelationshipErrorException();
+            }
+
+            SessionContentObject sessionContent = this.getContent(accountID, sessionID);
             if (ObjectUtil.allNotNull(sessionContent)) {
                 sessionContent.deleteProcessID(this.parent.getID());
             }
-
-            UUID sessionID = this.value.getSessionID();
 
             ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
             if (processInfoTable.containByID(sessionID)) {
@@ -220,14 +225,14 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             SessionContentObject newSessionContent = (SessionContentObject) newSessionInfo.getContent();
             newSessionContent.addProcessID(this.parent.getID());
 
-            if (!ValueUtil.isAnyNullOrEmpty(this.value.getAccountID(), this.value.getSessionID())) {
-                SessionContentObject oldSessionContent = this.getContent();
+            UUID oldAccountID = this.value.getAccountID();
+            UUID oldSessionID = this.value.getSessionID();
+
+            if (!ValueUtil.isAnyNullOrEmpty(oldAccountID, oldSessionID)) {
+                SessionContentObject oldSessionContent = this.getContent(oldAccountID, oldSessionID);
                 if (ObjectUtil.allNotNull(oldSessionContent)) {
                     oldSessionContent.deleteProcessID(this.parent.getID());
                 }
-
-                UUID oldSessionID = this.value.getSessionID();
-
                 ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
                 if (processInfoTable.containByID(oldSessionID)) {
                     ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(oldSessionID);
@@ -254,13 +259,34 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
         }
     }
 
+    private SessionContentObject getContent(UUID accountID, UUID sessionID) {
+        if (ValueUtil.isAnyNullOrEmpty(accountID, sessionID)) {
+            throw new ConditionParametersException();
+        }
+
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+
+
+        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
+                new IdentificationDefinition(accountID), new IdentificationDefinition(sessionID));
+
+        InfoObject sessionInfo = objectManager.get(identifications);
+
+        SessionContentObject sessionContent;
+        try {
+            sessionContent = (SessionContentObject) sessionInfo.getContent();
+        } catch (AKernelException ignored) {
+            sessionContent = null;
+        }
+
+        return sessionContent;
+    }
+
     public SessionContentObject getContent() {
         if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
-
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         try {
             this.lock(LockType.READ);
@@ -273,19 +299,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
                 throw new StatusRelationshipErrorException();
             }
 
-            List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
-                    new IdentificationDefinition(accountID), new IdentificationDefinition(sessionID));
-
-            InfoObject sessionInfo = objectManager.get(identifications);
-
-            SessionContentObject sessionContent;
-            try {
-                sessionContent = (SessionContentObject) sessionInfo.getContent();
-            } catch (AKernelException ignored) {
-                sessionContent = null;
-            }
-
-            return sessionContent;
+            return this.getContent(accountID, sessionID);
         } finally {
             this.lock(LockType.NONE);
         }

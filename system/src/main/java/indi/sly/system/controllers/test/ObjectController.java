@@ -64,7 +64,7 @@ public class ObjectController extends AController {
                 path.append("/").append(StringUtil.readFormBytes(identification.getID()));
             }
         }
-        paths.append(path.isEmpty() ? "/" : path).append("(").append(info.getOpened()).append(")").append("<br />");
+        paths.append(path.isEmpty() ? "/" : path).append("\t(").append(info.getOpened()).append(")").append("<br />");
 
         UUID type = info.getType();
         if (type.equals(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID)

@@ -67,7 +67,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
 
             if (ValueUtil.isAnyNullOrEmpty(childInfo.getID())) {
                 if (identification.getType().equals(UUID.class)) {
-                    childInfo.setID(UUIDUtil.getFromBytes(identification.getID()));
+                    childInfo.setID(UUIDUtil.readFormBytes(identification.getID()));
                 } else if (identification.getType().equals(String.class)) {
                     childInfo.setID(UUIDUtil.createRandom());
                 }

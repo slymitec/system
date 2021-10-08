@@ -10,6 +10,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -99,6 +100,8 @@ public class AccountAuthorizationObject extends AObject {
             throw new ConditionContextException();
         }
 
+        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+
         AccountObject account;
         try {
             account = this.account.acquire();
@@ -111,9 +114,7 @@ public class AccountAuthorizationObject extends AObject {
 
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
-        long expiredTime =
-                this.factoryManager.getKernelSpace().getConfiguration().SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME;
-
+        long expiredTime = kernelConfiguration.SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME;
         if (nowDateTime - this.date.get(DateTimeType.CREATE) > expiredTime) {
             throw new StatusExpiredException();
         }
@@ -180,7 +181,7 @@ public class AccountAuthorizationObject extends AObject {
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         InfoObject sessionsInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
-                new IdentificationDefinition(processToken.getAccountID())));
+                new IdentificationDefinition(account.getName())));
         Set<InfoSummaryDefinition> infoSummaries = sessionsInfo.queryChild(infoSummaryDefinition -> true);
         for (InfoSummaryDefinition infoSummary : infoSummaries) {
             InfoObject sessionInfo = sessionsInfo.getChild(new IdentificationDefinition(infoSummary.getID()));

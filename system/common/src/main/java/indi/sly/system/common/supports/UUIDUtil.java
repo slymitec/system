@@ -18,10 +18,6 @@ public abstract class UUIDUtil {
         return UUIDUtil.EMPTY;
     }
 
-    public static UUID getFromBytes(byte[] value) {
-        return UUID.nameUUIDFromBytes(value);
-    }
-
     public static UUID getFormLongs(long mostSigBits, long leastSigBits) {
         return new UUID(mostSigBits, leastSigBits);
     }

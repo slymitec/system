@@ -85,10 +85,10 @@ public class InfoFactory extends AFactory {
             status.getIdentifications().addAll(parentInfo.status.getIdentifications());
 
             IdentificationDefinition identification;
-            if (!StringUtil.isNameIllegal(info.getName())) {
-                identification = new IdentificationDefinition(info.getName());
-            } else {
+            if (StringUtil.isNameIllegal(info.getName())) {
                 identification = new IdentificationDefinition(info.getID());
+            } else {
+                identification = new IdentificationDefinition(info.getName());
             }
             status.getIdentifications().add(identification);
         }

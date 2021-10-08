@@ -186,10 +186,10 @@ public class UserManager extends AManager {
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions")));
-        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getID().equals(infoSummary.getID()));
+        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
         if (infoSummaries.isEmpty()) {
             InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                    new IdentificationDefinition(account.getID()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -214,10 +214,10 @@ public class UserManager extends AManager {
         }
 
         parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-        infoSummaries = parentInfo.queryChild(infoSummary -> account.getID().equals(infoSummary.getID()));
+        infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
         if (infoSummaries.isEmpty()) {
             InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                    new IdentificationDefinition(account.getID()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -277,15 +277,15 @@ public class UserManager extends AManager {
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions")));
-        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getID().equals(infoSummary.getID()));
+        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
         if (!infoSummaries.isEmpty()) {
-            parentInfo.deleteChild(new IdentificationDefinition(account.getID()));
+            parentInfo.deleteChild(new IdentificationDefinition(account.getName()));
         }
 
         parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-        infoSummaries = parentInfo.queryChild(infoSummary -> account.getID().equals(infoSummary.getID()));
+        infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
         if (!infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.getChild(new IdentificationDefinition(account.getID()));
+            InfoObject childInfo = parentInfo.getChild(new IdentificationDefinition(account.getName()));
 
             infoSummaries = childInfo.queryChild(infoSummaryDefinition -> true);
             for (InfoSummaryDefinition auditInfoSummary : infoSummaries) {

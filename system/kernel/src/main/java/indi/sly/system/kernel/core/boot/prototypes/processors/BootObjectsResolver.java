@@ -92,9 +92,9 @@ public class BootObjectsResolver extends ABootResolver {
                 Set<InfoSummaryDefinition> infoSummaries = rootInfo.queryChild((InfoSummaryDefinition infoSummary) -> true);
 
                 String[] childFolderNames = new String[]{"Audits", "Files", "Sessions"};
-                UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+                UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
                         kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
-                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};
+                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID};
 
                 boolean isExist = false;
                 for (int i = 0; i < childFolderNames.length; i++) {
@@ -111,8 +111,6 @@ public class BootObjectsResolver extends ABootResolver {
 
                         childInfo.close();
                     }
-
-                    isExist = false;
                 }
 
                 childFolderNames = new String[]{"Ports", "Signals"};
@@ -144,15 +142,14 @@ public class BootObjectsResolver extends ABootResolver {
 
                         childInfo.close();
                     }
-
-                    isExist = false;
                 }
 
                 InfoObject parentInfo = rootInfo.getChild(new IdentificationDefinition("Sessions"));
-                infoSummaries = parentInfo.queryChild(infoSummary -> kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID.equals(infoSummary.getID()));
+                infoSummaries =
+                        parentInfo.queryChild(infoSummary -> kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME.equals(infoSummary.getName()));
                 if (infoSummaries.isEmpty()) {
                     InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                            new IdentificationDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                            new IdentificationDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
                     SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                     Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -177,10 +174,10 @@ public class BootObjectsResolver extends ABootResolver {
                 }
 
                 parentInfo = rootInfo.getChild(new IdentificationDefinition("Audits"));
-                infoSummaries = parentInfo.queryChild(infoSummary -> kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID.equals(infoSummary.getID()));
+                infoSummaries = parentInfo.queryChild(infoSummary -> kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME.equals(infoSummary.getName()));
                 if (infoSummaries.isEmpty()) {
                     InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                            new IdentificationDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                            new IdentificationDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
                     SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                     Set<AccessControlDefinition> permissions = new HashSet<>();

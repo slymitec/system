@@ -35,7 +35,7 @@ import java.util.*;
 public class InitController extends AController {
     @RequestMapping(value = {"/InitEnv.action"}, method = {RequestMethod.GET})
     @Transactional
-    public Object initTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    public Object initEnv(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init();
 
         UserSpaceDefinition userSpace = new UserSpaceDefinition();

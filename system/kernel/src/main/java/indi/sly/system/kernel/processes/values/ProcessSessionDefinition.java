@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.values;
 
+import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
 
@@ -10,15 +11,15 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ProcessSessionDefinition extends ADefinition<ProcessSessionDefinition> {
-    private UUID accountID;
+    private String accountName;
     private UUID sessionID;
 
-    public UUID getAccountID() {
-        return this.accountID;
+    public String getAccountName() {
+        return accountName;
     }
 
-    public void setAccountID(UUID accountID) {
-        this.accountID = accountID;
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 
     public UUID getSessionID() {
@@ -34,19 +35,19 @@ public class ProcessSessionDefinition extends ADefinition<ProcessSessionDefiniti
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProcessSessionDefinition that = (ProcessSessionDefinition) o;
-        return Objects.equals(accountID, that.accountID) && Objects.equals(sessionID, that.sessionID);
+        return Objects.equals(accountName, that.accountName) && Objects.equals(sessionID, that.sessionID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountID, sessionID);
+        return Objects.hash(accountName, sessionID);
     }
 
     @Override
     public ProcessSessionDefinition deepClone() {
         ProcessSessionDefinition definition = new ProcessSessionDefinition();
 
-        definition.accountID = this.accountID;
+        definition.accountName = this.accountName;
         definition.sessionID = this.sessionID;
 
         return definition;
@@ -56,7 +57,7 @@ public class ProcessSessionDefinition extends ADefinition<ProcessSessionDefiniti
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         super.readExternal(in);
 
-        this.accountID = UUIDUtil.readExternal(in);
+        this.accountName = StringUtil.readExternal(in);
         this.sessionID = UUIDUtil.readExternal(in);
     }
 
@@ -64,7 +65,7 @@ public class ProcessSessionDefinition extends ADefinition<ProcessSessionDefiniti
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
 
-        UUIDUtil.writeExternal(out, this.accountID);
+        StringUtil.writeExternal(out, this.accountName);
         UUIDUtil.writeExternal(out, this.sessionID);
     }
 }

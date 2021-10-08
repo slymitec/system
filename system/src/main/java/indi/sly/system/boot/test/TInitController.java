@@ -27,7 +27,7 @@ import java.util.*;
 
 @RestController
 @Transactional
-public class InitController extends ATController {
+public class TInitController extends ATController {
     @RequestMapping(value = {"/TInitTest.action"}, method = {RequestMethod.GET})
     @Transactional
     public Object initTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {

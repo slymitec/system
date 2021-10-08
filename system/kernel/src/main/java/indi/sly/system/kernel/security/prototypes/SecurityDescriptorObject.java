@@ -482,7 +482,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
             this.init();
 
             try {
-                InfoObject auditsInfo = objectManager.get(List.of(new IdentificationDefinition("Audits"), new IdentificationDefinition(account.getID())));
+                InfoObject auditsInfo = objectManager.get(List.of(new IdentificationDefinition("Audits"), new IdentificationDefinition(account.getName())));
 
                 InfoObject auditInfo = auditsInfo.createChildAndOpen(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID,
                         new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_EXCLUSIVE);

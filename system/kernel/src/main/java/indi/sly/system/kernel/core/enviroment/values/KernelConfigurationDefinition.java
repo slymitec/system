@@ -61,6 +61,7 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
     public final long SECURITY_ACCOUNT_SESSION_DEFAULT_LIMIT = 4L;
     public final UUID SECURITY_ACCOUNT_SYSTEM_ID
             = UUIDUtil.getFormLongs(5081613797628857462L, -8788797059387809235L);
+    public final String SECURITY_ACCOUNT_SYSTEM_NAME = "System";
     public final UUID SECURITY_GROUP_ADMINISTRATORS_ID
             = UUIDUtil.getFormLongs(-8601383103213975109L, -7868140629624229647L);
     public final UUID SECURITY_GROUP_SYSTEMS_ID

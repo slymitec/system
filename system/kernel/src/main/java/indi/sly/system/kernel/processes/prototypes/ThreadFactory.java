@@ -25,5 +25,4 @@ public class ThreadFactory extends AFactory {
 
         return threadBuilder;
     }
-
 }

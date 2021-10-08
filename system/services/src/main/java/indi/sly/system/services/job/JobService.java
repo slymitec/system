@@ -103,9 +103,9 @@ public class JobService extends AService {
             throw new StatusUnreadableException();
         }
 
-        UserContextBuilder userContextBuilder = this.factory.createUserContext();
+        UserContextCreateBuilder userContextCreateBuilder = this.factory.createUserContextCreator();
 
-        return userContextBuilder.create(userContextRequestRaw);
+        return userContextCreateBuilder.create(userContextRequestRaw);
     }
 
     public void finishUserContext(UserContextObject userContext) {
@@ -113,8 +113,8 @@ public class JobService extends AService {
             throw new ConditionParametersException();
         }
 
-        UserContextBuilder userContextBuilder = this.factory.createUserContext();
+        UserContextFinishBuilder userContextFinishBuilder = this.factory.createUserContextFinish();
 
-        userContextBuilder.finish(userContext);
+        userContextFinishBuilder.finish(userContext);
     }
 }

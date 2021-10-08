@@ -6,9 +6,6 @@ import indi.sly.system.services.job.instances.prototypes.processors.ATaskInitial
 import java.util.UUID;
 
 public class TaskDefinition extends ADefinition<TaskDefinition> {
-    public TaskDefinition() {
-    }
-
     private UUID id;
     private long attribute;
     private String name;

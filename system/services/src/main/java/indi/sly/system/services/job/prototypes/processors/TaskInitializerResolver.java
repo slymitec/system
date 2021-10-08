@@ -50,7 +50,6 @@ public class TaskInitializerResolver extends ATaskResolver {
                     return null;
                 };
 
-
                 TransactionalActionObject transactionalAction = this.factoryManager.create(TransactionalActionObject.class);
 
                 if (LogicalUtil.isAnyEqual(initializerRunTransaction, TransactionType.INDEPENDENCE)) {

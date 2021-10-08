@@ -36,17 +36,29 @@ public abstract class ValueUtil {
 
         for (Object value : values) {
             if (value instanceof Optional) {
-                return ((Optional<?>) value).isEmpty();
+                if (((Optional<?>) value).isEmpty()) {
+                    return true;
+                }
             } else if (value instanceof CharSequence) {
-                return ((CharSequence) value).length() == 0;
+                if (((CharSequence) value).length() == 0) {
+                    return true;
+                }
             } else if (value instanceof UUID) {
-                return value.equals(UUIDUtil.getEmpty());
+                if (value.equals(UUIDUtil.getEmpty())) {
+                    return true;
+                }
             } else if (value.getClass().isArray()) {
-                return Array.getLength(value) == 0;
+                if (Array.getLength(value) == 0) {
+                    return true;
+                }
             } else if (value instanceof Collection) {
-                return ((Collection<?>) value).isEmpty();
+                if (((Collection<?>) value).isEmpty()) {
+                    return true;
+                }
             } else if (value instanceof Map) {
-                return ((Map<?, ?>) value).isEmpty();
+                if (((Map<?, ?>) value).isEmpty()) {
+                    return true;
+                }
             }
         }
 

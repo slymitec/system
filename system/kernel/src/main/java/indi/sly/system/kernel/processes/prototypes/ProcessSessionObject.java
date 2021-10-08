@@ -224,11 +224,10 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             newSessionContent.addProcessID(this.parent.getID());
 
             if (!ValueUtil.isAnyNullOrEmpty(this.value.getAccountID(), this.value.getSessionID())) {
-                InfoObject oldSessionInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
-                        new IdentificationDefinition(this.value.getAccountID()), new IdentificationDefinition(this.value.getSessionID())));
-
-                SessionContentObject oldSessionContent = (SessionContentObject) oldSessionInfo.getContent();
-                oldSessionContent.deleteProcessID(this.parent.getID());
+                SessionContentObject oldSessionContent = this.getContent();
+                if (ObjectUtil.allNotNull(oldSessionContent)) {
+                    oldSessionContent.deleteProcessID(this.parent.getID());
+                }
 
                 ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
                 if (processInfoTable.containByID(this.value.getSessionID())) {

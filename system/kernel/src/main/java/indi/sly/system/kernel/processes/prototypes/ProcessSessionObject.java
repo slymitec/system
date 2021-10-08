@@ -62,7 +62,6 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             InfoObject sessionsInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
                     new IdentificationDefinition(accountID)));
-
             InfoObject sessionInfo = sessionsInfo.createChildAndOpen(kernelConfiguration.PROCESSES_SESSION_INSTANCE_ID,
                     new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_SHARED_WRITE);
 
@@ -217,9 +216,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             InfoObject newSessionInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
                     new IdentificationDefinition(accountID), new IdentificationDefinition(sessionID)));
-
             newSessionInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
-
             SessionContentObject newSessionContent = (SessionContentObject) newSessionInfo.getContent();
             newSessionContent.addProcessID(this.parent.getID());
 
@@ -229,9 +226,11 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
                     oldSessionContent.deleteProcessID(this.parent.getID());
                 }
 
+                UUID oldSessionID = this.value.getSessionID();
+
                 ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
-                if (processInfoTable.containByID(this.value.getSessionID())) {
-                    ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(this.value.getSessionID());
+                if (processInfoTable.containByID(oldSessionID)) {
+                    ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(oldSessionID);
                     processInfoEntry.setUnsupportedDelete(false);
 
                     InfoObject info = processInfoEntry.getInfo();

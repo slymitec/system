@@ -26,13 +26,13 @@ public class ProcessEndBuilder extends ABuilder {
 
         ProcessStatusObject processStatus = this.process.getStatus();
 
-        processStatus.die(() -> {
-            List<ProcessLifeProcessorEndFunction> resolvers = this.processorMediator.getEnds();
+        processStatus.die();
 
-            for (ProcessLifeProcessorEndFunction resolver : resolvers) {
-                this.process = resolver.apply(this.process, this.parentProcess);
-            }
-        });
+        List<ProcessLifeProcessorEndFunction> resolvers = this.processorMediator.getEnds();
+
+        for (ProcessLifeProcessorEndFunction resolver : resolvers) {
+            this.process = resolver.apply(this.process, this.parentProcess);
+        }
 
         processStatus.zombie();
 

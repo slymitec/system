@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="SlySystem@Localhost">
   <database-model serializer="dbm" dbms="MSSQL" family-id="MSSQL" format-version="4.23">
-    <root id="1">
-      <ServerVersion>15.0.4138</ServerVersion>
-      <PermissionsCheckSum>34984096874</PermissionsCheckSum>
-      <Grants>2|||2|connect|G
-3|||2|connect|G
-4|||2|connect|G
-5|||2|connect|G
-0|root||260|alter any event session|G
-0|root||102|authenticate server|G
-0|root||103|authenticate server|G
-0|root||260|connect any database|G
-0|root||1|connect sql|G
-0|root||256|connect sql|G
-0|root||257|connect sql|G
-0|root||258|connect sql|G
-0|root||259|connect sql|G
-0|root||260|connect sql|G
-0|root||261|connect sql|G
-0|root||105|control server|G
-0|root||2|view any database|G
-0|root||101|view any definition|G
-0|root||102|view any definition|G
-0|root||105|view any definition|G
-0|root||106|view any definition|G
-0|root||257|view any definition|G
-0|root||260|view any definition|G
-0|root||102|view server state|G
-0|root||257|view server state|G
-0|root||260|view server state|G</Grants>
-    </root>
+    <root id="1"/>
     <database id="2" parent="1" name="SlySystem">
       <ObjectId>5</ObjectId>
       <PermissionsCheckSum>3196235284</PermissionsCheckSum>

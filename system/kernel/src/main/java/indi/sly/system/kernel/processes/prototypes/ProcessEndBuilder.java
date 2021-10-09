@@ -2,8 +2,6 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABuilder;
-import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -28,26 +26,17 @@ public class ProcessEndBuilder extends ABuilder {
 
         ProcessStatusObject processStatus = this.process.getStatus();
 
-        processStatus.die();
+        processStatus.die(() -> {
+            List<ProcessLifeProcessorEndFunction> resolvers = this.processorMediator.getEnds();
 
-        List<ProcessLifeProcessorEndFunction> resolvers = this.processorMediator.getEnds();
-
-        for (ProcessLifeProcessorEndFunction resolver : resolvers) {
-            this.process = resolver.apply(this.process, this.parentProcess);
-        }
+            for (ProcessLifeProcessorEndFunction resolver : resolvers) {
+                this.process = resolver.apply(this.process, this.parentProcess);
+            }
+        });
 
         processStatus.zombie();
 
-        this.delete();
-
         this.process = null;
         this.parentProcess = null;
-    }
-
-    private void delete() {
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
-
-        processRepository.delete(processRepository.get(this.process.getID()));
     }
 }

@@ -1,12 +1,13 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.lang.StatusIsUsedException;
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
+import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteStatusConsumer;
@@ -162,7 +163,10 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
         }
     }
 
-    public void die() {
+    public void die(Consumer additionalConsumer) {
+        if (ObjectUtil.isAnyNull(additionalConsumer)) {
+            throw new ConditionParametersException();
+        }
         if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.RUNNING, ProcessStatusType.INTERRUPTED, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
@@ -182,6 +186,8 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
         } finally {
             this.lock(LockType.NONE);
         }
+
+        additionalConsumer.accept();
     }
 
     public void zombie() {
@@ -211,5 +217,9 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
         } finally {
             this.lock(LockType.NONE);
         }
+
+        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+        processRepository.delete(processRepository.get(this.parent.getID()));
     }
 }

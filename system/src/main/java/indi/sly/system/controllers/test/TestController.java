@@ -11,6 +11,8 @@ import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,15 +58,12 @@ public class TestController extends AController {
         //--Start--
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        processManager.endCurrent();
 
-//        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-//
-//        ProcessObject process = processManager.getCurrent();
-//        ProcessSessionObject processSession = process.getSession();
-//
-//        processSession.create("Main");
-//        result.put("ProcessSessionID", processSession.getID());
+        ProcessObject process = processManager.getCurrent();
+        ProcessSessionObject processSession = process.getSession();
+
+        processSession.create("Main");
+        result.put("ProcessSessionID", processSession.getID());
 
         return result;
     }

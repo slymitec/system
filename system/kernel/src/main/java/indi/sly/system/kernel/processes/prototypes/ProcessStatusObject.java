@@ -192,13 +192,14 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
             throw new StatusRelationshipErrorException();
         }
 
+        ProcessCommunicationObject processCommunication = this.parent.getCommunication();
+        ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
+        ProcessSessionObject processSession = this.parent.getSession();
+
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            ProcessCommunicationObject processCommunication = this.parent.getCommunication();
-            ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
-            ProcessSessionObject processSession = this.parent.getSession();
             if (!processCommunication.getPortIDs().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalID())
                     || !processInfoTable.list().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
                 throw new StatusIsUsedException();

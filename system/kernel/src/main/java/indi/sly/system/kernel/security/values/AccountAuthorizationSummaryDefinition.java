@@ -1,20 +1,18 @@
 package indi.sly.system.kernel.security.values;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class AccountAuthorizationSummaryDefinition {
     public AccountAuthorizationSummaryDefinition() {
         this.token = new AccountAuthorizationTokenDefinition();
-        this.sessions = new HashMap<>();
+        this.sessions = new HashSet<>();
     }
 
     private UUID id;
     private String name;
     private String password;
     private final AccountAuthorizationTokenDefinition token;
-    private final Map<UUID, String> sessions;
+    private final Set<UUID> sessions;
 
     public UUID getID() {
         return this.id;
@@ -44,7 +42,7 @@ public class AccountAuthorizationSummaryDefinition {
         return this.token;
     }
 
-    public Map<UUID, String> getSessions() {
+    public Set<UUID> getSessions() {
         return this.sessions;
     }
 }

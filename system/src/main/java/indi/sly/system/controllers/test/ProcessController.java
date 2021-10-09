@@ -1,5 +1,7 @@
 package indi.sly.system.controllers.test;
 
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.controllers.AController;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 public class ProcessController extends AController {
@@ -35,7 +38,19 @@ public class ProcessController extends AController {
         this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
-        threadManager.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+
+        UUID processID = null;
+        String processIDText = request.getParameter("ProcessID");
+        if (!ValueUtil.isAnyNullOrEmpty(processIDText)) {
+            processID = UUIDUtil.getFromString(processIDText);
+        }
+        if (ValueUtil.isAnyNullOrEmpty(processID)) {
+            threadManager.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+        } else {
+            threadManager.create(processID);
+        }
+
+        //--Start--
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
@@ -97,5 +112,84 @@ public class ProcessController extends AController {
         processTokenObject.put("getRoles", processToken.getRoles());
 
         return processObject;
+    }
+
+    @RequestMapping(value = {"/ProcessShutdown.action"}, method = {RequestMethod.GET})
+    @Transactional
+    public Object processShutdown(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        this.init();
+
+        UserSpaceDefinition userSpace = new UserSpaceDefinition();
+        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+
+        kernelSpace.getUserSpace().set(userSpace);
+        this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+
+        UUID processID = null;
+        String processIDText = request.getParameter("ProcessID");
+        if (!ValueUtil.isAnyNullOrEmpty(processIDText)) {
+            processID = UUIDUtil.getFromString(processIDText);
+        }
+        if (ValueUtil.isAnyNullOrEmpty(processID)) {
+            threadManager.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+        } else {
+            threadManager.create(processID);
+        }
+
+        //--Start--
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        processManager.endCurrent();
+
+        return "Finished";
+    }
+
+    @RequestMapping(value = {"/ProcessStatus.action"}, method = {RequestMethod.GET})
+    @Transactional
+    public Object processStatus(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        this.init();
+
+        UserSpaceDefinition userSpace = new UserSpaceDefinition();
+        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+
+        kernelSpace.getUserSpace().set(userSpace);
+        this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+
+        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+
+        UUID processID = null;
+        String processIDText = request.getParameter("ProcessID");
+        if (!ValueUtil.isAnyNullOrEmpty(processIDText)) {
+            processID = UUIDUtil.getFromString(processIDText);
+        }
+        if (ValueUtil.isAnyNullOrEmpty(processID)) {
+            threadManager.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+        } else {
+            threadManager.create(processID);
+        }
+
+        //--Start--
+
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+
+        ProcessStatusObject processStatus = process.getStatus();
+
+        int status = 0;
+        String statusText = request.getParameter("Status");
+        if (!ValueUtil.isAnyNullOrEmpty(statusText)) {
+            status = Integer.parseInt(statusText);
+        }
+        if (status == 2) {
+            processStatus.run();
+        } else if (status == 3) {
+            processStatus.interrupt();
+        }
+
+        return "Finished";
     }
 }

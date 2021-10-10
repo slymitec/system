@@ -30,6 +30,9 @@ public class AObject extends APrototype {
         if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();
         }
+        if (!ValueUtil.isAnyNullOrEmpty(this.handle)) {
+            throw new StatusAlreadyFinishedException();
+        }
 
         if (LogicalUtil.isAnyEqual(space, SpaceType.KERNEL)) {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
@@ -43,10 +46,6 @@ public class AObject extends APrototype {
 
         CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
 
-        if (!ValueUtil.isAnyNullOrEmpty(this.handle)) {
-            throw new StatusAlreadyFinishedException();
-        }
-
         coreObjectRepository.addByHandle(space, handle, this);
 
         this.handle = handle;
@@ -59,11 +58,21 @@ public class AObject extends APrototype {
     }
 
     public final void uncache(long space) {
-        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
-
         if (ValueUtil.isAnyNullOrEmpty(this.handle)) {
             throw new StatusAlreadyFinishedException();
         }
+
+        if (LogicalUtil.isAnyEqual(space, SpaceType.KERNEL)) {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+            ProcessTokenObject processToken = process.getToken();
+
+            if (!processToken.isPrivileges(PrivilegeType.CORE_CACHE_OBJECT_IN_KERNEL_SPACE)) {
+                throw new ConditionRefuseException();
+            }
+        }
+
+        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
 
         coreObjectRepository.deleteByHandle(space, this.handle);
 

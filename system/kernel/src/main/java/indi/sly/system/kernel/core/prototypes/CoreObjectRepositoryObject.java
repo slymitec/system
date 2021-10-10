@@ -56,14 +56,14 @@ public class CoreObjectRepositoryObject extends AObject {
     }
 
     public Set<UUID> getAllHandle(long space) {
-        HashSet<UUID> handles;
+        Set<UUID> handles;
 
         Lock lock = this.getLock(space, LockType.READ);
 
         try {
             lock.lock();
 
-            handles = new HashSet<>(this.getSpace(space).getHandledHandles().keySet());
+            handles = this.getSpace(space).getHandledHandles().keySet();
         } finally {
             lock.unlock();
         }
@@ -185,9 +185,10 @@ public class CoreObjectRepositoryObject extends AObject {
             coreObject.factoryManager = this.factoryManager;
         }
 
-        Lock lock = this.getLock(space, LockType.READ);
-
         UUID id = UUIDUtil.createRandom();
+        Class<? extends AObject> clazz = coreObject.getClass();
+
+        Lock lock = this.getLock(space, LockType.READ);
 
         try {
             lock.lock();
@@ -200,8 +201,6 @@ public class CoreObjectRepositoryObject extends AObject {
             if (handledHandles.containsKey(handle)) {
                 throw new StatusAlreadyExistedException();
             }
-
-            Class<? extends AObject> clazz = coreObject.getClass();
 
             HandleEntryDefinition handleEntry = new HandleEntryDefinition();
             handleEntry.setHandle(handle);
@@ -226,6 +225,7 @@ public class CoreObjectRepositoryObject extends AObject {
 
         UUID handle = UUIDUtil.createRandom();
         UUID id = UUIDUtil.createRandom();
+        Class<? extends AObject> clazz = coreObject.getClass();
 
         Lock lock = this.getLock(space, LockType.READ);
 
@@ -234,8 +234,6 @@ public class CoreObjectRepositoryObject extends AObject {
 
             Map<UUID, HandleEntryDefinition> handledHandles = this.getSpace(space).getHandledHandles();
             Map<Class<? extends AObject>, HandleEntryDefinition> classedHandles = this.getSpace(space).getClassedHandles();
-
-            Class<? extends AObject> clazz = coreObject.getClass();
 
             if (handledHandles.size() > this.getSpace(space).getCoreObjectLimit()) {
                 throw new StatusInsufficientResourcesException();
@@ -264,13 +262,12 @@ public class CoreObjectRepositoryObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        ASpaceDefinition<?> aSpace = this.getSpace(space);
         Lock lock = this.getLock(space, LockType.READ);
 
         try {
             lock.lock();
 
-            Map<UUID, HandleEntryDefinition> handledHandles = aSpace.getHandledHandles();
+            Map<UUID, HandleEntryDefinition> handledHandles = this.getSpace(space).getHandledHandles();
 
             return handledHandles.containsKey(handle);
         } finally {

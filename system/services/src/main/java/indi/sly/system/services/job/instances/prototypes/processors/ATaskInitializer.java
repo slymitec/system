@@ -66,8 +66,7 @@ public abstract class ATaskInitializer extends AInitializer {
         }
 
         TaskInitializerRunSummaryDefinition runSummary = new TaskInitializerRunSummaryDefinition();
-        runSummary.setMethod(run.getMethod());
-        runSummary.setTransaction(run.getTransaction());
+        runSummary.setTaskInitializerRun(run);
 
         return runSummary;
     }

@@ -1,25 +1,30 @@
 package indi.sly.system.services.job.values;
 
+import indi.sly.system.common.lang.ConditionContextException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.services.job.lang.TaskInitializerRunMethodConsumer;
 
 public class TaskInitializerRunSummaryDefinition extends ADefinition<TaskInitializerRunSummaryDefinition> {
-    private TaskInitializerRunMethodConsumer method;
-    private long transaction;
+    private TaskInitializerRunDefinition taskInitializerRun;
 
-    public TaskInitializerRunMethodConsumer getMethod() {
-        return this.method;
+    public void setTaskInitializerRun(TaskInitializerRunDefinition taskInitializerRun) {
+        this.taskInitializerRun = taskInitializerRun;
     }
 
-    public void setMethod(TaskInitializerRunMethodConsumer method) {
-        this.method = method;
+    public TaskInitializerRunMethodConsumer getMethod() {
+        if (ObjectUtil.isAnyNull(this.taskInitializerRun)) {
+            throw new ConditionContextException();
+        }
+
+        return this.taskInitializerRun.getMethod();
     }
 
     public long getTransaction() {
-        return this.transaction;
-    }
+        if (ObjectUtil.isAnyNull(this.taskInitializerRun)) {
+            throw new ConditionContextException();
+        }
 
-    public void setTransaction(long transaction) {
-        this.transaction = transaction;
+        return this.taskInitializerRun.getTransaction();
     }
 }

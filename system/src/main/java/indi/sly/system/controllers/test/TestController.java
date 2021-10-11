@@ -13,6 +13,9 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
+import indi.sly.system.kernel.security.UserManager;
+import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
+import indi.sly.system.kernel.security.values.AccountAuthorizationSummaryDefinition;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,8 +65,16 @@ public class TestController extends AController {
         ProcessObject process = processManager.getCurrent();
         ProcessSessionObject processSession = process.getSession();
 
-        processSession.create("Main");
+        if (ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+            processSession.create("Main");
+        }
         result.put("ProcessSessionID", processSession.getID());
+
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+        AccountAuthorizationObject authorize = userManager.authorize(process.getToken().getAccountID());
+        AccountAuthorizationSummaryDefinition accountAuthorizationSummary = authorize.checkAndGetSummary();
+
+        result.put("accountAuthorizationSummary", accountAuthorizationSummary);
 
         return result;
     }

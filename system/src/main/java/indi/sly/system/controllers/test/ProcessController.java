@@ -1,5 +1,6 @@
 package indi.sly.system.controllers.test;
 
+import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.controllers.AController;
@@ -134,7 +135,7 @@ public class ProcessController extends AController {
             processID = UUIDUtil.getFromString(processIDText);
         }
         if (ValueUtil.isAnyNullOrEmpty(processID)) {
-            threadManager.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+            throw new StatusNotReadyException();
         } else {
             threadManager.create(processID);
         }
@@ -167,7 +168,7 @@ public class ProcessController extends AController {
             processID = UUIDUtil.getFromString(processIDText);
         }
         if (ValueUtil.isAnyNullOrEmpty(processID)) {
-            threadManager.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+            throw new StatusNotReadyException();
         } else {
             threadManager.create(processID);
         }

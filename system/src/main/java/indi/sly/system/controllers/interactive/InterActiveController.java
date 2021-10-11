@@ -19,7 +19,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
 @RestController
-@ServerEndpoint(value = "/Call")
+@ServerEndpoint(value = "/Call.action")
 public class InterActiveController extends AController {
     public InterActiveController() {
     }

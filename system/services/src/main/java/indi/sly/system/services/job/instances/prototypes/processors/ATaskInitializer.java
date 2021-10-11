@@ -5,11 +5,11 @@ import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AInitializer;
+import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.job.lang.TaskInitializerRunMethodConsumer;
 import indi.sly.system.services.job.values.TaskDefinition;
 import indi.sly.system.services.job.values.TaskInitializerRunDefinition;
 import indi.sly.system.services.job.values.TaskInitializerRunSummaryDefinition;
-import indi.sly.system.services.core.values.TransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

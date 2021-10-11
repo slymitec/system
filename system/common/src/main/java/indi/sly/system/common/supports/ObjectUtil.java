@@ -13,11 +13,7 @@ public abstract class ObjectUtil {
     private static final Gson JSON_HELPER = new Gson();
 
     public static boolean isNull(final Object value) {
-        if (value == null) {
-            return true;
-        } else {
-            return false;
-        }
+        return ObjectUtil.isAnyNull(value);
     }
 
     public static boolean isAnyNull(final Object value) {
@@ -71,8 +67,7 @@ public abstract class ObjectUtil {
     }
 
     public static Object unwrapOptional(Object value) {
-        if (value instanceof Optional) {
-            Optional<?> optional = (Optional<?>) value;
+        if (value instanceof Optional<?> optional) {
             if (optional.isEmpty()) {
                 return null;
             }

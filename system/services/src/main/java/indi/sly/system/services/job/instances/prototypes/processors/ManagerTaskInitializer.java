@@ -32,8 +32,8 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ManagerTaskInitializer extends ATaskInitializer {
     public ManagerTaskInitializer() {
-        this.register("coreGetDate", this::coreGetDate, TransactionType.INDEPENDENCE);
-        this.register("coreGetVersion", this::coreGetVersion, TransactionType.INDEPENDENCE);
+        this.register("coreGetDate", this::coreGetDate, TransactionType.WHATEVER);
+        this.register("coreGetVersion", this::coreGetVersion, TransactionType.WHATEVER);
 
         this.register("objectGet", this::objectGet, TransactionType.INDEPENDENCE);
 

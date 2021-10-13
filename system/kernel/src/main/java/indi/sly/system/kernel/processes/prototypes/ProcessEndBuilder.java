@@ -19,7 +19,7 @@ public class ProcessEndBuilder extends ABuilder {
     protected ProcessObject process;
     protected ProcessObject parentProcess;
 
-    public void build() {
+    public synchronized void build() {
         if (ObjectUtil.isAnyNull(this.process)) {
             return;
         }

@@ -47,7 +47,7 @@ public class ProcessCreateBuilder extends ABuilder {
         this.process = this.factory.buildProcess(process);
     }
 
-    public ProcessObject build(ProcessCreatorDefinition processCreator) {
+    public synchronized ProcessObject build(ProcessCreatorDefinition processCreator) {
         if (ObjectUtil.isAnyNull(processCreator)) {
             throw new ConditionParametersException();
         }

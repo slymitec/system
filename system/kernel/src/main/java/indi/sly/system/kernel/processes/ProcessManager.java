@@ -3,6 +3,7 @@ package indi.sly.system.kernel.processes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
@@ -21,6 +22,7 @@ import indi.sly.system.kernel.processes.instances.prototypes.processors.SessionT
 import indi.sly.system.kernel.processes.instances.prototypes.processors.SignalTypeInitializer;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
+import indi.sly.system.kernel.processes.values.ThreadStatusType;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -87,6 +89,11 @@ public class ProcessManager extends AManager {
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 
         ThreadObject thread = threadManager.getCurrent();
+        ThreadStatusObject threadStatus = thread.getStatus();
+
+        if (LogicalUtil.allNotEqual(threadStatus.get(), ThreadStatusType.RUNNING)) {
+            throw new StatusRelationshipErrorException();
+        }
 
         return this.getTarget(thread.getProcessID());
     }

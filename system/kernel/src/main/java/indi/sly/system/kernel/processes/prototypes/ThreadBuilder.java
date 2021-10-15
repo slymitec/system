@@ -1,8 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
-import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
@@ -10,7 +8,6 @@ import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.kernel.processes.values.ThreadContextType;
-import indi.sly.system.kernel.processes.values.ThreadStatusType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -49,6 +46,8 @@ public class ThreadBuilder extends ABuilder {
         ThreadStatisticsObject threadStatistics = thread.getStatistics();
         threadStatistics.setDate(DateTimeType.CREATE, nowDateTime);
 
+        threadStatus.running();
+
         threads.push(thread);
 
         return thread;
@@ -65,9 +64,7 @@ public class ThreadBuilder extends ABuilder {
         ThreadObject thread = threads.peek();
 
         ThreadStatusObject threadStatus = thread.getStatus();
-        if (LogicalUtil.allNotEqual(threadStatus.get(), ThreadStatusType.DIED)) {
-            throw new StatusRelationshipErrorException();
-        }
+        threadStatus.die();
 
         threads.pop();
     }

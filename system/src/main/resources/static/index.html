@@ -59,17 +59,9 @@
 
         if ('WebSocket' in window) {
             websocket = new WebSocket("ws://localhost:8080/Call.action");
-            setMessageInnerHTML("准备中……");
+            setMessageInnerHTML("--连接中--");
         } else {
             alert('浏览器不支持……')
-        }
-
-        websocket.onerror = function () {
-            setMessageInnerHTML("--错误--");
-        };
-
-        websocket.onopen = function (event) {
-            setMessageInnerHTML("--连接--");
         }
 
         websocket.onmessage = function (event) {
@@ -92,6 +84,14 @@
             }
 
             setMessageInnerHTML("输出：" + newline + "response:" + newline + responseRaw + "exception:" + newline + exceptionRaw);
+        }
+
+        websocket.onerror = function () {
+            setMessageInnerHTML("--错误--");
+        };
+
+        websocket.onopen = function (event) {
+            setMessageInnerHTML("--连接--");
         }
 
         websocket.onclose = function () {

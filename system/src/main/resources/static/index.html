@@ -8,6 +8,7 @@
 <label for="text">输入：</label><input id="text" type="text" style="width: 100%; height: 60px"/>
 <br/>
 <button onclick="send()" style="width: 200px; height: 40px">发送</button>
+<button onclick="createWebSocket()" style="width: 200px; height: 40px">连接</button>
 <button onclick="closeWebSocket()" style="width: 200px; height: 40px">断开</button>
 <div id="message"></div>
 </body>
@@ -20,38 +21,54 @@
 
     let websocket = null;
 
-    if ('WebSocket' in window) {
-        websocket = new WebSocket("ws://localhost:8080/Call.action");
-        setMessageInnerHTML("准备中……");
-    } else {
-        alert('浏览器不支持……')
-    }
+    function createWebSocket() {
+        if (websocket != null) {
+            return;
+        }
 
-    websocket.onerror = function () {
-        setMessageInnerHTML("--错误--");
-    };
+        if ('WebSocket' in window) {
+            websocket = new WebSocket("ws://localhost:8080/Call.action");
+            setMessageInnerHTML("准备中……");
+        } else {
+            alert('浏览器不支持……')
+        }
 
-    websocket.onopen = function (event) {
-        setMessageInnerHTML("--连接--");
-    }
+        websocket.onerror = function () {
+            setMessageInnerHTML("--错误--");
+        };
 
-    websocket.onmessage = function (event) {
-        setMessageInnerHTML(event.data);
-    }
+        websocket.onopen = function (event) {
+            setMessageInnerHTML("--连接--");
+        }
 
-    websocket.onclose = function () {
-        setMessageInnerHTML("--关闭--");
-    }
+        websocket.onmessage = function (event) {
+            setMessageInnerHTML(event.data);
+        }
 
-    window.onbeforeunload = function () {
-        websocket.close();
+        websocket.onclose = function () {
+            setMessageInnerHTML("--关闭--");
+        }
+
+        window.onbeforeunload = function () {
+            websocket.close();
+        }
     }
 
     function closeWebSocket() {
+        if (websocket == null) {
+            return;
+        }
+
         websocket.close();
+
+        websocket = null;
     }
 
     function send() {
+        if (websocket == null) {
+            return;
+        }
+
         const message = document.getElementById('text').value;
         websocket.send(message);
     }

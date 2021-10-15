@@ -70,6 +70,9 @@ public class ThreadManager extends AManager {
 
         ThreadObject thread = threadBuilder.create(processID);
 
+        ThreadStatusObject threadStatus = thread.getStatus();
+        threadStatus.running();
+
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessStatisticsObject processStatistics = process.getStatistics();

@@ -46,8 +46,6 @@ public class ThreadBuilder extends ABuilder {
         ThreadStatisticsObject threadStatistics = thread.getStatistics();
         threadStatistics.setDate(DateTimeType.CREATE, nowDateTime);
 
-        threadStatus.running();
-
         threads.push(thread);
 
         return thread;

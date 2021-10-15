@@ -8,11 +8,14 @@
 <div style="width: 100px"><label for="processID">processID </label></div>
 <input id="processID" type="text" style="width: 500px; height: 20px" value="9c337a14-f7f4-432e-ab4a-c8e95943d31f"/><br/>
 <div style="width: 100px"><label for="task">task </label></div>
-<input id="task" type="text" style="width: 500px; height: 20px" value="Handle"/><br/>
+<select id="task" style="width: 500px; height: 20px">
+    <option value="Handle">Handle</option>
+    <option value="Manager">Manager</option>
+</select><br/>
 <div style="width: 100px"><label for="method">method </label></div>
 <input id="method" type="text" style="width: 500px; height: 20px" value="getAllHandle"/><br/>
 <div style="width: 100px"><label for="request">request </label></div>
-<input id="request" type="text" style="width: 500px; height: 60px" value="{}"/><br/>
+<input id="request" type="text" style="width: 100%; height: 60px" value="{}"/><br/>
 <button onclick="send()" style="width: 200px; height: 40px">发送</button>
 <button onclick="createWebSocket()" style="width: 200px; height: 40px">连接</button>
 <button onclick="closeWebSocket()" style="width: 200px; height: 40px">断开</button>
@@ -69,7 +72,7 @@
         }
 
         websocket.onmessage = function (event) {
-            setMessageInnerHTML(event.data);
+            setMessageInnerHTML("输出：" + event.data);
         }
 
         websocket.onclose = function () {

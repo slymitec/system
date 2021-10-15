@@ -40,16 +40,17 @@
 
         let userContextRequestRaw = JSON.stringify(userContextRequest);
 
-        setMessageInnerHTML("输入：" + userContextRequestRaw);
+        setMessageInnerHTML("输入：" + userContextRequestRaw + newline);
         websocket.send(userContextRequestRaw);
     }
 
     function setMessageInnerHTML(innerHTML) {
         const text = document.getElementById('message').innerHTML;
-        document.getElementById('message').innerHTML = innerHTML + '<br/>' + text;
+        document.getElementById('message').innerHTML = innerHTML + newline + text;
     }
 
     let websocket = null;
+    let newline = "<br/>";
 
     function createWebSocket() {
         if (websocket != null) {
@@ -72,7 +73,25 @@
         }
 
         websocket.onmessage = function (event) {
-            setMessageInnerHTML("输出：" + event.data);
+            let userContentResponse = JSON.parse(event.data);
+
+            console.log(userContentResponse);
+
+            let responseRaw = "";
+            for (const key in userContentResponse.response) {
+                let value = userContentResponse.response[key];
+
+                responseRaw = responseRaw + "——" + key + " : " + JSON.stringify(value) + newline;
+            }
+
+            let exceptionRaw = "";
+            for (const key in userContentResponse.exception) {
+                let value = userContentResponse.exception[key];
+
+                exceptionRaw = exceptionRaw + "——" + key + " : " + JSON.stringify(value) + newline;
+            }
+
+            setMessageInnerHTML("输出：" + newline + "response:" + newline + responseRaw + "exception:" + newline + exceptionRaw);
         }
 
         websocket.onclose = function () {

@@ -57,10 +57,29 @@ public class TaskContentObject extends AObject {
         object.uncache(SpaceType.USER);
     }
 
-    public <T> T getParameter(Class<T> clazz, String name) {
-        return this.getParameterOrDefaultProvider(clazz, name, () -> {
+    public String getParameter(String name) {
+        return this.getParameterOrDefaultProvider(name, () -> {
             throw new StatusNotExistedException();
         });
+    }
+
+    public String getParameterOrDefault(String name, String defaultValue) {
+        return this.getParameterOrDefaultProvider(name, () -> defaultValue);
+    }
+
+    public String getParameterOrDefaultProvider(String name, Provider<String> defaultValue) {
+        if (ObjectUtil.isAnyNull(defaultValue) || StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        Map<String, String> threadContextParameters = this.threadContext.getParameters();
+        String value = threadContextParameters.getOrDefault(name, null);
+
+        if (ObjectUtil.isAnyNull(value)) {
+            return defaultValue.acquire();
+        } else {
+            return value;
+        }
     }
 
     public <T> T getParameterOrDefault(Class<T> clazz, String name, T defaultValue) {

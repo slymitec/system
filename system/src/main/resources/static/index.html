@@ -67,20 +67,21 @@
         websocket.onmessage = function (event) {
             let userContentResponse = JSON.parse(event.data);
 
+            console.log(event.data);
             console.log(userContentResponse);
 
             let responseRaw = "";
             for (const key in userContentResponse.response) {
                 let value = userContentResponse.response[key];
 
-                responseRaw = responseRaw + "——" + key + " : " + JSON.stringify(value) + newline;
+                responseRaw = responseRaw + "->" + key + " : " + JSON.stringify(value) + newline;
             }
 
             let exceptionRaw = "";
             for (const key in userContentResponse.exception) {
                 let value = userContentResponse.exception[key];
 
-                exceptionRaw = exceptionRaw + "——" + key + " : " + JSON.stringify(value) + newline;
+                exceptionRaw = exceptionRaw + "->" + key + " : " + JSON.stringify(value) + newline;
             }
 
             setMessageInnerHTML("输出：" + newline + "response:" + newline + responseRaw + "exception:" + newline + exceptionRaw);

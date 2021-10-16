@@ -1,16 +1,17 @@
 package indi.sly.system.common.supports;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import indi.sly.system.common.lang.ISerializeCapable;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
-import indi.sly.system.common.lang.ISerializeCapable;
 
 import java.io.*;
 import java.util.Optional;
 
 public abstract class ObjectUtil {
     private static final String TO_STRING_NULL_OBJECT = "null";
-    private static final Gson JSON_HELPER = new Gson();
+    private static final ObjectMapper JSON_HELPER = new ObjectMapper();
 
     public static boolean isNull(final Object value) {
         return ObjectUtil.isAnyNull(value);
@@ -245,12 +246,16 @@ public abstract class ObjectUtil {
     }
 
     public static String transferToString(Object value) {
-        return ObjectUtil.JSON_HELPER.toJson(value);
+        try {
+            return ObjectUtil.JSON_HELPER.writeValueAsString(value);
+        } catch (JsonProcessingException e) {
+            throw new StatusUnexpectedException();
+        }
     }
 
     public static <T> T transferFromString(Class<T> clazz, String stream) {
         try {
-            return ObjectUtil.JSON_HELPER.fromJson(stream, clazz);
+            return ObjectUtil.JSON_HELPER.readValue(stream, clazz);
         } catch (Exception ignored) {
             throw new StatusUnexpectedException();
         }

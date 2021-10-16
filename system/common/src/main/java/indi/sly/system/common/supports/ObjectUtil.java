@@ -248,7 +248,7 @@ public abstract class ObjectUtil {
     public static String transferToString(Object value) {
         try {
             return ObjectUtil.JSON_HELPER.writeValueAsString(value);
-        } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException ignored) {
             throw new StatusUnexpectedException();
         }
     }

@@ -121,8 +121,13 @@ public final class IdentificationDefinition extends ADefinition<IdentificationDe
 
     public static class IdentificationDefinitionDeserializer extends JsonDeserializer<IdentificationDefinition> {
         @Override
-        public IdentificationDefinition deserialize(JsonParser parser, DeserializationContext context) throws IOException {
-            String value = parser.getText();
+        public IdentificationDefinition deserialize(JsonParser parser, DeserializationContext context) {
+            String value;
+            try {
+                value = parser.getText();
+            } catch (IOException ignored) {
+                throw new StatusUnreadableException();
+            }
 
             IdentificationDefinition identification;
 

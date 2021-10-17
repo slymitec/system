@@ -34,40 +34,6 @@ public abstract class StringUtil {
         return false;
     }
 
-//    public static List<IdentificationDefinition> parseIdentifications(String value) {
-//        if (ObjectUtil.isAnyNull(value)) {
-//            throw new ConditionParametersException();
-//        }
-//
-//        String[] values = value.split("(\\\\)|(/)");
-//
-//        List<IdentificationDefinition> identifications = new ArrayList<>();
-//
-//        for (String pair : values) {
-//            IdentificationDefinition identification;
-//            if (pair.startsWith("<") && pair.endsWith(">")) {
-//                if (pair.length() == 34 || pair.length() == 38) {
-//                    UUID id = ObjectUtil.transferFromString(UUID.class, pair.substring(1, pair.length() - 1));
-//                    if (ValueUtil.isAnyNullOrEmpty(id)) {
-//                        throw new ConditionParametersException();
-//                    }
-//                    identification = new IdentificationDefinition(id);
-//                } else {
-//                    throw new ConditionParametersException();
-//                }
-//            } else if (ValueUtil.isAnyNullOrEmpty(pair)) {
-//                continue;
-//            } else if (!StringUtil.isNameIllegal(pair)) {
-//                identification = new IdentificationDefinition(pair);
-//            } else {
-//                throw new ConditionParametersException();
-//            }
-//            identifications.add(identification);
-//        }
-//
-//        return identifications;
-//    }
-
     public static String readFormBytes(byte[] value) {
         if (ObjectUtil.isAnyNull(value)) {
             throw new NullPointerException();

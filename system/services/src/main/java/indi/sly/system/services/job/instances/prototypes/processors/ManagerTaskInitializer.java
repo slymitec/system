@@ -119,11 +119,7 @@ public class ManagerTaskInitializer extends ATaskInitializer {
         AccountAuthorizationObject accountAuthorization = content.getCacheByParameterNameOrDefault("accountAuthorizationID", null);
         UUID fileIndex = content.getParameterOrNull(UUID.class, "fileIndex");
         String parameters = content.getParameterOrNull("parameters");
-        String parameter_WorkFolder = content.getParameterOrNull("workFolder");
-        List<IdentificationDefinition> workFolder = null;
-        if (ObjectUtil.allNotNull(parameter_WorkFolder)) {
-            workFolder = StringUtil.parseIdentifications(parameter_WorkFolder);
-        }
+        List<IdentificationDefinition> workFolder = content.getParameterListOrNull(IdentificationDefinition.class, "workFolder");
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 

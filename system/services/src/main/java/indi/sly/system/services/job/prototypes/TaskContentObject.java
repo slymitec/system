@@ -65,6 +65,16 @@ public class TaskContentObject extends AObject {
         object.uncache(SpaceType.USER);
     }
 
+    public boolean isParameterExist(String name) {
+        if (StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        Map<String, String> threadContextParameters = this.threadContext.getParameters();
+
+        return threadContextParameters.containsKey(name);
+    }
+
     public <T> T getParameter(Class<T> clazz, String name) {
         return ObjectUtil.transferFromStringOrDefaultProvider(clazz, this.getParameter(name), () -> {
             throw new StatusUnreadableException();
@@ -72,14 +82,11 @@ public class TaskContentObject extends AObject {
     }
 
     public <T> T getParameterOrDefault(Class<T> clazz, String name, T defaultValue) {
-        String parameter;
-        try {
-            parameter = this.getParameter(name);
-        } catch (StatusNotExistedException ignore) {
+        if (!this.isParameterExist(name)) {
             return defaultValue;
         }
 
-        return ObjectUtil.transferFromStringOrDefault(clazz, parameter, defaultValue);
+        return ObjectUtil.transferFromStringOrDefault(clazz, this.getParameter(name), defaultValue);
     }
 
     public String getParameter(String name) {
@@ -114,6 +121,16 @@ public class TaskContentObject extends AObject {
         Map<String, String> threadContextParameters = new HashMap<>(this.threadContext.getParameters());
         threadContextParameters.put(name, value);
         this.threadContext.setParameters(threadContextParameters);
+    }
+
+    public boolean isResultExist(String name) {
+        if (StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        Map<String, Object> threadContextResults = new HashMap<>(this.threadContext.getResults());
+
+        return threadContextResults.containsKey(name);
     }
 
     public Map<String, Object> getResult() {

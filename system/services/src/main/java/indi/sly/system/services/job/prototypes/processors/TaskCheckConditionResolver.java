@@ -1,6 +1,5 @@
 package indi.sly.system.services.job.prototypes.processors;
 
-import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.services.job.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.job.lang.TaskProcessorFinishConsumer;
@@ -33,10 +32,6 @@ public class TaskCheckConditionResolver extends ATaskResolver {
         this.run = (job, status, name, run, content) -> {
             if (status.getRuntime() != TaskStatusRuntimeType.RUNNING) {
                 throw new StatusRelationshipErrorException();
-            }
-
-            if (content.isException()) {
-                throw new StatusNotReadyException();
             }
         };
 

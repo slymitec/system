@@ -2,6 +2,7 @@ package indi.sly.system.services.job.prototypes;
 
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
@@ -76,7 +77,7 @@ public class UserContentObject extends AIndependentValueProcessObject<UserContex
 
         task.run(userContent.getMethod());
 
-        if (taskContent.isException()) {
+        if (ObjectUtil.allNotNull(taskContent.getException())) {
             AKernelException kernelException = taskContent.getException();
             UserContentExceptionDefinition userContentException = userContent.getException();
 

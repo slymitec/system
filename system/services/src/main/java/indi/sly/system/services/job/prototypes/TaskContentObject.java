@@ -130,10 +130,6 @@ public class TaskContentObject extends AObject {
         this.threadContext.setResults(threadContextResults);
     }
 
-    public boolean isException() {
-        return ObjectUtil.allNotNull(this.threadContext.getRunException());
-    }
-
     public AKernelException getException() {
         return this.threadContext.getRunException();
     }
@@ -144,9 +140,5 @@ public class TaskContentObject extends AObject {
         }
 
         this.threadContext.setRunException(exception);
-    }
-
-    public void clearException() {
-        this.threadContext.setRunException(null);
     }
 }

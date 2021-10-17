@@ -12,10 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.inject.Named;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -81,12 +78,46 @@ public class TaskContentObject extends AObject {
         });
     }
 
-    public <T> T getParameterOrDefault(Class<T> clazz, String name, T defaultValue) {
+    public <T> T getParameterOrNull(Class<T> clazz, String name) {
         if (!this.isParameterExist(name)) {
-            return defaultValue;
+            return null;
         }
 
-        return ObjectUtil.transferFromStringOrDefault(clazz, this.getParameter(name), defaultValue);
+        return ObjectUtil.transferFromStringOrDefaultProvider(clazz, this.getParameter(name), () -> {
+            throw new StatusUnreadableException();
+        });
+    }
+
+    public <T> List<T> getParameterList(Class<T> clazz, String name) {
+        return ObjectUtil.transferListFromStringOrDefaultProvider(clazz, this.getParameter(name), () -> {
+            throw new StatusUnreadableException();
+        });
+    }
+
+    public <T> List<T> getParameterListOrNull(Class<T> clazz, String name) {
+        if (!this.isParameterExist(name)) {
+            return null;
+        }
+
+        return ObjectUtil.transferListFromStringOrDefaultProvider(clazz, this.getParameter(name), () -> {
+            throw new StatusUnreadableException();
+        });
+    }
+
+    public <TK, TV> Map<TK, TV> getParameterMap(Class<TK> keyClass, Class<TV> valueClass, String name) {
+        return ObjectUtil.transferMapFromStringOrDefaultProvider(keyClass, valueClass, this.getParameter(name), () -> {
+            throw new StatusUnreadableException();
+        });
+    }
+
+    public <TK, TV> Map<TK, TV> getParameterMapOrNull(Class<TK> keyClass, Class<TV> valueClass, String name) {
+        if (!this.isParameterExist(name)) {
+            return null;
+        }
+
+        return ObjectUtil.transferMapFromStringOrDefaultProvider(keyClass, valueClass, this.getParameter(name), () -> {
+            throw new StatusUnreadableException();
+        });
     }
 
     public String getParameter(String name) {
@@ -95,11 +126,11 @@ public class TaskContentObject extends AObject {
         });
     }
 
-    public String getParameterOrDefault(String name, String defaultValue) {
-        return this.getParameterOrDefaultProvider(name, () -> defaultValue);
+    public String getParameterOrNull(String name) {
+        return this.getParameterOrDefaultProvider(name, () -> null);
     }
 
-    public String getParameterOrDefaultProvider(String name, Provider<String> defaultValue) {
+    private String getParameterOrDefaultProvider(String name, Provider<String> defaultValue) {
         if (ObjectUtil.isAnyNull(defaultValue) || StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }

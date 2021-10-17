@@ -46,7 +46,7 @@ public class HandleTaskInitializer extends ATaskInitializer {
         if (ValueUtil.isAnyNullOrEmpty(handleID) || StringUtil.isNameIllegal(methodName)) {
             throw new ConditionParametersException();
         }
-        String[] methodParameters = content.getParameterOrDefault(String[].class, "methodParameterTypes",null);
+        String[] methodParameters = content.getParameterOrNull(String[].class, "methodParameterTypes");
         Class<?>[] methodParameterTypes;
         if (ArrayUtil.isNullOrEmpty(methodParameters)) {
             methodParameterTypes = new Class[0];

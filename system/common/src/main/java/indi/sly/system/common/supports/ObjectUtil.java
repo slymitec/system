@@ -1,10 +1,13 @@
 package indi.sly.system.common.supports;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import indi.sly.system.common.lang.*;
 
 import java.io.*;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public abstract class ObjectUtil {
@@ -266,6 +269,50 @@ public abstract class ObjectUtil {
 
         try {
             return ObjectUtil.JSON_HELPER.readValue(value, clazz);
+        } catch (Exception ignored) {
+            return defaultProvider.acquire();
+        }
+    }
+
+    public static <T> List<T> transferListFromString(Class<T> clazz, String value) {
+        return ObjectUtil.transferListFromStringOrDefaultProvider(clazz, value, () -> null);
+    }
+
+    public static <T> List<T> transferListFromStringOrDefault(Class<T> clazz, String value, List<T> defaultValue) {
+        return ObjectUtil.transferListFromStringOrDefaultProvider(clazz, value, () -> defaultValue);
+    }
+
+    public static <T> List<T> transferListFromStringOrDefaultProvider(Class<T> clazz, String value, Provider<List<T>> defaultProvider) {
+        if (ObjectUtil.isAnyNull(clazz, defaultProvider)) {
+            throw new ConditionParametersException();
+        }
+
+        JavaType type = ObjectUtil.JSON_HELPER.getTypeFactory().constructParametricType(List.class, clazz);
+
+        try {
+            return ObjectUtil.JSON_HELPER.readValue(value, type);
+        } catch (Exception ignored) {
+            return defaultProvider.acquire();
+        }
+    }
+
+    public static <TK, TV> Map<TK, TV> transferMapFromString(Class<TK> keyClass, Class<TV> valueClass, String value) {
+        return ObjectUtil.transferMapFromStringOrDefaultProvider(keyClass, valueClass, value, () -> null);
+    }
+
+    public static <TK, TV> Map<TK, TV> transferMapFromStringOrDefault(Class<TK> keyClass, Class<TV> valueClass, String value, Map<TK, TV> defaultValue) {
+        return ObjectUtil.transferMapFromStringOrDefaultProvider(keyClass, valueClass, value, () -> defaultValue);
+    }
+
+    public static <TK, TV> Map<TK, TV> transferMapFromStringOrDefaultProvider(Class<TK> keyClass, Class<TV> valueClass, String value, Provider<Map<TK, TV>> defaultProvider) {
+        if (ObjectUtil.isAnyNull(keyClass, valueClass, defaultProvider)) {
+            throw new ConditionParametersException();
+        }
+
+        JavaType type = ObjectUtil.JSON_HELPER.getTypeFactory().constructParametricType(Map.class, keyClass, valueClass);
+
+        try {
+            return ObjectUtil.JSON_HELPER.readValue(value, type);
         } catch (Exception ignored) {
             return defaultProvider.acquire();
         }

@@ -75,9 +75,7 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void objectGet(TaskRunConsumer run, TaskContentObject content) {
-        List<IdentificationDefinition> identifications = StringUtil.parseIdentifications(content.getParameterOrDefaultProvider("identifications", () -> {
-            throw new ConditionParametersException();
-        }));
+        List<IdentificationDefinition> identifications = content.getParameterList(IdentificationDefinition.class, "identifications");
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -119,9 +117,9 @@ public class ManagerTaskInitializer extends ATaskInitializer {
 
     private void processCreate(TaskRunConsumer run, TaskContentObject content) {
         AccountAuthorizationObject accountAuthorization = content.getCacheByParameterNameOrDefault("accountAuthorizationID", null);
-        UUID fileIndex = content.getParameterOrDefault(UUID.class, "fileIndex", null);
-        String parameters = content.getParameterOrDefault("parameters", null);
-        String parameter_WorkFolder = content.getParameterOrDefault("workFolder", null);
+        UUID fileIndex = content.getParameterOrNull(UUID.class, "fileIndex");
+        String parameters = content.getParameterOrNull("parameters");
+        String parameter_WorkFolder = content.getParameterOrNull("workFolder");
         List<IdentificationDefinition> workFolder = null;
         if (ObjectUtil.allNotNull(parameter_WorkFolder)) {
             workFolder = StringUtil.parseIdentifications(parameter_WorkFolder);
@@ -150,8 +148,8 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void userGetAccount(TaskRunConsumer run, TaskContentObject content) {
-        UUID accountID = content.getParameterOrDefault(UUID.class, "accountID", null);
-        String accountName = content.getParameterOrDefault("accountName", null);
+        UUID accountID = content.getParameterOrNull(UUID.class, "accountID");
+        String accountName = content.getParameterOrNull("accountName");
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
@@ -169,8 +167,8 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void userGetGroup(TaskRunConsumer run, TaskContentObject content) {
-        UUID groupID = content.getParameterOrDefault(UUID.class, "groupID", null);
-        String groupName = content.getParameterOrDefault("groupName", null);
+        UUID groupID = content.getParameterOrNull(UUID.class, "groupID");
+        String groupName = content.getParameterOrNull("groupName");
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
@@ -188,8 +186,8 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void userCreateAccount(TaskRunConsumer run, TaskContentObject content) {
-        String accountName = content.getParameterOrDefault("accountName", null);
-        String accountPassword = content.getParameterOrDefault("accountPassword", null);
+        String accountName = content.getParameterOrNull("accountName");
+        String accountPassword = content.getParameterOrNull("accountPassword");
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
@@ -200,7 +198,7 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void userCreateGroup(TaskRunConsumer run, TaskContentObject content) {
-        String groupName = content.getParameterOrDefault("groupName", null);
+        String groupName = content.getParameterOrNull("groupName");
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
@@ -211,7 +209,7 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void userDeleteAccount(TaskRunConsumer run, TaskContentObject content) {
-        UUID accountID = content.getParameterOrDefault(UUID.class, "accountID", null);
+        UUID accountID = content.getParameterOrNull(UUID.class, "accountID");
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
@@ -219,7 +217,7 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void userDeleteGroup(TaskRunConsumer run, TaskContentObject content) {
-        UUID groupID = content.getParameterOrDefault(UUID.class, "groupID", null);
+        UUID groupID = content.getParameterOrNull(UUID.class, "groupID");
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
@@ -227,11 +225,11 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void userAuthorize(TaskRunConsumer run, TaskContentObject content) {
-        UUID accountID = content.getParameterOrDefault(UUID.class, "accountID", null);
-        String accountName = content.getParameterOrDefault("accountName", null);
-        String accountPassword = content.getParameterOrDefault("accountPassword", null);
+        UUID accountID = content.getParameterOrNull(UUID.class, "accountID");
+        String accountName = content.getParameterOrNull("accountName");
+        String accountPassword = content.getParameterOrNull("accountPassword");
         AccountAuthorizationTokenDefinition accountAuthorizationToken =
-                content.getParameterOrDefault(AccountAuthorizationTokenDefinition.class, "accountAuthorizationToken", null);
+                content.getParameterOrNull(AccountAuthorizationTokenDefinition.class, "accountAuthorizationToken");
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 

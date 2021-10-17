@@ -102,7 +102,7 @@ public class ManagerTaskInitializer extends ATaskInitializer {
             throw new ConditionParametersException();
         }
 
-        AccountAuthorizationObject accountAuthorization = content.getCacheByParameterName("accountAuthorizationID");
+        AccountAuthorizationObject accountAuthorization = content.getCacheByParameterNameOrDefault("accountAuthorizationID", null);
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 

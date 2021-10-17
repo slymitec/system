@@ -60,9 +60,10 @@ public class HtmlController extends AController {
 
         List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition(UUIDUtil.createRandom()), new IdentificationDefinition(
                 "hello123"));
+
         result.put("ids", identifications);
 
-        String value = "[\"<71533d3b-e328-477b-81cd-e39a1c5a47cf>\",\"hello123\"]";
+        String value = ObjectUtil.transferToString(identifications);
 
         List<IdentificationDefinition> identifications2 = ObjectUtil.transferListFromString(IdentificationDefinition.class, value);
         if (identifications2 != null) {

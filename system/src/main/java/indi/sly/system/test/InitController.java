@@ -1,4 +1,4 @@
-package indi.sly.system.controllers.test;
+package indi.sly.system.test;
 
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.IdentificationDefinition;

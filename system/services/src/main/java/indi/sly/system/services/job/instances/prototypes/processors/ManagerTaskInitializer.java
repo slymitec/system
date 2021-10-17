@@ -17,10 +17,10 @@ import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.AccountObject;
 import indi.sly.system.kernel.security.prototypes.GroupObject;
 import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
+import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.job.lang.TaskRunConsumer;
 import indi.sly.system.services.job.prototypes.TaskContentObject;
 import indi.sly.system.services.job.values.TaskDefinition;
-import indi.sly.system.services.core.values.TransactionType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -75,8 +75,9 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void objectGet(TaskRunConsumer run, TaskContentObject content) {
-        String parameter_Identifications = content.getParameterOrDefault(String.class, "identifications", null);
-        List<IdentificationDefinition> identifications = StringUtil.parseIdentifications(parameter_Identifications);
+        List<IdentificationDefinition> identifications = StringUtil.parseIdentifications(content.getParameterOrDefaultProvider("identifications", () -> {
+            throw new ConditionParametersException();
+        }));
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -96,9 +97,11 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void processGet(TaskRunConsumer run, TaskContentObject content) {
-        UUID processID = content.getParameterOrDefaultProvider(UUID.class, "processID", () -> {
+        UUID processID = content.getParameter(UUID.class, "processID");
+        if (ValueUtil.isAnyNullOrEmpty(processID)) {
             throw new ConditionParametersException();
-        });
+        }
+
         AccountAuthorizationObject accountAuthorization = content.getCacheByParameterName("accountAuthorizationID");
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
@@ -115,10 +118,10 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void processCreate(TaskRunConsumer run, TaskContentObject content) {
-        AccountAuthorizationObject accountAuthorization = content.getCacheByParameterName("accountAuthorizationID");
+        AccountAuthorizationObject accountAuthorization = content.getCacheByParameterNameOrDefault("accountAuthorizationID", null);
         UUID fileIndex = content.getParameterOrDefault(UUID.class, "fileIndex", null);
-        String parameters = content.getParameterOrDefault(String.class, "parameters", null);
-        String parameter_WorkFolder = content.getParameterOrDefault(String.class, "workFolder", null);
+        String parameters = content.getParameterOrDefault("parameters", null);
+        String parameter_WorkFolder = content.getParameterOrDefault("workFolder", null);
         List<IdentificationDefinition> workFolder = null;
         if (ObjectUtil.allNotNull(parameter_WorkFolder)) {
             workFolder = StringUtil.parseIdentifications(parameter_WorkFolder);
@@ -148,7 +151,7 @@ public class ManagerTaskInitializer extends ATaskInitializer {
 
     private void userGetAccount(TaskRunConsumer run, TaskContentObject content) {
         UUID accountID = content.getParameterOrDefault(UUID.class, "accountID", null);
-        String accountName = content.getParameterOrDefault(String.class, "accountName", null);
+        String accountName = content.getParameterOrDefault("accountName", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
@@ -167,7 +170,7 @@ public class ManagerTaskInitializer extends ATaskInitializer {
 
     private void userGetGroup(TaskRunConsumer run, TaskContentObject content) {
         UUID groupID = content.getParameterOrDefault(UUID.class, "groupID", null);
-        String groupName = content.getParameterOrDefault(String.class, "groupName", null);
+        String groupName = content.getParameterOrDefault("groupName", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
@@ -185,8 +188,8 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void userCreateAccount(TaskRunConsumer run, TaskContentObject content) {
-        String accountName = content.getParameterOrDefault(String.class, "accountName", null);
-        String accountPassword = content.getParameterOrDefault(String.class, "accountPassword", null);
+        String accountName = content.getParameterOrDefault("accountName", null);
+        String accountPassword = content.getParameterOrDefault("accountPassword", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
@@ -197,7 +200,7 @@ public class ManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void userCreateGroup(TaskRunConsumer run, TaskContentObject content) {
-        String groupName = content.getParameterOrDefault(String.class, "groupName", null);
+        String groupName = content.getParameterOrDefault("groupName", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
@@ -225,9 +228,10 @@ public class ManagerTaskInitializer extends ATaskInitializer {
 
     private void userAuthorize(TaskRunConsumer run, TaskContentObject content) {
         UUID accountID = content.getParameterOrDefault(UUID.class, "accountID", null);
-        String accountName = content.getParameterOrDefault(String.class, "accountName", null);
-        String accountPassword = content.getParameterOrDefault(String.class, "accountPassword", null);
-        AccountAuthorizationTokenDefinition accountAuthorizationToken = content.getParameterOrDefault(AccountAuthorizationTokenDefinition.class, "accountAuthorizationToken", null);
+        String accountName = content.getParameterOrDefault("accountName", null);
+        String accountPassword = content.getParameterOrDefault("accountPassword", null);
+        AccountAuthorizationTokenDefinition accountAuthorizationToken =
+                content.getParameterOrDefault(AccountAuthorizationTokenDefinition.class, "accountAuthorizationToken", null);
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 

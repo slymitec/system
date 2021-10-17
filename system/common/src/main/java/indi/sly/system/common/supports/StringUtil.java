@@ -52,7 +52,7 @@ public abstract class StringUtil {
             IdentificationDefinition identification;
             if (pair.startsWith("<") && pair.endsWith(">")) {
                 if (pair.length() == 34 || pair.length() == 38) {
-                    UUID id = UUIDUtil.getFromString(pair.substring(1, pair.length() - 1));
+                    UUID id = ObjectUtil.transferFromString(UUID.class, pair.substring(1, pair.length() - 1));
                     if (ValueUtil.isAnyNullOrEmpty(id)) {
                         throw new ConditionParametersException();
                     }

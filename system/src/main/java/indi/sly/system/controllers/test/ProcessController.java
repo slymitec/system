@@ -1,7 +1,8 @@
 package indi.sly.system.controllers.test;
 
 import indi.sly.system.common.lang.StatusNotReadyException;
-import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.lang.StatusUnreadableException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.controllers.AController;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
@@ -43,7 +44,9 @@ public class ProcessController extends AController {
         UUID processID = null;
         String processIDText = request.getParameter("ProcessID");
         if (!ValueUtil.isAnyNullOrEmpty(processIDText)) {
-            processID = UUIDUtil.getFromString(processIDText);
+            processID = ObjectUtil.transferFromStringOrDefaultProvider(UUID.class, processIDText, () -> {
+                throw new StatusUnreadableException();
+            });
         }
         if (ValueUtil.isAnyNullOrEmpty(processID)) {
             threadManager.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
@@ -132,7 +135,9 @@ public class ProcessController extends AController {
         UUID processID = null;
         String processIDText = request.getParameter("ProcessID");
         if (!ValueUtil.isAnyNullOrEmpty(processIDText)) {
-            processID = UUIDUtil.getFromString(processIDText);
+            processID = ObjectUtil.transferFromStringOrDefaultProvider(UUID.class, processIDText, () -> {
+                throw new StatusUnreadableException();
+            });
         }
         if (ValueUtil.isAnyNullOrEmpty(processID)) {
             throw new StatusNotReadyException();
@@ -165,7 +170,9 @@ public class ProcessController extends AController {
         UUID processID = null;
         String processIDText = request.getParameter("ProcessID");
         if (!ValueUtil.isAnyNullOrEmpty(processIDText)) {
-            processID = UUIDUtil.getFromString(processIDText);
+            processID = ObjectUtil.transferFromStringOrDefaultProvider(UUID.class, processIDText, () -> {
+                throw new StatusUnreadableException();
+            });
         }
         if (ValueUtil.isAnyNullOrEmpty(processID)) {
             throw new StatusNotReadyException();

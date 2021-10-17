@@ -22,41 +22,42 @@ public abstract class UUIDUtil {
         return new UUID(mostSigBits, leastSigBits);
     }
 
-    public static String toString(UUID uuid) {
-        if (ObjectUtil.isAnyNull(uuid)) {
-            return null;
-        } else {
-            return uuid.toString().replace("-", StringUtil.EMPTY);
-        }
-    }
-
-    public static UUID getFromString(String value) {
-        if (ValueUtil.isAnyNullOrEmpty(value)) {
-            return null;
-        }
-        if (value.length() == 36) {
-            value = value.replace("-", "");
-        }
-        if (value.length() != 32) {
-            return null;
-        }
-        for (int i = 0; i < 32; i++) {
-            char pair = value.charAt(i);
-            if (pair < '0' || (pair > '9' && pair < 'A') || (pair > 'F' && pair < 'a') || pair > 'f') {
-                return null;
-            }
-        }
-
-        long mostSigBits = Long.parseLong(value, 0, 8, 16) & 0xffffffffL;
-        mostSigBits <<= 32;
-        mostSigBits |= Long.parseLong(value, 8, 16, 16) & 0xffffffffL;
-
-        long leastSigBits = Long.parseLong(value, 16, 24, 16) & 0xffffffffL;
-        leastSigBits <<= 32;
-        leastSigBits |= Long.parseLong(value, 24, 32, 16) & 0xffffffffL;
-
-        return new UUID(mostSigBits, leastSigBits);
-    }
+//    public static UUID getFromString(String value) {
+//        return UUIDUtil.getFromStringOrDefaultProvider(value, () -> null);
+//    }
+//
+//    public static UUID getParameterOrDefault(String value, UUID defaultValue) {
+//        return UUIDUtil.getFromStringOrDefaultProvider(value, () -> defaultValue);
+//    }
+//
+//    public static UUID getFromStringOrDefaultProvider(String value, Provider<UUID> defaultValue) {
+//        if (ValueUtil.isAnyNullOrEmpty(value) || ObjectUtil.isAnyNull(defaultValue)) {
+//            throw new ConditionParametersException();
+//        }
+//
+//        if (value.length() == 36) {
+//            value = value.replace("-", "");
+//        }
+//        if (value.length() != 32) {
+//            return defaultValue.acquire();
+//        }
+//        for (int i = 0; i < 32; i++) {
+//            char pair = value.charAt(i);
+//            if (pair < '0' || (pair > '9' && pair < 'A') || (pair > 'F' && pair < 'a') || pair > 'f') {
+//                return defaultValue.acquire();
+//            }
+//        }
+//
+//        long mostSigBits = Long.parseLong(value, 0, 8, 16) & 0xffffffffL;
+//        mostSigBits <<= 32;
+//        mostSigBits |= Long.parseLong(value, 8, 16, 16) & 0xffffffffL;
+//
+//        long leastSigBits = Long.parseLong(value, 16, 24, 16) & 0xffffffffL;
+//        leastSigBits <<= 32;
+//        leastSigBits |= Long.parseLong(value, 24, 32, 16) & 0xffffffffL;
+//
+//        return new UUID(mostSigBits, leastSigBits);
+//    }
 
     public static UUID readFormBytes(byte[] value) {
         if (ObjectUtil.isAnyNull(value) || value.length != 16) {

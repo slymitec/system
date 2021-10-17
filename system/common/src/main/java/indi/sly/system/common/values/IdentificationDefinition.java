@@ -63,7 +63,7 @@ public final class IdentificationDefinition extends ADefinition<IdentificationDe
     @Override
     public String toString() {
         if (this.type == UUID.class) {
-            return UUIDUtil.toString(UUIDUtil.readFormBytes(this.id));
+            return ObjectUtil.transferToString(UUIDUtil.readFormBytes(this.id));
         } else if (this.type == String.class) {
             return StringUtil.readFormBytes(this.id);
         } else {

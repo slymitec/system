@@ -39,10 +39,18 @@ public class TaskContentObject extends AObject {
     }
 
     public <T extends AObject> T getCacheByParameterName(String name) {
-        UUID handle = this.getParameterOrDefaultProvider(UUID.class, name, null);
-
+        UUID handle = this.getParameter(UUID.class, name);
         if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new StatusNotExistedException();
+        }
+
+        return this.getCache(handle);
+    }
+
+    public <T extends AObject> T getCacheByParameterNameOrDefault(String name, T defaultValue) {
+        UUID handle = this.getParameter(UUID.class, name);
+        if (ValueUtil.isAnyNullOrEmpty(handle)) {
+            return defaultValue;
         }
 
         return this.getCache(handle);
@@ -55,6 +63,23 @@ public class TaskContentObject extends AObject {
 
         AObject object = this.getCache(handle);
         object.uncache(SpaceType.USER);
+    }
+
+    public <T> T getParameter(Class<T> clazz, String name) {
+        return ObjectUtil.transferFromStringOrDefaultProvider(clazz, this.getParameter(name), () -> {
+            throw new StatusUnreadableException();
+        });
+    }
+
+    public <T> T getParameterOrDefault(Class<T> clazz, String name, T defaultValue) {
+        String parameter;
+        try {
+            parameter = this.getParameter(name);
+        } catch (StatusNotExistedException ignore) {
+            return defaultValue;
+        }
+
+        return ObjectUtil.transferFromStringOrDefault(clazz, parameter, defaultValue);
     }
 
     public String getParameter(String name) {
@@ -73,35 +98,11 @@ public class TaskContentObject extends AObject {
         }
 
         Map<String, String> threadContextParameters = this.threadContext.getParameters();
-        String value = threadContextParameters.getOrDefault(name, null);
 
-        if (ObjectUtil.isAnyNull(value)) {
-            return defaultValue.acquire();
+        if (threadContextParameters.containsKey(name)) {
+            return threadContextParameters.get(name);
         } else {
-            return value;
-        }
-    }
-
-    public <T> T getParameterOrDefault(Class<T> clazz, String name, T defaultValue) {
-        return this.getParameterOrDefaultProvider(clazz, name, () -> defaultValue);
-    }
-
-    public <T> T getParameterOrDefaultProvider(Class<T> clazz, String name, Provider<T> defaultValue) {
-        if (ObjectUtil.isAnyNull(clazz, defaultValue) || StringUtil.isNameIllegal(name)) {
-            throw new ConditionParametersException();
-        }
-
-        Map<String, String> threadContextParameters = this.threadContext.getParameters();
-        String value = threadContextParameters.getOrDefault(name, null);
-
-        if (ObjectUtil.isAnyNull(value)) {
             return defaultValue.acquire();
-        } else {
-            try {
-                return ObjectUtil.transferFromString(clazz, value);
-            } catch (RuntimeException ignored) {
-                throw new StatusUnreadableException();
-            }
         }
     }
 

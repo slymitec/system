@@ -2,9 +2,7 @@ package indi.sly.system.common.supports;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import indi.sly.system.common.lang.ISerializeCapable;
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
-import indi.sly.system.common.lang.StatusUnexpectedException;
+import indi.sly.system.common.lang.*;
 
 import java.io.*;
 import java.util.Optional;
@@ -253,11 +251,23 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static <T> T transferFromString(Class<T> clazz, String stream) {
+    public static <T> T transferFromString(Class<T> clazz, String value) {
+        return ObjectUtil.transferFromStringOrDefaultProvider(clazz, value, () -> null);
+    }
+
+    public static <T> T transferFromStringOrDefault(Class<T> clazz, String value, T defaultValue) {
+        return ObjectUtil.transferFromStringOrDefaultProvider(clazz, value, () -> defaultValue);
+    }
+
+    public static <T> T transferFromStringOrDefaultProvider(Class<T> clazz, String value, Provider<T> defaultProvider) {
+        if (ObjectUtil.isAnyNull(clazz, defaultProvider)) {
+            throw new ConditionParametersException();
+        }
+
         try {
-            return ObjectUtil.JSON_HELPER.readValue(stream, clazz);
+            return ObjectUtil.JSON_HELPER.readValue(value, clazz);
         } catch (Exception ignored) {
-            throw new StatusUnexpectedException();
+            return defaultProvider.acquire();
         }
     }
 }

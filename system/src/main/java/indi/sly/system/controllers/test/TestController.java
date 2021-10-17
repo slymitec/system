@@ -1,8 +1,7 @@
 package indi.sly.system.controllers.test;
 
-import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.controllers.AController;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -46,11 +45,9 @@ public class TestController extends AController {
 
         String processIDText = request.getParameter("ProcessID");
         if (!ValueUtil.isAnyNullOrEmpty(processIDText)) {
-            processID = UUIDUtil.getFromString(processIDText);
-
-            if (ObjectUtil.isAnyNull(processID)) {
-                throw new ConditionParametersException();
-            }
+            processID = ObjectUtil.transferFromStringOrDefaultProvider(UUID.class, processIDText, () -> {
+                throw new StatusUnreadableException();
+            });
         }
 
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);

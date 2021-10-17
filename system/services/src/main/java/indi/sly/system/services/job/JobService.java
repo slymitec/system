@@ -95,13 +95,11 @@ public class JobService extends AService {
             throw new StatusUnreadableException();
         }
 
-        UserContextRequestRawDefinition userContextRequestRaw;
-
-        try {
-            userContextRequestRaw = ObjectUtil.transferFromString(UserContextRequestRawDefinition.class, userContextRequest);
-        } catch (RuntimeException ignored) {
-            throw new StatusUnreadableException();
-        }
+        UserContextRequestRawDefinition userContextRequestRaw =
+                ObjectUtil.transferFromStringOrDefaultProvider(UserContextRequestRawDefinition.class,
+                        userContextRequest, () -> {
+                            throw new StatusUnreadableException();
+                        });
 
         UserContextCreateBuilder userContextCreateBuilder = this.factory.createUserContextCreator();
 

@@ -41,12 +41,12 @@ public class HandleTaskInitializer extends ATaskInitializer {
     }
 
     private void customHandle(TaskRunConsumer run, TaskContentObject content) {
-        UUID handleID = content.getParameterOrDefault(UUID.class, "handleID", null);
-        String methodName = content.getParameterOrDefault(String.class, "method", null);
+        UUID handleID = content.getParameter(UUID.class, "handleID");
+        String methodName = content.getParameter("method");
         if (ValueUtil.isAnyNullOrEmpty(handleID) || StringUtil.isNameIllegal(methodName)) {
             throw new ConditionParametersException();
         }
-        String[] methodParameters = content.getParameterOrDefault(String[].class, "methodParameterTypes", null);
+        String[] methodParameters = content.getParameterOrDefault(String[].class, "methodParameterTypes",null);
         Class<?>[] methodParameterTypes;
         if (ArrayUtil.isNullOrEmpty(methodParameters)) {
             methodParameterTypes = new Class[0];
@@ -77,10 +77,10 @@ public class HandleTaskInitializer extends ATaskInitializer {
 
         for (int i = 0; i < methodParameterTypes.length; i++) {
             if (ClassUtil.isThisOrSuperContain(methodParameterTypes[i], AObject.class)) {
-                UUID handle = content.getParameterOrDefault(UUID.class, "methodParameter" + i, null);
+                UUID handle = content.getParameter(UUID.class, content.getParameter("methodParameter" + i));
                 methodParameterValues[i] = content.getCache(handle);
             } else {
-                methodParameterValues[i] = content.getParameterOrDefault(Object.class, "methodParameter" + i, null);
+                methodParameterValues[i] = content.getParameter(Object.class, content.getParameter("methodParameter" + i));
             }
         }
 
@@ -114,7 +114,7 @@ public class HandleTaskInitializer extends ATaskInitializer {
     }
 
     private void deleteHandle(TaskRunConsumer run, TaskContentObject content) {
-        UUID handleID = content.getParameterOrDefault(UUID.class, "handleID", null);
+        UUID handleID = content.getParameter(UUID.class, "handleID");
         if (ValueUtil.isAnyNullOrEmpty(handleID)) {
             throw new ConditionParametersException();
         }

@@ -3,6 +3,7 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
@@ -53,7 +54,10 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
                 infoContent.execute();
                 long infoContentLength = infoContent.length();
                 byte[] applicationSource = infoContent.read(0, (int) infoContentLength);
-                ApplicationDefinition application = ObjectUtil.transferFromString(ApplicationDefinition.class, StringUtil.readFormBytes(applicationSource));
+                ApplicationDefinition application = ObjectUtil.transferFromStringOrDefaultProvider(ApplicationDefinition.class,
+                        StringUtil.readFormBytes(applicationSource), () -> {
+                            throw new StatusUnreadableException();
+                        });
 
                 if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
                     SessionContentObject sessionContent = processSession.getContent();

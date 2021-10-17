@@ -1,16 +1,10 @@
 package indi.sly.system.controllers.test;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.controllers.AController;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
@@ -25,8 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -64,74 +58,22 @@ public class HtmlController extends AController {
 
         //--Start--
 
-        Identification i1 = new Identification(UUID.randomUUID());
-        Identification i2 = new Identification("Hello123");
+        List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition(UUIDUtil.createRandom()), new IdentificationDefinition(
+                "hello123"));
+        result.put("ids", identifications);
 
-        UUID u = UUID.randomUUID();
-        String s = ObjectUtil.transferToString(u);
+        String value = "[\"<71533d3b-e328-477b-81cd-e39a1c5a47cf>\",\"hello123\"]";
 
-        result.put("1", i1);
-        result.put("2", i2);
-        result.put("u", u);
-        result.put("s", s);
+        List<IdentificationDefinition> identifications2 = ObjectUtil.transferListFromString(IdentificationDefinition.class, value);
+        if (identifications2 != null) {
+            for (IdentificationDefinition identification : identifications2) {
+                this.logger().error(identification.toString());
+                this.logger().error(identification.getType().getName());
+            }
+        }
 
         //--End--
 
         return result;
-    }
-
-    public static class IdentificationSerializer extends JsonSerializer<Identification> {
-        @Override
-        public void serialize(Identification value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-            gen.writeString(value.toString());
-        }
-    }
-
-    @JsonSerialize(using = IdentificationSerializer.class)
-    public static class Identification extends ADefinition<Identification> {
-        private byte[] id;
-        private Class<?> type;
-
-        public byte[] getID() {
-            return this.id;
-        }
-
-        public Class<?> getType() {
-            return this.type;
-        }
-
-        public Identification() {
-            this.id = UUIDUtil.writeToBytes(UUIDUtil.getEmpty());
-            this.type = UUID.class;
-        }
-
-        public Identification(UUID id) {
-            if (ObjectUtil.isAnyNull(id)) {
-                throw new ConditionParametersException();
-            }
-
-            this.id = UUIDUtil.writeToBytes(id);
-            this.type = UUID.class;
-        }
-
-        public Identification(String id) {
-            if (StringUtil.isNameIllegal(id)) {
-                throw new ConditionParametersException();
-            }
-
-            this.id = StringUtil.writeToBytes(id);
-            this.type = String.class;
-        }
-
-        @Override
-        public String toString() {
-            if (this.type == UUID.class) {
-                return ObjectUtil.transferToString(UUIDUtil.readFormBytes(this.id));
-            } else if (this.type == String.class) {
-                return StringUtil.readFormBytes(this.id);
-            } else {
-                return null;
-            }
-        }
     }
 }

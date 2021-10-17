@@ -2,13 +2,14 @@ package indi.sly.system.common.values;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.*;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @JsonSerialize(using = IdentificationDefinition.IdentificationDefinitionSerializer.class)
+@JsonDeserialize(using = IdentificationDefinition.IdentificationDefinitionDeserializer.class)
 public final class IdentificationDefinition extends ADefinition<IdentificationDefinition> {
     private byte[] id;
     private Class<?> type;
@@ -112,17 +114,35 @@ public final class IdentificationDefinition extends ADefinition<IdentificationDe
             if (value.type == String.class) {
                 generator.writeString(StringUtil.readFormBytes(value.id));
             } else if (value.type == UUID.class) {
-                generator.writeObject(UUIDUtil.readFormBytes(value.id));
+                generator.writeObject("<" + UUIDUtil.readFormBytes(value.id) + ">");
             }
         }
     }
 
     public static class IdentificationDefinitionDeserializer extends JsonDeserializer<IdentificationDefinition> {
         @Override
-        public IdentificationDefinition deserialize(JsonParser parser, DeserializationContext context) throws IOException, JsonProcessingException {
+        public IdentificationDefinition deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+            String value = parser.getText();
 
+            IdentificationDefinition identification;
 
-            return null;
+            if (value.startsWith("<") && value.endsWith(">")) {
+                if (value.length() == 38) {
+                    UUID id = ObjectUtil.transferFromString(UUID.class, "\"" + value.substring(1, value.length() - 1) + "\"");
+                    if (ValueUtil.isAnyNullOrEmpty(id)) {
+                        throw new StatusUnreadableException();
+                    }
+                    identification = new IdentificationDefinition(id);
+                } else {
+                    throw new StatusUnreadableException();
+                }
+            } else if (!StringUtil.isNameIllegal(value)) {
+                identification = new IdentificationDefinition(value);
+            } else {
+                throw new StatusUnreadableException();
+            }
+
+            return identification;
         }
     }
 }

@@ -1,26 +1,15 @@
-### SLY System Configuration ###
 build/
+out/
+
 .gradle
 gradlew
 gradlew.bat
 
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
 *.iws
 *.iml
 *.ipr
-out/
+
+!**/src/main/**/build/
+!**/src/test/**/build/
 !**/src/main/**/out/
 !**/src/test/**/out/
-

@@ -59,7 +59,7 @@ public class HtmlController extends AController {
         //--Start--
 
         List<IdentificationDefinition> identifications =
-                List.of(new IdentificationDefinition(UUIDUtil.createRandom()), new IdentificationDefinition("hello123"));
+                List.of(new IdentificationDefinition(UUIDUtil.createRandom()), new IdentificationDefinition("text"));
 
         result.put("ids", identifications);
 

@@ -1,4 +1,4 @@
-package indi.sly.system.services.faces;
+package indi.sly.system.services.face;
 
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;

@@ -72,13 +72,23 @@ public class TaskContentObject extends AObject {
         return threadContextParameters.containsKey(name);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getParameter(Class<T> clazz, String name) {
+        if (clazz == String.class) {
+            return (T) this.getParameter(name);
+        }
+
         return ObjectUtil.transferFromStringOrDefaultProvider(clazz, this.getParameter(name), () -> {
             throw new StatusUnreadableException();
         });
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getParameterOrNull(Class<T> clazz, String name) {
+        if (clazz == String.class) {
+            return (T) this.getParameterOrNull(name);
+        }
+
         if (!this.isParameterExist(name)) {
             return null;
         }
@@ -86,6 +96,16 @@ public class TaskContentObject extends AObject {
         return ObjectUtil.transferFromStringOrDefaultProvider(clazz, this.getParameter(name), () -> {
             throw new StatusUnreadableException();
         });
+    }
+
+    public String getParameter(String name) {
+        return this.getParameterOrDefaultProvider(name, () -> {
+            throw new StatusNotExistedException();
+        });
+    }
+
+    public String getParameterOrNull(String name) {
+        return this.getParameterOrDefaultProvider(name, () -> null);
     }
 
     public <T> List<T> getParameterList(Class<T> clazz, String name) {
@@ -118,16 +138,6 @@ public class TaskContentObject extends AObject {
         return ObjectUtil.transferMapFromStringOrDefaultProvider(keyClass, valueClass, this.getParameter(name), () -> {
             throw new StatusUnreadableException();
         });
-    }
-
-    public String getParameter(String name) {
-        return this.getParameterOrDefaultProvider(name, () -> {
-            throw new StatusNotExistedException();
-        });
-    }
-
-    public String getParameterOrNull(String name) {
-        return this.getParameterOrDefaultProvider(name, () -> null);
     }
 
     private String getParameterOrDefaultProvider(String name, Provider<String> defaultValue) {

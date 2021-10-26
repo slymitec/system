@@ -5,12 +5,12 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
-import indi.sly.system.services.face.AController;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.processes.ThreadManager;
+import indi.sly.system.services.face.AController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,6 +57,17 @@ public class HtmlController extends AController {
         Map<String, Object> result = new HashMap<>();
 
         //--Start--
+
+        String j1 = ObjectUtil.transferToString("/234");
+        String j2 = ObjectUtil.transferToString("234");
+        String s1 = ObjectUtil.transferFromString(String.class, j1);
+        String s2 = ObjectUtil.transferFromString(String.class, j2);
+
+        this.logger().error(j1);
+        this.logger().error(s1);
+        this.logger().error(j2);
+        this.logger().error(s2);
+
 
         List<IdentificationDefinition> identifications =
                 List.of(new IdentificationDefinition(UUIDUtil.createRandom()), new IdentificationDefinition("text"));

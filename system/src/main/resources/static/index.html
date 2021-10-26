@@ -19,6 +19,7 @@
 <button onclick="send()" style="width: 200px; height: 40px">发送</button>
 <button onclick="createWebSocket()" style="width: 200px; height: 40px">连接</button>
 <button onclick="closeWebSocket()" style="width: 200px; height: 40px">断开</button>
+<button onclick="clearScreen()" style="width: 200px; height: 40px">清屏</button>
 <div id="message"></div>
 </body>
 
@@ -112,6 +113,10 @@
         websocket.close();
 
         websocket = null;
+    }
+
+    function clearScreen() {
+        document.getElementById('message').innerHTML = "";
     }
 </script>
 </html>

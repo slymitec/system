@@ -3,6 +3,18 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SlySystem 1.1.iml" filepath="$PROJECT_DIR$/.idea/SlySystem 1.1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/system.iml" filepath="$PROJECT_DIR$/.idea/modules/system.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/system.common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/system.common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/system.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/system.common.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/system.common.test.iml" filepath="$PROJECT_DIR$/.idea/modules/common/system.common.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kernel/system.kernel.iml" filepath="$PROJECT_DIR$/.idea/modules/kernel/system.kernel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kernel/system.kernel.main.iml" filepath="$PROJECT_DIR$/.idea/modules/kernel/system.kernel.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kernel/system.kernel.test.iml" filepath="$PROJECT_DIR$/.idea/modules/kernel/system.kernel.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/system.main.iml" filepath="$PROJECT_DIR$/.idea/modules/system.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/services/system.services.iml" filepath="$PROJECT_DIR$/.idea/modules/services/system.services.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/services/system.services.main.iml" filepath="$PROJECT_DIR$/.idea/modules/services/system.services.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/services/system.services.test.iml" filepath="$PROJECT_DIR$/.idea/modules/services/system.services.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/system.test.iml" filepath="$PROJECT_DIR$/.idea/modules/system.test.iml" />
     </modules>
   </component>
 </project>

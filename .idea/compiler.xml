@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="11">
+      <module name="system" target="17" />
+      <module name="system.common" target="17" />
+      <module name="system.common.main" target="17" />
+      <module name="system.common.test" target="17" />
+      <module name="system.kernel" target="17" />
+      <module name="system.kernel.main" target="17" />
+      <module name="system.kernel.test" target="17" />
+      <module name="system.main" target="17" />
+      <module name="system.services" target="17" />
+      <module name="system.services.main" target="17" />
+      <module name="system.services.test" target="17" />
+      <module name="system.test" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

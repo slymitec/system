@@ -30,9 +30,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="system.common.main" />
+    <orderEntry type="module" module-name="indi.sly.system.system.common.main" />
     <orderEntry type="module" module-name="indi.sly.system.system.kernel.main" />
-    <orderEntry type="library" name="Gradle: jakarta.inject:jakarta.inject-api:2.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: jakarta.inject:jakarta.inject-api:2.0.1" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.12.0" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-websocket:3.0.1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-web:3.0.1" level="project" />

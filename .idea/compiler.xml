@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="11">
+      <module name="indi.sly.system.system.common.main" target="17" />
       <module name="indi.sly.system.system.kernel.main" target="17" />
       <module name="system" target="17" />
       <module name="system.common" target="17" />

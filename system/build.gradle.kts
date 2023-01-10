@@ -1,9 +1,9 @@
 plugins {
     java
-    id("org.springframework.boot") version ("2.5.6")
-    id("io.spring.dependency-management") version ("1.0.11.RELEASE")
-    kotlin("jvm") version ("1.5.31")
-    kotlin("plugin.spring") version ("1.5.31")
+    id("org.springframework.boot") version ("3.0.1")
+    id("io.spring.dependency-management") version ("1.1.0")
+    kotlin("jvm") version ("1.7.22")
+    kotlin("plugin.spring") version ("1.7.22")
 }
 
 allprojects {
@@ -41,8 +41,8 @@ dependencies {
 //    implementation("org.jetbrains.kotlin:kotlin-reflect")
 //    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation("com.microsoft.sqlserver:mssql-jdbc:9.4.0.jre16")
-    implementation("javax.inject:javax.inject:1")
+    implementation("com.microsoft.sqlserver:mssql-jdbc:11.2.2.jre17")
+    implementation("jakarta.inject:jakarta.inject-api:2.0.1")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

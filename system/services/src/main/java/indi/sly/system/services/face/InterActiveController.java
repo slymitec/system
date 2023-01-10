@@ -13,8 +13,8 @@ import indi.sly.system.services.job.values.UserContentExceptionDefinition;
 import indi.sly.system.services.job.values.UserContentResponseRawDefinition;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
+import jakarta.websocket.*;
+import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
 @RestController

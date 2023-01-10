@@ -1,7 +1,7 @@
 dependencies {
     implementation(project(":common"))
 
-    implementation("javax.inject:javax.inject:1")
+    implementation("jakarta.inject:jakarta.inject-api:2.0.1")
     implementation("org.apache.commons:commons-lang3")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

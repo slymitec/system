@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.microsoft.sqlserver:mssql-jdbc:11.2.2.jre17">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.microsoft.sqlserver/mssql-jdbc/11.2.2.jre17/ae6f502916d94ba97c046f698a6e5cb9038fde52/mssql-jdbc-11.2.2.jre17.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.microsoft.sqlserver/mssql-jdbc/11.2.2.jre17/76bf8bee8c9943ba740f2f00c9ed5bd5d817998d/mssql-jdbc-11.2.2.jre17-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

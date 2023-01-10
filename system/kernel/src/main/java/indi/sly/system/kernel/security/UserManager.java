@@ -29,7 +29,7 @@ import indi.sly.system.kernel.security.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

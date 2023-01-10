@@ -23,104 +23,98 @@
           <stringArguments>
             <stringArg name="classpath">
               <args>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.5.31/ff5d99aecd328872494e8921b72bf6e3af97af3e/kotlin-stdlib-jdk8-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/com.microsoft.sqlserver/mssql-jdbc/9.4.0.jre16/22f63f2fdb5a4ea3d311f1d1576a1f85a67f3c4f/mssql-jdbc-9.4.0.jre16.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-data-jpa/2.5.6/8d7fe99c33e09390316749614d9795d80b49207b/spring-boot-starter-data-jpa-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-aop/2.5.6/c5db1260ecf447f55419f1a17da75a42f211aca3/spring-boot-starter-aop-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-websocket/2.5.6/b427089543b8b22e97a7126eadb1c9cd7e619932/spring-boot-starter-websocket-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/2.5.6/46b479490170914f7477b96a21241183b181c24d/spring-boot-starter-web-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-test/2.5.6/ae7b6c974539d7789bfff7bb150b333f1ffb5795/spring-boot-starter-test-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-jdbc/2.5.6/cf01e787378c2d30b695f0c9f76fb48a6b490984/spring-boot-starter-jdbc-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-json/2.5.6/6ef5a7087e18ed4f3736c8752440ecd489c36a4d/spring-boot-starter-json-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter/2.5.6/d5d1fada1afe9a808abf48da7066a993cf679aa/spring-boot-starter-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.5.31/77e0f2568912e45d26c31fd417a332458508acdf/kotlin-stdlib-jdk7-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.5.31/6628d61d0f5603568e72d2d5915d2c034b4f1c55/kotlin-stdlib-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test-autoconfigure/2.5.6/8e5fdad6e7e508fde028f8f5179b061ec47c5636/spring-boot-test-autoconfigure-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-autoconfigure/2.5.6/b9f4016180c5242530da465561ff25c7cac14bf3/spring-boot-autoconfigure-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test/2.5.6/d51fcfd9c4f1236e6460a476be93c96a5687612e/spring-boot-test-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot/2.5.6/d8c6b97fd3182fb6d7d06ebf710cd9ccabc83b89/spring-boot-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/2.5.6/a900356a11b1a41f4277136f1d13ce7a13f43b3c/spring-boot-starter-logging-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-tomcat/2.5.6/6d1a04a727d9d09b99207864ceb0a4567e53730a/spring-boot-starter-tomcat-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/jakarta.annotation/jakarta.annotation-api/1.3.5/59eb84ee0d616332ff44aba065f3888cf002cd2d/jakarta.annotation-api-1.3.5.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.data/spring-data-jpa/2.5.6/8e0ec2f54f3fcda49dfb3123f3a40f34b55df92a/spring-data-jpa-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-webmvc/5.3.12/3d92ad6c28bfa5923183f328f5bfa1e39ec32714/spring-webmvc-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-websocket/5.3.12/c61eda1bf65960e00c3dc5266a63d6786463f91c/spring-websocket-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-context/5.3.12/d5f5f044e05109b7f3337ea2cf692fd62d1ecbb6/spring-context-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-aop/5.3.12/882db41939109e96f4c78cd5c0931cc4aebc3d58/spring-aop-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-web/5.3.12/78991a50d17da49bddc4987a2cc8b83d46c402a7/spring-web-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-messaging/5.3.12/82cfd9bb58123e3aab52bc725a8d5fe5348e28ff/spring-messaging-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-test/5.3.12/f993b6846c26a1f0f4ed60bc5fdba22a4839c9c1/spring-test-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-orm/5.3.12/2881f9e71889b35fa3785bf67706a201cea93004/spring-orm-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-jdbc/5.3.12/957d6ddc80fbf52d965e6af90ddd0dccfed42d7d/spring-jdbc-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.5.6/15a2384f4eaf7fee512fb295174f6c0fb6c55ee1/spring-data-commons-2.5.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-tx/5.3.12/7f2e61a22682baa22ed5bef0724a4386c41477cb/spring-tx-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-beans/5.3.12/caaa1d489bce88d6aa01ddd255ad5046acf8f282/spring-beans-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-expression/5.3.12/50c82e995b3b8e20a3f313b4356237db5a26e14a/spring-expression-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-core/5.3.12/662e6536968246af9baa84fbac2d3eb56a04fda9/spring-core-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.28/7cae037c3014350c923776548e71c9feb7a69259/snakeyaml-1.28.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-aspects/5.3.12/3cccc3052c6973c059eb2be7c4baf0b9558d49b7/spring-aspects-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.aspectj/aspectjweaver/1.9.7/158f5c255cd3e4408e795b79f7c3fbae9b53b7ca/aspectjweaver-1.9.7.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/jakarta.transaction/jakarta.transaction-api/1.3.3/c4179d48720a1e87202115fbed6089bdc4195405/jakarta.transaction-api-1.3.3.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/jakarta.persistence/jakarta.persistence-api/2.2.3/8f6ea5daedc614f07a3654a455660145286f024e/jakarta.persistence-api-2.2.3.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.hibernate/hibernate-core/5.4.32.Final/99a5e10bf455337014c190e141ec631e9ff71663/hibernate-core-5.4.32.Final.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/com.jayway.jsonpath/json-path/2.5.0/c35ef29095125b51638d19120f63e2b56eff20e9/json-path-2.5.0.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.glassfish.jaxb/jaxb-runtime/2.3.5/a169a961a2bb9ac69517ec1005e451becf5cdfab/jaxb-runtime-2.3.5.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/jakarta.xml.bind/jakarta.xml.bind-api/2.3.3/48e3b9cfc10752fba3521d6511f4165bea951801/jakarta.xml.bind-api-2.3.3.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.assertj/assertj-core/3.19.0/f64cb5690b85e68d5e1e6c6152bfb6e3840a452d/assertj-core-3.19.0.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.hamcrest/hamcrest/2.2/1820c0968dba3a11a1b30669bb1f01978a91dedc/hamcrest-2.2.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-params/5.7.2/685f832f8c54dd40100f646d61aca88ed9545421/junit-jupiter-params-5.7.2.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.7.2/f4b4079732a9c537983324cfa4e46655f21d2c56/junit-jupiter-api-5.7.2.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.7.2/34adfea6c13fc4a996cf38cdad80800ce850d198/junit-platform-commons-1.7.2.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter/5.7.2/62faa742964a9d8dab8fdb4a0eab7b01441c171f/junit-jupiter-5.7.2.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.mockito/mockito-junit-jupiter/3.9.0/871745ab6af5a269411ea3c1f99ced82ed079436/mockito-junit-jupiter-3.9.0.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.mockito/mockito-core/3.9.0/b7573430aea743b26434b44f4f46272af613e660/mockito-core-3.9.0.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.skyscreamer/jsonassert/1.5.0/6c9d5fe2f59da598d9aefc1cfc6528ff3cf32df3/jsonassert-1.5.0.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.xmlunit/xmlunit-core/2.8.3/79be4916d0203c17944d0e891c2b17c555727af/xmlunit-core-2.8.3.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.5.31/43331609c7de811fed085e0dfd150874b157c32/kotlin-stdlib-common-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.2.6/b09efa852337fa0dd9859614389eec58dc287116/logback-classic-1.2.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-to-slf4j/2.14.1/ce8a86a3f50a4304749828ce68e7478cafbc8039/log4j-to-slf4j-2.14.1.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.slf4j/jul-to-slf4j/1.7.32/8a055c04ab44e8e8326901cadf89080721348bdb/jul-to-slf4j-1.7.32.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.3.12/2b5f5bb4a78af879bd174ceff5226da3f014ab9d/spring-jcl-5.3.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/com.zaxxer/HikariCP/4.0.3/107cbdf0db6780a065f895ae9d8fbf3bb0e1c21f/HikariCP-4.0.3.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.hibernate.common/hibernate-commons-annotations/5.1.2.Final/e59ffdbc6ad09eeb33507b39ffcf287679a498c8/hibernate-commons-annotations-5.1.2.Final.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.4.2.Final/e517b8a93dd9962ed5481345e4d262fdd47c4217/jboss-logging-3.4.2.Final.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.javassist/javassist/3.27.0-GA/f63e6aa899e15eca8fdaa402a79af4c417252213/javassist-3.27.0-GA.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.10.22/ef45d7e2cd1c600d279704f492ed5ce2ceb6cdb5/byte-buddy-1.10.22.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/antlr/antlr/2.7.7/83cd2cd674a217ade95a4bb83a8a14f351f48bd0/antlr-2.7.7.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jboss/jandex/2.2.3.Final/d3865101f0666b63586683bd811d754517f331ab/jandex-2.2.3.Final.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml/classmate/1.5.1/3fe0bed568c62df5e89f4f174c101eab25345b6c/classmate-1.5.1.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.dom4j/dom4j/2.1.3/a75914155a9f5808963170ec20653668a2ffd2fd/dom4j-2.1.3.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.32/cdcff33940d9f2de763bc41ea05a0be5941176c3/slf4j-api-1.7.32.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/2.12.5/a0a9870b681a72789c5c6bdc380e45ab719c6aa3/jackson-datatype-jsr310-2.12.5.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-parameter-names/2.12.5/2c85c2036d0851425a260c01eb5f7ddbed1eeb00/jackson-module-parameter-names-2.12.5.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.12.5/52d929d5bb21d0186fe24c09624cc3ee4bafc3b3/jackson-annotations-2.12.5.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.12.5/725e364cc71b80e60fa450bd06d75cdea7fb2d59/jackson-core-2.12.5.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jdk8/2.12.5/6b2f79547d217ad50dfc5b57af7444a3aa583b43/jackson-datatype-jdk8-2.12.5.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.12.5/b064cf057f23d3d35390328c5030847efeffedde/jackson-databind-2.12.5.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-websocket/9.0.54/ae018906cecb818a8c6f2316d7b0793beadf6609/tomcat-embed-websocket-9.0.54.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-core/9.0.54/34322c731b2394ea13681cfae0be9cd72f46f88d/tomcat-embed-core-9.0.54.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-el/9.0.54/9edb062d38d0fd8a165289f44b28b3b0e0e11ed7/tomcat-embed-el-9.0.54.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/net.minidev/json-smart/2.4.7/8d7f4c1530c07c54930935f3da85f48b83b3c109/json-smart-2.4.7.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/jakarta.activation/jakarta.activation-api/1.2.2/99f53adba383cb1bf7c3862844488574b559621f/jakarta.activation-api-1.2.2.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.10.22/b01df6b71a882b9fde5a608a26e641cd399a4d83/byte-buddy-agent-1.10.22.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.objenesis/objenesis/3.2/7fadf57620c8b8abdf7519533e5527367cb51f09/objenesis-3.2.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/com.vaadin.external.google/android-json/0.0.20131108.vaadin1/fa26d351fe62a6a17f5cda1287c1c6110dec413f/android-json-0.0.20131108.vaadin1.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.2.6/25be1abb32e870ff042e698a799b56587e0dca9a/logback-core-1.2.6.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.14.1/cd8858fbbde69f46bce8db1152c18a43328aae78/log4j-api-2.14.1.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.glassfish.jaxb/txw2/2.3.5/ec8930fa62e7b1758b1664d135f50c7abe86a4a3/txw2-2.3.5.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/com.sun.istack/istack-commons-runtime/3.0.12/cbbe1a62b0cc6c85972e99d52aaee350153dc530/istack-commons-runtime-3.0.12.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/net.minidev/accessors-smart/2.4.7/3970cfc505e6657ca60f3aa57c849f6043000d7a/accessors-smart-2.4.7.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.apiguardian/apiguardian-api/1.1.0/fc9dff4bb36d627bdc553de77e1f17efd790876c/apiguardian-api-1.1.0.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.2.0/28c11eb91f9b6d8e200631d46e20a7f407f2a046/opentest4j-1.2.0.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.ow2.asm/asm/9.1/a99500cf6eea30535eeac6be73899d048f8d12a8/asm-9.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.7.22/b75c999616784d452613d670fec56a527f2bd3d1/kotlin-stdlib-jdk8-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../system/common/build/libs/common-1.0-plain.jar</arg>
+                <arg>$MODULE_DIR$/../../system/kernel/build/libs/kernel-1.0-plain.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.microsoft.sqlserver/mssql-jdbc/11.2.2.jre17/ae6f502916d94ba97c046f698a6e5cb9038fde52/mssql-jdbc-11.2.2.jre17.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/jakarta.inject/jakarta.inject-api/2.0.0/46fc8560b6fd17b78396d88f39c1a730457671f0/jakarta.inject-api-2.0.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-data-jpa/3.0.1/a68c2e57bd3a0c5bdf7e4de6c0d563aad38d3f47/spring-boot-starter-data-jpa-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-aop/3.0.1/489dae5b71e160d74190738b0419c2cecd7f7e95/spring-boot-starter-aop-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-websocket/3.0.1/797e150e340bd7f76029c73af7cc44434049eb28/spring-boot-starter-websocket-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/3.0.1/1d99ce519a0fe66f15dc9bbdc2507a8d0a01690/spring-boot-starter-web-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-test/3.0.1/92d4e6de86bf76db3bd5c40155ede74c35f3323f/spring-boot-starter-test-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-jdbc/3.0.1/a1121611438c39fdcad2c73da7564d851b386a75/spring-boot-starter-jdbc-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-json/3.0.1/e409ce80cf518c619d59e44f0173a7e728f75da2/spring-boot-starter-json-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter/3.0.1/c37bc07921436d1ef410ae4bd53747c721ae1c7c/spring-boot-starter-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.7.22/6aa0a0e051d6b828dc25047025ec245758fab6d9/kotlin-stdlib-jdk7-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.7.22/9fb43bccb6cf8cfaaf3776c75f5df4f052f09b72/kotlin-stdlib-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test-autoconfigure/3.0.1/26346db6db873dd9a7737691b66727cf6e0984d9/spring-boot-test-autoconfigure-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-autoconfigure/3.0.1/7705d0e28d18b79b25587fb88eade85287a10513/spring-boot-autoconfigure-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test/3.0.1/1ad6a6b50844ac5a3290b40963b7151b2684a3d3/spring-boot-test-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot/3.0.1/9a7c15dfec7a5207965c8893abfd12fa0eac1d38/spring-boot-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/3.0.1/bf285578b44ecddaeb32f5d57a08fa5be60fc69f/spring-boot-starter-logging-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.data/spring-data-jpa/3.0.0/c1289ab131eddd70fc35beb880927f4808d5d5f1/spring-data-jpa-3.0.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-tomcat/3.0.1/e0c8b1f3bb20b08ef532bf58262b4374a6f64d06/spring-boot-starter-tomcat-3.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/jakarta.annotation/jakarta.annotation-api/2.1.1/48b9bda22b091b1f48b13af03fe36db3be6e1ae3/jakarta.annotation-api-2.1.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-webmvc/6.0.3/b0e6742f8dcbf0353d45d1b540b35e0748e58ea7/spring-webmvc-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-websocket/6.0.3/14ee4d76148fea28d341c6e3aa920d724a4d7682/spring-websocket-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-context/6.0.3/a111998c7ba31ea6cd25b23e5a9ea73582af1f89/spring-context-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-aop/6.0.3/ba05b9129c800e7a3febf795724d0be7d4995a7e/spring-aop-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-web/6.0.3/484265303687177c5952e4cb8c141333dc89c7fb/spring-web-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-messaging/6.0.3/1cb421e8659d05a77e82265e72c27babc2b7b073/spring-messaging-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-test/6.0.3/b7be928715aefbcaf44c2ad1ca19c86615886ba0/spring-test-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-orm/6.0.3/9b1603b8c93f638e3f1bbe24f62f2eafc2cdf661/spring-orm-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-jdbc/6.0.3/eec28775713c2a106270e2988be03f603367c92b/spring-jdbc-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/3.0.0/79f898c8a9d926f6434ae53c9a927a299e079663/spring-data-commons-3.0.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-tx/6.0.3/e4673092d71ac1aa36627305d269eaa670d10c9e/spring-tx-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-beans/6.0.3/7ca05b6618b149da38fde262a0d98fc8a6f75d02/spring-beans-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-expression/6.0.3/778ab1fedad855d9d6c79e3e2368b29818589a59/spring-expression-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-core/6.0.3/5314570bb619e4821a3ca0dad28702f9cb7fc114/spring-core-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.33/2cd0a87ff7df953f810c344bdf2fe3340b954c69/snakeyaml-1.33.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-aspects/6.0.3/3c1a00fc7d6ad9c229c81d0b01c77788789cfbbc/spring-aspects-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.aspectj/aspectjweaver/1.9.19/afbffb1210239fbba5cad73093c5b216d515838f/aspectjweaver-1.9.19.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.hibernate.orm/hibernate-core/6.1.6.Final/e2ff7dfc50d16377da7bedbf48a0a2e9db30ac66/hibernate-core-6.1.6.Final.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.jayway.jsonpath/json-path/2.7.0/f9d7d9659f2694e61142046ff8a216c047f263e8/json-path-2.7.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/jakarta.xml.bind/jakarta.xml.bind-api/4.0.0/bbb399208d288b15ec101fa4fcfc4bd77cedc97a/jakarta.xml.bind-api-4.0.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.assertj/assertj-core/3.23.1/d2bb60570f5b3d7ffa8f8000118c9c07b86eca93/assertj-core-3.23.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.hamcrest/hamcrest/2.2/1820c0968dba3a11a1b30669bb1f01978a91dedc/hamcrest-2.2.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-params/5.9.1/ffcd1013edaeee112be11fcddeb38882d79238de/junit-jupiter-params-5.9.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.9.1/7bb53fbc0173e9f6a9d21d58297af94b1f2f9ce1/junit-jupiter-api-5.9.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.9.1/3145f821b5cd10abcdc5f925baa5fffa6f1b628f/junit-platform-commons-1.9.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter/5.9.1/9274d3757e224bc02eae367bd481062a263c150b/junit-jupiter-5.9.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.mockito/mockito-junit-jupiter/4.8.1/e393aa62eca2244a535b03842843f2f199343d1f/mockito-junit-jupiter-4.8.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.mockito/mockito-core/4.8.1/d8eb9dec8747d08645347bb8c69088ac83197975/mockito-core-4.8.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.skyscreamer/jsonassert/1.5.1/6d842d0faf4cf6725c509a5e5347d319ee0431c3/jsonassert-1.5.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.xmlunit/xmlunit-core/2.9.0/8959725d90eecfee28acd7110e2bb8460285d876/xmlunit-core-2.9.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.7.22/5dd2c9dcf64c94b46cf4bdb6fa4035b9bb726e2e/kotlin-stdlib-common-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.4.5/28e7dc0b208d6c3f15beefd73976e064b4ecfa9b/logback-classic-1.4.5.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-to-slf4j/2.19.0/30f4812e43172ecca5041da2cb6b965cc4777c19/log4j-to-slf4j-2.19.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.slf4j/jul-to-slf4j/2.0.6/c4d348977a83a0bfcf42fd6fd1fee6e7904f1a0c/jul-to-slf4j-2.0.6.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-jcl/6.0.3/ce5a18b010a99c58e98d1fa993dcec2148a361a6/spring-jcl-6.0.3.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.zaxxer/HikariCP/5.0.1/a74c7f0a37046846e88d54f7cb6ea6d565c65f9c/HikariCP-5.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/jakarta.persistence/jakarta.persistence-api/3.1.0/66901fa1c373c6aff65c13791cc11da72060a8d6/jakarta.persistence-api-3.1.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/jakarta.transaction/jakarta.transaction-api/2.0.1/51a520e3fae406abb84e2e1148e6746ce3f80a1a/jakarta.transaction-api-2.0.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.6/88c40d8b4f33326f19a7d3c0aaf2c7e8721d4953/slf4j-api-2.0.6.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/2.14.1/f24e8cb1437e05149b7a3049ebd6700f42e664b1/jackson-datatype-jsr310-2.14.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-parameter-names/2.14.1/2e05a86dba3d4b05074b6a313c4d5b7ff844c8dd/jackson-module-parameter-names-2.14.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.14.1/2a6ad504d591a7903ffdec76b5b7252819a2d162/jackson-annotations-2.14.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.14.1/7a07bc535ccf0b7f6929c4d0f2ab9b294ef7c4a3/jackson-core-2.14.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jdk8/2.14.1/da194197d187bf24a8699514344ebf0abd7c342a/jackson-datatype-jdk8-2.14.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.14.1/268524b9056cae1211b9f1f52560ef19347f4d17/jackson-databind-2.14.1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-websocket/10.1.4/d1cc4aaeaf512334dfadc25da7cb5f64fa301632/tomcat-embed-websocket-10.1.4.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-core/10.1.4/9876c0b98b91b5054d32fe5279b21cf8d57991e8/tomcat-embed-core-10.1.4.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.apache.tomcat.embed/tomcat-embed-el/10.1.4/c52d54faef26b3e6fd56fa20c7d7c77ba1216efa/tomcat-embed-el-10.1.4.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/io.micrometer/micrometer-observation/1.10.2/5b63205c0e9f3acf4b84f852ea707f9f9fffda6f/micrometer-observation-1.10.2.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/net.minidev/json-smart/2.4.8/7c62f5f72ab05eb54d40e2abf0360a2fe9ea477f/json-smart-2.4.8.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/jakarta.activation/jakarta.activation-api/2.1.0/a58861b5deac5e151140511cf57d6b80a83f2d20/jakarta.activation-api-2.1.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.12.20/6ec3b8bccc4c988790d8cde5baad3b95609ef136/byte-buddy-1.12.20.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.12.20/c37341e04a529c7263ff3093ecdceaa4ab39b489/byte-buddy-agent-1.12.20.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.vaadin.external.google/android-json/0.0.20131108.vaadin1/fa26d351fe62a6a17f5cda1287c1c6110dec413f/android-json-0.0.20131108.vaadin1.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.4.5/e9bb2ea70f84401314da4300343b0a246c8954da/logback-core-1.4.5.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.19.0/ea1b37f38c327596b216542bc636cfdc0b8036fa/log4j-api-2.19.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/io.micrometer/micrometer-commons/1.10.2/3a97e1874b8ca9c1c08f67d58bf7d567bb748601/micrometer-commons-1.10.2.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/net.minidev/accessors-smart/2.4.8/6e1bee5a530caba91893604d6ab41d0edcecca9a/accessors-smart-2.4.8.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.2.0/28c11eb91f9b6d8e200631d46e20a7f407f2a046/opentest4j-1.2.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.apiguardian/apiguardian-api/1.1.2/a231e0d844d2721b0fa1b238006d15c6ded6842a/apiguardian-api-1.1.2.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.ow2.asm/asm/9.1/a99500cf6eea30535eeac6be73899d048f8d12a8/asm-9.1.jar</arg>
               </args>
             </stringArg>
             <stringArg name="destination" arg="$MODULE_DIR$/../../system/build/classes/kotlin/test" />
+            <stringArg name="jvmTarget" arg="1.8" />
             <stringArg name="moduleName" arg="system" />
-            <stringArg name="apiVersion" arg="1.5" />
-            <stringArg name="languageVersion" arg="1.5" />
+            <stringArg name="apiVersion" arg="1.7" />
+            <stringArg name="languageVersion" arg="1.7" />
           </stringArguments>
           <arrayArguments>
             <arrayArg name="friendPaths">
@@ -132,20 +126,19 @@
             </arrayArg>
             <arrayArg name="pluginClasspaths">
               <args>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/1.5.31/d854edda951feb05387ada385f8f3462ec01a885/kotlin-scripting-jvm-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/1.5.31/512a5997987cd210dcd5442da6aef00a5c12de90/kotlin-scripting-common-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.5.2/f4cc07a50437659e0043e7da762809a46932b6a0/kotlinx-coroutines-core-jvm-1.5.2.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.5.31/ff5d99aecd328872494e8921b72bf6e3af97af3e/kotlin-stdlib-jdk8-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.5.31/77e0f2568912e45d26c31fd417a332458508acdf/kotlin-stdlib-jdk7-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.5.31/6628d61d0f5603568e72d2d5915d2c034b4f1c55/kotlin-stdlib-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-api/1.5.31/a06ef07ca3822b0d9c11c69296cd27765f4ed5bb/kotlin-gradle-plugin-api-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-model/1.5.31/fa84cbab82c2d4a4e2d0c77520a07c2f146b773f/kotlin-gradle-plugin-model-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.5.31/43331609c7de811fed085e0dfd150874b157c32/kotlin-stdlib-common-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-native-utils/1.5.31/3f56bbbc08afd14fbb94bcd558b861be66a3cba9/kotlin-native-utils-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-project-model/1.5.31/3a6adaf7f626af7ce62a3734975eb2154ae12e58/kotlin-project-model-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/1.5.31/aaea854be2cfc06373dfc11be5a6ba9ca5ca84a6/kotlin-script-runtime-1.5.31.jar</arg>
-                <arg>$MODULE_DIR$/../../../../../Applications/Tools/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-util-io/1.5.31/61c784021068d1ddd347eeba86384dbf92c725ca/kotlin-util-io-1.5.31.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/1.7.22/496ed7206d5d7ddb1bc3fc5ecb357558a26e1954/kotlin-scripting-jvm-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/1.7.22/98ac39f8f50d398e9e8df8a1d30fc854f83f3629/kotlin-scripting-common-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.7.22/9fb43bccb6cf8cfaaf3776c75f5df4f052f09b72/kotlin-stdlib-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-model/1.7.22/afe178b910a87756ef8e8cad36ba4cc3e9cb955a/kotlin-gradle-plugin-model-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-api/1.7.22/e13b22bd53f54f3c01b3a4c86f54d95585a457a5/kotlin-gradle-plugin-api-1.7.22-gradle71.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-api/1.7.22/e13b22bd53f54f3c01b3a4c86f54d95585a457a5/kotlin-gradle-plugin-api-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.7.22/5dd2c9dcf64c94b46cf4bdb6fa4035b9bb726e2e/kotlin-stdlib-common-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-native-utils/1.7.22/89b1c8999ee0b8963f736e65bd30d76b0aa0728d/kotlin-native-utils-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-project-model/1.7.22/648610014d3797c3f914830c9a77dd736cb92cab/kotlin-project-model-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-tooling-core/1.7.22/19c84dd609449479dd647cfb8b885f6430501a21/kotlin-tooling-core-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/1.7.22/703a4d56168f3517532bc04481e3c8b751f685cb/kotlin-script-runtime-1.7.22.jar</arg>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-util-io/1.7.22/c7c029364a8ec73bca0721095e03496acf25da50/kotlin-util-io-1.7.22.jar</arg>
                 <arg>$KOTLIN_BUNDLED$/lib/allopen-compiler-plugin.jar</arg>
               </args>
             </arrayArg>
@@ -163,6 +156,16 @@
         </compilerArguments>
       </configuration>
     </facet>
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="Hibernate" />
+        <datasource-mapping>
+          <factory-entry name="entityManagerFactory" />
+        </datasource-mapping>
+        <naming-strategy-map />
+      </configuration>
+    </facet>
   </component>
   <component name="NewModuleRootManager">
     <output-test url="file://$MODULE_DIR$/../../system/build/classes/java/test" />
@@ -174,106 +177,107 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="system.main" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.31" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.22" level="project" />
     <orderEntry type="module" module-name="system.common.main" />
-    <orderEntry type="module" module-name="system.kernel.main" />
+    <orderEntry type="module" module-name="indi.sly.system.system.kernel.main" />
     <orderEntry type="module" module-name="system.services.main" />
-    <orderEntry type="library" name="Gradle: com.microsoft.sqlserver:mssql-jdbc:9.4.0.jre16" level="project" />
-    <orderEntry type="library" name="Gradle: javax.inject:javax.inject:1" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-data-jpa:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-aop:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-websocket:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-web:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-test:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.31" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.5.31" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-jdbc:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.data:spring-data-jpa:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-aspects:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: jakarta.transaction:jakarta.transaction-api:1.3.3" level="project" />
-    <orderEntry type="library" name="Gradle: jakarta.persistence:jakarta.persistence-api:2.2.3" level="project" />
-    <orderEntry type="library" name="Gradle: org.hibernate:hibernate-core:5.4.32.Final" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-aop:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: org.aspectj:aspectjweaver:1.9.7" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-websocket:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-messaging:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-json:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-tomcat:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-webmvc:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-web:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test-autoconfigure:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-test:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-core:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: com.jayway.jsonpath:json-path:2.5.0" level="project" />
-    <orderEntry type="library" name="Gradle: jakarta.xml.bind:jakarta.xml.bind-api:2.3.3" level="project" />
-    <orderEntry type="library" name="Gradle: org.assertj:assertj-core:3.19.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.microsoft.sqlserver:mssql-jdbc:11.2.2.jre17" level="project" />
+    <orderEntry type="library" name="Gradle: jakarta.inject:jakarta.inject-api:2.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-data-jpa:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-aop:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-websocket:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-web:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-test:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.22" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.7.22" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-jdbc:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.data:spring-data-jpa:3.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-aspects:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.hibernate.orm:hibernate-core:6.1.6.Final" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-aop:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.aspectj:aspectjweaver:1.9.19" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-websocket:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-messaging:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-json:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-tomcat:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-webmvc:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-web:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test-autoconfigure:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-test:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-core:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.jayway.jsonpath:json-path:2.7.0" level="project" />
+    <orderEntry type="library" name="Gradle: jakarta.xml.bind:jakarta.xml.bind-api:4.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.assertj:assertj-core:3.23.1" level="project" />
     <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest:2.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter:5.7.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.mockito:mockito-junit-jupiter:3.9.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.mockito:mockito-core:3.9.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.skyscreamer:jsonassert:1.5.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.xmlunit:xmlunit-core:2.8.3" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-autoconfigure:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-logging:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: jakarta.annotation:jakarta.annotation-api:1.3.5" level="project" />
-    <orderEntry type="library" name="Gradle: org.yaml:snakeyaml:1.28" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter:5.9.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.mockito:mockito-junit-jupiter:4.8.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.mockito:mockito-core:4.8.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.skyscreamer:jsonassert:1.5.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.xmlunit:xmlunit-core:2.9.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-autoconfigure:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-logging:3.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: jakarta.annotation:jakarta.annotation-api:2.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.yaml:snakeyaml:1.33" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.7.22" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.5.31" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-jdbc:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: com.zaxxer:HikariCP:4.0.3" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-context:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-orm:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework.data:spring-data-commons:2.5.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-tx:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-beans:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.32" level="project" />
-    <orderEntry type="library" name="Gradle: org.glassfish.jaxb:jaxb-runtime:2.3.5" level="project" />
-    <orderEntry type="library" name="Gradle: org.hibernate.common:hibernate-commons-annotations:5.1.2.Final" level="project" />
-    <orderEntry type="library" name="Gradle: org.jboss.logging:jboss-logging:3.4.2.Final" level="project" />
-    <orderEntry type="library" name="Gradle: org.javassist:javassist:3.27.0-GA" level="project" />
-    <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy:1.10.22" level="project" />
-    <orderEntry type="library" name="Gradle: antlr:antlr:2.7.7" level="project" />
-    <orderEntry type="library" name="Gradle: org.jboss:jandex:2.2.3.Final" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml:classmate:1.5.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.dom4j:dom4j:2.1.3" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.5" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.module:jackson-module-parameter-names:2.12.5" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.12.5" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.12.5" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.tomcat.embed:tomcat-embed-websocket:9.0.54" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.tomcat.embed:tomcat-embed-core:9.0.54" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.tomcat.embed:tomcat-embed-el:9.0.54" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-expression:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: org.springframework:spring-jcl:5.3.12" level="project" />
-    <orderEntry type="library" name="Gradle: net.minidev:json-smart:2.4.7" level="project" />
-    <orderEntry type="library" name="Gradle: jakarta.activation:jakarta.activation-api:1.2.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-params:5.7.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-api:5.7.2" level="project" />
-    <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy-agent:1.10.22" level="project" />
-    <orderEntry type="library" name="Gradle: org.objenesis:objenesis:3.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-jdbc:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.zaxxer:HikariCP:5.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-context:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-orm:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.data:spring-data-commons:3.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-tx:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-beans:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:2.0.6" level="project" />
+    <orderEntry type="library" name="Gradle: jakarta.persistence:jakarta.persistence-api:3.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: jakarta.transaction:jakarta.transaction-api:2.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.module:jackson-module-parameter-names:2.14.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.14.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat.embed:tomcat-embed-websocket:10.1.4" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat.embed:tomcat-embed-core:10.1.4" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat.embed:tomcat-embed-el:10.1.4" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-expression:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: io.micrometer:micrometer-observation:1.10.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-jcl:6.0.3" level="project" />
+    <orderEntry type="library" name="Gradle: net.minidev:json-smart:2.4.8" level="project" />
+    <orderEntry type="library" name="Gradle: jakarta.activation:jakarta.activation-api:2.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy:1.12.20" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-params:5.9.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-api:5.9.1" level="project" />
+    <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy-agent:1.12.20" level="project" />
     <orderEntry type="library" name="Gradle: com.vaadin.external.google:android-json:0.0.20131108.vaadin1" level="project" />
-    <orderEntry type="library" name="Gradle: ch.qos.logback:logback-classic:1.2.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-to-slf4j:2.14.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.slf4j:jul-to-slf4j:1.7.32" level="project" />
-    <orderEntry type="library" name="Gradle: org.glassfish.jaxb:txw2:2.3.5" level="project" />
-    <orderEntry type="library" name="Gradle: com.sun.istack:istack-commons-runtime:3.0.12" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.12.5" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.12.5" level="project" />
-    <orderEntry type="library" name="Gradle: net.minidev:accessors-smart:2.4.7" level="project" />
-    <orderEntry type="library" name="Gradle: org.apiguardian:apiguardian-api:1.1.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.junit.platform:junit-platform-commons:1.7.2" level="project" />
+    <orderEntry type="library" name="Gradle: ch.qos.logback:logback-classic:1.4.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-to-slf4j:2.19.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:jul-to-slf4j:2.0.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.14.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.14.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.micrometer:micrometer-commons:1.10.2" level="project" />
+    <orderEntry type="library" name="Gradle: net.minidev:accessors-smart:2.4.8" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.apiguardian:apiguardian-api:1.1.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.platform:junit-platform-commons:1.9.1" level="project" />
     <orderEntry type="library" name="Gradle: org.opentest4j:opentest4j:1.2.0" level="project" />
-    <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.2.6" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-api:2.14.1" level="project" />
+    <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.4.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-api:2.19.0" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm:9.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.apache.commons:commons-lang3:3.12.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.apache.commons:commons-collections4:4.4" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.junit.jupiter:junit-jupiter-engine:5.7.2" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: com.sun.activation:jakarta.activation:1.2.2" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.junit.platform:junit-platform-engine:1.7.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.glassfish.jaxb:jaxb-runtime:4.0.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jboss.logging:jboss-logging:3.5.0.Final" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.hibernate.common:hibernate-commons-annotations:6.0.2.Final" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jboss:jandex:2.4.2.Final" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: com.fasterxml:classmate:1.5.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.antlr:antlr4-runtime:4.10.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.junit.jupiter:junit-jupiter-engine:5.9.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.objenesis:objenesis:3.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.glassfish.jaxb:jaxb-core:4.0.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.junit.platform:junit-platform-engine:1.9.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.eclipse.angus:angus-activation:1.0.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.glassfish.jaxb:txw2:4.0.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: com.sun.istack:istack-commons-runtime:4.1.1" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="system.main" />
 </module>

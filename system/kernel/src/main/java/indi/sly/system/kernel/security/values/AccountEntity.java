@@ -3,7 +3,7 @@ package indi.sly.system.kernel.security.values;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.values.AEntity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;

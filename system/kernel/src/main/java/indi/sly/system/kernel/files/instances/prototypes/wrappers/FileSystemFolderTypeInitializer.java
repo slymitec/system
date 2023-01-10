@@ -20,7 +20,7 @@ import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

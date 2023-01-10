@@ -5,8 +5,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.objenesis.SpringObjenesis;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 @Named
 @Singleton
@@ -20,7 +20,6 @@ public class SpringHelper implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         SpringHelper.applicationContext = applicationContext;
-
     }
 
     public static <T> T getInstance(Class<T> clazz) throws BeansException {

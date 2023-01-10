@@ -6,7 +6,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.core.values.HandleEntryDefinition;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;

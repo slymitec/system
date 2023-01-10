@@ -1,5 +1,5 @@
 dependencies {
-    implementation("javax.inject:javax.inject:1")
+    implementation("jakarta.inject:jakarta.inject-api:2.0.1")
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("org.apache.commons:commons-lang3")
     implementation("com.fasterxml.jackson.core:jackson-core")

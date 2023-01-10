@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SlySystem 1.1.iml" filepath="$PROJECT_DIR$/.idea/SlySystem 1.1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kernel/indi.sly.system.system.kernel.main.iml" filepath="$PROJECT_DIR$/.idea/modules/kernel/indi.sly.system.system.kernel.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/system.iml" filepath="$PROJECT_DIR$/.idea/modules/system.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/system.common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/system.common.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/system.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/system.common.main.iml" />

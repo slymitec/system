@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework:spring-webmvc:6.0.3">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-webmvc/6.0.3/b0e6742f8dcbf0353d45d1b540b35e0748e58ea7/spring-webmvc-6.0.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework/spring-webmvc/6.0.3/699ff31da9c75f8cb902b46a7b25d4b843280221/spring-webmvc-6.0.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -13,7 +13,7 @@ spring:
     location: classpath:logo.txt
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: "jdbc:sqlserver://;database=SlySystem;server=localhost;port=21433"
+    url: "jdbc:sqlserver://;database=SlySystem;server=localhost;port=21433;encrypt=true;trustServerCertificate=true"
     username: "sa"
     password: "s34+l510*y24"
   task:
@@ -24,6 +24,7 @@ spring:
 
   jpa:
     database: SQL_SERVER
+    database-platform: "org.hibernate.dialect.SQLServerDialect"
     hibernate:
       ddl-auto: update
     open-in-view: false

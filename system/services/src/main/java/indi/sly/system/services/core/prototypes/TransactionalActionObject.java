@@ -2,11 +2,11 @@ package indi.sly.system.services.core.prototypes;
 
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.kernel.core.prototypes.APrototype;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import javax.inject.Named;
-import javax.transaction.Transactional;
+import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework.boot:spring-boot-starter-tomcat:3.0.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-tomcat/3.0.1/e0c8b1f3bb20b08ef532bf58262b4374a6f64d06/spring-boot-starter-tomcat-3.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-tomcat/3.0.1/409c802c45d0d109979cb19091704fa745543683/spring-boot-starter-tomcat-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

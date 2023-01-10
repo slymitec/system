@@ -2,8 +2,8 @@ package indi.sly.system.kernel.objects.values;
 
 import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.values.AEntity;
+import jakarta.persistence.*;
 
-import javax.persistence.*;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;

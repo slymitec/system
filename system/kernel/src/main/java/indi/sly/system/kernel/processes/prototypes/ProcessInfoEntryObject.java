@@ -217,7 +217,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         InfoObject info;
         if (!identifications.isEmpty()) {
             info = objectManager.get(identifications.subList(0, identifications.size() - 1));
-            info = info.rebuildChild(identifications.get(identifications.size() - 1), infoOpen);
+            info = info.rebuildChild(identifications.get(identifications.size() - 1), ()-> infoOpen);
         } else {
             info = objectManager.get(identifications);
         }

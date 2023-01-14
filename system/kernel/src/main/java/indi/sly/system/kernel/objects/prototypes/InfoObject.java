@@ -251,7 +251,8 @@ public class InfoObject extends AObject {
         return this.rebuildChild(identification, null);
     }
 
-    public synchronized InfoObject rebuildChild(IdentificationDefinition identification, InfoOpenDefinition infoOpen) {
+    public synchronized InfoObject rebuildChild(IdentificationDefinition identification,
+                                                Provider<InfoOpenDefinition> infoOpenProvider) {
         if (ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
@@ -264,6 +265,13 @@ public class InfoObject extends AObject {
         List<InfoProcessorGetOrRebuildChildFunction> resolvers = this.processorMediator.getGetOrRebuildChilds();
 
         InfoEntity childInfo = null;
+
+        InfoOpenDefinition infoOpen;
+        if(ObjectUtil.allNotNull(infoOpenProvider)){
+            infoOpen = infoOpenProvider.acquire();
+        }else {
+            infoOpen = null;
+        }
 
         for (InfoProcessorGetOrRebuildChildFunction resolver : resolvers) {
             childInfo = resolver.apply(childInfo, info, type, this.status, identification, infoOpen);

@@ -2,6 +2,7 @@ package indi.sly.system.kernel.memory.repositories.prototypes;
 
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
+import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.kernel.objects.values.InfoRelationEntity;
 
 import java.util.List;
@@ -18,7 +19,13 @@ public abstract class AInfoRepositoryObject extends AObject {
 
     public abstract void lock(InfoEntity info, long lock);
 
-    public abstract List<InfoRelationEntity> listRelation(InfoEntity info);
+    public abstract InfoRelationEntity getRelation(InfoEntity info, UUID id);
+
+    public abstract InfoRelationEntity getRelation(InfoEntity info, String name);
+
+    public abstract List<InfoRelationEntity> listRelation(InfoEntity info, InfoWildcardDefinition wildcard);
+
+    public abstract int countRelation(InfoEntity info, InfoWildcardDefinition wildcard);
 
     public abstract void addRelation(InfoRelationEntity infoRelation);
 

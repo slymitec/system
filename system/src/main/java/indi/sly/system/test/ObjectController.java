@@ -3,6 +3,7 @@ package indi.sly.system.test;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.services.face.AController;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
@@ -69,13 +70,13 @@ public class ObjectController extends AController {
         UUID type = info.getType();
         if (type.equals(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID)
                 || type.equals(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID)) {
-            Set<InfoSummaryDefinition> infoSummaries = info.queryChild(infoSummaryDefinition -> true);
+            Set<InfoSummaryDefinition> infoSummaries = info.queryChild(new InfoWildcardDefinition());
             for (InfoSummaryDefinition infoSummary : infoSummaries) {
                 InfoObject childInfo = info.getChild(new IdentificationDefinition(infoSummary.getName()));
                 this.objectsDisplay(kernelConfiguration, paths, childInfo);
             }
         } else if (type.equals(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID)) {
-            Set<InfoSummaryDefinition> infoSummaries = info.queryChild(infoSummaryDefinition -> true);
+            Set<InfoSummaryDefinition> infoSummaries = info.queryChild(new InfoWildcardDefinition());
             for (InfoSummaryDefinition infoSummary : infoSummaries) {
                 InfoObject childInfo = info.getChild(new IdentificationDefinition(infoSummary.getID()));
                 this.objectsDisplay(kernelConfiguration, paths, childInfo);

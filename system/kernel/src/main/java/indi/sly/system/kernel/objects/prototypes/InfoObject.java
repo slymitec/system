@@ -23,6 +23,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.*;
 
 @Named
@@ -214,8 +215,7 @@ public class InfoObject extends AObject {
         }
     }
 
-    public synchronized InfoObject createChildAndOpen(UUID type, IdentificationDefinition identification,
-                                                      long openAttribute, Object... arguments) {
+    public synchronized InfoObject createChildAndOpen(UUID type, IdentificationDefinition identification, long openAttribute, Object... arguments) {
         if (ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
@@ -251,8 +251,7 @@ public class InfoObject extends AObject {
         return this.rebuildChild(identification, null);
     }
 
-    public synchronized InfoObject rebuildChild(IdentificationDefinition identification,
-                                                Provider<InfoOpenDefinition> infoOpenProvider) {
+    public synchronized InfoObject rebuildChild(IdentificationDefinition identification, Provider<InfoOpenDefinition> infoOpenProvider) {
         if (ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
@@ -267,9 +266,9 @@ public class InfoObject extends AObject {
         InfoEntity childInfo = null;
 
         InfoOpenDefinition infoOpen;
-        if(ObjectUtil.allNotNull(infoOpenProvider)){
+        if (ObjectUtil.allNotNull(infoOpenProvider)) {
             infoOpen = infoOpenProvider.acquire();
-        }else {
+        } else {
             infoOpen = null;
         }
 
@@ -301,7 +300,7 @@ public class InfoObject extends AObject {
         }
     }
 
-    public synchronized Set<InfoSummaryDefinition> queryChild(InfoQueryChildPredicate wildcard) {
+    public synchronized Set<InfoSummaryDefinition> queryChild(InfoWildcardDefinition wildcard) {
         if (ObjectUtil.isAnyNull(wildcard)) {
             throw new ConditionParametersException();
         }
@@ -322,8 +321,7 @@ public class InfoObject extends AObject {
         return infoSummaries;
     }
 
-    public synchronized void renameChild(IdentificationDefinition oldIdentification,
-                                         IdentificationDefinition newIdentification) {
+    public synchronized void renameChild(IdentificationDefinition oldIdentification, IdentificationDefinition newIdentification) {
         if (ObjectUtil.isAnyNull(oldIdentification, newIdentification)) {
             throw new ConditionParametersException();
         }

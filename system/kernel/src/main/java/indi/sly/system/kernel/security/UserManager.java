@@ -19,6 +19,7 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeI
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
+import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,14 +52,11 @@ public class UserManager extends AManager {
 
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
-            long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_READ,
-                    TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
-                    TypeInitializerAttributeType.HAS_PROPERTIES);
+            long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_READ, TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
             Set<UUID> childTypes = Set.of();
             AInfoTypeInitializer typeInitializer = this.factoryManager.create(AuditTypeInitializer.class);
 
-            typeManager.create(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID,
-                    kernelConfiguration.SECURITY_INSTANCE_AUDIT_NAME, attribute, childTypes, typeInitializer);
+            typeManager.create(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID, kernelConfiguration.SECURITY_INSTANCE_AUDIT_NAME, attribute, childTypes, typeInitializer);
         }
     }
 
@@ -186,10 +185,11 @@ public class UserManager extends AManager {
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions")));
-        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+
+        InfoWildcardDefinition wildcard = new InfoWildcardDefinition(account.getName());
+        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                    new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -197,10 +197,7 @@ public class UserManager extends AManager {
             permission.getUserID().setID(account.getID());
             permission.getUserID().setType(UserType.ACCOUNT);
             permission.setScope(AccessControlScopeType.ALL);
-            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
-                    PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
-                    PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW,
-                    PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
+            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
             permissions.add(permission);
             permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_USERS_ID);
             permission.getUserID().setType(UserType.GROUP);
@@ -214,10 +211,9 @@ public class UserManager extends AManager {
         }
 
         parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-        infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                    new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -225,10 +221,7 @@ public class UserManager extends AManager {
             permission.getUserID().setID(account.getID());
             permission.getUserID().setType(UserType.ACCOUNT);
             permission.setScope(AccessControlScopeType.ALL);
-            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
-                    PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
-                    PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW,
-                    PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
+            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
             auditSecurityDescriptor.setInherit(false);
@@ -236,12 +229,10 @@ public class UserManager extends AManager {
             childInfo.close();
         }
 
-        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"),
-                new IdentificationDefinition("Main"), new IdentificationDefinition("Home")));
-        infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"), new IdentificationDefinition("Main"), new IdentificationDefinition("Home")));
+        infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
-                    new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -249,10 +240,7 @@ public class UserManager extends AManager {
             permission.getUserID().setID(account.getID());
             permission.getUserID().setType(UserType.ACCOUNT);
             permission.setScope(AccessControlScopeType.ALL);
-            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
-                    PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
-                    PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW,
-                    PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
+            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
             auditSecurityDescriptor.setInherit(false);
@@ -277,29 +265,29 @@ public class UserManager extends AManager {
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions")));
-        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+
+        InfoWildcardDefinition infoQueryChildWildcard = new InfoWildcardDefinition(account.getName());
+        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoQueryChildWildcard);
         if (!infoSummaries.isEmpty()) {
             parentInfo.deleteChild(new IdentificationDefinition(account.getName()));
         }
 
         parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-        infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        infoSummaries = parentInfo.queryChild(infoQueryChildWildcard);
         if (!infoSummaries.isEmpty()) {
             InfoObject childInfo = parentInfo.getChild(new IdentificationDefinition(account.getName()));
 
-            infoSummaries = childInfo.queryChild(infoSummaryDefinition -> true);
+            infoSummaries = childInfo.queryChild(new InfoWildcardDefinition());
             for (InfoSummaryDefinition auditInfoSummary : infoSummaries) {
                 childInfo.deleteChild(new IdentificationDefinition(auditInfoSummary.getID()));
             }
             parentInfo.deleteChild(new IdentificationDefinition(account.getID()));
         }
 
-        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"),
-                new IdentificationDefinition("Main"), new IdentificationDefinition("Home")));
-        infoSummaries = parentInfo.queryChild(infoSummary -> account.getName().equals(infoSummary.getName()));
+        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"), new IdentificationDefinition("Main"), new IdentificationDefinition("Home")));
+        infoSummaries = parentInfo.queryChild(infoQueryChildWildcard);
         if (!infoSummaries.isEmpty()) {
-            parentInfo.renameChild(new IdentificationDefinition(account.getName()),
-                    new IdentificationDefinition(account.getName() + "_Deleted"));
+            parentInfo.renameChild(new IdentificationDefinition(account.getName()), new IdentificationDefinition(account.getName() + "_Deleted"));
         }
 
         accountBuilder.delete(accountID);
@@ -337,8 +325,7 @@ public class UserManager extends AManager {
         return this.authorize(accountName, accountPassword, null);
     }
 
-    public AccountAuthorizationObject authorize(String accountName, String accountPassword,
-                                                AccountAuthorizationTokenDefinition accountAuthorizationToken) {
+    public AccountAuthorizationObject authorize(String accountName, String accountPassword, AccountAuthorizationTokenDefinition accountAuthorizationToken) {
         if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }
@@ -352,8 +339,7 @@ public class UserManager extends AManager {
 
         AccountObject account = this.getTargetAccount(accountName);
 
-        if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                && !ObjectUtil.equals(account.getPassword(), accountPassword)) {
+        if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT) && !ObjectUtil.equals(account.getPassword(), accountPassword)) {
             throw new ConditionRefuseException();
         }
 

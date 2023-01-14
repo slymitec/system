@@ -10,13 +10,14 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.instances.prototypes.NamelessFolderContentObject;
-import indi.sly.system.kernel.objects.lang.InfoQueryChildPredicate;
+import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,12 +34,9 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
     @Override
     public void deleteProcedure(InfoEntity info) {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
-                info.getType()));
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
-        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
-
-        if (!infoRelations.isEmpty()) {
+        if (infoRepository.countRelation(info, null) > 0) {
             throw new StatusIsUsedException();
         }
     }
@@ -50,17 +48,14 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
-                info.getType()));
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
         try {
             this.lockProcedure(info, LockType.WRITE);
 
-            List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
-            for (InfoRelationEntity infoRelation : infoRelations) {
-                if (infoRelation.getID().equals(childInfo.getID())) {
-                    throw new StatusAlreadyExistedException();
-                }
+            InfoWildcardDefinition wildcard = new InfoWildcardDefinition(childInfo.getID());
+            if (infoRepository.countRelation(info, wildcard) > 0) {
+                throw new StatusAlreadyExistedException();
             }
 
             InfoRelationEntity infoRelation = new InfoRelationEntity();
@@ -85,29 +80,16 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
         InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject entityRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
-                info.getType()));
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
         try {
             this.lockProcedure(info, LockType.READ);
 
-            List<InfoRelationEntity> infoRelations = entityRepository.listRelation(info);
+            InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoID);
 
-            boolean isFinished = false;
-            for (InfoRelationEntity infoRelation : infoRelations) {
-                if (infoRelation.getID().equals(childInfoID)) {
-                    infoSummary.setID(infoRelation.getID());
-                    infoSummary.setType(infoRelation.getType());
-                    infoSummary.setName(infoRelation.getName());
-
-                    isFinished = true;
-                    break;
-                }
-            }
-
-            if (!isFinished) {
-                throw new StatusNotExistedException();
-            }
+            infoSummary.setID(infoRelation.getID());
+            infoSummary.setType(infoRelation.getType());
+            infoSummary.setName(infoRelation.getName());
         } finally {
             this.lockProcedure(info, LockType.NONE);
         }
@@ -116,26 +98,23 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoQueryChildPredicate wildcard) {
+    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardDefinition wildcard) {
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
-                info.getType()));
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
         try {
             this.lockProcedure(info, LockType.READ);
 
-            List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
+            List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
             for (InfoRelationEntity infoRelation : infoRelations) {
                 InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
                 infoSummary.setID(infoRelation.getID());
                 infoSummary.setType(infoRelation.getType());
                 infoSummary.setName(infoRelation.getName());
 
-                if (wildcard.test(infoSummary)) {
-                    infoSummaries.add(infoSummary);
-                }
+                infoSummaries.add(infoSummary);
             }
         } finally {
             this.lockProcedure(info, LockType.NONE);
@@ -153,27 +132,14 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
         UUID childInfoID = UUIDUtil.readFormBytes(identification.getID());
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(),
-                info.getType()));
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
         try {
             this.lockProcedure(info, LockType.WRITE);
 
-            List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info);
+            InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoID);
 
-            boolean isFinished = false;
-            for (InfoRelationEntity infoRelation : infoRelations) {
-                if (infoRelation.getID().equals(childInfoID)) {
-                    infoRepository.deleteRelation(infoRelation);
-
-                    isFinished = true;
-                    break;
-                }
-            }
-
-            if (!isFinished) {
-                throw new StatusNotExistedException();
-            }
+            infoRepository.deleteRelation(infoRelation);
         } finally {
             this.lockProcedure(info, LockType.NONE);
         }

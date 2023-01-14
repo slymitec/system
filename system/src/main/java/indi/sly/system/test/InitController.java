@@ -2,6 +2,7 @@ package indi.sly.system.test;
 
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.services.face.AController;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
@@ -29,6 +30,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+
 import java.util.*;
 
 @RestController
@@ -56,10 +58,10 @@ public class InitController extends AController {
 
         InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files")));
 
-        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoSummary -> "Volume".equals(infoSummary.getName()));
+        InfoWildcardDefinition wildcard = new InfoWildcardDefinition("Volume");
+        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
-                    new IdentificationDefinition("Volume"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentificationDefinition("Volume"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
             FileSystemFolderContentObject folderContent = (FileSystemFolderContentObject) childInfo.getContent();
             folderContent.setType(FileSystemLocationType.MAPPING);
             folderContent.setValue(StringUtil.writeToBytes("C:/Users/Sly/Desktop/SlySystem/Volume"));
@@ -67,10 +69,10 @@ public class InitController extends AController {
         }
 
         parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"), new IdentificationDefinition("Volume")));
-        infoSummaries = parentInfo.queryChild(infoSummary -> "Test.bin".equals(infoSummary.getName()));
+        wildcard = new InfoWildcardDefinition("Test.bin");
+        infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID,
-                    new IdentificationDefinition("Test.bin"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID, new IdentificationDefinition("Test.bin"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
             FileSystemFileContentObject fileContent = (FileSystemFileContentObject) childInfo.getContent();
             fileContent.write(StringUtil.writeToBytes("{\"id\":\"f912d8f2-37ed-4c11-88e0-cb4a6e7eb147\",\"supportedSession\":2,\"name\":\"测试程序\",\"serverURL\":\"http://1.2.3.4\",\"configurations\":{\"配置1\":\"数值1\",\"配置2\":\"数值2\"}}"));
             fileContent.close();
@@ -89,8 +91,7 @@ public class InitController extends AController {
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
-        InfoObject execInfo = objectManager.get(List.of(new IdentificationDefinition("Files"),
-                new IdentificationDefinition("Volume"), new IdentificationDefinition("Test.bin")));
+        InfoObject execInfo = objectManager.get(List.of(new IdentificationDefinition("Files"), new IdentificationDefinition("Volume"), new IdentificationDefinition("Test.bin")));
         UUID handle = execInfo.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
         ProcessObject process = processManager.create(accountAuthorization, handle, null, null);
 

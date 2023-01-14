@@ -3,15 +3,11 @@ package indi.sly.system.kernel.memory.repositories.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
-import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoRelationEntity;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-
+import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
@@ -20,6 +16,9 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -35,8 +34,6 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new ConditionParametersException();
         }
 
-        //this.logger.warn(".contain(" + id + ");");
-
         InfoEntity info = this.entityManager.find(InfoEntity.class, id);
 
         return ObjectUtil.allNotNull(info);
@@ -47,8 +44,6 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
-
-        //this.logger.warn(".get(" + id + ");");
 
         InfoEntity info = this.entityManager.find(InfoEntity.class, id);
 
@@ -69,8 +64,6 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new StatusAlreadyExistedException();
         }
 
-        //this.logger.warn(".add(" + info.getID() + ");");
-
         return this.entityManager.merge(info);
     }
 
@@ -84,8 +77,6 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new StatusNotExistedException();
         }
 
-        //this.logger.warn(".delete(" + info.getID() + ");");
-
         this.entityManager.remove(info);
     }
 
@@ -96,8 +87,6 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         }
 
         LockModeType lockMode = this.entityManager.getLockMode(info);
-
-        //this.logger.warn(".lock(" + info.getID() + ", " + lock + "); Current lockMode is " + lockMode);
 
         if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
             return;
@@ -123,31 +112,126 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
         this.entityManager.lock(info, lockMode);
 
-        List<InfoRelationEntity> relations = this.listRelation(info);
+        List<InfoRelationEntity> relations = this.listRelation(info, null);
         for (InfoRelationEntity relation : relations) {
             this.entityManager.lock(relation, lockMode);
         }
     }
 
     @Override
-    public List<InfoRelationEntity> listRelation(InfoEntity info) {
-        if (ObjectUtil.isAnyNull(info)) {
+    public InfoRelationEntity getRelation(InfoEntity info, UUID id) {
+        if (ObjectUtil.isAnyNull(info) || ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
-
-        //this.logger.warn(".listRelation(" + info.getID() + ");");
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<InfoRelationEntity> criteriaQuery = criteriaBuilder.createQuery(InfoRelationEntity.class);
         Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
         criteriaQuery.select(root);
         criteriaQuery.where(criteriaBuilder.equal(root.get("parentID"), info.getID()));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("id"), id));
         TypedQuery<InfoRelationEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
         List<InfoRelationEntity> relations = typedQuery.getResultList();
 
-        //this.logger.warn("-.listRelation(" + relations.size() + ");");
+        if (relations.isEmpty()) {
+            throw new StatusNotExistedException();
+        }
+
+        return relations.get(0);
+    }
+
+    @Override
+    public InfoRelationEntity getRelation(InfoEntity info, String name) {
+        if (ObjectUtil.isAnyNull(info) || StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<InfoRelationEntity> criteriaQuery = criteriaBuilder.createQuery(InfoRelationEntity.class);
+        Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
+        criteriaQuery.select(root);
+        criteriaQuery.where(criteriaBuilder.equal(root.get("parentID"), info.getID()));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("name"), name));
+        TypedQuery<InfoRelationEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
+        List<InfoRelationEntity> relations = typedQuery.getResultList();
+
+        if (relations.isEmpty()) {
+            throw new StatusNotExistedException();
+        }
+
+        return relations.get(0);
+    }
+
+    @Override
+    public List<InfoRelationEntity> listRelation(InfoEntity info, InfoWildcardDefinition wildcard) {
+        if (ObjectUtil.isAnyNull(info)) {
+            throw new ConditionParametersException();
+        }
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<InfoRelationEntity> criteriaQuery = criteriaBuilder.createQuery(InfoRelationEntity.class);
+        Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
+        criteriaQuery.select(root);
+        criteriaQuery.where(criteriaBuilder.equal(root.get("parentID"), info.getID()));
+        if (!ValueUtil.isAnyNullOrEmpty(wildcard)) {
+            if (wildcard.isFuzzy()) {
+                if (wildcard.getType() == String.class) {
+                    String wildcardValue = StringUtil.readFormBytes(wildcard.getValue());
+                    wildcardValue = wildcardValue.replace("[", "[[]");
+                    wildcardValue = wildcardValue.replace("%", "[%]");
+                    wildcardValue = wildcardValue.replace("_", "[_]");
+                    wildcardValue = wildcardValue.replace('*', '%');
+                    wildcardValue = wildcardValue.replace('?', '_');
+                    criteriaQuery.where(criteriaBuilder.like(root.get("name"), wildcardValue));
+                }
+            } else {
+                if (wildcard.getType() == String.class) {
+                    criteriaQuery.where(criteriaBuilder.equal(root.get("name"), StringUtil.readFormBytes(wildcard.getValue())));
+                } else if (wildcard.getType() == UUID.class) {
+                    criteriaQuery.where(criteriaBuilder.equal(root.get("id"), UUIDUtil.readFormBytes(wildcard.getValue())));
+                }
+            }
+        }
+        TypedQuery<InfoRelationEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
+        List<InfoRelationEntity> relations = typedQuery.getResultList();
 
         return relations;
+    }
+
+    @Override
+    public int countRelation(InfoEntity info, InfoWildcardDefinition wildcard) {
+        if (ObjectUtil.isAnyNull(info)) {
+            throw new ConditionParametersException();
+        }
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
+        criteriaQuery.select(criteriaBuilder.count(root));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("parentID"), info.getID()));
+        if (!ValueUtil.isAnyNullOrEmpty(wildcard)) {
+            if (wildcard.isFuzzy()) {
+                if (wildcard.getType() == String.class) {
+                    String wildcardValue = StringUtil.readFormBytes(wildcard.getValue());
+                    wildcardValue = wildcardValue.replace("[", "[[]");
+                    wildcardValue = wildcardValue.replace("%", "[%]");
+                    wildcardValue = wildcardValue.replace("_", "[_]");
+                    wildcardValue = wildcardValue.replace('*', '%');
+                    wildcardValue = wildcardValue.replace('?', '_');
+                    criteriaQuery.where(criteriaBuilder.like(root.get("name"), wildcardValue));
+                }
+            } else {
+                if (wildcard.getType() == String.class) {
+                    criteriaQuery.where(criteriaBuilder.equal(root.get("name"), StringUtil.readFormBytes(wildcard.getValue())));
+                } else if (wildcard.getType() == UUID.class) {
+                    criteriaQuery.where(criteriaBuilder.equal(root.get("id"), UUIDUtil.readFormBytes(wildcard.getValue())));
+                }
+            }
+        }
+        TypedQuery<Long> typedQuery = this.entityManager.createQuery(criteriaQuery);
+        int relationCount = typedQuery.getSingleResult().intValue();
+
+        return relationCount;
     }
 
     @Override
@@ -155,8 +239,6 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         if (ObjectUtil.isAnyNull(relation)) {
             throw new ConditionParametersException();
         }
-
-        //this.logger.warn(".addRelation(" + relation.getID() + " " + relation.getParentID() + ");");
 
         if (this.entityManager.contains(relation)) {
             throw new StatusAlreadyExistedException();
@@ -170,8 +252,6 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         if (ObjectUtil.isAnyNull(relation)) {
             throw new ConditionParametersException();
         }
-
-        //this.logger.warn(".deleteRelation(" + relation.getID() + " " + relation.getParentID() + ");");
 
         if (!this.entityManager.contains(relation)) {
             throw new StatusNotExistedException();

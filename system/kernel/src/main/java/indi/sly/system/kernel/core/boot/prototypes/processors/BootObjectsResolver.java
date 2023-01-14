@@ -16,6 +16,7 @@ import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
+import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.*;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.*;
 
 @Named
@@ -68,17 +70,13 @@ public class BootObjectsResolver extends ABootResolver {
                     permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_ADMINISTRATORS_ID);
                     permission.getUserID().setType(UserType.GROUP);
                     permission.setScope(AccessControlScopeType.ALL);
-                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
-                            PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
-                            PermissionType.READPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW,
-                            PermissionType.DELETECHILD_ALLOW));
+                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
                     securityDescriptor.getPermissions().add(permission);
                     permission = new AccessControlDefinition();
                     permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_USERS_ID);
                     permission.getUserID().setType(UserType.GROUP);
                     permission.setScope(AccessControlScopeType.ALL);
-                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
-                            PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.READPROPERTIES_ALLOW));
+                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.READPROPERTIES_ALLOW));
                     securityDescriptor.getPermissions().add(permission);
                     info.setSecurityDescriptor(ObjectUtil.transferToByteArray(securityDescriptor));
 
@@ -89,46 +87,29 @@ public class BootObjectsResolver extends ABootResolver {
                 }
             } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_AFTER_KERNEL)) {
                 InfoObject rootInfo = objectManager.get(List.of());
-                Set<InfoSummaryDefinition> infoSummaries = rootInfo.queryChild((InfoSummaryDefinition infoSummary) -> true);
+                Set<InfoSummaryDefinition> infoSummaries;
 
                 String[] childFolderNames = new String[]{"Audits", "Files", "Sessions"};
-                UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
-                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
-                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID};
+                UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID};
 
-                boolean isExist = false;
                 for (int i = 0; i < childFolderNames.length; i++) {
-                    for (InfoSummaryDefinition infoSummary : infoSummaries) {
-                        if (childFolderNames[i].equals(infoSummary.getName())) {
-                            isExist = true;
-                            break;
-                        }
-                    }
+                    infoSummaries = rootInfo.queryChild(new InfoWildcardDefinition(childFolderNames[i]));
 
-                    if (!isExist) {
-                        InfoObject childInfo = rootInfo.createChildAndOpen(childFolderTypes[i],
-                                new IdentificationDefinition(childFolderNames[i]), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    if (infoSummaries.isEmpty()) {
+                        InfoObject childInfo = rootInfo.createChildAndOpen(childFolderTypes[i], new IdentificationDefinition(childFolderNames[i]), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
                         childInfo.close();
                     }
                 }
 
                 childFolderNames = new String[]{"Ports", "Signals"};
-                childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                        kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};
+                childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};
 
-                isExist = false;
                 for (int i = 0; i < childFolderNames.length; i++) {
-                    for (InfoSummaryDefinition infoSummary : infoSummaries) {
-                        if (childFolderNames[i].equals(infoSummary.getName())) {
-                            isExist = true;
-                            break;
-                        }
-                    }
+                    infoSummaries = rootInfo.queryChild(new InfoWildcardDefinition(childFolderNames[i]));
 
-                    if (!isExist) {
-                        InfoObject childInfo = rootInfo.createChildAndOpen(childFolderTypes[i],
-                                new IdentificationDefinition(childFolderNames[i]), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    if (infoSummaries.isEmpty()) {
+                        InfoObject childInfo = rootInfo.createChildAndOpen(childFolderTypes[i], new IdentificationDefinition(childFolderNames[i]), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
                         SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                         Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -145,11 +126,10 @@ public class BootObjectsResolver extends ABootResolver {
                 }
 
                 InfoObject parentInfo = rootInfo.getChild(new IdentificationDefinition("Sessions"));
-                infoSummaries =
-                        parentInfo.queryChild(infoSummary -> kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME.equals(infoSummary.getName()));
+                InfoWildcardDefinition wildcard = new InfoWildcardDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME);
+                infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
-                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                            new IdentificationDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentificationDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
                     SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                     Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -157,10 +137,7 @@ public class BootObjectsResolver extends ABootResolver {
                     permission.getUserID().setID(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
                     permission.getUserID().setType(UserType.ACCOUNT);
                     permission.setScope(AccessControlScopeType.ALL);
-                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
-                            PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
-                            PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW,
-                            PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
+                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
                     permissions.add(permission);
                     permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_USERS_ID);
                     permission.getUserID().setType(UserType.GROUP);
@@ -174,10 +151,9 @@ public class BootObjectsResolver extends ABootResolver {
                 }
 
                 parentInfo = rootInfo.getChild(new IdentificationDefinition("Audits"));
-                infoSummaries = parentInfo.queryChild(infoSummary -> kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME.equals(infoSummary.getName()));
+                infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
-                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
-                            new IdentificationDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentificationDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
                     SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                     Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -185,10 +161,7 @@ public class BootObjectsResolver extends ABootResolver {
                     permission.getUserID().setID(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
                     permission.getUserID().setType(UserType.ACCOUNT);
                     permission.setScope(AccessControlScopeType.ALL);
-                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW,
-                            PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW,
-                            PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW,
-                            PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
+                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
                     permissions.add(permission);
                     auditSecurityDescriptor.setPermissions(permissions);
                     auditSecurityDescriptor.setInherit(false);
@@ -197,18 +170,18 @@ public class BootObjectsResolver extends ABootResolver {
                 }
 
                 parentInfo = rootInfo.getChild(new IdentificationDefinition("Files"));
-                infoSummaries = parentInfo.queryChild(infoSummary -> "Main".equals(infoSummary.getName()));
+                wildcard = new InfoWildcardDefinition("Main");
+                infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
-                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
-                            new IdentificationDefinition("Main"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentificationDefinition("Main"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
                     childInfo.close();
                 }
                 parentInfo = parentInfo.getChild(new IdentificationDefinition("Main"));
-                infoSummaries = parentInfo.queryChild(infoSummary -> "Home".equals(infoSummary.getName()));
+                wildcard = new InfoWildcardDefinition("Home");
+                infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
-                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
-                            new IdentificationDefinition("Home"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentificationDefinition("Home"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
                     childInfo.close();
                 }

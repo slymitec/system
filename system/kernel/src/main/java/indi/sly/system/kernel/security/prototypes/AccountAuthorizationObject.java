@@ -15,6 +15,7 @@ import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
+import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.lang.AccountAuthorizationGetAccount;
@@ -175,7 +176,7 @@ public class AccountAuthorizationObject extends AObject {
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         InfoObject sessionsInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
                 new IdentificationDefinition(account.getName())));
-        Set<InfoSummaryDefinition> infoSummaries = sessionsInfo.queryChild(infoSummaryDefinition -> true);
+        Set<InfoSummaryDefinition> infoSummaries = sessionsInfo.queryChild(new InfoWildcardDefinition());
         for (InfoSummaryDefinition infoSummary : infoSummaries) {
             accountAuthorizationSessions.add(infoSummary.getID());
         }

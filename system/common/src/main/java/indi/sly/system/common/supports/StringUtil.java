@@ -16,8 +16,18 @@ public abstract class StringUtil {
         if (ValueUtil.isAnyNullOrEmpty(value)) {
             return true;
         }
-        if (value.length() > 256 || StringUtils.containsAny(value, '/', '\\', ':', '*', '?', '\"', '<', '>', '|', '$') || StringUtils.equalsIgnoreCase(value, ".")
-                || StringUtils.equalsIgnoreCase(value, "..") || (value.length() > 1 && value.charAt(value.length() - 1) == '.')) {
+        if (value.length() > 256 || StringUtils.containsAny(value, '/', '\\', ':', '*', '?', '\"', '<', '>', '|', '$') || StringUtils.equalsIgnoreCase(value, ".") || StringUtils.equalsIgnoreCase(value, "..") || (value.length() > 1 && value.charAt(value.length() - 1) == '.')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isNameIllegalButWildcard(CharSequence value) {
+        if (ValueUtil.isAnyNullOrEmpty(value)) {
+            return true;
+        }
+        if (value.length() > 256 || StringUtils.containsAny(value, '/', '\\', ':', '\"', '<', '>', '|', '$') || StringUtils.equalsIgnoreCase(value, ".") || StringUtils.equalsIgnoreCase(value, "..") || (value.length() > 1 && value.charAt(value.length() - 1) == '.')) {
             return true;
         }
 
@@ -27,6 +37,16 @@ public abstract class StringUtil {
     public static boolean isNameIllegal(CharSequence... values) {
         for (CharSequence value : values) {
             if (StringUtil.isNameIllegal(value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean isNameIllegalButWildcard(CharSequence... values) {
+        for (CharSequence value : values) {
+            if (StringUtil.isNameIllegalButWildcard(value)) {
                 return true;
             }
         }

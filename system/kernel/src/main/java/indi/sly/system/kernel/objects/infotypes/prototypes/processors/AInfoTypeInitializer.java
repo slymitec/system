@@ -6,7 +6,7 @@ import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.kernel.core.prototypes.processors.AInitializer;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.kernel.objects.lang.InfoQueryChildPredicate;
+import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.DumpDefinition;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -68,7 +68,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         throw new StatusNotSupportedException();
     }
 
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoQueryChildPredicate wildcard) {
+    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardDefinition wildcard) {
         throw new StatusNotSupportedException();
     }
 

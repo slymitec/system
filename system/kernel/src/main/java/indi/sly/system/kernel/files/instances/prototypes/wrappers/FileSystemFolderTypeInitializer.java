@@ -239,6 +239,10 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
     @Override
     public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardDefinition wildcard) {
+        if (wildcard.getType() != String.class) {
+            throw new StatusNotSupportedException();
+        }
+
         FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
         assert entry != null;
 
@@ -264,6 +268,10 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 this.lockProcedure(info, LockType.NONE);
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
+            if (wildcard.isFuzzy()) {
+                throw new StatusNotSupportedException();
+            }
+
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
             File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "$Relations");
 
@@ -290,10 +298,9 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 infoSummary.setType(UUIDUtil.readFormBytes(childInfoRelationType));
                 infoSummary.setName(childInfoName);
 
-                // not finished...
-//                if (wildcard.test(infoSummary)) {
-//                    infoSummaries.add(infoSummary);
-//                }
+                if (StringUtil.readFormBytes(wildcard.getValue()).equals(infoSummary.getName())) {
+                    infoSummaries.add(infoSummary);
+                }
             }
         }
 

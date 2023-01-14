@@ -99,6 +99,10 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
 
     @Override
     public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardDefinition wildcard) {
+        if (wildcard.getType() != UUID.class) {
+            throw new StatusNotSupportedException();
+        }
+
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);

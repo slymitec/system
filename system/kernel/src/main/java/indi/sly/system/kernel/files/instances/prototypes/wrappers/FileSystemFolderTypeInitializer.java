@@ -268,7 +268,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 this.lockProcedure(info, LockType.NONE);
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
-            if (wildcard.isFuzzy()) {
+            if (wildcard.getType() == UUID.class) {
                 throw new StatusNotSupportedException();
             }
 
@@ -298,8 +298,14 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 infoSummary.setType(UUIDUtil.readFormBytes(childInfoRelationType));
                 infoSummary.setName(childInfoName);
 
-                if (StringUtil.readFormBytes(wildcard.getValue()).equals(infoSummary.getName())) {
+                String wildcardValue = StringUtil.readFormBytes(wildcard.getValue());
+                if (wildcard.isFuzzy()) {
                     infoSummaries.add(infoSummary);
+                } else {
+                    if (wildcardValue.equals(infoSummary.getName())) {
+                        infoSummaries.add(infoSummary);
+                        break;
+                    }
                 }
             }
         }

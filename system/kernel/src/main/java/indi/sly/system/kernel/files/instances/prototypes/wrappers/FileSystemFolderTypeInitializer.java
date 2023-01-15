@@ -80,7 +80,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     @Override
     public void getProcedure(InfoEntity info, IdentificationDefinition identification) {
         if (identification.getType() == String.class) {
-            String childInfoName = StringUtil.readFormBytes(identification.getID());
+            String childInfoName = StringUtil.readFormBytes(identification.getValue());
             if (!childInfoName.equals(info.getName())) {
                 info.setName(childInfoName);
             }
@@ -188,7 +188,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
         assert entry != null;
 
-        String childInfoName = StringUtil.readFormBytes(identification.getID());
+        String childInfoName = StringUtil.readFormBytes(identification.getValue());
         InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
@@ -313,8 +313,8 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
-        String oldChildInfoName = StringUtil.readFormBytes(oldIdentification.getID());
-        String newChildInfoName = StringUtil.readFormBytes(oldIdentification.getID());
+        String oldChildInfoName = StringUtil.readFormBytes(oldIdentification.getValue());
+        String newChildInfoName = StringUtil.readFormBytes(oldIdentification.getValue());
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
         assert entry != null;
@@ -375,7 +375,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
         assert entry != null;
 
-        String childInfoName = StringUtil.readFormBytes(identification.getID());
+        String childInfoName = StringUtil.readFormBytes(identification.getValue());
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
             MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);

@@ -60,9 +60,9 @@ public class ObjectController extends AController {
         StringBuilder path = new StringBuilder();
         for (IdentificationDefinition identification : identifications) {
             if (identification.getType().equals(UUID.class)) {
-                path.append("/").append(UUIDUtil.readFormBytes(identification.getID()));
+                path.append("/").append(UUIDUtil.readFormBytes(identification.getValue()));
             } else if (identification.getType().equals(String.class)) {
-                path.append("/").append(StringUtil.readFormBytes(identification.getID()));
+                path.append("/").append(StringUtil.readFormBytes(identification.getValue()));
             }
         }
         paths.append(path.isEmpty() ? "/" : path).append("\t(").append(info.getOpened()).append(")").append("<br />");

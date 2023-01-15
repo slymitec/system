@@ -76,7 +76,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
-        UUID childInfoID = UUIDUtil.readFormBytes(identification.getID());
+        UUID childInfoID = UUIDUtil.readFormBytes(identification.getValue());
         InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
@@ -133,7 +133,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
-        UUID childInfoID = UUIDUtil.readFormBytes(identification.getID());
+        UUID childInfoID = UUIDUtil.readFormBytes(identification.getValue());
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));

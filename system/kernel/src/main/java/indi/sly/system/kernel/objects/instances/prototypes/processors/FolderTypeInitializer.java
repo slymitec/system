@@ -75,7 +75,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
-        String childInfoName = StringUtil.readFormBytes(identification.getID());
+        String childInfoName = StringUtil.readFormBytes(identification.getValue());
         InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
@@ -128,7 +128,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
-        String childInfoName = StringUtil.readFormBytes(identification.getID());
+        String childInfoName = StringUtil.readFormBytes(identification.getValue());
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));

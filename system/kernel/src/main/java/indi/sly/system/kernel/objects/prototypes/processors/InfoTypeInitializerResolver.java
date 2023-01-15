@@ -67,7 +67,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
 
             if (ValueUtil.isAnyNullOrEmpty(childInfo.getID())) {
                 if (identification.getType().equals(UUID.class)) {
-                    childInfo.setID(UUIDUtil.readFormBytes(identification.getID()));
+                    childInfo.setID(UUIDUtil.readFormBytes(identification.getValue()));
                 } else if (identification.getType().equals(String.class)) {
                     childInfo.setID(UUIDUtil.createRandom());
                 }
@@ -80,7 +80,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
                 if (identification.getType().equals(UUID.class)) {
                     childInfo.setName(null);
                 } else if (identification.getType().equals(String.class)) {
-                    childInfo.setName(StringUtil.readFormBytes(identification.getID()));
+                    childInfo.setName(StringUtil.readFormBytes(identification.getValue()));
                 }
             }
             Map<Long, Long> date = new HashMap<>();
@@ -164,7 +164,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             typeInitializer.renameChildProcedure(info, oldIdentification, newIdentification);
 
             if (newIdentification.getType().equals(String.class)) {
-                childInfo.setName(StringUtil.readFormBytes(newIdentification.getID()));
+                childInfo.setName(StringUtil.readFormBytes(newIdentification.getValue()));
             }
         };
 

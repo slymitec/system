@@ -22,11 +22,11 @@ import java.util.UUID;
 @JsonSerialize(using = IdentificationDefinition.IdentificationDefinitionSerializer.class)
 @JsonDeserialize(using = IdentificationDefinition.IdentificationDefinitionDeserializer.class)
 public final class IdentificationDefinition extends ADefinition<IdentificationDefinition> {
-    private byte[] id;
+    private byte[] value;
     private Class<?> type;
 
-    public byte[] getID() {
-        return this.id;
+    public byte[] getValue() {
+        return this.value;
     }
 
     public Class<?> getType() {
@@ -34,25 +34,25 @@ public final class IdentificationDefinition extends ADefinition<IdentificationDe
     }
 
     public IdentificationDefinition() {
-        this.id = UUIDUtil.writeToBytes(UUIDUtil.getEmpty());
+        this.value = UUIDUtil.writeToBytes(UUIDUtil.getEmpty());
         this.type = UUID.class;
     }
 
-    public IdentificationDefinition(UUID id) {
-        if (ObjectUtil.isAnyNull(id)) {
+    public IdentificationDefinition(UUID value) {
+        if (ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();
         }
 
-        this.id = UUIDUtil.writeToBytes(id);
+        this.value = UUIDUtil.writeToBytes(value);
         this.type = UUID.class;
     }
 
-    public IdentificationDefinition(String id) {
-        if (StringUtil.isNameIllegal(id)) {
+    public IdentificationDefinition(String value) {
+        if (StringUtil.isNameIllegal(value)) {
             throw new ConditionParametersException();
         }
 
-        this.id = StringUtil.writeToBytes(id);
+        this.value = StringUtil.writeToBytes(value);
         this.type = String.class;
     }
 
@@ -61,22 +61,22 @@ public final class IdentificationDefinition extends ADefinition<IdentificationDe
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IdentificationDefinition that = (IdentificationDefinition) o;
-        return Arrays.equals(id, that.id) && type.equals(that.type);
+        return Arrays.equals(value, that.value) && type.equals(that.type);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(type);
-        result = 31 * result + Arrays.hashCode(id);
+        result = 31 * result + Arrays.hashCode(value);
         return result;
     }
 
     @Override
     public String toString() {
         if (this.type == UUID.class) {
-            return ObjectUtil.transferToString(UUIDUtil.readFormBytes(this.id));
+            return ObjectUtil.transferToString(UUIDUtil.readFormBytes(this.value));
         } else if (this.type == String.class) {
-            return StringUtil.readFormBytes(this.id);
+            return StringUtil.readFormBytes(this.value);
         } else {
             return null;
         }
@@ -86,7 +86,7 @@ public final class IdentificationDefinition extends ADefinition<IdentificationDe
     public IdentificationDefinition deepClone() {
         IdentificationDefinition definition = new IdentificationDefinition();
 
-        definition.id = ArrayUtil.copyBytes(this.id);
+        definition.value = ArrayUtil.copyBytes(this.value);
         definition.type = this.type;
 
         return definition;
@@ -96,7 +96,7 @@ public final class IdentificationDefinition extends ADefinition<IdentificationDe
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         super.readExternal(in);
 
-        this.id = NumberUtil.readExternalBytes(in);
+        this.value = NumberUtil.readExternalBytes(in);
         this.type = ClassUtil.readExternal(in);
     }
 
@@ -104,7 +104,7 @@ public final class IdentificationDefinition extends ADefinition<IdentificationDe
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
 
-        NumberUtil.writeExternalBytes(out, this.id);
+        NumberUtil.writeExternalBytes(out, this.value);
         ClassUtil.writeExternal(out, this.type);
     }
 
@@ -112,9 +112,9 @@ public final class IdentificationDefinition extends ADefinition<IdentificationDe
         @Override
         public void serialize(IdentificationDefinition value, JsonGenerator generator, SerializerProvider serializer) throws IOException {
             if (value.type == String.class) {
-                generator.writeString(StringUtil.readFormBytes(value.id));
+                generator.writeString(StringUtil.readFormBytes(value.value));
             } else if (value.type == UUID.class) {
-                generator.writeObject("<" + UUIDUtil.readFormBytes(value.id) + ">");
+                generator.writeObject("<" + UUIDUtil.readFormBytes(value.value) + ">");
             }
         }
     }

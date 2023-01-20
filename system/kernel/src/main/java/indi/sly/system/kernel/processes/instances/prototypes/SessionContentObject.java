@@ -33,6 +33,7 @@ public class SessionContentObject extends AInfoContentObject {
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setName(String name) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();

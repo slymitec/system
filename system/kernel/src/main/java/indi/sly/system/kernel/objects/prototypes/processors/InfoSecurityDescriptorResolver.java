@@ -122,7 +122,7 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification, open) -> {
+        this.getOrRebuildChild = (childInfo, info, type, status, identification) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);

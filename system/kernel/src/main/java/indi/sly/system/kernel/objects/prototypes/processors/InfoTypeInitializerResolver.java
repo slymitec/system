@@ -106,7 +106,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification, open) -> {
+        this.getOrRebuildChild = (childInfo, info, type, status, identification) -> {
             AInfoTypeInitializer typeInitializer = type.getInitializer();
             InfoSummaryDefinition infoSummary = typeInitializer.getChildProcedure(info, identification);
 
@@ -124,7 +124,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
         };
 
         this.deleteChild = (info, type, status, identification) -> {
-            InfoEntity childInfo = this.getOrRebuildChild.apply(null, info, type, status, identification, null);
+            InfoEntity childInfo = this.getOrRebuildChild.apply(null, info, type, status, identification);
 
             if (childInfo.getOpened() > 0) {
                 throw new StatusIsUsedException();
@@ -154,7 +154,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
         };
 
         this.renameChild = (info, type, status, oldIdentification, newIdentification) -> {
-            InfoEntity childInfo = this.getOrRebuildChild.apply(null, info, type, status, oldIdentification, null);
+            InfoEntity childInfo = this.getOrRebuildChild.apply(null, info, type, status, oldIdentification);
 
             if (childInfo.getOpened() > 0) {
                 throw new StatusIsUsedException();

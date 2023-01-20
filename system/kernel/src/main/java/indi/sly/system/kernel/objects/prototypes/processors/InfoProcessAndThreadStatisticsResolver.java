@@ -78,7 +78,7 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification, open) -> {
+        this.getOrRebuildChild = (childInfo, info, type, status, identification) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
 

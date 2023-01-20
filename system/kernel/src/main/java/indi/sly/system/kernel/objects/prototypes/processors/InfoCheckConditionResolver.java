@@ -49,7 +49,7 @@ public class InfoCheckConditionResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification, open) -> {
+        this.getOrRebuildChild = (childInfo, info, type, status, identification) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
                     || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
                 throw new StatusNotSupportedException();

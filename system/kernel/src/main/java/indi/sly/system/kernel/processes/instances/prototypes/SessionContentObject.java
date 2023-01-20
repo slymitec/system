@@ -2,12 +2,9 @@ package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.MethodScope;
-import indi.sly.system.common.lang.StatusAlreadyExistedException;
-import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
@@ -95,33 +92,6 @@ public class SessionContentObject extends AInfoContentObject {
             this.init();
 
             return CollectionUtil.unmodifiable(this.session.getProcessIDs());
-        } finally {
-            this.lock(LockType.NONE);
-        }
-    }
-
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
-    public void changeProcessID(UUID sourceProcessID, UUID targetProcessID) {
-        if (ValueUtil.isAnyNullOrEmpty(sourceProcessID, targetProcessID)) {
-            throw new ConditionParametersException();
-        }
-
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            Set<UUID> sessionProcessIDs = this.session.getProcessIDs();
-
-            if (!sessionProcessIDs.contains(sourceProcessID)) {
-                throw new StatusNotExistedException();
-            }
-            if (sessionProcessIDs.contains(targetProcessID)) {
-                throw new StatusAlreadyExistedException();
-            }
-            sessionProcessIDs.remove(sourceProcessID);
-            sessionProcessIDs.add(targetProcessID);
-
-            this.fresh();
         } finally {
             this.lock(LockType.NONE);
         }

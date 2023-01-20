@@ -187,9 +187,6 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
                 sessionInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
 
-                SessionContentObject sessionContent = (SessionContentObject) sessionInfo.getContent();
-                sessionContent.changeProcessID(process.getID(), this.parent.getID());
-
                 ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
                 ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(sessionInfo.getID());
                 processInfoEntry.setUnsupportedDelete(true);

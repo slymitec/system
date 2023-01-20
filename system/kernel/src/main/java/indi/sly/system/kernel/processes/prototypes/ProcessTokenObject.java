@@ -383,19 +383,20 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
+        if (processToken.getAccountID().equals(this.value.getAccountID())) {
+            UserManager userManager = this.factoryManager.getManager(UserManager.class);
+
+            AccountObject account = userManager.getCurrentAccount();
+            if (ValueUtil.isAnyNullOrEmpty(account.getPassword())) {
+                roles.add(kernelConfiguration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
+            }
+        }
+
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            if (processToken.getAccountID().equals(this.value.getAccountID())) {
-                UserManager userManager = this.factoryManager.getManager(UserManager.class);
-
-                AccountObject account = userManager.getCurrentAccount();
-                if (ValueUtil.isAnyNullOrEmpty(account.getPassword())) {
-                    roles.add(kernelConfiguration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
-                }
-            }
-
+            this.value.getRoles().clear();
             this.value.getRoles().addAll(roles);
 
             this.fresh();

@@ -1,10 +1,8 @@
 package indi.sly.system.services.job.instances.prototypes.processors;
 
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusNotExistedException;
-import indi.sly.system.common.lang.StatusUnexpectedException;
-import indi.sly.system.common.lang.StatusUnreadableException;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.services.core.values.TransactionType;
@@ -15,6 +13,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -71,6 +71,14 @@ public class HandleTaskInitializer extends ATaskInitializer {
         } catch (NoSuchMethodException e) {
             throw new StatusNotExistedException();
         }
+
+        Annotation[] methodDeclaredAnnotations = method.getDeclaredAnnotations();
+        for (Annotation methodDeclaredAnnotation : methodDeclaredAnnotations) {
+            if (methodDeclaredAnnotation.annotationType() == MethodScope.class && ((MethodScope) methodDeclaredAnnotation).value() == MethodScopeType.ONLY_KERNEL) {
+                throw new StatusNotSupportedException();
+            }
+        }
+
         methodParameterTypes = method.getParameterTypes();
         Object[] methodParameterValues = new Object[methodParameterTypes.length];
         Class<?> methodReturnType = method.getReturnType();

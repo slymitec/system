@@ -6,6 +6,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -47,6 +48,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public synchronized void inherit(UUID index) {
         if (ValueUtil.isAnyNullOrEmpty(index)) {
             throw new ConditionParametersException();
@@ -196,6 +198,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
         return processInfoEntry;
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public synchronized ProcessInfoEntryObject create(UUID id, InfoStatusDefinition status, long openAttribute) {
         if (ValueUtil.isAnyNullOrEmpty(id) || ObjectUtil.isAnyNull(status) || LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.CLOSE)) {
             throw new ConditionParametersException();

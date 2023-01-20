@@ -2,12 +2,14 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -105,6 +107,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void inheritAccountID() {
         if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.INITIALIZATION)) {
@@ -143,6 +146,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void inheritPrivileges() {
         if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.INITIALIZATION)) {
@@ -228,6 +232,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void inheritLimits() {
         if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.INITIALIZATION)) {

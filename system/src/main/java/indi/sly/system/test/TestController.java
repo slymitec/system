@@ -3,6 +3,7 @@ package indi.sly.system.test;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.kernel.processes.instances.values.SessionType;
 import indi.sly.system.services.face.AController;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
@@ -23,6 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -63,7 +65,7 @@ public class TestController extends AController {
         ProcessSessionObject processSession = process.getSession();
 
         if (ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-            processSession.create("Main");
+            processSession.create("Main", SessionType.CLI);
         }
         result.put("ProcessSessionID", processSession.getID());
 

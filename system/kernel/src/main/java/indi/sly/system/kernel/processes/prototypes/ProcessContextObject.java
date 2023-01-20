@@ -2,12 +2,14 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.List;
 import java.util.Map;
 
@@ -80,6 +83,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setIdentifications(List<IdentificationDefinition> identifications) {
         if (ObjectUtil.isAnyNull(identifications)) {
             throw new ConditionParametersException();
@@ -126,6 +130,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setApplication(ApplicationDefinition application) {
         if (ObjectUtil.isAnyNull(application)) {
             throw new ConditionParametersException();

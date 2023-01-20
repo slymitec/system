@@ -5,6 +5,7 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -133,6 +134,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         return infoOpen;
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public synchronized boolean isUnsupportedDelete() {
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
@@ -160,6 +162,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         return unsupportedDelete;
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public synchronized void setUnsupportedDelete(boolean unsupportedDelete) {
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
         long nowDateTime = dateTime.getCurrentDateTime();
@@ -218,6 +221,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         return info;
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public synchronized void delete() {
         try {
             this.lock(LockType.WRITE);

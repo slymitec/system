@@ -7,6 +7,7 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -35,7 +36,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessionDefinition, ProcessObject> {
-    public void create(String name) {
+    public void create(String name, long type) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
@@ -88,6 +89,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             SessionContentObject sessionContent = (SessionContentObject) sessionInfo.getContent();
             sessionContent.setName(name);
+            sessionContent.setType(type);
             sessionContent.addProcessID(this.parent.getID());
 
             ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
@@ -156,6 +158,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void inheritID() {
         if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.INITIALIZATION)) {
@@ -208,6 +211,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setID(UUID sessionID) {
         if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
             throw new ConditionParametersException();

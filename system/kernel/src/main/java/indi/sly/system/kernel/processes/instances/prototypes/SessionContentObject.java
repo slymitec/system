@@ -1,12 +1,14 @@
 package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
 
@@ -61,6 +63,7 @@ public class SessionContentObject extends AInfoContentObject {
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setType(long type) {
         try {
             this.lock(LockType.WRITE);
@@ -96,6 +99,7 @@ public class SessionContentObject extends AInfoContentObject {
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addProcessID(UUID processID) {
         boolean result;
 
@@ -115,6 +119,7 @@ public class SessionContentObject extends AInfoContentObject {
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void deleteProcessID(UUID processID) {
         boolean result;
 

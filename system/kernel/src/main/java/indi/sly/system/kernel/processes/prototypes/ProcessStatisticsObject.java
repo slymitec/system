@@ -1,10 +1,12 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.processes.values.ProcessStatisticsDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -32,6 +34,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         return value;
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setDate(long dataTime, long value) {
         this.lock(LockType.WRITE);
         this.init();
@@ -82,6 +85,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         return CollectionUtil.unmodifiable(statistics);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addStatusCumulation(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -96,6 +100,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addThreadCumulation(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -114,6 +119,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoCreate(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -132,6 +138,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoGet(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -150,6 +157,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoQuery(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -168,6 +176,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoDelete(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -186,6 +195,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoDump(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -204,6 +214,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoOpen(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -222,6 +233,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoClose(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -240,6 +252,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoRead(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -258,6 +271,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoWrite(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -276,6 +290,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSharedReadCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -294,6 +309,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSharedReadBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -312,6 +328,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSharedWriteCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -330,6 +347,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSharedWriteBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -348,6 +366,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addPortCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -366,6 +385,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addPortReadCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -384,6 +404,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addPortReadBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -402,6 +423,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addPortWriteCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -420,6 +442,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addPortWriteBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -438,6 +461,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSignalReadCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -456,6 +480,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSignalWriteCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -474,6 +499,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addIoCreate(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -492,6 +518,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addIoStatus(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -510,6 +537,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addIoReadCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -528,6 +556,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addIoReadBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -546,6 +575,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addIoWriteCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -564,6 +594,7 @@ public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessSta
         this.lock(LockType.NONE);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addIoWriteBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();

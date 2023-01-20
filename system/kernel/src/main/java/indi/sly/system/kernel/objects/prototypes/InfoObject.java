@@ -251,7 +251,7 @@ public class InfoObject extends AObject {
         return this.rebuildChild(identification, null);
     }
 
-    public synchronized InfoObject rebuildChild(IdentificationDefinition identification, Provider<InfoOpenDefinition> infoOpenProvider) {
+    public synchronized InfoObject rebuildChild(IdentificationDefinition identification, UUID index) {
         if (ObjectUtil.isAnyNull(identification)) {
             throw new ConditionParametersException();
         }
@@ -266,8 +266,13 @@ public class InfoObject extends AObject {
         InfoEntity childInfo = null;
 
         InfoOpenDefinition infoOpen;
-        if (ObjectUtil.allNotNull(infoOpenProvider)) {
-            infoOpen = infoOpenProvider.acquire();
+        if (!ValueUtil.isAnyNullOrEmpty(index)) {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+            ProcessObject process = processManager.getCurrent();
+            ProcessInfoTableObject processInfoTable = process.getInfoTable();
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByIndex(index);
+            infoOpen = processInfoEntry.getOpen();
         } else {
             infoOpen = null;
         }

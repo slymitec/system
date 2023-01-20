@@ -19,6 +19,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -191,7 +192,6 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         long nowDateTime = dateTime.getCurrentDateTime();
 
         List<IdentificationDefinition> identifications;
-        InfoOpenDefinition infoOpen;
 
         try {
             this.lock(LockType.WRITE);
@@ -205,7 +205,6 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
             identifications = processInfoEntry.getIdentifications();
-            infoOpen = processInfoEntry.getInfoOpen();
 
             this.fresh();
         } finally {
@@ -217,7 +216,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
         InfoObject info;
         if (!identifications.isEmpty()) {
             info = objectManager.get(identifications.subList(0, identifications.size() - 1));
-            info = info.rebuildChild(identifications.get(identifications.size() - 1), ()-> infoOpen);
+            info = info.rebuildChild(identifications.get(identifications.size() - 1), this.index);
         } else {
             info = objectManager.get(identifications);
         }

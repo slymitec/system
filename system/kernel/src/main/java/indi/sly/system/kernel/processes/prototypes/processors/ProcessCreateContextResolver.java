@@ -38,7 +38,7 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
             KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
 
             ProcessContextObject processContext = process.getContext();
-            ProcessSessionObject processSession = process.getSession();
+            ProcessSessionObject parentProcessSession = parentProcess.getSession();
             ProcessContextObject parentProcessContext = parentProcess.getContext();
 
             if (!ValueUtil.isAnyNullOrEmpty(processCreator.getFileIndex())) {
@@ -59,8 +59,8 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
                             throw new StatusUnreadableException();
                         });
 
-                if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-                    SessionContentObject sessionContent = processSession.getContent();
+                if (!ValueUtil.isAnyNullOrEmpty(parentProcessSession.getID())) {
+                    SessionContentObject sessionContent = parentProcessSession.getContent();
                     if (ObjectUtil.allNotNull(sessionContent) && LogicalUtil.allNotEqual(sessionContent.getType(), application.getSupportedSession(), SessionType.KNOWN)) {
                         throw new StatusNotSupportedException();
                     }
@@ -70,8 +70,8 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
                 processContext.setApplication(application);
             }
 
-            if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-                SessionContentObject sessionContent = processSession.getContent();
+            if (!ValueUtil.isAnyNullOrEmpty(parentProcessSession.getID())) {
+                SessionContentObject sessionContent = parentProcessSession.getContent();
                 if (ObjectUtil.allNotNull()) {
                     processContext.setEnvironmentVariables(sessionContent.getEnvironmentVariables());
                 }

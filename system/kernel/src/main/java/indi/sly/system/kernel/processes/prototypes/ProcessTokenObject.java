@@ -25,10 +25,10 @@ import indi.sly.system.kernel.security.prototypes.AccountObject;
 import indi.sly.system.kernel.security.values.AccountAuthorizationSummaryDefinition;
 import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
 import indi.sly.system.kernel.security.values.PrivilegeType;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import jakarta.inject.Named;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -343,7 +343,6 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
         KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
         ProcessContextObject processContext = this.parent.getContext();
-        ProcessSessionObject processSession = this.parent.getSession();
 
         Set<UUID> roles = new HashSet<>();
         long processContextType = processContext.getType();
@@ -358,6 +357,14 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
             roles.add(kernelConfiguration.SECURITY_ROLE_EXECUTABLE_ID);
         }
 
+        ProcessSessionObject processSession;
+        if (this.parent.isCurrent()) {
+            processSession = this.parent.getSession();
+        } else {
+            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessObject process = processManager.getCurrent();
+            processSession = process.getSession();
+        }
         if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
             SessionContentObject sessionContent = processSession.getContent();
             if (ObjectUtil.allNotNull(sessionContent)) {

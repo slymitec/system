@@ -14,6 +14,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.UUID;
 
 @Named
@@ -35,6 +36,30 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
         session.setAccountID(processToken.getAccountID());
 
         info.setContent(ObjectUtil.transferToByteArray(session));
+    }
+
+    @Override
+    public void openProcedure(InfoEntity info, InfoOpenDefinition infoOpen, Object[] arguments) {
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessTokenObject processToken = process.getToken();
+
+        SessionDefinition session = new SessionDefinition();
+
+        session.setAccountID(processToken.getAccountID());
+        session.getProcessIDs().add(process.getID());
+    }
+
+    @Override
+    public void closeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
+        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessTokenObject processToken = process.getToken();
+
+        SessionDefinition session = new SessionDefinition();
+
+        session.setAccountID(processToken.getAccountID());
+        session.getProcessIDs().remove(process.getID());
     }
 
     @Override

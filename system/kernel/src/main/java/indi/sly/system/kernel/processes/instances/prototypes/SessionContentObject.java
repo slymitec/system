@@ -7,6 +7,7 @@ import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
@@ -100,42 +101,29 @@ public class SessionContentObject extends AInfoContentObject {
     }
 
     @MethodScope(value = MethodScopeType.ONLY_KERNEL)
-    public void addProcessID(UUID processID) {
-        boolean result;
+    public void changeProcessID(UUID sourceProcessID, UUID targetProcessID) {
+        if (ValueUtil.isAnyNullOrEmpty(sourceProcessID, targetProcessID)) {
+            throw new ConditionParametersException();
+        }
 
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            result = this.session.getProcessIDs().add(processID);
+            Set<UUID> sessionProcessIDs = this.session.getProcessIDs();
+
+            if (!sessionProcessIDs.contains(sourceProcessID)) {
+                throw new StatusNotExistedException();
+            }
+            if (sessionProcessIDs.contains(targetProcessID)) {
+                throw new StatusAlreadyExistedException();
+            }
+            sessionProcessIDs.remove(sourceProcessID);
+            sessionProcessIDs.add(targetProcessID);
 
             this.fresh();
         } finally {
             this.lock(LockType.NONE);
-        }
-
-        if (!result) {
-            throw new StatusAlreadyExistedException();
-        }
-    }
-
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
-    public void deleteProcessID(UUID processID) {
-        boolean result;
-
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            result = this.session.getProcessIDs().remove(processID);
-
-            this.fresh();
-        } finally {
-            this.lock(LockType.NONE);
-        }
-
-        if (!result) {
-            throw new StatusNotExistedException();
         }
     }
 

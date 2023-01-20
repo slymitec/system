@@ -184,6 +184,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             processInfoEntry.setParent(this);
             processInfoEntry.setSource(() -> this.value, (ProcessInfoTableDefinition source) -> {
             });
+            processInfoEntry.setLock(this::lock);
             processInfoEntry.index = index;
             processInfoEntry.isProcessCurrent = () -> this.parent.isCurrent();
 

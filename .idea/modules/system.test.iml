@@ -24,7 +24,6 @@
             <stringArg name="classpath">
               <args>
                 <arg>$MODULE_DIR$/../../system/build/classes/java/main</arg>
-                <arg>$MODULE_DIR$/../../system/build/classes/kotlin/main</arg>
                 <arg>$MODULE_DIR$/../../system/build/resources/main</arg>
                 <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.7.22/b75c999616784d452613d670fec56a527f2bd3d1/kotlin-stdlib-jdk8-1.7.22.jar</arg>
                 <arg>$MODULE_DIR$/../../system/common/build/libs/common-1.0-plain.jar</arg>

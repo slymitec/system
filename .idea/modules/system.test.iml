@@ -23,13 +23,7 @@
           <stringArguments>
             <stringArg name="classpath">
               <args>
-                <arg>$MODULE_DIR$/../../system/build/classes/java/main</arg>
-                <arg>$MODULE_DIR$/../../system/build/classes/kotlin/main</arg>
-                <arg>$MODULE_DIR$/../../system/build/resources/main</arg>
                 <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.7.22/b75c999616784d452613d670fec56a527f2bd3d1/kotlin-stdlib-jdk8-1.7.22.jar</arg>
-                <arg>$MODULE_DIR$/../../system/common/build/libs/common-1.0-plain.jar</arg>
-                <arg>$MODULE_DIR$/../../system/kernel/build/libs/kernel-1.0-plain.jar</arg>
-                <arg>$MODULE_DIR$/../../system/services/build/libs/services-1.0-plain.jar</arg>
                 <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/com.microsoft.sqlserver/mssql-jdbc/11.2.2.jre17/ae6f502916d94ba97c046f698a6e5cb9038fde52/mssql-jdbc-11.2.2.jre17.jar</arg>
                 <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/jakarta.inject/jakarta.inject-api/2.0.1/4c28afe1991a941d7702fe1362c365f0a8641d1e/jakarta.inject-api-2.0.1.jar</arg>
                 <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-data-jpa/3.0.1/a68c2e57bd3a0c5bdf7e4de6c0d563aad38d3f47/spring-boot-starter-data-jpa-3.0.1.jar</arg>

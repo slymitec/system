@@ -1,5 +1,6 @@
 build/
 out/
+gradle/
 
 .gradle
 gradlew
@@ -13,3 +14,4 @@ gradlew.bat
 !**/src/test/**/build/
 !**/src/main/**/out/
 !**/src/test/**/out/
+/gradle/

@@ -9,11 +9,10 @@ import indi.sly.system.kernel.files.instances.prototypes.wrappers.FileSystemFold
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
-import indi.sly.system.kernel.objects.prototypes.InfoObject;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import jakarta.inject.Named;
 import java.util.Set;
 import java.util.UUID;
 
@@ -51,9 +50,5 @@ public class FileSystemManager extends AManager {
 
     @Override
     public void shutdown() {
-    }
-
-    public InfoObject get(String path) {
-        return null;
     }
 }

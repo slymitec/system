@@ -204,7 +204,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
+        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 

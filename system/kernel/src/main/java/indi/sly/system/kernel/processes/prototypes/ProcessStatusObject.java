@@ -1,13 +1,11 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.lang.StatusIsUsedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
@@ -18,10 +16,9 @@ import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMedi
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.security.values.PrivilegeType;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.Set;
 
@@ -49,7 +46,6 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
         }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void initialize() {
         if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.NULL)) {
@@ -168,7 +164,6 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
         }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void die() {
         if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.RUNNING, ProcessStatusType.INTERRUPTED, ProcessStatusType.DIED)) {
@@ -191,7 +186,6 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
         }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void zombie() {
         if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.DIED)) {

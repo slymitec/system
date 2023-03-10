@@ -27,6 +27,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -48,7 +49,6 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
         }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public synchronized void inherit(UUID index) {
         if (ValueUtil.isAnyNullOrEmpty(index)) {
             throw new ConditionParametersException();

@@ -6,7 +6,6 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -151,7 +150,6 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
         }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void inheritID() {
         if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.INITIALIZATION)) {

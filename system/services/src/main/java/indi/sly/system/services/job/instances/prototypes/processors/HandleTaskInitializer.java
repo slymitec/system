@@ -74,7 +74,7 @@ public class HandleTaskInitializer extends ATaskInitializer {
 
         Annotation[] methodDeclaredAnnotations = method.getDeclaredAnnotations();
         for (Annotation methodDeclaredAnnotation : methodDeclaredAnnotations) {
-            if (methodDeclaredAnnotation.annotationType() == MethodScope.class && ((MethodScope) methodDeclaredAnnotation).value() == MethodScopeType.ONLY_KERNEL) {
+            if (methodDeclaredAnnotation.annotationType() == MethodScope.class && (LogicalUtil.isAnyExist(((MethodScope) methodDeclaredAnnotation).value(), MethodScopeType.ONLY_KERNEL))) {
                 throw new StatusNotSupportedException();
             }
         }

@@ -1,11 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: org.springframework.boot:spring-boot-starter-web:3.0.1" external-system-id="GRADLE">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/3.0.1/1d99ce519a0fe66f15dc9bbdc2507a8d0a01690/spring-boot-starter-web-3.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/3.0.1/1d99ce519a0fe66f15dc9bbdc2507a8d0a01690/spring-boot-starter-web-3.0.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/3.0.1/9a574980b10c84ac9162b73e88ca6c8df2511af1/spring-boot-starter-web-3.0.1-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/3.0.1/9a574980b10c84ac9162b73e88ca6c8df2511af1/spring-boot-starter-web-3.0.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

@@ -1,11 +1,11 @@
 <component name="libraryTable">
-  <library name="Gradle: org.springframework.boot:spring-boot-starter-data-jpa:3.0.1">
+  <library name="Gradle: org.springframework.boot:spring-boot-starter-data-jpa:3.0.1" external-system-id="GRADLE">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-data-jpa/3.0.1/a68c2e57bd3a0c5bdf7e4de6c0d563aad38d3f47/spring-boot-starter-data-jpa-3.0.1.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-data-jpa/3.0.1/a68c2e57bd3a0c5bdf7e4de6c0d563aad38d3f47/spring-boot-starter-data-jpa-3.0.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-data-jpa/3.0.1/59d37c5f12d2ed32a878a8f1e7275043325abe17/spring-boot-starter-data-jpa-3.0.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-data-jpa/3.0.1/59d37c5f12d2ed32a878a8f1e7275043325abe17/spring-boot-starter-data-jpa-3.0.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

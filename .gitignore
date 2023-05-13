@@ -16,4 +16,3 @@ gradlew.bat
 !**/src/test/**/out/
 
 /.idea/
-!**/gradle/

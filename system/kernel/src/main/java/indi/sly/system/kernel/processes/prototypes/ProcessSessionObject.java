@@ -44,6 +44,12 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             throw new StatusRelationshipErrorException();
         }
 
+        UUID sessionID = this.value.getSessionID();
+
+        if(!ValueUtil.isAnyNullOrEmpty(sessionID)){
+            throw new StatusAlreadyFinishedException();
+        }
+
         KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
@@ -53,8 +59,6 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
         String accountName = account.getName();
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
-        UUID sessionID;
 
         try {
             this.lock(LockType.WRITE);
@@ -156,6 +160,12 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             throw new StatusRelationshipErrorException();
         }
 
+        UUID sessionID = this.value.getSessionID();
+
+        if(!ValueUtil.isAnyNullOrEmpty(sessionID)){
+            throw new StatusAlreadyFinishedException();
+        }
+
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
 
@@ -169,7 +179,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
         String accountName = account.getName();
 
         ProcessSessionObject processSession = process.getSession();
-        UUID sessionID = processSession.getID();
+        sessionID = processSession.getID();
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 

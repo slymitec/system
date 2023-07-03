@@ -10,9 +10,28 @@ import java.util.UUID;
 public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefinition> {
     private AccountAuthorizationObject accountAuthorization;
 
+    private String sessionName;
+    private long sessionType;
+
     private UUID fileIndex;
     private String parameters;
     private List<IdentificationDefinition> workFolder;
+
+    public String getSessionName() {
+        return this.sessionName;
+    }
+
+    public void setSessionName(String sessionName) {
+        this.sessionName = sessionName;
+    }
+
+    public long getSessionType() {
+        return this.sessionType;
+    }
+
+    public void setSessionType(long sessionType) {
+        this.sessionType = sessionType;
+    }
 
     public AccountAuthorizationObject getAccountAuthorization() {
         return this.accountAuthorization;

@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
 
@@ -11,15 +11,15 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ProcessSessionDefinition extends ADefinition<ProcessSessionDefinition> {
-    private String accountName;
     private UUID sessionID;
+    private boolean link;
 
-    public String getAccountName() {
-        return accountName;
+    public boolean isLink() {
+        return this.link;
     }
 
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
+    public void setLink(boolean link) {
+        this.link = link;
     }
 
     public UUID getSessionID() {
@@ -35,20 +35,20 @@ public class ProcessSessionDefinition extends ADefinition<ProcessSessionDefiniti
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProcessSessionDefinition that = (ProcessSessionDefinition) o;
-        return Objects.equals(accountName, that.accountName) && Objects.equals(sessionID, that.sessionID);
+        return link == that.link && Objects.equals(sessionID, that.sessionID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountName, sessionID);
+        return Objects.hash(sessionID, link);
     }
 
     @Override
     public ProcessSessionDefinition deepClone() {
         ProcessSessionDefinition definition = new ProcessSessionDefinition();
 
-        definition.accountName = this.accountName;
         definition.sessionID = this.sessionID;
+        definition.link = this.link;
 
         return definition;
     }
@@ -57,15 +57,15 @@ public class ProcessSessionDefinition extends ADefinition<ProcessSessionDefiniti
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         super.readExternal(in);
 
-        this.accountName = StringUtil.readExternal(in);
         this.sessionID = UUIDUtil.readExternal(in);
+        this.link = NumberUtil.readExternalBoolean(in);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
 
-        StringUtil.writeExternal(out, this.accountName);
         UUIDUtil.writeExternal(out, this.sessionID);
+        NumberUtil.writeExternalBoolean(out, this.link);
     }
 }

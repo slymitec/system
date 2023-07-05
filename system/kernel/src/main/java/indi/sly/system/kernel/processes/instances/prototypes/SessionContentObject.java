@@ -76,17 +76,6 @@ public class SessionContentObject extends AInfoContentObject {
         }
     }
 
-    public UUID getAccountID() {
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            return this.session.getAccountID();
-        } finally {
-            this.lock(LockType.NONE);
-        }
-    }
-
     public Set<UUID> listProcessID() {
         try {
             this.lock(LockType.WRITE);

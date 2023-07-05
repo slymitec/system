@@ -19,9 +19,8 @@ public class ProcessCreateSessionResolver extends AProcessCreateResolver {
             ProcessSessionObject parentProcessSession = parentProcess.getSession();
             ProcessSessionObject processSession = process.getSession();
 
-            if (!ValueUtil.isAnyNullOrEmpty(processCreator.getSessionName())) {
-                processSession.create(processCreator.getSessionName(), processCreator.getSessionType());
-            } else if (!ValueUtil.isAnyNullOrEmpty(parentProcessSession.getID())) {
+            if (processCreator.isInheritSessionID() && !ValueUtil.isAnyNullOrEmpty(parentProcessSession.getID())
+                    && parentProcessSession.isLink()) {
                 processSession.inheritID();
             }
 

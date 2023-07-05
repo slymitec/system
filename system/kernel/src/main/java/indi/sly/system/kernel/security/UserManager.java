@@ -184,34 +184,10 @@ public class UserManager extends AManager {
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions")));
-
         InfoWildcardDefinition wildcard = new InfoWildcardDefinition(account.getName());
+
+        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
         Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(wildcard);
-        if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
-
-            SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
-            Set<AccessControlDefinition> permissions = new HashSet<>();
-            AccessControlDefinition permission = new AccessControlDefinition();
-            permission.getUserID().setID(account.getID());
-            permission.getUserID().setType(UserType.ACCOUNT);
-            permission.setScope(AccessControlScopeType.ALL);
-            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
-            permissions.add(permission);
-            permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_USERS_ID);
-            permission.getUserID().setType(UserType.GROUP);
-            permission.setScope(AccessControlScopeType.ALL);
-            permission.setValue(PermissionType.DELETECHILD_ALLOW);
-            permissions.add(permission);
-            auditSecurityDescriptor.setPermissions(permissions);
-            auditSecurityDescriptor.setInherit(true);
-
-            childInfo.close();
-        }
-
-        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-        infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
             InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
@@ -264,16 +240,10 @@ public class UserManager extends AManager {
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
-        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions")));
-
         InfoWildcardDefinition infoQueryChildWildcard = new InfoWildcardDefinition(account.getName());
-        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoQueryChildWildcard);
-        if (!infoSummaries.isEmpty()) {
-            parentInfo.deleteChild(new IdentificationDefinition(account.getName()));
-        }
 
-        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-        infoSummaries = parentInfo.queryChild(infoQueryChildWildcard);
+        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
+        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoQueryChildWildcard);
         if (!infoSummaries.isEmpty()) {
             InfoObject childInfo = parentInfo.getChild(new IdentificationDefinition(account.getName()));
 

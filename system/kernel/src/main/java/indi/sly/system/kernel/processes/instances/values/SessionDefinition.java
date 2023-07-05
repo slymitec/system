@@ -19,7 +19,6 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
 
     private String name;
     private long type;
-    private UUID accountID;
     private final Set<UUID> processIDs;
     private final Map<String, String> environmentVariables;
     private final Map<String, String> parameters;
@@ -40,14 +39,6 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
         this.type = type;
     }
 
-    public UUID getAccountID() {
-        return this.accountID;
-    }
-
-    public void setAccountID(UUID accountID) {
-        this.accountID = accountID;
-    }
-
     public Set<UUID> getProcessIDs() {
         return this.processIDs;
     }
@@ -65,12 +56,12 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SessionDefinition that = (SessionDefinition) o;
-        return type == that.type && Objects.equals(name, that.name) && Objects.equals(accountID, that.accountID) && processIDs.equals(that.processIDs) && environmentVariables.equals(that.environmentVariables) && parameters.equals(that.parameters);
+        return type == that.type && Objects.equals(name, that.name) && processIDs.equals(that.processIDs) && environmentVariables.equals(that.environmentVariables) && parameters.equals(that.parameters);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, type, accountID, processIDs, environmentVariables, parameters);
+        return Objects.hash(name, type, processIDs, environmentVariables, parameters);
     }
 
     @Override
@@ -79,7 +70,6 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
 
         definition.name = this.name;
         definition.type = this.type;
-        definition.accountID = this.accountID;
         definition.processIDs.addAll(this.processIDs);
         definition.environmentVariables.putAll(this.environmentVariables);
         definition.parameters.putAll(this.parameters);
@@ -93,7 +83,6 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
 
         this.name = StringUtil.readExternal(in);
         this.type = NumberUtil.readExternalLong(in);
-        this.accountID = UUIDUtil.readExternal(in);
 
         int valueInteger;
 
@@ -119,7 +108,6 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
 
         StringUtil.writeExternal(out, this.name);
         NumberUtil.writeExternalLong(out, this.type);
-        UUIDUtil.writeExternal(out, this.accountID);
 
         NumberUtil.writeExternalInteger(out, this.processIDs.size());
         for (UUID pair : this.processIDs) {

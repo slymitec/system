@@ -8,30 +8,15 @@ import java.util.List;
 import java.util.UUID;
 
 public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefinition> {
+    public ProcessCreatorDefinition() {
+        this.inheritSessionID = true;
+    }
+
     private AccountAuthorizationObject accountAuthorization;
-
-    private String sessionName;
-    private long sessionType;
-
+    private boolean inheritSessionID;
     private UUID fileIndex;
     private String parameters;
     private List<IdentificationDefinition> workFolder;
-
-    public String getSessionName() {
-        return this.sessionName;
-    }
-
-    public void setSessionName(String sessionName) {
-        this.sessionName = sessionName;
-    }
-
-    public long getSessionType() {
-        return this.sessionType;
-    }
-
-    public void setSessionType(long sessionType) {
-        this.sessionType = sessionType;
-    }
 
     public AccountAuthorizationObject getAccountAuthorization() {
         return this.accountAuthorization;
@@ -39,6 +24,14 @@ public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefiniti
 
     public void setAccountAuthorization(AccountAuthorizationObject accountAuthorization) {
         this.accountAuthorization = accountAuthorization;
+    }
+
+    public boolean isInheritSessionID() {
+        return inheritSessionID;
+    }
+
+    public void setInheritSessionID(boolean inheritSessionID) {
+        this.inheritSessionID = inheritSessionID;
     }
 
     public UUID getFileIndex() {

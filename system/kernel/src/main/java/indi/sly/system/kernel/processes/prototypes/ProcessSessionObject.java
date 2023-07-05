@@ -11,6 +11,8 @@ import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
+import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
+import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.values.ProcessSessionDefinition;
@@ -34,6 +36,17 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessionDefinition, ProcessObject> {
+    public UUID getID() {
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            return this.value.getSessionID();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+    }
+
     public void create(String name, long type) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
@@ -44,34 +57,36 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             throw new StatusRelationshipErrorException();
         }
 
-        UUID sessionID = this.value.getSessionID();
-
-        if(!ValueUtil.isAnyNullOrEmpty(sessionID)){
-            throw new StatusAlreadyFinishedException();
-        }
-
         KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
 
+        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         AccountObject account = userManager.getCurrentAccount();
         UUID accountID = account.getID();
-        String accountName = account.getName();
-
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            if (!ValueUtil.isAnyNullOrEmpty(this.value.getSessionID())) {
-                throw new StatusAlreadyFinishedException();
+            UUID sessionID = this.value.getSessionID();
+
+            if (this.value.isLink()) {
+                throw new StatusRelationshipErrorException();
             }
 
-            InfoObject sessionsInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
-                    new IdentificationDefinition(accountName)));
+            InfoObject sessionsInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions")));
+
+            if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
+                Set<InfoSummaryDefinition> infoSummary = sessionsInfo.queryChild(new InfoWildcardDefinition(sessionID));
+                if (!infoSummary.isEmpty()) {
+                    throw new StatusAlreadyExistedException();
+                }
+            }
+
             InfoObject sessionInfo = sessionsInfo.createChildAndOpen(kernelConfiguration.PROCESSES_SESSION_INSTANCE_ID,
                     new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_SHARED_WRITE);
+            sessionID = sessionInfo.getID();
 
             SecurityDescriptorObject securityDescriptor = sessionInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -82,7 +97,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
             permissions.add(permission);
             permission = new AccessControlDefinition();
-            permission.getUserID().setID(sessionInfo.getID());
+            permission.getUserID().setID(sessionID);
             permission.getUserID().setType(UserType.SESSION);
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
@@ -99,8 +114,8 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             sessionID = sessionInfo.getID();
 
-            this.value.setAccountName(accountName);
             this.value.setSessionID(sessionID);
+            this.value.setLink(true);
 
             this.fresh();
         } finally {
@@ -109,8 +124,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
     }
 
     public void close() {
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.DIED)) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -118,10 +132,9 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             this.lock(LockType.WRITE);
             this.init();
 
-            String accountName = this.value.getAccountName();
             UUID sessionID = this.value.getSessionID();
 
-            if (StringUtil.isNameIllegal(accountName) || ValueUtil.isAnyNullOrEmpty(sessionID)) {
+            if (!this.value.isLink() || ValueUtil.isAnyNullOrEmpty(sessionID)) {
                 throw new StatusRelationshipErrorException();
             }
 
@@ -134,74 +147,39 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
                 info.close();
             }
 
-            this.value.setAccountName(null);
             this.value.setSessionID(null);
+            this.value.setLink(false);
 
             this.fresh();
-        } finally {
-            this.lock(LockType.NONE);
-        }
-    }
-
-    public UUID getID() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            return this.value.getSessionID();
         } finally {
             this.lock(LockType.NONE);
         }
     }
 
     public void inheritID() {
-        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
-                ProcessStatusType.INITIALIZATION)) {
+        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
-        }
-
-        UUID sessionID = this.value.getSessionID();
-
-        if(!ValueUtil.isAnyNullOrEmpty(sessionID)){
-            throw new StatusAlreadyFinishedException();
         }
 
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
-
         if (!process.getID().equals(parent.getParentID())) {
             throw new ConditionRefuseException();
         }
 
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
-
-        AccountObject account = userManager.getCurrentAccount();
-        String accountName = account.getName();
-
         ProcessSessionObject processSession = process.getSession();
-        sessionID = processSession.getID();
-
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        UUID sessionID = processSession.getID();
 
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
-                List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
-                        new IdentificationDefinition(accountName), new IdentificationDefinition(sessionID));
-
-                InfoObject sessionInfo = objectManager.get(identifications);
-
-                sessionInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
-
-                ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
-                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(sessionInfo.getID());
-                processInfoEntry.setUnsupportedDelete(true);
+            if (this.value.isLink()) {
+                throw new StatusRelationshipErrorException();
             }
 
-            this.value.setAccountName(accountName);
             this.value.setSessionID(sessionID);
+            this.value.setLink(false);
 
             this.fresh();
         } finally {
@@ -209,20 +187,11 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
         }
     }
 
-    public void setID(UUID sessionID) {
-        if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
-            throw new ConditionParametersException();
-        }
-
+    public void link() {
         if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
-
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
-
-        AccountObject account = userManager.getCurrentAccount();
-        String accountName = account.getName();
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
@@ -230,34 +199,38 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             this.lock(LockType.WRITE);
             this.init();
 
-            InfoObject newSessionInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
-                    new IdentificationDefinition(accountName), new IdentificationDefinition(sessionID)));
-            newSessionInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+            UUID sessionID = this.value.getSessionID();
 
-            UUID oldSessionID = this.value.getSessionID();
-
-            if (!StringUtil.isNameIllegal(accountName) && !ValueUtil.isAnyNullOrEmpty(oldSessionID)) {
-                ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
-                if (processInfoTable.containByID(oldSessionID)) {
-                    ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(oldSessionID);
-                    processInfoEntry.setUnsupportedDelete(false);
-
-                    InfoObject info = processInfoEntry.getInfo();
-                    info.close();
-                }
-
-                this.value.setAccountName(null);
-                this.value.setSessionID(null);
+            if (this.value.isLink()) {
+                throw new StatusAlreadyFinishedException();
+            }
+            if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
+                throw new StatusRelationshipErrorException();
             }
 
+            InfoObject sessionInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
+                    new IdentificationDefinition(sessionID)));
+            sessionInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+
             ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(newSessionInfo.getID());
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(sessionInfo.getID());
             processInfoEntry.setUnsupportedDelete(true);
 
-            this.value.setAccountName(accountName);
             this.value.setSessionID(sessionID);
+            this.value.setLink(true);
 
             this.fresh();
+        } finally {
+            this.lock(LockType.NONE);
+        }
+    }
+
+    public boolean isLink() {
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            return this.value.isLink();
         } finally {
             this.lock(LockType.NONE);
         }
@@ -273,17 +246,16 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             this.lock(LockType.READ);
             this.init();
 
-            String accountName = this.value.getAccountName();
             UUID sessionID = this.value.getSessionID();
 
-            if (StringUtil.isNameIllegal(accountName) || ValueUtil.isAnyNullOrEmpty(sessionID)) {
+            if (!this.value.isLink() || ValueUtil.isAnyNullOrEmpty(sessionID)) {
                 throw new StatusRelationshipErrorException();
             }
 
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 
             List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
-                    new IdentificationDefinition(accountName), new IdentificationDefinition(sessionID));
+                    new IdentificationDefinition(sessionID));
 
             InfoObject sessionInfo = objectManager.get(identifications);
 

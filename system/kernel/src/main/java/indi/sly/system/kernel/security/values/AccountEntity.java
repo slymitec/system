@@ -4,6 +4,7 @@ import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.values.AEntity;
 
 import jakarta.persistence.*;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -33,6 +34,8 @@ public class AccountEntity extends AEntity<AccountEntity> {
     protected List<GroupEntity> groups;
     @Column(length = 4096, name = "Token", nullable = false)
     protected byte[] token;
+    @Column(length = 4096, name = "Sessions", nullable = false)
+    protected byte[] sessions;
 
     public UUID getID() {
         return this.id;
@@ -74,18 +77,27 @@ public class AccountEntity extends AEntity<AccountEntity> {
         this.token = token;
     }
 
+    public byte[] getSessions() {
+        return this.sessions;
+    }
+
+    public void setSessions(byte[] sessions) {
+        this.sessions = sessions;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccountEntity that = (AccountEntity) o;
-        return id.equals(that.id) && name.equals(that.name) && Objects.equals(password, that.password) && groups.equals(that.groups) && Arrays.equals(token, that.token);
+        return id.equals(that.id) && name.equals(that.name) && Objects.equals(password, that.password) && groups.equals(that.groups) && Arrays.equals(token, that.token) && Arrays.equals(sessions, that.sessions);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(id, name, password, groups);
         result = 31 * result + Arrays.hashCode(token);
+        result = 31 * result + Arrays.hashCode(sessions);
         return result;
     }
 
@@ -98,6 +110,7 @@ public class AccountEntity extends AEntity<AccountEntity> {
         account.password = this.password;
         account.groups = this.groups;
         account.token = ArrayUtil.copyBytes(this.token);
+        account.sessions = ArrayUtil.copyBytes(this.sessions);
 
         return account;
     }
@@ -118,6 +131,7 @@ public class AccountEntity extends AEntity<AccountEntity> {
         }
 
         this.token = NumberUtil.readExternalBytes(in);
+        this.sessions = NumberUtil.readExternalBytes(in);
     }
 
     @Override
@@ -134,5 +148,6 @@ public class AccountEntity extends AEntity<AccountEntity> {
         }
 
         NumberUtil.writeExternalBytes(out, this.token);
+        NumberUtil.writeExternalBytes(out, this.sessions);
     }
 }

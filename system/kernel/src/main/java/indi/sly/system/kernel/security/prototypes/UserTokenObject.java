@@ -2,6 +2,7 @@ package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.Map;
 
 @Named
@@ -57,7 +59,7 @@ public class UserTokenObject extends AIndependentBytesValueProcessObject<UserTok
             this.lock(LockType.READ);
             this.init();
 
-            return this.value.getLimits();
+            return CollectionUtil.unmodifiable(this.value.getLimits());
         } finally {
             this.lock(LockType.NONE);
         }

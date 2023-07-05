@@ -12,6 +12,9 @@ import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObjec
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
+import indi.sly.system.kernel.security.UserManager;
+import indi.sly.system.kernel.security.prototypes.AccountObject;
+import indi.sly.system.kernel.security.prototypes.AccountSessionsObject;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -30,6 +33,19 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
     public void createProcedure(InfoEntity info) {
         SessionDefinition session = new SessionDefinition();
         info.setContent(ObjectUtil.transferToByteArray(session));
+
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+        AccountObject account = userManager.getCurrentAccount();
+        AccountSessionsObject accountSessions = account.getSessions();
+        accountSessions.addSession(info.getID());
+    }
+
+    @Override
+    public void deleteProcedure(InfoEntity info) {
+        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+        AccountObject account = userManager.getCurrentAccount();
+        AccountSessionsObject accountSessions = account.getSessions();
+        accountSessions.deleteSession(info.getID());
     }
 
     @Override
@@ -38,7 +54,7 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
         ProcessObject process = processManager.getCurrent();
 
         ProcessSessionObject processSession = process.getSession();
-        if(!ValueUtil.isAnyNullOrEmpty(processSession.getID())){
+        if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -55,7 +71,7 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
         ProcessObject process = processManager.getCurrent();
 
         ProcessSessionObject processSession = process.getSession();
-        if(!info.getID().equals(processSession.getID())){
+        if (!info.getID().equals(processSession.getID())) {
             throw new StatusRelationshipErrorException();
         }
 

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.*;
 
 @Named
@@ -146,6 +147,22 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
             userToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
 
             return userToken;
+        } finally {
+            this.lock(LockType.NONE);
+        }
+    }
+
+    public AccountSessionsObject getSessions() {
+        try {
+            this.lock(LockType.READ);
+            this.init();
+
+            AccountSessionsObject accountSessions = this.factoryManager.create(AccountSessionsObject.class);
+
+            accountSessions.setParent(this);
+            accountSessions.setSource(() -> this.value.getSessions(), (byte[] source) -> this.value.setSessions(source));
+
+            return accountSessions;
         } finally {
             this.lock(LockType.NONE);
         }

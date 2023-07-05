@@ -3,6 +3,7 @@ package indi.sly.system.kernel.security;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
@@ -237,6 +238,11 @@ public class UserManager extends AManager {
         AccountBuilder accountBuilder = this.factory.createAccount();
 
         AccountObject account = this.getAccount(accountID);
+        AccountSessionsObject accountSessions = account.getSessions();
+
+        if (!accountSessions.listSessions().isEmpty()) {
+            throw new StatusRelationshipErrorException();
+        }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
 

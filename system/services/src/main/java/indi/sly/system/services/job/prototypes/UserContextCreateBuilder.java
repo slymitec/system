@@ -20,11 +20,11 @@ public class UserContextCreateBuilder extends ABuilder {
     protected UserContextProcessorMediator processorMediator;
 
     public UserContextObject create(UserContextRequestRawDefinition userContextRequestRaw) {
-        UserContextDefinition userContext = new UserContextDefinition();
-
         if (ValueUtil.isAnyNullOrEmpty(userContextRequestRaw)) {
             throw new ConditionParametersException();
         }
+
+        UserContextDefinition userContext = new UserContextDefinition();
 
         List<UserContextProcessorCreateFunction> resolvers = this.processorMediator.getCreates();
 

@@ -35,7 +35,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
         }
 
         try {
-            this.lock(LockType.WRITE);
+            this.lock(LockType.READ);
             this.init();
 
             return this.entry.getType();
@@ -77,7 +77,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
         }
 
         try {
-            this.lock(LockType.WRITE);
+            this.lock(LockType.READ);
             this.init();
 
             return this.entry.getValue();

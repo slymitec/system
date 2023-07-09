@@ -545,7 +545,6 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
             this.value.setSignalID(null);
 
             this.fresh();
-            this.lock(LockType.NONE);
         } finally {
             this.lock(LockType.NONE);
         }
@@ -608,7 +607,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         UUID signalID;
 
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             signalID = this.value.getSignalID();

@@ -28,7 +28,7 @@ public class AuditContentObject extends AInfoContentObject {
 
     public UUID getProcessID() {
         try {
-            this.lock(LockType.WRITE);
+            this.lock(LockType.READ);
             this.init();
 
             return this.audit.getProcessID();
@@ -39,7 +39,7 @@ public class AuditContentObject extends AInfoContentObject {
 
     public UUID getAccountID() {
         try {
-            this.lock(LockType.WRITE);
+            this.lock(LockType.READ);
             this.init();
 
             return this.audit.getAccountID();
@@ -50,7 +50,7 @@ public class AuditContentObject extends AInfoContentObject {
 
     public List<IdentificationDefinition> getIdentifications() {
         try {
-            this.lock(LockType.WRITE);
+            this.lock(LockType.READ);
             this.init();
 
             return CollectionUtil.unmodifiable(this.audit.getIdentifications());
@@ -79,7 +79,7 @@ public class AuditContentObject extends AInfoContentObject {
 
     public Set<UserIDDefinition> getUserIDs() {
         try {
-            this.lock(LockType.WRITE);
+            this.lock(LockType.READ);
             this.init();
 
             return CollectionUtil.unmodifiable(this.audit.getUserIDs());
@@ -108,7 +108,7 @@ public class AuditContentObject extends AInfoContentObject {
 
     public long getAudit() {
         try {
-            this.lock(LockType.WRITE);
+            this.lock(LockType.READ);
             this.init();
 
             return this.audit.getAudit();

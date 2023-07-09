@@ -65,8 +65,6 @@ public class TaskObject extends AIndependentValueProcessObject<TaskDefinition> {
             for (TaskProcessorFinishConsumer resolver : resolvers) {
                 resolver.accept(this.value, this.status);
             }
-
-            this.lock(LockType.NONE);
         } finally {
             this.lock(LockType.NONE);
         }

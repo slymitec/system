@@ -5,7 +5,6 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.services.job.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.job.prototypes.wrappers.UserContextProcessorMediator;
 import indi.sly.system.services.job.values.UserContentRequestDefinition;
-import indi.sly.system.services.job.values.UserContextRequestContentRawDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -15,21 +14,21 @@ import org.springframework.context.annotation.Scope;
 public class UserContextCreateContentResolver extends AUserContextCreateResolver {
     public UserContextCreateContentResolver() {
         this.create = (userContext, userContextRequestRaw) -> {
-            UserContextRequestContentRawDefinition contentRaw = userContextRequestRaw.getContent();
+            UserContentRequestDefinition userContentRequestRaw = userContextRequestRaw.getContent();
 
-            if (ValueUtil.isAnyNullOrEmpty(contentRaw.getTask(), contentRaw.getMethod())) {
+            if (ValueUtil.isAnyNullOrEmpty(userContentRequestRaw.getTask(), userContentRequestRaw.getMethod())) {
                 throw new ConditionParametersException();
             }
-            for (String key : contentRaw.getRequest().keySet()) {
+            for (String key : userContentRequestRaw.getRequest().keySet()) {
                 if (ValueUtil.isAnyNullOrEmpty(key)) {
                     throw new ConditionParametersException();
                 }
             }
 
             UserContentRequestDefinition userContentRequest = userContext.getContent().getRequest();
-            userContentRequest.setTask(contentRaw.getTask());
-            userContentRequest.setMethod(contentRaw.getMethod());
-            userContentRequest.getRequest().putAll(contentRaw.getRequest());
+            userContentRequest.setTask(userContentRequestRaw.getTask());
+            userContentRequest.setMethod(userContentRequestRaw.getMethod());
+            userContentRequest.getRequest().putAll(userContentRequestRaw.getRequest());
 
             return userContext;
         };

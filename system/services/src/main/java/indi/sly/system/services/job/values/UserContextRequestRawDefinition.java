@@ -5,17 +5,17 @@ import indi.sly.system.common.values.ADefinition;
 public class UserContextRequestRawDefinition extends ADefinition<UserContextRequestRawDefinition> {
     public UserContextRequestRawDefinition() {
         this.processID = new UserContextRequestProcessIDRawDefinition();
-        this.content = new UserContextRequestContentRawDefinition();
+        this.content = new UserContentRequestDefinition();
     }
 
     private final UserContextRequestProcessIDRawDefinition processID;
-    private final UserContextRequestContentRawDefinition content;
+    private final UserContentRequestDefinition content;
 
     public UserContextRequestProcessIDRawDefinition getProcessID() {
         return this.processID;
     }
 
-    public UserContextRequestContentRawDefinition getContent() {
+    public UserContentRequestDefinition getContent() {
         return this.content;
     }
 }

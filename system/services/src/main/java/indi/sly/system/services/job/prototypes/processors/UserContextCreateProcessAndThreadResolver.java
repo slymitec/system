@@ -10,6 +10,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.UUID;
 
 @Named
@@ -17,11 +18,11 @@ import java.util.UUID;
 public class UserContextCreateProcessAndThreadResolver extends AUserContextCreateResolver {
     public UserContextCreateProcessAndThreadResolver() {
         this.create = (userContext, userContextRequestRaw) -> {
-            UserContextRequestProcessIDRawDefinition processIDRaw = userContextRequestRaw.getProcessID();
+            UserContextRequestProcessIDRawDefinition userContextRequestProcessIDRaw = userContextRequestRaw.getProcessID();
 
 //            userContentProcessIDRaw.getVerification();
 
-            UUID processID = processIDRaw.getID();
+            UUID processID = userContextRequestProcessIDRaw.getID();
 
             TransactionalActionObject transactionalAction = this.factoryManager.create(TransactionalActionObject.class);
 

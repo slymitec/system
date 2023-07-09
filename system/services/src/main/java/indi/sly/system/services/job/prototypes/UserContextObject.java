@@ -5,13 +5,12 @@ import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.services.job.values.UserContentDefinition;
-import indi.sly.system.services.job.values.UserContentExceptionDefinition;
-import indi.sly.system.services.job.values.UserContentResponseRawDefinition;
+import indi.sly.system.services.job.values.UserContentResponseDefinition;
 import indi.sly.system.services.job.values.UserContextDefinition;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import jakarta.inject.Named;
 import java.util.UUID;
 
 @Named
@@ -53,7 +52,7 @@ public class UserContextObject extends AIndependentValueProcessObject<UserContex
         return userContent;
     }
 
-    public UserContentResponseRawDefinition getResponse() {
+    public UserContentResponseDefinition getResponse() {
         this.init();
 
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
@@ -65,17 +64,8 @@ public class UserContextObject extends AIndependentValueProcessObject<UserContex
             throw new StatusRelationshipErrorException();
         }
 
-        UserContentResponseRawDefinition responseRaw = new UserContentResponseRawDefinition();
+        UserContentDefinition userContent = this.value.getContent();
 
-        UserContentDefinition content = this.value.getContent();
-
-        responseRaw.getResponse().putAll(content.getResponse());
-        UserContentExceptionDefinition exception = content.getException();
-        responseRaw.getException().setName(exception.getName());
-        responseRaw.getException().setClazz(exception.getClazz());
-        responseRaw.getException().setMethod(exception.getMethod());
-        responseRaw.getException().setMessage(exception.getMessage());
-
-        return responseRaw;
+        return userContent.getResponse();
     }
 }

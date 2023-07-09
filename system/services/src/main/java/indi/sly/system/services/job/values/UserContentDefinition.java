@@ -2,47 +2,20 @@ package indi.sly.system.services.job.values;
 
 import indi.sly.system.common.values.ADefinition;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class UserContentDefinition extends ADefinition<UserContentDefinition> {
     public UserContentDefinition() {
-        this.request = new HashMap<>();
-        this.response = new HashMap<>();
-        this.exception = new UserContentExceptionDefinition();
+        this.request = new UserContentRequestDefinition();
+        this.response = new UserContentResponseDefinition();
     }
 
-    private String task;
-    private String method;
-    private final Map<String, String> request;
-    private final Map<String, Object> response;
-    private final UserContentExceptionDefinition exception;
+    private final UserContentRequestDefinition request;
+    private final UserContentResponseDefinition response;
 
-    public String getTask() {
-        return this.task;
+    public UserContentRequestDefinition getRequest() {
+        return request;
     }
 
-    public void setTask(String task) {
-        this.task = task;
-    }
-
-    public String getMethod() {
-        return this.method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public Map<String, String> getRequest() {
-        return this.request;
-    }
-
-    public Map<String, Object> getResponse() {
-        return this.response;
-    }
-
-    public UserContentExceptionDefinition getException() {
-        return this.exception;
+    public UserContentResponseDefinition getResponse() {
+        return response;
     }
 }

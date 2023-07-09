@@ -7,13 +7,12 @@ import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.services.job.JobService;
-import indi.sly.system.services.job.values.UserContentDefinition;
-import indi.sly.system.services.job.values.UserContentExceptionDefinition;
-import indi.sly.system.services.job.values.UserContextDefinition;
+import indi.sly.system.services.job.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.Map;
 
 @Named
@@ -31,7 +30,7 @@ public class UserContentObject extends AIndependentValueProcessObject<UserContex
             throw new StatusRelationshipErrorException();
         }
 
-        return this.value.getContent().getTask();
+        return this.value.getContent().getRequest().getTask();
     }
 
     public String getMethod() {
@@ -46,7 +45,7 @@ public class UserContentObject extends AIndependentValueProcessObject<UserContex
             throw new StatusRelationshipErrorException();
         }
 
-        return this.value.getContent().getMethod();
+        return this.value.getContent().getRequest().getMethod();
     }
 
     public void run() {
@@ -61,25 +60,26 @@ public class UserContentObject extends AIndependentValueProcessObject<UserContex
             throw new StatusRelationshipErrorException();
         }
 
-        UserContentDefinition userContent = this.value.getContent();
+        UserContentRequestDefinition userContentRequest = this.value.getContent().getRequest();
+        UserContentResponseDefinition userContentResponse = this.value.getContent().getResponse();
 
         JobService jobService = this.factoryManager.getService(JobService.class);
-        TaskObject task = jobService.getTask(userContent.getTask());
+        TaskObject task = jobService.getTask(userContentRequest.getTask());
 
         task.start();
 
         TaskContentObject taskContent = task.getContent();
 
-        Map<String, String> request = userContent.getRequest();
+        Map<String, String> request = userContentRequest.getRequest();
         for (Map.Entry<String, String> pair : request.entrySet()) {
             taskContent.setParameter(pair.getKey(), pair.getValue());
         }
 
-        task.run(userContent.getMethod());
+        task.run(userContentRequest.getMethod());
 
         if (ObjectUtil.allNotNull(taskContent.getException())) {
             AKernelException kernelException = taskContent.getException();
-            UserContentExceptionDefinition userContentException = userContent.getException();
+            UserContentExceptionDefinition userContentException = userContentResponse.getException();
 
             userContentException.setName(kernelException.getClass().getSimpleName());
             StackTraceElement[] kernelExceptionStackTrace = kernelException.getStackTrace();
@@ -93,7 +93,7 @@ public class UserContentObject extends AIndependentValueProcessObject<UserContex
             }
             userContentException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
         } else {
-            userContent.getResponse().putAll(taskContent.getResult());
+            userContentResponse.getResponse().putAll(taskContent.getResult());
         }
 
         task.finish();

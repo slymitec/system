@@ -18,7 +18,7 @@ import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
 import indi.sly.system.services.job.JobService;
-import indi.sly.system.services.job.values.UserContentResponseRawDefinition;
+import indi.sly.system.services.job.values.UserContentResponseDefinition;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +32,7 @@ import jakarta.transaction.Transactional;
 public class StartUpController extends AController {
     @RequestMapping(value = {"/StartUp.action"}, method = {RequestMethod.GET})
     @Transactional
-    public UserContentResponseRawDefinition startup(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    public UserContentResponseDefinition startup(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init();
 
         if (ObjectUtil.isAnyNull(this.factoryManager)) {
@@ -84,9 +84,9 @@ public class StartUpController extends AController {
                 jobService.startup(startup);
             }
 
-            return new UserContentResponseRawDefinition();
+            return new UserContentResponseDefinition();
         } else {
-            UserContentResponseRawDefinition userContentResponseRaw = new UserContentResponseRawDefinition();
+            UserContentResponseDefinition userContentResponseRaw = new UserContentResponseDefinition();
 
             userContentResponseRaw.getException().setName("StatusAlreadyFinishedException");
             userContentResponseRaw.getException().setClazz(StartUpController.class.getName());

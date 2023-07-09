@@ -10,7 +10,7 @@ import indi.sly.system.services.job.JobService;
 import indi.sly.system.services.job.prototypes.UserContentObject;
 import indi.sly.system.services.job.prototypes.UserContextObject;
 import indi.sly.system.services.job.values.UserContentExceptionDefinition;
-import indi.sly.system.services.job.values.UserContentResponseRawDefinition;
+import indi.sly.system.services.job.values.UserContentResponseDefinition;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.websocket.*;
@@ -70,13 +70,13 @@ public class InterActiveController extends AController {
 
             userContent.run();
 
-            UserContentResponseRawDefinition userContentResponseRaw = userContext.getResponse();
+            UserContentResponseDefinition userContentResponseRaw = userContext.getResponse();
 
             jobService.finishUserContext(userContext);
 
             session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponseRaw));
         } catch (RuntimeException exception) {
-            UserContentResponseRawDefinition userContentResponseRaw = new UserContentResponseRawDefinition();
+            UserContentResponseDefinition userContentResponseRaw = new UserContentResponseDefinition();
 
             UserContentExceptionDefinition userContentResponseExceptionRaw = userContentResponseRaw.getException();
 

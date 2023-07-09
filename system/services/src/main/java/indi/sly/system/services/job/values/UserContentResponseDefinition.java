@@ -5,8 +5,8 @@ import indi.sly.system.common.values.ADefinition;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserContentResponseRawDefinition extends ADefinition<UserContentResponseRawDefinition> {
-    public UserContentResponseRawDefinition() {
+public class UserContentResponseDefinition extends ADefinition<UserContentResponseDefinition> {
+    public UserContentResponseDefinition() {
         this.response = new HashMap<>();
         this.exception = new UserContentExceptionDefinition();
     }

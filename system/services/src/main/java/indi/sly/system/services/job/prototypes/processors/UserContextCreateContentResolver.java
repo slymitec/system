@@ -4,12 +4,11 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.services.job.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.job.prototypes.wrappers.UserContextProcessorMediator;
-import indi.sly.system.services.job.values.UserContentDefinition;
+import indi.sly.system.services.job.values.UserContentRequestDefinition;
 import indi.sly.system.services.job.values.UserContextRequestContentRawDefinition;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -27,10 +26,10 @@ public class UserContextCreateContentResolver extends AUserContextCreateResolver
                 }
             }
 
-            UserContentDefinition content = userContext.getContent();
-            content.setTask(contentRaw.getTask());
-            content.setMethod(contentRaw.getMethod());
-            content.getRequest().putAll(contentRaw.getRequest());
+            UserContentRequestDefinition userContentRequest = userContext.getContent().getRequest();
+            userContentRequest.setTask(contentRaw.getTask());
+            userContentRequest.setMethod(contentRaw.getMethod());
+            userContentRequest.getRequest().putAll(contentRaw.getRequest());
 
             return userContext;
         };

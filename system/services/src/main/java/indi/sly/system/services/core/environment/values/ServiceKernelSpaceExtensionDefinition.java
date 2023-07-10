@@ -1,7 +1,7 @@
 package indi.sly.system.services.core.environment.values;
 
 import indi.sly.system.kernel.core.enviroment.values.AKernelSpaceExtensionDefinition;
-import indi.sly.system.services.job.values.TaskDefinition;
+import indi.sly.system.services.jobs.values.TaskDefinition;
 
 import java.util.Map;
 import java.util.UUID;

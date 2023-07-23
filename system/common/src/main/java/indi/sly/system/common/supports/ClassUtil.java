@@ -7,7 +7,6 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 public abstract class ClassUtil extends org.apache.commons.lang3.ClassUtils {
-
     public static boolean isThisOrSuperContain(Class<?> child, Class<?> parent) {
         if (ObjectUtil.isAnyNull(child, parent)) {
             throw new ConditionParametersException();

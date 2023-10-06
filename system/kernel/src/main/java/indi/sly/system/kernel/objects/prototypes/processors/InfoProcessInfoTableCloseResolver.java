@@ -18,18 +18,6 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoProcessInfoTableCloseResolver extends AInfoResolver {
     public InfoProcessInfoTableCloseResolver() {
-        this.open = (index, info, type, status, openAttribute, arguments) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrent();
-            ProcessInfoTableObject processInfoTable = process.getInfoTable();
-
-            if (processInfoTable.containByID(info.getID())) {
-                throw new StatusAlreadyFinishedException();
-            }
-
-            return index;
-        };
-
         this.close = (info, type, status) -> {
             ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
@@ -47,12 +35,10 @@ public class InfoProcessInfoTableCloseResolver extends AInfoResolver {
         };
     }
 
-    private final InfoProcessorOpenFunction open;
     private final InfoProcessorCloseFunction close;
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
-        processorMediator.getOpens().add(this.open);
         processorMediator.getCloses().add(this.close);
     }
 

@@ -11,11 +11,11 @@
       <module name="system.kernel" target="21" />
       <module name="system.kernel.main" target="17" />
       <module name="system.kernel.test" target="21" />
-      <module name="system.main" target="17" />
+      <module name="system.main" target="21" />
       <module name="system.services" target="21" />
       <module name="system.services.main" target="21" />
       <module name="system.services.test" target="21" />
-      <module name="system.test" target="17" />
+      <module name="system.test" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>

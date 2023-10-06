@@ -14,6 +14,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -80,6 +81,7 @@ public class BootUserResolver extends ABootResolver {
                     account.setPassword(StringUtil.EMPTY);
                     account.setGroups(new ArrayList<>(List.of(group)));
                     account.setToken(ObjectUtil.transferToByteArray(new UserTokenDefinition()));
+                    account.setSessions(ObjectUtil.transferToByteArray(new AccountSessionsDefinition()));
 
                     userRepository.add(account);
                 }

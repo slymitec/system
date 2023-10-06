@@ -78,7 +78,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_17">
+  <component name="NewModuleRootManager">
     <output url="file://$MODULE_DIR$/../../system/build/classes/java/main" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../system/src/main">
@@ -87,8 +87,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.antlr:antlr4-runtime:4.10.1" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22" level="project" />
+    <orderEntry type="module" module-name="indi.sly.system.system.common.main" />
+    <orderEntry type="module" module-name="indi.sly.system.system.kernel.main" />
+    <orderEntry type="module" module-name="system.services.main" />
     <orderEntry type="library" name="Gradle: com.microsoft.sqlserver:mssql-jdbc:11.2.2.jre17" level="project" />
     <orderEntry type="library" name="Gradle: jakarta.inject:jakarta.inject-api:2.0.1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-data-jpa:3.1.4" level="project" />
@@ -147,9 +149,8 @@
     <orderEntry type="library" name="Gradle: io.micrometer:micrometer-commons:1.11.4" level="project" />
     <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.4.11" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-api:2.20.0" level="project" />
-    <orderEntry type="library" name="Gradle: indi.sly.system:common:1.0" level="project" />
-    <orderEntry type="library" name="Gradle: indi.sly.system:kernel:1.0" level="project" />
-    <orderEntry type="library" name="Gradle: indi.sly.system:services:1.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.apache.commons:commons-lang3:3.12.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.apache.commons:commons-collections4:4.4" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jboss.logging:jboss-logging:3.5.3.Final" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.hibernate.common:hibernate-commons-annotations:6.0.6.Final" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: io.smallrye:jandex:3.0.5" level="project" />

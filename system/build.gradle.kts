@@ -1,9 +1,9 @@
 plugins {
     java
-    id("org.springframework.boot") version ("3.0.6")
-    id("io.spring.dependency-management") version ("1.1.0")
-    kotlin("jvm") version ("1.7.22")
-    kotlin("plugin.spring") version ("1.7.22")
+    id("org.springframework.boot") version ("3.1.4")
+    id("io.spring.dependency-management") version ("1.1.3")
+    kotlin("jvm") version ("1.8.22")
+    kotlin("plugin.spring") version ("1.8.22")
 }
 
 allprojects {
@@ -74,6 +74,13 @@ tasks.compileTestJava {
     options.release.set(17)
 }
 
+//tasks.withType<KotlinCompile> {
+//    kotlinOptions {
+//        freeCompilerArgs += "-Xjsr305=strict"
+//        jvmTarget = "21"
+//    }
+//}
+
 tasks.jar {
     enabled = true
     manifest {
@@ -83,13 +90,6 @@ tasks.jar {
         )
     }
 }
-
-//tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-//    kotlinOptions {
-//        freeCompilerArgs = listOf("-Xjsr305=strict")
-//        jvmTarget = "16"
-//    }
-//}
 
 tasks.test {
     useJUnitPlatform()

@@ -38,9 +38,6 @@ dependencies {
     implementation(project(":kernel"))
     implementation(project(":services"))
 
-//    implementation("org.jetbrains.kotlin:kotlin-reflect")
-//    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-
     implementation("com.microsoft.sqlserver:mssql-jdbc:11.2.2.jre17")
     implementation("jakarta.inject:jakarta.inject-api:2.0.1")
     implementation("org.springframework.boot:spring-boot-starter")
@@ -66,12 +63,12 @@ tasks.bootJar {
 
 tasks.compileJava {
     options.encoding = "UTF-8"
-    options.release.set(17)
+    options.release.set(21)
 }
 
 tasks.compileTestJava {
     options.encoding = "UTF-8"
-    options.release.set(17)
+    options.release.set(21)
 }
 
 //tasks.withType<KotlinCompile> {
@@ -91,6 +88,6 @@ tasks.jar {
     }
 }
 
-tasks.test {
+tasks.withType<Test> {
     useJUnitPlatform()
 }

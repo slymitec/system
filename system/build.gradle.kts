@@ -1,9 +1,9 @@
 plugins {
     java
-    id("org.springframework.boot") version ("3.2.2")
-    id("io.spring.dependency-management") version ("1.1.4")
-    kotlin("jvm") version ("1.9.22")
-    kotlin("plugin.spring") version ("1.9.22")
+    id("org.springframework.boot") version ("3.3.2")
+    id("io.spring.dependency-management") version ("1.1.6")
+    kotlin("jvm") version ("1.9.24")
+    kotlin("plugin.spring") version ("1.9.24")
 }
 
 allprojects {
@@ -38,8 +38,8 @@ dependencies {
     implementation(project(":kernel"))
     implementation(project(":services"))
 
-    implementation("com.microsoft.sqlserver:mssql-jdbc:12.4.2.jre11")
-    implementation("jakarta.inject:jakarta.inject-api:2.0.1")
+    implementation("com.microsoft.sqlserver:mssql-jdbc:12.7.0")
+    implementation("jakarta.inject:jakarta.inject-api:2.0.1.MR")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

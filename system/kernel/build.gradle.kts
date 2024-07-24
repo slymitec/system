@@ -1,7 +1,7 @@
 dependencies {
     implementation(project(":common"))
 
-    implementation("jakarta.inject:jakarta.inject-api:2.0.1")
+    implementation("jakarta.inject:jakarta.inject-api:2.0.1.MR")
     implementation("org.apache.commons:commons-lang3")
     implementation("com.fasterxml.jackson.core:jackson-core")
     implementation("com.fasterxml.jackson.core:jackson-databind")

@@ -20,8 +20,6 @@ public class UserContextCreateProcessAndThreadResolver extends AUserContextCreat
         this.create = (userContext, userContextRequestRaw) -> {
             UserContextRequestProcessIDRawDefinition userContextRequestProcessIDRaw = userContextRequestRaw.getProcessID();
 
-//            userContentProcessIDRaw.getVerification();
-
             UUID processID = userContextRequestProcessIDRaw.getID();
 
             TransactionalActionObject transactionalAction = this.factoryManager.create(TransactionalActionObject.class);

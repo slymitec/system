@@ -26,9 +26,9 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class HandleTaskInitializer extends ATaskInitializer {
     public HandleTaskInitializer() {
-        this.register("getAllHandle", this::getAllHandle, TransactionType.INDEPENDENCE);
+        this.register("getAllHandles", this::getAllHandles, TransactionType.INDEPENDENCE);
         this.register("deleteHandle", this::deleteHandle, TransactionType.INDEPENDENCE);
-        this.register("deleteAllHandle", this::deleteAllHandle, TransactionType.INDEPENDENCE);
+        this.register("deleteAllHandles", this::deleteAllHandles, TransactionType.INDEPENDENCE);
         this.register("customHandle", this::customHandle, TransactionType.INDEPENDENCE);
     }
 
@@ -109,7 +109,7 @@ public class HandleTaskInitializer extends ATaskInitializer {
         }
     }
 
-    private void getAllHandle(TaskRunConsumer run, TaskContentObject content) {
+    private void getAllHandles(TaskRunConsumer run, TaskContentObject content) {
         Map<UUID, String> handleSummary = new HashMap<>();
 
         Set<UUID> handles = content.getAllHandle();
@@ -130,7 +130,7 @@ public class HandleTaskInitializer extends ATaskInitializer {
         content.deleteCache(handleID);
     }
 
-    private void deleteAllHandle(TaskRunConsumer run, TaskContentObject content) {
+    private void deleteAllHandles(TaskRunConsumer run, TaskContentObject content) {
         Set<UUID> handles = content.getAllHandle();
 
         for (UUID handle : handles) {

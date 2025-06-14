@@ -1,9 +1,11 @@
 package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
 import indi.sly.system.kernel.security.values.AccountSessionsDefinition;
 import jakarta.inject.Named;
@@ -27,6 +29,7 @@ public class AccountSessionsObject extends AIndependentBytesValueProcessObject<A
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSession(UUID sessionID) {
         if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
             throw new ConditionParametersException();
@@ -44,6 +47,7 @@ public class AccountSessionsObject extends AIndependentBytesValueProcessObject<A
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void deleteSession(UUID sessionID) {
         if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
             throw new ConditionParametersException();

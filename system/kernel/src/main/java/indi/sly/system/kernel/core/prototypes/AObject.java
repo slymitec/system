@@ -2,10 +2,12 @@ package indi.sly.system.kernel.core.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -26,6 +28,7 @@ public class AObject extends APrototype {
         return this.handle;
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public final UUID cache(long space, UUID handle) {
         if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();
@@ -53,10 +56,12 @@ public class AObject extends APrototype {
         return this.handle;
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public final UUID cache(long space) {
         return this.cache(space, UUIDUtil.createRandom());
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public final void uncache(long space) {
         if (ValueUtil.isAnyNullOrEmpty(this.handle)) {
             throw new StatusAlreadyFinishedException();

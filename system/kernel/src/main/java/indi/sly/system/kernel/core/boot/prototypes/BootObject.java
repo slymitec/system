@@ -29,7 +29,6 @@ public class BootObject extends AObject implements IStartupCapable {
 
     @Override
     public void shutdown() {
-
     }
 
     public long getStartupStatus() {

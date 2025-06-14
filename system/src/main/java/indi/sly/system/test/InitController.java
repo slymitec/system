@@ -84,8 +84,6 @@ public class InitController extends AController {
                 fileContent.write(StringUtil.writeToBytes(Long.toString(System.currentTimeMillis())));
                 fileContent.close();
             }
-
-
         }
         result.put("result", infoSummaries);
 

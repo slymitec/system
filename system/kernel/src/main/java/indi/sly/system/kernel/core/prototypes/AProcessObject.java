@@ -3,6 +3,7 @@ package indi.sly.system.kernel.core.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.MethodScopeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -20,6 +21,7 @@ public abstract class AProcessObject<T1, T2> extends AObject {
     private Consumer1<T1> funcWrite;
     private Consumer1<Long> funcLock;
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public final void setParent(T2 parent) {
         this.parent = parent;
 
@@ -36,6 +38,7 @@ public abstract class AProcessObject<T1, T2> extends AObject {
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public final void setSource(Provider<T1> funcRead, Consumer1<T1> funcWrite) {
         if (ObjectUtil.isAnyNull(funcRead, funcWrite)) {
             throw new ConditionParametersException();
@@ -45,6 +48,7 @@ public abstract class AProcessObject<T1, T2> extends AObject {
         this.funcWrite = funcWrite;
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public final void setLock(Consumer1<Long> funcLock) {
         if (ObjectUtil.isAnyNull(funcLock)) {
             throw new ConditionParametersException();
@@ -53,6 +57,7 @@ public abstract class AProcessObject<T1, T2> extends AObject {
         this.funcLock = funcLock;
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     protected final void lock(long lock) {
         if (ObjectUtil.isAnyNull(this.funcRead, this.funcWrite)) {
             throw new ConditionContextException();
@@ -66,6 +71,7 @@ public abstract class AProcessObject<T1, T2> extends AObject {
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     protected final void init() {
         if (ObjectUtil.isAnyNull(this.funcRead, this.funcWrite)) {
             throw new ConditionContextException();
@@ -79,6 +85,7 @@ public abstract class AProcessObject<T1, T2> extends AObject {
         this.read(value);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     protected final void fresh() {
         if (ObjectUtil.isAnyNull(this.funcRead, this.funcWrite)) {
             throw new ConditionContextException();
@@ -92,7 +99,9 @@ public abstract class AProcessObject<T1, T2> extends AObject {
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     protected abstract void read(T1 source);
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     protected abstract T1 write();
 }

@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
@@ -21,6 +22,7 @@ public abstract class AInfoContentObject extends AValueProcessObject<byte[], Inf
 
     protected InfoOpenDefinition infoOpen;
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public final void setExecute(Consumer funcExecute) {
         if (ObjectUtil.isAnyNull(funcExecute)) {
             throw new ConditionParametersException();
@@ -29,6 +31,7 @@ public abstract class AInfoContentObject extends AValueProcessObject<byte[], Inf
         this.funcExecute = funcExecute;
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setInfoOpen(InfoOpenDefinition infoOpen) {
         this.infoOpen = infoOpen;
     }
@@ -53,6 +56,7 @@ public abstract class AInfoContentObject extends AValueProcessObject<byte[], Inf
         return super.write();
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public synchronized void close() {
         this.parent.close();
 
@@ -69,6 +73,7 @@ public abstract class AInfoContentObject extends AValueProcessObject<byte[], Inf
         });
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public synchronized void execute() {
         if (ObjectUtil.isAnyNull(this.funcExecute)) {
             throw new StatusDisabilityException();

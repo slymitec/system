@@ -7,6 +7,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -36,6 +37,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
     private boolean permission;
     private boolean audit;
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setIdentifications(List<IdentificationDefinition> identifications) {
         if (ObjectUtil.isAnyNull(identifications)) {
             throw new ConditionParametersException();
@@ -45,10 +47,12 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
         this.identifications.addAll(identifications);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setPermission(boolean permission) {
         this.permission = permission;
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setAudit(boolean audit) {
         this.audit = audit;
     }

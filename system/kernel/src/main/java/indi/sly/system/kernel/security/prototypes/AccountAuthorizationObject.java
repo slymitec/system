@@ -1,12 +1,10 @@
 package indi.sly.system.kernel.security.prototypes;
 
-import indi.sly.system.common.lang.AKernelException;
-import indi.sly.system.common.lang.ConditionContextException;
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusExpiredException;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -36,6 +34,7 @@ public class AccountAuthorizationObject extends AObject {
     private ProcessTokenObject processToken;
     private AccountAuthorizationTokenDefinition accountAuthorizationToken;
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setAccount(AccountAuthorizationGetAccount account, String password) {
         if (ObjectUtil.isAnyNull(account)) {
             throw new ConditionParametersException();
@@ -51,6 +50,7 @@ public class AccountAuthorizationObject extends AObject {
         this.date.put(DateTimeType.ACCESS, nowDateTime);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setToken(ProcessTokenObject processToken, AccountAuthorizationTokenDefinition accountAuthorizationToken) {
         this.processToken = processToken;
         this.accountAuthorizationToken = accountAuthorizationToken;

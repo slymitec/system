@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MethodScope {
-    long value() default MethodScopeType.KERNEL_AND_SERVICE;
+    long value() default MethodScopeType.WHATEVER;
 }

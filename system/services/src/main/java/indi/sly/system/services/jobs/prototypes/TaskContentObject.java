@@ -19,10 +19,10 @@ import java.util.*;
 public class TaskContentObject extends AObject {
     protected ThreadContextObject threadContext;
 
-    public Set<UUID> getAllHandle() {
+    public Set<UUID> getAllHandles() {
         CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
 
-        return coreObjectRepository.getAllHandle(SpaceType.USER);
+        return coreObjectRepository.getAllHandles(SpaceType.USER);
     }
 
     public <T extends AObject> T getCache(UUID handle) {

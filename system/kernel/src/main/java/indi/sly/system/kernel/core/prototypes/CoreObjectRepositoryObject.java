@@ -55,7 +55,7 @@ public class CoreObjectRepositoryObject extends AObject {
         return CollectionUtil.unmodifiable(coreObjects);
     }
 
-    public Set<UUID> getAllHandle(long space) {
+    public Set<UUID> getAllHandles(long space) {
         Set<UUID> handles;
 
         Lock lock = this.getLock(space, LockType.READ);

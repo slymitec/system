@@ -9,16 +9,12 @@ import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
 import indi.sly.system.services.jobs.values.TaskDefinition;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import jakarta.inject.Named;
-
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,6 +23,8 @@ import java.util.UUID;
 public class HandleTaskInitializer extends ATaskInitializer {
     public HandleTaskInitializer() {
         this.register("getAllHandles", this::getAllHandles, TransactionType.INDEPENDENCE);
+        this.register("getHandleClass", this::getHandleClass, TransactionType.INDEPENDENCE);
+        this.register("containHandle", this::containHandle, TransactionType.INDEPENDENCE);
         this.register("deleteHandle", this::deleteHandle, TransactionType.INDEPENDENCE);
         this.register("deleteAllHandles", this::deleteAllHandles, TransactionType.INDEPENDENCE);
         this.register("customHandle", this::customHandle, TransactionType.INDEPENDENCE);
@@ -72,11 +70,9 @@ public class HandleTaskInitializer extends ATaskInitializer {
             throw new StatusNotExistedException();
         }
 
-        Annotation[] methodDeclaredAnnotations = method.getDeclaredAnnotations();
-        for (Annotation methodDeclaredAnnotation : methodDeclaredAnnotations) {
-            if (methodDeclaredAnnotation.annotationType() == MethodScope.class && (LogicalUtil.isAnyExist(((MethodScope) methodDeclaredAnnotation).value(), MethodScopeType.ONLY_KERNEL))) {
-                throw new StatusNotSupportedException();
-            }
+        MethodScope methodScope = AnnotationUtil.getAnnotationFormThisAndSuperOrNull(method, MethodScope.class);
+        if (ObjectUtil.notNull(methodScope) && LogicalUtil.isAnyExist(methodScope.value(), MethodScopeType.ONLY_KERNEL)) {
+            throw new StatusNotSupportedException();
         }
 
         methodParameterTypes = method.getParameterTypes();
@@ -110,15 +106,31 @@ public class HandleTaskInitializer extends ATaskInitializer {
     }
 
     private void getAllHandles(TaskRunConsumer run, TaskContentObject content) {
-        Map<UUID, String> handleSummary = new HashMap<>();
+        Set<UUID> handles = content.getAllHandles();
 
-        Set<UUID> handles = content.getAllHandle();
-        for (UUID handle : handles) {
-            AObject object = content.getCache(handle);
-            handleSummary.put(handle, object.getClass().getName());
+        content.setResult("result", handles);
+    }
+
+    private void getHandleClass(TaskRunConsumer run, TaskContentObject content) {
+        UUID handleID = content.getParameter(UUID.class, "handleID");
+        if (ValueUtil.isAnyNullOrEmpty(handleID)) {
+            throw new ConditionParametersException();
         }
 
-        content.setResult("result", handleSummary);
+        AObject object = content.getCache(handleID);
+
+        content.setResult("result", object.getClass().getName());
+    }
+
+    private void containHandle(TaskRunConsumer run, TaskContentObject content) {
+        UUID handleID = content.getParameter(UUID.class, "handleID");
+        if (ValueUtil.isAnyNullOrEmpty(handleID)) {
+            throw new ConditionParametersException();
+        }
+
+        boolean result = content.getAllHandles().contains(handleID);
+
+        content.setResult("result", result);
     }
 
     private void deleteHandle(TaskRunConsumer run, TaskContentObject content) {
@@ -131,7 +143,7 @@ public class HandleTaskInitializer extends ATaskInitializer {
     }
 
     private void deleteAllHandles(TaskRunConsumer run, TaskContentObject content) {
-        Set<UUID> handles = content.getAllHandle();
+        Set<UUID> handles = content.getAllHandles();
 
         for (UUID handle : handles) {
             content.deleteCache(handle);

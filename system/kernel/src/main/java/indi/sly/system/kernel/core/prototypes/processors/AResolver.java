@@ -8,6 +8,7 @@ import jakarta.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class AResolver extends AProcessor implements IOrderlyResolver {
+    @Override
     public int order() {
         return 0;
     }

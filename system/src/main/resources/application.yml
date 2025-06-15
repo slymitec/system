@@ -9,6 +9,8 @@ server:
     uri-encoding: UTF-8
 
 spring:
+  application:
+    name: SlySystem
   banner:
     location: classpath:logo.txt
   datasource:

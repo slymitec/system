@@ -1,19 +1,17 @@
 package indi.sly.system.kernel.security.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.security.instances.values.AuditDefinition;
 import indi.sly.system.kernel.security.values.UserIDDefinition;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import jakarta.inject.Named;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -61,7 +59,6 @@ public class AuditContentObject extends AInfoContentObject {
         }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setIdentifications(List<IdentificationDefinition> identifications) {
         if (ObjectUtil.isAnyNull(identifications)) {
             throw new ConditionParametersException();
@@ -91,7 +88,6 @@ public class AuditContentObject extends AInfoContentObject {
         }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setUserIDs(Set<UserIDDefinition> userUDs) {
         if (ObjectUtil.isAnyNull(userUDs)) {
             throw new ConditionParametersException();
@@ -121,7 +117,6 @@ public class AuditContentObject extends AInfoContentObject {
         }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setAudit(long audit) {
         try {
             this.lock(LockType.WRITE);

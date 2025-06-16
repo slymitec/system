@@ -15,7 +15,7 @@ public abstract class ValueUtil {
         if (value instanceof Optional) {
             return ((Optional<?>) value).isEmpty();
         } else if (value instanceof CharSequence) {
-            return ((CharSequence) value).length() == 0;
+            return ((CharSequence) value).isEmpty();
         } else if (value instanceof UUID) {
             return value.equals(UUIDUtil.EMPTY);
         } else if (value.getClass().isArray()) {
@@ -40,7 +40,7 @@ public abstract class ValueUtil {
                     return true;
                 }
             } else if (value instanceof CharSequence) {
-                if (((CharSequence) value).length() == 0) {
+                if (((CharSequence) value).isEmpty()) {
                     return true;
                 }
             } else if (value instanceof UUID) {

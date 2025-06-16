@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":services:test" external.linked.project.path="$MODULE_DIR$/../../../system/services" external.root.project.path="$MODULE_DIR$/../../../system" external.system.id="GRADLE" external.system.module.group="indi.sly.system" external.system.module.type="sourceSet" external.system.module.version="1.0" type="JAVA_MODULE" version="4">
+<module external.linked.project.id=":services:test" external.linked.project.path="$MODULE_DIR$/../../../system/services" external.root.project.path="$MODULE_DIR$/../../../system" external.system.id="GRADLE" external.system.module.group="system" external.system.module.type="sourceSet" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="web" name="Web">
       <configuration>
@@ -30,8 +30,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="system.services.main" />
-    <orderEntry type="module" module-name="indi.sly.system.system.common.main" />
-    <orderEntry type="module" module-name="indi.sly.system.system.kernel.main" />
+    <orderEntry type="module" module-name="SlySystem 1.1.system.common.main" />
+    <orderEntry type="module" module-name="SlySystem 1.1.system.kernel.main" />
     <orderEntry type="library" name="Gradle: jakarta.inject:jakarta.inject-api:2.0.1.MR" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.17.0" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-data-jpa:3.5.0" level="project" />

@@ -1,6 +1,6 @@
 plugins {
     java
-    id("org.springframework.boot") version ("3.4.4")
+    id("org.springframework.boot") version ("3.5.0")
     id("io.spring.dependency-management") version ("1.1.7")
     kotlin("jvm") version ("1.9.25")
     kotlin("plugin.spring") version ("1.9.25")
@@ -39,7 +39,7 @@ dependencies {
     implementation(project(":services"))
 
     implementation("com.microsoft.sqlserver:mssql-jdbc:12.10.0.jre11")
-    implementation("jakarta.inject:jakarta.inject-api:2.0.1.MR")
+    implementation("jakarta.inject:jakarta.inject-api:2.0.1")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -58,6 +58,12 @@ tasks.bootJar {
             "Implementation-Title" to "SLY System",
             "Implementation-Version" to "1.0.0.0"
         )
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 

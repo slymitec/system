@@ -7,8 +7,8 @@ plugins {
 }
 
 allprojects {
-    group = "indi.sly.system"
-    version = "1.0"
+    group = projectNameSpace
+    version = projectVersion
 
     repositories {
         mavenCentral()
@@ -50,50 +50,53 @@ dependencies {
     }
 }
 
-tasks.bootJar {
-    enabled = true
-    mainClass.set("indi.sly.system.boot.SystemBoot")
-    manifest {
-        attributes(
-            "Implementation-Title" to "SLY System",
-            "Implementation-Version" to "1.0.0.0"
-        )
-    }
-}
+var projectName = "SLY System"
+var projectVersion = "1.0.0.0"
+var projectNameSpace = "indi.sly.system"
+var javaLanguageVersion = 21
+var textEncoding = "UTF-8";
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(javaLanguageVersion)
     }
 }
 
 tasks.compileJava {
-    options.encoding = "UTF-8"
-    options.release.set(21)
+    options.encoding = textEncoding
+    options.release.set(javaLanguageVersion)
 }
 
 tasks.compileTestJava {
-    options.encoding = "UTF-8"
-    options.release.set(21)
+    options.encoding = textEncoding
+    options.release.set(javaLanguageVersion)
 }
-
-//tasks.withType<KotlinCompile> {
-//    kotlinOptions {
-//        freeCompilerArgs += "-Xjsr305=strict"
-//        jvmTarget = "21"
-//    }
-//}
 
 tasks.jar {
     enabled = true
     manifest {
         attributes(
-            "Implementation-Title" to "SLY System",
-            "Implementation-Version" to "1.0.0.0"
+            "Implementation-Title" to projectName, "Implementation-Version" to projectVersion
+        )
+    }
+}
+
+tasks.bootJar {
+    enabled = true
+    mainClass.set("indi.sly.system.boot.SystemBoot")
+    manifest {
+        attributes(
+            "Implementation-Title" to projectName, "Implementation-Version" to projectVersion
         )
     }
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
+    }
 }

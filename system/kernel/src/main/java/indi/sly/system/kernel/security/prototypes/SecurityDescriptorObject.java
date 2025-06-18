@@ -24,6 +24,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.*;
 
 @Named
@@ -415,19 +416,13 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
     }
 
     public void checkPermission(long permission, PermissionQueryDefinition permissionQueryFunc) {
-        if (ObjectUtil.isAnyNull(permissionQueryFunc)) {
-            throw new ConditionParametersException();
-        }
-
         if (this.denyPermission(permission, permissionQueryFunc)) {
             throw new ConditionPermissionException();
         }
     }
 
     public void checkPermission(long permission) {
-        if (this.denyPermission(permission, null)) {
-            throw new ConditionPermissionException();
-        }
+        this.checkPermission(permission, null);
     }
 
     public void setPermissions(Set<AccessControlDefinition> permissions) {

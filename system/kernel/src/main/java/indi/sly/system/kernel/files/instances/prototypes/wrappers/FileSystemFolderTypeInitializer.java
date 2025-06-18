@@ -338,6 +338,8 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             } finally {
                 this.lockProcedure(info, LockType.NONE);
             }
+
+            return;
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
             File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "$Relations");

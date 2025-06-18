@@ -22,7 +22,7 @@ public class InfoCloseThenDeleteIfTemporaryResolver extends AInfoResolver {
             if (!status.getIdentifications().isEmpty()
                     && type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.TEMPORARY) && info.getOpened() <= 0) {
                 List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
-                IdentificationDefinition identification = identifications.remove(identifications.size() - 1);
+                IdentificationDefinition identification = identifications.removeLast();
 
                 ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
                 InfoObject parentInfo = objectManager.get(identifications);

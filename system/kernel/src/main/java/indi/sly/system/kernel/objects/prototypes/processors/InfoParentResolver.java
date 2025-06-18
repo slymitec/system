@@ -24,7 +24,7 @@ public class InfoParentResolver extends AInfoResolver {
                 throw new StatusNotExistedException();
             }
 
-            identifications.remove(identifications.size() - 1);
+            identifications.removeLast();
 
             ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
             InfoObject parentInfo = objectManager.get(identifications);

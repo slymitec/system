@@ -45,7 +45,7 @@ public class InterActiveController extends AController {
         KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
-        kernelSpace.setUserSpace(this.userSpace);
+        this.factoryManager.setUserSpace(this.userSpace);
         this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
     }
 
@@ -53,15 +53,13 @@ public class InterActiveController extends AController {
     public void onClose(Session session, CloseReason closeReason) {
         this.userSpace = null;
 
-        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
-
-        kernelSpace.setUserSpace(this.userSpace);
+        this.factoryManager.setUserSpace(this.userSpace);
     }
 
     @OnMessage
     public void onMessage(String message, Session session) {
         try {
-            this.factoryManager.getKernelSpace().setUserSpace(this.userSpace);
+            this.factoryManager.setUserSpace(this.userSpace);
 
             JobService jobService = this.factoryManager.getService(JobService.class);
 

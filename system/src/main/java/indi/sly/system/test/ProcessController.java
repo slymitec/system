@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -36,7 +37,7 @@ public class ProcessController extends AController {
         KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
-        kernelSpace.getUserSpace().set(userSpace);
+        kernelSpace.setUserSpace(userSpace);
         this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
@@ -127,7 +128,7 @@ public class ProcessController extends AController {
         KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
-        kernelSpace.getUserSpace().set(userSpace);
+        kernelSpace.setUserSpace(userSpace);
         this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
@@ -162,7 +163,7 @@ public class ProcessController extends AController {
         KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
-        kernelSpace.getUserSpace().set(userSpace);
+        kernelSpace.setUserSpace(userSpace);
         this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
         ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);

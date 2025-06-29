@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
+
 import java.io.IOException;
 
 @RestController
@@ -44,7 +45,7 @@ public class InterActiveController extends AController {
         KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
-        kernelSpace.getUserSpace().set(this.userSpace);
+        kernelSpace.setUserSpace(this.userSpace);
         this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
     }
 
@@ -54,13 +55,13 @@ public class InterActiveController extends AController {
 
         KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
 
-        kernelSpace.getUserSpace().set(this.userSpace);
+        kernelSpace.setUserSpace(this.userSpace);
     }
 
     @OnMessage
     public void onMessage(String message, Session session) {
         try {
-            this.factoryManager.getKernelSpace().getUserSpace().set(this.userSpace);
+            this.factoryManager.getKernelSpace().setUserSpace(this.userSpace);
 
             JobService jobService = this.factoryManager.getService(JobService.class);
 

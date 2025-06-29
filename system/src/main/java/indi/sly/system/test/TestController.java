@@ -40,7 +40,7 @@ public class TestController extends AController {
         KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
-        kernelSpace.getUserSpace().set(userSpace);
+        kernelSpace.setUserSpace(userSpace);
         this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
         UUID processID = null;

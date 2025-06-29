@@ -2,6 +2,7 @@ package indi.sly.system.kernel.core.enviroment.values;
 
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -30,8 +31,12 @@ public class KernelSpaceDefinition extends ASpaceDefinition<KernelSpaceDefinitio
         return this.infoTypeIDs;
     }
 
-    public ThreadLocal<UserSpaceDefinition> getUserSpace() {
-        return this.userSpace;
+    public UserSpaceDefinition getUserSpace() {
+        return this.userSpace.get();
+    }
+
+    public void setUserSpace(UserSpaceDefinition userSpace) {
+        this.userSpace.set(userSpace);
     }
 
     public AKernelSpaceExtensionDefinition<?> getServiceSpace() {

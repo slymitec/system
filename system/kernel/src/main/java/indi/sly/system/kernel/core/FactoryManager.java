@@ -104,7 +104,7 @@ public class FactoryManager extends AManager {
     }
 
     public UserSpaceDefinition getUserSpace() {
-        return this.getKernelSpace().getUserSpace().get();
+        return this.getKernelSpace().getUserSpace();
     }
 
     public void setUserSpace(UserSpaceDefinition userSpace) {
@@ -112,6 +112,6 @@ public class FactoryManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        this.getKernelSpace().getUserSpace().set(userSpace);
+        this.getKernelSpace().setUserSpace(userSpace);
     }
 }

@@ -43,6 +43,7 @@ public class JobFactory extends AFactory {
 
         this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateContentResolver.class));
         this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateProcessAndThreadResolver.class));
+        this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateProcessIDVerificationResolver.class));
         this.userContextFinishResolvers.add(this.factoryManager.create(UserContextFinishProcessAndThreadResolver.class));
 
         Collections.sort(this.taskResolvers);

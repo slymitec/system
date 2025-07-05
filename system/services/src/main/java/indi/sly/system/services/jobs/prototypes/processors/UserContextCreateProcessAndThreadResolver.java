@@ -5,7 +5,7 @@ import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.services.core.prototypes.TransactionalActionObject;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.wrappers.UserContextProcessorMediator;
-import indi.sly.system.services.jobs.values.UserContextRequestProcessIDRawDefinition;
+import indi.sly.system.services.jobs.values.UserContextRequestProcessIDDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -18,9 +18,9 @@ import java.util.UUID;
 public class UserContextCreateProcessAndThreadResolver extends AUserContextCreateResolver {
     public UserContextCreateProcessAndThreadResolver() {
         this.create = (userContext, userContextRequestRaw) -> {
-            UserContextRequestProcessIDRawDefinition userContextRequestProcessIDRaw = userContextRequestRaw.getProcessID();
+            UserContextRequestProcessIDDefinition userContextRequestProcessID = userContextRequestRaw.getProcessID();
 
-            UUID processID = userContextRequestProcessIDRaw.getID();
+            UUID processID = userContextRequestProcessID.getID();
 
             TransactionalActionObject transactionalAction = this.factoryManager.create(TransactionalActionObject.class);
 

@@ -4,7 +4,7 @@ import indi.sly.system.common.values.ADefinition;
 
 import java.util.UUID;
 
-public class UserContextRequestProcessIDRawDefinition extends ADefinition<UserContextRequestProcessIDRawDefinition> {
+public class UserContextRequestProcessIDDefinition extends ADefinition<UserContextRequestProcessIDDefinition> {
     private UUID id;
     private String verification;
 

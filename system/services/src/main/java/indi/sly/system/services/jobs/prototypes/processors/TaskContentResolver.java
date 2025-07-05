@@ -14,7 +14,7 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TaskContentResolver extends ATaskResolver {
     public TaskContentResolver() {
-        this.content = (job, status, threadRun) -> {
+        this.content = (task, status, threadRun) -> {
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
             ThreadObject thread = threadManager.getCurrent();
 

@@ -17,25 +17,25 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TaskCheckConditionResolver extends ATaskResolver {
     public TaskCheckConditionResolver() {
-        this.start = (job, status) -> {
+        this.start = (task, status) -> {
             if (status.getRuntime() != TaskStatusRuntimeType.INITIALIZATION) {
                 throw new StatusRelationshipErrorException();
             }
         };
 
-        this.finish = (job, status) -> {
+        this.finish = (task, status) -> {
             if (status.getRuntime() != TaskStatusRuntimeType.RUNNING) {
                 throw new StatusRelationshipErrorException();
             }
         };
 
-        this.run = (job, status, name, run, content) -> {
+        this.run = (task, status, name, run, content) -> {
             if (status.getRuntime() != TaskStatusRuntimeType.RUNNING) {
                 throw new StatusRelationshipErrorException();
             }
         };
 
-        this.content = (job, status, threadRun) -> {
+        this.content = (task, status, threadRun) -> {
             if (status.getRuntime() != TaskStatusRuntimeType.RUNNING) {
                 throw new StatusRelationshipErrorException();
             }

@@ -14,9 +14,9 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TaskStatusRuntimeResolver extends ATaskResolver {
     public TaskStatusRuntimeResolver() {
-        this.start = (job, status) -> status.setRuntime(TaskStatusRuntimeType.RUNNING);
+        this.start = (task, status) -> status.setRuntime(TaskStatusRuntimeType.RUNNING);
 
-        this.finish = (job, status) -> status.setRuntime(TaskStatusRuntimeType.FINISHED);
+        this.finish = (task, status) -> status.setRuntime(TaskStatusRuntimeType.FINISHED);
     }
 
     @Override

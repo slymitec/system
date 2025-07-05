@@ -19,20 +19,20 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TaskProcessAndThreadResolver extends ATaskResolver {
     public TaskProcessAndThreadResolver() {
-        this.start = (job, status) -> {
-            if (LogicalUtil.isAllExist(job.getAttribute(), TaskAttributeType.HAS_PROCESS)
-                    && !ValueUtil.isAnyNullOrEmpty(job.getProcessID())) {
+        this.start = (task, status) -> {
+            if (LogicalUtil.isAllExist(task.getAttribute(), TaskAttributeType.HAS_PROCESS)
+                    && !ValueUtil.isAnyNullOrEmpty(task.getProcessID())) {
                 ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
-                ThreadObject thread = threadManager.create(job.getProcessID());
+                ThreadObject thread = threadManager.create(task.getProcessID());
 
                 ThreadStatusObject threadStatus = thread.getStatus();
                 threadStatus.running();
             }
         };
 
-        this.finish = (job, status) -> {
-            if (LogicalUtil.isAllExist(job.getAttribute(), TaskAttributeType.HAS_PROCESS)
-                    && !ValueUtil.isAnyNullOrEmpty(job.getProcessID())) {
+        this.finish = (task, status) -> {
+            if (LogicalUtil.isAllExist(task.getAttribute(), TaskAttributeType.HAS_PROCESS)
+                    && !ValueUtil.isAnyNullOrEmpty(task.getProcessID())) {
                 ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
                 ThreadObject thread = threadManager.getCurrent();
 

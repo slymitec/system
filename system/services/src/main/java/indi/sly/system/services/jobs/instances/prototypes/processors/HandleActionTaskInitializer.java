@@ -21,8 +21,8 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class HandleTaskInitializer extends ATaskInitializer {
-    public HandleTaskInitializer() {
+public class HandleActionTaskInitializer extends ATaskInitializer {
+    public HandleActionTaskInitializer() {
         this.register("getAllHandles", this::getAllHandles, TransactionType.INDEPENDENCE);
         this.register("getHandleClass", this::getHandleClass, TransactionType.INDEPENDENCE);
         this.register("containHandle", this::containHandle, TransactionType.INDEPENDENCE);

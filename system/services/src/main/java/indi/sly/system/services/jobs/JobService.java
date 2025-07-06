@@ -37,7 +37,7 @@ public class JobService extends AService {
             this.createTask("ProcessManager", TaskAttributeType.NULL, null, this.factoryManager.create(ProcessTaskInitializer.class));
             this.createTask("UserManager", TaskAttributeType.NULL, null, this.factoryManager.create(UserManagerTaskInitializer.class));
 
-            this.createTask("HandleAction", TaskAttributeType.NULL, null, this.factoryManager.create(HandleTaskInitializer.class));
+            this.createTask("HandleAction", TaskAttributeType.NULL, null, this.factoryManager.create(HandleActionTaskInitializer.class));
         }
     }
 

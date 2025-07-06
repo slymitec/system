@@ -33,7 +33,7 @@ public class ProcessStatisticsResolver extends AProcessResolver {
 
     @Override
     public void resolve(ProcessEntity process, ProcessProcessorMediator processorMediator) {
-        processorMediator.getReadProcessStatuses().add(readProcessStatus);
-        processorMediator.getWriteProcessStatuses().add(writeProcessStatus);
+        processorMediator.getReadProcessStatuses().add(this.readProcessStatus);
+        processorMediator.getWriteProcessStatuses().add(this.writeProcessStatus);
     }
 }

@@ -114,6 +114,6 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
 
     @Override
     public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getCreates().add(create);
+        processorCreatorMediator.getCreates().add(this.create);
     }
 }

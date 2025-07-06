@@ -33,6 +33,6 @@ public class ProcessEndSessionResolver extends AProcessEndResolver {
 
     @Override
     public void resolve(ProcessLifeProcessorMediator processorCreatorMediator) {
-        processorCreatorMediator.getEnds().add(end);
+        processorCreatorMediator.getEnds().add(this.end);
     }
 }

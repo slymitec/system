@@ -1,5 +1,6 @@
 package indi.sly.system.services.jobs.values;
 
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.ADefinition;
 
 public class UserContentResponseResultDefinition extends ADefinition<UserContentResponseResultDefinition> {
@@ -19,6 +20,6 @@ public class UserContentResponseResultDefinition extends ADefinition<UserContent
 
     public void setValue(Object value) {
         this.value = value;
-        this.type = value.getClass();
+        this.type = ObjectUtil.isAnyNull(this.value) ? null : this.value.getClass();
     }
 }

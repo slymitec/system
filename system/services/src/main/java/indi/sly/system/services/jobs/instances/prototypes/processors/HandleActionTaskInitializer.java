@@ -82,7 +82,7 @@ public class HandleActionTaskInitializer extends ATaskInitializer {
 
         for (int i = 0; i < methodParameterTypes.length; i++) {
             if (ClassUtil.isThisOrSuperContain(methodParameterTypes[i], AObject.class)) {
-                HandledObjectDefinition handledObject = content.getParameter(HandledObjectDefinition.class, content.getParameter("parameterValues" + i));
+                HandledObjectDefinition handledObject = content.getParameter(HandledObjectDefinition.class, content.getParameter("parameterValue_" + i));
 
                 if (handledObject.getType() != methodParameterTypes[i]) {
                     throw new ConditionParametersException();
@@ -90,7 +90,7 @@ public class HandleActionTaskInitializer extends ATaskInitializer {
 
                 methodParameterValues[i] = content.getCache(handledObject.getHandle());
             } else {
-                methodParameterValues[i] = content.getParameter(methodParameterTypes[i], content.getParameter("parameterValues" + i));
+                methodParameterValues[i] = content.getParameter(methodParameterTypes[i], content.getParameter("parameterValue_" + i));
             }
         }
 

@@ -93,7 +93,7 @@ public class UserContentObject extends AIndependentValueProcessObject<UserContex
             }
             userContentException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
         } else {
-            userContentResponse.getResponse().putAll(taskContent.getResult());
+            userContentResponse.getResult().setValue(taskContent.getResult());
         }
 
         task.finish();

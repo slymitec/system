@@ -8,6 +8,7 @@ import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
+import indi.sly.system.services.jobs.values.HandledObjectDefinition;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -44,7 +45,7 @@ public class HandleTaskInitializer extends ATaskInitializer {
         if (ValueUtil.isAnyNullOrEmpty(handleID) || StringUtil.isNameIllegal(methodName)) {
             throw new ConditionParametersException();
         }
-        String[] methodParameters = content.getParameterOrNull(String[].class, "methodParameterTypes");
+        String[] methodParameters = content.getParameterOrNull(String[].class, "parameterTypes");
         Class<?>[] methodParameterTypes;
         if (ArrayUtil.isNullOrEmpty(methodParameters)) {
             methodParameterTypes = new Class[0];
@@ -81,10 +82,15 @@ public class HandleTaskInitializer extends ATaskInitializer {
 
         for (int i = 0; i < methodParameterTypes.length; i++) {
             if (ClassUtil.isThisOrSuperContain(methodParameterTypes[i], AObject.class)) {
-                UUID handle = content.getParameter(UUID.class, content.getParameter("methodParameter" + i));
-                methodParameterValues[i] = content.getCache(handle);
+                HandledObjectDefinition handledObject = content.getParameter(HandledObjectDefinition.class, content.getParameter("parameterValues" + i));
+
+                if (handledObject.getType() != methodParameterTypes[i]) {
+                    throw new ConditionParametersException();
+                }
+
+                methodParameterValues[i] = content.getCache(handledObject.getHandle());
             } else {
-                methodParameterValues[i] = content.getParameter(Object.class, content.getParameter("methodParameter" + i));
+                methodParameterValues[i] = content.getParameter(methodParameterTypes[i], content.getParameter("parameterValues" + i));
             }
         }
 
@@ -98,9 +104,14 @@ public class HandleTaskInitializer extends ATaskInitializer {
             if (ClassUtil.isThisOrSuperContain(methodReturnType, AObject.class)) {
                 AObject resultObject = (AObject) result;
                 UUID handle = resultObject.cache(SpaceType.USER);
-                content.setResult("result", handle);
+
+                HandledObjectDefinition handledObject = new HandledObjectDefinition();
+                handledObject.setHandle(handle);
+                handledObject.setType(resultObject.getClass());
+
+                content.setResult(handledObject);
             } else {
-                content.setResult("result", result);
+                content.setResult(result);
             }
         }
     }
@@ -108,7 +119,7 @@ public class HandleTaskInitializer extends ATaskInitializer {
     private void getAllHandles(TaskRunConsumer run, TaskContentObject content) {
         Set<UUID> handles = content.getAllHandles();
 
-        content.setResult("result", handles);
+        content.setResult(handles);
     }
 
     private void getHandleClass(TaskRunConsumer run, TaskContentObject content) {
@@ -119,7 +130,7 @@ public class HandleTaskInitializer extends ATaskInitializer {
 
         AObject object = content.getCache(handleID);
 
-        content.setResult("result", object.getClass().getName());
+        content.setResult(object.getClass());
     }
 
     private void containHandle(TaskRunConsumer run, TaskContentObject content) {
@@ -130,7 +141,7 @@ public class HandleTaskInitializer extends ATaskInitializer {
 
         boolean result = content.getAllHandles().contains(handleID);
 
-        content.setResult("result", result);
+        content.setResult(result);
     }
 
     private void deleteHandle(TaskRunConsumer run, TaskContentObject content) {

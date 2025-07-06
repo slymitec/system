@@ -6,11 +6,10 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.enviroment.values.ASpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.values.HandleEntryDefinition;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import jakarta.inject.Named;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -37,22 +36,6 @@ public class CoreObjectRepositoryObject extends AObject {
         }
 
         return readWriteLock;
-    }
-
-    public Set<AObject> getAll(long space) {
-        Set<AObject> coreObjects;
-
-        Lock lock = this.getLock(space, LockType.READ);
-
-        try {
-            lock.lock();
-
-            coreObjects = new HashSet<>(this.getSpace(space).getCoreObjects().values());
-        } finally {
-            lock.unlock();
-        }
-
-        return CollectionUtil.unmodifiable(coreObjects);
     }
 
     public Set<UUID> getAllHandles(long space) {

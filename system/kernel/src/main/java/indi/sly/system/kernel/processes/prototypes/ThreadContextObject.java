@@ -9,6 +9,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.Map;
 
 @Named
@@ -55,22 +56,21 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
         this.lock(LockType.NONE);
     }
 
-    public Map<String, Object> getResults() {
+    public Object getResult() {
         this.lock(LockType.READ);
         this.init();
 
-        Map<String, Object> results = this.value.getRun().getResults();
+        Object result = this.value.getRun().getResult();
 
         this.lock(LockType.NONE);
-        return CollectionUtil.unmodifiable(results);
+        return result;
     }
 
-    public void setResults(Map<String, Object> results) {
+    public void setResult(Object result) {
         this.lock(LockType.WRITE);
         this.init();
 
-        this.value.getRun().getResults().clear();
-        this.value.getRun().getResults().putAll(results);
+        this.value.getRun().setResult(result);
 
         this.fresh();
         this.lock(LockType.NONE);

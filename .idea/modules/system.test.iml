@@ -31,23 +31,16 @@
           <arrayArguments>
             <arrayArg name="pluginClasspaths">
               <args>
+                <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-allopen-compiler-plugin-embeddable/2.1.0/ee6754a5334a927570742cee09dfd7122879a65d/kotlin-allopen-compiler-plugin-embeddable-2.1.0.jar</arg>
                 <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/2.1.0/63671ebf34dac00ac97885f3e0e6f7478537bd20/kotlin-scripting-jvm-2.1.0.jar</arg>
                 <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/2.1.0/269ce38f2d7214d4608059b4326b1710f82b91b9/kotlin-scripting-common-2.1.0.jar</arg>
                 <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.1.0/85f8b81009cda5890e54ba67d64b5e599c645020/kotlin-stdlib-2.1.0.jar</arg>
                 <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar</arg>
                 <arg>$MODULE_DIR$/../../../../../Applications/Developers/Gradle/SlySystem/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.1.0/5909da8c57b75a117714ab0e348c86101b7a3284/kotlin-script-runtime-2.1.0.jar</arg>
-                <arg>$KOTLIN_BUNDLED$/lib/allopen-compiler-plugin.jar</arg>
               </args>
             </arrayArg>
             <arrayArg name="pluginOptions">
-              <args>
-                <arg>plugin:org.jetbrains.kotlin.allopen:annotation=org.springframework.stereotype.Component</arg>
-                <arg>plugin:org.jetbrains.kotlin.allopen:annotation=org.springframework.transaction.annotation.Transactional</arg>
-                <arg>plugin:org.jetbrains.kotlin.allopen:annotation=org.springframework.scheduling.annotation.Async</arg>
-                <arg>plugin:org.jetbrains.kotlin.allopen:annotation=org.springframework.cache.annotation.Cacheable</arg>
-                <arg>plugin:org.jetbrains.kotlin.allopen:annotation=org.springframework.boot.test.context.SpringBootTest</arg>
-                <arg>plugin:org.jetbrains.kotlin.allopen:annotation=org.springframework.validation.annotation.Validated</arg>
-              </args>
+              <args>plugin:org.jetbrains.kotlin.allopen:preset=spring</args>
             </arrayArg>
           </arrayArguments>
         </compilerArguments>
@@ -72,7 +65,7 @@
       <sourceFolder url="file://$MODULE_DIR$/../../system/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../system/src/test/resources" type="java-test-resource" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="21" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="system.main" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:2.1.0" level="project" />

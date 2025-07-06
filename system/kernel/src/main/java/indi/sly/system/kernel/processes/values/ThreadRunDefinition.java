@@ -9,19 +9,22 @@ import java.util.Map;
 public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
     public ThreadRunDefinition() {
         this.parameters = new HashMap<>();
-        this.results = new HashMap<>();
     }
 
     private final Map<String, String> parameters;
-    private final Map<String, Object> results;
+    private Object result;
     private AKernelException exception;
 
     public Map<String, String> getParameters() {
         return this.parameters;
     }
 
-    public Map<String, Object> getResults() {
-        return this.results;
+    public Object getResult() {
+        return this.result;
+    }
+
+    public void setResult(Object result) {
+        this.result = result;
     }
 
     public AKernelException getException() {
@@ -31,4 +34,5 @@ public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
     public void setException(AKernelException exception) {
         this.exception = exception;
     }
+
 }

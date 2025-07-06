@@ -20,6 +20,7 @@ import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinitio
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
+import indi.sly.system.services.jobs.values.HandledObjectDefinition;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -65,14 +66,24 @@ public class ManagerTaskInitializer extends ATaskInitializer {
         DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
 
         UUID handle = dateTime.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+
+        HandledObjectDefinition handledObject = new HandledObjectDefinition();
+        handledObject.setHandle(handle);
+        handledObject.setType(dateTime.getClass());
+
+        content.setResult(handledObject);
     }
 
     private void coreGetVersion(TaskRunConsumer run, TaskContentObject content) {
         SystemVersionObject systemVersion = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, SystemVersionObject.class);
 
         UUID handle = systemVersion.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+
+        HandledObjectDefinition handledObject = new HandledObjectDefinition();
+        handledObject.setHandle(handle);
+        handledObject.setType(systemVersion.getClass());
+
+        content.setResult(handledObject);
     }
 
     private void objectGet(TaskRunConsumer run, TaskContentObject content) {
@@ -83,7 +94,12 @@ public class ManagerTaskInitializer extends ATaskInitializer {
         InfoObject info = objectManager.get(identifications);
 
         UUID handle = info.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+
+        HandledObjectDefinition handledObject = new HandledObjectDefinition();
+        handledObject.setHandle(handle);
+        handledObject.setType(info.getClass());
+
+        content.setResult(handledObject);
     }
 
     private void processGetCurrent(TaskRunConsumer run, TaskContentObject content) {
@@ -92,7 +108,12 @@ public class ManagerTaskInitializer extends ATaskInitializer {
         ProcessObject process = processManager.getCurrent();
 
         UUID handle = process.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+
+        HandledObjectDefinition handledObject = new HandledObjectDefinition();
+        handledObject.setHandle(handle);
+        handledObject.setType(process.getClass());
+
+        content.setResult(handledObject);
     }
 
     private void processGet(TaskRunConsumer run, TaskContentObject content) {
@@ -113,7 +134,12 @@ public class ManagerTaskInitializer extends ATaskInitializer {
         }
 
         UUID handle = process.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+
+        HandledObjectDefinition handledObject = new HandledObjectDefinition();
+        handledObject.setHandle(handle);
+        handledObject.setType(process.getClass());
+
+        content.setResult(handledObject);
     }
 
     private void processCreate(TaskRunConsumer run, TaskContentObject content) {
@@ -127,7 +153,12 @@ public class ManagerTaskInitializer extends ATaskInitializer {
         ProcessObject process = processManager.create(accountAuthorization, fileIndex, parameters, workFolder);
 
         UUID handle = process.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+
+        HandledObjectDefinition handledObject = new HandledObjectDefinition();
+        handledObject.setHandle(handle);
+        handledObject.setType(process.getClass());
+
+        content.setResult(handledObject);
     }
 
     private void processEndCurrent(TaskRunConsumer run, TaskContentObject content) {
@@ -141,7 +172,12 @@ public class ManagerTaskInitializer extends ATaskInitializer {
         AccountObject account = userManager.getCurrentAccount();
 
         UUID handle = account.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+
+        HandledObjectDefinition handledObject = new HandledObjectDefinition();
+        handledObject.setHandle(handle);
+        handledObject.setType(account.getClass());
+
+        content.setResult(handledObject);
     }
 
     private void userGetAccount(TaskRunConsumer run, TaskContentObject content) {
@@ -160,7 +196,12 @@ public class ManagerTaskInitializer extends ATaskInitializer {
         }
 
         UUID handle = account.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+
+        HandledObjectDefinition handledObject = new HandledObjectDefinition();
+        handledObject.setHandle(handle);
+        handledObject.setType(account.getClass());
+
+        content.setResult(handledObject);
     }
 
     private void userGetGroup(TaskRunConsumer run, TaskContentObject content) {
@@ -179,7 +220,12 @@ public class ManagerTaskInitializer extends ATaskInitializer {
         }
 
         UUID handle = group.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+
+        HandledObjectDefinition handledObject = new HandledObjectDefinition();
+        handledObject.setHandle(handle);
+        handledObject.setType(group.getClass());
+
+        content.setResult(handledObject);
     }
 
     private void userCreateAccount(TaskRunConsumer run, TaskContentObject content) {
@@ -191,7 +237,12 @@ public class ManagerTaskInitializer extends ATaskInitializer {
         AccountObject account = userManager.createAccount(accountName, accountPassword);
 
         UUID handle = account.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+
+        HandledObjectDefinition handledObject = new HandledObjectDefinition();
+        handledObject.setHandle(handle);
+        handledObject.setType(account.getClass());
+
+        content.setResult(handledObject);
     }
 
     private void userCreateGroup(TaskRunConsumer run, TaskContentObject content) {
@@ -202,7 +253,12 @@ public class ManagerTaskInitializer extends ATaskInitializer {
         GroupObject group = userManager.createGroup(groupName);
 
         UUID handle = group.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+
+        HandledObjectDefinition handledObject = new HandledObjectDefinition();
+        handledObject.setHandle(handle);
+        handledObject.setType(group.getClass());
+
+        content.setResult(handledObject);
     }
 
     private void userDeleteAccount(TaskRunConsumer run, TaskContentObject content) {
@@ -244,6 +300,11 @@ public class ManagerTaskInitializer extends ATaskInitializer {
         }
 
         UUID handle = accountAuthorization.cache(SpaceType.USER);
-        content.setResult("handle", handle);
+
+        HandledObjectDefinition handledObject = new HandledObjectDefinition();
+        handledObject.setHandle(handle);
+        handledObject.setType(accountAuthorization.getClass());
+
+        content.setResult(handledObject);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.*;
 
 @Named
@@ -164,28 +165,12 @@ public class TaskContentObject extends AObject {
         this.threadContext.setParameters(threadContextParameters);
     }
 
-    public boolean isResultExist(String name) {
-        if (StringUtil.isNameIllegal(name)) {
-            throw new ConditionParametersException();
-        }
-
-        Map<String, Object> threadContextResults = new HashMap<>(this.threadContext.getResults());
-
-        return threadContextResults.containsKey(name);
+    public Object getResult() {
+        return this.threadContext.getResult();
     }
 
-    public Map<String, Object> getResult() {
-        return this.threadContext.getResults();
-    }
-
-    public void setResult(String name, Object value) {
-        if (StringUtil.isNameIllegal(name)) {
-            throw new ConditionParametersException();
-        }
-
-        Map<String, Object> threadContextResults = new HashMap<>(this.threadContext.getResults());
-        threadContextResults.put(name, value);
-        this.threadContext.setResults(threadContextResults);
+    public void setResult(Object value) {
+        this.threadContext.setResult(value);
     }
 
     public AKernelException getException() {

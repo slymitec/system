@@ -9,9 +9,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
-import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.jobs.instances.prototypes.processors.HandleTaskInitializer;
-import indi.sly.system.services.jobs.instances.prototypes.processors.ManagerTaskInitializer;
+import indi.sly.system.services.jobs.instances.prototypes.processors.*;
 import indi.sly.system.services.jobs.prototypes.*;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
@@ -20,6 +18,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.UUID;
 
 @Named
@@ -33,8 +32,12 @@ public class JobService extends AService {
         } else if (startup == StartupType.STEP_INIT_SERVICE) {
             this.factoryManager.getKernelSpace().setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
 
-            this.createTask("Manager", TaskAttributeType.NULL, null, this.factoryManager.create(ManagerTaskInitializer.class));
-            this.createTask("Handle", TaskAttributeType.NULL, null, this.factoryManager.create(HandleTaskInitializer.class));
+            this.createTask("FactoryManager", TaskAttributeType.NULL, null, this.factoryManager.create(FactoryManagerTaskInitializer.class));
+            this.createTask("ObjectManager", TaskAttributeType.NULL, null, this.factoryManager.create(ObjectManagerTaskInitializer.class));
+            this.createTask("ProcessManager", TaskAttributeType.NULL, null, this.factoryManager.create(ProcessTaskInitializer.class));
+            this.createTask("UserManager", TaskAttributeType.NULL, null, this.factoryManager.create(UserManagerTaskInitializer.class));
+
+            this.createTask("HandleAction", TaskAttributeType.NULL, null, this.factoryManager.create(HandleTaskInitializer.class));
         }
     }
 

@@ -123,7 +123,7 @@ public class HandleActionTaskInitializer extends ATaskInitializer {
     }
 
     private void getHandleClass(TaskRunConsumer run, TaskContentObject content) {
-        UUID handleID = content.getParameter(UUID.class, "handleID");
+        UUID handleID = content.getParameter(UUID.class, "handle");
         if (ValueUtil.isAnyNullOrEmpty(handleID)) {
             throw new ConditionParametersException();
         }
@@ -134,7 +134,7 @@ public class HandleActionTaskInitializer extends ATaskInitializer {
     }
 
     private void containHandle(TaskRunConsumer run, TaskContentObject content) {
-        UUID handleID = content.getParameter(UUID.class, "handleID");
+        UUID handleID = content.getParameter(UUID.class, "handle");
         if (ValueUtil.isAnyNullOrEmpty(handleID)) {
             throw new ConditionParametersException();
         }
@@ -145,7 +145,7 @@ public class HandleActionTaskInitializer extends ATaskInitializer {
     }
 
     private void deleteHandle(TaskRunConsumer run, TaskContentObject content) {
-        UUID handleID = content.getParameter(UUID.class, "handleID");
+        UUID handleID = content.getParameter(UUID.class, "handle");
         if (ValueUtil.isAnyNullOrEmpty(handleID)) {
             throw new ConditionParametersException();
         }

@@ -40,7 +40,7 @@ public class HandleActionTaskInitializer extends ATaskInitializer {
     }
 
     private void customHandle(TaskRunConsumer run, TaskContentObject content) {
-        UUID handleID = content.getParameter(UUID.class, "handleID");
+        UUID handleID = content.getParameter(UUID.class, "handle");
         String methodName = content.getParameter("method");
         if (ValueUtil.isAnyNullOrEmpty(handleID) || StringUtil.isNameIllegal(methodName)) {
             throw new ConditionParametersException();

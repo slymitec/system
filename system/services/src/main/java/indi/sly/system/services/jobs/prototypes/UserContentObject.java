@@ -2,6 +2,7 @@ package indi.sly.system.services.jobs.prototypes;
 
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.kernel.processes.ThreadManager;
@@ -81,10 +82,14 @@ public class UserContentObject extends AIndependentValueProcessObject<UserContex
             AKernelException kernelException = taskContent.getException();
             UserContentExceptionDefinition userContentException = userContentResponse.getException();
 
-            userContentException.setName(kernelException.getClass().getSimpleName());
+            userContentException.setClazz(kernelException.getClass());
             StackTraceElement[] kernelExceptionStackTrace = kernelException.getStackTrace();
             if (kernelExceptionStackTrace.length != 0) {
-                userContentException.setClazz(kernelExceptionStackTrace[0].getClassName());
+                try {
+                    userContentException.setOwner(Class.forName(kernelExceptionStackTrace[0].getClassName()));
+                } catch (ClassNotFoundException e) {
+                    userContentException.setOwner(StatusUnexpectedException.class);
+                }
                 userContentException.setMethod(kernelExceptionStackTrace[0].getMethodName());
             }
             String[] kernelExceptionStackTraceMessage = new String[kernelExceptionStackTrace.length];

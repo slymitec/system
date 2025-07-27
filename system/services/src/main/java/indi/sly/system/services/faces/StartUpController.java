@@ -1,5 +1,6 @@
 package indi.sly.system.services.faces;
 
+import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.FactoryManager;
@@ -88,8 +89,8 @@ public class StartUpController extends AController {
         } else {
             UserContentResponseDefinition userContentResponseRaw = new UserContentResponseDefinition();
 
-            userContentResponseRaw.getException().setName("StatusAlreadyFinishedException");
-            userContentResponseRaw.getException().setClazz(StartUpController.class.getName());
+            userContentResponseRaw.getException().setClazz(StatusAlreadyFinishedException.class);
+            userContentResponseRaw.getException().setOwner(StartUpController.class);
             userContentResponseRaw.getException().setMethod("startup");
 
             return userContentResponseRaw;

@@ -3,25 +3,25 @@ package indi.sly.system.services.jobs.values;
 import indi.sly.system.common.values.ADefinition;
 
 public class UserContentExceptionDefinition extends ADefinition<UserContentExceptionDefinition> {
-    private String name;
-    private String clazz;
+    private Class<?> clazz;
+    private Class<?> owner;
     private String method;
     private String message;
 
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getClazz() {
+    public Class<?> getClazz() {
         return this.clazz;
     }
 
-    public void setClazz(String clazz) {
+    public void setClazz(Class<?> clazz) {
         this.clazz = clazz;
+    }
+
+    public Class<?> getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Class<?> owner) {
+        this.owner = owner;
     }
 
     public String getMethod() {

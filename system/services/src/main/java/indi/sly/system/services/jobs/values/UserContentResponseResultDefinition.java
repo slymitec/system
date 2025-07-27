@@ -7,11 +7,11 @@ public class UserContentResponseResultDefinition extends ADefinition<UserContent
     public UserContentResponseResultDefinition() {
     }
 
-    private Class<?> type;
+    private Class<?> clazz;
     private Object value;
 
-    public Class<?> getType() {
-        return this.type;
+    public Class<?> getClazz() {
+        return this.clazz;
     }
 
     public Object getValue() {
@@ -20,6 +20,6 @@ public class UserContentResponseResultDefinition extends ADefinition<UserContent
 
     public void setValue(Object value) {
         this.value = value;
-        this.type = ObjectUtil.isAnyNull(this.value) ? null : this.value.getClass();
+        this.clazz = ObjectUtil.isAnyNull(this.value) ? null : this.value.getClass();
     }
 }

@@ -75,8 +75,8 @@
             console.log(userContentResponse);
 
             let responseRaw = "";
-            for (const key in userContentResponse.response) {
-                let value = userContentResponse.response[key];
+            for (const key in userContentResponse.result) {
+                let value = userContentResponse.result[key];
 
                 responseRaw = responseRaw + "->" + key + " : " + JSON.stringify(value) + newline;
             }
@@ -88,7 +88,7 @@
                 exceptionRaw = exceptionRaw + "->" + key + " : " + JSON.stringify(value) + newline;
             }
 
-            setMessageInnerHTML("输出：" + newline + "response:" + newline + responseRaw + "exception:" + newline + exceptionRaw);
+            setMessageInnerHTML("输出：" + newline + "result:" + newline + responseRaw + "exception:" + newline + exceptionRaw);
         }
 
         websocket.onerror = function () {

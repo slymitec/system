@@ -1,5 +1,6 @@
 package indi.sly.system.services.faces;
 
+import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
@@ -69,24 +70,33 @@ public class InterActiveController extends AController {
 
             userContent.run();
 
-            UserContentResponseDefinition userContentResponseRaw = userContext.getResponse();
+            UserContentResponseDefinition userContentResponse = userContext.getResponse();
 
             jobService.finishUserContext(userContext);
 
-            session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponseRaw));
+            session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponse));
         } catch (RuntimeException exception) {
-            UserContentResponseDefinition userContentResponseRaw = new UserContentResponseDefinition();
+            UserContentResponseDefinition userContentResponse = new UserContentResponseDefinition();
 
-            UserContentExceptionDefinition userContentResponseExceptionRaw = userContentResponseRaw.getException();
+            UserContentExceptionDefinition userContentException = userContentResponse.getException();
 
-            userContentResponseExceptionRaw.setName(exception.getClass().getSimpleName());
+            userContentException.setClazz(exception.getClass());
             StackTraceElement[] kernelExceptionStackTrace = exception.getStackTrace();
             if (kernelExceptionStackTrace.length != 0) {
-                userContentResponseExceptionRaw.setClazz(kernelExceptionStackTrace[0].getClassName());
-                userContentResponseExceptionRaw.setMethod(kernelExceptionStackTrace[0].getMethodName());
+                try {
+                    userContentException.setOwner(Class.forName(kernelExceptionStackTrace[0].getClassName()));
+                } catch (ClassNotFoundException e) {
+                    userContentException.setOwner(StatusUnexpectedException.class);
+                }
+                userContentException.setMethod(kernelExceptionStackTrace[0].getMethodName());
             }
+            String[] kernelExceptionStackTraceMessage = new String[kernelExceptionStackTrace.length];
+            for (int i = 0; i < kernelExceptionStackTrace.length; i++) {
+                kernelExceptionStackTraceMessage[i] = kernelExceptionStackTrace[i].getClassName() + "." + kernelExceptionStackTrace[i].getMethodName() + "(...)";
+            }
+            userContentException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
 
-            session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponseRaw));
+            session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponse));
         }
     }
 

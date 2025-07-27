@@ -1,9 +1,9 @@
 plugins {
     java
-    id("org.springframework.boot") version ("3.5.0")
+    id("org.springframework.boot") version ("3.5.4")
     id("io.spring.dependency-management") version ("1.1.7")
-    kotlin("jvm") version "2.1.0"
-    kotlin("plugin.spring") version "2.1.0"
+    kotlin("jvm") version "2.2.0"
+    kotlin("plugin.spring") version "2.2.0"
 }
 
 allprojects {
@@ -42,9 +42,9 @@ dependencies {
     }
 }
 
-var projectName = "SLY CliSubSystem"
+var projectName = "SLY CLISubSystem"
 var projectVersion = "1.0.0.0"
-var projectNameSpace = "indi.sly.system"
+var projectNameSpace = "indi.sly.clisubsystem"
 var javaLanguageVersion = 21
 var textEncoding = "UTF-8";
 
@@ -75,7 +75,7 @@ tasks.jar {
 
 tasks.bootJar {
     enabled = true
-    mainClass.set("indi.sly.system.boot.SystemBoot")
+    mainClass.set("indi.sly.clisubsystem.boot.CLISubSystemBoot")
     manifest {
         attributes(
             "Implementation-Title" to projectName, "Implementation-Version" to projectVersion

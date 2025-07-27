@@ -1,0 +1,12 @@
+package indi.sly.subsystem.periphery.core.enviroment.values;
+
+import jakarta.inject.Named;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class UserSpaceDefinition extends ASpaceDefinition<UserSpaceDefinition> {
+    public UserSpaceDefinition() {
+    }
+}

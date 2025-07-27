@@ -1,1 +1,0 @@
-package indi.sly.clisubsystem.periphery.core.boot.prototypes.wrappers;

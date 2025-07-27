@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @Import({SpringConfiguration.class})
-public class CLISubSystemBoot {
+public class SubSystemBoot {
     public static void main(String[] args) {
-        SpringApplication cliSubSystem = new SpringApplication(null, new Class<?>[]{CLISubSystemBoot.class});
+        SpringApplication cliSubSystem = new SpringApplication(null, new Class<?>[]{SubSystemBoot.class});
         cliSubSystem.run(args);
     }
 }

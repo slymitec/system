@@ -42,9 +42,9 @@ dependencies {
     }
 }
 
-var projectName = "SLY CLISubSystem"
+var projectName = "SLY SubSystem"
 var projectVersion = "1.0.0.0"
-var projectNameSpace = "indi.sly.clisubsystem"
+var projectNameSpace = "indi.sly.subsystem"
 var javaLanguageVersion = 21
 var textEncoding = "UTF-8";
 
@@ -75,7 +75,7 @@ tasks.jar {
 
 tasks.bootJar {
     enabled = true
-    mainClass.set("indi.sly.clisubsystem.boot.CLISubSystemBoot")
+    mainClass.set("indi.sly.subsystem.boot.CLISubSystemBoot")
     manifest {
         attributes(
             "Implementation-Title" to projectName, "Implementation-Version" to projectVersion

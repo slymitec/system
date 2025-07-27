@@ -149,7 +149,7 @@ public class CoreObjectRepositoryObject extends AObject {
         }
     }
 
-    private <T extends AObject> void addByID(long space, T coreObject, UUID id) {
+    private <T extends AObject> void addByID(long space, UUID id, T coreObject) {
         Map<UUID, AObject> coreObjects = this.getSpace(space).getCoreObjects();
 
         if (coreObjects.containsKey(id)) {
@@ -192,7 +192,7 @@ public class CoreObjectRepositoryObject extends AObject {
             handleEntry.setID(id);
 
             handledHandles.put(handle, handleEntry);
-            this.addByID(space, coreObject, id);
+            this.addByID(space, id, coreObject);
         } finally {
             lock.unlock();
         }
@@ -234,7 +234,7 @@ public class CoreObjectRepositoryObject extends AObject {
             handledHandles.put(handle, handleEntry);
             classedHandles.put(clazz, handleEntry);
 
-            this.addByID(space, coreObject, id);
+            this.addByID(space, id, coreObject);
         } finally {
             lock.unlock();
         }

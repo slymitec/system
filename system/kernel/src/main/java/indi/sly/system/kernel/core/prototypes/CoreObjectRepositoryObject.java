@@ -329,6 +329,14 @@ public class CoreObjectRepositoryObject extends AObject {
             HandleEntryDefinition handleEntry = this.deleteHandleEntryByHandle(space, handle);
 
             this.deleteByID(space, handleEntry.getID());
+
+            Map<Class<? extends AObject>, HandleEntryDefinition> classedHandles = this.getSpace(space).getClassedHandles();
+            for (HandleEntryDefinition handleEntryPair : classedHandles.values()) {
+                if (handleEntryPair.equals(handleEntry)) {
+                    classedHandles.remove(handleEntry.getType());
+                    break;
+                }
+            }
         } finally {
             lock.unlock();
         }

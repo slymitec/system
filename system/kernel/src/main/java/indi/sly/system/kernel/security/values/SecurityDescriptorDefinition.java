@@ -13,6 +13,7 @@ import java.util.*;
 public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptorDefinition> {
     private boolean inherit;
     private boolean hasChild;
+    private boolean canChangeOwner;
     private final Set<UUID> owners;
     private final Set<AccessControlDefinition> permissions;
     private final Set<AccessControlDefinition> audits;
@@ -41,6 +42,14 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
         this.inherit = inherit;
     }
 
+    public boolean isCanChangeOwner() {
+        return this.canChangeOwner;
+    }
+
+    public void setCanChangeOwner(boolean canChangeOwner) {
+        this.canChangeOwner = canChangeOwner;
+    }
+
     public Set<UUID> getOwners() {
         return this.owners;
     }
@@ -58,12 +67,12 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SecurityDescriptorDefinition that = (SecurityDescriptorDefinition) o;
-        return inherit == that.inherit && hasChild == that.hasChild && owners.equals(that.owners) && permissions.equals(that.permissions) && audits.equals(that.audits);
+        return inherit == that.inherit && hasChild == that.hasChild && canChangeOwner == that.canChangeOwner && owners.equals(that.owners) && permissions.equals(that.permissions) && audits.equals(that.audits);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(inherit, hasChild, owners, permissions, audits);
+        return Objects.hash(inherit, hasChild, canChangeOwner, owners, permissions, audits);
     }
 
     @Override
@@ -72,6 +81,7 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
 
         definition.inherit = this.inherit;
         definition.hasChild = this.hasChild;
+        definition.canChangeOwner = this.canChangeOwner;
         definition.owners.addAll(this.owners);
         definition.permissions.addAll(this.permissions);
         definition.audits.addAll(this.audits);
@@ -85,6 +95,7 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
 
         this.inherit = NumberUtil.readExternalBoolean(in);
         this.hasChild = NumberUtil.readExternalBoolean(in);
+        this.canChangeOwner = NumberUtil.readExternalBoolean(in);
 
         int valueInteger;
 
@@ -110,6 +121,7 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
 
         NumberUtil.writeExternalBoolean(out, this.inherit);
         NumberUtil.writeExternalBoolean(out, this.hasChild);
+        NumberUtil.writeExternalBoolean(out, this.canChangeOwner);
 
         NumberUtil.writeExternalInteger(out, this.owners.size());
         for (UUID pair : this.owners) {

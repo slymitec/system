@@ -29,6 +29,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -51,7 +52,7 @@ public class ProcessManager extends AManager {
             long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,
                     TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CONTENT,
                     TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES,
-                    TypeInitializerAttributeType.TEMPORARY);
+                    TypeInitializerAttributeType.CAN_NOT_CHANGE_OWNER, TypeInitializerAttributeType.TEMPORARY);
             Set<UUID> childTypes = Set.of();
             AInfoTypeInitializer typeInitializer = this.factoryManager.create(PortTypeInitializer.class);
 

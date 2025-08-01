@@ -33,6 +33,7 @@ public class InfoSecurityDescriptorCreateResolver extends AInfoResolver {
 
                     securityDescriptor.getOwners().add(process.getToken().getAccountID());
                     securityDescriptor.setInherit(true);
+                    securityDescriptor.setCanChangeOwner(!childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_NOT_CHANGE_OWNER));
                     securityDescriptor.setHasChild(childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD));
                 }
 

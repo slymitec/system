@@ -54,14 +54,12 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
         ProcessObject process = processManager.getCurrent();
 
         ProcessSessionObject processSession = process.getSession();
-        if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+        if (!info.getID().equals(processSession.getID())) {
             throw new StatusRelationshipErrorException();
         }
 
         SessionDefinition session = ObjectUtil.transferFromByteArray(info.getContent());
-
         session.getProcessIDs().add(process.getID());
-
         info.setContent(ObjectUtil.transferToByteArray(session));
     }
 
@@ -76,9 +74,7 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
         }
 
         SessionDefinition session = ObjectUtil.transferFromByteArray(info.getContent());
-
         session.getProcessIDs().remove(process.getID());
-
         info.setContent(ObjectUtil.transferToByteArray(session));
     }
 

@@ -259,6 +259,10 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                 throw new ConditionPermissionException();
             }
 
+            if (this.value.isCanChangeOwner()) {
+                throw new ConditionRefuseException();
+            }
+
             if (this.audit) {
                 this.checkAudit(AuditType.TAKEONWERSHIP);
             }

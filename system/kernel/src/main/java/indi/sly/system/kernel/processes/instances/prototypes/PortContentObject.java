@@ -1,17 +1,20 @@
 package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.instances.values.PortDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,6 +28,7 @@ public class PortContentObject extends AInfoContentObject {
 
     private PortDefinition port;
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public Set<UUID> getSourceProcessIDs() {
         try {
             this.lock(LockType.READ);
@@ -36,6 +40,7 @@ public class PortContentObject extends AInfoContentObject {
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {
         if (ObjectUtil.isAnyNull(sourceProcessIDs)) {
             throw new ConditionParametersException();
@@ -55,6 +60,7 @@ public class PortContentObject extends AInfoContentObject {
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public byte[] receive() {
         byte[] value;
 
@@ -73,6 +79,7 @@ public class PortContentObject extends AInfoContentObject {
         return value;
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void send(byte[] value) {
         if (ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();

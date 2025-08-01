@@ -1,10 +1,12 @@
 package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -31,6 +34,7 @@ public class SignalContentObject extends AInfoContentObject {
 
     private SignalDefinition signal;
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public Set<UUID> getSourceProcessIDs() {
         try {
             this.lock(LockType.WRITE);
@@ -42,6 +46,7 @@ public class SignalContentObject extends AInfoContentObject {
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {
         if (ObjectUtil.isAnyNull(sourceProcessIDs)) {
             throw new ConditionParametersException();
@@ -61,6 +66,7 @@ public class SignalContentObject extends AInfoContentObject {
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public long getLimit() {
         try {
             this.lock(LockType.WRITE);
@@ -72,6 +78,7 @@ public class SignalContentObject extends AInfoContentObject {
         }
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public List<SignalEntryDefinition> receive() {
         List<SignalEntryDefinition> signalEntries;
 
@@ -96,6 +103,7 @@ public class SignalContentObject extends AInfoContentObject {
         return CollectionUtil.unmodifiable(signalEntries);
     }
 
+    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void send(long key, long value) {
         try {
             this.lock(LockType.WRITE);

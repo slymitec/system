@@ -34,7 +34,7 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
 
             if (!status.getIdentifications().isEmpty()) {
                 List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
-                identifications.remove(identifications.size() - 1);
+                identifications.removeLast();
 
                 ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
                 InfoObject parentInfo = objectManager.get(identifications);
@@ -138,7 +138,7 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.deleteChild = (info, type, status, identification) -> {
+        this.deleteChild = (info, type, status, identificati1on) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);

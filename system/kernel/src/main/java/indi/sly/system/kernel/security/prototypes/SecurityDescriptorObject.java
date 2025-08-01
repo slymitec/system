@@ -323,22 +323,22 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                     }
                 }
                 if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.CHILD_HAS_CHILD)) {
-                    if (i == securityDescriptors.size() - 2 && securityDescriptors.get(i + 1).isHasChild()) {
+                    if (i == securityDescriptors.size() - 2 && securityDescriptors.getLast().isHasChild()) {
                         effectivePermissions.add(accessControl);
                     }
                 }
                 if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.CHILD_HAS_NOT_CHILD)) {
-                    if (i == securityDescriptors.size() - 2 && !securityDescriptors.get(i + 1).isHasChild()) {
+                    if (i == securityDescriptors.size() - 2 && !securityDescriptors.getLast().isHasChild()) {
                         effectivePermissions.add(accessControl);
                     }
                 }
                 if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.HIERARCHICAL_HAS_CHILD)) {
-                    if (i < securityDescriptors.size() - 1 && securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
+                    if (i < securityDescriptors.size() - 1 && securityDescriptors.getLast().isHasChild()) {
                         effectivePermissions.add(accessControl);
                     }
                 }
                 if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD)) {
-                    if (i < securityDescriptors.size() - 1 && !securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
+                    if (i < securityDescriptors.size() - 1 && !securityDescriptors.getLast().isHasChild()) {
                         effectivePermissions.add(accessControl);
                     }
                 }

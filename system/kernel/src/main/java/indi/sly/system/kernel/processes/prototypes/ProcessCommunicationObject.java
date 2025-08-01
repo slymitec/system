@@ -29,6 +29,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.*;
 
 @Named
@@ -207,15 +208,15 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             Set<UUID> processCommunicationPortIDs = this.value.getPortIDs();
 
-            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+            ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
 
             for (UUID processCommunicationPortID : processCommunicationPortIDs) {
-                List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Ports"));
+                if (processInfoTable.containByID(processCommunicationPortID)) {
+                    ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(processCommunicationPortID);
+                    processInfoEntry.setUnsupportedDelete(false);
 
-                InfoObject portsInfo = objectManager.get(identifications);
-                try {
-                    portsInfo.deleteChild(new IdentificationDefinition(processCommunicationPortID));
-                } catch (StatusNotExistedException ignored) {
+                    InfoObject info = processInfoEntry.getInfo();
+                    info.close();
                 }
 
                 processCommunicationPortIDs.remove(processCommunicationPortID);
@@ -577,19 +578,8 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
         InfoObject signalInfo = objectManager.get(identifications);
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-        ProcessInfoTableObject processInfoTable = process.getInfoTable();
-
-        boolean contain = processInfoTable.containByID(signalInfo.getID());
-        if (!contain) {
-            signalInfo.open(InfoOpenAttributeType.OPEN_ONLY_READ);
-        }
         SignalContentObject signalContent = (SignalContentObject) signalInfo.getContent();
         Set<UUID> sourceProcessIDs = signalContent.getSourceProcessIDs();
-        if (!contain) {
-            signalInfo.close();
-        }
 
         return sourceProcessIDs;
     }

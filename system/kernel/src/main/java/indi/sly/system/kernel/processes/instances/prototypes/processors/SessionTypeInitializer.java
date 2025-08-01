@@ -31,11 +31,13 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
 
     @Override
     public void createProcedure(InfoEntity info) {
-        SessionDefinition session = new SessionDefinition();
-        info.setContent(ObjectUtil.transferToByteArray(session));
-
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
         AccountObject account = userManager.getCurrentAccount();
+
+        SessionDefinition session = new SessionDefinition();
+        session.setAccountID(account.getID());
+        info.setContent(ObjectUtil.transferToByteArray(session));
+
         AccountSessionsObject accountSessions = account.getSessions();
         accountSessions.addSession(info.getID());
     }
@@ -43,7 +45,10 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
     @Override
     public void deleteProcedure(InfoEntity info) {
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
-        AccountObject account = userManager.getCurrentAccount();
+
+        SessionDefinition session = ObjectUtil.transferFromByteArray(info.getContent());
+        AccountObject account = userManager.getAccount(session.getAccountID());
+
         AccountSessionsObject accountSessions = account.getSessions();
         accountSessions.deleteSession(info.getID());
     }

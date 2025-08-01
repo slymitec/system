@@ -23,7 +23,9 @@ import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.instances.prototypes.processors.AuditTypeInitializer;
 import indi.sly.system.kernel.security.prototypes.*;
@@ -118,8 +120,10 @@ public class UserManager extends AManager {
 
             ProcessObject process = processManager.getCurrent();
             ProcessTokenObject processToken = process.getToken();
+            ProcessSessionObject processSession = process.getSession();
+            SessionContentObject processSessionContent = processSession.getContent();
 
-            if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
+            if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT) || !accountID.equals(processSessionContent.getAccountID())) {
                 throw new ConditionRefuseException();
             }
 
@@ -141,12 +145,16 @@ public class UserManager extends AManager {
 
             ProcessObject process = processManager.getCurrent();
             ProcessTokenObject processToken = process.getToken();
+            ProcessSessionObject processSession = process.getSession();
+            SessionContentObject processSessionContent = processSession.getContent();
 
-            if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
+            AccountObject account = this.getTargetAccount(accountName);
+
+            if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT) || !account.getID().equals(processSessionContent.getAccountID())) {
                 throw new ConditionRefuseException();
             }
 
-            return this.getTargetAccount(accountName);
+            return account;
         }
     }
 

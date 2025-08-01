@@ -258,8 +258,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                     && !owners.contains(processToken.getAccountID()))) {
                 throw new ConditionPermissionException();
             }
-
-            if (this.value.isCanChangeOwner()) {
+            if (!this.value.isCanChangeOwner()) {
                 throw new ConditionRefuseException();
             }
 

@@ -2,7 +2,7 @@ package indi.sly.system.services.jobs.values;
 
 import indi.sly.system.common.values.ADefinition;
 
-public class UserContentExceptionDefinition extends ADefinition<UserContentExceptionDefinition> {
+public class UserContentResponseExceptionDefinition extends ADefinition<UserContentResponseExceptionDefinition> {
     private Class<?> clazz;
     private Class<?> owner;
     private String method;

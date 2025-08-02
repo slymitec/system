@@ -10,7 +10,7 @@ import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensio
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.prototypes.UserContentObject;
 import indi.sly.system.services.jobs.prototypes.UserContextObject;
-import indi.sly.system.services.jobs.values.UserContentExceptionDefinition;
+import indi.sly.system.services.jobs.values.UserContentResponseExceptionDefinition;
 import indi.sly.system.services.jobs.values.UserContentResponseDefinition;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -78,23 +78,23 @@ public class InterActiveController extends AController {
         } catch (RuntimeException exception) {
             UserContentResponseDefinition userContentResponse = new UserContentResponseDefinition();
 
-            UserContentExceptionDefinition userContentException = userContentResponse.getException();
+            UserContentResponseExceptionDefinition userContentResponseException = userContentResponse.getException();
 
-            userContentException.setClazz(exception.getClass());
+            userContentResponseException.setClazz(exception.getClass());
             StackTraceElement[] kernelExceptionStackTrace = exception.getStackTrace();
             if (kernelExceptionStackTrace.length != 0) {
                 try {
-                    userContentException.setOwner(Class.forName(kernelExceptionStackTrace[0].getClassName()));
+                    userContentResponseException.setOwner(Class.forName(kernelExceptionStackTrace[0].getClassName()));
                 } catch (ClassNotFoundException e) {
-                    userContentException.setOwner(StatusUnexpectedException.class);
+                    userContentResponseException.setOwner(StatusUnexpectedException.class);
                 }
-                userContentException.setMethod(kernelExceptionStackTrace[0].getMethodName());
+                userContentResponseException.setMethod(kernelExceptionStackTrace[0].getMethodName());
             }
             String[] kernelExceptionStackTraceMessage = new String[kernelExceptionStackTrace.length];
             for (int i = 0; i < kernelExceptionStackTrace.length; i++) {
                 kernelExceptionStackTraceMessage[i] = kernelExceptionStackTrace[i].getClassName() + "." + kernelExceptionStackTrace[i].getMethodName() + "(...)";
             }
-            userContentException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
+            userContentResponseException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
 
             session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponse));
         }

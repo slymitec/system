@@ -16,3 +16,5 @@ gradlew.bat
 !**/src/test/**/out/
 
 .idea/
+
+**/.DS_Store

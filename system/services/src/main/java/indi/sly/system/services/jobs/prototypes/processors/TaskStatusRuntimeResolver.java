@@ -1,7 +1,7 @@
 package indi.sly.system.services.jobs.prototypes.processors;
 
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
-import indi.sly.system.services.jobs.lang.TaskProcessorStartFunction;
+import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import indi.sly.system.services.jobs.values.TaskStatusRuntimeType;
@@ -24,7 +24,7 @@ public class TaskStatusRuntimeResolver extends ATaskResolver {
         return 4;
     }
 
-    private final TaskProcessorStartFunction start;
+    private final TaskProcessorStartConsumer start;
     private final TaskProcessorFinishConsumer finish;
 
     @Override

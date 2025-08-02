@@ -8,7 +8,7 @@ import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
-import indi.sly.system.services.jobs.lang.TaskProcessorStartFunction;
+import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import indi.sly.system.services.jobs.values.TaskStatusDefinition;
@@ -41,13 +41,13 @@ public class TaskObject extends AIndependentValueProcessObject<TaskDefinition> {
     }
 
     public void start() {
-        List<TaskProcessorStartFunction> resolvers = this.processorMediator.getStarts();
+        List<TaskProcessorStartConsumer> resolvers = this.processorMediator.getStarts();
 
         try {
             this.lock(LockType.READ);
             this.init();
 
-            for (TaskProcessorStartFunction resolver : resolvers) {
+            for (TaskProcessorStartConsumer resolver : resolvers) {
                 resolver.accept(this.value, this.status);
             }
         } finally {

@@ -5,5 +5,5 @@ import indi.sly.system.services.jobs.values.TaskDefinition;
 import indi.sly.system.services.jobs.values.TaskStatusDefinition;
 
 @FunctionalInterface
-public interface TaskProcessorStartFunction extends Consumer2<TaskDefinition, TaskStatusDefinition> {
+public interface TaskProcessorStartConsumer extends Consumer2<TaskDefinition, TaskStatusDefinition> {
 }

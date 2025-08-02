@@ -6,7 +6,7 @@ import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadStatusObject;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
-import indi.sly.system.services.jobs.lang.TaskProcessorStartFunction;
+import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
@@ -48,7 +48,7 @@ public class TaskProcessAndThreadResolver extends ATaskResolver {
         return 1;
     }
 
-    private final TaskProcessorStartFunction start;
+    private final TaskProcessorStartConsumer start;
     private final TaskProcessorFinishConsumer finish;
 
     @Override

@@ -4,7 +4,7 @@ import indi.sly.system.kernel.core.prototypes.wrappers.AMediator;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
-import indi.sly.system.services.jobs.lang.TaskProcessorStartFunction;
+import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -22,12 +22,12 @@ public class TaskProcessorMediator extends AMediator {
         this.contents = new ArrayList<>();
     }
 
-    private final List<TaskProcessorStartFunction> starts;
+    private final List<TaskProcessorStartConsumer> starts;
     private final List<TaskProcessorFinishConsumer> finishes;
     private final List<TaskProcessorRunConsumer> runs;
     private final List<TaskProcessorContentFunction> contents;
 
-    public List<TaskProcessorStartFunction> getStarts() {
+    public List<TaskProcessorStartConsumer> getStarts() {
         return this.starts;
     }
 

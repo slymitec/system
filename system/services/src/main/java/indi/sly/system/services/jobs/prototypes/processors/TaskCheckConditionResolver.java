@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
-import indi.sly.system.services.jobs.lang.TaskProcessorStartFunction;
+import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import indi.sly.system.services.jobs.values.TaskStatusRuntimeType;
@@ -49,7 +49,7 @@ public class TaskCheckConditionResolver extends ATaskResolver {
         return 0;
     }
 
-    private final TaskProcessorStartFunction start;
+    private final TaskProcessorStartConsumer start;
     private final TaskProcessorFinishConsumer finish;
     private final TaskProcessorRunConsumer run;
     private final TaskProcessorContentFunction content;

@@ -80,23 +80,24 @@ public class UserContentObject extends AIndependentValueProcessObject<UserContex
 
         if (ObjectUtil.allNotNull(taskContent.getException())) {
             AKernelException kernelException = taskContent.getException();
-            UserContentExceptionDefinition userContentException = userContentResponse.getException();
 
-            userContentException.setClazz(kernelException.getClass());
+            UserContentResponseExceptionDefinition userContentResponseException = userContentResponse.getException();
+
+            userContentResponseException.setClazz(kernelException.getClass());
             StackTraceElement[] kernelExceptionStackTrace = kernelException.getStackTrace();
             if (kernelExceptionStackTrace.length != 0) {
                 try {
-                    userContentException.setOwner(Class.forName(kernelExceptionStackTrace[0].getClassName()));
+                    userContentResponseException.setOwner(Class.forName(kernelExceptionStackTrace[0].getClassName()));
                 } catch (ClassNotFoundException e) {
-                    userContentException.setOwner(StatusUnexpectedException.class);
+                    userContentResponseException.setOwner(StatusUnexpectedException.class);
                 }
-                userContentException.setMethod(kernelExceptionStackTrace[0].getMethodName());
+                userContentResponseException.setMethod(kernelExceptionStackTrace[0].getMethodName());
             }
             String[] kernelExceptionStackTraceMessage = new String[kernelExceptionStackTrace.length];
             for (int i = 0; i < kernelExceptionStackTrace.length; i++) {
                 kernelExceptionStackTraceMessage[i] = kernelExceptionStackTrace[i].getClassName() + "." + kernelExceptionStackTrace[i].getMethodName() + "(...)";
             }
-            userContentException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
+            userContentResponseException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
         } else {
             userContentResponse.getResult().setValue(taskContent.getResult());
         }

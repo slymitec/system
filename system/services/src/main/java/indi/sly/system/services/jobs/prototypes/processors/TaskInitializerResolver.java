@@ -8,7 +8,7 @@ import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
-import indi.sly.system.services.jobs.lang.TaskProcessorStartFunction;
+import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
@@ -72,7 +72,7 @@ public class TaskInitializerResolver extends ATaskResolver {
         return 3;
     }
 
-    private final TaskProcessorStartFunction start;
+    private final TaskProcessorStartConsumer start;
     private final TaskProcessorFinishConsumer finish;
     private final TaskProcessorRunConsumer run;
 

@@ -7,7 +7,7 @@ import indi.sly.subsystem.periphery.calls.prototypes.wrappers.ConnectionProcesso
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
 import indi.sly.subsystem.periphery.calls.values.ConnectionStatusDefinition;
 import indi.sly.subsystem.periphery.calls.values.UserContentResponseDefinition;
-import indi.sly.subsystem.periphery.calls.values.UserContextRequestRawDefinition;
+import indi.sly.subsystem.periphery.calls.values.UserContextRequestDefinition;
 import indi.sly.subsystem.periphery.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Future;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -70,12 +71,12 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
         }
     }
 
-    public synchronized UserContentResponseDefinition send(UserContextRequestRawDefinition userContextRequestRaw) {
-        if (ObjectUtil.isAnyNull(userContextRequestRaw)) {
+    public Future<UserContentResponseDefinition> send(UserContextRequestDefinition userContextRequest) {
+        if (ObjectUtil.isAnyNull(userContextRequest)) {
             throw new ConditionParametersException();
         }
 
-        UserContentResponseDefinition userContentResponse = null;
+        Future<UserContentResponseDefinition> userContentResponse = null;
 
         List<ConnectionProcessorSendFunction> resolvers = this.processorMediator.getSends();
 
@@ -84,7 +85,7 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
             this.init();
 
             for (ConnectionProcessorSendFunction resolver : resolvers) {
-                userContentResponse = resolver.apply(this.value, this.status, userContextRequestRaw, userContentResponse);
+                userContentResponse = resolver.apply(this.value, this.status, userContextRequest, userContentResponse);
             }
         } finally {
             this.lock(LockType.NONE);

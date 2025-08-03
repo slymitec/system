@@ -2,8 +2,8 @@ package indi.sly.subsystem.periphery.calls.values;
 
 import indi.sly.system.common.values.ADefinition;
 
-public class UserContextRequestRawDefinition extends ADefinition<UserContextRequestRawDefinition> {
-    public UserContextRequestRawDefinition() {
+public class UserContextRequestDefinition extends ADefinition<UserContextRequestDefinition> {
+    public UserContextRequestDefinition() {
         this.processID = new UserContextRequestProcessIDDefinition();
         this.content = new UserContentRequestDefinition();
     }

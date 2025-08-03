@@ -15,7 +15,7 @@ import indi.sly.system.services.jobs.instances.prototypes.processors.*;
 import indi.sly.system.services.jobs.prototypes.*;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
-import indi.sly.system.services.jobs.values.UserContextRequestRawDefinition;
+import indi.sly.system.services.jobs.values.UserContextRequestDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -98,20 +98,20 @@ public class JobService extends AService {
         return this.factory.buildTask(task);
     }
 
-    public UserContextObject createUserContext(String userContextRequest) {
-        if (ValueUtil.isAnyNullOrEmpty(userContextRequest)) {
+    public UserContextObject createUserContext(String userContextRequestRaw) {
+        if (ValueUtil.isAnyNullOrEmpty(userContextRequestRaw)) {
             throw new StatusUnreadableException();
         }
 
-        UserContextRequestRawDefinition userContextRequestRaw =
-                ObjectUtil.transferFromStringOrDefaultProvider(UserContextRequestRawDefinition.class,
-                        userContextRequest, () -> {
+        UserContextRequestDefinition userContextRequest =
+                ObjectUtil.transferFromStringOrDefaultProvider(UserContextRequestDefinition.class,
+                        userContextRequestRaw, () -> {
                             throw new StatusUnreadableException();
                         });
 
         UserContextCreateBuilder userContextCreateBuilder = this.factory.createUserContextCreator();
 
-        return userContextCreateBuilder.create(userContextRequestRaw);
+        return userContextCreateBuilder.create(userContextRequest);
     }
 
     public void finishUserContext(UserContextObject userContext) {

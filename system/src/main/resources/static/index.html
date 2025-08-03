@@ -13,7 +13,7 @@
     <option value="FactoryManager">FactoryManager</option>
     <option value="ObjectManager">ObjectManager</option>
     <option value="ProcessManager">ProcessManager</option>
-    <option value="UserManager">UserManager</option>+
+    <option value="UserManager">UserManager</option>
 </select><br/>
 <div style="width: 100px"><label for="method">method </label></div>
 <input id="method" type="text" style="width: 500px; height: 20px" value="getAllHandles"/><br/>
@@ -37,15 +37,20 @@
         const method = document.getElementById('method').value;
         const request = document.getElementById('request').value;
 
-        let userContextRequest = {
+        let userContextRequestRaw = {
             "processID": {"id": processID},
-            "content": {"task": task, "method": method, "request": JSON.parse(request)}
+            "content": {
+                "id": "00000000-0000-0000-0000-000000000000",
+                "task": task,
+                "method": method,
+                "request": JSON.parse(request)
+            }
         };
 
-        let userContextRequestRaw = JSON.stringify(userContextRequest);
+        let userContextRequest = JSON.stringify(userContextRequestRaw);
 
-        setMessageInnerHTML("输入：" + userContextRequestRaw + newline);
-        websocket.send(userContextRequestRaw);
+        setMessageInnerHTML("输入：" + userContextRequest + newline);
+        websocket.send(userContextRequest);
     }
 
     function setMessageInnerHTML(innerHTML) {

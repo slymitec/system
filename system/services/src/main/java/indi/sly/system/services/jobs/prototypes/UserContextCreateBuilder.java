@@ -6,7 +6,7 @@ import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.wrappers.UserContextProcessorMediator;
 import indi.sly.system.services.jobs.values.UserContextDefinition;
-import indi.sly.system.services.jobs.values.UserContextRequestRawDefinition;
+import indi.sly.system.services.jobs.values.UserContextRequestDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -19,8 +19,8 @@ public class UserContextCreateBuilder extends ABuilder {
     protected JobFactory factory;
     protected UserContextProcessorMediator processorMediator;
 
-    public UserContextObject create(UserContextRequestRawDefinition userContextRequestRaw) {
-        if (ValueUtil.isAnyNullOrEmpty(userContextRequestRaw)) {
+    public UserContextObject create(UserContextRequestDefinition userContextRequest) {
+        if (ValueUtil.isAnyNullOrEmpty(userContextRequest)) {
             throw new ConditionParametersException();
         }
 
@@ -29,7 +29,7 @@ public class UserContextCreateBuilder extends ABuilder {
         List<UserContextProcessorCreateFunction> resolvers = this.processorMediator.getCreates();
 
         for (UserContextProcessorCreateFunction resolver : resolvers) {
-            userContext = resolver.apply(userContext, userContextRequestRaw);
+            userContext = resolver.apply(userContext, userContextRequest);
         }
 
         return this.factory.buildUserContext(userContext);

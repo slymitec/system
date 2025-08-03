@@ -17,8 +17,8 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserContextCreateProcessAndThreadResolver extends AUserContextCreateResolver {
     public UserContextCreateProcessAndThreadResolver() {
-        this.create = (userContext, userContextRequestRaw) -> {
-            UserContextRequestProcessIDDefinition userContextRequestProcessID = userContextRequestRaw.getProcessID();
+        this.create = (userContext, userContextRequest) -> {
+            UserContextRequestProcessIDDefinition userContextRequestProcessID = userContextRequest.getProcessID();
 
             UUID processID = userContextRequestProcessID.getID();
 

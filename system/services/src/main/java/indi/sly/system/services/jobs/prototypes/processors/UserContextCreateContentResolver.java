@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Scope;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserContextCreateContentResolver extends AUserContextCreateResolver {
     public UserContextCreateContentResolver() {
-        this.create = (userContext, userContextRequestRaw) -> {
-            UserContentRequestDefinition userContentRequestRaw = userContextRequestRaw.getContent();
+        this.create = (userContext, userContextRequest) -> {
+            UserContentRequestDefinition userContentRequestRaw = userContextRequest.getContent();
 
             if (ObjectUtil.isAnyNull(userContentRequestRaw.getID()) || ValueUtil.isAnyNullOrEmpty(userContentRequestRaw.getTask(), userContentRequestRaw.getMethod())) {
                 throw new ConditionParametersException();

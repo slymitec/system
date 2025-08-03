@@ -28,12 +28,12 @@ public class ConnectionCheckConditionResolver extends AConnectionResolver {
             }
         };
 
-        this.send = (connection, status, userContextRequestRaw, result) -> {
+        this.send = (connection, status, userContextRequestRaw, userContentResponse) -> {
             if (LogicalUtil.allNotEqual(status.getRuntime(), ConnectStatusRuntimeType.CONNECTED)) {
                 throw new StatusRelationshipErrorException();
             }
 
-            return result;
+            return userContentResponse;
         };
     }
 

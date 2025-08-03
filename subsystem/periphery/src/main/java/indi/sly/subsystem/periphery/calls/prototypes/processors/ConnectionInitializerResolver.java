@@ -30,7 +30,7 @@ public class ConnectionInitializerResolver extends AConnectionResolver {
             initializer.disconnect(connection, status);
         };
 
-        this.send = (connection, status, userContextRequestRaw, result) -> {
+        this.send = (connection, status, userContextRequestRaw, userContentResponse) -> {
             AConnectionInitializer initializer = connection.getInitializer();
 
             return initializer.send(userContextRequestRaw, status);

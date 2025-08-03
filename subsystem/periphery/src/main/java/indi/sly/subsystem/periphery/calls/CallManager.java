@@ -35,8 +35,8 @@ public class CallManager extends AManager {
             KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
-            this.createConnection(kernelConfiguration.CALL_CONNECTION_SYSTEM_NAME, ConnectionAttributeType.NULL,
-                    kernelConfiguration.CALL_CONNECTION_SYSTEM_ADDRESS, this.factoryManager.create(WebSocketConnectionInitializer.class));
+            this.createConnection(kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_NAME, ConnectionAttributeType.NULL,
+                    kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS, this.factoryManager.create(WebSocketConnectionInitializer.class));
 
         }
     }

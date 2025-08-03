@@ -1,5 +1,6 @@
 package indi.sly.subsystem.periphery.core;
 
+import indi.sly.subsystem.periphery.calls.CallManager;
 import indi.sly.subsystem.periphery.core.boot.prototypes.BootFactory;
 import indi.sly.subsystem.periphery.core.boot.prototypes.BootObject;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
@@ -9,6 +10,7 @@ import indi.sly.subsystem.periphery.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.subsystem.periphery.core.prototypes.APrototype;
 import indi.sly.subsystem.periphery.core.prototypes.CoreObjectRepositoryObject;
 import indi.sly.subsystem.periphery.core.prototypes.CorePrototypeValueBuilder;
+import indi.sly.subsystem.periphery.proxies.ProxyManager;
 import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -33,6 +35,9 @@ public class FactoryManager extends AManager {
 
             this.coreObjectRepository = this.factoryManager.create(CoreObjectRepositoryObject.class);
             this.coreObjectRepository.setLimit(SpaceType.KERNEL, Long.MAX_VALUE);
+            this.coreObjectRepository.addByClass(SpaceType.KERNEL, this);
+            this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(CallManager.class));
+            this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(ProxyManager.class));
             this.bootFactory = this.factoryManager.create(BootFactory.class);
             this.bootFactory.init();
             BootObject boot = this.bootFactory.buildBoot();

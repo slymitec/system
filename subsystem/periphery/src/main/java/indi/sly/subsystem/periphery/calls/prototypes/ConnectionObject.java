@@ -6,6 +6,7 @@ import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorSendFunction;
 import indi.sly.subsystem.periphery.calls.prototypes.wrappers.ConnectionProcessorMediator;
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
 import indi.sly.subsystem.periphery.calls.values.ConnectionStatusDefinition;
+import indi.sly.subsystem.periphery.calls.values.UserContentResponseDefinition;
 import indi.sly.subsystem.periphery.calls.values.UserContextRequestRawDefinition;
 import indi.sly.subsystem.periphery.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.common.lang.ConditionParametersException;
@@ -69,13 +70,12 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public synchronized <T> T send(UserContextRequestRawDefinition userContextRequestRaw) {
+    public synchronized UserContentResponseDefinition send(UserContextRequestRawDefinition userContextRequestRaw) {
         if (ObjectUtil.isAnyNull(userContextRequestRaw)) {
             throw new ConditionParametersException();
         }
 
-        Object result = null;
+        UserContentResponseDefinition userContentResponse = null;
 
         List<ConnectionProcessorSendFunction> resolvers = this.processorMediator.getSends();
 
@@ -84,12 +84,12 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
             this.init();
 
             for (ConnectionProcessorSendFunction resolver : resolvers) {
-                result = resolver.apply(this.value, this.status, userContextRequestRaw, result);
+                userContentResponse = resolver.apply(this.value, this.status, userContextRequestRaw, userContentResponse);
             }
         } finally {
             this.lock(LockType.NONE);
         }
 
-        return (T) result;
+        return userContentResponse;
     }
 }

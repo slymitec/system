@@ -2,6 +2,7 @@ package indi.sly.subsystem.periphery.calls.instances.prototypes.processors;
 
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
 import indi.sly.subsystem.periphery.calls.values.ConnectionStatusDefinition;
+import indi.sly.subsystem.periphery.calls.values.UserContentResponseDefinition;
 import indi.sly.subsystem.periphery.calls.values.UserContextRequestRawDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -19,7 +20,7 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
     }
 
     @Override
-    public Object send(UserContextRequestRawDefinition userContextRequestRawm, ConnectionStatusDefinition status) {
+    public UserContentResponseDefinition send(UserContextRequestRawDefinition userContextRequestRaw, ConnectionStatusDefinition status) {
         return null;
     }
 }

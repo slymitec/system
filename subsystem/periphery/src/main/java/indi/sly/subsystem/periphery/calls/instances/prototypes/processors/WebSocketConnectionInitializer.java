@@ -23,79 +23,85 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WebSocketConnectionInitializer extends AConnectionInitializer {
     @Override
-    public void connect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
-        WebSocketClient systemWebSocketClient;
+    public synchronized void connect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
+        synchronized (this) {
+            WebSocketClient webSocketClient;
 
-        if (ObjectUtil.allNotNull(status.getHelper())) {
-            if (status.getHelper() instanceof WebSocketClient) {
-                systemWebSocketClient = (WebSocketClient) status.getHelper();
+            if (ObjectUtil.allNotNull(status.getHelper())) {
+                if (status.getHelper() instanceof WebSocketClient) {
+                    webSocketClient = (WebSocketClient) status.getHelper();
 
-                systemWebSocketClient.reconnect();
+                    webSocketClient.reconnect();
+                } else {
+                    throw new StatusRelationshipErrorException();
+                }
             } else {
-                throw new StatusRelationshipErrorException();
-            }
-        } else {
-            URI address = null;
-            try {
-                address = new URI(connection.getAddress());
-            } catch (URISyntaxException e) {
-                throw new ConditionParametersException();
-            }
-
-            systemWebSocketClient = new WebSocketClient(address, new Draft_6455()) {
-                @Override
-                public void onOpen(ServerHandshake handshakedata) {
+                URI address;
+                try {
+                    address = new URI(connection.getAddress());
+                } catch (URISyntaxException e) {
+                    throw new ConditionParametersException();
                 }
 
-                @Override
-                public void onMessage(String message) {
-                    UserContentResponseDefinition userContentResponse = ObjectUtil.transferFromStringOrDefaultProvider(UserContentResponseDefinition.class, message, () -> {
-                        throw new StatusUnreadableException();
-                    });
-
-                    Map<UUID, UserContentRequestDefinition> requests = status.getRequest();
-                    Map<UUID, UserContentResponseDefinition> responses = status.getResponses();
-
-                    UUID id = userContentResponse.getID();
-
-                    UserContentRequestDefinition userContentRequest;
-
-                    userContentRequest = requests.getOrDefault(id, null);
-                    if (ObjectUtil.isAnyNull(userContentRequest)) {
-                        return;
-                    } else {
-                        requests.remove(id);
+                webSocketClient = new WebSocketClient(address, new Draft_6455()) {
+                    @Override
+                    public void onOpen(ServerHandshake handshakedata) {
                     }
 
-                    synchronized (userContentRequest) {
-                        if (!ValueUtil.isAnyNullOrEmpty(userContentRequest.getID())) {
-                            responses.put(id, userContentResponse);
-                            userContentRequest.setID(UUIDUtil.getEmpty());
+                    @Override
+                    public void onMessage(String message) {
+                        UserContentResponseDefinition userContentResponse = ObjectUtil.transferFromStringOrDefaultProvider(UserContentResponseDefinition.class, message, () -> {
+                            throw new StatusUnreadableException();
+                        });
+
+                        Map<UUID, UserContentRequestDefinition> requests = status.getRequest();
+                        Map<UUID, UserContentResponseDefinition> responses = status.getResponses();
+
+                        UUID id = userContentResponse.getID();
+
+                        UserContentRequestDefinition userContentRequest;
+
+                        userContentRequest = requests.getOrDefault(id, null);
+                        if (ObjectUtil.isAnyNull(userContentRequest)) {
+                            return;
+                        } else {
+                            requests.remove(id);
                         }
-                        userContentRequest.notify();
+
+                        synchronized (userContentRequest) {
+                            if (!ValueUtil.isAnyNullOrEmpty(userContentRequest.getID())) {
+                                responses.put(id, userContentResponse);
+                                userContentRequest.setID(UUIDUtil.getEmpty());
+                            }
+                            userContentRequest.notify();
+                        }
                     }
-                }
 
-                @Override
-                public void onClose(int code, String reason, boolean remote) {
-                    status.setRuntime(ConnectStatusRuntimeType.DISCONNECTED);
-                    disconnect(connection, status);
-                }
+                    @Override
+                    public void onClose(int code, String reason, boolean remote) {
+                        status.setRuntime(ConnectStatusRuntimeType.DISCONNECTED);
+                        disconnect(connection, status);
+                    }
 
-                @Override
-                public void onError(Exception ex) {
-                }
-            };
+                    @Override
+                    public void onError(Exception ex) {
+                    }
+                };
 
-            status.setHelper(systemWebSocketClient);
+                status.getRequest().clear();
+                status.getResponses().clear();
+                status.setHelper(webSocketClient);
+            }
         }
     }
 
     @Override
-    public void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
-        status.getRequest().clear();
-        status.getResponses().clear();
-        status.setHelper(null);
+    public synchronized void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
+        synchronized (this) {
+            status.getRequest().clear();
+            status.getResponses().clear();
+            status.setHelper(null);
+        }
     }
 
     @Override

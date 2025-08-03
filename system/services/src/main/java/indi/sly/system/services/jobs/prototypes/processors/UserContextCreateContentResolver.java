@@ -1,6 +1,7 @@
 package indi.sly.system.services.jobs.prototypes.processors;
 
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.wrappers.UserContextProcessorMediator;
@@ -16,7 +17,7 @@ public class UserContextCreateContentResolver extends AUserContextCreateResolver
         this.create = (userContext, userContextRequestRaw) -> {
             UserContentRequestDefinition userContentRequestRaw = userContextRequestRaw.getContent();
 
-            if (ValueUtil.isAnyNullOrEmpty(userContentRequestRaw.getTask(), userContentRequestRaw.getMethod())) {
+            if (ObjectUtil.isAnyNull(userContentRequestRaw.getID()) || ValueUtil.isAnyNullOrEmpty(userContentRequestRaw.getTask(), userContentRequestRaw.getMethod())) {
                 throw new ConditionParametersException();
             }
             for (String key : userContentRequestRaw.getRequest().keySet()) {
@@ -26,6 +27,7 @@ public class UserContextCreateContentResolver extends AUserContextCreateResolver
             }
 
             UserContentRequestDefinition userContentRequest = userContext.getContent().getRequest();
+            userContentRequest.setID(userContentRequestRaw.getID());
             userContentRequest.setTask(userContentRequestRaw.getTask());
             userContentRequest.setMethod(userContentRequestRaw.getMethod());
             userContentRequest.getRequest().putAll(userContentRequestRaw.getRequest());

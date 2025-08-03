@@ -4,15 +4,25 @@ import indi.sly.system.common.values.ADefinition;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class UserContentRequestDefinition extends ADefinition<UserContentRequestDefinition> {
     public UserContentRequestDefinition() {
         this.request = new HashMap<>();
     }
 
+    private UUID id;
     private String task;
     private String method;
     private final Map<String, String> request;
+
+    public UUID getID() {
+        return this.id;
+    }
+
+    public void setID(UUID id) {
+        this.id = id;
+    }
 
     public String getTask() {
         return this.task;

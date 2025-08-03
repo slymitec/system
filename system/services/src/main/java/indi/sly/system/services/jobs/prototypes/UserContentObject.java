@@ -64,6 +64,8 @@ public class UserContentObject extends AIndependentValueProcessObject<UserContex
         UserContentRequestDefinition userContentRequest = this.value.getContent().getRequest();
         UserContentResponseDefinition userContentResponse = this.value.getContent().getResponse();
 
+        userContentResponse.setID(userContentRequest.getID());
+
         JobService jobService = this.factoryManager.getService(JobService.class);
         TaskObject task = jobService.getTask(userContentRequest.getTask());
 

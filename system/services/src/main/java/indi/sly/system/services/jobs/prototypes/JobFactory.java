@@ -37,6 +37,7 @@ public class JobFactory extends AFactory {
     public void init() {
         this.taskResolvers.add(this.factoryManager.create(TaskCheckConditionResolver.class));
         this.taskResolvers.add(this.factoryManager.create(TaskContentResolver.class));
+        this.taskResolvers.add(this.factoryManager.create(TaskDateResolver.class));
         this.taskResolvers.add(this.factoryManager.create(TaskInitializerResolver.class));
         this.taskResolvers.add(this.factoryManager.create(TaskProcessAndThreadResolver.class));
         this.taskResolvers.add(this.factoryManager.create(TaskStatusRuntimeResolver.class));

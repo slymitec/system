@@ -69,7 +69,7 @@ public class TaskInitializerResolver extends ATaskResolver {
 
     @Override
     public int order() {
-        return 3;
+        return 2;
     }
 
     private final TaskProcessorStartConsumer start;

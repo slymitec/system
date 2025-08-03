@@ -14,7 +14,7 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TaskContentResolver extends ATaskResolver {
     public TaskContentResolver() {
-        this.content = (task, status, threadRun) -> {
+        this.content = (task, status, threadContext) -> {
             ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
             ThreadObject thread = threadManager.getCurrent();
 
@@ -24,7 +24,7 @@ public class TaskContentResolver extends ATaskResolver {
 
     @Override
     public int order() {
-        return 3;
+        return 0;
     }
 
     private final TaskProcessorContentFunction content;

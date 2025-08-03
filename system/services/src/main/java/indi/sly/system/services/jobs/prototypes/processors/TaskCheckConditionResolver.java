@@ -35,12 +35,12 @@ public class TaskCheckConditionResolver extends ATaskResolver {
             }
         };
 
-        this.content = (task, status, threadRun) -> {
+        this.content = (task, status, threadContext) -> {
             if (status.getRuntime() != TaskStatusRuntimeType.RUNNING) {
                 throw new StatusRelationshipErrorException();
             }
 
-            return threadRun;
+            return threadContext;
         };
     }
 

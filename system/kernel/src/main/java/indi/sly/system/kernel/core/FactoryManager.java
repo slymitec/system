@@ -108,10 +108,6 @@ public class FactoryManager extends AManager {
     }
 
     public void setUserSpace(UserSpaceDefinition userSpace) {
-        if (ObjectUtil.isAnyNull(userSpace)) {
-            throw new ConditionParametersException();
-        }
-
         this.getKernelSpace().setUserSpace(userSpace);
     }
 }

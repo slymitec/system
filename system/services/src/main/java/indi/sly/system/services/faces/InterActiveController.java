@@ -74,10 +74,8 @@ public class InterActiveController extends AController {
 
             jobService.finishUserContext(userContext);
 
-            session.getBasicRemote().sendObject(userContentResponse);
-
-            //session.getBasicRemote().sendText(ObjectUtil.transferToString(userContentResponse));
-        } catch (Exception exception) {
+            session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponse));
+        } catch (RuntimeException exception) {
             UserContentResponseDefinition userContentResponse = new UserContentResponseDefinition();
 
             UserContentResponseExceptionDefinition userContentResponseException = userContentResponse.getException();

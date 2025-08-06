@@ -23,15 +23,12 @@
 <button onclick="createWebSocket()" style="width: 200px; height: 40px">连接</button>
 <button onclick="closeWebSocket()" style="width: 200px; height: 40px">断开</button>
 <button onclick="clearScreen()" style="width: 200px; height: 40px">清屏</button>
+<button onclick="send2()" style="width: 200px; height: 40px">传统发送</button>
 <div id="message"></div>
 </body>
 
 <script type="text/javascript">
     function send() {
-        if (websocket == null) {
-            return;
-        }
-
         const processID = document.getElementById('processID').value;
         const task = document.getElementById('task').value;
         const method = document.getElementById('method').value;
@@ -125,6 +122,57 @@
 
     function clearScreen() {
         document.getElementById('message').innerHTML = "";
+    }
+
+    function send2() {
+        const processID = document.getElementById('processID').value;
+        const task = document.getElementById('task').value;
+        const method = document.getElementById('method').value;
+        const request = document.getElementById('request').value;
+
+        let userContextRequestRaw = {
+            "processID": {"id": processID},
+            "content": {
+                "id": "00000000-0000-0000-0000-000000000000",
+                "task": task,
+                "method": method,
+                "request": JSON.parse(request)
+            }
+        };
+
+        let userContextRequest = JSON.stringify(userContextRequestRaw);
+
+        setMessageInnerHTML("输入：" + userContextRequest + newline);
+
+        const xmlHttpRequest = new XMLHttpRequest()
+        xmlHttpRequest.onreadystatechange = function () {
+            if (xmlHttpRequest.readyState === 4 && xmlHttpRequest.status === 200) {
+                let userContentResponse = JSON.parse(this.responseText);
+
+                console.log(this.responseText);
+                console.log(userContentResponse);
+
+                let responseRaw = "";
+                for (const key in userContentResponse.result) {
+                    let value = userContentResponse.result[key];
+
+                    responseRaw = responseRaw + "->" + key + " : " + JSON.stringify(value) + newline;
+                }
+
+                let exceptionRaw = "";
+                for (const key in userContentResponse.exception) {
+                    let value = userContentResponse.exception[key];
+
+                    exceptionRaw = exceptionRaw + "->" + key + " : " + JSON.stringify(value) + newline;
+                }
+
+                setMessageInnerHTML("输出：" + newline + "result:" + newline + responseRaw + "exception:" + newline + exceptionRaw);
+            }
+        }
+
+        xmlHttpRequest.open("post", "http://localhost:8080/Call2.action");
+        xmlHttpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xmlHttpRequest.send(userContextRequest);
     }
 </script>
 </html>

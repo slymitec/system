@@ -28,6 +28,8 @@
 </body>
 
 <script type="text/javascript">
+    const hostAddress = "localhost:8080";
+
     function send() {
         const processID = document.getElementById('processID').value;
         const task = document.getElementById('task').value;
@@ -64,7 +66,7 @@
         }
 
         if ('WebSocket' in window) {
-            websocket = new WebSocket("ws://localhost:8080/Call.action");
+            websocket = new WebSocket("ws://" + hostAddress + "/Call.action");
             setMessageInnerHTML("--连接中--");
         } else {
             alert('浏览器不支持……')
@@ -170,9 +172,9 @@
             }
         }
 
-        xmlHttpRequest.open("post", "http://localhost:8080/Call2.action");
+        xmlHttpRequest.open("post", "http://" + hostAddress + "/Request.action");
         xmlHttpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xmlHttpRequest.send(userContextRequest);
+        xmlHttpRequest.send("message=" + userContextRequest);
     }
 </script>
 </html>

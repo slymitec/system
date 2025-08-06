@@ -6,7 +6,6 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
-import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.prototypes.UserContentObject;
 import indi.sly.system.services.jobs.prototypes.UserContextObject;
@@ -18,15 +17,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class InterActive2Controller extends AController {
-    public InterActive2Controller() {
-        this.init();
+public class RequestController extends AController {
+    private void initUserSpace(UserSpaceDefinition userSpace) {
+        synchronized (this) {
+            if (ObjectUtil.isAnyNull(this.factoryManager)) {
+                this.init();
+
+                KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+                KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+
+                this.factoryManager.setUserSpace(userSpace);
+                this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+            }
+        }
     }
 
-    @RequestMapping(value = {"/Call2.action"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = {"/Request.action"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String onMessage(String message, HttpSession session) {
         UserSpaceDefinition userSpace = (UserSpaceDefinition) session.getAttribute("userSpace");
-        session.setMaxInactiveInterval(60 * 60);
+
+        if (ObjectUtil.isAnyNull(this.factoryManager)) {
+            this.initUserSpace(userSpace);
+        }
 
         try {
             this.factoryManager.setUserSpace(userSpace);

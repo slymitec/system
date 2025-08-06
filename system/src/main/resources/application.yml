@@ -5,6 +5,8 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+    session:
+      timeout: 60m
   tomcat:
     uri-encoding: UTF-8
 

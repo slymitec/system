@@ -50,39 +50,38 @@ public class ConnectionInitializerResolver extends AConnectionResolver {
 
             if (ObjectUtil.isAnyNull(userContentResponseFuture)) {
                 userContentResponseFuture = status.getExecutor().submit(new Callable<>() {
-                    private UserContentResponseDefinition userContentResponse;
+                    private volatile UserContentResponseDefinition userContentResponse;
 
                     @Override
                     public UserContentResponseDefinition call() throws Exception {
-                        synchronized (userContentRequest) {
-                            if (ObjectUtil.allNotNull(this.userContentResponse)) {
-                                return this.userContentResponse;
+                        if (ObjectUtil.isAnyNull(this.userContentResponse)) {
+                            synchronized (userContentRequest) {
+                                if (ObjectUtil.isAnyNull(this.userContentResponse)) {
+                                    if (responses.containsKey(id)) {
+                                        requests.remove(id);
+                                        userContentRequest.setID(UUIDUtil.getEmpty());
+                                        this.userContentResponse = responses.remove(id);
+                                    } else if (ValueUtil.isAnyNullOrEmpty(userContentRequest.getID())) {
+                                        throw new StatusUnexpectedException();
+                                    } else {
+                                        try {
+                                            userContentRequest.wait(8192);
+                                        } catch (InterruptedException ignored) {
+                                        }
+
+                                        requests.remove(id);
+                                        userContentRequest.setID(UUIDUtil.getEmpty());
+                                        if (responses.containsKey(id)) {
+                                            this.userContentResponse = responses.remove(id);
+                                        } else {
+                                            throw new StatusUnexpectedException();
+                                        }
+                                    }
+                                }
                             }
-
-                            if (responses.containsKey(id)) {
-                                requests.remove(id);
-                                userContentRequest.setID(UUIDUtil.getEmpty());
-                                this.userContentResponse = responses.remove(id);
-
-                                return this.userContentResponse;
-                            }
-
-                            if (ValueUtil.isAnyNullOrEmpty(userContentRequest.getID())) {
-                                throw new StatusUnexpectedException();
-                            }
-
-                            userContentRequest.wait(8192);
-
-                            requests.remove(id);
-                            userContentRequest.setID(UUIDUtil.getEmpty());
-                            if (responses.containsKey(id)) {
-                                this.userContentResponse = responses.remove(id);
-
-                                return this.userContentResponse;
-                            }
-
-                            throw new StatusUnexpectedException();
                         }
+
+                        return this.userContentResponse;
                     }
                 });
             }

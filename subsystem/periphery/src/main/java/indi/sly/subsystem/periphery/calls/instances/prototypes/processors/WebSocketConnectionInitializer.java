@@ -73,7 +73,7 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
                                 responses.put(id, userContentResponse);
                                 userContentRequest.setID(UUIDUtil.getEmpty());
                             }
-                            userContentRequest.notify();
+                            userContentRequest.notifyAll();
                         }
                     }
 

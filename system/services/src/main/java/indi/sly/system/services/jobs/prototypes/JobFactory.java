@@ -65,17 +65,19 @@ public class JobFactory extends AFactory {
 
         task.setSource(funcRead, funcWrite);
         ReadWriteLock reentrantLock = new ReentrantReadWriteLock();
+        Lock reentrantLockRead = reentrantLock.readLock();
+        Lock reentrantLockWrite = reentrantLock.writeLock();
         task.setLock((lock) -> {
             if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-                reentrantLock.readLock().lock();
+                reentrantLockRead.lock();
             } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-                reentrantLock.writeLock().lock();
+                reentrantLockWrite.lock();
             }
         }, (lock) -> {
             if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-                reentrantLock.readLock().unlock();
+                reentrantLockRead.unlock();
             } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-                reentrantLock.writeLock().unlock();
+                reentrantLockWrite.unlock();
             }
         });
         task.processorMediator = processorMediator;

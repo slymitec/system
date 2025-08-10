@@ -56,7 +56,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
-        infoRepository.lock(info, lock);
+        infoRepository.unlock(info, lock);
     }
 
     public void dumpProcedure(InfoEntity info, DumpDefinition dump) {

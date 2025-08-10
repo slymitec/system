@@ -137,7 +137,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new StatusNotExistedException();
         }
 
-        return relations.get(0);
+        return relations.getFirst();
     }
 
     @Override
@@ -159,7 +159,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             throw new StatusNotExistedException();
         }
 
-        return relations.get(0);
+        return relations.getFirst();
     }
 
     @Override

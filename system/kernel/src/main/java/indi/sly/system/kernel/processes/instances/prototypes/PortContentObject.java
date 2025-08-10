@@ -36,7 +36,7 @@ public class PortContentObject extends AInfoContentObject {
 
             return CollectionUtil.unmodifiable(this.port.getSourceProcessIDs());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -56,7 +56,7 @@ public class PortContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -73,7 +73,7 @@ public class PortContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         return value;
@@ -97,7 +97,7 @@ public class PortContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 }

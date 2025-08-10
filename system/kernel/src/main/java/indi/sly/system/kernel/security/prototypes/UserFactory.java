@@ -15,6 +15,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.UUID;
 
 @Named
@@ -25,11 +26,11 @@ public class UserFactory extends AFactory {
     }
 
     private AccountObject buildAccount(Provider<AccountEntity> funcRead, Consumer1<AccountEntity> funcWrite,
-                                       Consumer1<Long> funcLock) {
+                                       Consumer1<Long> funcLock, Consumer1<Long> funcUnLock) {
         AccountObject account = this.factoryManager.create(AccountObject.class);
 
         account.setSource(funcRead, funcWrite);
-        account.setLock(funcLock);
+        account.setLock(funcLock, funcUnLock);
 
         return account;
     }
@@ -53,16 +54,22 @@ public class UserFactory extends AFactory {
 
             accountGroupRepository.lock(accountGroupRepository.getAccount(accountID), lock);
         };
+        Consumer1<Long> funcUnlock = (lock) -> {
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
-        return this.buildAccount(funcRead, funcWrite, funcLock);
+            accountGroupRepository.unlock(accountGroupRepository.getAccount(accountID), lock);
+        };
+
+        return this.buildAccount(funcRead, funcWrite, funcLock, funcUnlock);
     }
 
     private GroupObject buildGroup(Provider<GroupEntity> funcRead, Consumer1<GroupEntity> funcWrite,
-                                   Consumer1<Long> funcLock) {
+                                   Consumer1<Long> funcLock, Consumer1<Long> funcUnLock) {
         GroupObject group = this.factoryManager.create(GroupObject.class);
 
         group.setSource(funcRead, funcWrite);
-        group.setLock(funcLock);
+        group.setLock(funcLock, funcUnLock);
 
         return group;
     }
@@ -86,8 +93,14 @@ public class UserFactory extends AFactory {
 
             accountGroupRepository.lock(accountGroupRepository.getGroup(groupID), lock);
         };
+        Consumer1<Long> funcUnlock = (lock) -> {
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
-        return this.buildGroup(funcRead, funcWrite, funcLock);
+            accountGroupRepository.unlock(accountGroupRepository.getGroup(groupID), lock);
+        };
+
+        return this.buildGroup(funcRead, funcWrite, funcLock, funcUnlock);
     }
 
     public AccountBuilder createAccount() {

@@ -22,6 +22,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             });
 
             AInfoTypeInitializer infoTypeInitializer = type.getInitializer();
-            securityDescriptor.setLock((lock) -> infoTypeInitializer.lockProcedure(info, lock));
+            securityDescriptor.setLock((lock) -> infoTypeInitializer.lockProcedure(info, lock), (lock) -> infoTypeInitializer.unlockProcedure(info, lock));
 
             securityDescriptor.setIdentifications(status.getIdentifications());
             securityDescriptor.setPermission(type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION));

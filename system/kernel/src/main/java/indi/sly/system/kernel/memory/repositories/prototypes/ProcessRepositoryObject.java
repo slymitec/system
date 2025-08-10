@@ -16,6 +16,7 @@ import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
+
 import java.util.UUID;
 
 @Named
@@ -29,8 +30,6 @@ public class ProcessRepositoryObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        //this.logger.warn(".contain(" + id + ");");
-
         ProcessEntity process = this.entityManager.find(ProcessEntity.class, id);
 
         return ObjectUtil.allNotNull(process);
@@ -40,8 +39,6 @@ public class ProcessRepositoryObject extends AObject {
         if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
-
-        //this.logger.warn(".get(" + id + ");");
 
         ProcessEntity process = this.entityManager.find(ProcessEntity.class, id);
 
@@ -61,8 +58,6 @@ public class ProcessRepositoryObject extends AObject {
             throw new StatusAlreadyExistedException();
         }
 
-        //this.logger.warn(".add(" + process.getID() + ");");
-
         return this.entityManager.merge(process);
     }
 
@@ -75,8 +70,6 @@ public class ProcessRepositoryObject extends AObject {
             throw new StatusNotExistedException();
         }
 
-        //this.logger.warn(".delete(" + process.getID() + ");");
-
         this.entityManager.remove(process);
     }
 
@@ -86,8 +79,6 @@ public class ProcessRepositoryObject extends AObject {
         }
 
         LockModeType lockMode = this.entityManager.getLockMode(process);
-
-        //this.logger.warn(".lock(" + process.getID() + ", " + lock + "); Current lockMode is " + lockMode);
 
         if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
             return;
@@ -103,7 +94,21 @@ public class ProcessRepositoryObject extends AObject {
             } else {
                 lockMode = LockModeType.PESSIMISTIC_WRITE;
             }
-        } else {
+        }
+
+        this.entityManager.lock(process, lockMode);
+    }
+
+    public void unlock(ProcessEntity process, long lock) {
+        if (ObjectUtil.isAnyNull(process)) {
+            throw new ConditionParametersException();
+        }
+
+        LockModeType lockMode = this.entityManager.getLockMode(process);
+
+        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
+            return;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ, LockType.WRITE)) {
             if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
                 return;
             } else {

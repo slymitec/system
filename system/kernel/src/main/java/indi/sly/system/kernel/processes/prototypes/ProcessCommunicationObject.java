@@ -59,7 +59,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             return processCommunicationShared;
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -86,7 +86,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
@@ -110,7 +110,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             return CollectionUtil.unmodifiable(this.value.getPortIDs());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -183,7 +183,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         ProcessStatisticsObject processStatistics = this.parent.getStatistics();
@@ -224,7 +224,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -260,7 +260,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -446,7 +446,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             return this.value.getSignalID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -514,7 +514,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -547,7 +547,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -565,7 +565,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             signalID = this.value.getSignalID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
 
         if (ValueUtil.isAnyNullOrEmpty(signalID)) {
@@ -602,7 +602,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             signalID = this.value.getSignalID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         if (ValueUtil.isAnyNullOrEmpty(signalID)) {
@@ -669,7 +669,7 @@ public class ProcessCommunicationObject extends ABytesValueProcessObject<Process
 
             signalID = this.value.getSignalID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
 
         if (ValueUtil.isAnyNullOrEmpty(signalID)) {

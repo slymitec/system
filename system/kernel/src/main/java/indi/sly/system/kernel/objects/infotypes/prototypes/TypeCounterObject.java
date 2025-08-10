@@ -11,7 +11,7 @@ public class TypeCounterObject extends AValueProcessObject<TypeCounterDefinition
 
         int totalOccupiedCount = this.value.getTotalOccupiedCount();
 
-        this.lock(LockType.NONE);
+        this.unlock(LockType.READ);
         return totalOccupiedCount;
     }
 
@@ -22,7 +22,7 @@ public class TypeCounterObject extends AValueProcessObject<TypeCounterDefinition
         this.value.offsetTotalOccupiedCount(1);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public synchronized void minusTotalOccupiedCount() {
@@ -32,6 +32,6 @@ public class TypeCounterObject extends AValueProcessObject<TypeCounterDefinition
         this.value.offsetTotalOccupiedCount(-1);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 }

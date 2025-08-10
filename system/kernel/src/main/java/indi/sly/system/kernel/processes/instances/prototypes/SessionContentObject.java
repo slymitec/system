@@ -29,7 +29,7 @@ public class SessionContentObject extends AInfoContentObject {
 
             return this.session.getName();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -47,7 +47,7 @@ public class SessionContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -58,7 +58,7 @@ public class SessionContentObject extends AInfoContentObject {
 
             return this.session.getType();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -72,7 +72,7 @@ public class SessionContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -83,7 +83,7 @@ public class SessionContentObject extends AInfoContentObject {
 
             return this.session.getAccountID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -94,7 +94,7 @@ public class SessionContentObject extends AInfoContentObject {
 
             return CollectionUtil.unmodifiable(this.session.getProcessIDs());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -105,7 +105,7 @@ public class SessionContentObject extends AInfoContentObject {
 
             return CollectionUtil.unmodifiable(this.session.getEnvironmentVariables());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -123,7 +123,7 @@ public class SessionContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -134,7 +134,7 @@ public class SessionContentObject extends AInfoContentObject {
 
             return CollectionUtil.unmodifiable(this.session.getParameters());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -152,7 +152,7 @@ public class SessionContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 }

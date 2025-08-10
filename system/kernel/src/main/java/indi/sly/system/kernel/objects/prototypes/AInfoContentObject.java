@@ -70,6 +70,8 @@ public abstract class AInfoContentObject extends AValueProcessObject<byte[], Inf
         });
         this.setLock((lock) -> {
             throw new ConditionContextException();
+        }, (lock) -> {
+            throw new ConditionContextException();
         });
     }
 
@@ -85,7 +87,7 @@ public abstract class AInfoContentObject extends AValueProcessObject<byte[], Inf
 
             this.funcExecute.accept();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 }

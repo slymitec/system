@@ -19,6 +19,8 @@ public abstract class AInfoRepositoryObject extends AObject {
 
     public abstract void lock(InfoEntity info, long lock);
 
+    public abstract void unlock(InfoEntity info, long lock);
+
     public abstract InfoRelationEntity getRelation(InfoEntity info, UUID id);
 
     public abstract InfoRelationEntity getRelation(InfoEntity info, String name);

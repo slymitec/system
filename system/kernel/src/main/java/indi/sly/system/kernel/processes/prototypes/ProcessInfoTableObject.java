@@ -45,7 +45,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
 
             return this.value.list();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -89,8 +89,8 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             processInfoTable.fresh();
             this.fresh();
         } finally {
-            processInfoTable.lock(LockType.NONE);
-            this.lock(LockType.NONE);
+            processInfoTable.unlock(LockType.WRITE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -109,7 +109,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
 
             return this.value.containByIndex(index);
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -128,7 +128,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
 
             return this.value.containByID(id);
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -154,13 +154,13 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             processInfoEntry.setParent(this);
             processInfoEntry.setSource(() -> this.value, (ProcessInfoTableDefinition source) -> {
             });
-            processInfoEntry.setLock(this::lock);
+            processInfoEntry.setLock(this::lock, this::unlock);
             processInfoEntry.index = index;
             processInfoEntry.isProcessCurrent = () -> this.parent.isCurrent();
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         return processInfoEntry;
@@ -186,13 +186,13 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
             processInfoEntry.setParent(this);
             processInfoEntry.setSource(() -> this.value, (ProcessInfoTableDefinition source) -> {
             });
-            processInfoEntry.setLock(this::lock);
+            processInfoEntry.setLock(this::lock, this::unlock);
             processInfoEntry.index = index;
             processInfoEntry.isProcessCurrent = () -> this.parent.isCurrent();
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         return processInfoEntry;
@@ -240,7 +240,7 @@ public class ProcessInfoTableObject extends ABytesValueProcessObject<ProcessInfo
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
 
         return this.getByIndex(index);

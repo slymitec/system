@@ -25,7 +25,7 @@ public class DumpObject extends AValueProcessObject<DumpDefinition, InfoObject> 
 
             return CollectionUtil.unmodifiable(this.value.getDate());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -36,7 +36,7 @@ public class DumpObject extends AValueProcessObject<DumpDefinition, InfoObject> 
 
             return this.value.getProcessID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -47,7 +47,7 @@ public class DumpObject extends AValueProcessObject<DumpDefinition, InfoObject> 
 
             return this.value.getAccountID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -58,7 +58,7 @@ public class DumpObject extends AValueProcessObject<DumpDefinition, InfoObject> 
 
             return this.value.getIdentifications();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -69,7 +69,7 @@ public class DumpObject extends AValueProcessObject<DumpDefinition, InfoObject> 
 
             return this.value.getInfoOpen();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -80,7 +80,7 @@ public class DumpObject extends AValueProcessObject<DumpDefinition, InfoObject> 
 
             return CollectionUtil.unmodifiable(this.value.getSecurityDescriptorSummary());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 }

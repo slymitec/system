@@ -15,6 +15,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -51,7 +52,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
 
             return length;
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -89,7 +90,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
                 }
             }
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
 
         return value;
@@ -122,7 +123,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -157,7 +158,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 

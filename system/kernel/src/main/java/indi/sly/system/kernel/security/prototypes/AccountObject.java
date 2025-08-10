@@ -32,7 +32,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
 
             return this.value.getID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -43,7 +43,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
 
             return this.value.getName();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -54,7 +54,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
 
             return this.value.getPassword();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -76,7 +76,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -95,7 +95,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
 
             return CollectionUtil.unmodifiable(groups);
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -132,7 +132,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -148,7 +148,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
 
             return userToken;
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -164,7 +164,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
 
             return accountSessions;
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 }

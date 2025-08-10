@@ -28,7 +28,7 @@ public class UserTokenObject extends AIndependentBytesValueProcessObject<UserTok
 
             return this.value.getPrivileges();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -50,7 +50,7 @@ public class UserTokenObject extends AIndependentBytesValueProcessObject<UserTok
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -61,7 +61,7 @@ public class UserTokenObject extends AIndependentBytesValueProcessObject<UserTok
 
             return CollectionUtil.unmodifiable(this.value.getLimits());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -89,7 +89,7 @@ public class UserTokenObject extends AIndependentBytesValueProcessObject<UserTok
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -92,6 +93,13 @@ public class ProcessObject extends AObject {
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
             processRepository.lock(process, lock);
+        }, (lock) -> {
+            ProcessEntity process = this.getSelf();
+
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+            processRepository.unlock(process, lock);
         });
 
         return processCommunication;
@@ -129,6 +137,13 @@ public class ProcessObject extends AObject {
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
             processRepository.lock(process, lock);
+        }, (lock) -> {
+            ProcessEntity process = this.getSelf();
+
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+            processRepository.unlock(process, lock);
         });
 
         return processContext;
@@ -166,6 +181,13 @@ public class ProcessObject extends AObject {
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
             processRepository.lock(process, lock);
+        }, (lock) -> {
+            ProcessEntity process = this.getSelf();
+
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+            processRepository.unlock(process, lock);
         });
 
         return processInfoTable;
@@ -203,6 +225,13 @@ public class ProcessObject extends AObject {
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
             processRepository.lock(process, lock);
+        }, (lock) -> {
+            ProcessEntity process = this.getSelf();
+
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+            processRepository.unlock(process, lock);
         });
         return processSession;
     }
@@ -239,6 +268,13 @@ public class ProcessObject extends AObject {
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
             processRepository.lock(process, lock);
+        }, (lock) -> {
+            ProcessEntity process = this.getSelf();
+
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+            processRepository.unlock(process, lock);
         });
 
         return processStatistics;
@@ -276,6 +312,13 @@ public class ProcessObject extends AObject {
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
             processRepository.lock(process, lock);
+        }, (lock) -> {
+            ProcessEntity process = this.getSelf();
+
+            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
+            processRepository.unlock(process, lock);
         });
 
         return processToken;

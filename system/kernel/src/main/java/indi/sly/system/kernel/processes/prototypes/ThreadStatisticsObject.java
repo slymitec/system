@@ -10,6 +10,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
 
         Long value = this.value.getDate().getOrDefault(dataTime, null);
 
-        this.lock(LockType.NONE);
+        this.unlock(LockType.READ);
 
         if (ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();
@@ -38,7 +39,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.getDate().put(dataTime, value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public Map<String, Long> getStatistics() {
@@ -74,7 +75,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         statistics.put("IoWriteCount", this.value.getIoWriteCount());
         statistics.put("IoWriteBytes", this.value.getIoWriteBytes());
 
-        this.lock(LockType.NONE);
+        this.unlock(LockType.READ);
 
         return CollectionUtil.unmodifiable(statistics);
     }
@@ -90,7 +91,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetInfoCreate(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addInfoGet(long value) {
@@ -104,7 +105,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetInfoGet(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addInfoQuery(long value) {
@@ -118,7 +119,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetInfoQuery(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addInfoDelete(long value) {
@@ -132,7 +133,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetInfoDelete(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addInfoDump(long value) {
@@ -146,7 +147,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetInfoDump(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public long getInfoOpen() {
@@ -166,7 +167,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetInfoOpen(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addInfoClose(long value) {
@@ -180,7 +181,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetInfoClose(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addInfoRead(long value) {
@@ -194,7 +195,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetInfoRead(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addInfoWrite(long value) {
@@ -208,7 +209,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetInfoWrite(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addSharedReadCount(long value) {
@@ -222,7 +223,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetSharedReadCount(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addSharedReadBytes(long value) {
@@ -236,7 +237,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetSharedReadBytes(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addSharedWriteCount(long value) {
@@ -250,7 +251,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetSharedWriteCount(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addSharedWriteBytes(long value) {
@@ -264,7 +265,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetSharedWriteBytes(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addPortCount(long value) {
@@ -278,7 +279,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetPortCount(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addPortReadCount(long value) {
@@ -292,7 +293,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetPortReadCount(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addPortReadBytes(long value) {
@@ -306,7 +307,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetPortReadBytes(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addPortWriteCount(long value) {
@@ -320,7 +321,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetPortWriteCount(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addPortWriteBytes(long value) {
@@ -334,7 +335,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetPortWriteBytes(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addSignalReadCount(long value) {
@@ -348,7 +349,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetSignalReadCount(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addSignalWriteCount(long value) {
@@ -362,7 +363,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetSignalWriteCount(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addIoCreate(long value) {
@@ -376,7 +377,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetIoCreate(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addIoStatus(long value) {
@@ -390,7 +391,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetIoStatus(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addIoReadCount(long value) {
@@ -404,7 +405,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetIoReadCount(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addIoReadBytes(long value) {
@@ -418,7 +419,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetIoReadBytes(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addIoWriteCount(long value) {
@@ -432,7 +433,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetIoWriteCount(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public void addIoWriteBytes(long value) {
@@ -446,6 +447,6 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
         this.value.offsetIoWriteBytes(value);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 }

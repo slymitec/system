@@ -19,7 +19,7 @@ public class GroupObject extends AIndependentValueProcessObject<GroupEntity> {
 
             return this.value.getID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -30,7 +30,7 @@ public class GroupObject extends AIndependentValueProcessObject<GroupEntity> {
 
             return this.value.getName();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -46,7 +46,7 @@ public class GroupObject extends AIndependentValueProcessObject<GroupEntity> {
 
             return userToken;
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 }

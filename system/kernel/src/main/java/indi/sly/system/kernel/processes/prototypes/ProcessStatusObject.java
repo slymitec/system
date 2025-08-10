@@ -44,7 +44,7 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
 
             return status;
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -72,7 +72,7 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
                 resolver.accept(this.value, ProcessStatusType.INITIALIZATION);
             }
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
 
         ProcessStatisticsObject processStatus = this.parent.getStatistics();
@@ -118,7 +118,7 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
                 resolver.accept(this.value, ProcessStatusType.RUNNING);
             }
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -163,7 +163,7 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -186,7 +186,7 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -218,7 +218,7 @@ public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, Proc
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);

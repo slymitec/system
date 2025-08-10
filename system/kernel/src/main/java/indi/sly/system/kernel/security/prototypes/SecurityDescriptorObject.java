@@ -125,7 +125,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
             } while (securityDescriptor != null);
             Collections.reverse(securityDescriptorSummaries);
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
 
         return CollectionUtil.unmodifiable(securityDescriptorSummaries);
@@ -154,7 +154,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
             return this.value.isInherit();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -183,7 +183,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -206,7 +206,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
             return this.value.isHasChild();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -233,7 +233,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
             return CollectionUtil.unmodifiable(this.value.getOwners());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -271,7 +271,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -314,7 +314,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
             } while (securityDescriptor != null);
             Collections.reverse(securityDescriptors);
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
 
         Set<AccessControlDefinition> effectivePermissions = new HashSet<>();
@@ -467,7 +467,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -500,7 +500,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -534,7 +534,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
             } while (securityDescriptor != null);
             Collections.reverse(securityDescriptors);
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
 
         Set<AccessControlDefinition> effectiveAudits = new HashSet<>();
@@ -641,7 +641,7 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 }

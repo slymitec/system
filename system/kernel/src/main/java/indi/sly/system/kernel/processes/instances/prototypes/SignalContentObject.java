@@ -42,7 +42,7 @@ public class SignalContentObject extends AInfoContentObject {
 
             return CollectionUtil.unmodifiable(this.signal.getSourceProcessIDs());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -62,7 +62,7 @@ public class SignalContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -74,7 +74,7 @@ public class SignalContentObject extends AInfoContentObject {
 
             return this.signal.getLimit();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -97,7 +97,7 @@ public class SignalContentObject extends AInfoContentObject {
                 signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
             }
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         return CollectionUtil.unmodifiable(signalEntries);
@@ -130,7 +130,7 @@ public class SignalContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 }

@@ -85,7 +85,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -101,7 +101,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
 
             return this.value.getAccountID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -128,7 +128,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -139,7 +139,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
 
             return this.value.getPrivileges();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -166,7 +166,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -204,7 +204,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -224,7 +224,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
 
             return CollectionUtil.unmodifiable(this.value.getLimits());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -253,7 +253,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -297,7 +297,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -313,7 +313,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
 
             return CollectionUtil.unmodifiable(this.value.getRoles());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -396,7 +396,7 @@ public class ProcessTokenObject extends ABytesValueProcessObject<ProcessTokenDef
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 }

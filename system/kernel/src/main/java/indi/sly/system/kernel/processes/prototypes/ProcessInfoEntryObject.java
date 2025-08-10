@@ -56,7 +56,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         return this.index;
@@ -76,7 +76,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
 
             return CollectionUtil.unmodifiable(processInfoEntryDate);
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -101,7 +101,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         return CollectionUtil.unmodifiable(identifications);
@@ -128,7 +128,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         return infoOpen;
@@ -156,7 +156,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         return unsupportedDelete;
@@ -182,7 +182,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -211,7 +211,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
@@ -243,7 +243,7 @@ public class ProcessInfoEntryObject extends AValueProcessObject<ProcessInfoTable
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         this.index = null;

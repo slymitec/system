@@ -32,7 +32,7 @@ public class TaskObject extends AIndependentValueProcessObject<TaskDefinition> {
 
             return this.value.getID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -51,7 +51,7 @@ public class TaskObject extends AIndependentValueProcessObject<TaskDefinition> {
                 resolver.accept(this.value, this.status);
             }
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -66,7 +66,7 @@ public class TaskObject extends AIndependentValueProcessObject<TaskDefinition> {
                 resolver.accept(this.value, this.status);
             }
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -87,7 +87,7 @@ public class TaskObject extends AIndependentValueProcessObject<TaskDefinition> {
                 resolver.accept(this.value, this.status, name, this::run, content);
             }
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -104,7 +104,7 @@ public class TaskObject extends AIndependentValueProcessObject<TaskDefinition> {
                 threadContext = resolver.apply(this.value, this.status, threadContext);
             }
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
 
         TaskContentObject taskContent = this.factoryManager.create(TaskContentObject.class);

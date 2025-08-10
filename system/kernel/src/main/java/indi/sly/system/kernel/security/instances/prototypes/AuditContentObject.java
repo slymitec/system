@@ -33,7 +33,7 @@ public class AuditContentObject extends AInfoContentObject {
 
             return this.audit.getProcessID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -44,7 +44,7 @@ public class AuditContentObject extends AInfoContentObject {
 
             return this.audit.getAccountID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -55,7 +55,7 @@ public class AuditContentObject extends AInfoContentObject {
 
             return CollectionUtil.unmodifiable(this.audit.getIdentifications());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -73,7 +73,7 @@ public class AuditContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -84,7 +84,7 @@ public class AuditContentObject extends AInfoContentObject {
 
             return CollectionUtil.unmodifiable(this.audit.getUserIDs());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -102,7 +102,7 @@ public class AuditContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -113,7 +113,7 @@ public class AuditContentObject extends AInfoContentObject {
 
             return this.audit.getAudit();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -126,7 +126,7 @@ public class AuditContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 }

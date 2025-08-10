@@ -21,7 +21,7 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
 
         long type = this.value.getType();
 
-        this.lock(LockType.NONE);
+        this.unlock(LockType.READ);
         return type;
     }
 
@@ -32,7 +32,7 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
         this.value.setType(type);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public Map<String, String> getParameters() {
@@ -41,7 +41,7 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
 
         Map<String, String> parameters = this.value.getRun().getParameters();
 
-        this.lock(LockType.NONE);
+        this.unlock(LockType.READ);
         return CollectionUtil.unmodifiable(parameters);
     }
 
@@ -53,7 +53,7 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
         this.value.getRun().getParameters().putAll(parameters);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public Object getResult() {
@@ -62,7 +62,7 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
 
         Object result = this.value.getRun().getResult();
 
-        this.lock(LockType.NONE);
+        this.unlock(LockType.READ);
         return result;
     }
 
@@ -73,7 +73,7 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
         this.value.getRun().setResult(result);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 
     public AKernelException getRunException() {
@@ -82,7 +82,7 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
 
         AKernelException exception = this.value.getRun().getException();
 
-        this.lock(LockType.NONE);
+        this.unlock(LockType.READ);
         return exception;
     }
 
@@ -93,6 +93,6 @@ public class ThreadContextObject extends AValueProcessObject<ThreadContextDefini
         this.value.getRun().setException(exception);
 
         this.fresh();
-        this.lock(LockType.NONE);
+        this.unlock(LockType.WRITE);
     }
 }

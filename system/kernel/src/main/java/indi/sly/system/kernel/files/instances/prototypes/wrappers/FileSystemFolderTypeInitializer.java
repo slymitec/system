@@ -121,7 +121,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
                 infoRepository.addRelation(infoRelation);
             } finally {
-                this.lockProcedure(info, LockType.NONE);
+                this.unlockProcedure(info, LockType.WRITE);
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
@@ -204,7 +204,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 infoSummary.setType(infoRelation.getType());
                 infoSummary.setName(infoRelation.getName());
             } finally {
-                this.lockProcedure(info, LockType.NONE);
+                this.unlockProcedure(info, LockType.READ);
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
@@ -265,7 +265,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                     infoSummaries.add(infoSummary);
                 }
             } finally {
-                this.lockProcedure(info, LockType.NONE);
+                this.unlockProcedure(info, LockType.READ);
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             if (wildcard.getType() == UUID.class) {
@@ -336,7 +336,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
                 infoRelation.setName(newChildInfoName);
             } finally {
-                this.lockProcedure(info, LockType.NONE);
+                this.unlockProcedure(info, LockType.WRITE);
             }
 
             return;
@@ -396,7 +396,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
                 infoRepository.deleteRelation(infoRelation);
             } finally {
-                this.lockProcedure(info, LockType.NONE);
+                this.unlockProcedure(info, LockType.WRITE);
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));

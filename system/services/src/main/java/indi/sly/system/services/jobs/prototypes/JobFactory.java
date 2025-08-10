@@ -3,7 +3,9 @@ package indi.sly.system.services.jobs.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.Consumer1;
 import indi.sly.system.common.lang.Provider;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.services.jobs.prototypes.processors.*;
 import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
@@ -15,9 +17,14 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -57,6 +64,20 @@ public class JobFactory extends AFactory {
         TaskObject task = this.factoryManager.create(TaskObject.class);
 
         task.setSource(funcRead, funcWrite);
+        ReadWriteLock reentrantLock = new ReentrantReadWriteLock();
+        task.setLock((lock) -> {
+            if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
+                reentrantLock.readLock().lock();
+            } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
+                reentrantLock.writeLock().lock();
+            }
+        }, (lock) -> {
+            if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
+                reentrantLock.readLock().unlock();
+            } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
+                reentrantLock.writeLock().unlock();
+            }
+        });
         task.processorMediator = processorMediator;
         task.status = new TaskStatusDefinition();
 

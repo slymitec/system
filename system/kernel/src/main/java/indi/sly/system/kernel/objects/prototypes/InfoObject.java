@@ -168,7 +168,7 @@ public class InfoObject extends AObject {
                 }
             }
         } finally {
-            infoTypeInitializer.lockProcedure(info, LockType.NONE);
+            infoTypeInitializer.unlockProcedure(info, LockType.WRITE);
         }
 
         return index;
@@ -191,7 +191,7 @@ public class InfoObject extends AObject {
             }
         } finally {
             if (ObjectUtil.allNotNull(info)) {
-                infoTypeInitializer.lockProcedure(info, LockType.NONE);
+                infoTypeInitializer.unlockProcedure(info, LockType.WRITE);
             }
         }
     }

@@ -21,7 +21,7 @@ public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, Th
 
             return this.value.getStatus();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -38,7 +38,7 @@ public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, Th
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -55,7 +55,7 @@ public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, Th
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -72,7 +72,7 @@ public class ThreadStatusObject extends AValueProcessObject<ThreadDefinition, Th
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 }

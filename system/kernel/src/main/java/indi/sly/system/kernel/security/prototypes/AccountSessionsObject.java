@@ -25,7 +25,7 @@ public class AccountSessionsObject extends AIndependentBytesValueProcessObject<A
 
             return CollectionUtil.unmodifiable(this.value.getSessions());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -43,7 +43,7 @@ public class AccountSessionsObject extends AIndependentBytesValueProcessObject<A
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -61,7 +61,7 @@ public class AccountSessionsObject extends AIndependentBytesValueProcessObject<A
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 }

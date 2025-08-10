@@ -20,6 +20,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -45,6 +46,13 @@ public abstract class AInfoTypeInitializer extends AInitializer {
     }
 
     public final void lockProcedure(InfoEntity info, long lock) {
+        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+
+        infoRepository.lock(info, lock);
+    }
+
+    public final void unlockProcedure(InfoEntity info, long lock) {
         MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
 
@@ -118,7 +126,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, infoOpen));
 
         content.setSource(funcRead, funcWrite);
-        content.setLock((lockMode) -> this.lockProcedure(infoProvider.acquire(), lockMode));
+        content.setLock((lock) -> this.lockProcedure(infoProvider.acquire(), lock), (lock) -> this.unlockProcedure(infoProvider.acquire(), lock));
         content.setExecute(funcExecute);
         if (ObjectUtil.allNotNull(infoOpen)) {
             content.setInfoOpen(infoOpen);

@@ -20,7 +20,7 @@ public class TypeObject extends AIndependentValueProcessObject<TypeDefinition> {
 
         String name = this.value.getName();
 
-        this.lock(LockType.NONE);
+        this.unlock(LockType.READ);
         return name;
     }
 
@@ -30,7 +30,7 @@ public class TypeObject extends AIndependentValueProcessObject<TypeDefinition> {
 
         UUID thisType = this.value.getThisType();
 
-        this.lock(LockType.NONE);
+        this.unlock(LockType.READ);
         return thisType;
     }
 
@@ -44,7 +44,7 @@ public class TypeObject extends AIndependentValueProcessObject<TypeDefinition> {
 
         Set<UUID> childTypes = this.value.getChildTypes();
 
-        this.lock(LockType.NONE);
+        this.unlock(LockType.READ);
         return CollectionUtil.unmodifiable(childTypes);
     }
 
@@ -54,7 +54,7 @@ public class TypeObject extends AIndependentValueProcessObject<TypeDefinition> {
 
         long attribute = this.value.getAttribute();
 
-        this.lock(LockType.NONE);
+        this.unlock(LockType.READ);
         return LogicalUtil.isAllExist(attribute, typeInitializerAttributes);
     }
 
@@ -64,7 +64,7 @@ public class TypeObject extends AIndependentValueProcessObject<TypeDefinition> {
 
         AInfoTypeInitializer initializer = this.value.getInitializer();
 
-        this.lock(LockType.NONE);
+        this.unlock(LockType.READ);
         return initializer;
     }
 

@@ -40,7 +40,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
 
             return this.entry.getType();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -62,7 +62,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -82,7 +82,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
 
             return this.entry.getValue();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -104,7 +104,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 }

@@ -15,9 +15,11 @@ public abstract class AProcessObject<T1, T2> extends AObject {
     private Consumer funcParentInit;
     private Consumer funcParentFresh;
     private Consumer1<Long> funcParentLock;
+    private Consumer1<Long> funcParentUnlock;
     private Provider<T1> funcRead;
     private Consumer1<T1> funcWrite;
     private Consumer1<Long> funcLock;
+    private Consumer1<Long> funcUnlock;
 
     public final void setParent(T2 parent) {
         this.parent = parent;
@@ -27,11 +29,13 @@ public abstract class AProcessObject<T1, T2> extends AObject {
                 this.funcParentInit = parentProcess::init;
                 this.funcParentFresh = parentProcess::fresh;
                 this.funcParentLock = parentProcess::lock;
+                this.funcParentUnlock = parentProcess::unlock;
             }
         } else {
             this.funcParentInit = null;
             this.funcParentFresh = null;
             this.funcParentLock = null;
+            this.funcParentUnlock = null;
         }
     }
 
@@ -44,12 +48,13 @@ public abstract class AProcessObject<T1, T2> extends AObject {
         this.funcWrite = funcWrite;
     }
 
-    public final void setLock(Consumer1<Long> funcLock) {
+    public final void setLock(Consumer1<Long> funcLock, Consumer1<Long> funcUnlock) {
         if (ObjectUtil.isAnyNull(funcLock)) {
             throw new ConditionParametersException();
         }
 
         this.funcLock = funcLock;
+        this.funcUnlock = funcUnlock;
     }
 
     protected final void lock(long lock) {
@@ -62,6 +67,19 @@ public abstract class AProcessObject<T1, T2> extends AObject {
         }
         if (ObjectUtil.allNotNull(this.funcParentLock)) {
             this.funcParentLock.accept(lock);
+        }
+    }
+
+    protected final void unlock(long lock) {
+        if (ObjectUtil.isAnyNull(this.funcRead, this.funcWrite)) {
+            throw new ConditionContextException();
+        }
+
+        if (ObjectUtil.allNotNull(this.funcUnlock)) {
+            this.funcUnlock.accept(lock);
+        }
+        if (ObjectUtil.allNotNull(this.funcParentUnlock)) {
+            this.funcParentUnlock.accept(lock);
         }
     }
 

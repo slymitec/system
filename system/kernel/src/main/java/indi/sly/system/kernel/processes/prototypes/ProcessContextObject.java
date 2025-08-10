@@ -35,7 +35,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
 
             return this.value.getType();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -60,7 +60,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -76,7 +76,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
 
             return value.getIdentifications();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -106,7 +106,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -122,7 +122,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
 
             return this.value.getApplication();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -151,7 +151,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -167,7 +167,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
 
             return CollectionUtil.unmodifiable(this.value.getEnvironmentVariables());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -203,7 +203,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -219,7 +219,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
 
             return this.value.getParameters();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -248,7 +248,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -264,7 +264,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
 
             return CollectionUtil.unmodifiable(this.value.getWorkFolder());
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -300,7 +300,7 @@ public class ProcessContextObject extends ABytesValueProcessObject<ProcessContex
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 }

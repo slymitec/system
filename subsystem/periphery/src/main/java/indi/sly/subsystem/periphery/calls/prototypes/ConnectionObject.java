@@ -33,7 +33,7 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
 
             return this.value.getID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -45,14 +45,14 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
         List<ConnectionProcessorConnectConsumer> resolvers = this.processorMediator.getConnects();
 
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             for (ConnectionProcessorConnectConsumer resolver : resolvers) {
                 resolver.accept(this.value, this.status);
             }
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -60,14 +60,14 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
         List<ConnectionProcessorDisconnectConsumer> resolvers = this.processorMediator.getDisconnects();
 
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             for (ConnectionProcessorDisconnectConsumer resolver : resolvers) {
                 resolver.accept(this.value, this.status);
             }
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -81,14 +81,14 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
         List<ConnectionProcessorSendFunction> resolvers = this.processorMediator.getSends();
 
         try {
-            this.lock(LockType.READ);
+            this.lock(LockType.WRITE);
             this.init();
 
             for (ConnectionProcessorSendFunction resolver : resolvers) {
                 userContentResponse = resolver.apply(this.value, this.status, userContextRequest, userContentResponse);
             }
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
 
         return userContentResponse;

@@ -22,6 +22,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -192,12 +193,6 @@ public class UserRepositoryObject extends AObject {
             } else {
                 lockMode = LockModeType.PESSIMISTIC_WRITE;
             }
-        } else {
-            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.NONE;
-            }
         }
 
         this.entityManager.lock(account, lockMode);
@@ -224,7 +219,41 @@ public class UserRepositoryObject extends AObject {
             } else {
                 lockMode = LockModeType.PESSIMISTIC_WRITE;
             }
-        } else {
+        }
+
+        this.entityManager.lock(group, lockMode);
+    }
+
+    public void unlock(AccountEntity account, long lock) {
+        if (ObjectUtil.isAnyNull(account)) {
+            throw new ConditionParametersException();
+        }
+
+        LockModeType lockMode = this.entityManager.getLockMode(account);
+
+        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
+            return;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ, LockType.WRITE)) {
+            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
+                return;
+            } else {
+                lockMode = LockModeType.NONE;
+            }
+        }
+
+        this.entityManager.lock(account, lockMode);
+    }
+
+    public void unlock(GroupEntity group, long lock) {
+        if (ObjectUtil.isAnyNull(group)) {
+            throw new ConditionParametersException();
+        }
+
+        LockModeType lockMode = this.entityManager.getLockMode(group);
+
+        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
+            return;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ, LockType.WRITE)) {
             if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
                 return;
             } else {

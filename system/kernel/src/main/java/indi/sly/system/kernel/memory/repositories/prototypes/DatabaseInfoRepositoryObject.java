@@ -102,7 +102,27 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             } else {
                 lockMode = LockModeType.PESSIMISTIC_WRITE;
             }
-        } else {
+        }
+
+        this.entityManager.lock(info, lockMode);
+
+        List<InfoRelationEntity> relations = this.listRelation(info, null);
+        for (InfoRelationEntity relation : relations) {
+            this.entityManager.lock(relation, lockMode);
+        }
+    }
+
+    @Override
+    public void unlock(InfoEntity info, long lock) {
+        if (ObjectUtil.isAnyNull(info)) {
+            throw new ConditionParametersException();
+        }
+
+        LockModeType lockMode = this.entityManager.getLockMode(info);
+
+        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
+            return;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ, LockType.WRITE)) {
             if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
                 return;
             } else {

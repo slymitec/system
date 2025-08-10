@@ -66,7 +66,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
 
             infoRepository.addRelation(infoRelation);
         } finally {
-            this.lockProcedure(info, LockType.NONE);
+            this.unlockProcedure(info, LockType.WRITE);
         }
     }
 
@@ -91,7 +91,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
             infoSummary.setType(infoRelation.getType());
             infoSummary.setName(infoRelation.getName());
         } finally {
-            this.lockProcedure(info, LockType.NONE);
+            this.unlockProcedure(info, LockType.READ);
         }
 
         return infoSummary;
@@ -121,7 +121,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
                 infoSummaries.add(infoSummary);
             }
         } finally {
-            this.lockProcedure(info, LockType.NONE);
+            this.unlockProcedure(info, LockType.READ);
         }
 
         return CollectionUtil.unmodifiable(infoSummaries);
@@ -145,7 +145,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
 
             infoRepository.deleteRelation(infoRelation);
         } finally {
-            this.lockProcedure(info, LockType.NONE);
+            this.unlockProcedure(info, LockType.WRITE);
         }
     }
 

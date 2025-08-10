@@ -43,7 +43,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             return this.value.getSessionID();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -119,7 +119,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -152,7 +152,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -183,7 +183,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -221,7 +221,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             this.fresh();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.WRITE);
         }
     }
 
@@ -232,7 +232,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             return this.value.isLink();
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 
@@ -268,7 +268,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             return sessionContent;
         } finally {
-            this.lock(LockType.NONE);
+            this.unlock(LockType.READ);
         }
     }
 }

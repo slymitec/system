@@ -54,7 +54,7 @@ public class InterActiveController extends AController {
     public void onClose(Session session, CloseReason closeReason) {
         this.userSpace = null;
 
-        this.factoryManager.setUserSpace(this.userSpace);
+        this.factoryManager.setUserSpace(null);
     }
 
     @OnMessage

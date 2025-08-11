@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.core.enviroment.values;
 
+import indi.sly.system.common.supports.ObjectUtil;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
@@ -36,7 +37,11 @@ public class KernelSpaceDefinition extends ASpaceDefinition<KernelSpaceDefinitio
     }
 
     public void setUserSpace(UserSpaceDefinition userSpace) {
-        this.userSpace.set(userSpace);
+        if (ObjectUtil.isAnyNull(userSpace)) {
+            this.userSpace.remove();
+        } else {
+            this.userSpace.set(userSpace);
+        }
     }
 
     public AKernelSpaceExtensionDefinition<?> getServiceSpace() {

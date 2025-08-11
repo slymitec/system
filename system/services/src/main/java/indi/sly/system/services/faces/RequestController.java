@@ -55,6 +55,8 @@ public class RequestController extends AController {
 
             jobService.finishUserContext(userContext);
 
+            this.factoryManager.setUserSpace(null);
+
             return ObjectUtil.transferToString(userContentResponse);
         } catch (RuntimeException exception) {
             UserContentResponseDefinition userContentResponse = new UserContentResponseDefinition();

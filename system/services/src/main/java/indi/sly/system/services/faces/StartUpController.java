@@ -86,6 +86,8 @@ public class StartUpController extends AController {
                 jobService.startup(startup);
             }
 
+            this.factoryManager.setUserSpace(null);
+
             return new UserContentResponseDefinition();
         } else {
             UserContentResponseDefinition userContentResponse = new UserContentResponseDefinition();

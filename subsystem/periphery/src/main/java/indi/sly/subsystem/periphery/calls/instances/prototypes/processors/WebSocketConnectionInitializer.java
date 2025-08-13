@@ -3,6 +3,7 @@ package indi.sly.subsystem.periphery.calls.instances.prototypes.processors;
 import indi.sly.subsystem.periphery.calls.values.*;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
@@ -18,6 +19,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.*;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -25,6 +30,8 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
     @Override
     public synchronized void connect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
         synchronized (this) {
+            status.setExecutor(Executors.newCachedThreadPool());
+
             WebSocketClient webSocketClient;
 
             if (ObjectUtil.allNotNull(status.getHelper())) {
@@ -45,7 +52,7 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
 
                 webSocketClient = new WebSocketClient(address, new Draft_6455()) {
                     @Override
-                    public void onOpen(ServerHandshake handshakedata) {
+                    public void onOpen(ServerHandshake handshakeData) {
                     }
 
                     @Override
@@ -54,26 +61,29 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
                             throw new StatusUnreadableException();
                         });
 
-                        Map<UUID, UserContentRequestDefinition> requests = status.getRequest();
                         Map<UUID, UserContentResponseDefinition> responses = status.getResponses();
+                        Map<UUID, Lock> locks = status.getLocks();
+                        Map<UUID, Condition> conditions = status.getConditions();
 
                         UUID id = userContentResponse.getID();
 
-                        UserContentRequestDefinition userContentRequest;
+                        Lock lock = locks.getOrDefault(id, null);
+                        if (ObjectUtil.allNotNull(lock)) {
+                            try {
+                                lock.lock();
 
-                        userContentRequest = requests.getOrDefault(id, null);
-                        if (ObjectUtil.isAnyNull(userContentRequest)) {
-                            return;
-                        } else {
-                            requests.remove(id);
-                        }
-
-                        synchronized (userContentRequest) {
-                            if (!ValueUtil.isAnyNullOrEmpty(userContentRequest.getID())) {
                                 responses.put(id, userContentResponse);
-                                userContentRequest.setID(UUIDUtil.getEmpty());
+                                locks.remove(id);
+                                conditions.remove(id);
+
+                                Condition condition = conditions.getOrDefault(id, null);
+
+                                if (ObjectUtil.allNotNull(condition)) {
+                                    condition.signalAll();
+                                }
+                            } finally {
+                                lock.unlock();
                             }
-                            userContentRequest.notifyAll();
                         }
                     }
 
@@ -88,8 +98,6 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
                     }
                 };
 
-                status.getRequest().clear();
-                status.getResponses().clear();
                 status.setHelper(webSocketClient);
             }
         }
@@ -98,7 +106,11 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
     @Override
     public synchronized void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
         synchronized (this) {
-            status.getRequest().clear();
+            status.getExecutor().shutdown();
+            status.setExecutor(null);
+
+            status.getLocks().clear();
+            status.getConditions().clear();
             status.getResponses().clear();
             status.setHelper(null);
         }
@@ -114,6 +126,73 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
             systemWebSocketClient = (WebSocketClient) status.getHelper();
         }
 
+        UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
+        UUID id = userContentRequest.getID();
+
+        Map<UUID, Lock> locks = status.getLocks();
+        Map<UUID, Condition> conditions = status.getConditions();
+
+        Lock newLock = new ReentrantLock();
+        Condition newCondition = newLock.newCondition();
+        locks.put(id, newLock);
+        conditions.put(id, newCondition);
+
         systemWebSocketClient.send(ObjectUtil.transferToString(userContextRequest));
+    }
+
+    @Override
+    public UserContentResponseDefinition receive(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
+        UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
+        UUID id = userContentRequest.getID();
+        Map<UUID, UserContentResponseDefinition> responses = status.getResponses();
+        Map<UUID, Lock> locks = status.getLocks();
+        Map<UUID, Condition> conditions = status.getConditions();
+
+        Future<UserContentResponseDefinition> userContentResponseFuture = status.getExecutor().submit(() -> {
+            Lock lock = locks.getOrDefault(id, null);
+
+            UserContentResponseDefinition userContentResponse2 = new UserContentResponseDefinition();
+
+            if (ObjectUtil.allNotNull(lock)) {
+                try {
+                    lock.lock();
+
+                    Condition condition = conditions.getOrDefault(id, null);
+
+                    while (locks.containsKey(id)) {
+                        if (condition.await(8, TimeUnit.SECONDS)) {
+                            if (responses.containsKey(id)) {
+                                userContentResponse2 = responses.remove(id);
+                                locks.remove(id);
+                                conditions.remove(id);
+                            }
+                        } else {
+                            userContentResponse2 = responses.remove(id);
+                            locks.remove(id);
+                            conditions.remove(id);
+                        }
+                    }
+
+                } finally {
+                    lock.unlock();
+                }
+            } else {
+                userContentResponse2 = responses.remove(id);
+            }
+
+            return userContentResponse2;
+        });
+
+        UserContentResponseDefinition userContentResponse;
+        try {
+            userContentResponse = userContentResponseFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new StatusUnexpectedException();
+        }
+        if (ObjectUtil.isAnyNull(userContentResponse)) {
+            throw new StatusUnexpectedException();
+        }
+
+        return userContentResponse;
     }
 }

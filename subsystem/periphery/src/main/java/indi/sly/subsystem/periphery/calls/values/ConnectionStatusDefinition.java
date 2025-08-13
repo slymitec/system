@@ -6,20 +6,22 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
 
 public class ConnectionStatusDefinition extends ADefinition<ConnectionStatusDefinition> {
     public ConnectionStatusDefinition() {
-        this.request = new ConcurrentHashMap<>();
+        this.locks = new ConcurrentHashMap<>();
+        this.conditions = new ConcurrentHashMap<>();
         this.responses = new ConcurrentHashMap<>();
-        this.executor = Executors.newSingleThreadExecutor();
     }
 
     private long runtime;
     private Object helper;
-    private final Map<UUID, UserContentRequestDefinition> request;
+    private final Map<UUID, Lock> locks;
+    private final Map<UUID, Condition> conditions;
     private final Map<UUID, UserContentResponseDefinition> responses;
-    private final ExecutorService executor;
+    private ExecutorService executor;
 
     public long getRuntime() {
         return this.runtime;
@@ -37,8 +39,12 @@ public class ConnectionStatusDefinition extends ADefinition<ConnectionStatusDefi
         this.helper = helper;
     }
 
-    public Map<UUID, UserContentRequestDefinition> getRequest() {
-        return this.request;
+    public Map<UUID, Lock> getLocks() {
+        return this.locks;
+    }
+
+    public Map<UUID, Condition> getConditions() {
+        return this.conditions;
     }
 
     public Map<UUID, UserContentResponseDefinition> getResponses() {
@@ -47,5 +53,9 @@ public class ConnectionStatusDefinition extends ADefinition<ConnectionStatusDefi
 
     public ExecutorService getExecutor() {
         return this.executor;
+    }
+
+    public void setExecutor(ExecutorService executor) {
+        this.executor = executor;
     }
 }

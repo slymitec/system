@@ -2,7 +2,7 @@ package indi.sly.subsystem.periphery.calls.prototypes;
 
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorConnectConsumer;
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorDisconnectConsumer;
-import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorSendFunction;
+import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorCallFunction;
 import indi.sly.subsystem.periphery.calls.prototypes.wrappers.ConnectionProcessorMediator;
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
 import indi.sly.subsystem.periphery.calls.values.ConnectionStatusDefinition;
@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Future;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -71,20 +70,20 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
         }
     }
 
-    public Future<UserContentResponseDefinition> send(UserContextRequestDefinition userContextRequest) {
+    public UserContentResponseDefinition call(UserContextRequestDefinition userContextRequest) {
         if (ObjectUtil.isAnyNull(userContextRequest)) {
             throw new ConditionParametersException();
         }
 
-        Future<UserContentResponseDefinition> userContentResponse = null;
+        UserContentResponseDefinition userContentResponse = null;
 
-        List<ConnectionProcessorSendFunction> resolvers = this.processorMediator.getSends();
+        List<ConnectionProcessorCallFunction> resolvers = this.processorMediator.getCalls();
 
         try {
             this.lock(LockType.WRITE);
             this.init();
 
-            for (ConnectionProcessorSendFunction resolver : resolvers) {
+            for (ConnectionProcessorCallFunction resolver : resolvers) {
                 userContentResponse = resolver.apply(this.value, this.status, userContextRequest, userContentResponse);
             }
         } finally {

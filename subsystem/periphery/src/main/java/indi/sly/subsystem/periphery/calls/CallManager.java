@@ -1,6 +1,7 @@
 package indi.sly.subsystem.periphery.calls;
 
 import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.AConnectionInitializer;
+import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.HttpConnectionInitializer;
 import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.WebSocketConnectionInitializer;
 import indi.sly.subsystem.periphery.calls.prototypes.CallFactory;
 import indi.sly.subsystem.periphery.calls.prototypes.ConnectionBuilder;
@@ -36,7 +37,9 @@ public class CallManager extends AManager {
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
             this.createConnection(kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_NAME, ConnectionAttributeType.NULL,
-                    kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS, this.factoryManager.create(WebSocketConnectionInitializer.class));
+                    kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS_WEBSOCKET, this.factoryManager.create(HttpConnectionInitializer.class));
+            this.createConnection(kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_NAME_WEBSOCKET, ConnectionAttributeType.NULL,
+                    kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS_WEBSOCKET, this.factoryManager.create(WebSocketConnectionInitializer.class));
 
         }
     }

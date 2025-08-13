@@ -2,6 +2,7 @@ package indi.sly.subsystem.periphery.calls.instances.prototypes.processors;
 
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
 import indi.sly.subsystem.periphery.calls.values.ConnectionStatusDefinition;
+import indi.sly.subsystem.periphery.calls.values.UserContentResponseDefinition;
 import indi.sly.subsystem.periphery.calls.values.UserContextRequestDefinition;
 import indi.sly.subsystem.periphery.core.prototypes.processors.AInitializer;
 import jakarta.inject.Named;
@@ -19,4 +20,6 @@ public abstract class AConnectionInitializer extends AInitializer {
     public abstract void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status);
 
     public abstract void send(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status);
+
+    public abstract UserContentResponseDefinition receive(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status);
 }

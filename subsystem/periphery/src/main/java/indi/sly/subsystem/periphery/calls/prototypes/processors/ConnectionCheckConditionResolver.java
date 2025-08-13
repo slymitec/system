@@ -2,12 +2,14 @@ package indi.sly.subsystem.periphery.calls.prototypes.processors;
 
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorConnectConsumer;
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorDisconnectConsumer;
-import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorSendFunction;
+import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorCallFunction;
 import indi.sly.subsystem.periphery.calls.prototypes.wrappers.ConnectionProcessorMediator;
 import indi.sly.subsystem.periphery.calls.values.ConnectStatusRuntimeType;
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
+import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -28,9 +30,12 @@ public class ConnectionCheckConditionResolver extends AConnectionResolver {
             }
         };
 
-        this.send = (connection, status, userContextRequest, userContentResponse) -> {
+        this.call = (connection, status, userContextRequest, userContentResponse) -> {
             if (LogicalUtil.allNotEqual(status.getRuntime(), ConnectStatusRuntimeType.CONNECTED)) {
                 throw new StatusRelationshipErrorException();
+            }
+            if (ValueUtil.isAnyNullOrEmpty(userContextRequest.getContent().getID())) {
+                throw new ConditionParametersException();
             }
 
             return userContentResponse;
@@ -44,12 +49,12 @@ public class ConnectionCheckConditionResolver extends AConnectionResolver {
 
     private final ConnectionProcessorConnectConsumer connect;
     private final ConnectionProcessorDisconnectConsumer disconnect;
-    private final ConnectionProcessorSendFunction send;
+    private final ConnectionProcessorCallFunction call;
 
     @Override
     public void resolve(ConnectionDefinition connection, ConnectionProcessorMediator processorMediator) {
         processorMediator.getConnects().add(this.connect);
         processorMediator.getDisconnects().add(this.disconnect);
-        processorMediator.getSends().add(this.send);
+        processorMediator.getCalls().add(this.call);
     }
 }

@@ -2,7 +2,7 @@ package indi.sly.subsystem.periphery.calls.prototypes.wrappers;
 
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorConnectConsumer;
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorDisconnectConsumer;
-import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorSendFunction;
+import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorCallFunction;
 import indi.sly.subsystem.periphery.core.prototypes.wrappers.AMediator;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -17,12 +17,12 @@ public class ConnectionProcessorMediator extends AMediator {
     public ConnectionProcessorMediator() {
         this.connects = new ArrayList<>();
         this.disconnects = new ArrayList<>();
-        this.sends = new ArrayList<>();
+        this.calls = new ArrayList<>();
    }
 
     private final List<ConnectionProcessorConnectConsumer> connects;
     private final List<ConnectionProcessorDisconnectConsumer> disconnects;
-    private final List<ConnectionProcessorSendFunction> sends;
+    private final List<ConnectionProcessorCallFunction> calls;
 
     public List<ConnectionProcessorConnectConsumer> getConnects() {
         return this.connects;
@@ -32,7 +32,7 @@ public class ConnectionProcessorMediator extends AMediator {
         return this.disconnects;
     }
 
-    public List<ConnectionProcessorSendFunction> getSends() {
-        return this.sends;
+    public List<ConnectionProcessorCallFunction> getCalls() {
+        return this.calls;
     }
 }

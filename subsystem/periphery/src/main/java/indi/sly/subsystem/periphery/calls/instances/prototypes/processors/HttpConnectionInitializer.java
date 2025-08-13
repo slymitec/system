@@ -25,7 +25,6 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
                     .baseUrl(connection.getAddress())
                     .build();
 
-            status.getResponses().clear();
             status.setHelper(restClient);
         }
     }
@@ -33,7 +32,6 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
     @Override
     public synchronized void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
         synchronized (this) {
-            status.getResponses().clear();
             status.setHelper(null);
         }
     }
@@ -47,8 +45,6 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
         } else {
             systemRestClient = (RestClient) status.getHelper();
         }
-
-        Map<UUID, UserContentResponseDefinition> responses = status.getResponses();
 
         UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
 

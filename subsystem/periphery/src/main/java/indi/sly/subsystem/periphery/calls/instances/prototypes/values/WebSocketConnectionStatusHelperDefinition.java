@@ -1,5 +1,6 @@
 package indi.sly.subsystem.periphery.calls.instances.prototypes.values;
 
+import indi.sly.subsystem.periphery.calls.values.UserContentResponseDefinition;
 import indi.sly.system.common.values.ADefinition;
 import org.java_websocket.client.WebSocketClient;
 
@@ -14,12 +15,22 @@ public class WebSocketConnectionStatusHelperDefinition extends ADefinition<WebSo
     public WebSocketConnectionStatusHelperDefinition() {
         this.locks = new ConcurrentHashMap<>();
         this.conditions = new ConcurrentHashMap<>();
+        this.responses = new ConcurrentHashMap<>();
     }
 
+    private ExecutorService executor;
     private WebSocketClient webSocketClient;
     private final Map<UUID, Lock> locks;
     private final Map<UUID, Condition> conditions;
-    private ExecutorService executor;
+    private final Map<UUID, UserContentResponseDefinition> responses;
+
+    public ExecutorService getExecutor() {
+        return this.executor;
+    }
+
+    public void setExecutor(ExecutorService executor) {
+        this.executor = executor;
+    }
 
     public WebSocketClient getWebSocketClient() {
         return this.webSocketClient;
@@ -37,11 +48,7 @@ public class WebSocketConnectionStatusHelperDefinition extends ADefinition<WebSo
         return this.conditions;
     }
 
-    public ExecutorService getExecutor() {
-        return this.executor;
-    }
-
-    public void setExecutor(ExecutorService executor) {
-        this.executor = executor;
+    public Map<UUID, UserContentResponseDefinition> getResponses() {
+        return this.responses;
     }
 }

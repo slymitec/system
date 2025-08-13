@@ -1,5 +1,6 @@
 package indi.sly.subsystem.periphery.calls.instances.prototypes.processors;
 
+import indi.sly.subsystem.periphery.calls.instances.prototypes.values.WebSocketConnectionStatusHelperDefinition;
 import indi.sly.subsystem.periphery.calls.values.*;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
@@ -30,7 +31,10 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
     @Override
     public synchronized void connect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
         synchronized (this) {
-            status.setExecutor(Executors.newCachedThreadPool());
+            WebSocketConnectionStatusHelperDefinition webSocketConnectionStatusHelper = new WebSocketConnectionStatusHelperDefinition();
+            status.setHelper(webSocketConnectionStatusHelper);
+
+            webSocketConnectionStatusHelper.setExecutor(Executors.newCachedThreadPool());
 
             WebSocketClient webSocketClient;
 
@@ -62,8 +66,8 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
                         });
 
                         Map<UUID, UserContentResponseDefinition> responses = status.getResponses();
-                        Map<UUID, Lock> locks = status.getLocks();
-                        Map<UUID, Condition> conditions = status.getConditions();
+                        Map<UUID, Lock> locks = webSocketConnectionStatusHelper.getLocks();
+                        Map<UUID, Condition> conditions = webSocketConnectionStatusHelper.getConditions();
 
                         UUID id = userContentResponse.getID();
 
@@ -105,53 +109,57 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
 
     @Override
     public synchronized void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
-        synchronized (this) {
-            status.getExecutor().shutdown();
-            status.setExecutor(null);
+        WebSocketConnectionStatusHelperDefinition webSocketConnectionStatusHelper;
 
-            status.getLocks().clear();
-            status.getConditions().clear();
+        if (ObjectUtil.isAnyNull(status.getHelper()) || status.getHelper() instanceof WebSocketConnectionStatusHelperDefinition) {
+            throw new StatusRelationshipErrorException();
+        } else {
+            webSocketConnectionStatusHelper = (WebSocketConnectionStatusHelperDefinition) status.getHelper();
+        }
+
+        synchronized (this) {
+            webSocketConnectionStatusHelper.getExecutor().shutdown();
+            webSocketConnectionStatusHelper.setExecutor(null);
+
+            webSocketConnectionStatusHelper.getLocks().clear();
+            webSocketConnectionStatusHelper.getConditions().clear();
+
             status.getResponses().clear();
             status.setHelper(null);
         }
     }
 
     @Override
-    public void send(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
-        WebSocketClient systemWebSocketClient;
+    public UserContentResponseDefinition call(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
+        WebSocketConnectionStatusHelperDefinition webSocketConnectionStatusHelper;
 
-        if (ObjectUtil.isAnyNull(status.getHelper()) || status.getHelper() instanceof WebSocketClient) {
+        if (ObjectUtil.isAnyNull(status.getHelper()) || status.getHelper() instanceof WebSocketConnectionStatusHelperDefinition) {
             throw new StatusRelationshipErrorException();
         } else {
-            systemWebSocketClient = (WebSocketClient) status.getHelper();
+            webSocketConnectionStatusHelper = (WebSocketConnectionStatusHelperDefinition) status.getHelper();
         }
+
+        WebSocketClient webSocketClient = webSocketConnectionStatusHelper.getWebSocketClient();
 
         UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
         UUID id = userContentRequest.getID();
 
-        Map<UUID, Lock> locks = status.getLocks();
-        Map<UUID, Condition> conditions = status.getConditions();
+        Map<UUID, Lock> locks = webSocketConnectionStatusHelper.getLocks();
+        Map<UUID, Condition> conditions = webSocketConnectionStatusHelper.getConditions();
 
         Lock newLock = new ReentrantLock();
         Condition newCondition = newLock.newCondition();
         locks.put(id, newLock);
         conditions.put(id, newCondition);
 
-        systemWebSocketClient.send(ObjectUtil.transferToString(userContextRequest));
-    }
+        webSocketClient.send(ObjectUtil.transferToString(userContextRequest));
 
-    @Override
-    public UserContentResponseDefinition receive(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
-        UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
-        UUID id = userContentRequest.getID();
         Map<UUID, UserContentResponseDefinition> responses = status.getResponses();
-        Map<UUID, Lock> locks = status.getLocks();
-        Map<UUID, Condition> conditions = status.getConditions();
 
-        Future<UserContentResponseDefinition> userContentResponseFuture = status.getExecutor().submit(() -> {
+        Future<UserContentResponseDefinition> userContentResponseFuture = webSocketConnectionStatusHelper.getExecutor().submit(() -> {
             Lock lock = locks.getOrDefault(id, null);
 
-            UserContentResponseDefinition userContentResponse2 = new UserContentResponseDefinition();
+            UserContentResponseDefinition userContentResponse = new UserContentResponseDefinition();
 
             if (ObjectUtil.allNotNull(lock)) {
                 try {
@@ -162,12 +170,12 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
                     while (locks.containsKey(id)) {
                         if (condition.await(8, TimeUnit.SECONDS)) {
                             if (responses.containsKey(id)) {
-                                userContentResponse2 = responses.remove(id);
+                                userContentResponse = responses.remove(id);
                                 locks.remove(id);
                                 conditions.remove(id);
                             }
                         } else {
-                            userContentResponse2 = responses.remove(id);
+                            userContentResponse = responses.remove(id);
                             locks.remove(id);
                             conditions.remove(id);
                         }
@@ -177,10 +185,10 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
                     lock.unlock();
                 }
             } else {
-                userContentResponse2 = responses.remove(id);
+                userContentResponse= responses.remove(id);
             }
 
-            return userContentResponse2;
+            return userContentResponse;
         });
 
         UserContentResponseDefinition userContentResponse;

@@ -33,8 +33,7 @@ public class ConnectionInitializerResolver extends AConnectionResolver {
             }
 
             AConnectionInitializer initializer = connection.getInitializer();
-            initializer.send(userContextRequest, status);
-            userContentResponse = initializer.receive(userContextRequest, status);
+            userContentResponse = initializer.call(userContextRequest, status);
 
             return userContentResponse;
         };

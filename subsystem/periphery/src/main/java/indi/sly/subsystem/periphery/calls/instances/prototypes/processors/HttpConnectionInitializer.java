@@ -13,7 +13,6 @@ import org.springframework.web.client.RestClient;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Executors;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -21,8 +20,6 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
     @Override
     public synchronized void connect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
         synchronized (this) {
-            status.setExecutor(Executors.newCachedThreadPool());
-
             RestClient restClient = RestClient.builder()
                     .requestFactory(new HttpComponentsClientHttpRequestFactory())
                     .baseUrl(connection.getAddress())
@@ -42,7 +39,7 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
     }
 
     @Override
-    public void send(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
+    public UserContentResponseDefinition call(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
         RestClient systemRestClient;
 
         if (ObjectUtil.isAnyNull(status.getHelper()) || status.getHelper() instanceof RestClient) {
@@ -54,7 +51,6 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
         Map<UUID, UserContentResponseDefinition> responses = status.getResponses();
 
         UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
-        UUID id = userContentRequest.getID();
 
         UserContentResponseDefinition userContentResponse = systemRestClient
                 .post()
@@ -62,18 +58,6 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
                 .body(userContentRequest)
                 .retrieve()
                 .body(UserContentResponseDefinition.class);
-
-        responses.put(id, userContentResponse);
-    }
-
-    @Override
-    public UserContentResponseDefinition receive(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
-        Map<UUID, UserContentResponseDefinition> responses = status.getResponses();
-
-        UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
-        UUID id = userContentRequest.getID();
-
-        UserContentResponseDefinition userContentResponse = responses.remove(id);
 
         if (ObjectUtil.isAnyNull(userContentResponse)) {
             throw new StatusUnexpectedException();

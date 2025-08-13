@@ -19,7 +19,5 @@ public abstract class AConnectionInitializer extends AInitializer {
 
     public abstract void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status);
 
-    public abstract void send(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status);
-
-    public abstract UserContentResponseDefinition receive(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status);
+    public abstract UserContentResponseDefinition call(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status);
 }

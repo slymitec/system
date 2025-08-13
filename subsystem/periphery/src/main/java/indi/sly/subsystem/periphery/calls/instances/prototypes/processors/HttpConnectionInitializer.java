@@ -5,7 +5,6 @@ import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import jakarta.inject.Named;
-import org.java_websocket.client.WebSocketClient;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.MediaType;
@@ -14,13 +13,7 @@ import org.springframework.web.client.RestClient;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -35,6 +28,8 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
                     .baseUrl(connection.getAddress())
                     .build();
 
+            status.getResponses().clear();
+            status.setHelper(restClient);
         }
     }
 

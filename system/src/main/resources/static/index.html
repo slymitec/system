@@ -66,7 +66,7 @@
         }
 
         if ('WebSocket' in window) {
-            websocket = new WebSocket("ws://" + hostAddress + "/Call.action");
+            websocket = new WebSocket("ws://" + hostAddress + "/InterActive.action");
             setMessageInnerHTML("--连接中--");
         } else {
             alert('浏览器不支持……')
@@ -172,7 +172,7 @@
             }
         }
 
-        xmlHttpRequest.open("post", "http://" + hostAddress + "/Request.action");
+        xmlHttpRequest.open("post", "http://" + hostAddress + "/Call.action");
         xmlHttpRequest.setRequestHeader("Content-Type", "application/json");
         xmlHttpRequest.send(userContextRequest);
     }

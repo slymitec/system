@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class RequestController extends AController {
+public class CallController extends AController {
     private void initUserSpace(UserSpaceDefinition userSpace) {
         synchronized (this) {
             if (ObjectUtil.isAnyNull(this.factoryManager)) {
@@ -34,7 +34,7 @@ public class RequestController extends AController {
         }
     }
 
-    @RequestMapping(value = {"/Request.action"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = {"/Call.action"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String onMessage(@RequestBody UserContextRequestDefinition userContextRequest, HttpSession session) {
         UserSpaceDefinition userSpace = (UserSpaceDefinition) session.getAttribute("userSpace");
 

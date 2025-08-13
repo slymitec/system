@@ -23,7 +23,7 @@ import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
 @RestController
-@ServerEndpoint(value = "/Call.action")
+@ServerEndpoint(value = "/InterActive.action")
 public class InterActiveController extends AController {
     public InterActiveController() {
     }

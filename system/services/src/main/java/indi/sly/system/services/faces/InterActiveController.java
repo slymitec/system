@@ -1,7 +1,9 @@
 package indi.sly.system.services.faces;
 
 import indi.sly.system.common.lang.StatusUnexpectedException;
+import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -12,6 +14,7 @@ import indi.sly.system.services.jobs.prototypes.UserContentObject;
 import indi.sly.system.services.jobs.prototypes.UserContextObject;
 import indi.sly.system.services.jobs.values.UserContentResponseExceptionDefinition;
 import indi.sly.system.services.jobs.values.UserContentResponseDefinition;
+import indi.sly.system.services.jobs.values.UserContextRequestDefinition;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.websocket.*;
@@ -62,9 +65,19 @@ public class InterActiveController extends AController {
         try {
             this.factoryManager.setUserSpace(this.userSpace);
 
+            if (ValueUtil.isAnyNullOrEmpty(message)) {
+                throw new StatusUnreadableException();
+            }
+
+            UserContextRequestDefinition userContextRequest =
+                    ObjectUtil.transferFromStringOrDefaultProvider(UserContextRequestDefinition.class,
+                            message, () -> {
+                                throw new StatusUnreadableException();
+                            });
+
             JobService jobService = this.factoryManager.getService(JobService.class);
 
-            UserContextObject userContext = jobService.createUserContext(message);
+            UserContextObject userContext = jobService.createUserContext(userContextRequest);
 
             UserContentObject userContent = userContext.getContent();
 

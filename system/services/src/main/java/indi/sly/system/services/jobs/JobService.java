@@ -98,16 +98,10 @@ public class JobService extends AService {
         return this.factory.buildTask(task);
     }
 
-    public UserContextObject createUserContext(String userContextRequestRaw) {
-        if (ValueUtil.isAnyNullOrEmpty(userContextRequestRaw)) {
-            throw new StatusUnreadableException();
+    public UserContextObject createUserContext(UserContextRequestDefinition userContextRequest) {
+        if (ObjectUtil.isAnyNull(userContextRequest)) {
+            throw new ConditionParametersException();
         }
-
-        UserContextRequestDefinition userContextRequest =
-                ObjectUtil.transferFromStringOrDefaultProvider(UserContextRequestDefinition.class,
-                        userContextRequestRaw, () -> {
-                            throw new StatusUnreadableException();
-                        });
 
         UserContextCreateBuilder userContextCreateBuilder = this.factory.createUserContextCreator();
 

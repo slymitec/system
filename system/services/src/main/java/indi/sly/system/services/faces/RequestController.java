@@ -11,7 +11,9 @@ import indi.sly.system.services.jobs.prototypes.UserContentObject;
 import indi.sly.system.services.jobs.prototypes.UserContextObject;
 import indi.sly.system.services.jobs.values.UserContentResponseDefinition;
 import indi.sly.system.services.jobs.values.UserContentResponseExceptionDefinition;
+import indi.sly.system.services.jobs.values.UserContextRequestDefinition;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +35,7 @@ public class RequestController extends AController {
     }
 
     @RequestMapping(value = {"/Request.action"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String onMessage(String message, HttpSession session) {
+    public String onMessage(@RequestBody UserContextRequestDefinition userContextRequest, HttpSession session) {
         UserSpaceDefinition userSpace = (UserSpaceDefinition) session.getAttribute("userSpace");
 
         if (ObjectUtil.isAnyNull(this.factoryManager)) {
@@ -45,7 +47,7 @@ public class RequestController extends AController {
 
             JobService jobService = this.factoryManager.getService(JobService.class);
 
-            UserContextObject userContext = jobService.createUserContext(message);
+            UserContextObject userContext = jobService.createUserContext(userContextRequest);
 
             UserContentObject userContent = userContext.getContent();
 

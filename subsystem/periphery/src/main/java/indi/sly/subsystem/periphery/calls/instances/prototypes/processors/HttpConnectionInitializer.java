@@ -8,6 +8,7 @@ import jakarta.inject.Named;
 import org.java_websocket.client.WebSocketClient;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
@@ -40,8 +41,6 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
     @Override
     public synchronized void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
         synchronized (this) {
-            status.getLocks().clear();
-            status.getConditions().clear();
             status.getResponses().clear();
             status.setHelper(null);
         }
@@ -49,10 +48,42 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
 
     @Override
     public void send(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
+        RestClient systemRestClient;
+
+        if (ObjectUtil.isAnyNull(status.getHelper()) || status.getHelper() instanceof RestClient) {
+            throw new StatusRelationshipErrorException();
+        } else {
+            systemRestClient = (RestClient) status.getHelper();
+        }
+
+        Map<UUID, UserContentResponseDefinition> responses = status.getResponses();
+
+        UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
+        UUID id = userContentRequest.getID();
+
+        UserContentResponseDefinition userContentResponse = systemRestClient
+                .post()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(userContentRequest)
+                .retrieve()
+                .body(UserContentResponseDefinition.class);
+
+        responses.put(id, userContentResponse);
     }
 
     @Override
     public UserContentResponseDefinition receive(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
-        return null;
+        Map<UUID, UserContentResponseDefinition> responses = status.getResponses();
+
+        UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
+        UUID id = userContentRequest.getID();
+
+        UserContentResponseDefinition userContentResponse = responses.remove(id);
+
+        if (ObjectUtil.isAnyNull(userContentResponse)) {
+            throw new StatusUnexpectedException();
+        }
+
+        return userContentResponse;
     }
 }

@@ -173,8 +173,8 @@
         }
 
         xmlHttpRequest.open("post", "http://" + hostAddress + "/Request.action");
-        xmlHttpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xmlHttpRequest.send("message=" + userContextRequest);
+        xmlHttpRequest.setRequestHeader("Content-Type", "application/json");
+        xmlHttpRequest.send(userContextRequest);
     }
 </script>
 </html>

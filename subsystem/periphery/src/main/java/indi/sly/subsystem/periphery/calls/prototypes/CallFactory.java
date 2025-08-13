@@ -40,13 +40,14 @@ public class CallFactory extends AFactory {
 
     private ConnectionObject buildConnection(ConnectionProcessorMediator processorMediator, Provider<ConnectionDefinition> funcRead,
                                              Consumer1<ConnectionDefinition> funcWrite) {
-        ConnectionObject ConnectionObject = this.factoryManager.create(ConnectionObject.class);
+        ConnectionObject connection = this.factoryManager.create(ConnectionObject.class);
 
-        ConnectionObject.setSource(funcRead, funcWrite);
-        ConnectionObject.processorMediator = processorMediator;
-        ConnectionObject.status = new ConnectionStatusDefinition();
+        connection.setSource(funcRead, funcWrite);
+        connection.processorMediator = processorMediator;
+        connection.status = new ConnectionStatusDefinition();
+        connection.status.setConnection(connection);
 
-        return ConnectionObject;
+        return connection;
     }
 
     public ConnectionObject buildConnection(ConnectionDefinition connection) {

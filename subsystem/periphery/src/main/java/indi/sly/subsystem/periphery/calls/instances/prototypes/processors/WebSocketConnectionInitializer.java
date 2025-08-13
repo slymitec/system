@@ -1,14 +1,13 @@
 package indi.sly.subsystem.periphery.calls.instances.prototypes.processors;
 
-import indi.sly.subsystem.periphery.calls.instances.prototypes.values.WebSocketConnectionStatusHelperDefinition;
+import indi.sly.subsystem.periphery.calls.instances.prototypes.values.WebSocketConnectionStatusExtensionDefinition;
+import indi.sly.subsystem.periphery.calls.prototypes.ConnectionObject;
 import indi.sly.subsystem.periphery.calls.values.*;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.supports.ValueUtil;
 import jakarta.inject.Named;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
@@ -31,14 +30,14 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
     @Override
     public synchronized void connect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
         synchronized (this) {
-            WebSocketConnectionStatusHelperDefinition webSocketConnectionStatusHelper;
+            WebSocketConnectionStatusExtensionDefinition webSocketConnectionStatusExtension;
             WebSocketClient webSocketClient;
 
-            if (ObjectUtil.allNotNull(status.getHelper())) {
-                if (status.getHelper() instanceof WebSocketConnectionStatusHelperDefinition) {
-                    webSocketConnectionStatusHelper = (WebSocketConnectionStatusHelperDefinition) status.getHelper();
+            if (ObjectUtil.allNotNull(status.getExtension())) {
+                if (status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition) {
+                    webSocketConnectionStatusExtension = (WebSocketConnectionStatusExtensionDefinition) status.getExtension();
 
-                    webSocketClient = webSocketConnectionStatusHelper.getWebSocketClient();
+                    webSocketClient = webSocketConnectionStatusExtension.getWebSocketClient();
 
                     webSocketClient.reconnect();
                 } else {
@@ -52,9 +51,9 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
                     throw new ConditionParametersException();
                 }
 
-                webSocketConnectionStatusHelper = new WebSocketConnectionStatusHelperDefinition();
+                webSocketConnectionStatusExtension = new WebSocketConnectionStatusExtensionDefinition();
 
-                webSocketConnectionStatusHelper.setExecutor(Executors.newCachedThreadPool());
+                webSocketConnectionStatusExtension.setExecutor(Executors.newCachedThreadPool());
 
                 webSocketClient = new WebSocketClient(address, new Draft_6455()) {
                     @Override
@@ -67,9 +66,9 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
                             throw new StatusUnreadableException();
                         });
 
-                        Map<UUID, UserContentResponseDefinition> responses = webSocketConnectionStatusHelper.getResponses();
-                        Map<UUID, Lock> locks = webSocketConnectionStatusHelper.getLocks();
-                        Map<UUID, Condition> conditions = webSocketConnectionStatusHelper.getConditions();
+                        Map<UUID, UserContentResponseDefinition> responses = webSocketConnectionStatusExtension.getResponses();
+                        Map<UUID, Lock> locks = webSocketConnectionStatusExtension.getLocks();
+                        Map<UUID, Condition> conditions = webSocketConnectionStatusExtension.getConditions();
 
                         UUID id = userContentResponse.getID();
 
@@ -95,67 +94,67 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
 
                     @Override
                     public void onClose(int code, String reason, boolean remote) {
-                        status.setRuntime(ConnectStatusRuntimeType.DISCONNECTED);
-                        disconnect(connection, status);
+                        ConnectionObject connection = status.getConnection();
+                        connection.clone();
                     }
 
                     @Override
                     public void onError(Exception ex) {
                     }
                 };
-                webSocketConnectionStatusHelper.setWebSocketClient(webSocketClient);
+                webSocketConnectionStatusExtension.setWebSocketClient(webSocketClient);
 
-                status.setHelper(webSocketConnectionStatusHelper);
+                status.setExtension(webSocketConnectionStatusExtension);
             }
         }
     }
 
     @Override
     public synchronized void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
-        WebSocketConnectionStatusHelperDefinition webSocketConnectionStatusHelper;
+        WebSocketConnectionStatusExtensionDefinition webSocketConnectionStatusExtension;
 
-        if (ObjectUtil.isAnyNull(status.getHelper()) || status.getHelper() instanceof WebSocketConnectionStatusHelperDefinition) {
+        if (ObjectUtil.isAnyNull(status.getExtension()) || status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition) {
             throw new StatusRelationshipErrorException();
         } else {
-            webSocketConnectionStatusHelper = (WebSocketConnectionStatusHelperDefinition) status.getHelper();
+            webSocketConnectionStatusExtension = (WebSocketConnectionStatusExtensionDefinition) status.getExtension();
         }
 
         synchronized (this) {
-            webSocketConnectionStatusHelper.getExecutor().shutdown();
-            webSocketConnectionStatusHelper.setExecutor(null);
+            webSocketConnectionStatusExtension.getExecutor().shutdown();
+            webSocketConnectionStatusExtension.setExecutor(null);
 
-            WebSocketClient webSocketClient = webSocketConnectionStatusHelper.getWebSocketClient();
-            if(webSocketClient.isOpen())
+            WebSocketClient webSocketClient = webSocketConnectionStatusExtension.getWebSocketClient();
+            if(webSocketClient.isOpen() )
             {
                 webSocketClient.close();
             }
-            webSocketConnectionStatusHelper.setWebSocketClient(null);
+            webSocketConnectionStatusExtension.setWebSocketClient(null);
 
-            webSocketConnectionStatusHelper.getLocks().clear();
-            webSocketConnectionStatusHelper.getConditions().clear();
-            webSocketConnectionStatusHelper.getResponses().clear();
+            webSocketConnectionStatusExtension.getLocks().clear();
+            webSocketConnectionStatusExtension.getConditions().clear();
+            webSocketConnectionStatusExtension.getResponses().clear();
 
-            status.setHelper(null);
+            status.setExtension(null);
         }
     }
 
     @Override
     public UserContentResponseDefinition call(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
-        WebSocketConnectionStatusHelperDefinition webSocketConnectionStatusHelper;
+        WebSocketConnectionStatusExtensionDefinition webSocketConnectionStatusExtension;
 
-        if (ObjectUtil.isAnyNull(status.getHelper()) || status.getHelper() instanceof WebSocketConnectionStatusHelperDefinition) {
+        if (ObjectUtil.isAnyNull(status.getExtension()) || status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition) {
             throw new StatusRelationshipErrorException();
         } else {
-            webSocketConnectionStatusHelper = (WebSocketConnectionStatusHelperDefinition) status.getHelper();
+            webSocketConnectionStatusExtension = (WebSocketConnectionStatusExtensionDefinition) status.getExtension();
         }
 
-        WebSocketClient webSocketClient = webSocketConnectionStatusHelper.getWebSocketClient();
+        WebSocketClient webSocketClient = webSocketConnectionStatusExtension.getWebSocketClient();
 
         UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
         UUID id = userContentRequest.getID();
 
-        Map<UUID, Lock> locks = webSocketConnectionStatusHelper.getLocks();
-        Map<UUID, Condition> conditions = webSocketConnectionStatusHelper.getConditions();
+        Map<UUID, Lock> locks = webSocketConnectionStatusExtension.getLocks();
+        Map<UUID, Condition> conditions = webSocketConnectionStatusExtension.getConditions();
 
         Lock newLock = new ReentrantLock();
         Condition newCondition = newLock.newCondition();
@@ -164,9 +163,9 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
 
         webSocketClient.send(ObjectUtil.transferToString(userContextRequest));
 
-        Map<UUID, UserContentResponseDefinition> responses = webSocketConnectionStatusHelper.getResponses();
+        Map<UUID, UserContentResponseDefinition> responses = webSocketConnectionStatusExtension.getResponses();
 
-        Future<UserContentResponseDefinition> userContentResponseFuture = webSocketConnectionStatusHelper.getExecutor().submit(() -> {
+        Future<UserContentResponseDefinition> userContentResponseFuture = webSocketConnectionStatusExtension.getExecutor().submit(() -> {
             Lock lock = locks.getOrDefault(id, null);
 
             UserContentResponseDefinition userContentResponse = new UserContentResponseDefinition();

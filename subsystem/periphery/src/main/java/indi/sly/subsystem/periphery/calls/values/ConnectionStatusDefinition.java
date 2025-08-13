@@ -1,13 +1,24 @@
 package indi.sly.subsystem.periphery.calls.values;
 
+import indi.sly.subsystem.periphery.calls.instances.prototypes.values.AConnectionStatusExtensionDefinition;
+import indi.sly.subsystem.periphery.calls.prototypes.ConnectionObject;
 import indi.sly.system.common.values.ADefinition;
 
 public class ConnectionStatusDefinition extends ADefinition<ConnectionStatusDefinition> {
     public ConnectionStatusDefinition() {
     }
 
+    private ConnectionObject connection;
     private long runtime;
-    private Object helper;
+    private AConnectionStatusExtensionDefinition<? extends AConnectionStatusExtensionDefinition<?>> extension;
+
+    public ConnectionObject getConnection() {
+        return this.connection;
+    }
+
+    public void setConnection(ConnectionObject connection) {
+        this.connection = connection;
+    }
 
     public long getRuntime() {
         return this.runtime;
@@ -17,11 +28,11 @@ public class ConnectionStatusDefinition extends ADefinition<ConnectionStatusDefi
         this.runtime = runtime;
     }
 
-    public Object getHelper() {
-        return this.helper;
+    public Object getExtension() {
+        return this.extension;
     }
 
-    public void setHelper(Object helper) {
-        this.helper = helper;
+    public void setExtension(AConnectionStatusExtensionDefinition<? extends AConnectionStatusExtensionDefinition<?>> extension) {
+        this.extension = extension;
     }
 }

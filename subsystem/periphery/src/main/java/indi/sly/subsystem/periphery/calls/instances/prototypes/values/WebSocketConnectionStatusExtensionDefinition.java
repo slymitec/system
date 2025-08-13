@@ -1,7 +1,6 @@
 package indi.sly.subsystem.periphery.calls.instances.prototypes.values;
 
 import indi.sly.subsystem.periphery.calls.values.UserContentResponseDefinition;
-import indi.sly.system.common.values.ADefinition;
 import org.java_websocket.client.WebSocketClient;
 
 import java.util.Map;
@@ -11,8 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
-public class WebSocketConnectionStatusHelperDefinition extends ADefinition<WebSocketConnectionStatusHelperDefinition> {
-    public WebSocketConnectionStatusHelperDefinition() {
+public class WebSocketConnectionStatusExtensionDefinition extends AConnectionStatusExtensionDefinition<WebSocketConnectionStatusExtensionDefinition> {
+    public WebSocketConnectionStatusExtensionDefinition() {
         this.locks = new ConcurrentHashMap<>();
         this.conditions = new ConcurrentHashMap<>();
         this.responses = new ConcurrentHashMap<>();

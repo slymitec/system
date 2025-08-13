@@ -1,5 +1,6 @@
 package indi.sly.subsystem.periphery.calls.instances.prototypes.processors;
 
+import indi.sly.subsystem.periphery.calls.instances.prototypes.values.HttpConnectionStatusExtensionDefinition;
 import indi.sly.subsystem.periphery.calls.values.*;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
@@ -11,40 +12,52 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
-import java.util.Map;
-import java.util.UUID;
-
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class HttpConnectionInitializer extends AConnectionInitializer {
     @Override
     public synchronized void connect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
         synchronized (this) {
+            HttpConnectionStatusExtensionDefinition httpConnectionStatusExtension = new HttpConnectionStatusExtensionDefinition();
+
             RestClient restClient = RestClient.builder()
                     .requestFactory(new HttpComponentsClientHttpRequestFactory())
                     .baseUrl(connection.getAddress())
                     .build();
 
-            status.setHelper(restClient);
+            httpConnectionStatusExtension.setRestClient(restClient);
+
+            status.setExtension(httpConnectionStatusExtension);
         }
     }
 
     @Override
     public synchronized void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
+        HttpConnectionStatusExtensionDefinition httpConnectionStatusExtension;
+
+        if (ObjectUtil.isAnyNull(status.getExtension()) || status.getExtension() instanceof HttpConnectionStatusExtensionDefinition) {
+            throw new StatusRelationshipErrorException();
+        } else {
+            httpConnectionStatusExtension = (HttpConnectionStatusExtensionDefinition) status.getExtension();
+        }
+
         synchronized (this) {
-            status.setHelper(null);
+            httpConnectionStatusExtension.setRestClient(null);
+            status.setExtension(null);
         }
     }
 
     @Override
     public UserContentResponseDefinition call(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
-        RestClient systemRestClient;
+        HttpConnectionStatusExtensionDefinition httpConnectionStatusExtension;
 
-        if (ObjectUtil.isAnyNull(status.getHelper()) || status.getHelper() instanceof RestClient) {
+        if (ObjectUtil.isAnyNull(status.getExtension()) || status.getExtension() instanceof HttpConnectionStatusExtensionDefinition) {
             throw new StatusRelationshipErrorException();
         } else {
-            systemRestClient = (RestClient) status.getHelper();
+            httpConnectionStatusExtension = (HttpConnectionStatusExtensionDefinition) status.getExtension();
         }
+
+        RestClient systemRestClient = httpConnectionStatusExtension.getRestClient();
 
         UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
 

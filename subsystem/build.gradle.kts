@@ -46,7 +46,7 @@ dependencies {
 var projectName = "SLY SubSystem"
 var projectVersion = "1.0.0.0"
 var projectNameSpace = "indi.sly.subsystem"
-var javaLanguageVersion = 21
+var javaLanguageVersion = 25
 var textEncoding = "UTF-8";
 
 java {

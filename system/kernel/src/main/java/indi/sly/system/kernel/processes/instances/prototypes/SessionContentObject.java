@@ -2,14 +2,12 @@ package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.MethodScope;
-import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.processes.instances.values.HandlerEntryDefinition;
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
 
 import java.util.Map;
@@ -99,71 +97,6 @@ public class SessionContentObject extends AInfoContentObject {
             this.unlock(LockType.READ);
         }
     }
-
-    public Set<UUID> listHandle() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            return CollectionUtil.unmodifiable(this.session.getHandles().keySet());
-        } finally {
-            this.unlock(LockType.READ);
-        }
-    }
-
-    public UUID getKernelIDFromHandle(UUID handle) {
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            HandlerEntryDefinition handlerEntry = this.session.getHandles().getOrDefault(handle, null);
-
-            if (ObjectUtil.isAnyNull(handlerEntry)) {
-                throw new StatusNotExistedException();
-            }
-
-            return handlerEntry.getKernelID();
-        } finally {
-            this.unlock(LockType.READ);
-        }
-    }
-
-    public void addHandle(UUID handle) {
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            HandlerEntryDefinition handlerEntry = new HandlerEntryDefinition();
-            handlerEntry.setHandlerID(handle);
-            handlerEntry.setKernelID(this.getKernelID());
-
-            this.session.getHandles().put(handle, handlerEntry);
-
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
-    }
-
-    public void deleteHandle(UUID handle) {
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            HandlerEntryDefinition handlerEntry = this.session.getHandles().getOrDefault(handle, null);
-
-            if (ObjectUtil.isAnyNull(handlerEntry)) {
-                throw new StatusNotExistedException();
-            }
-
-            this.session.getHandles().remove(handle);
-
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
-    }
-
 
     public Map<String, String> getEnvironmentVariables() {
         try {

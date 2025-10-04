@@ -14,7 +14,6 @@ import java.util.*;
 public class SessionDefinition extends ADefinition<SessionDefinition> {
     public SessionDefinition() {
         this.processIDs = new HashSet<>();
-        this.handles = new HashMap<>();
         this.environmentVariables = new HashMap<>();
         this.parameters = new HashMap<>();
     }
@@ -23,7 +22,6 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
     private long type;
     private UUID accountID;
     private final Set<UUID> processIDs;
-    private final Map<UUID, HandlerEntryDefinition> handles;
     private final Map<String, String> environmentVariables;
     private final Map<String, String> parameters;
 
@@ -55,10 +53,6 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
         return this.processIDs;
     }
 
-    public Map<UUID, HandlerEntryDefinition> getHandles() {
-        return this.handles;
-    }
-
     public Map<String, String> getEnvironmentVariables() {
         return this.environmentVariables;
     }
@@ -72,12 +66,12 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SessionDefinition that = (SessionDefinition) o;
-        return type == that.type && Objects.equals(name, that.name) && Objects.equals(accountID, that.accountID) && Objects.equals(processIDs, that.processIDs) && Objects.equals(handles, that.handles) && Objects.equals(environmentVariables, that.environmentVariables) && Objects.equals(parameters, that.parameters);
+        return type == that.type && Objects.equals(name, that.name) && Objects.equals(accountID, that.accountID) && Objects.equals(processIDs, that.processIDs) && Objects.equals(environmentVariables, that.environmentVariables) && Objects.equals(parameters, that.parameters);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, type, accountID, processIDs, handles, environmentVariables, parameters);
+        return Objects.hash(name, type, accountID, processIDs, environmentVariables, parameters);
     }
 
     @Override
@@ -88,7 +82,6 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
         definition.type = this.type;
         definition.accountID = this.accountID;
         definition.processIDs.addAll(this.processIDs);
-        definition.handles.putAll(this.handles);
         definition.environmentVariables.putAll(this.environmentVariables);
         definition.parameters.putAll(this.parameters);
 
@@ -108,11 +101,6 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
         valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
             this.processIDs.add(UUIDUtil.readExternal(in));
-        }
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.handles.put(UUIDUtil.readExternal(in), ObjectUtil.readExternal(in));
         }
 
         valueInteger = NumberUtil.readExternalInteger(in);
@@ -137,12 +125,6 @@ public class SessionDefinition extends ADefinition<SessionDefinition> {
         NumberUtil.writeExternalInteger(out, this.processIDs.size());
         for (UUID pair : this.processIDs) {
             UUIDUtil.writeExternal(out, pair);
-        }
-
-        NumberUtil.writeExternalInteger(out, this.handles.size());
-        for (Map.Entry<UUID, HandlerEntryDefinition> pair : this.handles.entrySet()) {
-            UUIDUtil.writeExternal(out, pair.getKey());
-            ObjectUtil.writeExternal(out, pair.getValue());
         }
 
         NumberUtil.writeExternalInteger(out, this.environmentVariables.size());

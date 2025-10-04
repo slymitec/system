@@ -103,7 +103,6 @@ public class SignalDefinition extends ADefinition<SignalDefinition> {
         this.processID = UUIDUtil.readExternal(in);
 
         int valueInteger;
-
         valueInteger = NumberUtil.readExternalInteger(in);
         for (int i = 0; i < valueInteger; i++) {
             this.sourceProcessIDs.add(UUIDUtil.readExternal(in));

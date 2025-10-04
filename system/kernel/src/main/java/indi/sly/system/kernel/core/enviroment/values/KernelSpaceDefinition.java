@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.core.enviroment.values;
 
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
@@ -12,11 +13,19 @@ import java.util.concurrent.ConcurrentSkipListSet;
 @Singleton
 public class KernelSpaceDefinition extends ASpaceDefinition<KernelSpaceDefinition> {
     public KernelSpaceDefinition() {
+        this.kernelID = UUIDUtil.createRandom();
+
         this.configuration = new KernelConfigurationDefinition();
 
         this.infoTypeIDs = new ConcurrentSkipListSet<>();
 
         this.userSpace = new ThreadLocal<>();
+    }
+
+    private final UUID kernelID;
+
+    public UUID getKernelID() {
+        return this.kernelID;
     }
 
     private final KernelConfigurationDefinition configuration;

@@ -2,8 +2,6 @@ plugins {
     java
     id("org.springframework.boot") version ("4.0.0")
     id("io.spring.dependency-management") version ("1.1.7")
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.spring") version "2.2.21"
 }
 
 allprojects {
@@ -38,16 +36,13 @@ dependencies {
     implementation(project(":kernel"))
     implementation(project(":services"))
 
-    implementation("com.microsoft.sqlserver:mssql-jdbc:13.2.1.jre11")
-    implementation("jakarta.inject:jakarta.inject-api:2.0.1")
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude("org.junit.vintage", "junit-vintage-engine")
-    }
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-websocket-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 var projectName = "SLY System"
@@ -93,10 +88,4 @@ tasks.bootJar {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
-    }
 }

@@ -5,9 +5,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3")
     implementation("com.fasterxml.jackson.core:jackson-core")
     implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude("org.junit.vintage", "junit-vintage-engine")
-    }
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

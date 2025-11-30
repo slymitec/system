@@ -6,9 +6,9 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core")
     implementation("com.fasterxml.jackson.core:jackson-databind")
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-restclient")
     implementation("org.java-websocket:Java-WebSocket:1.6.0")
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude("org.junit.vintage", "junit-vintage-engine")
-    }
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

@@ -2,8 +2,6 @@ plugins {
     java
     id("org.springframework.boot") version ("4.0.0")
     id("io.spring.dependency-management") version ("1.1.7")
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.spring") version "2.2.21"
 }
 
 allprojects {
@@ -35,12 +33,11 @@ subprojects {
 
 dependencies {
     implementation("jakarta.inject:jakarta.inject-api:2.0.1")
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-aop")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude("org.junit.vintage", "junit-vintage-engine")
-    }
+    implementation("org.springframework.boot:spring-boot-starter-restclient")
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 var projectName = "SLY SubSystem"
@@ -86,10 +83,4 @@ tasks.bootJar {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
-    }
 }

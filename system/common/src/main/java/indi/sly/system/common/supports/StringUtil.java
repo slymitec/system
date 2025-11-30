@@ -1,6 +1,7 @@
 package indi.sly.system.common.supports;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -16,7 +17,7 @@ public abstract class StringUtil {
         if (ValueUtil.isAnyNullOrEmpty(value)) {
             return true;
         }
-        if (value.length() > 256 || StringUtils.containsAny(value, '/', '\\', ':', '*', '?', '\"', '<', '>', '|', '$') || StringUtils.equalsIgnoreCase(value, ".") || StringUtils.equalsIgnoreCase(value, "..") || (value.length() > 1 && value.charAt(value.length() - 1) == '.')) {
+        if (value.length() > 256 || StringUtils.containsAny(value, '/', '\\', ':', '*', '?', '\"', '<', '>', '|', '$') || Strings.CI.equals(value, ".") || Strings.CI.equals(value, "..") || (value.length() > 1 && value.charAt(value.length() - 1) == '.')) {
             return true;
         }
 
@@ -27,7 +28,7 @@ public abstract class StringUtil {
         if (ValueUtil.isAnyNullOrEmpty(value)) {
             return true;
         }
-        if (value.length() > 256 || StringUtils.containsAny(value, '/', '\\', ':', '\"', '<', '>', '|', '$') || StringUtils.equalsIgnoreCase(value, ".") || StringUtils.equalsIgnoreCase(value, "..") || (value.length() > 1 && value.charAt(value.length() - 1) == '.')) {
+        if (value.length() > 256 || StringUtils.containsAny(value, '/', '\\', ':', '\"', '<', '>', '|', '$') || Strings.CI.equals(value, ".") || Strings.CI.equals(value, "..") || (value.length() > 1 && value.charAt(value.length() - 1) == '.')) {
             return true;
         }
 

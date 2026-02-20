@@ -1,6 +1,7 @@
 package indi.sly.system.services.faces.configurations;
 
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
 import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
@@ -16,6 +17,7 @@ public class WebHttpSessionListener implements HttpSessionListener {
         HttpSession session = se.getSession();
 
         UserSpaceDefinition userSpace = new UserSpaceDefinition();
+        userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
 
         session.setAttribute("userSpace", userSpace);
     }

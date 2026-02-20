@@ -1,5 +1,6 @@
 package indi.sly.system.services.faces;
 
+import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -20,31 +21,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CallController extends AController {
-    private void initUserSpace(UserSpaceDefinition userSpace) {
-        synchronized (this) {
-            if (ObjectUtil.isAnyNull(this.factoryManager)) {
-                this.init();
+    protected void initCallController(HttpSession session) {
+        UserSpaceDefinition userSpace = (UserSpaceDefinition) session.getAttribute("userSpace");
 
-                KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
-                KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
-
-                this.factoryManager.setUserSpace(userSpace);
-                this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+        if (ObjectUtil.isAnyNull(this.factoryManager)) {
+            synchronized (this) {
+                if (ObjectUtil.isAnyNull(this.factoryManager)) {
+                    this.init();
+                }
             }
+        }
+
+        if (ObjectUtil.isAnyNull(userSpace)) {
+            throw new StatusNotReadyException();
+        }
+
+        this.factoryManager.setUserSpace(userSpace);
+
+        if (this.factoryManager.getCoreObjectRepository().getLimit(SpaceType.USER) <= 0L) {
+            KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+            KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+            this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
         }
     }
 
     @RequestMapping(value = {"/Call.action"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String onMessage(@RequestBody UserContextRequestDefinition userContextRequest, HttpSession session) {
-        UserSpaceDefinition userSpace = (UserSpaceDefinition) session.getAttribute("userSpace");
-
-        if (ObjectUtil.isAnyNull(this.factoryManager)) {
-            this.initUserSpace(userSpace);
-        }
+        this.initCallController(session);
 
         try {
-            this.factoryManager.setUserSpace(userSpace);
-
             JobService jobService = this.factoryManager.getService(JobService.class);
 
             UserContextObject userContext = jobService.createUserContext(userContextRequest);

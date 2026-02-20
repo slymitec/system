@@ -46,10 +46,10 @@ public class InterActiveController extends AController {
         this.userSpace = new UserSpaceDefinition();
         this.userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
 
+        this.factoryManager.setUserSpace(this.userSpace);
+
         KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
-
-        this.factoryManager.setUserSpace(this.userSpace);
         this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
     }
 

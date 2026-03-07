@@ -49,7 +49,7 @@ public abstract class AInfoContentObject extends AValueProcessObject<byte[], Inf
             throw new ConditionRefuseException();
         }
 
-        if (ObjectUtil.allNotNull(this.funcCustomRead)) {
+        if (ObjectUtil.allNotNull(this.funcCustomWrite)) {
             this.funcCustomWrite.accept();
         }
 

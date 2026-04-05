@@ -43,7 +43,7 @@ public class GroupObject extends AIndependentValueProcessObject<GroupEntity> {
             GroupTokenObject groupToken = this.factoryManager.create(GroupTokenObject.class);
 
             groupToken.setParent(this);
-            groupToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
+            groupToken.setSource(this.value::getToken, this.value::setToken);
 
             return groupToken;
         } finally {

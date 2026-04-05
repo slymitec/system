@@ -144,7 +144,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
             AccountTokenObject accountToken = this.factoryManager.create(AccountTokenObject.class);
 
             accountToken.setParent(this);
-            accountToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
+            accountToken.setSource(this.value::getToken, this.value::setToken);
 
             return accountToken;
         } finally {
@@ -160,7 +160,7 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
             AccountSessionsObject accountSessions = this.factoryManager.create(AccountSessionsObject.class);
 
             accountSessions.setParent(this);
-            accountSessions.setSource(() -> this.value.getSessions(), (byte[] source) -> this.value.setSessions(source));
+            accountSessions.setSource(this.value::getSessions, this.value::setSessions);
 
             return accountSessions;
         } finally {

@@ -6,6 +6,7 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.MethodScopeType;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
 import indi.sly.system.kernel.security.values.AccountSessionsDefinition;
 import jakarta.inject.Named;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AccountSessionsObject extends AIndependentBytesValueProcessObject<AccountSessionsDefinition> {
+public class AccountSessionsObject extends ABytesValueProcessObject<AccountSessionsDefinition, AccountObject> {
     public Set<UUID> listSessions() {
         try {
             this.lock(LockType.READ);

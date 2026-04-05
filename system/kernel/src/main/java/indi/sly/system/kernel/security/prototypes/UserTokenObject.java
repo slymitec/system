@@ -5,10 +5,14 @@ import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
 import indi.sly.system.kernel.core.prototypes.AIndependentBytesValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
+import indi.sly.system.kernel.security.values.AccountEntity;
+import indi.sly.system.kernel.security.values.GroupEntity;
 import indi.sly.system.kernel.security.values.PrivilegeType;
 import indi.sly.system.kernel.security.values.UserTokenDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -20,8 +24,8 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserTokenObject extends AIndependentBytesValueProcessObject<UserTokenDefinition> {
-    public long getPrivileges() {
+public abstract class UserTokenObject<T extends AIndependentValueProcessObject<?>> extends ABytesValueProcessObject<UserTokenDefinition, T> {
+    public final long getPrivileges() {
         try {
             this.lock(LockType.READ);
             this.init();
@@ -32,7 +36,7 @@ public class UserTokenObject extends AIndependentBytesValueProcessObject<UserTok
         }
     }
 
-    public void setPrivileges(long privileges) {
+    public final void setPrivileges(long privileges) {
         ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
@@ -54,7 +58,7 @@ public class UserTokenObject extends AIndependentBytesValueProcessObject<UserTok
         }
     }
 
-    public Map<Long, Integer> getLimits() {
+    public final Map<Long, Integer> getLimits() {
         try {
             this.lock(LockType.READ);
             this.init();
@@ -65,7 +69,7 @@ public class UserTokenObject extends AIndependentBytesValueProcessObject<UserTok
         }
     }
 
-    public void setLimits(Map<Long, Integer> limits) {
+    public final void setLimits(Map<Long, Integer> limits) {
         if (ObjectUtil.isAnyNull(limits)) {
             throw new ConditionParametersException();
         }

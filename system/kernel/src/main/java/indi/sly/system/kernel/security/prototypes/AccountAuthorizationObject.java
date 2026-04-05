@@ -113,7 +113,7 @@ public class AccountAuthorizationObject extends AObject {
 
         this.date.put(DateTimeType.ACCESS, nowDateTime);
 
-        Set<UserTokenObject> userTokens = new HashSet<>();
+        Set<UserTokenObject<?>> userTokens = new HashSet<>();
         Set<GroupObject> groups = account.getGroups();
         for (GroupObject group : groups) {
             userTokens.add(group.getToken());
@@ -127,7 +127,7 @@ public class AccountAuthorizationObject extends AObject {
 
         AccountAuthorizationTokenDefinition accountAuthorizationToken = accountAuthorization.getToken();
         Map<Long, Integer> accountAuthorizationTokenLimits = accountAuthorizationToken.getLimits();
-        for (UserTokenObject userToken : userTokens) {
+        for (UserTokenObject<?> userToken : userTokens) {
             accountAuthorizationToken.setPrivileges(LogicalUtil.or(accountAuthorizationToken.getPrivileges(),
                     userToken.getPrivileges()));
 

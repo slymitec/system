@@ -136,17 +136,17 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
         }
     }
 
-    public UserTokenObject getToken() {
+    public AccountTokenObject getToken() {
         try {
             this.lock(LockType.READ);
             this.init();
 
-            UserTokenObject userToken = this.factoryManager.create(UserTokenObject.class);
+            AccountTokenObject accountToken = this.factoryManager.create(AccountTokenObject.class);
 
-            userToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
-            userToken.setLock(this::lock, this::unlock);
+            accountToken.setParent(this);
+            accountToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
 
-            return userToken;
+            return accountToken;
         } finally {
             this.unlock(LockType.READ);
         }
@@ -159,8 +159,8 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
 
             AccountSessionsObject accountSessions = this.factoryManager.create(AccountSessionsObject.class);
 
+            accountSessions.setParent(this);
             accountSessions.setSource(() -> this.value.getSessions(), (byte[] source) -> this.value.setSessions(source));
-            accountSessions.setLock(this::lock, this::unlock);
 
             return accountSessions;
         } finally {

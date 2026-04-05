@@ -35,17 +35,17 @@ public class GroupObject extends AIndependentValueProcessObject<GroupEntity> {
         }
     }
 
-    public UserTokenObject getToken() {
+    public GroupTokenObject getToken() {
         try {
             this.lock(LockType.READ);
             this.init();
 
-            UserTokenObject userToken = this.factoryManager.create(UserTokenObject.class);
+            GroupTokenObject groupToken = this.factoryManager.create(GroupTokenObject.class);
 
-            userToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
-            userToken.setLock(this::lock, this::unlock);
+            groupToken.setParent(this);
+            groupToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
 
-            return userToken;
+            return groupToken;
         } finally {
             this.unlock(LockType.READ);
         }

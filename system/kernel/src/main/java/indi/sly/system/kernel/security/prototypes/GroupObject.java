@@ -7,6 +7,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.UUID;
 
 @Named
@@ -41,8 +42,8 @@ public class GroupObject extends AIndependentValueProcessObject<GroupEntity> {
 
             UserTokenObject userToken = this.factoryManager.create(UserTokenObject.class);
 
-            userToken.setParent(this);
             userToken.setSource(() -> this.value.getToken(), (byte[] source) -> this.value.setToken(source));
+            userToken.setLock(this::lock, this::unlock);
 
             return userToken;
         } finally {

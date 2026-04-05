@@ -45,9 +45,9 @@ public class UserContextObject extends AIndependentValueProcessObject<UserContex
 
         UserContentObject userContent = this.factoryManager.create(UserContentObject.class);
 
-        userContent.setParent(this);
         userContent.setSource(() -> this.value, (source) -> {
         });
+        userContent.setLock(this::lock, this::unlock);
 
         return userContent;
     }

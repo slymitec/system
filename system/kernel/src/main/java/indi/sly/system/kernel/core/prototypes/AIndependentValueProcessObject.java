@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.core.prototypes;
 
+import indi.sly.system.common.ANull;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -7,5 +8,5 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class AIndependentValueProcessObject<T> extends AValueProcessObject<T, AObject> {
+public abstract class AIndependentValueProcessObject<T> extends AValueProcessObject<T, ANull> {
 }

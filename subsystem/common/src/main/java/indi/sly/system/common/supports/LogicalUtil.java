@@ -56,7 +56,7 @@ public abstract class LogicalUtil {
     }
 
     public static boolean isAnyEqual(long source, long... values) {
-        if (ObjectUtil.isAnyNull(values) || values.length == 0) {
+        if (ObjectUtil.isAnyNull(values)) {
             return false;
         }
 
@@ -74,7 +74,7 @@ public abstract class LogicalUtil {
     }
 
     public static boolean allNotEqual(long source, long... values) {
-        if (ObjectUtil.isAnyNull(values) || values.length == 0) {
+        if (ObjectUtil.isAnyNull(values)) {
             return true;
         }
 

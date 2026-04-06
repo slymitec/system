@@ -556,12 +556,12 @@ public class SecurityDescriptorObject extends ABytesValueProcessObject<SecurityD
                     }
                 }
                 if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_CHILD, pair.getScope())) {
-                    if (i < securityDescriptors.size() - 1 && securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
+                    if (i < securityDescriptors.size() - 1 && securityDescriptors.getLast().isHasChild()) {
                         effectiveAudits.add(pair);
                     }
                 }
                 if (LogicalUtil.isAllExist(AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD, pair.getScope())) {
-                    if (i < securityDescriptors.size() - 1 && !securityDescriptors.get(securityDescriptors.size() - 1).isHasChild()) {
+                    if (i < securityDescriptors.size() - 1 && !securityDescriptors.getLast().isHasChild()) {
                         effectiveAudits.add(pair);
                     }
                 }

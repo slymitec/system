@@ -81,7 +81,7 @@ public class InfoDateResolver extends AInfoResolver {
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
         processorMediator.getOpens().add(this.open);
-        processorMediator.getCreateChilds().add(this.createChild);
+        processorMediator.getCreateChildren().add(this.createChild);
         processorMediator.getReadContents().add(this.readContent);
         processorMediator.getWriteContents().add(this.writeContent);
     }

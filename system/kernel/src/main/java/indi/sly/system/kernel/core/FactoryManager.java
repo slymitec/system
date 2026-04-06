@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.core;
 
 import indi.sly.system.common.lang.ConditionContextException;
-import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;

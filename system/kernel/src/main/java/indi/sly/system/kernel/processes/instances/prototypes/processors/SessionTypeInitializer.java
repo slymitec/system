@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.processes.instances.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -47,6 +47,9 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
         UserManager userManager = this.factoryManager.getManager(UserManager.class);
 
         SessionDefinition session = ObjectUtil.transferFromByteArray(info.getContent());
+        if(ObjectUtil.isNull(session)) {
+            throw new StatusUnreadableException();
+        }
         AccountObject account = userManager.getAccount(session.getAccountID());
 
         AccountSessionsObject accountSessions = account.getSessions();
@@ -64,6 +67,9 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
         }
 
         SessionDefinition session = ObjectUtil.transferFromByteArray(info.getContent());
+        if(ObjectUtil.isNull(session)) {
+            throw new StatusUnreadableException();
+        }
         session.getProcessIDs().add(process.getID());
         info.setContent(ObjectUtil.transferToByteArray(session));
     }
@@ -79,6 +85,9 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
         }
 
         SessionDefinition session = ObjectUtil.transferFromByteArray(info.getContent());
+        if(ObjectUtil.isNull(session)) {
+            throw new StatusUnreadableException();
+        }
         session.getProcessIDs().remove(process.getID());
         info.setContent(ObjectUtil.transferToByteArray(session));
     }

@@ -139,7 +139,7 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.deleteChild = (info, type, status, identificati1on) -> {
+        this.deleteChild = (info, type, status, identification) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
@@ -288,11 +288,11 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
         processorMediator.setSecurityDescriptor(this.securityDescriptor);
         processorMediator.getDumps().add(this.dump);
         processorMediator.getOpens().add(this.open);
-        processorMediator.getCreateChilds().add(this.createChild);
-        processorMediator.getGetOrRebuildChilds().add(this.getOrRebuildChild);
-        processorMediator.getDeleteChilds().add(this.deleteChild);
-        processorMediator.getQueryChilds().add(this.queryChild);
-        processorMediator.getRenameChilds().add(this.renameChild);
+        processorMediator.getCreateChildren().add(this.createChild);
+        processorMediator.getGetOrRebuildChildren().add(this.getOrRebuildChild);
+        processorMediator.getDeleteChildren().add(this.deleteChild);
+        processorMediator.getQueryChildren().add(this.queryChild);
+        processorMediator.getRenameChildren().add(this.renameChild);
         processorMediator.getReadProperties().add(this.readProperties);
         processorMediator.getWriteProperties().add(this.writeProperties);
         processorMediator.getReadContents().add(this.readContent);

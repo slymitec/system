@@ -209,10 +209,10 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
         processorMediator.getDumps().add(this.dump);
         processorMediator.getOpens().add(this.open);
         processorMediator.getCloses().add(this.close);
-        processorMediator.getCreateChilds().add(this.createChild);
-        processorMediator.getGetOrRebuildChilds().add(this.getOrRebuildChild);
-        processorMediator.getDeleteChilds().add(this.deleteChild);
-        processorMediator.getQueryChilds().add(this.queryChild);
+        processorMediator.getCreateChildren().add(this.createChild);
+        processorMediator.getGetOrRebuildChildren().add(this.getOrRebuildChild);
+        processorMediator.getDeleteChildren().add(this.deleteChild);
+        processorMediator.getQueryChildren().add(this.queryChild);
         processorMediator.getReadProperties().add(this.readProperties);
         processorMediator.getWriteProperties().add(this.writeProperties);
         processorMediator.getReadContents().add(this.readContent);

@@ -14,6 +14,7 @@ public abstract class ExceptionUtil {
 
         if (NumberUtil.readExternalBoolean(in)) {
             AKernelException value = (AKernelException) in.readObject();
+
             return value;
         } else {
             return null;

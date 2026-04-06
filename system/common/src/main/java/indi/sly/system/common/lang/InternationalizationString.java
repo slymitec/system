@@ -3,6 +3,7 @@ package indi.sly.system.common.lang;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -109,21 +110,21 @@ public final class InternationalizationString implements ISerializeCapable<Inter
         return this.text.replace(key, value);
     }
 
-    public String computeIfAbsent(Locale key, Function<? super Locale, ? extends String> mappingFunction) {
+    public String computeIfAbsent(Locale key, @NonNull Function<? super Locale, ? extends String> mappingFunction) {
         return this.text.computeIfAbsent(key, mappingFunction);
     }
 
     public String computeIfPresent(Locale key,
-                                   BiFunction<? super Locale, ? super String, ? extends String> remappingFunction) {
+                                   @NonNull BiFunction<? super Locale, ? super String, ? extends String> remappingFunction) {
         return this.text.computeIfPresent(key, remappingFunction);
     }
 
-    public String compute(Locale key, BiFunction<? super Locale, ? super String, ? extends String> remappingFunction) {
+    public String compute(Locale key, @NonNull BiFunction<? super Locale, ? super String, ? extends String> remappingFunction) {
         return this.text.compute(key, remappingFunction);
     }
 
-    public String merge(Locale key, String value,
-                        BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
+    public String merge(Locale key, @NonNull String value,
+                        @NonNull BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
         return this.text.merge(key, value, remappingFunction);
     }
 
@@ -131,9 +132,7 @@ public final class InternationalizationString implements ISerializeCapable<Inter
     public InternationalizationString deepClone() {
         InternationalizationString definition = new InternationalizationString();
 
-        for (Entry<Locale, String> pair : this.text.entrySet()) {
-            definition.text.put(pair.getKey(), pair.getValue());
-        }
+        definition.text.putAll(this.text);
 
         return definition;
     }

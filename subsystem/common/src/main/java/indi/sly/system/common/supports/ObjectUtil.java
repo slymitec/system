@@ -90,32 +90,36 @@ public abstract class ObjectUtil {
             return true;
         }
         if (value1.getClass().isArray() && value2.getClass().isArray()) {
-            if (value1 instanceof Object[] && value2 instanceof Object[]) {
-                return ArrayUtil.equals((Object[]) value1, (Object[]) value2);
-            }
-            if (value1 instanceof boolean[] && value2 instanceof boolean[]) {
-                return ArrayUtil.equals((boolean[]) value1, (boolean[]) value2);
-            }
-            if (value1 instanceof byte[] && value2 instanceof byte[]) {
-                return ArrayUtil.equals((byte[]) value1, (byte[]) value2);
-            }
-            if (value1 instanceof char[] && value2 instanceof char[]) {
-                return ArrayUtil.equals((char[]) value1, (char[]) value2);
-            }
-            if (value1 instanceof double[] && value2 instanceof double[]) {
-                return ArrayUtil.equals((double[]) value1, (double[]) value2);
-            }
-            if (value1 instanceof float[] && value2 instanceof float[]) {
-                return ArrayUtil.equals((float[]) value1, (float[]) value2);
-            }
-            if (value1 instanceof int[] && value2 instanceof int[]) {
-                return ArrayUtil.equals((int[]) value1, (int[]) value2);
-            }
-            if (value1 instanceof long[] && value2 instanceof long[]) {
-                return ArrayUtil.equals((long[]) value1, (long[]) value2);
-            }
-            if (value1 instanceof short[] && value2 instanceof short[]) {
-                return ArrayUtil.equals((short[]) value1, (short[]) value2);
+            switch (value1) {
+                case Object[] objects when value2 instanceof Object[] -> {
+                    return ArrayUtil.equals(objects, (Object[]) value2);
+                }
+                case boolean[] booleans when value2 instanceof boolean[] -> {
+                    return ArrayUtil.equals(booleans, (boolean[]) value2);
+                }
+                case byte[] bytes when value2 instanceof byte[] -> {
+                    return ArrayUtil.equals(bytes, (byte[]) value2);
+                }
+                case char[] chars when value2 instanceof char[] -> {
+                    return ArrayUtil.equals(chars, (char[]) value2);
+                }
+                case double[] doubles when value2 instanceof double[] -> {
+                    return ArrayUtil.equals(doubles, (double[]) value2);
+                }
+                case float[] floats when value2 instanceof float[] -> {
+                    return ArrayUtil.equals(floats, (float[]) value2);
+                }
+                case int[] ints when value2 instanceof int[] -> {
+                    return ArrayUtil.equals(ints, (int[]) value2);
+                }
+                case long[] longs when value2 instanceof long[] -> {
+                    return ArrayUtil.equals(longs, (long[]) value2);
+                }
+                case short[] shorts when value2 instanceof short[] -> {
+                    return ArrayUtil.equals(shorts, (short[]) value2);
+                }
+                default -> {
+                }
             }
         }
 
@@ -128,32 +132,36 @@ public abstract class ObjectUtil {
         }
 
         if (value.getClass().isArray()) {
-            if (value instanceof Object[]) {
-                return ArrayUtil.hashCode((Object[]) value);
-            }
-            if (value instanceof boolean[]) {
-                return ArrayUtil.hashCode((boolean[]) value);
-            }
-            if (value instanceof byte[]) {
-                return ArrayUtil.hashCode((byte[]) value);
-            }
-            if (value instanceof char[]) {
-                return ArrayUtil.hashCode((char[]) value);
-            }
-            if (value instanceof double[]) {
-                return ArrayUtil.hashCode((double[]) value);
-            }
-            if (value instanceof float[]) {
-                return ArrayUtil.hashCode((float[]) value);
-            }
-            if (value instanceof int[]) {
-                return ArrayUtil.hashCode((int[]) value);
-            }
-            if (value instanceof long[]) {
-                return ArrayUtil.hashCode((long[]) value);
-            }
-            if (value instanceof short[]) {
-                return ArrayUtil.hashCode((short[]) value);
+            switch (value) {
+                case Object[] objects -> {
+                    return ArrayUtil.hashCode(objects);
+                }
+                case boolean[] booleans -> {
+                    return ArrayUtil.hashCode(booleans);
+                }
+                case byte[] bytes -> {
+                    return ArrayUtil.hashCode(bytes);
+                }
+                case char[] chars -> {
+                    return ArrayUtil.hashCode(chars);
+                }
+                case double[] doubles -> {
+                    return ArrayUtil.hashCode(doubles);
+                }
+                case float[] floats -> {
+                    return ArrayUtil.hashCode(floats);
+                }
+                case int[] ints -> {
+                    return ArrayUtil.hashCode(ints);
+                }
+                case long[] longs -> {
+                    return ArrayUtil.hashCode(longs);
+                }
+                case short[] shorts -> {
+                    return ArrayUtil.hashCode(shorts);
+                }
+                default -> {
+                }
             }
         }
 

@@ -228,7 +228,7 @@ public class InfoObject extends AObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject typeObject = typeManager.get(this.getType());
 
-        List<InfoProcessorCreateChildFunction> resolvers = this.processorMediator.getCreateChilds();
+        List<InfoProcessorCreateChildFunction> resolvers = this.processorMediator.getCreateChildren();
 
         InfoEntity childInfo = null;
 
@@ -257,7 +257,7 @@ public class InfoObject extends AObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<InfoProcessorGetOrRebuildChildFunction> resolvers = this.processorMediator.getGetOrRebuildChilds();
+        List<InfoProcessorGetOrRebuildChildFunction> resolvers = this.processorMediator.getGetOrRebuildChildren();
 
         InfoEntity childInfo = null;
 
@@ -282,7 +282,7 @@ public class InfoObject extends AObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<InfoProcessorDeleteChildConsumer> resolvers = this.processorMediator.getDeleteChilds();
+        List<InfoProcessorDeleteChildConsumer> resolvers = this.processorMediator.getDeleteChildren();
 
         for (InfoProcessorDeleteChildConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status, identification);
@@ -299,7 +299,7 @@ public class InfoObject extends AObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<InfoProcessorQueryChildFunction> resolvers = this.processorMediator.getQueryChilds();
+        List<InfoProcessorQueryChildFunction> resolvers = this.processorMediator.getQueryChildren();
 
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
@@ -320,7 +320,7 @@ public class InfoObject extends AObject {
         TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<InfoProcessorRenameChildConsumer> resolvers = this.processorMediator.getRenameChilds();
+        List<InfoProcessorRenameChildConsumer> resolvers = this.processorMediator.getRenameChildren();
 
         for (InfoProcessorRenameChildConsumer resolver : resolvers) {
             resolver.accept(info, type, this.status, oldIdentification, newIdentification);

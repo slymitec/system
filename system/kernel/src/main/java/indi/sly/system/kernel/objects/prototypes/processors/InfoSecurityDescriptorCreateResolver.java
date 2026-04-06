@@ -59,7 +59,7 @@ public class InfoSecurityDescriptorCreateResolver extends AInfoResolver {
             }
         }
 
-        processorMediator.getCreateChilds().add(this.createChild);
+        processorMediator.getCreateChildren().add(this.createChild);
     }
 
     @Override

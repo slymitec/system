@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.core.prototypes;
 
 import indi.sly.system.common.ANull;
-import indi.sly.system.common.supports.ObjectUtil;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

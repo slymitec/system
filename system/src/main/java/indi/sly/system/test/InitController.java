@@ -72,10 +72,10 @@ public class InitController extends AController {
 
         infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
-//            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID, new IdentificationDefinition("Test.bin"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
-//            FileSystemFileContentObject fileContent = (FileSystemFileContentObject) childInfo.getContent();
-//            fileContent.write(StringUtil.writeToBytes("{\"id\":\"f912d8f2-37ed-4c11-88e0-cb4a6e7eb147\",\"supportedSession\":2,\"name\":\"测试程序\",\"serverURL\":\"http://1.2.3.4\",\"configurations\":{\"配置1\":\"数值1\",\"配置2\":\"数值2\"}}"));
-//            fileContent.close();
+            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID, new IdentificationDefinition("Test.bin"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            FileSystemFileContentObject fileContent = (FileSystemFileContentObject) childInfo.getContent();
+            fileContent.write(StringUtil.writeToBytes("{\"id\":\"f912d8f2-37ed-4c11-88e0-cb4a6e7eb147\",\"supportedSession\":2,\"name\":\"测试程序\",\"serverURL\":\"http://1.2.3.4\",\"configurations\":{\"配置1\":\"数值1\",\"配置2\":\"数值2\"}}"));
+            fileContent.close();
         } else {
             for (InfoSummaryDefinition infoSummary : infoSummaries) {
                 InfoObject childInfo = parentInfo.getChild(new IdentificationDefinition(infoSummary.getName()));

@@ -133,11 +133,11 @@ public class InfoCheckConditionResolver extends AInfoResolver {
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
         processorMediator.getOpens().add(this.open);
-        processorMediator.getCreateChilds().add(this.createChild);
-        processorMediator.getGetOrRebuildChilds().add(this.getOrRebuildChild);
-        processorMediator.getDeleteChilds().add(this.deleteChild);
-        processorMediator.getQueryChilds().add(this.queryChild);
-        processorMediator.getRenameChilds().add(this.renameChild);
+        processorMediator.getCreateChildren().add(this.createChild);
+        processorMediator.getGetOrRebuildChildren().add(this.getOrRebuildChild);
+        processorMediator.getDeleteChildren().add(this.deleteChild);
+        processorMediator.getQueryChildren().add(this.queryChild);
+        processorMediator.getRenameChildren().add(this.renameChild);
         processorMediator.getReadProperties().add(this.readProperties);
         processorMediator.getWriteProperties().add(this.writeProperties);
         processorMediator.getReadContents().add(this.readContent);

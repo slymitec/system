@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.processes.instances.values;
 
 import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;

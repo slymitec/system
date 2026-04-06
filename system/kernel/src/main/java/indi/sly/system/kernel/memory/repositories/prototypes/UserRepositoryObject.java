@@ -83,7 +83,7 @@ public class UserRepositoryObject extends AObject {
             throw new StatusNotExistedException();
         }
 
-        AccountEntity account = accounts.get(0);
+        AccountEntity account = accounts.getFirst();
 
         return account;
     }
@@ -119,7 +119,7 @@ public class UserRepositoryObject extends AObject {
             throw new StatusNotExistedException();
         }
 
-        GroupEntity group = groups.get(0);
+        GroupEntity group = groups.getFirst();
 
         return group;
     }

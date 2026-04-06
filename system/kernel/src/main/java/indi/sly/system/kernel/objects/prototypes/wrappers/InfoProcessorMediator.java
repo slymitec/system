@@ -16,11 +16,11 @@ public class InfoProcessorMediator extends AMediator {
         this.dumps = new ArrayList<>();
         this.opens = new ArrayList<>();
         this.closes = new ArrayList<>();
-        this.createChilds = new ArrayList<>();
-        this.getOrRebuildChilds = new ArrayList<>();
-        this.deleteChilds = new ArrayList<>();
-        this.queryChilds = new ArrayList<>();
-        this.renameChilds = new ArrayList<>();
+        this.createChildren = new ArrayList<>();
+        this.getOrRebuildChildren = new ArrayList<>();
+        this.deleteChildren = new ArrayList<>();
+        this.queryChildren = new ArrayList<>();
+        this.renameChildren = new ArrayList<>();
         this.readProperties = new ArrayList<>();
         this.writeProperties = new ArrayList<>();
         this.readContents = new ArrayList<>();
@@ -34,11 +34,11 @@ public class InfoProcessorMediator extends AMediator {
     private final List<InfoProcessorDumpFunction> dumps;
     private final List<InfoProcessorOpenFunction> opens;
     private final List<InfoProcessorCloseFunction> closes;
-    private final List<InfoProcessorCreateChildFunction> createChilds;
-    private final List<InfoProcessorGetOrRebuildChildFunction> getOrRebuildChilds;
-    private final List<InfoProcessorDeleteChildConsumer> deleteChilds;
-    private final List<InfoProcessorQueryChildFunction> queryChilds;
-    private final List<InfoProcessorRenameChildConsumer> renameChilds;
+    private final List<InfoProcessorCreateChildFunction> createChildren;
+    private final List<InfoProcessorGetOrRebuildChildFunction> getOrRebuildChildren;
+    private final List<InfoProcessorDeleteChildConsumer> deleteChildren;
+    private final List<InfoProcessorQueryChildFunction> queryChildren;
+    private final List<InfoProcessorRenameChildConsumer> renameChildren;
     private final List<InfoProcessorReadPropertyFunction> readProperties;
     private final List<InfoProcessorWritePropertyConsumer> writeProperties;
     private final List<InfoProcessorReadContentFunction> readContents;
@@ -81,24 +81,24 @@ public class InfoProcessorMediator extends AMediator {
         return this.closes;
     }
 
-    public List<InfoProcessorCreateChildFunction> getCreateChilds() {
-        return this.createChilds;
+    public List<InfoProcessorCreateChildFunction> getCreateChildren() {
+        return this.createChildren;
     }
 
-    public List<InfoProcessorGetOrRebuildChildFunction> getGetOrRebuildChilds() {
-        return this.getOrRebuildChilds;
+    public List<InfoProcessorGetOrRebuildChildFunction> getGetOrRebuildChildren() {
+        return this.getOrRebuildChildren;
     }
 
-    public List<InfoProcessorDeleteChildConsumer> getDeleteChilds() {
-        return this.deleteChilds;
+    public List<InfoProcessorDeleteChildConsumer> getDeleteChildren() {
+        return this.deleteChildren;
     }
 
-    public List<InfoProcessorQueryChildFunction> getQueryChilds() {
-        return this.queryChilds;
+    public List<InfoProcessorQueryChildFunction> getQueryChildren() {
+        return this.queryChildren;
     }
 
-    public List<InfoProcessorRenameChildConsumer> getRenameChilds() {
-        return this.renameChilds;
+    public List<InfoProcessorRenameChildConsumer> getRenameChildren() {
+        return this.renameChildren;
     }
 
     public List<InfoProcessorReadPropertyFunction> getReadProperties() {

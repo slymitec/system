@@ -2,26 +2,26 @@ package indi.sly.system.common;
 
 import indi.sly.system.common.lang.StatusNotSupportedException;
 
-public class ANull {
+public abstract class ANull {
     public ANull() {
         super();
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         throw new StatusNotSupportedException();
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         throw new StatusNotSupportedException();
     }
 
-    public Object clone() {
+    public final Object clone() {
         throw new StatusNotSupportedException();
     }
 
-    public String toString() {
+    public final String toString() {
         throw new StatusNotSupportedException();
     }
 }

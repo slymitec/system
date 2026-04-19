@@ -13,9 +13,9 @@ spring:
     location: classpath:logo.txt
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: "jdbc:sqlserver://;database=SlySystem;server=localhost;port=21433;encrypt=optional;trustServerCertificate=true"
+    url: "jdbc:sqlserver://;database=SlySystem;server=10.28.1.16;port=21433;encrypt=optional;trustServerCertificate=true"
     username: "sa"
-    password: "sly+database"
+    password: "sly7156+database"
   task:
     execution:
       pool:

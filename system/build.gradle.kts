@@ -37,6 +37,7 @@ dependencies {
     implementation(project(":services"))
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("com.microsoft.sqlserver:mssql-jdbc:13.4.0.jre11")

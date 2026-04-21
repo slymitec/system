@@ -40,7 +40,6 @@ spring:
       host: 10.28.1.16
       port: 6379
       database: 0
-      timeout: 5000ms
       lettuce:
         pool:
           max-active: 8

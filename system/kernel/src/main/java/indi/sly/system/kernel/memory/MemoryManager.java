@@ -6,14 +6,12 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
-import indi.sly.system.kernel.memory.repositories.prototypes.DatabaseInfoRepositoryObject;
-import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.UUID;
 
 @Named
@@ -30,6 +28,9 @@ public class MemoryManager extends AManager {
                     this.factoryManager.create(ProcessRepositoryObject.class));
             this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL,
                     this.factoryManager.create(UserRepositoryObject.class));
+
+            this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL,
+                    this.factoryManager.create(CacheRepositoryObject.class));
         }
     }
 
@@ -51,5 +52,9 @@ public class MemoryManager extends AManager {
 
     public UserRepositoryObject getUserRepository() {
         return this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, UserRepositoryObject.class);
+    }
+
+    public CacheRepositoryObject getCacheRepository() {
+        return this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, CacheRepositoryObject.class);
     }
 }

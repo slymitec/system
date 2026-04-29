@@ -1,7 +1,10 @@
 package indi.sly.system.boot;
 
 import indi.sly.system.common.ABase;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.AObject;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import org.springframework.boot.persistence.autoconfigure.EntityScan;
@@ -12,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.converter.HttpMessageConverters;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -33,7 +38,7 @@ public class SpringConfiguration extends ABase implements WebMvcConfigurer {
     public static final String BASE_PACKAGES = "indi.sly.*";
 
     @Override
-    public void configureMessageConverters(HttpMessageConverters.ServerBuilder builder){
+    public void configureMessageConverters(HttpMessageConverters.ServerBuilder builder) {
         builder.addCustomConverter(new StringHttpMessageConverter(StandardCharsets.UTF_8));
     }
 
@@ -43,13 +48,24 @@ public class SpringConfiguration extends ABase implements WebMvcConfigurer {
     }
 
     @Bean
-    public RedisTemplate<UUID, AObject> redisTemplate(RedisConnectionFactory factory){
-        RedisTemplate<UUID, AObject> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(factory);
+    public RedisTemplate<String, byte[]> redisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate<String, byte[]> template = new RedisTemplate<>();
 
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        template.setConnectionFactory(factory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new RedisSerializer<byte[]>() {
+            @Override
+            @NullMarked
+            public byte[] serialize(byte @Nullable [] bytes) throws SerializationException {
+                return ObjectUtil.isAnyNull(bytes) ? new byte[0] : bytes;
+            }
 
-        return redisTemplate;
+            @Override
+            public byte[] deserialize(byte[] bytes) throws SerializationException {
+                return bytes;
+            }
+        });
+
+        return template;
     }
 }

@@ -1,14 +1,13 @@
 package indi.sly.system.kernel.core.prototypes;
 
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.lang.MethodScope;
-import indi.sly.system.common.lang.StatusAlreadyFinishedException;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.values.AObjectStatusDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
@@ -17,23 +16,32 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AObject extends APrototype {
-    protected UUID handle;
+    protected AObjectStatusDefinition<?> status;
 
     public final UUID getHandle() {
-        return this.handle;
+        if (ObjectUtil.isAnyNull(this.status)) {
+            throw new StatusNotSupportedException();
+        }
+
+        return this.status.getHandle();
     }
 
     @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public final UUID cache(long space, UUID handle) {
+        if (ObjectUtil.isAnyNull(this.status)) {
+            throw new StatusNotSupportedException();
+        }
+
         if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();
         }
-        if (!ValueUtil.isAnyNullOrEmpty(this.handle)) {
+        if (!ValueUtil.isAnyNullOrEmpty(this.status.getHandle())) {
             throw new StatusAlreadyFinishedException();
         }
 
@@ -51,9 +59,9 @@ public class AObject extends APrototype {
 
         coreObjectRepository.addByHandle(space, handle, this);
 
-        this.handle = handle;
+        this.status.setHandle(handle);
 
-        return this.handle;
+        return handle;
     }
 
     @MethodScope(value = MethodScopeType.ONLY_KERNEL)
@@ -63,7 +71,11 @@ public class AObject extends APrototype {
 
     @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public final void uncache(long space) {
-        if (ValueUtil.isAnyNullOrEmpty(this.handle)) {
+        if (ObjectUtil.isAnyNull(this.status)) {
+            throw new StatusNotSupportedException();
+        }
+
+        if (!ValueUtil.isAnyNullOrEmpty(this.status.getHandle())) {
             throw new StatusAlreadyFinishedException();
         }
 
@@ -79,8 +91,8 @@ public class AObject extends APrototype {
 
         CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
 
-        coreObjectRepository.deleteByHandle(space, this.handle);
+        coreObjectRepository.deleteByHandle(space, this.status.getHandle());
 
-        this.handle = null;
+        this.status.setHandle(null);
     }
 }

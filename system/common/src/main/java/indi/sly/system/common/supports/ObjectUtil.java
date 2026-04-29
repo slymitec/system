@@ -4,6 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import indi.sly.system.common.lang.*;
+import org.apache.fory.Fory;
+import org.apache.fory.ThreadSafeFory;
+import org.apache.fory.config.ForyBuilder;
+import org.apache.fory.config.Language;
 
 import java.io.*;
 import java.util.List;
@@ -13,6 +17,15 @@ import java.util.Optional;
 public abstract class ObjectUtil {
     private static final String TO_STRING_NULL_OBJECT = "null";
     private static final ObjectMapper JSON_HELPER = new ObjectMapper();
+    private static ThreadSafeFory fory = null;
+
+    static {
+        ForyBuilder builder = Fory.builder();
+        builder.withLanguage(Language.JAVA);
+        builder.withAsyncCompilation(true);
+        builder.requireClassRegistration(false);
+        fory = builder.buildThreadSafeFory();
+    }
 
     public static boolean isNull(final Object value) {
         return ObjectUtil.isAnyNull(value);
@@ -201,6 +214,15 @@ public abstract class ObjectUtil {
             NumberUtil.writeExternalBoolean(out, true);
             out.writeObject(value);
         }
+    }
+
+    public static byte[] transferToByteArray2(Object value) {
+        return fory.serialize(value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T transferFromByteArray2(byte[] stream) {
+        return (T) fory.deserialize(stream);
     }
 
     public static byte[] transferToByteArray(Object value) {

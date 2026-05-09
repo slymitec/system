@@ -37,11 +37,11 @@ public class TestController extends AController {
         this.init();
 
         UserSpaceDefinition userSpace = new UserSpaceDefinition();
-        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
         kernelSpace.setUserSpace(userSpace);
-        this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+        this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
         UUID processID = null;
 
@@ -52,25 +52,25 @@ public class TestController extends AController {
             });
         }
 
-        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         threadManager.create(processID);
 
         Map<String, Object> result = new HashMap<>();
 
         //--Start--
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
         ProcessSessionObject processSession = process.getSession();
 
-        if (ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+        if (ValueUtil.isAnyNullOrEmpty(processSession.getId())) {
             processSession.create("Main", SessionType.CLI);
         }
-        result.put("ProcessSessionID", processSession.getID());
+        result.put("ProcessSessionID", processSession.getId());
 
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
-        AccountAuthorizationObject authorize = userManager.authorize(process.getToken().getAccountID());
+        UserManager userManager = this.coreManager.getManager(UserManager.class);
+        AccountAuthorizationObject authorize = userManager.authorize(process.getToken().getAccountId());
         AccountAuthorizationSummaryDefinition accountAuthorizationSummary = authorize.checkAndGetSummary();
 
         result.put("accountAuthorizationSummary", accountAuthorizationSummary);

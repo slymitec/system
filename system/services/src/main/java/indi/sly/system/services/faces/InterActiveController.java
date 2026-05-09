@@ -34,7 +34,7 @@ public class InterActiveController extends AController {
     public void onOpen(Session session) {
         this.init();
 
-        if (ObjectUtil.isAnyNull(this.factoryManager)) {
+        if (ObjectUtil.isAnyNull(this.coreManager)) {
             try {
                 session.close();
             } catch (IOException ignored) {
@@ -46,24 +46,24 @@ public class InterActiveController extends AController {
         this.userSpace = new UserSpaceDefinition();
         this.userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
 
-        this.factoryManager.setUserSpace(this.userSpace);
+        this.coreManager.setUserSpace(this.userSpace);
 
-        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
-        this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+        this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
     }
 
     @OnClose
     public void onClose(Session session, CloseReason closeReason) {
         this.userSpace = null;
 
-        this.factoryManager.setUserSpace(null);
+        this.coreManager.setUserSpace(null);
     }
 
     @OnMessage
     public void onMessage(String message, Session session) {
         try {
-            this.factoryManager.setUserSpace(this.userSpace);
+            this.coreManager.setUserSpace(this.userSpace);
 
             if (ValueUtil.isAnyNullOrEmpty(message)) {
                 throw new StatusUnreadableException();
@@ -75,7 +75,7 @@ public class InterActiveController extends AController {
                                 throw new StatusUnreadableException();
                             });
 
-            JobService jobService = this.factoryManager.getService(JobService.class);
+            JobService jobService = this.coreManager.getService(JobService.class);
 
             UserContextObject userContext = jobService.createUserContext(userContextRequest);
 

@@ -4,12 +4,13 @@ import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.kernel.core.values.AEntity;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -20,10 +21,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "Kernel_Groups")
-public class GroupEntity extends AEntity<GroupEntity> {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
+public class GroupEntity extends APersistentEntity {
     @Id
     @Column(columnDefinition = "uniqueidentifier", name = "ID", nullable = false, updatable = false)
     protected UUID id;
@@ -32,11 +30,11 @@ public class GroupEntity extends AEntity<GroupEntity> {
     @Column(length = 4096, name = "Token", nullable = false)
     protected byte[] token;
 
-    public UUID getID() {
+    public UUID getId() {
         return this.id;
     }
 
-    public void setID(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -58,47 +56,13 @@ public class GroupEntity extends AEntity<GroupEntity> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GroupEntity that = (GroupEntity) o;
-        return id.equals(that.id) && name.equals(that.name) && Arrays.equals(token, that.token);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.deepEquals(token, that.token);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name);
-        result = 31 * result + Arrays.hashCode(token);
-        return result;
-    }
-
-    @Override
-    public GroupEntity deepClone() {
-        GroupEntity group = new GroupEntity();
-
-        group.id = this.id;
-        group.name = this.name;
-        group.token = ArrayUtil.copyBytes(this.token);
-
-        return group;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        this.id = UUIDUtil.readExternal(in);
-        this.name = StringUtil.readExternal(in);
-        this.token = NumberUtil.readExternalBytes(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        UUIDUtil.writeExternal(out, this.id);
-        StringUtil.writeExternal(out, this.name);
-        NumberUtil.writeExternalBytes(out, this.token);
+        return Objects.hash(id, name, Arrays.hashCode(token));
     }
 }
-
-

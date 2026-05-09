@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ApplicationDefinition extends ADefinition<ApplicationDefinition> {
+public class ApplicationDefinition extends ADefinition {
     public ApplicationDefinition() {
         this.configurations = new HashMap<>();
     }
@@ -71,48 +71,6 @@ public class ApplicationDefinition extends ADefinition<ApplicationDefinition> {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, supportedSession, serverURL, configurations);
-    }
-
-    @Override
-    public ApplicationDefinition deepClone() {
-        ApplicationDefinition definition = new ApplicationDefinition();
-
-        definition.id = this.id;
-        definition.name = this.name;
-        definition.supportedSession = this.supportedSession;
-        definition.serverURL = this.serverURL;
-        definition.configurations.putAll(this.configurations);
-
-        return definition;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException {
-        this.id = UUIDUtil.readExternal(in);
-        this.name = StringUtil.readExternal(in);
-        this.supportedSession = NumberUtil.readExternalLong(in);
-        this.serverURL = StringUtil.readExternal(in);
-
-        int valueInteger;
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.configurations.put(StringUtil.readExternal(in), StringUtil.readExternal(in));
-        }
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        UUIDUtil.writeExternal(out, this.id);
-        StringUtil.writeExternal(out, this.name);
-        NumberUtil.writeExternalLong(out, this.supportedSession);
-        StringUtil.writeExternal(out, this.serverURL);
-
-        NumberUtil.writeExternalInteger(out, this.configurations.size());
-        for (Map.Entry<String, String> pair : this.configurations.entrySet()) {
-            StringUtil.writeExternal(out, pair.getKey());
-            StringUtil.writeExternal(out, pair.getValue());
-        }
     }
 }
 

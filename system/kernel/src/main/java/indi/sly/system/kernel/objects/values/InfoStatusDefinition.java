@@ -1,3 +1,4 @@
+/*
 package indi.sly.system.kernel.objects.values;
 
 import indi.sly.system.common.supports.NumberUtil;
@@ -33,53 +34,5 @@ public class InfoStatusDefinition extends ADefinition<InfoStatusDefinition> {
     public void setPoolID(UUID poolID) {
         this.poolID = poolID;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        InfoStatusDefinition that = (InfoStatusDefinition) o;
-        return identifications.equals(that.identifications) && Objects.equals(poolID, that.poolID);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(identifications, poolID);
-    }
-
-    @Override
-    public InfoStatusDefinition deepClone() {
-        InfoStatusDefinition definition = new InfoStatusDefinition();
-
-        definition.identifications.addAll(this.identifications);
-        definition.poolID = this.poolID;
-
-        return definition;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        int valueInteger;
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.identifications.add(ObjectUtil.readExternal(in));
-        }
-
-        this.poolID = UUIDUtil.readExternal(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        NumberUtil.writeExternalInteger(out, this.identifications.size());
-        for (IdentificationDefinition pair : this.identifications) {
-            ObjectUtil.writeExternal(out, pair);
-        }
-
-        UUIDUtil.writeExternal(out, this.poolID);
-    }
 }
+*/

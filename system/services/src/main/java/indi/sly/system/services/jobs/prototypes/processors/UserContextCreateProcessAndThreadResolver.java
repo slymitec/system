@@ -22,12 +22,12 @@ public class UserContextCreateProcessAndThreadResolver extends AUserContextCreat
 
             UUID processID = userContextRequestProcessID.getID();
 
-            TransactionalActionObject transactionalAction = this.factoryManager.create(TransactionalActionObject.class);
+            TransactionalActionObject transactionalAction = this.coreManager.create(TransactionalActionObject.class);
 
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
             ThreadObject thread = transactionalAction.runWithTransactional(() -> threadManager.create(processID));
 
-            userContext.setThreadID(thread.getID());
+            userContext.setThreadID(thread.getId());
 
             return userContext;
         };

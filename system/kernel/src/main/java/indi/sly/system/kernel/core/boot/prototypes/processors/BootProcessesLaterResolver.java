@@ -20,7 +20,7 @@ import java.util.UUID;
 public class BootProcessesLaterResolver extends ABootResolver {
     public BootProcessesLaterResolver() {
         this.start = (startup) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
             if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_AFTER_KERNEL)) {
                 ProcessObject process = processManager.getCurrent();

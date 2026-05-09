@@ -25,7 +25,7 @@ public class TaskBuilder extends ABuilder {
             throw new ConditionParametersException();
         }
 
-        ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.factoryManager.getKernelSpace().getServiceSpace();
+        ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.coreManager.getKernelSpace().getServiceSpace();
 
         if (serviceSpace.getNamedTaskIDs().containsKey(name)) {
             throw new StatusAlreadyExistedException();
@@ -51,7 +51,7 @@ public class TaskBuilder extends ABuilder {
             throw new ConditionParametersException();
         }
 
-        ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.factoryManager.getKernelSpace().getServiceSpace();
+        ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.coreManager.getKernelSpace().getServiceSpace();
 
         UUID taskID = serviceSpace.getNamedTaskIDs().getOrDefault(name, null);
 

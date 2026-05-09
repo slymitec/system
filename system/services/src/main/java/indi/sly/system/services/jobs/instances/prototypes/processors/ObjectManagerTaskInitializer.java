@@ -1,6 +1,6 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors;
 
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -32,9 +32,9 @@ public class ObjectManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void get(TaskRunConsumer run, TaskContentObject content) {
-        List<IdentificationDefinition> identifications = content.getParameterList(IdentificationDefinition.class, "identifications");
+        List<IdentifierDefinition> identifications = content.getParameterList(IdentifierDefinition.class, "identifications");
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
         InfoObject info = objectManager.get(identifications);
 

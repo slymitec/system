@@ -17,7 +17,7 @@ public class ProcessSelfResolver extends AProcessResolver {
 
     public ProcessSelfResolver() {
         this.self = id -> {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 

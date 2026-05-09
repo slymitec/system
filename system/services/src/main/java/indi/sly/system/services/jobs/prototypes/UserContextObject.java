@@ -1,7 +1,7 @@
 package indi.sly.system.services.jobs.prototypes;
 
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
-import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.ADefinitionObject;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.services.jobs.values.UserContentDefinition;
@@ -15,16 +15,16 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserContextObject extends AIndependentValueProcessObject<UserContextDefinition> {
+public class UserContextObject extends ADefinitionObject<UserContextDefinition> {
     public UUID getThreadID() {
         this.init();
 
-        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         if (threadManager.size() == 0) {
             throw new StatusRelationshipErrorException();
         }
         ThreadObject thread = threadManager.getCurrent();
-        if (!thread.getID().equals(this.value.getThreadID())) {
+        if (!thread.getId().equals(this.value.getThreadID())) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -34,16 +34,16 @@ public class UserContextObject extends AIndependentValueProcessObject<UserContex
     public UserContentObject getContent() {
         this.init();
 
-        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         if (threadManager.size() == 0) {
             throw new StatusRelationshipErrorException();
         }
         ThreadObject thread = threadManager.getCurrent();
-        if (!thread.getID().equals(this.value.getThreadID())) {
+        if (!thread.getId().equals(this.value.getThreadID())) {
             throw new StatusRelationshipErrorException();
         }
 
-        UserContentObject userContent = this.factoryManager.create(UserContentObject.class);
+        UserContentObject userContent = this.coreManager.create(UserContentObject.class);
 
         userContent.setSource(() -> this.value, (source) -> {
         });
@@ -55,12 +55,12 @@ public class UserContextObject extends AIndependentValueProcessObject<UserContex
     public UserContentResponseDefinition getResponse() {
         this.init();
 
-        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         if (threadManager.size() == 0) {
             throw new StatusRelationshipErrorException();
         }
         ThreadObject thread = threadManager.getCurrent();
-        if (!thread.getID().equals(this.value.getThreadID())) {
+        if (!thread.getId().equals(this.value.getThreadID())) {
             throw new StatusRelationshipErrorException();
         }
 

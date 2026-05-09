@@ -3,8 +3,9 @@ package indi.sly.system.kernel.security.instances.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.security.instances.values.AuditDefinition;
 import indi.sly.system.kernel.security.values.UserIDDefinition;
@@ -12,80 +13,46 @@ import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AuditContentObject extends AInfoContentObject {
-    public AuditContentObject() {
-        this.funcCustomRead = () -> this.audit = ObjectUtil.transferFromByteArray(this.value);
-        this.funcCustomWrite = () -> this.value = ObjectUtil.transferToByteArray(this.audit);
-    }
-
-    private AuditDefinition audit;
-
+public class AuditContentObject extends AInfoContentObject implements IByteValueProcess<AuditDefinition> {
     public UUID getProcessID() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        AuditDefinition audit = this.init(this.read());
 
-            return this.audit.getProcessID();
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return audit.getProcessID();
     }
 
     public UUID getAccountID() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        AuditDefinition audit = this.init(this.read());
 
-            return this.audit.getAccountID();
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return audit.getAccountID();
     }
 
-    public List<IdentificationDefinition> getIdentifications() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+    public PathDefinition getPath() {
+        AuditDefinition audit = this.init(this.read());
 
-            return CollectionUtil.unmodifiable(this.audit.getIdentifications());
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return audit.getPath();
     }
 
-    public void setIdentifications(List<IdentificationDefinition> identifications) {
-        if (ObjectUtil.isAnyNull(identifications)) {
+    public void setPath(PathDefinition path) {
+        if (ObjectUtil.isAnyNull(path)) {
             throw new ConditionParametersException();
         }
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        AuditDefinition audit = this.init(this.read());
 
-            this.audit.getIdentifications().clear();
-            this.audit.getIdentifications().addAll(identifications);
+        audit.setPath(path);
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        this.flush(audit);
     }
 
     public Set<UserIDDefinition> getUserIDs() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        AuditDefinition audit = this.init(this.read());
 
-            return CollectionUtil.unmodifiable(this.audit.getUserIDs());
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return CollectionUtil.unmodifiable(audit.getUserIDs());
     }
 
     public void setUserIDs(Set<UserIDDefinition> userUDs) {
@@ -93,40 +60,25 @@ public class AuditContentObject extends AInfoContentObject {
             throw new ConditionParametersException();
         }
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        AuditDefinition audit = this.init(this.read());
 
-            this.audit.getUserIDs().clear();
-            this.audit.getUserIDs().addAll(userUDs);
+        audit.getUserIDs().clear();
+        audit.getUserIDs().addAll(userUDs);
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        this.flush(audit);
     }
 
     public long getAudit() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        AuditDefinition audit = this.init(this.read());
 
-            return this.audit.getAudit();
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return audit.getAudit();
     }
 
-    public void setAudit(long audit) {
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+    public void setAudit(long value) {
+        AuditDefinition audit = this.init(this.read());
 
-            this.audit.setAudit(audit);
+        audit.setAudit(value);
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        this.flush(audit);
     }
 }

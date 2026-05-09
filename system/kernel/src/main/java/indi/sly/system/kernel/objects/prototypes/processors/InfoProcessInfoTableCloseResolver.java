@@ -17,16 +17,16 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoProcessInfoTableCloseResolver extends AInfoResolver {
     public InfoProcessInfoTableCloseResolver() {
-        this.close = (info, type, status) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        this.close = (info, type, cache) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (!processInfoTable.containByID(info.getID())) {
+            if (!processInfoTable.containById(info.getId())) {
                 throw new StatusAlreadyFinishedException();
             }
 
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(info.getId());
 
             processInfoEntry.delete();
 

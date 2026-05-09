@@ -36,14 +36,14 @@ public class GroupBuilder extends ABuilder {
             throw new ConditionRefuseException();
         }
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         GroupEntity group = new GroupEntity();
-        group.setID(UUID.randomUUID());
+        group.setId(UUID.randomUUID());
         group.setName(groupName);
         UserTokenDefinition userToken = new UserTokenDefinition();
-        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
         userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
         group.setToken(ObjectUtil.transferToByteArray(userToken));
 
@@ -55,7 +55,7 @@ public class GroupBuilder extends ABuilder {
             userRepository.add(group);
         }
 
-        return this.factory.buildGroup(group.getID());
+        return this.factory.buildGroup(group.getId());
     }
 
     public void delete(UUID groupID) {
@@ -67,7 +67,7 @@ public class GroupBuilder extends ABuilder {
             throw new ConditionRefuseException();
         }
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         GroupEntity group = userRepository.getGroup(groupID);

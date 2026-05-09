@@ -10,7 +10,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptorDefinition> {
+public class SecurityDescriptorDefinition extends ADefinition {
     private boolean inherit;
     private boolean hasChild;
     private boolean canChangeOwner;
@@ -60,82 +60,5 @@ public class SecurityDescriptorDefinition extends ADefinition<SecurityDescriptor
 
     public Set<AccessControlDefinition> getAudits() {
         return this.audits;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SecurityDescriptorDefinition that = (SecurityDescriptorDefinition) o;
-        return inherit == that.inherit && hasChild == that.hasChild && canChangeOwner == that.canChangeOwner && owners.equals(that.owners) && permissions.equals(that.permissions) && audits.equals(that.audits);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(inherit, hasChild, canChangeOwner, owners, permissions, audits);
-    }
-
-    @Override
-    public SecurityDescriptorDefinition deepClone() {
-        SecurityDescriptorDefinition definition = new SecurityDescriptorDefinition();
-
-        definition.inherit = this.inherit;
-        definition.hasChild = this.hasChild;
-        definition.canChangeOwner = this.canChangeOwner;
-        definition.owners.addAll(this.owners);
-        definition.permissions.addAll(this.permissions);
-        definition.audits.addAll(this.audits);
-
-        return definition;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        this.inherit = NumberUtil.readExternalBoolean(in);
-        this.hasChild = NumberUtil.readExternalBoolean(in);
-        this.canChangeOwner = NumberUtil.readExternalBoolean(in);
-
-        int valueInteger;
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.owners.add(UUIDUtil.readExternal(in));
-        }
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.permissions.add(ObjectUtil.readExternal(in));
-        }
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.audits.add(ObjectUtil.readExternal(in));
-        }
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        NumberUtil.writeExternalBoolean(out, this.inherit);
-        NumberUtil.writeExternalBoolean(out, this.hasChild);
-        NumberUtil.writeExternalBoolean(out, this.canChangeOwner);
-
-        NumberUtil.writeExternalInteger(out, this.owners.size());
-        for (UUID pair : this.owners) {
-            UUIDUtil.writeExternal(out, pair);
-        }
-
-        NumberUtil.writeExternalInteger(out, this.permissions.size());
-        for (AccessControlDefinition pair : this.permissions) {
-            ObjectUtil.writeExternal(out, pair);
-        }
-
-        NumberUtil.writeExternalInteger(out, this.audits.size());
-        for (AccessControlDefinition pair : this.audits) {
-            ObjectUtil.writeExternal(out, pair);
-        }
     }
 }

@@ -20,7 +20,7 @@ public class ProcessCreateTokenResolver extends AProcessCreateResolver {
             ProcessTokenObject processToken = process.getToken();
             AccountAuthorizationObject accountAuthorization = processCreator.getAccountAuthorization();
             if (ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.isLegal()) {
-                processToken.setAccountAuthorization(accountAuthorization);
+                processToken.injectAccountAuthorization(accountAuthorization);
             } else {
                 processToken.inheritAccountID();
                 processToken.inheritPrivileges();

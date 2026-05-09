@@ -14,7 +14,7 @@ import java.io.ObjectOutput;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class ProcessInfoTableDefinition extends ADefinition<ProcessInfoTableDefinition> {
+public class ProcessInfoTableDefinition extends ADefinition {
     public ProcessInfoTableDefinition() {
         this.indexTable = new Hashtable<>();
         this.idTable = new HashMap<>();
@@ -63,12 +63,12 @@ public class ProcessInfoTableDefinition extends ADefinition<ProcessInfoTableDefi
         if (this.indexTable.containsKey(infoEntry.getIndex())) {
             throw new StatusAlreadyExistedException();
         }
-        if (this.idTable.containsKey(infoEntry.getID())) {
+        if (this.idTable.containsKey(infoEntry.getId())) {
             throw new StatusAlreadyExistedException();
         }
 
         this.indexTable.put(infoEntry.getIndex(), infoEntry);
-        this.idTable.put(infoEntry.getID(), infoEntry);
+        this.idTable.put(infoEntry.getId(), infoEntry);
     }
 
     public void delete(UUID index) {
@@ -78,7 +78,7 @@ public class ProcessInfoTableDefinition extends ADefinition<ProcessInfoTableDefi
             throw new StatusNotExistedException();
         }
 
-        infoEntry = this.idTable.remove(infoEntry.getID());
+        infoEntry = this.idTable.remove(infoEntry.getId());
 
         if (ObjectUtil.isAnyNull(infoEntry)) {
             throw new StatusNotExistedException();
@@ -100,49 +100,5 @@ public class ProcessInfoTableDefinition extends ADefinition<ProcessInfoTableDefi
     @Override
     public int hashCode() {
         return Objects.hash(indexTable, idTable);
-    }
-
-    @Override
-    public ProcessInfoTableDefinition deepClone() {
-        ProcessInfoTableDefinition definition = new ProcessInfoTableDefinition();
-
-        definition.indexTable.putAll(this.indexTable);
-        definition.idTable.putAll(this.idTable);
-
-        return definition;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        int valueInteger;
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.indexTable.put(UUIDUtil.readExternal(in), ObjectUtil.readExternal(in));
-        }
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.idTable.put(UUIDUtil.readExternal(in), ObjectUtil.readExternal(in));
-        }
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        NumberUtil.writeExternalInteger(out, this.indexTable.size());
-        for (Entry<UUID, ProcessInfoEntryDefinition> pair : this.indexTable.entrySet()) {
-            UUIDUtil.writeExternal(out, pair.getKey());
-            ObjectUtil.writeExternal(out, pair.getValue());
-        }
-
-        NumberUtil.writeExternalInteger(out, this.idTable.size());
-        for (Entry<UUID, ProcessInfoEntryDefinition> pair : this.idTable.entrySet()) {
-            UUIDUtil.writeExternal(out, pair.getKey());
-            ObjectUtil.writeExternal(out, pair.getValue());
-        }
     }
 }

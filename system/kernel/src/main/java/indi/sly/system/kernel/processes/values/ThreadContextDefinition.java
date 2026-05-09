@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.values.ADefinition;
 
-public class ThreadContextDefinition extends ADefinition<ThreadContextDefinition> {
+public class ThreadContextDefinition extends ADefinition {
     public ThreadContextDefinition() {
         this.type = ThreadContextType.NULL;
         this.run = new ThreadRunDefinition();

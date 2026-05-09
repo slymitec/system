@@ -3,7 +3,7 @@ package indi.sly.system.services.jobs.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.ADefinitionObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TaskObject extends AIndependentValueProcessObject<TaskDefinition> {
+public class TaskObject extends ADefinitionObject<TaskDefinition> {
     protected TaskProcessorMediator processorMediator;
     protected TaskStatusDefinition status;
 
@@ -107,7 +107,7 @@ public class TaskObject extends AIndependentValueProcessObject<TaskDefinition> {
             this.unlock(LockType.READ);
         }
 
-        TaskContentObject taskContent = this.factoryManager.create(TaskContentObject.class);
+        TaskContentObject taskContent = this.coreManager.create(TaskContentObject.class);
         taskContent.threadContext = threadContext;
 
         return taskContent;

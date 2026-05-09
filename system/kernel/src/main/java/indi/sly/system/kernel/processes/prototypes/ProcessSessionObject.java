@@ -4,10 +4,12 @@ import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
-import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
+import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -15,15 +17,14 @@ import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
-import indi.sly.system.kernel.processes.values.ProcessSessionDefinition;
-import indi.sly.system.kernel.processes.values.ProcessStatusType;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
+import indi.sly.system.kernel.processes.values.*;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountObject;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
-import indi.sly.system.kernel.security.values.AccessControlDefinition;
-import indi.sly.system.kernel.security.values.AccessControlScopeType;
-import indi.sly.system.kernel.security.values.PermissionType;
-import indi.sly.system.kernel.security.values.UserType;
+import indi.sly.system.kernel.security.values.*;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,15 +36,51 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessionDefinition, ProcessObject> {
-    public UUID getID() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueProcess<ProcessSessionDefinition> {
+    protected ProcessFactory factory;
+    protected ProcessProcessorMediator processorMediator;
 
-            return this.value.getSessionID();
+    private ProcessEntity getSelf() {
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
+            throw new ConditionContextException();
+        }
+
+        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
+    }
+
+    private ProcessSessionDefinition init(ProcessEntity process) {
+        Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessSessions();
+
+        byte[] source = null;
+
+        for (ProcessProcessorReadComponentFunction resolver : resolvers) {
+            source = resolver.apply(source, process);
+        }
+
+        return IByteValueProcess.super.init(source);
+    }
+
+    private void flush(ProcessEntity process, ProcessSessionDefinition value) {
+        byte[] source = IByteValueProcess.super.flush(value);
+
+        Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessSessions();
+
+        for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
+            resolver.accept(process, source);
+        }
+    }
+
+    public UUID getId() {
+        ProcessEntity process = this.getSelf();
+
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+
+            ProcessSessionDefinition processSession = this.init(process);
+
+            return processSession.getSessionID();
         } finally {
-            this.unlock(LockType.READ);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
         }
     }
 
@@ -52,30 +89,33 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+        if (!this.base.isCurrent() || LogicalUtil.allNotEqual(this.base.getStatus().get(),
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
-        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+        UserManager userManager = this.coreManager.getManager(UserManager.class);
 
         AccountObject account = userManager.getCurrentAccount();
-        UUID accountID = account.getID();
+        UUID accountID = account.getId();
+
+        ProcessEntity process = this.getSelf();
 
         try {
-            this.lock(LockType.WRITE);
-            this.init();
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            UUID sessionID = this.value.getSessionID();
+            ProcessSessionDefinition processSession = this.init(process);
 
-            if (this.value.isLink()) {
+            UUID sessionID = processSession.getSessionID();
+
+            if (processSession.isLink()) {
                 throw new StatusRelationshipErrorException();
             }
 
-            InfoObject sessionsInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions")));
+            InfoObject sessionsInfo = objectManager.get(new PathDefinition(List.of(new IdentifierDefinition("Sessions"))));
 
             if (!ValueUtil.isAnyNullOrEmpty(sessionID)) {
                 Set<InfoSummaryDefinition> infoSummary = sessionsInfo.queryChild(new InfoWildcardDefinition(sessionID));
@@ -84,180 +124,195 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
                 }
             }
 
-            InfoObject sessionInfo = sessionsInfo.createChildAndOpen(kernelConfiguration.PROCESSES_SESSION_INSTANCE_ID,
-                    new IdentificationDefinition(UUID.randomUUID()), InfoOpenAttributeType.OPEN_SHARED_WRITE);
-            sessionID = sessionInfo.getID();
+            InfoObject sessionInfo = sessionsInfo.createChild(kernelConfiguration.PROCESSES_SESSION_INSTANCE_ID,
+                    new IdentifierDefinition(UUID.randomUUID()));
 
             SecurityDescriptorObject securityDescriptor = sessionInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
-            permission.getUserID().setID(accountID);
-            permission.getUserID().setType(UserType.ACCOUNT);
+            permission.setUserId(new UserIDDefinition(accountID, UserType.ACCOUNT));
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
             permissions.add(permission);
             permission = new AccessControlDefinition();
-            permission.getUserID().setID(sessionID);
-            permission.getUserID().setType(UserType.SESSION);
+            permission.setUserId(new UserIDDefinition(sessionID, UserType.SESSION));
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
             permissions.add(permission);
             securityDescriptor.setPermissions(permissions);
 
+            sessionsInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+
             SessionContentObject sessionContent = (SessionContentObject) sessionInfo.getContent();
             sessionContent.setName(name);
             sessionContent.setType(type);
 
-            ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(sessionInfo.getID());
+            sessionsInfo.close();
+
+            ProcessInfoTableObject processInfoTable = this.base.getInfoTable();
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(sessionInfo.getId());
             processInfoEntry.setUnsupportedDelete(true);
 
-            sessionID = sessionInfo.getID();
+            sessionID = sessionInfo.getId();
 
-            this.value.setSessionID(sessionID);
-            this.value.setLink(true);
+            processSession.setSessionID(sessionID);
+            processSession.setLink(true);
 
-            this.fresh();
+            this.flush(process, processSession);
         } finally {
-            this.unlock(LockType.WRITE);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
     }
 
     public void close() {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.DIED)) {
+        if (LogicalUtil.allNotEqual(this.base.getStatus().get(), ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
+        ProcessEntity process = this.getSelf();
+
         try {
-            this.lock(LockType.WRITE);
-            this.init();
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            UUID sessionID = this.value.getSessionID();
+            ProcessSessionDefinition processSession = this.init(process);
 
-            if (!this.value.isLink() || ValueUtil.isAnyNullOrEmpty(sessionID)) {
+            UUID sessionID = processSession.getSessionID();
+
+            if (!processSession.isLink() || ValueUtil.isAnyNullOrEmpty(sessionID)) {
                 throw new StatusRelationshipErrorException();
             }
 
-            ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
-            if (processInfoTable.containByID(sessionID)) {
-                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(sessionID);
+            ProcessInfoTableObject processInfoTable = this.base.getInfoTable();
+            if (processInfoTable.containById(sessionID)) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(sessionID);
                 processInfoEntry.setUnsupportedDelete(false);
 
                 InfoObject info = processInfoEntry.getInfo();
                 info.close();
             }
 
-            this.value.setSessionID(null);
-            this.value.setLink(false);
+            processSession.setSessionID(null);
+            processSession.setLink(false);
 
-            this.fresh();
+            this.flush(process, processSession);
         } finally {
-            this.unlock(LockType.WRITE);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
     }
 
     public void inheritID() {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+        if (LogicalUtil.allNotEqual(this.base.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-        if (!process.getID().equals(parent.getParentID())) {
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+        ProcessObject currentProcess = processManager.getCurrent();
+        if (!currentProcess.getId().equals(base.getParentId())) {
             throw new ConditionRefuseException();
         }
 
-        ProcessSessionObject processSession = process.getSession();
-        UUID sessionID = processSession.getID();
+        ProcessSessionObject currentProcessSession = currentProcess.getSession();
+        UUID sessionID = currentProcessSession.getId();
+
+        ProcessEntity process = this.getSelf();
 
         try {
-            this.lock(LockType.WRITE);
-            this.init();
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            if (this.value.isLink()) {
+            ProcessSessionDefinition processSession = this.init(process);
+
+            if (processSession.isLink()) {
                 throw new StatusRelationshipErrorException();
             }
 
-            this.value.setSessionID(sessionID);
-            this.value.setLink(false);
+            processSession.setSessionID(sessionID);
+            processSession.setLink(false);
 
-            this.fresh();
+            this.flush(process, processSession);
         } finally {
-            this.unlock(LockType.WRITE);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
     }
 
     public void link() {
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+        if (!this.base.isCurrent() || LogicalUtil.allNotEqual(this.base.getStatus().get(),
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+
+        ProcessEntity process = this.getSelf();
 
         try {
-            this.lock(LockType.WRITE);
-            this.init();
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            UUID sessionID = this.value.getSessionID();
+            ProcessSessionDefinition processSession = this.init(process);
 
-            if (this.value.isLink()) {
+            UUID sessionID = processSession.getSessionID();
+
+            if (processSession.isLink()) {
                 throw new StatusAlreadyFinishedException();
             }
             if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
                 throw new StatusRelationshipErrorException();
             }
 
-            InfoObject sessionInfo = objectManager.get(List.of(new IdentificationDefinition("Sessions"),
-                    new IdentificationDefinition(sessionID)));
+            InfoObject sessionInfo = objectManager.get(new PathDefinition(List.of(new IdentifierDefinition("Sessions"),
+                    new IdentifierDefinition(sessionID))));
             sessionInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
 
-            ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(sessionInfo.getID());
+            ProcessInfoTableObject processInfoTable = this.base.getInfoTable();
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(sessionInfo.getId());
             processInfoEntry.setUnsupportedDelete(true);
 
-            this.value.setSessionID(sessionID);
-            this.value.setLink(true);
+            processSession.setLink(true);
 
-            this.fresh();
+            this.flush(process, processSession);
         } finally {
-            this.unlock(LockType.WRITE);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
     }
 
     public boolean isLink() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        ProcessEntity process = this.getSelf();
 
-            return this.value.isLink();
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+
+            ProcessSessionDefinition processSession = this.init(process);
+
+            return processSession.isLink();
         } finally {
-            this.unlock(LockType.READ);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
         }
     }
 
     public SessionContentObject getContent() {
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+        if (!this.base.isCurrent() || LogicalUtil.allNotEqual(this.base.getStatus().get(),
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
 
+        ProcessEntity process = this.getSelf();
+
         try {
-            this.lock(LockType.READ);
-            this.init();
+            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            UUID sessionID = this.value.getSessionID();
+            ProcessSessionDefinition processSession = this.init(process);
 
-            if (!this.value.isLink() || ValueUtil.isAnyNullOrEmpty(sessionID)) {
+            UUID sessionID = processSession.getSessionID();
+
+            if (!processSession.isLink() || ValueUtil.isAnyNullOrEmpty(sessionID)) {
                 throw new StatusRelationshipErrorException();
             }
 
-            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+            ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
-            List<IdentificationDefinition> identifications = List.of(new IdentificationDefinition("Sessions"),
-                    new IdentificationDefinition(sessionID));
+            PathDefinition path = new PathDefinition(List.of(new IdentifierDefinition("Sessions"),
+                    new IdentifierDefinition(sessionID)));
 
-            InfoObject sessionInfo = objectManager.get(identifications);
+            InfoObject sessionInfo = objectManager.get(path);
 
             SessionContentObject sessionContent;
             try {
@@ -268,7 +323,7 @@ public class ProcessSessionObject extends ABytesValueProcessObject<ProcessSessio
 
             return sessionContent;
         } finally {
-            this.unlock(LockType.READ);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
         }
     }
 }

@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.security.values;
 
 import indi.sly.system.common.supports.*;
-import indi.sly.system.kernel.core.values.AEntity;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 
 import jakarta.persistence.*;
 
@@ -13,10 +13,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "Kernel_Accounts")
-public class AccountEntity extends AEntity<AccountEntity> {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
+public class AccountEntity extends APersistentEntity {
     public AccountEntity() {
         this.groups = new ArrayList<>();
     }
@@ -37,11 +34,11 @@ public class AccountEntity extends AEntity<AccountEntity> {
     @Column(length = 4096, name = "Sessions", nullable = false)
     protected byte[] sessions;
 
-    public UUID getID() {
+    public UUID getId() {
         return this.id;
     }
 
-    public void setID(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -87,67 +84,13 @@ public class AccountEntity extends AEntity<AccountEntity> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccountEntity that = (AccountEntity) o;
-        return id.equals(that.id) && name.equals(that.name) && Objects.equals(password, that.password) && groups.equals(that.groups) && Arrays.equals(token, that.token) && Arrays.equals(sessions, that.sessions);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(password, that.password) && Objects.equals(groups, that.groups) && Objects.deepEquals(token, that.token) && Objects.deepEquals(sessions, that.sessions);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name, password, groups);
-        result = 31 * result + Arrays.hashCode(token);
-        result = 31 * result + Arrays.hashCode(sessions);
-        return result;
-    }
-
-    @Override
-    public AccountEntity deepClone() {
-        AccountEntity account = new AccountEntity();
-
-        account.id = this.id;
-        account.name = this.name;
-        account.password = this.password;
-        account.groups = this.groups;
-        account.token = ArrayUtil.copyBytes(this.token);
-        account.sessions = ArrayUtil.copyBytes(this.sessions);
-
-        return account;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        int valueInteger;
-
-        this.id = UUIDUtil.readExternal(in);
-        this.name = StringUtil.readExternal(in);
-        this.password = StringUtil.readExternal(in);
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.groups.add(ObjectUtil.readExternal(in));
-        }
-
-        this.token = NumberUtil.readExternalBytes(in);
-        this.sessions = NumberUtil.readExternalBytes(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        UUIDUtil.writeExternal(out, this.id);
-        StringUtil.writeExternal(out, this.name);
-        StringUtil.writeExternal(out, this.password);
-
-        NumberUtil.writeExternalInteger(out, this.groups.size());
-        for (GroupEntity pair : this.groups) {
-            ObjectUtil.writeExternal(out, pair);
-        }
-
-        NumberUtil.writeExternalBytes(out, this.token);
-        NumberUtil.writeExternalBytes(out, this.sessions);
+        return Objects.hash(id, name, password, groups, Arrays.hashCode(token), Arrays.hashCode(sessions));
     }
 }

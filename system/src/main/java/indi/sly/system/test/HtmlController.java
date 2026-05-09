@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -31,13 +31,13 @@ public class HtmlController extends AController {
     public Object Html(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init();
 
-        if (ObjectUtil.allNotNull(this.factoryManager)) {
+        if (ObjectUtil.allNotNull(this.coreManager)) {
             UserSpaceDefinition userSpace = new UserSpaceDefinition();
-            KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+            KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
             kernelSpace.setUserSpace(userSpace);
-            this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+            this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
             UUID processID = null;
 
@@ -48,7 +48,7 @@ public class HtmlController extends AController {
                 });
             }
 
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
             if (!ValueUtil.isAnyNullOrEmpty(processID)) {
                 threadManager.create(processID);
             }
@@ -69,16 +69,16 @@ public class HtmlController extends AController {
         this.logger().error(s2);
 
 
-        List<IdentificationDefinition> identifications =
-                List.of(new IdentificationDefinition(UUIDUtil.createRandom()), new IdentificationDefinition("text"));
+        List<IdentifierDefinition> identifications =
+                List.of(new IdentifierDefinition(UUIDUtil.createRandom()), new IdentifierDefinition("text"));
 
         result.put("ids", identifications);
 
         String value = ObjectUtil.transferToString(identifications);
 
-        List<IdentificationDefinition> identifications2 = ObjectUtil.transferListFromString(IdentificationDefinition.class, value);
+        List<IdentifierDefinition> identifications2 = ObjectUtil.transferListFromString(IdentifierDefinition.class, value);
         if (identifications2 != null) {
-            for (IdentificationDefinition identification : identifications2) {
+            for (IdentifierDefinition identification : identifications2) {
                 this.logger().error(identification.toString());
                 this.logger().error(identification.getType().getName());
             }

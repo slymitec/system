@@ -19,8 +19,8 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoSecurityDescriptorCreateResolver extends AInfoResolver {
     public InfoSecurityDescriptorCreateResolver() {
-        this.createChild = (childInfo, info, type, status, childTypeID, identification) -> {
-            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        this.createChild = (childInfo, info, type, cache, childTypeID, identification) -> {
+            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
             TypeObject childType = typeManager.get(childTypeID);
 
             if (childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
@@ -28,10 +28,10 @@ public class InfoSecurityDescriptorCreateResolver extends AInfoResolver {
                 SecurityDescriptorDefinition securityDescriptor = new SecurityDescriptorDefinition();
 
                 if (childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                    ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+                    ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
                     ProcessObject process = processManager.getCurrent();
 
-                    securityDescriptor.getOwners().add(process.getToken().getAccountID());
+                    securityDescriptor.getOwners().add(process.getToken().getAccountId());
                     securityDescriptor.setInherit(true);
                     securityDescriptor.setCanChangeOwner(!childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_NOT_CHANGE_OWNER));
                     securityDescriptor.setHasChild(childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD));
@@ -51,7 +51,7 @@ public class InfoSecurityDescriptorCreateResolver extends AInfoResolver {
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
         if (ObjectUtil.allNotNull(info)) {
-            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
             TypeObject type = typeManager.get(info.getType());
 
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {

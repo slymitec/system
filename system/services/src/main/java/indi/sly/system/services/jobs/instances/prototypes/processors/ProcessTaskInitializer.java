@@ -3,7 +3,7 @@ package indi.sly.system.services.jobs.instances.prototypes.processors;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -39,7 +39,7 @@ public class ProcessTaskInitializer extends ATaskInitializer {
     }
 
     private void getCurrent(TaskRunConsumer run, TaskContentObject content) {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
 
@@ -60,7 +60,7 @@ public class ProcessTaskInitializer extends ATaskInitializer {
 
         AccountAuthorizationObject accountAuthorization = content.getCacheByParameterNameOrDefault("accountAuthorizationID", null);
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process;
         if (ObjectUtil.isAnyNull(accountAuthorization)) {
@@ -82,9 +82,9 @@ public class ProcessTaskInitializer extends ATaskInitializer {
         AccountAuthorizationObject accountAuthorization = content.getCacheByParameterNameOrDefault("accountAuthorizationID", null);
         UUID fileIndex = content.getParameterOrNull(UUID.class, "fileIndex");
         String parameters = content.getParameterOrNull("parameters");
-        List<IdentificationDefinition> workFolder = content.getParameterListOrNull(IdentificationDefinition.class, "workFolder");
+        List<IdentifierDefinition> workFolder = content.getParameterListOrNull(IdentifierDefinition.class, "workFolder");
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.create(accountAuthorization, fileIndex, parameters, workFolder);
 
@@ -98,7 +98,7 @@ public class ProcessTaskInitializer extends ATaskInitializer {
     }
 
     private void endCurrent(TaskRunConsumer run, TaskContentObject content) {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         processManager.endCurrent();
     }
 }

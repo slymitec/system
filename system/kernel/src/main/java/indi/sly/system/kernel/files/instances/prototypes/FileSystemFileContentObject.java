@@ -8,6 +8,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
@@ -23,37 +24,25 @@ import java.io.IOException;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FileSystemFileContentObject extends AInfoContentObject {
-    public FileSystemFileContentObject() {
-        this.funcCustomRead = () -> this.entry = ObjectUtil.transferFromByteArray(this.value);
-        this.funcCustomWrite = () -> this.value = ObjectUtil.transferToByteArray(this.entry);
-    }
-
-    private FileSystemEntryDefinition entry;
-
+public class FileSystemFileContentObject extends AInfoContentObject implements IByteValueProcess<FileSystemEntryDefinition> {
     public long length() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
 
-            long length = -1;
+        long length = -1;
 
-            if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
-                length = this.entry.getValue().length;
-            } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
-                File infoFile = new File(StringUtil.readFormBytes(entry.getValue()));
+        if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
+            length = fileSystemEntry.getValue().length;
+        } else if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.MAPPING)) {
+            File infoFile = new File(StringUtil.readFormBytes(fileSystemEntry.getValue()));
 
-                if (!infoFile.exists() || !infoFile.isFile()) {
-                    throw new StatusNotExistedException();
-                }
-
-                length = infoFile.length();
+            if (!infoFile.exists() || !infoFile.isFile()) {
+                throw new StatusNotExistedException();
             }
 
-            return length;
-        } finally {
-            this.unlock(LockType.READ);
+            length = infoFile.length();
         }
+
+        return length;
     }
 
     public byte[] read(long offset, int length) {
@@ -63,35 +52,32 @@ public class FileSystemFileContentObject extends AInfoContentObject {
 
         byte[] value = null;
 
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
 
-            if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
-                if (offset + length > Integer.MAX_VALUE) {
-                    throw new ConditionParametersException();
-                }
-
-                value = ArrayUtil.acquireBytes(this.entry.getValue(), (int) offset, length);
-            } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
-                value = new byte[length];
-
-                File infoFile = new File(StringUtil.readFormBytes(entry.getValue()));
-
-                if (!infoFile.exists() || !infoFile.isFile()) {
-                    throw new StatusNotExistedException();
-                }
-
-                try (FileInputStream fileInputStream = new FileInputStream(infoFile)) {
-                    fileInputStream.skip(offset);
-                    fileInputStream.read(value);
-                } catch (IOException e) {
-                    throw new StatusUnexpectedException();
-                }
+        if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
+            if (offset + length > Integer.MAX_VALUE) {
+                throw new ConditionParametersException();
             }
-        } finally {
-            this.unlock(LockType.READ);
+
+            value = ArrayUtil.acquireBytes(fileSystemEntry.getValue(), (int) offset, length);
+        } else if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.MAPPING)) {
+            value = new byte[length];
+
+            File infoFile = new File(StringUtil.readFormBytes(fileSystemEntry.getValue()));
+
+            if (!infoFile.exists() || !infoFile.isFile()) {
+                throw new StatusNotExistedException();
+            }
+
+            try (FileInputStream fileInputStream = new FileInputStream(infoFile)) {
+                fileInputStream.skip(offset);
+                fileInputStream.read(value);
+            } catch (IOException e) {
+                throw new StatusUnexpectedException();
+            }
         }
+
+        this.write(this.flush(fileSystemEntry));
 
         return value;
     }
@@ -101,30 +87,25 @@ public class FileSystemFileContentObject extends AInfoContentObject {
             throw new ConditionParametersException();
         }
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
 
-            if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
-                this.entry.setValue(value);
-            } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
-                File infoFile = new File(StringUtil.readFormBytes(entry.getValue()));
+        if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
+            fileSystemEntry.setValue(value);
+        } else if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.MAPPING)) {
+            File infoFile = new File(StringUtil.readFormBytes(fileSystemEntry.getValue()));
 
-                if (!infoFile.exists() || !infoFile.isFile()) {
-                    throw new StatusNotExistedException();
-                }
-
-                try (FileOutputStream fileOutputStream = new FileOutputStream(infoFile, false)) {
-                    fileOutputStream.write(value);
-                } catch (IOException e) {
-                    throw new StatusUnexpectedException();
-                }
+            if (!infoFile.exists() || !infoFile.isFile()) {
+                throw new StatusNotExistedException();
             }
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
+            try (FileOutputStream fileOutputStream = new FileOutputStream(infoFile, false)) {
+                fileOutputStream.write(value);
+            } catch (IOException e) {
+                throw new StatusUnexpectedException();
+            }
         }
+
+        this.write(this.flush(fileSystemEntry));
     }
 
     public void append(byte[] value) {
@@ -132,34 +113,29 @@ public class FileSystemFileContentObject extends AInfoContentObject {
             throw new ConditionParametersException();
         }
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
 
-            if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
-                if (this.length() + value.length > Integer.MAX_VALUE) {
-                    throw new ConditionParametersException();
-                }
-
-                this.entry.setValue(ArrayUtil.combineBytes(this.entry.getValue(), value));
-            } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
-                File infoFile = new File(StringUtil.readFormBytes(entry.getValue()));
-
-                if (!infoFile.exists() || !infoFile.isFile()) {
-                    throw new StatusNotExistedException();
-                }
-
-                try (FileOutputStream fileOutputStream = new FileOutputStream(infoFile, true)) {
-                    fileOutputStream.write(value);
-                } catch (IOException e) {
-                    throw new StatusUnexpectedException();
-                }
+        if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
+            if (this.length() + value.length > Integer.MAX_VALUE) {
+                throw new ConditionParametersException();
             }
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
+            fileSystemEntry.setValue(ArrayUtil.combineBytes(fileSystemEntry.getValue(), value));
+        } else if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.MAPPING)) {
+            File infoFile = new File(StringUtil.readFormBytes(fileSystemEntry.getValue()));
+
+            if (!infoFile.exists() || !infoFile.isFile()) {
+                throw new StatusNotExistedException();
+            }
+
+            try (FileOutputStream fileOutputStream = new FileOutputStream(infoFile, true)) {
+                fileOutputStream.write(value);
+            } catch (IOException e) {
+                throw new StatusUnexpectedException();
+            }
         }
+
+        this.write(this.flush(fileSystemEntry));
     }
 
     public void clear() {

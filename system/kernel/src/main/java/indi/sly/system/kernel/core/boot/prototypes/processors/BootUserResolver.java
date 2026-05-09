@@ -24,18 +24,18 @@ import java.util.UUID;
 public class BootUserResolver extends ABootResolver {
     public BootUserResolver() {
         this.start = (startup) -> {
-            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
             if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
                 UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
-                UUID groupID = kernelConfiguration.SECURITY_GROUP_SYSTEMS_ID;
+                UUID groupId = kernelConfiguration.SECURITY_GROUP_SYSTEMS_ID;
                 String groupName = "Systems";
-                if (!userRepository.containGroup(groupID)) {
+                if (!userRepository.containGroup(groupId)) {
                     GroupEntity group = new GroupEntity();
-                    group.setID(groupID);
+                    group.setId(groupId);
                     group.setName(groupName);
                     UserTokenDefinition userToken = new UserTokenDefinition();
                     userToken.setPrivileges(PrivilegeType.FULL);
@@ -44,11 +44,11 @@ public class BootUserResolver extends ABootResolver {
 
                     userRepository.add(group);
                 }
-                groupID = kernelConfiguration.SECURITY_GROUP_ADMINISTRATORS_ID;
+                groupId = kernelConfiguration.SECURITY_GROUP_ADMINISTRATORS_ID;
                 groupName = "Administrators";
-                if (!userRepository.containGroup(groupID)) {
+                if (!userRepository.containGroup(groupId)) {
                     GroupEntity group = new GroupEntity();
-                    group.setID(groupID);
+                    group.setId(groupId);
                     group.setName(groupName);
                     UserTokenDefinition userToken = new UserTokenDefinition();
                     userToken.setPrivileges(LogicalUtil.or(PrivilegeType.CORE_MODIFY_DATETIME,
@@ -59,11 +59,11 @@ public class BootUserResolver extends ABootResolver {
 
                     userRepository.add(group);
                 }
-                groupID = kernelConfiguration.SECURITY_GROUP_USERS_ID;
+                groupId = kernelConfiguration.SECURITY_GROUP_USERS_ID;
                 groupName = "Users";
-                if (!userRepository.containGroup(groupID)) {
+                if (!userRepository.containGroup(groupId)) {
                     GroupEntity group = new GroupEntity();
-                    group.setID(groupID);
+                    group.setId(groupId);
                     group.setName(groupName);
                     UserTokenDefinition userToken = new UserTokenDefinition();
                     userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
@@ -76,7 +76,7 @@ public class BootUserResolver extends ABootResolver {
                     GroupEntity group = userRepository.getGroup(kernelConfiguration.SECURITY_GROUP_SYSTEMS_ID);
 
                     AccountEntity account = new AccountEntity();
-                    account.setID(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
+                    account.setId(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
                     account.setName("System");
                     account.setPassword(StringUtil.EMPTY);
                     account.setGroups(new ArrayList<>(List.of(group)));

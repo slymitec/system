@@ -18,7 +18,7 @@ public class ProcessCreateStatisticsResolver extends AProcessCreateResolver {
 
     public ProcessCreateStatisticsResolver() {
         this.create = (process, parentProcess, processCreator) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+            DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrentDateTime();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();

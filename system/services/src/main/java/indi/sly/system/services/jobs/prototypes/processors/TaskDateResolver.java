@@ -20,7 +20,7 @@ import java.util.Map;
 public class TaskDateResolver extends ATaskResolver {
     public TaskDateResolver() {
         this.start = (task, status) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+            DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = status.getDate();
@@ -29,7 +29,7 @@ public class TaskDateResolver extends ATaskResolver {
         };
 
         this.finish = (task, status) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+            DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = status.getDate();
@@ -38,7 +38,7 @@ public class TaskDateResolver extends ATaskResolver {
         };
 
         this.run = (task, status, name, run, content) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+            DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = status.getDate();
@@ -47,7 +47,7 @@ public class TaskDateResolver extends ATaskResolver {
         };
 
         this.content = (task, status, threadContext) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+            DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = status.getDate();

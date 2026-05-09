@@ -3,8 +3,7 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AChildDefinitionObject;
 import indi.sly.system.kernel.processes.values.ThreadStatisticsDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -16,14 +15,9 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatisticsDefinition, ThreadObject> {
+public class ThreadStatisticsObject extends AChildDefinitionObject<ThreadStatisticsDefinition, ThreadObject> {
     public long getDate(long dataTime) {
-        this.lock(LockType.READ);
-        this.init();
-
-        Long value = this.value.getDate().getOrDefault(dataTime, null);
-
-        this.unlock(LockType.READ);
+        Long value = this.definition.getDate().getOrDefault(dataTime, null);
 
         if (ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();
@@ -33,49 +27,38 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
     }
 
     public void setDate(long dataTime, long value) {
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.getDate().put(dataTime, value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.getDate().put(dataTime, value);
     }
 
     public Map<String, Long> getStatistics() {
         Map<String, Long> statistics = new HashMap<>();
 
-        this.lock(LockType.READ);
-        this.init();
-
-        statistics.put("InfoCreate", this.value.getInfoCreate());
-        statistics.put("InfoGet", this.value.getInfoGet());
-        statistics.put("InfoQuery", this.value.getInfoQuery());
-        statistics.put("InfoDelete", this.value.getInfoDelete());
-        statistics.put("InfoDump", this.value.getInfoDump());
-        statistics.put("InfoOpen", this.value.getInfoOpen());
-        statistics.put("InfoClose", this.value.getInfoClose());
-        statistics.put("InfoRead", this.value.getInfoRead());
-        statistics.put("InfoWrite", this.value.getInfoWrite());
-        statistics.put("SharedReadCount", this.value.getSharedReadCount());
-        statistics.put("SharedReadBytes", this.value.getSharedReadBytes());
-        statistics.put("SharedWriteCount", this.value.getSharedWriteCount());
-        statistics.put("SharedWriteBytes", this.value.getSharedWriteBytes());
-        statistics.put("PortCount", this.value.getPortCount());
-        statistics.put("PortReadCount", this.value.getPortReadCount());
-        statistics.put("PortReadBytes", this.value.getPortReadBytes());
-        statistics.put("PortWriteCount", this.value.getPortWriteCount());
-        statistics.put("PortWriteBytes", this.value.getPortWriteBytes());
-        statistics.put("SignalReadCount", this.value.getSignalReadCount());
-        statistics.put("SignalWriteCount", this.value.getSignalWriteCount());
-        statistics.put("IoCreate", this.value.getIoCreate());
-        statistics.put("IoStatus", this.value.getIoStatus());
-        statistics.put("IoReadCount", this.value.getIoReadCount());
-        statistics.put("IoReadBytes", this.value.getIoReadBytes());
-        statistics.put("IoWriteCount", this.value.getIoWriteCount());
-        statistics.put("IoWriteBytes", this.value.getIoWriteBytes());
-
-        this.unlock(LockType.READ);
+        statistics.put("InfoCreate", this.definition.getInfoCreate());
+        statistics.put("InfoGet", this.definition.getInfoGet());
+        statistics.put("InfoQuery", this.definition.getInfoQuery());
+        statistics.put("InfoDelete", this.definition.getInfoDelete());
+        statistics.put("InfoDump", this.definition.getInfoDump());
+        statistics.put("InfoOpen", this.definition.getInfoOpen());
+        statistics.put("InfoClose", this.definition.getInfoClose());
+        statistics.put("InfoRead", this.definition.getInfoRead());
+        statistics.put("InfoWrite", this.definition.getInfoWrite());
+        statistics.put("SharedReadCount", this.definition.getSharedReadCount());
+        statistics.put("SharedReadBytes", this.definition.getSharedReadBytes());
+        statistics.put("SharedWriteCount", this.definition.getSharedWriteCount());
+        statistics.put("SharedWriteBytes", this.definition.getSharedWriteBytes());
+        statistics.put("PortCount", this.definition.getPortCount());
+        statistics.put("PortReadCount", this.definition.getPortReadCount());
+        statistics.put("PortReadBytes", this.definition.getPortReadBytes());
+        statistics.put("PortWriteCount", this.definition.getPortWriteCount());
+        statistics.put("PortWriteBytes", this.definition.getPortWriteBytes());
+        statistics.put("SignalReadCount", this.definition.getSignalReadCount());
+        statistics.put("SignalWriteCount", this.definition.getSignalWriteCount());
+        statistics.put("IoCreate", this.definition.getIoCreate());
+        statistics.put("IoStatus", this.definition.getIoStatus());
+        statistics.put("IoReadCount", this.definition.getIoReadCount());
+        statistics.put("IoReadBytes", this.definition.getIoReadBytes());
+        statistics.put("IoWriteCount", this.definition.getIoWriteCount());
+        statistics.put("IoWriteBytes", this.definition.getIoWriteBytes());
 
         return CollectionUtil.unmodifiable(statistics);
     }
@@ -85,13 +68,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetInfoCreate(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetInfoCreate(value);
     }
 
     public void addInfoGet(long value) {
@@ -99,13 +76,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetInfoGet(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetInfoGet(value);
     }
 
     public void addInfoQuery(long value) {
@@ -113,13 +84,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetInfoQuery(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetInfoQuery(value);
     }
 
     public void addInfoDelete(long value) {
@@ -127,13 +92,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetInfoDelete(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetInfoDelete(value);
     }
 
     public void addInfoDump(long value) {
@@ -141,19 +100,11 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetInfoDump(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetInfoDump(value);
     }
 
     public long getInfoOpen() {
-        this.init();
-
-        return this.value.getInfoOpen();
+        return this.definition.getInfoOpen();
     }
 
     public void addInfoOpen(long value) {
@@ -161,13 +112,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetInfoOpen(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetInfoOpen(value);
     }
 
     public void addInfoClose(long value) {
@@ -175,13 +120,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetInfoClose(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetInfoClose(value);
     }
 
     public void addInfoRead(long value) {
@@ -189,13 +128,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetInfoRead(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetInfoRead(value);
     }
 
     public void addInfoWrite(long value) {
@@ -203,13 +136,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetInfoWrite(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetInfoWrite(value);
     }
 
     public void addSharedReadCount(long value) {
@@ -217,13 +144,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetSharedReadCount(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetSharedReadCount(value);
     }
 
     public void addSharedReadBytes(long value) {
@@ -231,13 +152,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetSharedReadBytes(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetSharedReadBytes(value);
     }
 
     public void addSharedWriteCount(long value) {
@@ -245,13 +160,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetSharedWriteCount(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetSharedWriteCount(value);
     }
 
     public void addSharedWriteBytes(long value) {
@@ -259,13 +168,10 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
 
-        this.value.offsetSharedWriteBytes(value);
+        this.definition.offsetSharedWriteBytes(value);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+
     }
 
     public void addPortCount(long value) {
@@ -273,13 +179,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetPortCount(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetPortCount(value);
     }
 
     public void addPortReadCount(long value) {
@@ -287,13 +187,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetPortReadCount(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetPortReadCount(value);
     }
 
     public void addPortReadBytes(long value) {
@@ -301,13 +195,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetPortReadBytes(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetPortReadBytes(value);
     }
 
     public void addPortWriteCount(long value) {
@@ -315,13 +203,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetPortWriteCount(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetPortWriteCount(value);
     }
 
     public void addPortWriteBytes(long value) {
@@ -329,13 +211,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetPortWriteBytes(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetPortWriteBytes(value);
     }
 
     public void addSignalReadCount(long value) {
@@ -343,13 +219,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetSignalReadCount(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetSignalReadCount(value);
     }
 
     public void addSignalWriteCount(long value) {
@@ -357,13 +227,10 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
 
-        this.value.offsetSignalWriteCount(value);
+        this.definition.offsetSignalWriteCount(value);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+
     }
 
     public void addIoCreate(long value) {
@@ -371,13 +238,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetIoCreate(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetIoCreate(value);
     }
 
     public void addIoStatus(long value) {
@@ -385,13 +246,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetIoStatus(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetIoStatus(value);
     }
 
     public void addIoReadCount(long value) {
@@ -399,13 +254,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetIoReadCount(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetIoReadCount(value);
     }
 
     public void addIoReadBytes(long value) {
@@ -413,13 +262,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetIoReadBytes(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetIoReadBytes(value);
     }
 
     public void addIoWriteCount(long value) {
@@ -427,13 +270,7 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetIoWriteCount(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetIoWriteCount(value);
     }
 
     public void addIoWriteBytes(long value) {
@@ -441,12 +278,6 @@ public class ThreadStatisticsObject extends AValueProcessObject<ThreadStatistics
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
-
-        this.value.offsetIoWriteBytes(value);
-
-        this.fresh();
-        this.unlock(LockType.WRITE);
+        this.definition.offsetIoWriteBytes(value);
     }
 }

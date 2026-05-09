@@ -26,10 +26,10 @@ public class ThreadManager extends AManager {
     @Override
     public void startup(long startup) {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
-            this.factory = this.factoryManager.create(ThreadFactory.class);
+            this.factory = this.coreManager.create(ThreadFactory.class);
             this.factory.init();
         } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
-            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
             this.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
         }
@@ -40,10 +40,10 @@ public class ThreadManager extends AManager {
     }
 
     public ThreadObject getCurrent() {
-        UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
+        UserSpaceDefinition userSpace = this.coreManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
 
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+        DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrentDateTime();
 
         if (ObjectUtil.isAnyNull(threads) || threads.isEmpty()) {
@@ -59,7 +59,7 @@ public class ThreadManager extends AManager {
     }
 
     public int size() {
-        UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
+        UserSpaceDefinition userSpace = this.coreManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
 
         return ObjectUtil.isAnyNull(threads) ? 0 : threads.size();
@@ -73,7 +73,7 @@ public class ThreadManager extends AManager {
         ThreadStatusObject threadStatus = thread.getStatus();
         threadStatus.running();
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessStatisticsObject processStatistics = process.getStatistics();
         processStatistics.addThreadCumulation(1);

@@ -8,7 +8,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class ProcessCommunicationDefinition extends ADefinition<ProcessCommunicationDefinition> {
+public class ProcessCommunicationDefinition extends ADefinition {
     public ProcessCommunicationDefinition() {
         this.shared = ArrayUtil.EMPTY_BYTES;
         this.portIDs = new HashSet<>();
@@ -52,46 +52,5 @@ public class ProcessCommunicationDefinition extends ADefinition<ProcessCommunica
         int result = Objects.hash(portIDs, signalID);
         result = 31 * result + Arrays.hashCode(shared);
         return result;
-    }
-
-    @Override
-    public ProcessCommunicationDefinition deepClone() {
-        ProcessCommunicationDefinition definition = new ProcessCommunicationDefinition();
-
-        definition.shared = ArrayUtil.copyBytes(this.shared);
-        definition.portIDs.addAll(this.portIDs);
-        definition.signalID = this.signalID;
-
-        return definition;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        this.shared = NumberUtil.readExternalBytes(in);
-
-        int valueInteger;
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.portIDs.add(UUIDUtil.readExternal(in));
-        }
-
-        this.signalID = UUIDUtil.readExternal(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        NumberUtil.writeExternalBytes(out, this.shared);
-
-        NumberUtil.writeExternalInteger(out, this.portIDs.size());
-        for (UUID pair : this.portIDs) {
-            UUIDUtil.writeExternal(out, pair);
-        }
-
-        UUIDUtil.writeExternal(out, this.signalID);
     }
 }

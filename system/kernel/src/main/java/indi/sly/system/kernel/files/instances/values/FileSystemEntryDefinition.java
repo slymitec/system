@@ -9,7 +9,7 @@ import java.io.ObjectOutput;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class FileSystemEntryDefinition extends ADefinition<FileSystemEntryDefinition> {
+public class FileSystemEntryDefinition extends ADefinition {
     public FileSystemEntryDefinition() {
     }
 
@@ -45,27 +45,5 @@ public class FileSystemEntryDefinition extends ADefinition<FileSystemEntryDefini
         int result = Objects.hash(type);
         result = 31 * result + Arrays.hashCode(value);
         return result;
-    }
-
-    @Override
-    public FileSystemEntryDefinition deepClone() {
-        FileSystemEntryDefinition definition = new FileSystemEntryDefinition();
-
-        definition.type = this.type;
-        definition.value = this.value;
-
-        return definition;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException {
-        this.type = NumberUtil.readExternalLong(in);
-        this.value = NumberUtil.readExternalBytes(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        NumberUtil.writeExternalLong(out, this.type);
-        NumberUtil.writeExternalBytes(out, this.value);
     }
 }

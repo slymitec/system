@@ -10,7 +10,7 @@ import java.io.ObjectOutput;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ProcessSessionDefinition extends ADefinition<ProcessSessionDefinition> {
+public class ProcessSessionDefinition extends ADefinition {
     private UUID sessionID;
     private boolean link;
 
@@ -41,31 +41,5 @@ public class ProcessSessionDefinition extends ADefinition<ProcessSessionDefiniti
     @Override
     public int hashCode() {
         return Objects.hash(sessionID, link);
-    }
-
-    @Override
-    public ProcessSessionDefinition deepClone() {
-        ProcessSessionDefinition definition = new ProcessSessionDefinition();
-
-        definition.sessionID = this.sessionID;
-        definition.link = this.link;
-
-        return definition;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        this.sessionID = UUIDUtil.readExternal(in);
-        this.link = NumberUtil.readExternalBoolean(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        UUIDUtil.writeExternal(out, this.sessionID);
-        NumberUtil.writeExternalBoolean(out, this.link);
     }
 }

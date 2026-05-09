@@ -25,26 +25,26 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SessionTypeInitializer extends AInfoTypeInitializer {
     @Override
-    public UUID getPoolID(UUID id, UUID type) {
-        return this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID;
+    public UUID getPoolId(UUID id, UUID type) {
+        return this.coreManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORY_ID;
     }
 
     @Override
     public void createProcedure(InfoEntity info) {
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+        UserManager userManager = this.coreManager.getManager(UserManager.class);
         AccountObject account = userManager.getCurrentAccount();
 
         SessionDefinition session = new SessionDefinition();
-        session.setAccountID(account.getID());
+        session.setAccountID(account.getId());
         info.setContent(ObjectUtil.transferToByteArray(session));
 
         AccountSessionsObject accountSessions = account.getSessions();
-        accountSessions.addSession(info.getID());
+        accountSessions.addSession(info.getId());
     }
 
     @Override
     public void deleteProcedure(InfoEntity info) {
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+        UserManager userManager = this.coreManager.getManager(UserManager.class);
 
         SessionDefinition session = ObjectUtil.transferFromByteArray(info.getContent());
         if(ObjectUtil.isNull(session)) {
@@ -53,16 +53,16 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
         AccountObject account = userManager.getAccount(session.getAccountID());
 
         AccountSessionsObject accountSessions = account.getSessions();
-        accountSessions.deleteSession(info.getID());
+        accountSessions.deleteSession(info.getId());
     }
 
     @Override
     public void openProcedure(InfoEntity info, InfoOpenDefinition infoOpen, Object[] arguments) {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
 
         ProcessSessionObject processSession = process.getSession();
-        if (!info.getID().equals(processSession.getID())) {
+        if (!info.getId().equals(processSession.getId())) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -70,17 +70,17 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
         if(ObjectUtil.isNull(session)) {
             throw new StatusUnreadableException();
         }
-        session.getProcessIDs().add(process.getID());
+        session.getProcessIDs().add(process.getId());
         info.setContent(ObjectUtil.transferToByteArray(session));
     }
 
     @Override
     public void closeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
 
         ProcessSessionObject processSession = process.getSession();
-        if (!info.getID().equals(processSession.getID())) {
+        if (!info.getId().equals(processSession.getId())) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -88,7 +88,7 @@ public class SessionTypeInitializer extends AInfoTypeInitializer {
         if(ObjectUtil.isNull(session)) {
             throw new StatusUnreadableException();
         }
-        session.getProcessIDs().remove(process.getID());
+        session.getProcessIDs().remove(process.getId());
         info.setContent(ObjectUtil.transferToByteArray(session));
     }
 

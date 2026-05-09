@@ -22,16 +22,16 @@ public class FileSystemManager extends AManager {
     @Override
     public void startup(long startup) {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
-            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
 
-            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
             long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_EXECUTED,
                     TypeInitializerAttributeType.CAN_BE_INHERITED, TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,
                     TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CONTENT,
                     TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
             Set<UUID> childTypes = Set.of();
-            AInfoTypeInitializer typeInitializer = this.factoryManager.create(FileSystemFileTypeInitializer.class);
+            AInfoTypeInitializer typeInitializer = this.coreManager.create(FileSystemFileTypeInitializer.class);
 
             typeManager.create(kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID,
                     kernelConfiguration.FILES_TYPES_INSTANCE_FILE_NAME, attribute, childTypes, typeInitializer);
@@ -41,7 +41,7 @@ public class FileSystemManager extends AManager {
                     TypeInitializerAttributeType.HAS_CHILD, TypeInitializerAttributeType.HAS_CONTENT,
                     TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
             childTypes = Set.of(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID);
-            typeInitializer = this.factoryManager.create(FileSystemFolderTypeInitializer.class);
+            typeInitializer = this.coreManager.create(FileSystemFolderTypeInitializer.class);
 
             typeManager.create(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
                     kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_NAME, attribute, childTypes, typeInitializer);

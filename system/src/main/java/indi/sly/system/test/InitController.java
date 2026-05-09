@@ -2,7 +2,7 @@ package indi.sly.system.test;
 
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -35,34 +35,34 @@ public class InitController extends AController {
         this.init();
 
         UserSpaceDefinition userSpace = new UserSpaceDefinition();
-        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
         kernelSpace.setUserSpace(userSpace);
-        this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+        this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
-        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         threadManager.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
 
         Map<String, Object> result = new HashMap<>();
 
         //--Start--
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
-        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files")));
+        InfoObject parentInfo = objectManager.get(List.of(new IdentifierDefinition("Files")));
 
         InfoWildcardDefinition wildcard = new InfoWildcardDefinition("Volume");
         Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentificationDefinition("Volume"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            InfoObject childInfo = parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierDefinition("Volume"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
             FileSystemFolderContentObject folderContent = (FileSystemFolderContentObject) childInfo.getContent();
             folderContent.setType(FileSystemLocationType.MAPPING);
             folderContent.setValue(StringUtil.writeToBytes("C:/Users/Sly/Desktop/SlySystem/Volume"));
             folderContent.close();
         }
 
-        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"), new IdentificationDefinition("Volume")));
+        parentInfo = objectManager.get(List.of(new IdentifierDefinition("Files"), new IdentifierDefinition("Volume")));
         String fn = request.getParameter("fn");
         if (ValueUtil.isAnyNullOrEmpty(fn)) {
             wildcard = new InfoWildcardDefinition("Test.bin");
@@ -72,13 +72,13 @@ public class InitController extends AController {
 
         infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID, new IdentificationDefinition("Test.bin"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            InfoObject childInfo = parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID, new IdentifierDefinition("Test.bin"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
             FileSystemFileContentObject fileContent = (FileSystemFileContentObject) childInfo.getContent();
             fileContent.write(StringUtil.writeToBytes("{\"id\":\"f912d8f2-37ed-4c11-88e0-cb4a6e7eb147\",\"supportedSession\":2,\"name\":\"测试程序\",\"serverURL\":\"http://1.2.3.4\",\"configurations\":{\"配置1\":\"数值1\",\"配置2\":\"数值2\"}}"));
             fileContent.close();
         } else {
             for (InfoSummaryDefinition infoSummary : infoSummaries) {
-                InfoObject childInfo = parentInfo.getChild(new IdentificationDefinition(infoSummary.getName()));
+                InfoObject childInfo = parentInfo.getChild(new IdentifierDefinition(infoSummary.getName()));
                 childInfo.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
                 FileSystemFileContentObject fileContent = (FileSystemFileContentObject) childInfo.getContent();
                 fileContent.write(StringUtil.writeToBytes(Long.toString(System.currentTimeMillis())));

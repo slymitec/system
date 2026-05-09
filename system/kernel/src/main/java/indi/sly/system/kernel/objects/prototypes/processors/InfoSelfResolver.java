@@ -14,12 +14,12 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoSelfResolver extends AInfoResolver {
     public InfoSelfResolver() {
-        this.info = (id, status) -> {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        this.info = (cache) -> {
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(status.getPoolID());
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(cache.getPoolId());
 
-            return infoRepository.get(id);
+            return infoRepository.get(cache.getInfoId());
         };
     }
 

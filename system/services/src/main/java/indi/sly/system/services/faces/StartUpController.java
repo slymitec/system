@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.kernel.core.FactoryManager;
+import indi.sly.system.kernel.core.CoreManager;
 import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -37,32 +37,32 @@ public class StartUpController extends AController {
     public UserContentResponseDefinition startup(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init();
 
-        if (ObjectUtil.isAnyNull(this.factoryManager)) {
-            this.factoryManager = SpringHelper.getInstance(FactoryManager.class);
+        if (ObjectUtil.isAnyNull(this.coreManager)) {
+            this.coreManager = SpringHelper.getInstance(CoreManager.class);
 
-            this.factoryManager.startup(StartupType.STEP_INIT_SELF);
-            this.factoryManager.startup(StartupType.STEP_AFTER_SELF);
+            this.coreManager.startup(StartupType.STEP_INIT_SELF);
+            this.coreManager.startup(StartupType.STEP_AFTER_SELF);
 
-            KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+            KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
             UserSpaceDefinition userSpace = new UserSpaceDefinition();
             userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
-            this.factoryManager.setUserSpace(userSpace);
-            this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+            this.coreManager.setUserSpace(userSpace);
+            this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
-            BootObject boot = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, BootObject.class);
-            FileSystemManager fileSystemManager = this.factoryManager.getManager(FileSystemManager.class);
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
-            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
-            UserManager userManager = this.factoryManager.getManager(UserManager.class);
+            BootObject boot = this.coreManager.getObjectCollection().getByClass(SpaceType.KERNEL, BootObject.class);
+            FileSystemManager fileSystemManager = this.coreManager.getManager(FileSystemManager.class);
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+            ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
+            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
+            UserManager userManager = this.coreManager.getManager(UserManager.class);
 
-            this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL, this.factoryManager.create(JobService.class));
+            this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL, this.coreManager.create(JobService.class));
 
-            JobService jobService = this.factoryManager.getService(JobService.class);
+            JobService jobService = this.coreManager.getService(JobService.class);
 
             Long[] startups = new Long[]{
                     StartupType.STEP_INIT_SELF,
@@ -86,7 +86,7 @@ public class StartUpController extends AController {
                 jobService.startup(startup);
             }
 
-            this.factoryManager.setUserSpace(null);
+            this.coreManager.setUserSpace(null);
 
             return new UserContentResponseDefinition();
         } else {

@@ -13,8 +13,6 @@ import java.util.concurrent.ConcurrentSkipListSet;
 @Singleton
 public class KernelSpaceDefinition extends ASpaceDefinition<KernelSpaceDefinition> {
     public KernelSpaceDefinition() {
-        this.kernelID = UUIDUtil.createRandom();
-
         this.configuration = new KernelConfigurationDefinition();
 
         this.infoTypeIDs = new ConcurrentSkipListSet<>();
@@ -22,16 +20,11 @@ public class KernelSpaceDefinition extends ASpaceDefinition<KernelSpaceDefinitio
         this.userSpace = new ThreadLocal<>();
     }
 
-    private final UUID kernelID;
-
-    public UUID getKernelID() {
-        return this.kernelID;
-    }
-
     private final KernelConfigurationDefinition configuration;
     private final Set<UUID> infoTypeIDs;
     private final ThreadLocal<UserSpaceDefinition> userSpace;
     private AKernelSpaceExtensionDefinition<?> serviceSpace;
+    private long systemTimeOffset;
 
     public KernelConfigurationDefinition getConfiguration() {
         return configuration;
@@ -59,5 +52,13 @@ public class KernelSpaceDefinition extends ASpaceDefinition<KernelSpaceDefinitio
 
     public void setServiceSpace(AKernelSpaceExtensionDefinition<?> serviceSpace) {
         this.serviceSpace = serviceSpace;
+    }
+
+    public long getSystemTimeOffset() {
+        return systemTimeOffset;
+    }
+
+    public void setSystemTimeOffset(long systemTimeOffset) {
+        this.systemTimeOffset = systemTimeOffset;
     }
 }

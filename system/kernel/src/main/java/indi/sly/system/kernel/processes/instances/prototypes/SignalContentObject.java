@@ -9,7 +9,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.values.SignalDefinition;
@@ -26,111 +26,72 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SignalContentObject extends AInfoContentObject {
-    public SignalContentObject() {
-        this.funcCustomRead = () -> this.signal = ObjectUtil.transferFromByteArray(this.value);
-        this.funcCustomWrite = () -> this.value = ObjectUtil.transferToByteArray(this.signal);
-    }
-
-    private SignalDefinition signal;
-
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
+public class SignalContentObject extends AInfoContentObject implements IByteValueProcess<SignalDefinition> {
     public Set<UUID> getSourceProcessIDs() {
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        SignalDefinition signal = this.init(this.read());
 
-            return CollectionUtil.unmodifiable(this.signal.getSourceProcessIDs());
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        return CollectionUtil.unmodifiable(signal.getSourceProcessIDs());
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {
         if (ObjectUtil.isAnyNull(sourceProcessIDs)) {
             throw new ConditionParametersException();
         }
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        SignalDefinition signal = this.init(this.read());
 
-            Set<UUID> signalSourceProcessIDs = this.signal.getSourceProcessIDs();
-            signalSourceProcessIDs.clear();
-            signalSourceProcessIDs.addAll(sourceProcessIDs);
+        Set<UUID> signalSourceProcessIDs = signal.getSourceProcessIDs();
+        signalSourceProcessIDs.clear();
+        signalSourceProcessIDs.addAll(sourceProcessIDs);
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        this.write(this.flush(signal));
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public long getLimit() {
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        SignalDefinition signal = this.init(this.read());
 
-            return this.signal.getLimit();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        return signal.getLimit();
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public List<SignalEntryDefinition> receive() {
-        List<SignalEntryDefinition> signalEntries;
+        SignalDefinition signal = this.init(this.read());
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        DateTimeObject dateTime = this.coreManager.getDateTime();
+        long nowDateTime = dateTime.getCurrentDateTime();
 
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
-            long nowDateTime = dateTime.getCurrentDateTime();
+        List<SignalEntryDefinition> signalEntries = signal.pollAll();
 
-            signalEntries = this.signal.pollAll();
+        this.write(this.flush(signal));
 
-            this.fresh();
-
-            for (SignalEntryDefinition signalEntry : signalEntries) {
-                signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
-            }
-        } finally {
-            this.unlock(LockType.WRITE);
+        for (SignalEntryDefinition signalEntry : signalEntries) {
+            signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
         }
 
         return CollectionUtil.unmodifiable(signalEntries);
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void send(long key, long value) {
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        SignalDefinition signal = this.init(this.read());
 
-            if (this.signal.size() >= this.signal.getLimit()) {
-                throw new StatusInsufficientResourcesException();
-            }
-
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrent();
-
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
-            long nowDateTime = dateTime.getCurrentDateTime();
-
-            SignalEntryDefinition signalEntry = new SignalEntryDefinition();
-            signalEntry.setSource(process.getID());
-            signalEntry.setKey(key);
-            signalEntry.setValue(value);
-            signalEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
-            signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
-
-            this.signal.add(signalEntry);
-
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
+        if (signal.size() >= signal.getLimit()) {
+            throw new StatusInsufficientResourcesException();
         }
+
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+
+        DateTimeObject dateTime = this.coreManager.getDateTime();
+        long nowDateTime = dateTime.getCurrentDateTime();
+
+        SignalEntryDefinition signalEntry = new SignalEntryDefinition();
+        signalEntry.setSource(process.getId());
+        signalEntry.setKey(key);
+        signalEntry.setValue(value);
+        signalEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
+        signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
+        signal.add(signalEntry);
+
+        this.write(this.flush(signal));
     }
 }

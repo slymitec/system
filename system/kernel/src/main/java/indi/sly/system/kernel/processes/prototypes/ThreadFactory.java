@@ -10,16 +10,20 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ThreadFactory extends AFactory {
-    public ThreadObject buildThread(UUID processID) {
-        ThreadObject thread = this.factoryManager.create(ThreadObject.class);
+    @Override
+    public void init() {
+    }
 
-        thread.setProcessID(processID);
+    public ThreadObject buildThread(UUID processID) {
+        ThreadObject thread = this.coreManager.create(ThreadObject.class);
+
+        thread.setProcessId(processID);
 
         return thread;
     }
 
     public ThreadBuilder createThread() {
-        ThreadBuilder threadBuilder = this.factoryManager.create(ThreadBuilder.class);
+        ThreadBuilder threadBuilder = this.coreManager.create(ThreadBuilder.class);
 
         threadBuilder.factory = this;
 

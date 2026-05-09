@@ -7,7 +7,7 @@ import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 import java.util.Map;
 import java.util.UUID;
 
-public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefinition> {
+public class KernelConfigurationDefinition extends ADefinition {
     public final long CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT = 16L;
 
     public final UUID FILES_TYPES_INSTANCE_FILE_ID
@@ -17,9 +17,10 @@ public class KernelConfigurationDefinition extends ADefinition<KernelSpaceDefini
             = UUIDUtil.getFormLongs(1916803478875881556L, -6711235423546474736L);
     public final String FILES_TYPES_INSTANCE_FOLDER_NAME = "Folder";
 
-    public final UUID MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID
+    public final UUID MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORY_ID
             = UUIDUtil.getFormLongs(8953595201274071621L, -4864294792184025833L);
 
+    public final int OBJECTS_INFO_PATH_MAX_DEPTH = 256;
     public final UUID OBJECTS_PROTOTYPE_ROOT_ID
             = UUIDUtil.getFormLongs(-6865430042473446686L, -4838027132975818569L);
     public final UUID OBJECTS_TYPES_INSTANCE_FOLDER_ID

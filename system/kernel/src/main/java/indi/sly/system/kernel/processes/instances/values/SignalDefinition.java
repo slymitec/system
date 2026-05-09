@@ -11,7 +11,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class SignalDefinition extends ADefinition<SignalDefinition> {
+public class SignalDefinition extends ADefinition {
     public SignalDefinition() {
         this.sourceProcessIDs = new HashSet<>();
         this.signalEntries = new ArrayList<>();
@@ -80,58 +80,5 @@ public class SignalDefinition extends ADefinition<SignalDefinition> {
     @Override
     public int hashCode() {
         return Objects.hash(processID, sourceProcessIDs, signalEntries, limit);
-    }
-
-    @Override
-    public SignalDefinition deepClone() {
-        SignalDefinition signal = new SignalDefinition();
-
-        signal.processID = this.processID;
-        signal.sourceProcessIDs.addAll(this.sourceProcessIDs);
-        for (SignalEntryDefinition signalEntry : this.signalEntries) {
-            signal.signalEntries.add(signalEntry.deepClone());
-        }
-        signal.limit = this.limit;
-
-        return signal;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        this.processID = UUIDUtil.readExternal(in);
-
-        int valueInteger;
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.sourceProcessIDs.add(UUIDUtil.readExternal(in));
-        }
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.signalEntries.add(ObjectUtil.readExternal(in));
-        }
-
-        this.limit = NumberUtil.readExternalInteger(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        UUIDUtil.writeExternal(out, this.processID);
-
-        NumberUtil.writeExternalInteger(out, this.sourceProcessIDs.size());
-        for (UUID pair : this.sourceProcessIDs) {
-            UUIDUtil.writeExternal(out, pair);
-        }
-
-        NumberUtil.writeExternalInteger(out, this.signalEntries.size());
-        for (SignalEntryDefinition pair : this.signalEntries) {
-            ObjectUtil.writeExternal(out, pair);
-        }
-
-        NumberUtil.writeExternalInteger(out, this.limit);
     }
 }

@@ -4,7 +4,7 @@ import indi.sly.system.common.values.ADefinition;
 
 import java.util.*;
 
-public class AccountAuthorizationTokenDefinition extends ADefinition<AccountAuthorizationTokenDefinition> {
+public class AccountAuthorizationTokenDefinition extends ADefinition {
     public AccountAuthorizationTokenDefinition() {
         this.limits = new HashMap<>();
         this.roles = new HashSet<>();

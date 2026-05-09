@@ -1,13 +1,14 @@
 package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 
 import java.util.List;
 import java.util.UUID;
 
-public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefinition> {
+public class ProcessCreatorDefinition extends ADefinition {
     public ProcessCreatorDefinition() {
         this.inheritSessionID = true;
     }
@@ -16,7 +17,7 @@ public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefiniti
     private boolean inheritSessionID;
     private UUID fileIndex;
     private String parameters;
-    private List<IdentificationDefinition> workFolder;
+    private PathDefinition workFolder;
 
     public AccountAuthorizationObject getAccountAuthorization() {
         return this.accountAuthorization;
@@ -50,11 +51,11 @@ public class ProcessCreatorDefinition extends ADefinition<ProcessCreatorDefiniti
         this.parameters = parameters;
     }
 
-    public List<IdentificationDefinition> getWorkFolder() {
+    public PathDefinition getWorkFolder() {
         return this.workFolder;
     }
 
-    public void setWorkFolder(List<IdentificationDefinition> workFolder) {
+    public void setWorkFolder(PathDefinition workFolder) {
         this.workFolder = workFolder;
     }
 }

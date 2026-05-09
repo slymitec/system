@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class SignalEntryDefinition extends ADefinition<SignalEntryDefinition> {
+public class SignalEntryDefinition extends ADefinition {
     public SignalEntryDefinition() {
         this.date = new HashMap<>();
     }
@@ -64,48 +64,5 @@ public class SignalEntryDefinition extends ADefinition<SignalEntryDefinition> {
     @Override
     public int hashCode() {
         return Objects.hash(source, key, value, date);
-    }
-
-    @Override
-    public SignalEntryDefinition deepClone() {
-        SignalEntryDefinition signal = new SignalEntryDefinition();
-
-        signal.source = this.source;
-        signal.key = this.key;
-        signal.value = this.value;
-        signal.date.putAll(this.date);
-
-        return signal;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        this.source = UUIDUtil.readExternal(in);
-        this.key = NumberUtil.readExternalLong(in);
-        this.value = NumberUtil.readExternalLong(in);
-
-        int valueInteger;
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.date.put(NumberUtil.readExternalLong(in), NumberUtil.readExternalLong(in));
-        }
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        UUIDUtil.writeExternal(out, this.source);
-        NumberUtil.writeExternalLong(out, this.key);
-        NumberUtil.writeExternalLong(out, this.value);
-
-        NumberUtil.writeExternalInteger(out, this.date.size());
-        for (Map.Entry<Long, Long> pair : this.date.entrySet()) {
-            NumberUtil.writeExternalLong(out, pair.getKey());
-            NumberUtil.writeExternalLong(out, pair.getValue());
-        }
     }
 }

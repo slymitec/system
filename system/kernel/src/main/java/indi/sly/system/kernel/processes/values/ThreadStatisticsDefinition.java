@@ -5,7 +5,7 @@ import indi.sly.system.common.values.ADefinition;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ThreadStatisticsDefinition extends ADefinition<ThreadStatisticsDefinition> {
+public class ThreadStatisticsDefinition extends ADefinition {
     public ThreadStatisticsDefinition() {
         this.date = new HashMap<>();
     }

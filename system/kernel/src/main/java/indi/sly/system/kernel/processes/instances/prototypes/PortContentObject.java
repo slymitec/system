@@ -8,6 +8,7 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.MethodScopeType;
+import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.instances.values.PortDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -20,84 +21,51 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class PortContentObject extends AInfoContentObject {
-    public PortContentObject() {
-        this.funcCustomRead = () -> this.port = ObjectUtil.transferFromByteArray(this.value);
-        this.funcCustomWrite = () -> this.value = ObjectUtil.transferToByteArray(this.port);
-    }
-
-    private PortDefinition port;
-
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
+public class PortContentObject extends AInfoContentObject implements IByteValueProcess<PortDefinition> {
     public Set<UUID> getSourceProcessIDs() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        PortDefinition port = this.init(this.read());
 
-            return CollectionUtil.unmodifiable(this.port.getSourceProcessIDs());
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return CollectionUtil.unmodifiable(port.getSourceProcessIDs());
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setSourceProcessIDs(Set<UUID> sourceProcessIDs) {
         if (ObjectUtil.isAnyNull(sourceProcessIDs)) {
             throw new ConditionParametersException();
         }
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        PortDefinition port = this.init(this.read());
 
-            Set<UUID> portSourceProcessIDs = this.port.getSourceProcessIDs();
-            portSourceProcessIDs.clear();
-            portSourceProcessIDs.addAll(sourceProcessIDs);
+        Set<UUID> portSourceProcessIDs = port.getSourceProcessIDs();
+        portSourceProcessIDs.clear();
+        portSourceProcessIDs.addAll(sourceProcessIDs);
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        this.write(this.flush(port));
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public byte[] receive() {
-        byte[] value;
+        PortDefinition port = this.init(this.read());
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        byte[] value = port.getValue();
+        port.setValue(ArrayUtil.EMPTY_BYTES);
 
-            value = this.port.getValue();
-            this.port.setValue(ArrayUtil.EMPTY_BYTES);
-
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        this.write(this.flush(port));
 
         return value;
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void send(byte[] value) {
         if (ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();
         }
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        PortDefinition port = this.init(this.read());
 
-            if (this.port.size() + value.length >= this.port.getLimit()) {
-                throw new StatusInsufficientResourcesException();
-            }
-
-            this.port.setValue(ArrayUtil.combineBytes(this.port.getValue(), value));
-
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
+        if (port.size() + value.length >= port.getLimit()) {
+            throw new StatusInsufficientResourcesException();
         }
+
+        port.setValue(ArrayUtil.combineBytes(port.getValue(), value));
+
+        this.write(this.flush(port));
     }
 }

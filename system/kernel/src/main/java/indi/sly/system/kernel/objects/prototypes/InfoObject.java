@@ -5,9 +5,12 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.prototypes.AObject;
+import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.kernel.core.prototypes.ACacheableObject;
+import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
@@ -18,7 +21,9 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
+import indi.sly.system.kernel.security.values.SecurityDescriptorCacheEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -28,23 +33,20 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoObject extends AObject {
+public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     protected InfoFactory factory;
     protected InfoProcessorMediator processorMediator;
 
-    protected UUID id;
-    protected InfoStatusDefinition status;
-
-    public UUID getID() {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
+    public UUID getId() {
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
-        return this.id;
+        return this.cache.getInfoId();
     }
 
     public UUID getType() {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
@@ -52,7 +54,7 @@ public class InfoObject extends AObject {
     }
 
     public long getOpened() {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
@@ -60,54 +62,52 @@ public class InfoObject extends AObject {
     }
 
     public String getName() {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
         return this.getSelf().getName();
     }
 
-    public List<IdentificationDefinition> getIdentifications() {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
+    public PathDefinition getPath() {
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
-        return CollectionUtil.unmodifiable(this.status.getIdentifications());
+        return this.cache.getPath();
     }
 
-    private synchronized InfoEntity getSelf() {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
+    private InfoEntity getSelf() {
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.id, this.status);
+        return this.processorMediator.getSelf().apply(this.cache);
     }
 
-    private synchronized UUID getIndex() {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
+    public UUID getIndex() {
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
-        ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(this.id);
+        ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(this.cache.getInfoId());
 
         return processInfoEntry.getIndex();
     }
 
-    public synchronized InfoObject getParent() {
-        this.getSelf();
-
-        if (this.status.getIdentifications().isEmpty()) {
+    public InfoObject getParent() {
+        if (this.cache.getPath().get().isEmpty()) {
             return null;
         } else {
-            return this.processorMediator.getParent().apply(this.status);
+            return this.processorMediator.getParent().apply(this.cache);
         }
     }
 
-    public synchronized Map<Long, Long> getDate() {
+    public Map<Long, Long> getDate() {
         InfoEntity info = this.getSelf();
 
         Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
@@ -115,42 +115,40 @@ public class InfoObject extends AObject {
         return CollectionUtil.unmodifiable(date);
     }
 
-    public synchronized SecurityDescriptorObject getSecurityDescriptor() {
+    public SecurityDescriptorObject getSecurityDescriptor() {
         InfoEntity info = this.getSelf();
 
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
         InfoProcessorSecurityDescriptorFunction resolver = this.processorMediator.getSecurityDescriptor();
 
-        if (ObjectUtil.isAnyNull(resolver)) {
-            throw new StatusDisabilityException();
-        }
+        SecurityDescriptorCacheEntity securityDescriptorCache = resolver.apply(info, type, this.cache);
 
-        return resolver.apply(info, type, this.status);
+        return this.factory.buildSecurityDescriptor(processorMediator, this, securityDescriptorCache);
     }
 
-    public synchronized DumpObject dump() {
+    public DumpObject dump() {
         InfoEntity info = this.getSelf();
 
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
         List<InfoProcessorDumpFunction> resolvers = this.processorMediator.getDumps();
 
-        DumpDefinition dump = new DumpDefinition();
+        DumpCacheEntity dumpCache = new DumpCacheEntity();
 
         for (InfoProcessorDumpFunction resolver : resolvers) {
-            dump = resolver.apply(dump, info, type, this.status);
+            dumpCache = resolver.apply(dumpCache, info, type, this.cache);
         }
 
-        return this.factory.buildDump(this, dump);
+        return this.factory.buildDump(dumpCache);
     }
 
-    public synchronized UUID open(long openAttribute, Object... arguments) {
+    public UUID open(long openAttribute, Object... arguments) {
         InfoEntity info = this.getSelf();
 
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
         AInfoTypeInitializer infoTypeInitializer = type.getInitializer();
 
@@ -162,7 +160,7 @@ public class InfoObject extends AObject {
             infoTypeInitializer.lockProcedure(info, LockType.WRITE);
 
             for (InfoProcessorOpenFunction resolver : resolvers) {
-                index = resolver.apply(index, info, type, this.status, openAttribute, arguments);
+                index = resolver.apply(index, info, type, this.cache, openAttribute, arguments);
                 if (ObjectUtil.isAnyNull(index)) {
                     throw new StatusUnexpectedException();
                 }
@@ -174,10 +172,10 @@ public class InfoObject extends AObject {
         return index;
     }
 
-    public synchronized void close() {
+    public void close() {
         InfoEntity info = this.getSelf();
 
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
         AInfoTypeInitializer infoTypeInitializer = type.getInitializer();
 
@@ -187,7 +185,7 @@ public class InfoObject extends AObject {
             infoTypeInitializer.lockProcedure(info, LockType.WRITE);
 
             for (InfoProcessorCloseFunction resolver : resolvers) {
-                info = resolver.apply(info, type, this.status);
+                info = resolver.apply(info, type, this.cache);
             }
         } finally {
             if (ObjectUtil.allNotNull(info)) {
@@ -196,107 +194,100 @@ public class InfoObject extends AObject {
         }
     }
 
-    public synchronized long getOpenAttribute() {
-        if (ValueUtil.isAnyNullOrEmpty(this.id)) {
+    public long getOpenAttribute() {
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-        if (!processInfoTable.containByID(this.id)) {
+        if (!processInfoTable.containById(this.cache.getInfoId())) {
             return InfoOpenAttributeType.CLOSE;
         } else {
-            ProcessInfoEntryObject processInfoTableEntry = processInfoTable.getByID(this.id);
+            ProcessInfoEntryObject processInfoTableEntry = processInfoTable.getById(this.cache.getInfoId());
 
             return processInfoTableEntry.getOpen().getAttribute();
         }
     }
 
-    public synchronized InfoObject createChildAndOpen(UUID type, IdentificationDefinition identification, long openAttribute, Object... arguments) {
-        if (ObjectUtil.isAnyNull(identification)) {
+    public InfoObject createChild(UUID childType, IdentifierDefinition identifier) {
+        if (ObjectUtil.isAnyNull(identifier)) {
             throw new ConditionParametersException();
-        }
-        if (ObjectUtil.isNull(arguments)) {
-            arguments = new Object[0];
         }
 
         InfoEntity info = this.getSelf();
 
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
-        TypeObject typeObject = typeManager.get(this.getType());
+        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
+        TypeObject type = typeManager.get(this.getType());
 
         List<InfoProcessorCreateChildFunction> resolvers = this.processorMediator.getCreateChildren();
 
         InfoEntity childInfo = null;
 
         for (InfoProcessorCreateChildFunction resolver : resolvers) {
-            childInfo = resolver.apply(childInfo, info, typeObject, this.status, type, identification);
+            childInfo = resolver.apply(childInfo, info, type, this.cache, childType, identifier);
         }
 
         if (ObjectUtil.isAnyNull(info)) {
             throw new StatusUnexpectedException();
         }
 
-        Object[] additionalArguments = arguments;
-        return this.factory.buildInfo(childInfo, this, additionalChildInfo -> {
-            additionalChildInfo.open(openAttribute, additionalArguments);
-            return additionalChildInfo;
-        });
+        return this.factory.buildInfo(childInfo, this.cache);
     }
 
-    public synchronized InfoObject getChild(IdentificationDefinition identification) {
-        if (ObjectUtil.isAnyNull(identification)) {
+    public InfoObject getChild(IdentifierDefinition identifier) {
+        if (ObjectUtil.isAnyNull(identifier)) {
             throw new ConditionParametersException();
         }
 
         InfoEntity info = this.getSelf();
 
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        List<InfoProcessorGetOrRebuildChildFunction> resolvers = this.processorMediator.getGetOrRebuildChildren();
+        List<InfoProcessorGetChildFunction> resolvers = this.processorMediator.getGetChildren();
 
         InfoEntity childInfo = null;
 
-        for (InfoProcessorGetOrRebuildChildFunction resolver : resolvers) {
-            childInfo = resolver.apply(childInfo, info, type, this.status, identification);
+        for (InfoProcessorGetChildFunction resolver : resolvers) {
+            childInfo = resolver.apply(childInfo, info, type, this.cache, identifier);
         }
 
         if (ObjectUtil.isAnyNull(childInfo)) {
             throw new StatusUnexpectedException();
         }
 
-        return this.factory.buildInfo(childInfo, this);
+        return this.factory.buildInfo(childInfo, this.cache);
     }
 
-    public synchronized void deleteChild(IdentificationDefinition identification) {
-        if (ObjectUtil.isAnyNull(identification)) {
+    public void deleteChild(IdentifierDefinition identifier) {
+        if (ObjectUtil.isAnyNull(identifier)) {
             throw new ConditionParametersException();
         }
 
         InfoEntity info = this.getSelf();
 
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
         List<InfoProcessorDeleteChildConsumer> resolvers = this.processorMediator.getDeleteChildren();
 
         for (InfoProcessorDeleteChildConsumer resolver : resolvers) {
-            resolver.accept(info, type, this.status, identification);
+            resolver.accept(info, type, this.cache, identifier);
         }
     }
 
-    public synchronized Set<InfoSummaryDefinition> queryChild(InfoWildcardDefinition wildcard) {
+    public Set<InfoSummaryDefinition> queryChild(InfoWildcardDefinition wildcard) {
         if (ObjectUtil.isAnyNull(wildcard)) {
             throw new ConditionParametersException();
         }
 
         InfoEntity info = this.getSelf();
 
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
         List<InfoProcessorQueryChildFunction> resolvers = this.processorMediator.getQueryChildren();
@@ -304,33 +295,33 @@ public class InfoObject extends AObject {
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
         for (InfoProcessorQueryChildFunction resolver : resolvers) {
-            infoSummaries = resolver.apply(infoSummaries, info, type, this.status, wildcard);
+            infoSummaries = resolver.apply(infoSummaries, info, type, this.cache, wildcard);
         }
 
         return infoSummaries;
     }
 
-    public synchronized void renameChild(IdentificationDefinition oldIdentification, IdentificationDefinition newIdentification) {
-        if (ObjectUtil.isAnyNull(oldIdentification, newIdentification)) {
+    public void renameChild(IdentifierDefinition oldIdentifier, IdentifierDefinition newIdentifier) {
+        if (ObjectUtil.isAnyNull(oldIdentifier, newIdentifier)) {
             throw new ConditionParametersException();
         }
 
         InfoEntity info = this.getSelf();
 
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
         List<InfoProcessorRenameChildConsumer> resolvers = this.processorMediator.getRenameChildren();
 
         for (InfoProcessorRenameChildConsumer resolver : resolvers) {
-            resolver.accept(info, type, this.status, oldIdentification, newIdentification);
+            resolver.accept(info, type, this.cache, oldIdentifier, newIdentifier);
         }
     }
 
-    public synchronized Map<String, String> readProperties() {
+    public Map<String, String> readProperties() {
         InfoEntity info = this.getSelf();
 
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
         List<InfoProcessorReadPropertyFunction> resolvers = this.processorMediator.getReadProperties();
@@ -338,64 +329,45 @@ public class InfoObject extends AObject {
         Map<String, String> properties = new HashMap<>();
 
         for (InfoProcessorReadPropertyFunction resolver : resolvers) {
-            properties = resolver.apply(properties, info, type, this.status);
+            properties = resolver.apply(properties, info, type, this.cache);
         }
 
         return CollectionUtil.unmodifiable(properties);
     }
 
-    public synchronized void writeProperties(Map<String, String> properties) {
+    public void writeProperties(Map<String, String> properties) {
         if (ObjectUtil.isAnyNull(properties)) {
             throw new ConditionParametersException();
         }
 
         InfoEntity info = this.getSelf();
 
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
         List<InfoProcessorWritePropertyConsumer> resolvers = this.processorMediator.getWriteProperties();
 
         for (InfoProcessorWritePropertyConsumer resolver : resolvers) {
-            resolver.accept(info, type, this.status, properties);
+            resolver.accept(info, type, this.cache, properties);
         }
     }
 
-    public synchronized AInfoContentObject getContent() {
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+    public AInfoContentObject getContent() {
+        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
 
-        AInfoContentObject content = type.getInitializer().getContentProcedure(this::getSelf, () -> {
-            InfoEntity info = this.getSelf();
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+        ProcessObject process = processManager.getCurrent();
+        ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            List<InfoProcessorReadContentFunction> resolvers = this.processorMediator.getReadContents();
+        InfoOpenDefinition infoOpen = null;
+        if (processInfoTable.containById(this.getId())) {
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(this.getId());
+            infoOpen = processInfoEntry.getOpen();
+        }
 
-            byte[] source = null;
+        Class<? extends AInfoContentObject> contentType = type.getInitializer().getContentTypeProcedure(this.getSelf(), infoOpen);
 
-            for (InfoProcessorReadContentFunction resolver : resolvers) {
-                source = resolver.apply(source, info, type, status);
-            }
-
-            return source;
-        }, (byte[] source) -> {
-            InfoEntity info = this.getSelf();
-
-            List<InfoProcessorWriteContentConsumer> resolvers = this.processorMediator.getWriteContents();
-
-            for (InfoProcessorWriteContentConsumer resolver : resolvers) {
-                resolver.accept(info, type, status, source);
-            }
-        }, () -> {
-            InfoEntity info = this.getSelf();
-
-            List<InfoProcessorExecuteContentConsumer> resolvers = this.processorMediator.getExecuteContents();
-
-            for (InfoProcessorExecuteContentConsumer resolver : resolvers) {
-                resolver.accept(info, type, status);
-            }
-        });
-        content.setParent(this);
-
-        return content;
+        return this.factory.buildInfoContent(processorMediator, this, contentType);
     }
 }

@@ -11,7 +11,6 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeI
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.instances.prototypes.processors.FolderTypeInitializer;
 import indi.sly.system.kernel.objects.instances.prototypes.processors.NamelessFolderTypeInitializer;
-import indi.sly.system.kernel.objects.prototypes.TypeBuilder;
 import indi.sly.system.kernel.objects.prototypes.TypeFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -26,20 +25,24 @@ import java.util.UUID;
 public class TypeManager extends AManager {
     protected TypeFactory factory;
 
+    public TypeFactory getFactory() {
+        return this.factory;
+    }
+
     @Override
     public void startup(long startup) {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
-            this.factory = this.factoryManager.create(TypeFactory.class);
+            this.factory = this.coreManager.create(TypeFactory.class);
             this.factory.init();
         } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
-            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
             long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_READ,
                     TypeInitializerAttributeType.CAN_NOT_CHANGE_OWNER, TypeInitializerAttributeType.HAS_AUDIT,
                     TypeInitializerAttributeType.HAS_CHILD, TypeInitializerAttributeType.HAS_CONTENT,
                     TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
             Set<UUID> childTypes = Set.of(UUIDUtil.getEmpty());
-            AInfoTypeInitializer typeInitializer = this.factoryManager.create(FolderTypeInitializer.class);
+            AInfoTypeInitializer typeInitializer = this.coreManager.create(FolderTypeInitializer.class);
 
             this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
                     kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_NAME, attribute, childTypes, typeInitializer);
@@ -50,7 +53,7 @@ public class TypeManager extends AManager {
                     TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
                     TypeInitializerAttributeType.HAS_PROPERTIES
             );
-            typeInitializer = this.factoryManager.create(NamelessFolderTypeInitializer.class);
+            typeInitializer = this.coreManager.create(NamelessFolderTypeInitializer.class);
 
             this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                     kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_NAME, attribute, childTypes, typeInitializer);
@@ -62,9 +65,7 @@ public class TypeManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        TypeObject type = this.factoryManager.getCoreObjectRepository().getByHandle(SpaceType.KERNEL, typeID);
-
-        return type;
+        return this.coreManager.getObjectCollection().getById(SpaceType.KERNEL, typeID);
     }
 
     public synchronized TypeObject create(UUID typeID, String typeName, long attribute, Set<UUID> childTypes,
@@ -73,9 +74,7 @@ public class TypeManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        TypeBuilder typeBuilder = this.factory.createType();
-
-        return typeBuilder.create(typeID, typeName, attribute, childTypes, typeInitializer);
+        return this.factory.buildType(typeID, typeName, attribute, childTypes, typeInitializer);
     }
 
     public synchronized void delete(UUID typeID) {
@@ -85,13 +84,11 @@ public class TypeManager extends AManager {
 
         TypeObject type = this.get(typeID);
 
-        TypeBuilder typeBuilder = this.factory.createType();
-
-        typeBuilder.delete(typeID, type);
+        this.factory.deleteType(typeID, type);
     }
 
     public Set<UUID> list() {
-        Set<UUID> infoTypeIDs = this.factoryManager.getKernelSpace().getInfoTypeIDs();
+        Set<UUID> infoTypeIDs = this.coreManager.getKernelSpace().getInfoTypeIDs();
 
         return CollectionUtil.unmodifiable(infoTypeIDs);
     }

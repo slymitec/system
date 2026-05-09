@@ -9,23 +9,23 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> {
+public class ProcessTokenDefinition extends ADefinition {
     public ProcessTokenDefinition() {
         this.limits = new HashMap<>();
         this.roles = new HashSet<>();
     }
 
-    private UUID accountID;
+    private UUID accountId;
     private long privileges;
     private final Map<Long, Integer> limits;
     private final Set<UUID> roles;
 
-    public UUID getAccountID() {
-        return this.accountID;
+    public UUID getAccountId() {
+        return this.accountId;
     }
 
-    public void setAccountID(UUID accountID) {
-        this.accountID = accountID;
+    public void setAccountId(UUID accountId) {
+        this.accountId = accountId;
     }
 
     public long getPrivileges() {
@@ -50,64 +50,13 @@ public class ProcessTokenDefinition extends ADefinition<ProcessTokenDefinition> 
         if (o == null || getClass() != o.getClass()) return false;
         ProcessTokenDefinition that = (ProcessTokenDefinition) o;
         return privileges == that.privileges &&
-                Objects.equals(accountID, that.accountID) &&
+                Objects.equals(accountId, that.accountId) &&
                 limits.equals(that.limits) &&
                 roles.equals(that.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountID, privileges, limits, roles);
-    }
-
-    @Override
-    public ProcessTokenDefinition deepClone() {
-        ProcessTokenDefinition definition = new ProcessTokenDefinition();
-
-        definition.accountID = this.accountID;
-        definition.privileges = this.privileges;
-        definition.limits.putAll(this.limits);
-        definition.roles.addAll(this.roles);
-
-        return definition;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        this.accountID = UUIDUtil.readExternal(in);
-        this.privileges = NumberUtil.readExternalLong(in);
-
-        int valueInteger;
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.limits.put(NumberUtil.readExternalLong(in), NumberUtil.readExternalInteger(in));
-        }
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.roles.add(UUIDUtil.readExternal(in));
-        }
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        UUIDUtil.writeExternal(out, this.accountID);
-        NumberUtil.writeExternalLong(out, this.privileges);
-
-        NumberUtil.writeExternalInteger(out, this.limits.size());
-        for (Map.Entry<Long, Integer> pair : this.limits.entrySet()) {
-            NumberUtil.writeExternalLong(out, pair.getKey());
-            NumberUtil.writeExternalInteger(out, pair.getValue());
-        }
-
-        NumberUtil.writeExternalInteger(out, this.roles.size());
-        for (UUID pair : this.roles) {
-            UUIDUtil.writeExternal(out, pair);
-        }
+        return Objects.hash(accountId, privileges, limits, roles);
     }
 }

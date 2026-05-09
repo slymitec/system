@@ -2,20 +2,19 @@ package indi.sly.system.kernel.core.boot.prototypes.processors;
 
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.boot.lang.BootStartConsumer;
 import indi.sly.system.kernel.core.boot.prototypes.wrappers.BootProcessorMediator;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
@@ -32,22 +31,22 @@ import java.util.*;
 public class BootObjectsResolver extends ABootResolver {
     public BootObjectsResolver() {
         this.start = (startup) -> {
-            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+            ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
             if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
-                AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID);
+                AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORY_ID);
 
                 if (!infoRepository.contain(kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID)) {
                     InfoEntity info = new InfoEntity();
 
-                    info.setID(kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
+                    info.setId(kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
                     info.setType(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID);
                     info.setOpened(0L);
 
-                    DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+                    DateTimeObject dateTime = this.coreManager.getDateTime();
                     long nowDateTime = dateTime.getCurrentDateTime();
 
                     Map<Long, Long> date = new HashMap<>();
@@ -61,20 +60,17 @@ public class BootObjectsResolver extends ABootResolver {
                     securityDescriptor.setInherit(false);
                     securityDescriptor.setHasChild(true);
                     AccessControlDefinition permission = new AccessControlDefinition();
-                    permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_SYSTEMS_ID);
-                    permission.getUserID().setType(UserType.GROUP);
+                    permission.setUserId(new UserIDDefinition(kernelConfiguration.SECURITY_GROUP_SYSTEMS_ID, UserType.GROUP));
                     permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(PermissionType.FULLCONTROL_ALLOW);
                     securityDescriptor.getPermissions().add(permission);
                     permission = new AccessControlDefinition();
-                    permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_ADMINISTRATORS_ID);
-                    permission.getUserID().setType(UserType.GROUP);
+                    permission.setUserId(new UserIDDefinition(kernelConfiguration.SECURITY_GROUP_ADMINISTRATORS_ID, UserType.GROUP));
                     permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
                     securityDescriptor.getPermissions().add(permission);
                     permission = new AccessControlDefinition();
-                    permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_USERS_ID);
-                    permission.getUserID().setType(UserType.GROUP);
+                    permission.setUserId(new UserIDDefinition(kernelConfiguration.SECURITY_GROUP_USERS_ID, UserType.GROUP));
                     permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.READPROPERTIES_ALLOW));
                     securityDescriptor.getPermissions().add(permission);
@@ -86,7 +82,7 @@ public class BootObjectsResolver extends ABootResolver {
                     infoRepository.add(info);
                 }
             } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_AFTER_KERNEL)) {
-                InfoObject rootInfo = objectManager.get(List.of());
+                InfoObject rootInfo = objectManager.get(new PathDefinition(List.of()));
                 Set<InfoSummaryDefinition> infoSummaries;
 
                 String[] childFolderNames = new String[]{"Audits", "Files", "Sessions"};
@@ -96,9 +92,7 @@ public class BootObjectsResolver extends ABootResolver {
                     infoSummaries = rootInfo.queryChild(new InfoWildcardDefinition(childFolderNames[i]));
 
                     if (infoSummaries.isEmpty()) {
-                        InfoObject childInfo = rootInfo.createChildAndOpen(childFolderTypes[i], new IdentificationDefinition(childFolderNames[i]), InfoOpenAttributeType.OPEN_EXCLUSIVE);
-
-                        childInfo.close();
+                        rootInfo.createChild(childFolderTypes[i], new IdentifierDefinition(childFolderNames[i]));
                     }
                 }
 
@@ -109,81 +103,67 @@ public class BootObjectsResolver extends ABootResolver {
                     infoSummaries = rootInfo.queryChild(new InfoWildcardDefinition(childFolderNames[i]));
 
                     if (infoSummaries.isEmpty()) {
-                        InfoObject childInfo = rootInfo.createChildAndOpen(childFolderTypes[i], new IdentificationDefinition(childFolderNames[i]), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                        InfoObject childInfo = rootInfo.createChild(childFolderTypes[i], new IdentifierDefinition(childFolderNames[i]));
 
                         SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                         Set<AccessControlDefinition> permissions = new HashSet<>();
                         AccessControlDefinition permission = new AccessControlDefinition();
-                        permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_USERS_ID);
-                        permission.getUserID().setType(UserType.GROUP);
+                        permission.setUserId(new UserIDDefinition(kernelConfiguration.SECURITY_GROUP_USERS_ID, UserType.GROUP));
                         permission.setScope(AccessControlScopeType.ALL);
                         permission.setValue(PermissionType.DELETECHILD_ALLOW);
                         permissions.add(permission);
                         auditSecurityDescriptor.setPermissions(permissions);
-
-                        childInfo.close();
                     }
                 }
 
-                InfoObject parentInfo = rootInfo.getChild(new IdentificationDefinition("Sessions"));
+                InfoObject parentInfo = rootInfo.getChild(new IdentifierDefinition("Sessions"));
                 InfoWildcardDefinition wildcard = new InfoWildcardDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME);
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
-                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentificationDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME));
 
                     SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                     Set<AccessControlDefinition> permissions = new HashSet<>();
                     AccessControlDefinition permission = new AccessControlDefinition();
-                    permission.getUserID().setID(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
-                    permission.getUserID().setType(UserType.ACCOUNT);
+                    permission.setUserId(new UserIDDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID, UserType.ACCOUNT));
                     permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
                     permissions.add(permission);
-                    permission.getUserID().setID(kernelConfiguration.SECURITY_GROUP_USERS_ID);
-                    permission.getUserID().setType(UserType.GROUP);
+                    permission.setUserId(new UserIDDefinition(kernelConfiguration.SECURITY_GROUP_USERS_ID, UserType.GROUP));
                     permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(PermissionType.DELETECHILD_ALLOW);
                     permissions.add(permission);
                     auditSecurityDescriptor.setPermissions(permissions);
                     auditSecurityDescriptor.setInherit(true);
-
-                    childInfo.close();
                 }
 
-                parentInfo = rootInfo.getChild(new IdentificationDefinition("Audits"));
+                parentInfo = rootInfo.getChild(new IdentifierDefinition("Audits"));
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
-                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentificationDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+                    InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME));
 
                     SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                     Set<AccessControlDefinition> permissions = new HashSet<>();
                     AccessControlDefinition permission = new AccessControlDefinition();
-                    permission.getUserID().setID(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
-                    permission.getUserID().setType(UserType.ACCOUNT);
+                    permission.setUserId(new UserIDDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID, UserType.ACCOUNT));
                     permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
                     permissions.add(permission);
                     auditSecurityDescriptor.setPermissions(permissions);
                     auditSecurityDescriptor.setInherit(false);
-
-                    childInfo.close();
                 }
 
-                parentInfo = rootInfo.getChild(new IdentificationDefinition("Files"));
+                parentInfo = rootInfo.getChild(new IdentifierDefinition("Files"));
                 wildcard = new InfoWildcardDefinition("Main");
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
-                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentificationDefinition("Main"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
-
-                    childInfo.close();
+                    parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierDefinition("Main"));
                 }
-                parentInfo = parentInfo.getChild(new IdentificationDefinition("Main"));
+                parentInfo = parentInfo.getChild(new IdentifierDefinition("Main"));
                 wildcard = new InfoWildcardDefinition("Home");
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
-                    InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentificationDefinition("Home"), InfoOpenAttributeType.OPEN_EXCLUSIVE);
-
-                    childInfo.close();
+                    parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierDefinition("Home"));
                 }
             }
         };

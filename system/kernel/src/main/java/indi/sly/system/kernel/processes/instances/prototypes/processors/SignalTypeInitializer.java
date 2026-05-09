@@ -21,19 +21,19 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SignalTypeInitializer extends AInfoTypeInitializer {
     @Override
-    public UUID getPoolID(UUID id, UUID type) {
-        return this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID;
+    public UUID getPoolId(UUID id, UUID type) {
+        return this.coreManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORY_ID;
     }
 
     @Override
     public void createProcedure(InfoEntity info) {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
         SignalDefinition signal = new SignalDefinition();
 
-        signal.setProcessID(process.getID());
+        signal.setProcessID(process.getId());
         signal.setLimit(processToken.getLimits().get(ProcessTokenLimitType.SIGNAL_LENGTH_MAX));
 
         info.setContent(ObjectUtil.transferToByteArray(signal));

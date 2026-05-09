@@ -3,7 +3,7 @@ package indi.sly.system.kernel.security.values;
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.kernel.security.lang.PermissionCustomPredicate;
 
-public class PermissionQueryDefinition extends ADefinition<PermissionQueryDefinition> {
+public class PermissionQueryDefinition extends ADefinition {
     public PermissionQueryDefinition() {
         this.privilege = true;
         this.role = true;

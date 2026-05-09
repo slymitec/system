@@ -5,13 +5,14 @@ import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.AIndependentValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.UserManager;
+import indi.sly.system.kernel.security.values.AccountCacheEntity;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.GroupEntity;
 import indi.sly.system.kernel.security.values.PrivilegeType;
@@ -24,78 +25,74 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AccountObject extends AIndependentValueProcessObject<AccountEntity> {
-    public UUID getID() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+public class AccountObject extends ACacheableObject<AccountCacheEntity> {
+    protected UserFactory factory;
 
-            return this.value.getID();
-        } finally {
-            this.unlock(LockType.READ);
-        }
+    private AccountEntity getSelf() {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
+
+        return accountGroupRepository.getAccount(this.cache.getAccountId());
+    }
+
+    public UUID getId() {
+        return this.cache.getAccountId();
     }
 
     public String getName() {
         try {
-            this.lock(LockType.READ);
-            this.init();
+            this.factory.lockAccount(this.cache, LockType.READ);
 
-            return this.value.getName();
+            return this.getSelf().getName();
         } finally {
-            this.unlock(LockType.READ);
+            this.factory.unlockAccount(this.cache, LockType.READ);
         }
     }
 
     public String getPassword() {
         try {
-            this.lock(LockType.READ);
-            this.init();
+            this.factory.lockAccount(this.cache, LockType.READ);
 
-            return this.value.getPassword();
+            return this.getSelf().getPassword();
         } finally {
-            this.unlock(LockType.READ);
+            this.factory.unlockAccount(this.cache, LockType.READ);
         }
     }
 
     public void setPassword(String password) {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
-        if (!processToken.getAccountID().equals(this.getID())
+        if (!processToken.getAccountId().equals(this.getId())
                 && !processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
             throw new ConditionRefuseException();
         }
 
         try {
-            this.lock(LockType.WRITE);
-            this.init();
+            this.factory.lockAccount(this.cache, LockType.WRITE);
 
-            this.value.setPassword(password);
-
-            this.fresh();
+            this.getSelf().setPassword(password);
         } finally {
-            this.unlock(LockType.WRITE);
+            this.factory.unlockAccount(this.cache, LockType.WRITE);
         }
     }
 
     public Set<GroupObject> getGroups() {
-        UserManager userManager = this.factoryManager.getManager(UserManager.class);
+        UserManager userManager = this.coreManager.getManager(UserManager.class);
 
         try {
-            this.lock(LockType.READ);
-            this.init();
+            this.factory.lockAccount(this.cache, LockType.READ);
 
             Set<GroupObject> groups = new HashSet<>();
 
-            for (GroupEntity group : this.value.getGroups()) {
-                groups.add(userManager.getGroup(group.getID()));
+            for (GroupEntity group : this.getSelf().getGroups()) {
+                groups.add(userManager.getGroup(group.getId()));
             }
 
             return CollectionUtil.unmodifiable(groups);
         } finally {
-            this.unlock(LockType.READ);
+            this.factory.unlockAccount(this.cache, LockType.READ);
         }
     }
 
@@ -104,8 +101,8 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
             throw new ConditionParametersException();
         }
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
@@ -117,54 +114,29 @@ public class AccountObject extends AIndependentValueProcessObject<AccountEntity>
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         try {
-            this.lock(LockType.WRITE);
-            this.init();
+            this.factory.lockAccount(this.cache, LockType.WRITE);
 
-            if (ObjectUtil.isAnyNull(this.value.getGroups())) {
-                this.value.setGroups(new ArrayList<>());
+            AccountEntity account = this.getSelf();
+
+            if (ObjectUtil.isAnyNull(account.getGroups())) {
+                account.setGroups(new ArrayList<>());
             } else {
-                this.value.getGroups().clear();
+                account.getGroups().clear();
             }
 
             for (GroupObject group : groups) {
-                this.value.getGroups().add(userRepository.getGroup(group.getID()));
+                account.getGroups().add(userRepository.getGroup(group.getId()));
             }
-
-            this.fresh();
         } finally {
-            this.unlock(LockType.WRITE);
+            this.factory.unlockAccount(this.cache, LockType.WRITE);
         }
     }
 
     public AccountTokenObject getToken() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            AccountTokenObject accountToken = this.factoryManager.create(AccountTokenObject.class);
-
-            accountToken.setParent(this);
-            accountToken.setSource(this.value::getToken, this.value::setToken);
-
-            return accountToken;
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return this.factory.buildAccountToken(this);
     }
 
     public AccountSessionsObject getSessions() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            AccountSessionsObject accountSessions = this.factoryManager.create(AccountSessionsObject.class);
-
-            accountSessions.setParent(this);
-            accountSessions.setSource(this.value::getSessions, this.value::setSessions);
-
-            return accountSessions;
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return this.factory.buildAccountSessions(this);
     }
 }

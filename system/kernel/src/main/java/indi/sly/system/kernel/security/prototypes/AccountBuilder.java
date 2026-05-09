@@ -40,15 +40,15 @@ public class AccountBuilder extends ABuilder {
             throw new ConditionRefuseException();
         }
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         AccountEntity account = new AccountEntity();
-        account.setID(UUID.randomUUID());
+        account.setId(UUID.randomUUID());
         account.setName(accountName);
         account.setPassword(accountPassword);
         UserTokenDefinition userToken = new UserTokenDefinition();
-        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
         userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
         account.setToken(ObjectUtil.transferToByteArray(userToken));
         account.setSessions(ObjectUtil.transferToByteArray(new AccountSessionsDefinition()));
@@ -61,7 +61,7 @@ public class AccountBuilder extends ABuilder {
             userRepository.add(account);
         }
 
-        return this.factory.buildAccount(account.getID());
+        return this.factory.buildAccount(account.getId());
     }
 
     public void delete(UUID accountID) {
@@ -73,7 +73,7 @@ public class AccountBuilder extends ABuilder {
             throw new ConditionRefuseException();
         }
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         AccountEntity account = userRepository.getAccount(accountID);

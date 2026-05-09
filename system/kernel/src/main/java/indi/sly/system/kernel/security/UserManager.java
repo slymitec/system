@@ -8,7 +8,8 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -19,7 +20,6 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -43,23 +43,27 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserManager extends AManager {
-    protected UserFactory factory;
+    private UserFactory factory;
+
+    public UserFactory getFactory() {
+        return factory;
+    }
 
     @Override
     public void startup(long startup) {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
-            this.factory = this.factoryManager.create(UserFactory.class);
+            this.factory = this.coreManager.create(UserFactory.class);
             this.factory.init();
         } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
-            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
 
-            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
             long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_READ,
                     TypeInitializerAttributeType.CAN_NOT_CHANGE_OWNER, TypeInitializerAttributeType.HAS_CONTENT,
                     TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
             Set<UUID> childTypes = Set.of();
-            AInfoTypeInitializer typeInitializer = this.factoryManager.create(AuditTypeInitializer.class);
+            AInfoTypeInitializer typeInitializer = this.coreManager.create(AuditTypeInitializer.class);
 
             typeManager.create(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID, kernelConfiguration.SECURITY_INSTANCE_AUDIT_NAME, attribute, childTypes, typeInitializer);
         }
@@ -74,7 +78,7 @@ public class UserManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         if (!userRepository.containAccount(accountID)) {
@@ -89,21 +93,21 @@ public class UserManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         AccountEntity account = userRepository.getAccount(accountName);
 
-        return this.factory.buildAccount(account.getID());
+        return this.factory.buildAccount(account.getId());
     }
 
     public AccountObject getCurrentAccount() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
-        return this.getTargetAccount(processToken.getAccountID());
+        return this.getTargetAccount(processToken.getAccountId());
     }
 
     public AccountObject getAccount(UUID accountID) {
@@ -113,10 +117,10 @@ public class UserManager extends AManager {
 
         AccountObject currentAccount = this.getCurrentAccount();
 
-        if (currentAccount.getID().equals(accountID)) {
+        if (currentAccount.getId().equals(accountID)) {
             return currentAccount;
         } else {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ProcessTokenObject processToken = process.getToken();
@@ -141,7 +145,7 @@ public class UserManager extends AManager {
         if (currentAccount.getName().equals(accountName)) {
             return currentAccount;
         } else {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ProcessTokenObject processToken = process.getToken();
@@ -150,7 +154,7 @@ public class UserManager extends AManager {
 
             AccountObject account = this.getTargetAccount(accountName);
 
-            if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT) || !account.getID().equals(processSessionContent.getAccountID())) {
+            if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT) || !account.getId().equals(processSessionContent.getAccountID())) {
                 throw new ConditionRefuseException();
             }
 
@@ -163,7 +167,7 @@ public class UserManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         if (!userRepository.containGroup(groupID)) {
@@ -178,12 +182,12 @@ public class UserManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
         GroupEntity group = userRepository.getGroup(groupName);
 
-        return this.factory.buildGroup(group.getID());
+        return this.factory.buildGroup(group.getId());
     }
 
     public AccountObject createAccount(String accountName, String accountPassword) {
@@ -191,48 +195,42 @@ public class UserManager extends AManager {
 
         AccountObject account = accountBuilder.create(accountName, accountPassword);
 
-        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
         InfoWildcardDefinition wildcard = new InfoWildcardDefinition(account.getName());
 
-        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
+        InfoObject parentInfo = objectManager.get(new PathDefinition(List.of(new IdentifierDefinition("Audits"))));
         Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierDefinition(account.getName()));
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
-            permission.getUserID().setID(account.getID());
-            permission.getUserID().setType(UserType.ACCOUNT);
+            permission.setUserId(new UserIDDefinition(account.getId(), UserType.ACCOUNT));
             permission.setScope(AccessControlScopeType.ALL);
             permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
             auditSecurityDescriptor.setInherit(false);
-
-            childInfo.close();
         }
 
-        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"), new IdentificationDefinition("Main"), new IdentificationDefinition("Home")));
+        parentInfo = objectManager.get(new PathDefinition(List.of(new IdentifierDefinition("Files"), new IdentifierDefinition("Main"), new IdentifierDefinition("Home"))));
         infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChildAndOpen(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentificationDefinition(account.getName()), InfoOpenAttributeType.OPEN_EXCLUSIVE);
+            InfoObject childInfo = parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierDefinition(account.getName()));
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
-            permission.getUserID().setID(account.getID());
-            permission.getUserID().setType(UserType.ACCOUNT);
+            permission.setUserId(new UserIDDefinition(account.getId(), UserType.ACCOUNT));
             permission.setScope(AccessControlScopeType.ALL);
             permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
             auditSecurityDescriptor.setInherit(false);
-
-            childInfo.close();
         }
 
         return account;
@@ -254,28 +252,6 @@ public class UserManager extends AManager {
             throw new StatusRelationshipErrorException();
         }
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-
-        InfoWildcardDefinition infoQueryChildWildcard = new InfoWildcardDefinition(account.getName());
-
-        InfoObject parentInfo = objectManager.get(List.of(new IdentificationDefinition("Audits")));
-        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(infoQueryChildWildcard);
-        if (!infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.getChild(new IdentificationDefinition(account.getName()));
-
-            infoSummaries = childInfo.queryChild(new InfoWildcardDefinition());
-            for (InfoSummaryDefinition auditInfoSummary : infoSummaries) {
-                childInfo.deleteChild(new IdentificationDefinition(auditInfoSummary.getID()));
-            }
-            parentInfo.deleteChild(new IdentificationDefinition(account.getID()));
-        }
-
-        parentInfo = objectManager.get(List.of(new IdentificationDefinition("Files"), new IdentificationDefinition("Main"), new IdentificationDefinition("Home")));
-        infoSummaries = parentInfo.queryChild(infoQueryChildWildcard);
-        if (!infoSummaries.isEmpty()) {
-            parentInfo.renameChild(new IdentificationDefinition(account.getName()), new IdentificationDefinition(account.getName() + "_Deleted"));
-        }
-
         accountBuilder.delete(accountID);
     }
 
@@ -290,7 +266,7 @@ public class UserManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
@@ -300,11 +276,7 @@ public class UserManager extends AManager {
             throw new ConditionRefuseException();
         }
 
-        AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
-
-        accountAuthorization.setAccount(() -> this.getTargetAccount(account.getID()), account.getPassword());
-
-        return accountAuthorization;
+        return this.factory.buildAccountAuthorization(account, account.getPassword(), processToken, null);
     }
 
     public AccountAuthorizationObject authorize(String accountName, String accountPassword) {
@@ -319,7 +291,7 @@ public class UserManager extends AManager {
             accountPassword = StringUtil.EMPTY;
         }
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
@@ -329,13 +301,6 @@ public class UserManager extends AManager {
             throw new ConditionRefuseException();
         }
 
-        AccountAuthorizationObject accountAuthorization = this.factoryManager.create(AccountAuthorizationObject.class);
-
-        accountAuthorization.setAccount(() -> this.getTargetAccount(account.getID()), account.getPassword());
-        if (ObjectUtil.allNotNull(accountAuthorizationToken)) {
-            accountAuthorization.setToken(processToken, accountAuthorizationToken);
-        }
-
-        return accountAuthorization;
+        return this.factory.buildAccountAuthorization(account, account.getPassword(), processToken, accountAuthorizationToken);
     }
 }

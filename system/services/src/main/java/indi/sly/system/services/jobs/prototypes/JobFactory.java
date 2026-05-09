@@ -41,17 +41,17 @@ public class JobFactory extends AFactory {
 
     @Override
     public void init() {
-        this.taskResolvers.add(this.factoryManager.create(TaskCheckConditionResolver.class));
-        this.taskResolvers.add(this.factoryManager.create(TaskContentResolver.class));
-        this.taskResolvers.add(this.factoryManager.create(TaskDateResolver.class));
-        this.taskResolvers.add(this.factoryManager.create(TaskInitializerResolver.class));
-        this.taskResolvers.add(this.factoryManager.create(TaskProcessAndThreadResolver.class));
-        this.taskResolvers.add(this.factoryManager.create(TaskStatusRuntimeResolver.class));
+        this.taskResolvers.add(this.coreManager.create(TaskCheckConditionResolver.class));
+        this.taskResolvers.add(this.coreManager.create(TaskContentResolver.class));
+        this.taskResolvers.add(this.coreManager.create(TaskDateResolver.class));
+        this.taskResolvers.add(this.coreManager.create(TaskInitializerResolver.class));
+        this.taskResolvers.add(this.coreManager.create(TaskProcessAndThreadResolver.class));
+        this.taskResolvers.add(this.coreManager.create(TaskStatusRuntimeResolver.class));
 
-        this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateContentResolver.class));
-        this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateProcessAndThreadResolver.class));
-        this.userContextCreateResolvers.add(this.factoryManager.create(UserContextCreateProcessIDVerificationResolver.class));
-        this.userContextFinishResolvers.add(this.factoryManager.create(UserContextFinishProcessAndThreadResolver.class));
+        this.userContextCreateResolvers.add(this.coreManager.create(UserContextCreateContentResolver.class));
+        this.userContextCreateResolvers.add(this.coreManager.create(UserContextCreateProcessAndThreadResolver.class));
+        this.userContextCreateResolvers.add(this.coreManager.create(UserContextCreateProcessIDVerificationResolver.class));
+        this.userContextFinishResolvers.add(this.coreManager.create(UserContextFinishProcessAndThreadResolver.class));
 
         Collections.sort(this.taskResolvers);
         Collections.sort(this.userContextCreateResolvers);
@@ -60,7 +60,7 @@ public class JobFactory extends AFactory {
 
     private TaskObject buildTask(TaskProcessorMediator processorMediator, Provider<TaskDefinition> funcRead,
                                  Consumer1<TaskDefinition> funcWrite) {
-        TaskObject task = this.factoryManager.create(TaskObject.class);
+        TaskObject task = this.coreManager.create(TaskObject.class);
 
         task.setSource(funcRead, funcWrite);
         ReadWriteLock reentrantLock = new ReentrantReadWriteLock();
@@ -90,7 +90,7 @@ public class JobFactory extends AFactory {
             throw new ConditionParametersException();
         }
 
-        TaskProcessorMediator processorMediator = this.factoryManager.create(TaskProcessorMediator.class);
+        TaskProcessorMediator processorMediator = this.coreManager.create(TaskProcessorMediator.class);
         for (ATaskResolver resolver : this.taskResolvers) {
             resolver.resolve(task, processorMediator);
         }
@@ -100,7 +100,7 @@ public class JobFactory extends AFactory {
     }
 
     public TaskBuilder createTask() {
-        TaskBuilder taskBuilder = this.factoryManager.create(TaskBuilder.class);
+        TaskBuilder taskBuilder = this.coreManager.create(TaskBuilder.class);
 
         taskBuilder.factory = this;
 
@@ -108,7 +108,7 @@ public class JobFactory extends AFactory {
     }
 
     private UserContextObject buildUserContext(Provider<UserContextDefinition> funcRead, Consumer1<UserContextDefinition> funcWrite) {
-        UserContextObject userContext = this.factoryManager.create(UserContextObject.class);
+        UserContextObject userContext = this.coreManager.create(UserContextObject.class);
 
         userContext.setSource(funcRead, funcWrite);
 
@@ -125,13 +125,13 @@ public class JobFactory extends AFactory {
     }
 
     public UserContextCreateBuilder createUserContextCreator() {
-        UserContextProcessorMediator processorMediator = this.factoryManager.create(UserContextProcessorMediator.class);
+        UserContextProcessorMediator processorMediator = this.coreManager.create(UserContextProcessorMediator.class);
 
         for (AUserContextCreateResolver userContextCreateResolver : this.userContextCreateResolvers) {
             userContextCreateResolver.resolve(processorMediator);
         }
 
-        UserContextCreateBuilder userContextCreateBuilder = this.factoryManager.create(UserContextCreateBuilder.class);
+        UserContextCreateBuilder userContextCreateBuilder = this.coreManager.create(UserContextCreateBuilder.class);
 
         userContextCreateBuilder.processorMediator = processorMediator;
         userContextCreateBuilder.factory = this;
@@ -140,13 +140,13 @@ public class JobFactory extends AFactory {
     }
 
     public UserContextFinishBuilder createUserContextFinish() {
-        UserContextProcessorMediator processorMediator = this.factoryManager.create(UserContextProcessorMediator.class);
+        UserContextProcessorMediator processorMediator = this.coreManager.create(UserContextProcessorMediator.class);
 
         for (AUserContextFinishResolver userContextFinishResolver : this.userContextFinishResolvers) {
             userContextFinishResolver.resolve(processorMediator);
         }
 
-        UserContextFinishBuilder userContextFinishBuilder = this.factoryManager.create(UserContextFinishBuilder.class);
+        UserContextFinishBuilder userContextFinishBuilder = this.coreManager.create(UserContextFinishBuilder.class);
 
         userContextFinishBuilder.processorMediator = processorMediator;
         userContextFinishBuilder.factory = this;

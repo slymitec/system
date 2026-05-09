@@ -5,7 +5,7 @@ import indi.sly.system.common.values.ADefinition;
 
 import java.util.UUID;
 
-public class ThreadDefinition extends ADefinition<ThreadDefinition> {
+public class ThreadDefinition extends ADefinition {
     public ThreadDefinition() {
         this.id = UUIDUtil.createRandom();
         this.status = ThreadStatusType.NULL;
@@ -19,19 +19,19 @@ public class ThreadDefinition extends ADefinition<ThreadDefinition> {
     private ThreadContextDefinition context;
     private ThreadStatisticsDefinition statistics;
 
-    public UUID getID() {
+    public UUID getId() {
         return this.id;
     }
 
-    public void setID(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public UUID getProcessID() {
+    public UUID getProcessId() {
         return this.processID;
     }
 
-    public void setProcessID(UUID processID) {
+    public void setProcessId(UUID processID) {
         this.processID = processID;
     }
 
@@ -58,5 +58,4 @@ public class ThreadDefinition extends ADefinition<ThreadDefinition> {
     public void setStatistics(ThreadStatisticsDefinition statistics) {
         this.statistics = statistics;
     }
-
 }

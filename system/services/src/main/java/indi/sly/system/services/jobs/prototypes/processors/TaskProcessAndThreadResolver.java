@@ -22,7 +22,7 @@ public class TaskProcessAndThreadResolver extends ATaskResolver {
         this.start = (task, status) -> {
             if (LogicalUtil.isAllExist(task.getAttribute(), TaskAttributeType.HAS_PROCESS)
                     && !ValueUtil.isAnyNullOrEmpty(task.getProcessID())) {
-                ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+                ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
                 ThreadObject thread = threadManager.create(task.getProcessID());
 
                 ThreadStatusObject threadStatus = thread.getStatus();
@@ -33,7 +33,7 @@ public class TaskProcessAndThreadResolver extends ATaskResolver {
         this.finish = (task, status) -> {
             if (LogicalUtil.isAllExist(task.getAttribute(), TaskAttributeType.HAS_PROCESS)
                     && !ValueUtil.isAnyNullOrEmpty(task.getProcessID())) {
-                ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+                ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
                 ThreadObject thread = threadManager.getCurrent();
 
                 ThreadStatusObject threadStatus = thread.getStatus();

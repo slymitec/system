@@ -2,20 +2,13 @@ package indi.sly.system.kernel.objects.infotypes.prototypes.processors;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.processors.AInitializer;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
+import indi.sly.system.kernel.objects.values.*;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.objects.values.DumpDefinition;
-import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
-import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -34,7 +27,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
     public void uninstall() {
     }
 
-    public abstract UUID getPoolID(UUID id, UUID type);
+    public abstract UUID getPoolId(UUID id, UUID type);
 
     public void createProcedure(InfoEntity info) {
     }
@@ -42,24 +35,24 @@ public abstract class AInfoTypeInitializer extends AInitializer {
     public void deleteProcedure(InfoEntity info) {
     }
 
-    public void getProcedure(InfoEntity info, IdentificationDefinition identification) {
+    public void getProcedure(InfoEntity info, IdentifierDefinition identification) {
     }
 
     public final void lockProcedure(InfoEntity info, long lock) {
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
         infoRepository.lock(info, lock);
     }
 
     public final void unlockProcedure(InfoEntity info, long lock) {
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
         infoRepository.unlock(info, lock);
     }
 
-    public void dumpProcedure(InfoEntity info, DumpDefinition dump) {
+    public void dumpProcedure(InfoEntity info, DumpCacheEntity dump) {
     }
 
     public void openProcedure(InfoEntity info, InfoOpenDefinition infoOpen, Object[] arguments) {
@@ -72,7 +65,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         throw new StatusNotSupportedException();
     }
 
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification) {
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierDefinition identification) {
         throw new StatusNotSupportedException();
     }
 
@@ -80,63 +73,51 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         throw new StatusNotSupportedException();
     }
 
-    public void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification,
-                                     IdentificationDefinition newIdentification) {
+    public void renameChildProcedure(InfoEntity info, IdentifierDefinition oldIdentification,
+                                     IdentifierDefinition newIdentification) {
         throw new StatusNotSupportedException();
     }
 
-    public void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification) {
+    public void deleteChildProcedure(InfoEntity info, IdentifierDefinition identification) {
         throw new StatusNotSupportedException();
     }
 
     public Map<String, String> readPropertiesProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
-        Map<String, String> properties = ObjectUtil.transferFromByteArray(info.getProperties());
-        assert properties != null;
+        try {
+            this.lockProcedure(info, LockType.READ);
 
-        return properties;
+            return ObjectUtil.transferFromByteArray(info.getProperties());
+        } finally {
+            this.unlockProcedure(info, LockType.READ);
+        }
     }
 
     public void writePropertiesProcedure(InfoEntity info, Map<String, String> properties, InfoOpenDefinition infoOpen) {
         byte[] propertiesSource = ObjectUtil.transferToByteArray(properties);
-        assert propertiesSource != null;
 
         if (propertiesSource.length > 1024) {
             throw new StatusOverflowException();
         }
 
-        info.setProperties(propertiesSource);
+        try {
+            this.lockProcedure(info, LockType.WRITE);
+
+            info.setProperties(propertiesSource);
+        } finally {
+            this.unlockProcedure(info, LockType.WRITE);
+        }
     }
 
-    protected abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen);
-
-    public final AInfoContentObject getContentProcedure(Provider<InfoEntity> infoProvider, Provider<byte[]> funcRead,
-                                                        Consumer1<byte[]> funcWrite, Consumer funcExecute) {
-        InfoEntity info = infoProvider.acquire();
-
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-        ProcessInfoTableObject processInfoTable = process.getInfoTable();
-
-        InfoOpenDefinition infoOpen = null;
-        if (processInfoTable.containByID(info.getID())) {
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
-            infoOpen = processInfoEntry.getOpen();
-        }
-
-        AInfoContentObject content = this.factoryManager.create(this.getContentTypeProcedure(info, infoOpen));
-
-        content.setSource(funcRead, funcWrite);
-        content.setLock((lock) -> this.lockProcedure(infoProvider.acquire(), lock), (lock) -> this.unlockProcedure(infoProvider.acquire(), lock));
-        content.setExecute(funcExecute);
-        if (ObjectUtil.allNotNull(infoOpen)) {
-            content.setInfoOpen(infoOpen);
-        }
-
-        return content;
-    }
+    public abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen);
 
     public byte[] readContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
-        return info.getContent();
+        try {
+            this.lockProcedure(info, LockType.READ);
+
+            return info.getContent();
+        } finally {
+            this.unlockProcedure(info, LockType.READ);
+        }
     }
 
     public void writeContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen, byte[] source) {
@@ -144,7 +125,13 @@ public abstract class AInfoTypeInitializer extends AInitializer {
             throw new StatusOverflowException();
         }
 
-        info.setContent(source);
+        try {
+            this.lockProcedure(info, LockType.WRITE);
+
+            info.setContent(source);
+        } finally {
+            this.unlockProcedure(info, LockType.WRITE);
+        }
     }
 
     public void executeContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {

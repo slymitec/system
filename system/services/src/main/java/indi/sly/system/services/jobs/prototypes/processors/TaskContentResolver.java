@@ -15,7 +15,7 @@ import jakarta.inject.Named;
 public class TaskContentResolver extends ATaskResolver {
     public TaskContentResolver() {
         this.content = (task, status, threadContext) -> {
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
             ThreadObject thread = threadManager.getCurrent();
 
             return thread.getContext();

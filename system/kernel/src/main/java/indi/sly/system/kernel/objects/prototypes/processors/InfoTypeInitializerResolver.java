@@ -30,18 +30,18 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoTypeInitializerResolver extends AInfoResolver {
     public InfoTypeInitializerResolver() {
-        this.dump = (dump, info, type, status) -> {
+        this.dump = (dump, info, type, cache) -> {
             type.getInitializer().dumpProcedure(info, dump);
 
             return dump;
         };
 
-        this.open = (index, info, type, status, openAttribute, arguments) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        this.open = (index, info, type, cache, openAttribute, arguments) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(info.getId());
 
             type.getInitializer().openProcedure(info, processInfoEntry.getOpen(), arguments);
 
@@ -49,27 +49,27 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
         };
 
         this.close = (info, type, status) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(info.getId());
 
             type.getInitializer().closeProcedure(info, processInfoEntry.getOpen());
 
             return info;
         };
 
-        this.createChild = (childInfo, info, type, status, childType, identification) -> {
+        this.createChild = (childInfo, info, type, cache, childType, identification) -> {
             if (ObjectUtil.isAnyNull(childInfo)) {
                 childInfo = new InfoEntity();
             }
 
-            if (ValueUtil.isAnyNullOrEmpty(childInfo.getID())) {
+            if (ValueUtil.isAnyNullOrEmpty(childInfo.getId())) {
                 if (identification.getType().equals(UUID.class)) {
-                    childInfo.setID(UUIDUtil.readFormBytes(identification.getValue()));
+                    childInfo.setId(UUIDUtil.readFormBytes(identification.getValue()));
                 } else if (identification.getType().equals(String.class)) {
-                    childInfo.setID(UUIDUtil.createRandom());
+                    childInfo.setId(UUIDUtil.createRandom());
                 }
             }
             if (ValueUtil.isAnyNullOrEmpty(childInfo.getType())) {
@@ -90,12 +90,12 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
                 childInfo.setProperties(ObjectUtil.transferToByteArray(childProperties));
             }
 
-            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
             AInfoTypeInitializer childTypeInitializer = typeManager.get(childInfo.getType()).getInitializer();
 
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UUID childRepositoryID = childTypeInitializer.getPoolID(childInfo.getID(), childInfo.getType());
-            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryID);
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+            UUID childRepositoryId = childTypeInitializer.getPoolId(childInfo.getId(), childInfo.getType());
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryId);
             childInfo = infoRepository.add(childInfo);
 
             childTypeInitializer.createProcedure(childInfo);
@@ -106,16 +106,16 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification) -> {
+        this.getChild = (childInfo, info, type, cache, identification) -> {
             AInfoTypeInitializer typeInitializer = type.getInitializer();
             InfoSummaryDefinition infoSummary = typeInitializer.getChildProcedure(info, identification);
 
-            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
             AInfoTypeInitializer childTypeInitializer = typeManager.get(infoSummary.getType()).getInitializer();
 
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UUID childRepositoryID = childTypeInitializer.getPoolID(infoSummary.getID(), infoSummary.getType());
-            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryID);
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+            UUID childRepositoryId = childTypeInitializer.getPoolId(infoSummary.getID(), infoSummary.getType());
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryId);
             childInfo = infoRepository.get(infoSummary.getID());
 
             childTypeInitializer.getProcedure(childInfo, identification);
@@ -123,28 +123,28 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.deleteChild = (info, type, status, identification) -> {
-            InfoEntity childInfo = this.getOrRebuildChild.apply(null, info, type, status, identification);
+        this.deleteChild = (info, type, cache, identification) -> {
+            InfoEntity childInfo = this.getChild.apply(null, info, type, cache, identification);
 
             if (childInfo.getOpened() > 0) {
                 throw new StatusIsUsedException();
             }
 
-            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
             AInfoTypeInitializer childTypeInitializer = typeManager.get(childInfo.getType()).getInitializer();
 
             childTypeInitializer.deleteProcedure(childInfo);
 
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UUID childRepositoryID = childTypeInitializer.getPoolID(childInfo.getID(), childInfo.getType());
-            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryID);
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+            UUID childRepositoryId = childTypeInitializer.getPoolId(childInfo.getId(), childInfo.getType());
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryId);
             infoRepository.delete(childInfo);
 
             AInfoTypeInitializer typeInitializer = type.getInitializer();
             typeInitializer.deleteChildProcedure(info, identification);
         };
 
-        this.queryChild = (infoSummaries, info, type, status, wildcard) -> {
+        this.queryChild = (infoSummaries, info, type, cache, wildcard) -> {
             AInfoTypeInitializer typeInitializer = type.getInitializer();
             Set<InfoSummaryDefinition> infoSummary = typeInitializer.queryChildProcedure(info, wildcard);
 
@@ -153,8 +153,8 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             return infoSummaries;
         };
 
-        this.renameChild = (info, type, status, oldIdentification, newIdentification) -> {
-            InfoEntity childInfo = this.getOrRebuildChild.apply(null, info, type, status, oldIdentification);
+        this.renameChild = (info, type, cache, oldIdentification, newIdentification) -> {
+            InfoEntity childInfo = this.getChild.apply(null, info, type, cache, oldIdentification);
 
             if (childInfo.getOpened() > 0) {
                 throw new StatusIsUsedException();
@@ -168,16 +168,16 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             }
         };
 
-        this.readProperties = (properties, info, type, status) -> {
+        this.readProperties = (properties, info, type, cache) -> {
             AInfoTypeInitializer typeInitializer = type.getInitializer();
 
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
             Map<String, String> newProperties;
-            if (processInfoTable.containByID(info.getID())) {
-                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+            if (processInfoTable.containById(info.getId())) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(info.getId());
 
                 newProperties = typeInitializer.readPropertiesProcedure(info, processInfoEntry.getOpen());
             } else {
@@ -188,15 +188,15 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             return properties;
         };
 
-        this.writeProperties = (info, type, status, properties) -> {
+        this.writeProperties = (info, type, cache, properties) -> {
             AInfoTypeInitializer typeInitializer = type.getInitializer();
 
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (processInfoTable.containByID(info.getID())) {
-                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+            if (processInfoTable.containById(info.getId())) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(info.getId());
 
                 typeInitializer.writePropertiesProcedure(info, new HashMap<>(properties), processInfoEntry.getOpen());
             } else {
@@ -204,15 +204,15 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             }
         };
 
-        this.readContent = (content, info, type, status) -> {
+        this.readContent = (content, info, type, cache) -> {
             AInfoTypeInitializer typeInitializer = type.getInitializer();
 
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (processInfoTable.containByID(info.getID())) {
-                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+            if (processInfoTable.containById(info.getId())) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(info.getId());
 
                 return typeInitializer.readContentProcedure(info, processInfoEntry.getOpen());
             } else {
@@ -220,15 +220,15 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             }
         };
 
-        this.writeContent = (info, type, status, content) -> {
+        this.writeContent = (info, type, cache, content) -> {
             AInfoTypeInitializer typeInitializer = type.getInitializer();
 
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (processInfoTable.containByID(info.getID())) {
-                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+            if (processInfoTable.containById(info.getId())) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(info.getId());
 
                 typeInitializer.writeContentProcedure(info, processInfoEntry.getOpen(), content);
             } else {
@@ -236,15 +236,15 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
             }
         };
 
-        this.executeContent = (info, type, status) -> {
+        this.executeContent = (info, type, cache) -> {
             AInfoTypeInitializer typeInitializer = type.getInitializer();
 
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (processInfoTable.containByID(info.getID())) {
-                ProcessInfoEntryObject processInfoEntry = processInfoTable.getByID(info.getID());
+            if (processInfoTable.containById(info.getId())) {
+                ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(info.getId());
 
                 typeInitializer.executeContentProcedure(info, processInfoEntry.getOpen());
             } else {
@@ -257,7 +257,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
     private final InfoProcessorOpenFunction open;
     private final InfoProcessorCloseFunction close;
     private final InfoProcessorCreateChildFunction createChild;
-    private final InfoProcessorGetOrRebuildChildFunction getOrRebuildChild;
+    private final InfoProcessorGetChildFunction getChild;
     private final InfoProcessorDeleteChildConsumer deleteChild;
     private final InfoProcessorQueryChildFunction queryChild;
     private final InfoProcessorRenameChildConsumer renameChild;
@@ -273,7 +273,7 @@ public class InfoTypeInitializerResolver extends AInfoResolver {
         processorMediator.getOpens().add(this.open);
         processorMediator.getCloses().add(this.close);
         processorMediator.getCreateChildren().add(this.createChild);
-        processorMediator.getGetOrRebuildChildren().add(this.getOrRebuildChild);
+        processorMediator.getGetChildren().add(this.getChild);
         processorMediator.getDeleteChildren().add(this.deleteChild);
         processorMediator.getQueryChildren().add(this.queryChild);
         processorMediator.getRenameChildren().add(this.renameChild);

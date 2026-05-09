@@ -1,16 +1,20 @@
 package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.Consumer1;
-import indi.sly.system.common.lang.Provider;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
+import indi.sly.system.kernel.core.date.values.DateTimeType;
+import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
+import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.security.values.AccountEntity;
-import indi.sly.system.kernel.security.values.GroupEntity;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
+import indi.sly.system.kernel.security.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -21,93 +25,145 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserFactory extends AFactory {
+    private UUID accountCacheRepositoryId;
+    private UUID groupCacheRepositoryId;
+    private UUID accountChildCacheRepositoryId;
+    private UUID groupChildCacheRepositoryId;
+    private UUID accountAuthorizationCacheRepositoryId;
+
     @Override
     public void init() {
+        this.accountCacheRepositoryId = UUIDUtil.createRandom();
+        this.groupCacheRepositoryId = UUIDUtil.createRandom();
+
+        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.accountCacheRepositoryId, this.coreManager.create(AccountCacheRepositoryObject.class));
+        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.groupCacheRepositoryId, this.coreManager.create(GroupCacheRepositoryObject.class));
+
+        this.accountChildCacheRepositoryId = UUIDUtil.createRandom();
+        this.groupChildCacheRepositoryId = UUIDUtil.createRandom();
+
+        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.accountChildCacheRepositoryId, this.coreManager.create(AccountChildCacheRepositoryObject.class));
+        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.groupChildCacheRepositoryId, this.coreManager.create(GroupChildCacheRepositoryObject.class));
+
+        this.accountAuthorizationCacheRepositoryId = UUIDUtil.createRandom();
+        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.groupChildCacheRepositoryId, this.coreManager.create(AccountAuthorizationCacheRepositoryObject.class));
     }
 
-    private AccountObject buildAccount(Provider<AccountEntity> funcRead, Consumer1<AccountEntity> funcWrite,
-                                       Consumer1<Long> funcLock, Consumer1<Long> funcUnLock) {
-        AccountObject account = this.factoryManager.create(AccountObject.class);
+    private AccountObject createAccount(AccountCacheEntity cache) {
+        AccountObject account = this.coreManager.create(AccountObject.class);
 
-        account.setSource(funcRead, funcWrite);
-        account.setLock(funcLock, funcUnLock);
+        account.factory = this;
+        account.setCache(cache);
 
         return account;
     }
 
-    public AccountObject buildAccount(UUID accountID) {
-        if (ValueUtil.isAnyNullOrEmpty(accountID)) {
+    public void lockAccount(AccountCacheEntity cache, long lock) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
+
+        userRepository.lock(userRepository.getAccount(cache.getAccountId()), lock);
+    }
+
+    public void unlockAccount(AccountCacheEntity cache, long lock) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
+
+        userRepository.unlock(userRepository.getAccount(cache.getAccountId()), lock);
+    }
+
+    public AccountObject buildAccount(UUID accountId) {
+        if (ValueUtil.isAnyNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
 
-        Provider<AccountEntity> funcRead = () -> {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
+        AccountCacheEntity cache = new AccountCacheEntity();
 
-            return accountGroupRepository.getAccount(accountID);
-        };
-        Consumer1<AccountEntity> funcWrite = (AccountEntity source) -> {
-        };
-        Consumer1<Long> funcLock = (lock) -> {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
+        cache.setAccountId(accountId);
+        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setCacheRepositoryId(this.accountCacheRepositoryId);
 
-            accountGroupRepository.lock(accountGroupRepository.getAccount(accountID), lock);
-        };
-        Consumer1<Long> funcUnlock = (lock) -> {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
-
-            accountGroupRepository.unlock(accountGroupRepository.getAccount(accountID), lock);
-        };
-
-        return this.buildAccount(funcRead, funcWrite, funcLock, funcUnlock);
+        return this.createAccount(cache);
     }
 
-    private GroupObject buildGroup(Provider<GroupEntity> funcRead, Consumer1<GroupEntity> funcWrite,
-                                   Consumer1<Long> funcLock, Consumer1<Long> funcUnLock) {
-        GroupObject group = this.factoryManager.create(GroupObject.class);
+    public AccountObject rebuildAccount(UUID handle) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        group.setSource(funcRead, funcWrite);
-        group.setLock(funcLock, funcUnLock);
+        AccountCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.accountCacheRepositoryId);
+        AccountCacheEntity cache = cacheRepository.get(handle);
+
+        return this.createAccount(cache);
+    }
+
+    public AccountObject rebuildAccount(AccountCacheEntity cache) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        AccountCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.accountCacheRepositoryId);
+        cacheRepository.refresh(cache);
+
+        return this.createAccount(cache);
+    }
+
+    private GroupObject createGroup(GroupCacheEntity cache) {
+        GroupObject group = this.coreManager.create(GroupObject.class);
+
+        group.factory = this;
+        group.setCache(cache);
 
         return group;
     }
 
-    public GroupObject buildGroup(UUID groupID) {
-        if (ValueUtil.isAnyNullOrEmpty(groupID)) {
+    public void lockGroup(GroupCacheEntity cache, long lock) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
+
+        userRepository.lock(userRepository.getGroup(cache.getGroupId()), lock);
+    }
+
+    public void unlockGroup(GroupCacheEntity cache, long lock) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        UserRepositoryObject userRepository = memoryManager.getUserRepository();
+
+        userRepository.unlock(userRepository.getGroup(cache.getGroupId()), lock);
+    }
+
+    public GroupObject buildGroup(UUID groupId) {
+        if (ValueUtil.isAnyNullOrEmpty(groupId)) {
             throw new ConditionParametersException();
         }
 
-        Provider<GroupEntity> funcRead = () -> {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
+        GroupCacheEntity cache = new GroupCacheEntity();
 
-            return accountGroupRepository.getGroup(groupID);
-        };
-        Consumer1<GroupEntity> funcWrite = (GroupEntity source) -> {
-        };
-        Consumer1<Long> funcLock = (lock) -> {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
+        cache.setGroupId(groupId);
+        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setCacheRepositoryId(this.groupCacheRepositoryId);
 
-            accountGroupRepository.lock(accountGroupRepository.getGroup(groupID), lock);
-        };
-        Consumer1<Long> funcUnlock = (lock) -> {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
+        return this.createGroup(cache);
+    }
 
-            accountGroupRepository.unlock(accountGroupRepository.getGroup(groupID), lock);
-        };
+    public GroupObject rebuildGroup(UUID handle) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        return this.buildGroup(funcRead, funcWrite, funcLock, funcUnlock);
+        GroupCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.groupCacheRepositoryId);
+        GroupCacheEntity cache = cacheRepository.get(handle);
+
+        return this.createGroup(cache);
+    }
+
+    public GroupObject rebuildGroup(GroupCacheEntity cache) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        GroupCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.groupCacheRepositoryId);
+        cacheRepository.refresh(cache);
+
+        return this.createGroup(cache);
     }
 
     public AccountBuilder createAccount() {
-        AccountBuilder accountBuilder = this.factoryManager.create(AccountBuilder.class);
+        AccountBuilder accountBuilder = this.coreManager.create(AccountBuilder.class);
 
         accountBuilder.factory = this;
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         accountBuilder.processToken = process.getToken();
 
@@ -115,13 +171,189 @@ public class UserFactory extends AFactory {
     }
 
     public GroupBuilder createGroup() {
-        GroupBuilder groupBuilder = this.factoryManager.create(GroupBuilder.class);
+        GroupBuilder groupBuilder = this.coreManager.create(GroupBuilder.class);
 
         groupBuilder.factory = this;
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         groupBuilder.processToken = process.getToken();
 
         return groupBuilder;
+    }
+
+    public AccountTokenObject createAccountToken(AccountObject account, AccountChildCacheEntity cache) {
+        AccountTokenObject accountToken = this.coreManager.create(AccountTokenObject.class);
+
+        accountToken.factory = this;
+        accountToken.setCache(cache);
+        accountToken.setBase(account);
+
+        return accountToken;
+    }
+
+    public AccountTokenObject buildAccountToken(AccountObject account) {
+        AccountChildCacheEntity cache = new AccountChildCacheEntity();
+
+        cache.setAccount(account.getCache());
+        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setCacheRepositoryId(this.accountChildCacheRepositoryId);
+
+        return this.createAccountToken(account, cache);
+    }
+
+    public AccountTokenObject rebuildAccountToken(UUID handle) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        AccountChildCacheRepositoryObject accountTokenCacheRepository = memoryManager.getCacheRepository(this.accountChildCacheRepositoryId);
+        AccountChildCacheEntity cache = accountTokenCacheRepository.get(handle);
+
+        return this.rebuildAccountToken(cache);
+    }
+
+    public AccountTokenObject rebuildAccountToken(AccountChildCacheEntity cache) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        AccountChildCacheRepositoryObject accountTokenCacheRepository = memoryManager.getCacheRepository(this.accountChildCacheRepositoryId);
+        accountTokenCacheRepository.refresh(cache);
+
+        AccountObject account = this.rebuildAccount(cache.getAccount());
+
+        return account.getToken();
+    }
+
+    public AccountSessionsObject createAccountSessions(AccountObject account, AccountChildCacheEntity cache) {
+        AccountSessionsObject accountSessions = this.coreManager.create(AccountSessionsObject.class);
+
+        accountSessions.factory = this;
+        accountSessions.setCache(cache);
+        accountSessions.setBase(account);
+
+        return accountSessions;
+    }
+
+    public AccountSessionsObject buildAccountSessions(AccountObject account) {
+        AccountChildCacheEntity cache = new AccountChildCacheEntity();
+
+        cache.setAccount(account.getCache());
+        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setCacheRepositoryId(this.accountCacheRepositoryId);
+
+        return this.createAccountSessions(account, cache);
+    }
+
+    public AccountSessionsObject rebuildAccountSessions(UUID handle) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        AccountChildCacheRepositoryObject accountSessionsCacheRepository = memoryManager.getCacheRepository(this.accountCacheRepositoryId);
+        AccountChildCacheEntity cache = accountSessionsCacheRepository.get(handle);
+
+        return this.rebuildAccountSessions(cache);
+    }
+
+    public AccountSessionsObject rebuildAccountSessions(AccountChildCacheEntity cache) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        AccountChildCacheRepositoryObject accountSessionsCacheRepository = memoryManager.getCacheRepository(this.accountCacheRepositoryId);
+        accountSessionsCacheRepository.refresh(cache);
+
+        AccountObject account = this.rebuildAccount(cache.getAccount());
+
+        return account.getSessions();
+    }
+
+    public GroupTokenObject createGroupToken(GroupObject group, GroupChildCacheEntity cache) {
+        GroupTokenObject groupToken = this.coreManager.create(GroupTokenObject.class);
+
+        groupToken.factory = this;
+        groupToken.setCache(cache);
+        groupToken.setBase(group);
+
+        return groupToken;
+    }
+
+    public GroupTokenObject buildGroupToken(GroupObject group) {
+        GroupChildCacheEntity cache = new GroupChildCacheEntity();
+
+        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setCacheRepositoryId(this.groupChildCacheRepositoryId);
+
+        return this.createGroupToken(group, cache);
+    }
+
+    public GroupTokenObject rebuildGroupToken(UUID handle) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        GroupChildCacheRepositoryObject groupTokenCacheRepository = memoryManager.getCacheRepository(this.groupChildCacheRepositoryId);
+        GroupChildCacheEntity cache = groupTokenCacheRepository.get(handle);
+
+        return this.rebuildGroupToken(cache);
+    }
+
+    public GroupTokenObject rebuildGroupToken(GroupChildCacheEntity cache) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        GroupChildCacheRepositoryObject groupTokenCacheRepository = memoryManager.getCacheRepository(this.groupChildCacheRepositoryId);
+        groupTokenCacheRepository.refresh(cache);
+
+        GroupObject group = this.rebuildGroup(cache.getGroup());
+
+        return group.getToken();
+    }
+
+    public AccountAuthorizationObject createAccountAuthorization(AccountAuthorizationCacheEntity cache) {
+        AccountAuthorizationObject accountAuthorization = this.coreManager.create(AccountAuthorizationObject.class);
+
+        accountAuthorization.factory = this;
+        accountAuthorization.setCache(cache);
+
+        return accountAuthorization;
+    }
+
+    public AccountAuthorizationObject buildAccountAuthorization(AccountObject account, String password, ProcessTokenObject processToken, AccountAuthorizationTokenDefinition accountAuthorizationToken) {
+        AccountAuthorizationCacheEntity cache = new AccountAuthorizationCacheEntity();
+
+        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setCacheRepositoryId(this.accountCacheRepositoryId);
+
+        cache.setAccount(account.getCache());
+        cache.setPassword(password);
+
+        DateTimeObject dateTime = this.coreManager.getDateTime();
+        long nowDateTime = dateTime.getCurrentDateTime();
+        cache.getDate().put(DateTimeType.CREATE, nowDateTime);
+        cache.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
+        cache.setProcessToken(processToken.getCache());
+
+        if (ObjectUtil.allNotNull(processToken, accountAuthorizationToken)) {
+            cache.setAccountAuthorizationToken(accountAuthorizationToken);
+        }
+
+        return this.createAccountAuthorization(cache);
+    }
+
+    public AccountAuthorizationObject rebuildAccountAuthorization(UUID handle) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        AccountAuthorizationCacheRepositoryObject accountAuthorizationCacheRepository = memoryManager.getCacheRepository(this.accountAuthorizationCacheRepositoryId);
+        AccountAuthorizationCacheEntity cache = accountAuthorizationCacheRepository.get(handle);
+
+        return this.rebuildGAccountAuthorization(cache);
+    }
+
+    public AccountAuthorizationObject rebuildGAccountAuthorization(AccountAuthorizationCacheEntity cache) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        AccountAuthorizationCacheRepositoryObject accountAuthorizationCacheRepository = memoryManager.getCacheRepository(this.accountAuthorizationCacheRepositoryId);
+        accountAuthorizationCacheRepository.refresh(cache);
+
+        return this.createAccountAuthorization(cache);
+    }
+
+    public void updateAccountAuthorization(AccountAuthorizationCacheEntity cache) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        AccountAuthorizationCacheRepositoryObject accountAuthorizationCacheRepository = memoryManager.getCacheRepository(this.accountAuthorizationCacheRepositoryId);
+        accountAuthorizationCacheRepository.update(cache);
     }
 }

@@ -5,7 +5,7 @@ import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.files.instances.values.FileSystemFilePropertyTypes;
@@ -25,8 +25,8 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
     @Override
-    public UUID getPoolID(UUID id, UUID type) {
-        return this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID;
+    public UUID getPoolId(UUID id, UUID type) {
+        return this.coreManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORY_ID;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void getProcedure(InfoEntity info, IdentificationDefinition identification) {
+    public void getProcedure(InfoEntity info, IdentifierDefinition identification) {
         if (identification.getType() == String.class) {
             String childInfoName = StringUtil.readFormBytes(identification.getValue());
             if (!childInfoName.equals(info.getName())) {

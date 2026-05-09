@@ -20,44 +20,44 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoProcessInfoTableResolver extends AInfoResolver {
     public InfoProcessInfoTableResolver() {
-        this.open = (index, info, type, status, openAttribute, arguments) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        this.open = (index, info, type, cache, openAttribute, arguments) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.create(info.getID(), status, openAttribute);
+            ProcessInfoEntryObject processInfoEntry = processInfoTable.create(info.getId(), cache, openAttribute);
 
             return processInfoEntry.getIndex();
         };
 
-        this.readContent = (content, info, type, status) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        this.readContent = (content, info, type, cache) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (!processInfoTable.containByID(info.getID())) {
+            if (!processInfoTable.containById(info.getId())) {
                 throw new StatusNotReadyException();
             }
 
             return content;
         };
 
-        this.writeContent = (info, type, status, content) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        this.writeContent = (info, type, cache, content) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (!processInfoTable.containByID(info.getID())) {
+            if (!processInfoTable.containById(info.getId())) {
                 throw new StatusNotReadyException();
             }
         };
 
-        this.executeContent = (info, type, status) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        this.executeContent = (info, type, cache) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject process = processManager.getCurrent();
             ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-            if (!processInfoTable.containByID(info.getID())) {
+            if (!processInfoTable.containById(info.getId())) {
                 throw new StatusNotReadyException();
             }
         };

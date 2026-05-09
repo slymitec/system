@@ -21,10 +21,10 @@ public class ProcessStatisticsResolver extends AProcessResolver {
     public ProcessStatisticsResolver() {
         this.readProcessStatus = (status, process) -> status;
         this.writeProcessStatus = (process, status) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject currentProcess = processManager.getCurrent();
 
-            if (process.getID().equals(currentProcess.getID())) {
+            if (process.getId().equals(currentProcess.getId())) {
                 ProcessStatisticsObject processStatistics = currentProcess.getStatistics();
                 processStatistics.addStatusCumulation(1);
             }

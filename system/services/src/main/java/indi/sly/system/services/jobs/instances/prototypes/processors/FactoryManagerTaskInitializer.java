@@ -2,7 +2,7 @@ package indi.sly.system.services.jobs.instances.prototypes.processors;
 
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.prototypes.SystemVersionObject;
+import indi.sly.system.kernel.core.systemversion.prototypes.SystemVersionObject;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
@@ -31,7 +31,7 @@ public class FactoryManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void getDateTime(TaskRunConsumer run, TaskContentObject content) {
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+        DateTimeObject dateTime = this.coreManager.getDateTime();
 
         UUID handle = dateTime.cache(SpaceType.USER);
 
@@ -43,7 +43,7 @@ public class FactoryManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void getSystemVersion(TaskRunConsumer run, TaskContentObject content) {
-        SystemVersionObject systemVersion = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, SystemVersionObject.class);
+        SystemVersionObject systemVersion = this.coreManager.getSystemVersion();
 
         UUID handle = systemVersion.cache(SpaceType.USER);
 

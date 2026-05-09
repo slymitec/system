@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @JsonSerialize(using = InfoWildcardDefinition.InfoWildcardDefinitionSerializer.class)
 @JsonDeserialize(using = InfoWildcardDefinition.InfoWildcardDefinitionDeserializer.class)
-public class InfoWildcardDefinition extends ADefinition<InfoWildcardDefinition> {
+public class InfoWildcardDefinition extends ADefinition {
     private byte[] value;
     private Class<?> type;
     private boolean fuzzy;
@@ -63,50 +63,6 @@ public class InfoWildcardDefinition extends ADefinition<InfoWildcardDefinition> 
         this.value = StringUtil.writeToBytes(value);
         this.type = String.class;
         this.fuzzy = StringUtil.isNameIllegal(value);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        InfoWildcardDefinition that = (InfoWildcardDefinition) o;
-        return fuzzy == that.fuzzy && Arrays.equals(value, that.value) && type.equals(that.type);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(type, fuzzy);
-        result = 31 * result + Arrays.hashCode(value);
-        return result;
-    }
-
-    @Override
-    public InfoWildcardDefinition deepClone() {
-        InfoWildcardDefinition definition = new InfoWildcardDefinition();
-
-        definition.value = ArrayUtil.copyBytes(this.value);
-        definition.type = this.type;
-        definition.fuzzy = this.fuzzy;
-
-        return definition;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        this.value = NumberUtil.readExternalBytes(in);
-        this.type = ClassUtil.readExternal(in);
-        this.fuzzy = NumberUtil.readExternalBoolean(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        NumberUtil.writeExternalBytes(out, this.value);
-        ClassUtil.writeExternal(out, this.type);
-        NumberUtil.writeExternalBoolean(out, this.fuzzy);
     }
 
     public static class InfoWildcardDefinitionSerializer extends JsonSerializer<InfoWildcardDefinition> {

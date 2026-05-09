@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.lang.InfoProcessorCloseFunction;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,16 +20,16 @@ import java.util.List;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoCloseThenDeleteIfTemporaryResolver extends AInfoResolver {
     public InfoCloseThenDeleteIfTemporaryResolver() {
-        this.close = (info, type, status) -> {
-            if (!status.getIdentifications().isEmpty()
+        this.close = (info, type, cache) -> {
+            if (!cache.getPath().get().isEmpty()
                     && type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.TEMPORARY) && info.getOpened() <= 0) {
-                List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
-                IdentificationDefinition identification = identifications.removeLast();
+                List<IdentifierDefinition> identifiers = new ArrayList<>(cache.getPath().get());
+                IdentifierDefinition identifier = identifiers.removeLast();
 
-                ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-                InfoObject parentInfo = objectManager.get(identifications);
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                InfoObject parentInfo = objectManager.get(new PathDefinition(identifiers));
 
-                parentInfo.deleteChild(identification);
+                parentInfo.deleteChild(identifier);
 
                 info = null;
             }

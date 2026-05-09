@@ -4,7 +4,8 @@ import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.StatusDisabilityException;
 import indi.sly.system.common.lang.StatusOverflowException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
@@ -14,9 +15,11 @@ import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
+import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.AuditType;
 import indi.sly.system.kernel.security.values.PermissionType;
+import indi.sly.system.kernel.security.values.SecurityDescriptorCacheEntity;
 import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -30,49 +33,22 @@ import java.util.List;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoSecurityDescriptorResolver extends AInfoResolver {
     public InfoSecurityDescriptorResolver() {
-        this.securityDescriptor = (info, type, status) -> {
-            SecurityDescriptorObject securityDescriptor = this.factoryManager.create(SecurityDescriptorObject.class);
+        this.securityDescriptor = (info, type, cache) -> {
+            SecurityDescriptorCacheEntity securityDescriptorCache = new SecurityDescriptorCacheEntity();
 
-            if (!status.getIdentifications().isEmpty()) {
-                List<IdentificationDefinition> identifications = new ArrayList<>(status.getIdentifications());
-                identifications.removeLast();
+            securityDescriptorCache.setPermission(type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION));
+            securityDescriptorCache.setAudit(type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT));
 
-                ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
-                InfoObject parentInfo = objectManager.get(identifications);
-
-                SecurityDescriptorObject parentSecurityDescriptor = null;
-                try {
-                    parentSecurityDescriptor = parentInfo.getSecurityDescriptor();
-                } catch (StatusDisabilityException ignored) {
-                }
-
-                if (ObjectUtil.allNotNull(parentSecurityDescriptor)) {
-                    securityDescriptor.setParent(parentSecurityDescriptor);
-                }
-            }
-
-            securityDescriptor.setSource(info::getSecurityDescriptor, (source) -> {
-                if (source.length > 4096) {
-                    throw new StatusOverflowException();
-                }
-
-                info.setSecurityDescriptor(source);
-            });
-
-            AInfoTypeInitializer infoTypeInitializer = type.getInitializer();
-            securityDescriptor.setLock((lock) -> infoTypeInitializer.lockProcedure(info, lock), (lock) -> infoTypeInitializer.unlockProcedure(info, lock));
-
-            securityDescriptor.setIdentifications(status.getIdentifications());
-            securityDescriptor.setPermission(type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION));
-            securityDescriptor.setAudit(type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT));
-
-            return securityDescriptor;
+            return securityDescriptorCache;
         };
 
-        this.dump = (dump, info, type, status) -> {
+        this.dump = (dump, info, type, cache) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+                SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
+
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                SecurityDescriptorObject securityDescriptor = objectManager.getFactory().rebuildSecurityDescriptor(securityDescriptorCache);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.checkPermission(PermissionType.LISTCHILD_READDATA_ALLOW);
@@ -91,10 +67,13 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             return dump;
         };
 
-        this.open = (index, info, type, status, openAttribute, arguments) -> {
+        this.open = (index, info, type, cache, openAttribute, arguments) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+                SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
+
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                SecurityDescriptorObject securityDescriptor = objectManager.getFactory().rebuildSecurityDescriptor(securityDescriptorCache);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.checkPermission(PermissionType.LISTCHILD_READDATA_ALLOW);
@@ -107,10 +86,13 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             return index;
         };
 
-        this.createChild = (childInfo, info, type, status, childTypeID, identification) -> {
+        this.createChild = (childInfo, info, type, cache, childTypeID, identification) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+                SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
+
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                SecurityDescriptorObject securityDescriptor = objectManager.getFactory().rebuildSecurityDescriptor(securityDescriptorCache);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.checkPermission(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
@@ -123,10 +105,13 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification) -> {
+        this.getChild = (childInfo, info, type, cache, identification) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+                SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
+
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                SecurityDescriptorObject securityDescriptor = objectManager.getFactory().rebuildSecurityDescriptor(securityDescriptorCache);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.checkPermission(PermissionType.TRAVERSE_EXECUTE_ALLOW);
@@ -139,10 +124,13 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.deleteChild = (info, type, status, identification) -> {
+        this.deleteChild = (info, type, cache, identification) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+                SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
+
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                SecurityDescriptorObject securityDescriptor = objectManager.getFactory().rebuildSecurityDescriptor(securityDescriptorCache);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.checkPermission(PermissionType.DELETECHILD_ALLOW);
@@ -153,10 +141,13 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             }
         };
 
-        this.queryChild = (summaryDefinitions, info, type, status, wildcard) -> {
+        this.queryChild = (summaryDefinitions, info, type, cache, wildcard) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+                SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
+
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                SecurityDescriptorObject securityDescriptor = objectManager.getFactory().rebuildSecurityDescriptor(securityDescriptorCache);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.checkPermission(PermissionType.LISTCHILD_READDATA_ALLOW);
@@ -169,10 +160,13 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             return summaryDefinitions;
         };
 
-        this.renameChild = (info, type, status, oldIdentification, newIdentification) -> {
+        this.renameChild = (info, type, cache, oldIdentification, newIdentification) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+                SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
+
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                SecurityDescriptorObject securityDescriptor = objectManager.getFactory().rebuildSecurityDescriptor(securityDescriptorCache);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.checkPermission(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
@@ -185,10 +179,13 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             }
         };
 
-        this.readProperties = (properties, info, type, status) -> {
+        this.readProperties = (properties, info, type, cache) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+                SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
+
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                SecurityDescriptorObject securityDescriptor = objectManager.getFactory().rebuildSecurityDescriptor(securityDescriptorCache);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.checkPermission(PermissionType.READPROPERTIES_ALLOW);
@@ -201,10 +198,13 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             return properties;
         };
 
-        this.writeProperties = (info, type, status, properties) -> {
+        this.writeProperties = (info, type, cache, properties) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+                SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
+
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                SecurityDescriptorObject securityDescriptor = objectManager.getFactory().rebuildSecurityDescriptor(securityDescriptorCache);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.checkPermission(PermissionType.WRITEPROPERTIES_ALLOW);
@@ -215,10 +215,13 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             }
         };
 
-        this.readContent = (content, info, type, status) -> {
+        this.readContent = (content, info, type, cache) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+                SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
+
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                SecurityDescriptorObject securityDescriptor = objectManager.getFactory().rebuildSecurityDescriptor(securityDescriptorCache);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.checkPermission(PermissionType.LISTCHILD_READDATA_ALLOW);
@@ -231,10 +234,13 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             return content;
         };
 
-        this.writeContent = (info, type, status, content) -> {
+        this.writeContent = (info, type, cache, content) -> {
             if ((type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT))
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+                SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
+
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                SecurityDescriptorObject securityDescriptor = objectManager.getFactory().rebuildSecurityDescriptor(securityDescriptorCache);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.checkPermission(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
@@ -245,10 +251,13 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
             }
         };
 
-        this.executeContent = (info, type, status) -> {
+        this.executeContent = (info, type, cache) -> {
             if ((type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT))
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorObject securityDescriptor = this.securityDescriptor.apply(info, type, status);
+                SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
+
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+                SecurityDescriptorObject securityDescriptor = objectManager.getFactory().rebuildSecurityDescriptor(securityDescriptorCache);
 
                 if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     securityDescriptor.checkPermission(PermissionType.TRAVERSE_EXECUTE_ALLOW);
@@ -264,7 +273,7 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
     private final InfoProcessorDumpFunction dump;
     private final InfoProcessorOpenFunction open;
     private final InfoProcessorCreateChildFunction createChild;
-    private final InfoProcessorGetOrRebuildChildFunction getOrRebuildChild;
+    private final InfoProcessorGetChildFunction getChild;
     private final InfoProcessorDeleteChildConsumer deleteChild;
     private final InfoProcessorQueryChildFunction queryChild;
     private final InfoProcessorRenameChildConsumer renameChild;
@@ -277,7 +286,7 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
         if (ObjectUtil.allNotNull(info)) {
-            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
             TypeObject type = typeManager.get(info.getType());
 
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT) && !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
@@ -289,7 +298,7 @@ public class InfoSecurityDescriptorResolver extends AInfoResolver {
         processorMediator.getDumps().add(this.dump);
         processorMediator.getOpens().add(this.open);
         processorMediator.getCreateChildren().add(this.createChild);
-        processorMediator.getGetOrRebuildChildren().add(this.getOrRebuildChild);
+        processorMediator.getGetChildren().add(this.getChild);
         processorMediator.getDeleteChildren().add(this.deleteChild);
         processorMediator.getQueryChildren().add(this.queryChild);
         processorMediator.getRenameChildren().add(this.renameChild);

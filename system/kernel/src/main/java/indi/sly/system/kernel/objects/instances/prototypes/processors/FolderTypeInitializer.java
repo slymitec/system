@@ -3,7 +3,7 @@ package indi.sly.system.kernel.objects.instances.prototypes.processors;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
@@ -25,14 +25,14 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FolderTypeInitializer extends AInfoTypeInitializer {
     @Override
-    public UUID getPoolID(UUID id, UUID type) {
-        return this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID;
+    public UUID getPoolId(UUID id, UUID type) {
+        return this.coreManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORY_ID;
     }
 
     @Override
     public void deleteProcedure(InfoEntity info) {
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
         if (infoRepository.countRelation(info, null) > 0) {
             throw new StatusIsUsedException();
@@ -45,8 +45,8 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
         try {
             this.lockProcedure(info, LockType.WRITE);
@@ -57,8 +57,8 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
             }
 
             InfoRelationEntity infoRelation = new InfoRelationEntity();
-            infoRelation.setID(childInfo.getID());
-            infoRelation.setParentID(info.getID());
+            infoRelation.setId(childInfo.getId());
+            infoRelation.setParentId(info.getId());
             infoRelation.setType(childInfo.getType());
             infoRelation.setName(childInfo.getName());
 
@@ -69,7 +69,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification) {
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierDefinition identification) {
         if (identification.getType() != String.class) {
             throw new StatusNotSupportedException();
         }
@@ -77,15 +77,15 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
         String childInfoName = StringUtil.readFormBytes(identification.getValue());
         InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
         try {
             this.lockProcedure(info, LockType.READ);
 
             InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoName);
 
-            infoSummary.setID(infoRelation.getID());
+            infoSummary.setID(infoRelation.getId());
             infoSummary.setType(infoRelation.getType());
             infoSummary.setName(infoRelation.getName());
         } finally {
@@ -99,8 +99,8 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardDefinition wildcard) {
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
         try {
             this.lockProcedure(info, LockType.READ);
@@ -108,7 +108,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
             List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
             for (InfoRelationEntity infoRelation : infoRelations) {
                 InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
-                infoSummary.setID(infoRelation.getID());
+                infoSummary.setID(infoRelation.getId());
                 infoSummary.setType(infoRelation.getType());
                 infoSummary.setName(infoRelation.getName());
 
@@ -122,15 +122,15 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification) {
+    public void deleteChildProcedure(InfoEntity info, IdentifierDefinition identification) {
         if (identification.getType() != String.class) {
             throw new StatusNotSupportedException();
         }
 
         String childInfoName = StringUtil.readFormBytes(identification.getValue());
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
         try {
             this.lockProcedure(info, LockType.WRITE);

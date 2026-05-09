@@ -1,23 +1,15 @@
 package indi.sly.system.kernel.objects.values;
 
-import indi.sly.system.common.supports.*;
-import indi.sly.system.kernel.core.values.AEntity;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 import jakarta.persistence.*;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.io.Serial;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "Kernel_Infos")
-public class InfoEntity extends AEntity<InfoEntity> {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
+public class InfoEntity extends APersistentEntity {
     @Id
     @Column(columnDefinition = "uniqueidentifier", name = "ID", nullable = false, updatable = false)
     protected UUID id;
@@ -36,11 +28,11 @@ public class InfoEntity extends AEntity<InfoEntity> {
     @Column(length = 4096, name = "Content_Stream", nullable = true)
     protected byte[] content;
 
-    public UUID getID() {
+    public UUID getId() {
         return this.id;
     }
 
-    public void setID(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -123,49 +115,5 @@ public class InfoEntity extends AEntity<InfoEntity> {
         result = 31 * result + Arrays.hashCode(properties);
         result = 31 * result + Arrays.hashCode(content);
         return result;
-    }
-
-    @Override
-    public InfoEntity deepClone() {
-        InfoEntity entity = new InfoEntity();
-
-        entity.id = this.id;
-        entity.type = this.type;
-        entity.opened = this.opened;
-        entity.name = this.name;
-        entity.date = ArrayUtil.copyBytes(this.date);
-        entity.securityDescriptor = ArrayUtil.copyBytes(this.securityDescriptor);
-        entity.properties = ArrayUtil.copyBytes(this.properties);
-        entity.content = ArrayUtil.copyBytes(this.content);
-
-        return entity;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        this.id = UUIDUtil.readExternal(in);
-        this.type = UUIDUtil.readExternal(in);
-        this.opened = NumberUtil.readExternalLong(in);
-        this.name = StringUtil.readExternal(in);
-        this.date = NumberUtil.readExternalBytes(in);
-        this.securityDescriptor = NumberUtil.readExternalBytes(in);
-        this.properties = NumberUtil.readExternalBytes(in);
-        this.content = NumberUtil.readExternalBytes(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        UUIDUtil.writeExternal(out, this.id);
-        UUIDUtil.writeExternal(out, this.type);
-        NumberUtil.writeExternalLong(out, this.opened);
-        StringUtil.writeExternal(out, this.name);
-        NumberUtil.writeExternalBytes(out, this.date);
-        NumberUtil.writeExternalBytes(out, this.securityDescriptor);
-        NumberUtil.writeExternalBytes(out, this.properties);
-        NumberUtil.writeExternalBytes(out, this.content);
     }
 }

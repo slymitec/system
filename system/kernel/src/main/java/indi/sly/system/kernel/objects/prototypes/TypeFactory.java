@@ -1,47 +1,90 @@
 package indi.sly.system.kernel.objects.prototypes;
 
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.Consumer1;
-import indi.sly.system.common.lang.Provider;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
+import indi.sly.system.kernel.core.prototypes.ObjectCollectionObject;
+import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.objects.ObjectManager;
+import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
+import indi.sly.system.kernel.objects.values.InfoContentCacheEntity;
+import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
+import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
+import java.util.Set;
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TypeFactory extends AFactory {
-    private TypeObject buildType(UUID typeID, Provider<TypeDefinition> funcRead, Consumer1<TypeDefinition> funcWrite) {
-        TypeObject type = this.factoryManager.create(TypeObject.class);
+    @Override
+    public void init() {
+    }
 
-        type.setSource(funcRead, funcWrite);
+    private TypeObject createType(UUID typeID, TypeDefinition definition) {
+        TypeObject type = this.coreManager.create(TypeObject.class);
 
-        type.cache(SpaceType.KERNEL, typeID);
+        type.setDefinition(definition);
+
+        ObjectCollectionObject objectCollection = this.coreManager.getObjectCollection();
+        objectCollection.addById(SpaceType.KERNEL, typeID, type);
 
         return type;
     }
 
-    public TypeObject buildType(UUID typeID, TypeDefinition type) {
-        if (ValueUtil.isAnyNullOrEmpty(type) || ObjectUtil.isAnyNull(type)) {
+    public TypeObject buildType(UUID typeID, String typeName, long attribute, Set<UUID> childTypes,
+                                AInfoTypeInitializer typeInitializer) {
+        if (ObjectUtil.isAnyNull(typeID, childTypes, typeInitializer) || StringUtil.isNameIllegal(typeName)) {
             throw new ConditionParametersException();
         }
 
-        return this.buildType(typeID, () -> type, (source) -> {
-        });
+        TypeDefinition type = new TypeDefinition();
+        type.setName(typeName);
+        type.setAttribute(attribute);
+        type.setInitializer(typeInitializer);
+        if (ObjectUtil.allNotNull(childTypes)) {
+            type.getChildTypes().addAll(childTypes);
+        }
+
+        Set<UUID> infoTypeIDs = this.coreManager.getKernelSpace().getInfoTypeIDs();
+
+        if (infoTypeIDs.contains(typeID)) {
+            throw new StatusAlreadyExistedException();
+        }
+
+        infoTypeIDs.add(typeID);
+
+        typeInitializer.install();
+
+        return this.createType(typeID, type);
     }
 
-    public TypeBuilder createType() {
-        TypeBuilder typeBuilder = this.factoryManager.create(TypeBuilder.class);
+    public void deleteType(UUID typeID, TypeObject type) {
+        if (ObjectUtil.isAnyNull(typeID)) {
+            throw new ConditionParametersException();
+        }
 
-        typeBuilder.factory = this;
+        Set<UUID> infoTypeIDs = this.coreManager.getKernelSpace().getInfoTypeIDs();
 
-        return typeBuilder;
+        type.getInitializer().uninstall();
+
+        ObjectCollectionObject objectCollection = this.coreManager.getObjectCollection();
+        objectCollection.deleteById(SpaceType.KERNEL, typeID);
+
+        infoTypeIDs.remove(typeID);
     }
 }

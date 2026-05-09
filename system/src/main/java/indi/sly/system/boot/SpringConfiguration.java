@@ -1,5 +1,6 @@
 package indi.sly.system.boot;
 
+import com.redis.om.spring.annotations.EnableRedisDocumentRepositories;
 import indi.sly.system.common.ABase;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.AObject;
@@ -32,6 +33,7 @@ import java.util.UUID;
 @EnableAsync
 @EnableAutoConfiguration()
 @EnableJpaRepositories(basePackages = SpringConfiguration.BASE_PACKAGES)
+@EnableRedisDocumentRepositories(basePackages = SpringConfiguration.BASE_PACKAGES)
 @EntityScan(basePackages = SpringConfiguration.BASE_PACKAGES)
 @ServletComponentScan(basePackages = SpringConfiguration.BASE_PACKAGES)
 public class SpringConfiguration extends ABase implements WebMvcConfigurer {
@@ -45,27 +47,5 @@ public class SpringConfiguration extends ABase implements WebMvcConfigurer {
     @Bean
     public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();
-    }
-
-    @Bean
-    public RedisTemplate<String, byte[]> redisTemplate(RedisConnectionFactory factory) {
-        RedisTemplate<String, byte[]> template = new RedisTemplate<>();
-
-        template.setConnectionFactory(factory);
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new RedisSerializer<byte[]>() {
-            @Override
-            @NullMarked
-            public byte[] serialize(byte @Nullable [] bytes) throws SerializationException {
-                return ObjectUtil.isAnyNull(bytes) ? new byte[0] : bytes;
-            }
-
-            @Override
-            public byte[] deserialize(byte[] bytes) throws SerializationException {
-                return bytes;
-            }
-        });
-
-        return template;
     }
 }

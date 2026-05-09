@@ -20,17 +20,14 @@ public class MemoryManager extends AManager {
     @Override
     public void startup(long startup) {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_AFTER_SELF)) {
-            this.factoryManager.getCoreObjectRepository().addByHandle(SpaceType.KERNEL,
-                    this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID,
-                    this.factoryManager.create(DatabaseInfoRepositoryObject.class));
+            this.coreManager.getObjectCollection().addById(SpaceType.KERNEL,
+                    this.coreManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORY_ID,
+                    this.coreManager.create(DatabaseInfoRepositoryObject.class));
 
-            this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL,
-                    this.factoryManager.create(ProcessRepositoryObject.class));
-            this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL,
-                    this.factoryManager.create(UserRepositoryObject.class));
-
-            this.factoryManager.getCoreObjectRepository().addByClass(SpaceType.KERNEL,
-                    this.factoryManager.create(CacheRepositoryObject.class));
+            this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
+                    this.coreManager.create(ProcessRepositoryObject.class));
+            this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
+                    this.coreManager.create(UserRepositoryObject.class));
         }
     }
 
@@ -43,18 +40,22 @@ public class MemoryManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        return this.factoryManager.getCoreObjectRepository().getByHandle(SpaceType.KERNEL, id);
+        return this.coreManager.getObjectCollection().getById(SpaceType.KERNEL, id);
     }
 
     public ProcessRepositoryObject getProcessRepository() {
-        return this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, ProcessRepositoryObject.class);
+        return this.coreManager.getObjectCollection().getByClass(SpaceType.KERNEL, ProcessRepositoryObject.class);
     }
 
     public UserRepositoryObject getUserRepository() {
-        return this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, UserRepositoryObject.class);
+        return this.coreManager.getObjectCollection().getByClass(SpaceType.KERNEL, UserRepositoryObject.class);
     }
 
-    public CacheRepositoryObject getCacheRepository() {
-        return this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, CacheRepositoryObject.class);
+    public <T extends ACacheRepositoryObject<?>> T getCacheRepository(UUID id) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
+            throw new ConditionParametersException();
+        }
+
+        return this.coreManager.getObjectCollection().getById(SpaceType.KERNEL, id);
     }
 }

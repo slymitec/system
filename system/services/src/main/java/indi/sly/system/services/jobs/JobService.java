@@ -28,20 +28,20 @@ public class JobService extends AService {
     @Override
     public void startup(long startup) {
         if (startup == StartupType.STEP_INIT_SELF) {
-            this.factory = this.factoryManager.create(JobFactory.class);
+            this.factory = this.coreManager.create(JobFactory.class);
             this.factory.init();
         } else if (startup == StartupType.STEP_INIT_SERVICE) {
-            KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+            KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
             kernelSpace.setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
 
-            this.createTask("FactoryManager", TaskAttributeType.NULL, null, this.factoryManager.create(FactoryManagerTaskInitializer.class));
-            this.createTask("ObjectManager", TaskAttributeType.NULL, null, this.factoryManager.create(ObjectManagerTaskInitializer.class));
-            this.createTask("ProcessManager", TaskAttributeType.NULL, null, this.factoryManager.create(ProcessTaskInitializer.class));
-            this.createTask("UserManager", TaskAttributeType.NULL, null, this.factoryManager.create(UserManagerTaskInitializer.class));
+            this.createTask("FactoryManager", TaskAttributeType.NULL, null, this.coreManager.create(FactoryManagerTaskInitializer.class));
+            this.createTask("ObjectManager", TaskAttributeType.NULL, null, this.coreManager.create(ObjectManagerTaskInitializer.class));
+            this.createTask("ProcessManager", TaskAttributeType.NULL, null, this.coreManager.create(ProcessTaskInitializer.class));
+            this.createTask("UserManager", TaskAttributeType.NULL, null, this.coreManager.create(UserManagerTaskInitializer.class));
 
-            this.createTask("HandleAction", TaskAttributeType.NULL, null, this.factoryManager.create(HandleActionTaskInitializer.class));
+            this.createTask("HandleAction", TaskAttributeType.NULL, null, this.coreManager.create(HandleActionTaskInitializer.class));
         }
     }
 
@@ -80,7 +80,7 @@ public class JobService extends AService {
             throw new ConditionParametersException();
         }
 
-        ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.factoryManager.getKernelSpace().getServiceSpace();
+        ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.coreManager.getKernelSpace().getServiceSpace();
 
         UUID taskID = serviceSpace.getNamedTaskIDs().getOrDefault(name, null);
 

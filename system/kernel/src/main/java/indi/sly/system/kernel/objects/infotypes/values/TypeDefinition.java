@@ -7,17 +7,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class TypeDefinition extends ADefinition<TypeDefinition> {
+public class TypeDefinition extends ADefinition {
     private String name;
     private long attribute;
-    private UUID thisType;
     private final Set<UUID> childTypes;
     private AInfoTypeInitializer initializer;
-    private final TypeCounterDefinition counter;
 
     public TypeDefinition() {
         this.childTypes = new HashSet<>();
-        this.counter = new TypeCounterDefinition();
     }
 
     public String getName() {
@@ -36,14 +33,6 @@ public class TypeDefinition extends ADefinition<TypeDefinition> {
         this.attribute = attribute;
     }
 
-    public UUID getThisType() {
-        return thisType;
-    }
-
-    public void setThisType(UUID thisType) {
-        this.thisType = thisType;
-    }
-
     public Set<UUID> getChildTypes() {
         return this.childTypes;
     }
@@ -54,9 +43,5 @@ public class TypeDefinition extends ADefinition<TypeDefinition> {
 
     public void setInitializer(AInfoTypeInitializer initializer) {
         this.initializer = initializer;
-    }
-
-    public TypeCounterDefinition getCounter() {
-        return this.counter;
     }
 }

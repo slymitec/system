@@ -21,14 +21,14 @@ public class ThreadBuilder extends ABuilder {
     protected ThreadFactory factory;
 
     public ThreadObject create(UUID processID) {
-        UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
+        UserSpaceDefinition userSpace = this.coreManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
         if (ObjectUtil.isAnyNull(threads)) {
             threads = new Stack<>();
             userSpace.setThreads(threads);
         }
 
-        DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+        DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrentDateTime();
 
         ThreadObject thread = this.factory.buildThread(processID);
@@ -52,7 +52,7 @@ public class ThreadBuilder extends ABuilder {
     }
 
     public void end() {
-        UserSpaceDefinition userSpace = this.factoryManager.getUserSpace();
+        UserSpaceDefinition userSpace = this.coreManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
 
         if (ObjectUtil.isAnyNull(threads) || threads.isEmpty()) {

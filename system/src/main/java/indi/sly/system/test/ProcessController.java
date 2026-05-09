@@ -34,13 +34,13 @@ public class ProcessController extends AController {
         this.init();
 
         UserSpaceDefinition userSpace = new UserSpaceDefinition();
-        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
         kernelSpace.setUserSpace(userSpace);
-        this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+        this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
-        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
         UUID processID = null;
         String processIDText = request.getParameter("ProcessID");
@@ -57,7 +57,7 @@ public class ProcessController extends AController {
 
         //--Start--
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
 
         ProcessStatusObject processStatus = process.getStatus();
@@ -77,8 +77,8 @@ public class ProcessController extends AController {
         Map<String, Object> processStatisticsObject = new HashMap<>();
         Map<String, Object> processTokenObject = new HashMap<>();
 
-        processObject.put("id", process.getID());
-        processObject.put("parentID", process.getParentID());
+        processObject.put("id", process.getId());
+        processObject.put("parentID", process.getParentId());
         processObject.put("status", processStatusObject);
         processObject.put("communication", processCommunicationObject);
         processObject.put("context", processContextObject);
@@ -106,13 +106,13 @@ public class ProcessController extends AController {
 
         processInfoTableObject.put("list", processInfoTable.list());
 
-        processSessionObject.put("getID", processSession.getID());
+        processSessionObject.put("getID", processSession.getId());
 
         processStatisticsObject.put("getDate(Create)", processStatistics.getDate(DateTimeType.CREATE));
         processStatisticsObject.put("getDate(Access)", processStatistics.getDate(DateTimeType.ACCESS));
         processStatisticsObject.put("getStatistics", processStatistics.getStatistics());
 
-        processTokenObject.put("getAccountID", processToken.getAccountID());
+        processTokenObject.put("getAccountID", processToken.getAccountId());
         processTokenObject.put("getLimits", processToken.getLimits());
         processTokenObject.put("getRoles", processToken.getRoles());
 
@@ -125,13 +125,13 @@ public class ProcessController extends AController {
         this.init();
 
         UserSpaceDefinition userSpace = new UserSpaceDefinition();
-        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
         kernelSpace.setUserSpace(userSpace);
-        this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+        this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
-        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
         UUID processID = null;
         String processIDText = request.getParameter("ProcessID");
@@ -148,7 +148,7 @@ public class ProcessController extends AController {
 
         //--Start--
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         processManager.endCurrent();
 
         return "Finished";
@@ -160,13 +160,13 @@ public class ProcessController extends AController {
         this.init();
 
         UserSpaceDefinition userSpace = new UserSpaceDefinition();
-        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
         kernelSpace.setUserSpace(userSpace);
-        this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+        this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
-        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
         UUID processID = null;
         String processIDText = request.getParameter("ProcessID");
@@ -183,7 +183,7 @@ public class ProcessController extends AController {
 
         //--Start--
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
 
         ProcessStatusObject processStatus = process.getStatus();

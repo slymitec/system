@@ -6,7 +6,7 @@ import indi.sly.system.common.values.ADefinition;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ThreadRunDefinition extends ADefinition<ThreadRunDefinition> {
+public class ThreadRunDefinition extends ADefinition {
     public ThreadRunDefinition() {
         this.parameters = new HashMap<>();
     }

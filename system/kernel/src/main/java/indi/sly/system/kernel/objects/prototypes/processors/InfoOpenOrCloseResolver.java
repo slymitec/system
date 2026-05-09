@@ -1,7 +1,5 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.kernel.objects.infotypes.prototypes.TypeCounterObject;
-import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.lang.InfoProcessorCloseFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
@@ -15,23 +13,13 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoOpenOrCloseResolver extends AInfoResolver {
     public InfoOpenOrCloseResolver() {
-        this.open = (index, info, type, status, openAttribute, arguments) -> {
-            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DO_NOT_USE_TYPE_COUNT)) {
-                TypeCounterObject typeCount = type.getCount();
-                typeCount.addTotalOccupiedCount();
-            }
-
+        this.open = (index, info, type, cache, openAttribute, arguments) -> {
             info.setOpened(info.getOpened() + 1);
 
             return index;
         };
 
-        this.close = (info, type, status) -> {
-            if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.DO_NOT_USE_TYPE_COUNT)) {
-                TypeCounterObject typeCount = type.getCount();
-                typeCount.minusTotalOccupiedCount();
-            }
-
+        this.close = (info, type, cache) -> {
             info.setOpened(info.getOpened() - 1);
 
             return info;

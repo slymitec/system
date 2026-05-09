@@ -8,7 +8,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -30,7 +30,6 @@ import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -39,32 +38,36 @@ import java.util.UUID;
 public class ProcessManager extends AManager {
     private ProcessFactory factory;
 
+    public ProcessFactory getFactory() {
+        return this.factory;
+    }
+
     @Override
     public void startup(long startup) {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
-            this.factory = this.factoryManager.create(ProcessFactory.class);
+            this.factory = this.coreManager.create(ProcessFactory.class);
             this.factory.init();
         } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
-            TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
+            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
 
-            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
             long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,
                     TypeInitializerAttributeType.CAN_NOT_CHANGE_OWNER, TypeInitializerAttributeType.HAS_AUDIT,
                     TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
                     TypeInitializerAttributeType.HAS_PROPERTIES, TypeInitializerAttributeType.TEMPORARY);
             Set<UUID> childTypes = Set.of();
-            AInfoTypeInitializer typeInitializer = this.factoryManager.create(PortTypeInitializer.class);
+            AInfoTypeInitializer typeInitializer = this.coreManager.create(PortTypeInitializer.class);
 
             typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_ID,
                     kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_NAME, attribute, childTypes, typeInitializer);
 
-            typeInitializer = this.factoryManager.create(SignalTypeInitializer.class);
+            typeInitializer = this.coreManager.create(SignalTypeInitializer.class);
 
             typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID,
                     kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_NAME, attribute, childTypes, typeInitializer);
 
-            typeInitializer = this.factoryManager.create(SessionTypeInitializer.class);
+            typeInitializer = this.coreManager.create(SessionTypeInitializer.class);
 
             typeManager.create(kernelConfiguration.PROCESSES_SESSION_INSTANCE_ID,
                     kernelConfiguration.PROCESSES_SESSION_INSTANCE_NAME, attribute, childTypes, typeInitializer);
@@ -80,14 +83,14 @@ public class ProcessManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
         return this.factory.buildProcess(processRepository.get(processID));
     }
 
     public ProcessObject getCurrent() {
-        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
         ThreadObject thread = threadManager.getCurrent();
         ThreadStatusObject threadStatus = thread.getStatus();
@@ -96,7 +99,7 @@ public class ProcessManager extends AManager {
             throw new StatusRelationshipErrorException();
         }
 
-        return this.getTarget(thread.getProcessID());
+        return this.getTarget(thread.getProcessId());
     }
 
     public ProcessObject get(UUID processID, AccountAuthorizationObject accountAuthorization) {
@@ -105,7 +108,7 @@ public class ProcessManager extends AManager {
         }
 
         ProcessObject currentProcess = this.getCurrent();
-        if (currentProcess.getID().equals(processID)) {
+        if (currentProcess.getId().equals(processID)) {
             return currentProcess;
         }
 
@@ -116,10 +119,10 @@ public class ProcessManager extends AManager {
         ProcessSessionObject currentProcessSession = currentProcess.getSession();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-        if (!currentProcessToken.getAccountID().equals(processToken.getAccountID())
+        if (!currentProcessToken.getAccountId().equals(processToken.getAccountId())
                 && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                && !(ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.checkAndGetSummary().getID().equals(processToken.getAccountID())))
-                && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getID()) && !currentProcessSession.getID().equals(processSession.getID()))) {
+                && !(ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.checkAndGetSummary().getID().equals(processToken.getAccountId())))
+                && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
             throw new ConditionRefuseException();
         }
 
@@ -130,7 +133,7 @@ public class ProcessManager extends AManager {
         return this.get(processID, null);
     }
 
-    public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, String parameters, List<IdentificationDefinition> workFolder) {
+    public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, String parameters, PathDefinition workFolder) {
         ProcessCreatorDefinition processCreator = new ProcessCreatorDefinition();
 
         if (ObjectUtil.allNotNull(accountAuthorization)) {
@@ -144,7 +147,7 @@ public class ProcessManager extends AManager {
         } else {
             processCreator.setParameters(StringUtil.EMPTY);
         }
-        if (ObjectUtil.allNotNull(workFolder) && !workFolder.isEmpty()) {
+        if (ObjectUtil.allNotNull(workFolder) && !workFolder.get().isEmpty()) {
             processCreator.setWorkFolder(workFolder);
         }
 
@@ -158,9 +161,9 @@ public class ProcessManager extends AManager {
         ProcessObject process = this.getCurrent();
         ProcessObject parentProcess = null;
 
-        if (!ValueUtil.isAnyNullOrEmpty(process.getParentID())) {
+        if (!ValueUtil.isAnyNullOrEmpty(process.getParentId())) {
             try {
-                parentProcess = this.getTarget(process.getParentID());
+                parentProcess = this.getTarget(process.getParentId());
             } catch (StatusNotExistedException ignored) {
             }
         }

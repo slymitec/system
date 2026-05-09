@@ -18,7 +18,7 @@ public class ProcessEndSessionResolver extends AProcessEndResolver {
         this.end = (process, parentProcess) -> {
             ProcessSessionObject processSession = process.getSession();
 
-            if (!ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
+            if (!ValueUtil.isAnyNullOrEmpty(processSession.getId())) {
                 processSession.close();
             }
 

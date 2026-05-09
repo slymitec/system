@@ -3,6 +3,7 @@ package indi.sly.system.kernel.files.instances.prototypes;
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
+import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -16,16 +17,9 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FileSystemFolderContentObject extends AInfoContentObject {
-    public FileSystemFolderContentObject() {
-        this.funcCustomRead = () -> this.entry = ObjectUtil.transferFromByteArray(this.value);
-        this.funcCustomWrite = () -> this.value = ObjectUtil.transferToByteArray(this.entry);
-    }
-
-    private FileSystemEntryDefinition entry;
-
+public class FileSystemFolderContentObject extends AInfoContentObject implements IByteValueProcess<FileSystemEntryDefinition> {
     public long getType() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
@@ -34,18 +28,13 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
             throw new ConditionRefuseException();
         }
 
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
 
-            return this.entry.getType();
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return fileSystemEntry.getType();
     }
 
     public void setType(long type) {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
@@ -54,20 +43,15 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
             throw new ConditionRefuseException();
         }
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
 
-            this.entry.setType(type);
+        fileSystemEntry.setType(type);
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        this.write(this.flush(fileSystemEntry));
     }
 
     public byte[] getValue() {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
@@ -76,18 +60,13 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
             throw new ConditionRefuseException();
         }
 
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
 
-            return this.entry.getValue();
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return fileSystemEntry.getValue();
     }
 
     public void setValue(byte[] configuration) {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
@@ -96,15 +75,10 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
             throw new ConditionRefuseException();
         }
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
 
-            this.entry.setValue(configuration);
+        fileSystemEntry.setValue(configuration);
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        this.write(this.flush(fileSystemEntry));
     }
 }

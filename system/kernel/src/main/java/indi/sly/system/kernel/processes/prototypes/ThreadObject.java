@@ -1,58 +1,58 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.kernel.core.prototypes.AObject;
+import indi.sly.system.kernel.core.prototypes.ADefinitionObject;
 import indi.sly.system.kernel.processes.values.ThreadDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ThreadObject extends AObject {
+public class ThreadObject extends ADefinitionObject<ThreadDefinition> {
     public ThreadObject() {
         this.thread = new ThreadDefinition();
     }
 
     private final ThreadDefinition thread;
 
-    public UUID getID() {
-        return this.thread.getID();
+    public UUID getId() {
+        return this.thread.getId();
     }
 
-    public UUID getProcessID() {
-        return this.thread.getProcessID();
+    public UUID getProcessId() {
+        return this.thread.getProcessId();
     }
 
-    public void setProcessID(UUID id) {
-        this.thread.setProcessID(id);
+    public void setProcessId(UUID id) {
+        this.thread.setProcessId(id);
     }
 
     public synchronized ThreadStatusObject getStatus() {
-        ThreadStatusObject threadStatus = this.factoryManager.create(ThreadStatusObject.class);
+        ThreadStatusObject threadStatus = this.coreManager.create(ThreadStatusObject.class);
 
-        threadStatus.setParent(this);
-        threadStatus.setSource(() -> this.thread, (source) -> {
-        });
+        threadStatus.setBase(this);
+        threadStatus.setDefinition(this.definition);
 
         return threadStatus;
     }
 
     public synchronized ThreadContextObject getContext() {
-        ThreadContextObject threadContext = this.factoryManager.create(ThreadContextObject.class);
+        ThreadContextObject threadContext = this.coreManager.create(ThreadContextObject.class);
 
-        threadContext.setParent(this);
-        threadContext.setSource(this.thread::getContext, this.thread::setContext);
+        threadContext.setBase(this);
+        threadContext.setDefinition(threadContext.getDefinition());
 
         return threadContext;
     }
 
     public synchronized ThreadStatisticsObject getStatistics() {
-        ThreadStatisticsObject threadStatistics = this.factoryManager.create(ThreadStatisticsObject.class);
+        ThreadStatisticsObject threadStatistics = this.coreManager.create(ThreadStatisticsObject.class);
 
-        threadStatistics.setParent(this);
-        threadStatistics.setSource(this.thread::getStatistics, this.thread::setStatistics);
+        threadStatistics.setBase(this);
+        threadStatistics.setDefinition(this.thread.getStatistics());
 
         return threadStatistics;
     }

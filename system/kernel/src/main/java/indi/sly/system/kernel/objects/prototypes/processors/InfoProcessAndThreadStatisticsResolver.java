@@ -18,9 +18,9 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
     public InfoProcessAndThreadStatisticsResolver() {
-        this.dump = (dump, info, type, status) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        this.dump = (dump, info, type, cache) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
@@ -33,9 +33,9 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             return dump;
         };
 
-        this.open = (index, info, type, status, openAttribute, arguments) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        this.open = (index, info, type, cache, openAttribute, arguments) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
@@ -48,9 +48,9 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             return index;
         };
 
-        this.close = (info, type, status) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        this.close = (info, type, cache) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
@@ -63,9 +63,9 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             return info;
         };
 
-        this.createChild = (childInfo, info, type, status, childType, identification) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        this.createChild = (childInfo, info, type, cache, childType, identification) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
@@ -78,9 +78,9 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        this.getChild = (childInfo, info, type, cache, identification) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
@@ -93,9 +93,9 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.deleteChild = (info, type, status, identification) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        this.deleteChild = (info, type, cache, identification) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
@@ -106,9 +106,9 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             threadStatistics.addInfoDelete(1);
         };
 
-        this.queryChild = (summaryDefinitions, info, type, status, wildcard) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        this.queryChild = (summaryDefinitions, info, type, cache, wildcard) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
@@ -121,9 +121,9 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             return summaryDefinitions;
         };
 
-        this.readProperties = (properties, info, type, status) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        this.readProperties = (properties, info, type, cache) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
@@ -136,9 +136,9 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             return properties;
         };
 
-        this.writeProperties = (info, type, status, properties) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        this.writeProperties = (info, type, cache, properties) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
@@ -149,9 +149,9 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             threadStatistics.addInfoWrite(1);
         };
 
-        this.readContent = (content, info, type, status) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        this.readContent = (content, info, type, cache) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
@@ -164,9 +164,9 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             return content;
         };
 
-        this.writeContent = (info, type, status, content) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        this.writeContent = (info, type, cache, content) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
@@ -177,9 +177,9 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
             threadStatistics.addInfoWrite(1);
         };
 
-        this.executeContent = (info, type, status) -> {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        this.executeContent = (info, type, cache) -> {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
             ProcessObject process = processManager.getCurrent();
             ThreadObject thread = threadManager.getCurrent();
@@ -195,7 +195,7 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
     private final InfoProcessorOpenFunction open;
     private final InfoProcessorCloseFunction close;
     private final InfoProcessorCreateChildFunction createChild;
-    private final InfoProcessorGetOrRebuildChildFunction getOrRebuildChild;
+    private final InfoProcessorGetChildFunction getChild;
     private final InfoProcessorDeleteChildConsumer deleteChild;
     private final InfoProcessorQueryChildFunction queryChild;
     private final InfoProcessorReadPropertyFunction readProperties;
@@ -210,7 +210,7 @@ public class InfoProcessAndThreadStatisticsResolver extends AInfoResolver {
         processorMediator.getOpens().add(this.open);
         processorMediator.getCloses().add(this.close);
         processorMediator.getCreateChildren().add(this.createChild);
-        processorMediator.getGetOrRebuildChildren().add(this.getOrRebuildChild);
+        processorMediator.getGetChildren().add(this.getChild);
         processorMediator.getDeleteChildren().add(this.deleteChild);
         processorMediator.getQueryChildren().add(this.queryChild);
         processorMediator.getReadProperties().add(this.readProperties);

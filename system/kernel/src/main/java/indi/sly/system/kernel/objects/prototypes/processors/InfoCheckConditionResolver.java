@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoCheckConditionResolver extends AInfoResolver {
     public InfoCheckConditionResolver() {
-        this.open = (index, info, type, status, openAttribute, arguments) -> {
+        this.open = (index, info, type, cache, openAttribute, arguments) -> {
             if (LogicalUtil.isAnyEqual(openAttribute, InfoOpenAttributeType.CLOSE)
                     || (LogicalUtil.isAnyEqual(openAttribute, InfoOpenAttributeType.OPEN_EXCLUSIVE) && info.getOpened() > 0)
                     || (LogicalUtil.isAnyEqual(openAttribute, InfoOpenAttributeType.OPEN_ONLY_READ) && info.getOpened() > 0
@@ -29,14 +30,14 @@ public class InfoCheckConditionResolver extends AInfoResolver {
                 throw new StatusNotSupportedException();
             }
 
-            if (status.getIdentifications().isEmpty()) {
+            if (cache.getPath().get().isEmpty()) {
                 throw new StatusNotSupportedException();
             }
 
             return index;
         };
 
-        this.createChild = (childInfo, info, type, status, childType, identification) -> {
+        this.createChild = (childInfo, info, type, cache, childType, identification) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
                     || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
                 throw new StatusNotSupportedException();
@@ -49,7 +50,7 @@ public class InfoCheckConditionResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.getOrRebuildChild = (childInfo, info, type, status, identification) -> {
+        this.getChild = (childInfo, info, type, cache, identification) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
                     || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
                 throw new StatusNotSupportedException();
@@ -58,14 +59,14 @@ public class InfoCheckConditionResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.deleteChild = (info, type, status, identification) -> {
+        this.deleteChild = (info, type, cache, identification) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
                     || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
         };
 
-        this.queryChild = (summaryDefinitions, info, type, status, wildcard) -> {
+        this.queryChild = (summaryDefinitions, info, type, cache, wildcard) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)) {
                 throw new StatusNotSupportedException();
             }
@@ -73,7 +74,7 @@ public class InfoCheckConditionResolver extends AInfoResolver {
             return summaryDefinitions;
         };
 
-        this.renameChild = (info, type, status, oldIdentification, newIdentification) -> {
+        this.renameChild = (info, type, cache, oldIdentification, newIdentification) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD) || (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS))) {
                 throw new StatusNotSupportedException();
             }
@@ -82,7 +83,7 @@ public class InfoCheckConditionResolver extends AInfoResolver {
             }
         };
 
-        this.readProperties = (properties, info, type, status) -> {
+        this.readProperties = (properties, info, type, cache) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PROPERTIES)) {
                 throw new StatusNotSupportedException();
             }
@@ -90,13 +91,13 @@ public class InfoCheckConditionResolver extends AInfoResolver {
             return properties;
         };
 
-        this.writeProperties = (info, type, status, properties) -> {
+        this.writeProperties = (info, type, cache, properties) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PROPERTIES)) {
                 throw new StatusNotSupportedException();
             }
         };
 
-        this.readContent = (content, info, type, status) -> {
+        this.readContent = (content, info, type, cache) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CONTENT)) {
                 throw new StatusNotSupportedException();
             }
@@ -110,7 +111,7 @@ public class InfoCheckConditionResolver extends AInfoResolver {
             }
         };
 
-        this.executeContent = (info, type, status) -> {
+        this.executeContent = (info, type, cache) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CONTENT)
                     || !type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CAN_BE_EXECUTED)) {
                 throw new StatusNotSupportedException();
@@ -120,7 +121,7 @@ public class InfoCheckConditionResolver extends AInfoResolver {
 
     private final InfoProcessorOpenFunction open;
     private final InfoProcessorCreateChildFunction createChild;
-    private final InfoProcessorGetOrRebuildChildFunction getOrRebuildChild;
+    private final InfoProcessorGetChildFunction getChild;
     private final InfoProcessorDeleteChildConsumer deleteChild;
     private final InfoProcessorQueryChildFunction queryChild;
     private final InfoProcessorRenameChildConsumer renameChild;
@@ -134,7 +135,7 @@ public class InfoCheckConditionResolver extends AInfoResolver {
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
         processorMediator.getOpens().add(this.open);
         processorMediator.getCreateChildren().add(this.createChild);
-        processorMediator.getGetOrRebuildChildren().add(this.getOrRebuildChild);
+        processorMediator.getGetChildren().add(this.getChild);
         processorMediator.getDeleteChildren().add(this.deleteChild);
         processorMediator.getQueryChildren().add(this.queryChild);
         processorMediator.getRenameChildren().add(this.renameChild);

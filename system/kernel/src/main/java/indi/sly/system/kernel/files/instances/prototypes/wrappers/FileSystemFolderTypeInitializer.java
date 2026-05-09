@@ -2,7 +2,7 @@ package indi.sly.system.kernel.files.instances.prototypes.wrappers;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFolderContentObject;
@@ -35,8 +35,8 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     @Override
-    public UUID getPoolID(UUID id, UUID type) {
-        return this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID;
+    public UUID getPoolId(UUID id, UUID type) {
+        return this.coreManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORY_ID;
     }
 
     @Override
@@ -55,8 +55,8 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         assert entry != null;
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
             if (infoRepository.countRelation(info, null) > 0) {
                 throw new StatusIsUsedException();
@@ -78,7 +78,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void getProcedure(InfoEntity info, IdentificationDefinition identification) {
+    public void getProcedure(InfoEntity info, IdentifierDefinition identification) {
         if (identification.getType() == String.class) {
             String childInfoName = StringUtil.readFormBytes(identification.getValue());
             if (!childInfoName.equals(info.getName())) {
@@ -97,8 +97,8 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         assert entry != null;
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
             try {
                 this.lockProcedure(info, LockType.WRITE);
 
@@ -114,8 +114,8 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 childInfo.setContent(ObjectUtil.transferToByteArray(childEntry));
 
                 InfoRelationEntity infoRelation = new InfoRelationEntity();
-                infoRelation.setID(childInfo.getID());
-                infoRelation.setParentID(info.getID());
+                infoRelation.setId(childInfo.getId());
+                infoRelation.setParentId(info.getId());
                 infoRelation.setType(childInfo.getType());
                 infoRelation.setName(childInfo.getName());
 
@@ -124,7 +124,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 this.unlockProcedure(info, LockType.WRITE);
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
-            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
             File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "$Relations");
@@ -168,7 +168,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             } catch (IOException e) {
                 throw new StatusUnexpectedException();
             }
-            byte[] childInfoRelationID = UUIDUtil.writeToBytes(childInfo.getID());
+            byte[] childInfoRelationID = UUIDUtil.writeToBytes(childInfo.getId());
             byte[] childInfoRelationType = UUIDUtil.writeToBytes(childInfo.getType());
             try (FileOutputStream fileOutputStream = new FileOutputStream(childInfoRelationFile)) {
                 fileOutputStream.write(childInfoRelationID);
@@ -180,7 +180,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentificationDefinition identification) {
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierDefinition identification) {
         if (identification.getType() != String.class) {
             throw new StatusNotSupportedException();
         }
@@ -192,15 +192,15 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
             try {
                 this.lockProcedure(info, LockType.READ);
 
                 InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoName);
 
-                infoSummary.setID(infoRelation.getID());
+                infoSummary.setID(infoRelation.getId());
                 infoSummary.setType(infoRelation.getType());
                 infoSummary.setName(infoRelation.getName());
             } finally {
@@ -249,8 +249,8 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
             try {
                 this.lockProcedure(info, LockType.READ);
@@ -258,7 +258,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
                 for (InfoRelationEntity infoRelation : infoRelations) {
                     InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
-                    infoSummary.setID(infoRelation.getID());
+                    infoSummary.setID(infoRelation.getId());
                     infoSummary.setType(infoRelation.getType());
                     infoSummary.setName(infoRelation.getName());
 
@@ -314,7 +314,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void renameChildProcedure(InfoEntity info, IdentificationDefinition oldIdentification, IdentificationDefinition newIdentification) {
+    public void renameChildProcedure(InfoEntity info, IdentifierDefinition oldIdentification, IdentifierDefinition newIdentification) {
         if (oldIdentification.getType() != String.class || newIdentification.getType() != String.class) {
             throw new StatusNotSupportedException();
         }
@@ -326,8 +326,8 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         assert entry != null;
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
             try {
                 this.lockProcedure(info, LockType.WRITE);
@@ -375,7 +375,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, IdentificationDefinition identification) {
+    public void deleteChildProcedure(InfoEntity info, IdentifierDefinition identification) {
         if (identification.getType() != String.class) {
             throw new StatusNotSupportedException();
         }
@@ -386,8 +386,8 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         String childInfoName = StringUtil.readFormBytes(identification.getValue());
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolID(info.getID(), info.getType()));
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+            AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
             try {
                 this.lockProcedure(info, LockType.WRITE);

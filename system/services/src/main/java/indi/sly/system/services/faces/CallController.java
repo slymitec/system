@@ -24,9 +24,9 @@ public class CallController extends AController {
     protected void initCallController(HttpSession session) {
         UserSpaceDefinition userSpace = (UserSpaceDefinition) session.getAttribute("userSpace");
 
-        if (ObjectUtil.isAnyNull(this.factoryManager)) {
+        if (ObjectUtil.isAnyNull(this.coreManager)) {
             synchronized (this) {
-                if (ObjectUtil.isAnyNull(this.factoryManager)) {
+                if (ObjectUtil.isAnyNull(this.coreManager)) {
                     this.init();
                 }
             }
@@ -36,12 +36,12 @@ public class CallController extends AController {
             throw new StatusNotReadyException();
         }
 
-        this.factoryManager.setUserSpace(userSpace);
+        this.coreManager.setUserSpace(userSpace);
 
-        if (this.factoryManager.getCoreObjectRepository().getLimit(SpaceType.USER) <= 0L) {
-            KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        if (this.coreManager.getObjectCollection().getLimit(SpaceType.USER) <= 0L) {
+            KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
-            this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+            this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
         }
     }
 
@@ -50,7 +50,7 @@ public class CallController extends AController {
         this.initCallController(session);
 
         try {
-            JobService jobService = this.factoryManager.getService(JobService.class);
+            JobService jobService = this.coreManager.getService(JobService.class);
 
             UserContextObject userContext = jobService.createUserContext(userContextRequest);
 
@@ -62,7 +62,7 @@ public class CallController extends AController {
 
             jobService.finishUserContext(userContext);
 
-            this.factoryManager.setUserSpace(null);
+            this.coreManager.setUserSpace(null);
 
             return ObjectUtil.transferToString(userContentResponse);
         } catch (RuntimeException exception) {

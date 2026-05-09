@@ -1,20 +1,17 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.lang.MethodScope;
-import indi.sly.system.common.lang.StatusIsUsedException;
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.values.MethodScopeType;
-import indi.sly.system.kernel.core.prototypes.AValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteStatusConsumer;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
+import indi.sly.system.kernel.processes.values.ProcessChildCacheEntity;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.kernel.security.values.PrivilegeType;
@@ -26,203 +23,211 @@ import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessStatusObject extends AValueProcessObject<ProcessEntity, ProcessObject> {
+public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
+    protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
+    private ProcessEntity getSelf() {
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
+            throw new ConditionContextException();
+        }
+
+        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
+    }
+
     public long get() {
+        ProcessEntity process = this.getSelf();
+
         try {
-            this.lock(LockType.READ);
-            this.init();
+            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
             Long status = ProcessStatusType.NULL;
 
             Set<ProcessProcessorReadStatusFunction> resolvers = this.processorMediator.getReadProcessStatuses();
 
             for (ProcessProcessorReadStatusFunction resolver : resolvers) {
-                status = resolver.apply(status, this.value);
+                status = resolver.apply(status, process);
             }
 
             return status;
         } finally {
-            this.unlock(LockType.READ);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
         }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void initialize() {
-        if (this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+        if (this.base.isCurrent() || LogicalUtil.allNotEqual(this.base.getStatus().get(),
                 ProcessStatusType.NULL)) {
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessEntity process = this.getSelf();
+
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject currentProcess = processManager.getCurrent();
 
-        if (!currentProcess.getID().equals(this.parent.getParentID())) {
+        if (!currentProcess.getId().equals(this.base.getParentId())) {
             throw new ConditionRefuseException();
         }
 
         try {
-            this.lock(LockType.READ);
-            this.init();
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
             Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
             for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-                resolver.accept(this.value, ProcessStatusType.INITIALIZATION);
+                resolver.accept(process, ProcessStatusType.INITIALIZATION);
             }
         } finally {
-            this.unlock(LockType.READ);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
 
-        ProcessStatisticsObject processStatus = this.parent.getStatistics();
+        ProcessStatisticsObject processStatus = this.base.getStatistics();
         processStatus.addStatusCumulation(1);
     }
 
     public void run() {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
+        if (LogicalUtil.allNotEqual(this.base.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.INTERRUPTED)) {
             throw new StatusRelationshipErrorException();
         }
-        if (!this.parent.isCurrent()) {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessEntity process = this.getSelf();
+
+        if (!this.base.isCurrent()) {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject currentProcess = processManager.getCurrent();
             ProcessSessionObject currentProcessSession = currentProcess.getSession();
             ProcessTokenObject currentProcessToken = currentProcess.getToken();
-            ProcessSessionObject processSession = this.parent.getSession();
-            ProcessTokenObject processToken = this.parent.getToken();
+            ProcessSessionObject processSession = this.base.getSession();
+            ProcessTokenObject processToken = this.base.getToken();
 
-            if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
-                if (!currentProcess.getID().equals(this.parent.getParentID())
+            if (LogicalUtil.isAnyEqual(this.base.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+                if (!currentProcess.getId().equals(this.base.getParentId())
                         && !currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                        && !currentProcessToken.getAccountID().equals(processToken.getAccountID())
-                        && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getID()) && !currentProcessSession.getID().equals(processSession.getID()))) {
+                        && !currentProcessToken.getAccountId().equals(processToken.getAccountId())
+                        && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
                     throw new ConditionRefuseException();
                 }
-            } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INTERRUPTED)) {
+            } else if (LogicalUtil.isAnyEqual(this.base.getStatus().get(), ProcessStatusType.INTERRUPTED)) {
                 if (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                        && !currentProcessToken.getAccountID().equals(processToken.getAccountID())
-                        && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getID()) && !currentProcessSession.getID().equals(processSession.getID()))) {
+                        && !currentProcessToken.getAccountId().equals(processToken.getAccountId())
+                        && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
                     throw new ConditionRefuseException();
                 }
             }
         }
 
         try {
-            this.lock(LockType.READ);
-            this.init();
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
             Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
             for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-                resolver.accept(this.value, ProcessStatusType.RUNNING);
+                resolver.accept(process, ProcessStatusType.RUNNING);
             }
         } finally {
-            this.unlock(LockType.READ);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
     }
 
     public void interrupt() {
-        if (LogicalUtil.allNotEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION,
+        if (LogicalUtil.allNotEqual(this.base.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
         }
-        if (!this.parent.isCurrent()) {
-            ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+
+        ProcessEntity process = this.getSelf();
+
+        if (!this.base.isCurrent()) {
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ProcessObject currentProcess = processManager.getCurrent();
             ProcessSessionObject currentProcessSession = currentProcess.getSession();
             ProcessTokenObject currentProcessToken = currentProcess.getToken();
-            ProcessSessionObject processSession = this.parent.getSession();
-            ProcessTokenObject processToken = this.parent.getToken();
+            ProcessSessionObject processSession = this.base.getSession();
+            ProcessTokenObject processToken = this.base.getToken();
 
-            if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
-                if (!currentProcess.getID().equals(this.parent.getParentID())
+            if (LogicalUtil.isAnyEqual(this.base.getStatus().get(), ProcessStatusType.INITIALIZATION)) {
+                if (!currentProcess.getId().equals(this.base.getParentId())
                         && !currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                        && !currentProcessToken.getAccountID().equals(processToken.getAccountID())
-                        && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getID()) && !currentProcessSession.getID().equals(processSession.getID()))) {
+                        && !currentProcessToken.getAccountId().equals(processToken.getAccountId())
+                        && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
                     throw new ConditionRefuseException();
                 }
-            } else if (LogicalUtil.isAnyEqual(this.parent.getStatus().get(), ProcessStatusType.RUNNING)) {
+            } else if (LogicalUtil.isAnyEqual(this.base.getStatus().get(), ProcessStatusType.RUNNING)) {
                 if (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                        && !currentProcessToken.getAccountID().equals(processToken.getAccountID())
-                        && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getID()) && !currentProcessSession.getID().equals(processSession.getID()))) {
+                        && !currentProcessToken.getAccountId().equals(processToken.getAccountId())
+                        && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
                     throw new ConditionRefuseException();
                 }
             }
         }
 
         try {
-            this.lock(LockType.WRITE);
-            this.init();
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
             Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
             for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-                resolver.accept(this.value, ProcessStatusType.INTERRUPTED);
+                resolver.accept(process, ProcessStatusType.INTERRUPTED);
             }
-
-            this.fresh();
         } finally {
-            this.unlock(LockType.WRITE);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void die() {
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+        if (!this.base.isCurrent() || LogicalUtil.allNotEqual(this.base.getStatus().get(),
                 ProcessStatusType.RUNNING, ProcessStatusType.INTERRUPTED, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
+        ProcessEntity process = this.getSelf();
+
         try {
-            this.lock(LockType.WRITE);
-            this.init();
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
             Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
             for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-                resolver.accept(this.value, ProcessStatusType.DIED);
+                resolver.accept(process, ProcessStatusType.DIED);
             }
-
-            this.fresh();
         } finally {
-            this.unlock(LockType.WRITE);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void zombie() {
-        if (!this.parent.isCurrent() || LogicalUtil.allNotEqual(this.parent.getStatus().get(),
+        if (!this.base.isCurrent() || LogicalUtil.allNotEqual(this.base.getStatus().get(),
                 ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessCommunicationObject processCommunication = this.parent.getCommunication();
-        ProcessInfoTableObject processInfoTable = this.parent.getInfoTable();
-        ProcessSessionObject processSession = this.parent.getSession();
+        ProcessEntity process = this.getSelf();
+
+        ProcessCommunicationObject processCommunication = this.base.getCommunication();
+        ProcessInfoTableObject processInfoTable = this.base.getInfoTable();
+        ProcessSessionObject processSession = this.base.getSession();
+
+        if (!processCommunication.getPortIDs().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalID())
+                || !processInfoTable.list().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processSession.getId())) {
+            throw new StatusIsUsedException();
+        }
 
         try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            if (!processCommunication.getPortIDs().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalID())
-                    || !processInfoTable.list().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processSession.getID())) {
-                throw new StatusIsUsedException();
-            }
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
             Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
             for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-                resolver.accept(this.value, ProcessStatusType.ZOMBIE);
+                resolver.accept(process, ProcessStatusType.ZOMBIE);
             }
 
-            this.fresh();
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+            processRepository.delete(processRepository.get(this.base.getId()));
         } finally {
-            this.unlock(LockType.WRITE);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
-
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
-        processRepository.delete(processRepository.get(this.parent.getID()));
     }
 }

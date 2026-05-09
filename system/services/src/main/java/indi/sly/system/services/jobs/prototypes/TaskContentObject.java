@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AObject;
-import indi.sly.system.kernel.core.prototypes.CoreObjectRepositoryObject;
+import indi.sly.system.kernel.core.prototypes.ObjectCollectionObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -21,7 +21,7 @@ public class TaskContentObject extends AObject {
     protected ThreadContextObject threadContext;
 
     public Set<UUID> getAllHandles() {
-        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
+        ObjectCollectionObject coreObjectRepository = this.coreManager.getObjectCollection();
 
         return coreObjectRepository.getAllHandles(SpaceType.USER);
     }
@@ -31,7 +31,7 @@ public class TaskContentObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        CoreObjectRepositoryObject coreObjectRepository = this.factoryManager.getCoreObjectRepository();
+        ObjectCollectionObject coreObjectRepository = this.coreManager.getObjectCollection();
 
         return coreObjectRepository.getByHandle(SpaceType.USER, handle);
     }

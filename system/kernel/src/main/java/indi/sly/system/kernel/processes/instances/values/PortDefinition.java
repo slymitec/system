@@ -11,7 +11,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class PortDefinition extends ADefinition<PortDefinition> {
+public class PortDefinition extends ADefinition {
     public PortDefinition() {
         this.sourceProcessIDs = new HashSet<>();
         this.value = ArrayUtil.EMPTY_BYTES;
@@ -74,49 +74,5 @@ public class PortDefinition extends ADefinition<PortDefinition> {
         int result = Objects.hash(processID, sourceProcessIDs, limit);
         result = 31 * result + Arrays.hashCode(value);
         return result;
-    }
-
-    @Override
-    public PortDefinition deepClone() {
-        PortDefinition signal = new PortDefinition();
-
-        signal.processID = this.processID;
-        signal.sourceProcessIDs.addAll(this.sourceProcessIDs);
-        signal.value = ArrayUtil.copyBytes(this.value);
-        signal.limit = this.limit;
-
-        return signal;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        this.processID = UUIDUtil.readExternal(in);
-
-        int valueInteger;
-
-        valueInteger = NumberUtil.readExternalInteger(in);
-        for (int i = 0; i < valueInteger; i++) {
-            this.sourceProcessIDs.add(UUIDUtil.readExternal(in));
-        }
-
-        this.value = NumberUtil.readExternalBytes(in);
-        this.limit = NumberUtil.readExternalInteger(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        UUIDUtil.writeExternal(out, this.processID);
-
-        NumberUtil.writeExternalInteger(out, this.sourceProcessIDs.size());
-        for (UUID pair : this.sourceProcessIDs) {
-            UUIDUtil.writeExternal(out, pair);
-        }
-
-        NumberUtil.writeExternalBytes(out, this.value);
-        NumberUtil.writeExternalLong(out, this.limit);
     }
 }

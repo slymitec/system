@@ -5,8 +5,8 @@ import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.MethodScopeType;
+import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
 
@@ -14,23 +14,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class SessionContentObject extends AInfoContentObject {
-    public SessionContentObject() {
-        this.funcCustomRead = () -> this.session = ObjectUtil.transferFromByteArray(this.value);
-        this.funcCustomWrite = () -> this.value = ObjectUtil.transferToByteArray(this.session);
-    }
-
-    private SessionDefinition session;
-
+public class SessionContentObject extends AInfoContentObject implements IByteValueProcess<SessionDefinition> {
     public String getName() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        SessionDefinition session = this.init(this.read());
 
-            return this.session.getName();
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return session.getName();
     }
 
     @MethodScope(value = MethodScopeType.ONLY_KERNEL)
@@ -39,74 +27,43 @@ public class SessionContentObject extends AInfoContentObject {
             throw new ConditionParametersException();
         }
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        SessionDefinition session = this.init(this.read());
 
-            this.session.setName(name);
+        session.setName(name);
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        this.write(this.flush(session));
     }
 
     public long getType() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        SessionDefinition session = this.init(this.read());
 
-            return this.session.getType();
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return session.getType();
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setType(long type) {
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        SessionDefinition session = this.init(this.read());
 
-            this.session.setType(type);
+        session.setType(type);
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        this.write(this.flush(session));
     }
 
     public UUID getAccountID() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        SessionDefinition session = this.init(this.read());
 
-            return this.session.getAccountID();
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return session.getAccountID();
     }
 
     public Set<UUID> listProcessID() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        SessionDefinition session = this.init(this.read());
 
-            return CollectionUtil.unmodifiable(this.session.getProcessIDs());
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return CollectionUtil.unmodifiable(session.getProcessIDs());
     }
 
     public Map<String, String> getEnvironmentVariables() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        SessionDefinition session = this.init(this.read());
 
-            return CollectionUtil.unmodifiable(this.session.getEnvironmentVariables());
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return CollectionUtil.unmodifiable(session.getEnvironmentVariables());
     }
 
     public void setEnvironmentVariables(Map<String, String> environment) {
@@ -114,28 +71,18 @@ public class SessionContentObject extends AInfoContentObject {
             throw new ConditionParametersException();
         }
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        SessionDefinition session = this.init(this.read());
 
-            this.session.getEnvironmentVariables().clear();
-            this.session.getEnvironmentVariables().putAll(environment);
+        session.getEnvironmentVariables().clear();
+        session.getEnvironmentVariables().putAll(environment);
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        this.write(this.flush(session));
     }
 
     public Map<String, String> getParameters() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
+        SessionDefinition session = this.init(this.read());
 
-            return CollectionUtil.unmodifiable(this.session.getParameters());
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return CollectionUtil.unmodifiable(session.getParameters());
     }
 
     public void setParameters(Map<String, String> parameters) {
@@ -143,16 +90,11 @@ public class SessionContentObject extends AInfoContentObject {
             throw new ConditionParametersException();
         }
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
+        SessionDefinition session = this.init(this.read());
 
-            this.session.getParameters().clear();
-            this.session.getParameters().putAll(parameters);
+        session.getParameters().clear();
+        session.getParameters().putAll(parameters);
 
-            this.fresh();
-        } finally {
-            this.unlock(LockType.WRITE);
-        }
+        this.write(this.flush(session));
     }
 }

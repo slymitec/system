@@ -21,19 +21,19 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PortTypeInitializer extends AInfoTypeInitializer {
     @Override
-    public UUID getPoolID(UUID id, UUID type) {
-        return this.factoryManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID;
+    public UUID getPoolId(UUID id, UUID type) {
+        return this.coreManager.getKernelSpace().getConfiguration().MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORY_ID;
     }
 
     @Override
     public void createProcedure(InfoEntity info) {
-        ProcessManager processManager = this.factoryManager.getManager(ProcessManager.class);
+        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
         PortDefinition port = new PortDefinition();
 
-        port.setProcessID(process.getID());
+        port.setProcessID(process.getId());
         port.setLimit(processToken.getLimits().get(ProcessTokenLimitType.PORT_LENGTH_MAX));
 
         info.setContent(ObjectUtil.transferToByteArray(port));

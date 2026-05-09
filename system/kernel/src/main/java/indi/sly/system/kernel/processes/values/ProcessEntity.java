@@ -1,28 +1,18 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.supports.ArrayUtil;
-import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.kernel.core.values.AEntity;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.io.Serial;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "Kernel_Processes")
-public class ProcessEntity extends AEntity<ProcessEntity> {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
+public class ProcessEntity extends APersistentEntity {
     @Id
     @Column(columnDefinition = "uniqueidentifier", name = "ID", nullable = false, updatable = false)
     protected UUID id;
@@ -43,11 +33,11 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
     @Column(length = 4096, name = "Token", nullable = false)
     protected byte[] token;
 
-    public UUID getID() {
+    public UUID getId() {
         return this.id;
     }
 
-    public void setID(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -117,76 +107,13 @@ public class ProcessEntity extends AEntity<ProcessEntity> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProcessEntity that = (ProcessEntity) o;
-        return status == that.status &&
-                id.equals(that.id) &&
-                Objects.equals(parentProcessID, that.parentProcessID) &&
-                Arrays.equals(communication, that.communication) &&
-                Arrays.equals(context, that.context) &&
-                Arrays.equals(infoTable, that.infoTable) &&
-                Arrays.equals(session, that.session) &&
-                Arrays.equals(statistics, that.statistics) &&
-                Arrays.equals(token, that.token);
+        return status == that.status && Objects.equals(id, that.id) && Objects.equals(parentProcessID, that.parentProcessID) && Objects.deepEquals(communication, that.communication) && Objects.deepEquals(context, that.context) && Objects.deepEquals(infoTable, that.infoTable) && Objects.deepEquals(session, that.session) && Objects.deepEquals(statistics, that.statistics) && Objects.deepEquals(token, that.token);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, status, parentProcessID);
-        result = 31 * result + Arrays.hashCode(communication);
-        result = 31 * result + Arrays.hashCode(context);
-        result = 31 * result + Arrays.hashCode(infoTable);
-        result = 31 * result + Arrays.hashCode(session);
-        result = 31 * result + Arrays.hashCode(statistics);
-        result = 31 * result + Arrays.hashCode(token);
-        return result;
-    }
-
-    @Override
-    public ProcessEntity deepClone() {
-        ProcessEntity process = new ProcessEntity();
-
-        process.id = this.id;
-        process.status = this.status;
-        process.parentProcessID = this.parentProcessID;
-        process.communication = ArrayUtil.copyBytes(this.communication);
-        process.context = ArrayUtil.copyBytes(this.context);
-        process.infoTable = ArrayUtil.copyBytes(this.infoTable);
-        process.session = ArrayUtil.copyBytes(this.session);
-        process.statistics = ArrayUtil.copyBytes(this.statistics);
-        process.token = ArrayUtil.copyBytes(this.token);
-
-        return process;
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-
-        this.id = UUIDUtil.readExternal(in);
-        this.status = NumberUtil.readExternalLong(in);
-        this.parentProcessID = UUIDUtil.readExternal(in);
-        this.communication = NumberUtil.readExternalBytes(in);
-        this.context = NumberUtil.readExternalBytes(in);
-        this.infoTable = NumberUtil.readExternalBytes(in);
-        this.session = NumberUtil.readExternalBytes(in);
-        this.statistics = NumberUtil.readExternalBytes(in);
-        this.token = NumberUtil.readExternalBytes(in);
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-
-        UUIDUtil.writeExternal(out, this.id);
-        NumberUtil.writeExternalLong(out, this.status);
-        UUIDUtil.writeExternal(out, this.parentProcessID);
-        NumberUtil.writeExternalBytes(out, this.communication);
-        NumberUtil.writeExternalBytes(out, this.context);
-        NumberUtil.writeExternalBytes(out, this.infoTable);
-        NumberUtil.writeExternalBytes(out, this.session);
-        NumberUtil.writeExternalBytes(out, this.statistics);
-        NumberUtil.writeExternalBytes(out, this.token);
+        return Objects.hash(id, status, parentProcessID, Arrays.hashCode(communication), Arrays.hashCode(context), Arrays.hashCode(infoTable), Arrays.hashCode(session), Arrays.hashCode(statistics), Arrays.hashCode(token));
     }
 }

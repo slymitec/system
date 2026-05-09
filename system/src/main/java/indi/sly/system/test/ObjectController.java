@@ -2,7 +2,7 @@ package indi.sly.system.test;
 
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.services.faces.AController;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -33,20 +33,20 @@ public class ObjectController extends AController {
         this.init();
 
         UserSpaceDefinition userSpace = new UserSpaceDefinition();
-        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
         KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
         kernelSpace.setUserSpace(userSpace);
-        this.factoryManager.getCoreObjectRepository().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
+        this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
-        ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         threadManager.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
 
         //--Start--
 
         StringBuilder sb = new StringBuilder();
 
-        ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
         InfoObject info = objectManager.get(List.of());
 
         this.objectsDisplay(kernelConfiguration, sb, info);
@@ -55,10 +55,10 @@ public class ObjectController extends AController {
     }
 
     private void objectsDisplay(KernelConfigurationDefinition kernelConfiguration, StringBuilder paths, InfoObject info) {
-        List<IdentificationDefinition> identifications = info.getIdentifications();
+        List<IdentifierDefinition> identifications = info.getIdentifications();
 
         StringBuilder path = new StringBuilder();
-        for (IdentificationDefinition identification : identifications) {
+        for (IdentifierDefinition identification : identifications) {
             if (identification.getType().equals(UUID.class)) {
                 path.append("/").append(UUIDUtil.readFormBytes(identification.getValue()));
             } else if (identification.getType().equals(String.class)) {
@@ -72,13 +72,13 @@ public class ObjectController extends AController {
                 || type.equals(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID)) {
             Set<InfoSummaryDefinition> infoSummaries = info.queryChild(new InfoWildcardDefinition());
             for (InfoSummaryDefinition infoSummary : infoSummaries) {
-                InfoObject childInfo = info.getChild(new IdentificationDefinition(infoSummary.getName()));
+                InfoObject childInfo = info.getChild(new IdentifierDefinition(infoSummary.getName()));
                 this.objectsDisplay(kernelConfiguration, paths, childInfo);
             }
         } else if (type.equals(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID)) {
             Set<InfoSummaryDefinition> infoSummaries = info.queryChild(new InfoWildcardDefinition());
             for (InfoSummaryDefinition infoSummary : infoSummaries) {
-                InfoObject childInfo = info.getChild(new IdentificationDefinition(infoSummary.getID()));
+                InfoObject childInfo = info.getChild(new IdentifierDefinition(infoSummary.getID()));
                 this.objectsDisplay(kernelConfiguration, paths, childInfo);
             }
         }

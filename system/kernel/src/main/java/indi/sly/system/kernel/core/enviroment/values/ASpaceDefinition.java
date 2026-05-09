@@ -4,9 +4,9 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AObject;
-import indi.sly.system.kernel.core.values.HandleEntryDefinition;
 
 import jakarta.inject.Named;
+
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,51 +14,48 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Named
-public abstract class ASpaceDefinition<T> extends ADefinition<T> {
+public abstract class ASpaceDefinition<T> extends ADefinition {
     public ASpaceDefinition() {
-        this.coreObjects = new ConcurrentHashMap<>();
-        this.handledHandles = new ConcurrentHashMap<>();
-        this.classedHandles = new ConcurrentHashMap<>();
-        ReentrantReadWriteLock coreObjectLock = new ReentrantReadWriteLock();
-        this.coreObjectReadLock = coreObjectLock.readLock();
-        this.coreObjectWriteLock = coreObjectLock.writeLock();
-        this.coreObjectLimit = 0L;
+        this.objects = new ConcurrentHashMap<>();
+        this.classedObjects = new ConcurrentHashMap<>();
+
+        ReentrantReadWriteLock objectLock = new ReentrantReadWriteLock();
+        this.objectReadLock = objectLock.readLock();
+        this.objectWriteLock = objectLock.writeLock();
+
+        this.objectLimit = 0L;
     }
 
-    private final Map<UUID, AObject> coreObjects;
-    private final Map<UUID, HandleEntryDefinition> handledHandles;
-    private final Map<Class<? extends AObject>, HandleEntryDefinition> classedHandles;
-    private final Lock coreObjectReadLock;
-    private final Lock coreObjectWriteLock;
-    private long coreObjectLimit;
+    private final Map<UUID, AObject> objects;
+    private final Map<Class<? extends AObject>, AObject> classedObjects;
+    private final Lock objectReadLock;
+    private final Lock objectWriteLock;
+    private long objectLimit;
 
-    public Map<UUID, AObject> getCoreObjects() {
-        return this.coreObjects;
+    public Map<UUID, AObject> getObjects() {
+        return this.objects;
     }
 
-    public Map<UUID, HandleEntryDefinition> getHandledHandles() {
-        return this.handledHandles;
+    public Map<Class<? extends AObject>, AObject> getClassedObjects() {
+        return this.classedObjects;
     }
 
-    public Map<Class<? extends AObject>, HandleEntryDefinition> getClassedHandles() {
-        return this.classedHandles;
-    }
-
-    public Lock getCoreObjectLock(long lock) {
+    public Lock getObjectLock(long lock) {
         if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-            return this.coreObjectReadLock;
+            return this.objectReadLock;
         } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-            return this.coreObjectWriteLock;
+            return this.objectWriteLock;
         } else {
             return null;
         }
     }
 
-    public long getCoreObjectLimit() {
-        return this.coreObjectLimit;
+    public long getObjectLimit() {
+        return this.objectLimit;
     }
 
-    public void setCoreObjectLimit(long coreObjectLimit) {
-        this.coreObjectLimit = coreObjectLimit;
+    public void setObjectLimit(long coreObjectLimit) {
+        this.objectLimit = coreObjectLimit;
     }
+
 }

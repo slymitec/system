@@ -24,16 +24,16 @@ public class ProcessCreateBuilder extends ABuilder {
     protected ProcessObject parentProcess;
     protected ProcessObject process;
 
-    private void build() {
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+    private void create() {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
         ProcessEntity process = new ProcessEntity();
 
-        process.setID(UUIDUtil.createRandom());
+        process.setId(UUIDUtil.createRandom());
         process.setStatus(ProcessStatusType.NULL);
         if (ObjectUtil.allNotNull(this.parentProcess)) {
-            process.setParentProcessID(parentProcess.getID());
+            process.setParentProcessID(parentProcess.getId());
         }
         process.setCommunication(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));
         process.setContext(ObjectUtil.transferToByteArray(new ProcessContextDefinition()));
@@ -56,7 +56,7 @@ public class ProcessCreateBuilder extends ABuilder {
             return this.process;
         }
 
-        this.build();
+        this.create();
 
         ProcessStatusObject processStatus = this.process.getStatus();
         processStatus.initialize();

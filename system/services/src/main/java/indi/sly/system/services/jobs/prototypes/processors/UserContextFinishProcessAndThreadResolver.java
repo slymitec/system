@@ -16,9 +16,9 @@ import jakarta.inject.Named;
 public class UserContextFinishProcessAndThreadResolver extends AUserContextFinishResolver {
     public UserContextFinishProcessAndThreadResolver() {
         this.finish = (userContext) -> {
-            TransactionalActionObject transactionalAction = this.factoryManager.create(TransactionalActionObject.class);
+            TransactionalActionObject transactionalAction = this.coreManager.create(TransactionalActionObject.class);
 
-            ThreadManager threadManager = this.factoryManager.getManager(ThreadManager.class);
+            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
             transactionalAction.runWithTransactional(() -> {
                 if (threadManager.size() == 0) {
                     throw new StatusRelationshipErrorException();
@@ -26,7 +26,7 @@ public class UserContextFinishProcessAndThreadResolver extends AUserContextFinis
 
                 ThreadObject thread = threadManager.getCurrent();
 
-                if (!thread.getID().equals(userContext.getThreadID())) {
+                if (!thread.getId().equals(userContext.getThreadID())) {
                     throw new StatusRelationshipErrorException();
                 }
 

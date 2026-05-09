@@ -20,8 +20,8 @@ import java.util.Map;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoDateResolver extends AInfoResolver {
     public InfoDateResolver() {
-        this.open = (index, info, type, status, openAttribute, arguments) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+        this.open = (index, info, type, cache, openAttribute, arguments) -> {
+            DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
@@ -33,8 +33,8 @@ public class InfoDateResolver extends AInfoResolver {
             return index;
         };
 
-        this.createChild = (childInfo, info, type, status, childType, identification) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+        this.createChild = (childInfo, info, type, cache, childType, identification) -> {
+            DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(childInfo.getDate());
@@ -48,8 +48,8 @@ public class InfoDateResolver extends AInfoResolver {
             return childInfo;
         };
 
-        this.readContent = (content, info, type, status) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+        this.readContent = (content, info, type, cache) -> {
+            DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
@@ -61,8 +61,8 @@ public class InfoDateResolver extends AInfoResolver {
             return content;
         };
 
-        this.writeContent = (info, type, status, content) -> {
-            DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+        this.writeContent = (info, type, cache, content) -> {
+            DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrentDateTime();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());

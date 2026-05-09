@@ -1,615 +1,811 @@
 package indi.sly.system.kernel.processes.prototypes;
 
+import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.values.MethodScopeType;
-import indi.sly.system.kernel.core.prototypes.ABytesValueProcessObject;
+import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
+import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
+import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
+import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
+import indi.sly.system.kernel.processes.values.ProcessChildCacheEntity;
+import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatisticsDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessStatisticsObject extends ABytesValueProcessObject<ProcessStatisticsDefinition, ProcessObject> {
-    public long getDate(long dataTime) {
-        this.lock(LockType.READ);
-        this.init();
+public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueProcess<ProcessStatisticsDefinition> {
+    protected ProcessFactory factory;
+    protected ProcessProcessorMediator processorMediator;
 
-        Long value = this.value.getDate().getOrDefault(dataTime, null);
-
-        this.unlock(LockType.READ);
-
-        if (ObjectUtil.isAnyNull(value)) {
-            throw new ConditionParametersException();
+    private ProcessEntity getSelf() {
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
+            throw new ConditionContextException();
         }
 
-        return value;
+        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
+    private ProcessStatisticsDefinition init(ProcessEntity process) {
+        Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessStatistics();
+
+        byte[] source = null;
+
+        for (ProcessProcessorReadComponentFunction resolver : resolvers) {
+            source = resolver.apply(source, process);
+        }
+
+        return IByteValueProcess.super.init(source);
+    }
+
+    private void flush(ProcessEntity process, ProcessStatisticsDefinition value) {
+        byte[] source = IByteValueProcess.super.flush(value);
+
+        Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessStatistics();
+
+        for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
+            resolver.accept(process, source);
+        }
+    }
+
+    public long getDate(long dataTime) {
+        ProcessEntity process = this.getSelf();
+
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            Long value = processStatistics.getDate().getOrDefault(dataTime, null);
+
+            if (ObjectUtil.isAnyNull(value)) {
+                throw new ConditionParametersException();
+            }
+
+            return value;
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
+        }
+    }
+
     public void setDate(long dataTime, long value) {
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.getDate().put(dataTime, value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.getDate().put(dataTime, value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
     public Map<String, Long> getStatistics() {
         Map<String, Long> statistics = new HashMap<>();
 
-        this.lock(LockType.READ);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        statistics.put("StatusCumulation", this.value.getStatusCumulation());
-        statistics.put("ThreadCumulation", this.value.getThreadCumulation());
-        statistics.put("InfoCreate", this.value.getInfoCreate());
-        statistics.put("InfoGet", this.value.getInfoGet());
-        statistics.put("InfoQuery", this.value.getInfoQuery());
-        statistics.put("InfoDelete", this.value.getInfoDelete());
-        statistics.put("InfoDump", this.value.getInfoDump());
-        statistics.put("InfoOpen", this.value.getInfoOpen());
-        statistics.put("InfoClose", this.value.getInfoClose());
-        statistics.put("InfoRead", this.value.getInfoRead());
-        statistics.put("InfoWrite", this.value.getInfoWrite());
-        statistics.put("SharedReadCount", this.value.getSharedReadCount());
-        statistics.put("SharedReadBytes", this.value.getSharedReadBytes());
-        statistics.put("SharedWriteCount", this.value.getSharedWriteCount());
-        statistics.put("SharedWriteBytes", this.value.getSharedWriteBytes());
-        statistics.put("PortCount", this.value.getPortCount());
-        statistics.put("PortReadCount", this.value.getPortReadCount());
-        statistics.put("PortReadBytes", this.value.getPortReadBytes());
-        statistics.put("PortWriteCount", this.value.getPortWriteCount());
-        statistics.put("PortWriteBytes", this.value.getPortWriteBytes());
-        statistics.put("SignalReadCount", this.value.getSignalReadCount());
-        statistics.put("SignalWriteCount", this.value.getSignalWriteCount());
-        statistics.put("IoCreate", this.value.getIoCreate());
-        statistics.put("IoStatus", this.value.getIoStatus());
-        statistics.put("IoReadCount", this.value.getIoReadCount());
-        statistics.put("IoReadBytes", this.value.getIoReadBytes());
-        statistics.put("IoWriteCount", this.value.getIoWriteCount());
-        statistics.put("IoWriteBytes", this.value.getIoWriteBytes());
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-        this.unlock(LockType.READ);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
 
-        return CollectionUtil.unmodifiable(statistics);
+            statistics.put("StatusCumulation", processStatistics.getStatusCumulation());
+            statistics.put("ThreadCumulation", processStatistics.getThreadCumulation());
+            statistics.put("InfoCreate", processStatistics.getInfoCreate());
+            statistics.put("InfoGet", processStatistics.getInfoGet());
+            statistics.put("InfoQuery", processStatistics.getInfoQuery());
+            statistics.put("InfoDelete", processStatistics.getInfoDelete());
+            statistics.put("InfoDump", processStatistics.getInfoDump());
+            statistics.put("InfoOpen", processStatistics.getInfoOpen());
+            statistics.put("InfoClose", processStatistics.getInfoClose());
+            statistics.put("InfoRead", processStatistics.getInfoRead());
+            statistics.put("InfoWrite", processStatistics.getInfoWrite());
+            statistics.put("SharedReadCount", processStatistics.getSharedReadCount());
+            statistics.put("SharedReadBytes", processStatistics.getSharedReadBytes());
+            statistics.put("SharedWriteCount", processStatistics.getSharedWriteCount());
+            statistics.put("SharedWriteBytes", processStatistics.getSharedWriteBytes());
+            statistics.put("PortCount", processStatistics.getPortCount());
+            statistics.put("PortReadCount", processStatistics.getPortReadCount());
+            statistics.put("PortReadBytes", processStatistics.getPortReadBytes());
+            statistics.put("PortWriteCount", processStatistics.getPortWriteCount());
+            statistics.put("PortWriteBytes", processStatistics.getPortWriteBytes());
+            statistics.put("SignalReadCount", processStatistics.getSignalReadCount());
+            statistics.put("SignalWriteCount", processStatistics.getSignalWriteCount());
+            statistics.put("IoCreate", processStatistics.getIoCreate());
+            statistics.put("IoStatus", processStatistics.getIoStatus());
+            statistics.put("IoReadCount", processStatistics.getIoReadCount());
+            statistics.put("IoReadBytes", processStatistics.getIoReadBytes());
+            statistics.put("IoWriteCount", processStatistics.getIoWriteCount());
+            statistics.put("IoWriteBytes", processStatistics.getIoWriteBytes());
+
+            return CollectionUtil.unmodifiable(statistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addStatusCumulation(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetStatusCumulation(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetStatusCumulation(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addThreadCumulation(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetThreadCumulation(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetThreadCumulation(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoCreate(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetInfoCreate(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetInfoCreate(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoGet(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetInfoGet(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetInfoGet(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoQuery(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetInfoQuery(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetInfoQuery(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoDelete(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetInfoDelete(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetInfoDelete(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoDump(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetInfoDump(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetInfoDump(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoOpen(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetInfoOpen(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetInfoOpen(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoClose(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetInfoClose(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetInfoClose(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoRead(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetInfoRead(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetInfoRead(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addInfoWrite(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetInfoWrite(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetInfoWrite(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSharedReadCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetSharedReadCount(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetSharedReadCount(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSharedReadBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetSharedReadBytes(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetSharedReadBytes(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSharedWriteCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetSharedWriteCount(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetSharedWriteCount(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSharedWriteBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetSharedWriteBytes(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetSharedWriteBytes(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addPortCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetPortCount(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetPortCount(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addPortReadCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetPortReadCount(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetPortReadCount(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addPortReadBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetPortReadBytes(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetPortReadBytes(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addPortWriteCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetPortWriteCount(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetPortWriteCount(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addPortWriteBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetPortWriteBytes(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetPortWriteBytes(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSignalReadCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetSignalReadCount(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetSignalReadCount(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addSignalWriteCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetSignalWriteCount(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetSignalWriteCount(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addIoCreate(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetIoCreate(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetIoCreate(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addIoStatus(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetIoStatus(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetIoStatus(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addIoReadCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetIoReadCount(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetIoReadCount(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addIoReadBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetIoReadBytes(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetIoReadBytes(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addIoWriteCount(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetIoWriteCount(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetIoWriteCount(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void addIoWriteBytes(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
         }
 
-        if (!this.parent.isCurrent()) {
+        if (!this.base.isCurrent()) {
             throw new StatusRelationshipErrorException();
         }
 
-        this.lock(LockType.WRITE);
-        this.init();
+        ProcessEntity process = this.getSelf();
 
-        this.value.offsetIoWriteBytes(value);
+        try {
+            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-        this.fresh();
-        this.unlock(LockType.WRITE);
+            ProcessStatisticsDefinition processStatistics = this.init(process);
+
+            processStatistics.offsetIoWriteBytes(value);
+
+            this.flush(process, processStatistics);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
     }
 }

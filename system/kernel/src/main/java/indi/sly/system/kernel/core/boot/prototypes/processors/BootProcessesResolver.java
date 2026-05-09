@@ -9,7 +9,6 @@ import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.values.*;
@@ -24,9 +23,9 @@ import jakarta.inject.Named;
 public class BootProcessesResolver extends ABootResolver {
     public BootProcessesResolver() {
         this.start = (startup) -> {
-            KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
-            MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
+            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
             if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
                 ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
@@ -34,7 +33,7 @@ public class BootProcessesResolver extends ABootResolver {
                 if (!processRepository.contain(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID)) {
                     ProcessEntity process = new ProcessEntity();
 
-                    process.setID(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+                    process.setId(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
                     process.setStatus(ProcessStatusType.RUNNING);
                     process.setCommunication(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));
                     ProcessContextDefinition context = new ProcessContextDefinition();
@@ -44,12 +43,12 @@ public class BootProcessesResolver extends ABootResolver {
                     process.setInfoTable(ObjectUtil.transferToByteArray(new ProcessInfoTableDefinition()));
                     process.setSession(ObjectUtil.transferToByteArray(new ProcessSessionDefinition()));
                     ProcessStatisticsDefinition processStatistics = new ProcessStatisticsDefinition();
-                    DateTimeObject dateTime = this.factoryManager.getCoreObjectRepository().getByClass(SpaceType.KERNEL, DateTimeObject.class);
+                    DateTimeObject dateTime = this.coreManager.getDateTime();
                     processStatistics.getDate().put(DateTimeType.CREATE, dateTime.getCurrentDateTime());
                     processStatistics.getDate().put(DateTimeType.ACCESS, dateTime.getCurrentDateTime());
                     process.setStatistics(ObjectUtil.transferToByteArray(processStatistics));
                     ProcessTokenDefinition token = new ProcessTokenDefinition();
-                    token.setAccountID(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
+                    token.setAccountId(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
                     token.setPrivileges(PrivilegeType.FULL);
                     token.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
                     token.getRoles().add(kernelConfiguration.SECURITY_ROLE_EXECUTABLE_ID);

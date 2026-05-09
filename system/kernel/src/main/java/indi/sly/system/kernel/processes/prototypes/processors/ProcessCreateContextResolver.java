@@ -8,7 +8,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -26,7 +26,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
-import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -35,7 +34,7 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
 
     public ProcessCreateContextResolver() {
         this.create = (process, parentProcess, processCreator) -> {
-            KernelConfigurationDefinition configuration = this.factoryManager.getKernelSpace().getConfiguration();
+            KernelConfigurationDefinition configuration = this.coreManager.getKernelSpace().getConfiguration();
 
             ProcessContextObject processContext = process.getContext();
             ProcessSessionObject parentProcessSession = parentProcess.getSession();
@@ -59,18 +58,18 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
                             throw new StatusUnreadableException();
                         });
 
-                if (!ValueUtil.isAnyNullOrEmpty(parentProcessSession.getID())) {
+                if (!ValueUtil.isAnyNullOrEmpty(parentProcessSession.getId())) {
                     SessionContentObject sessionContent = parentProcessSession.getContent();
                     if (ObjectUtil.allNotNull(sessionContent) && LogicalUtil.allNotEqual(sessionContent.getType(), application.getSupportedSession(), SessionType.KNOWN)) {
                         throw new StatusNotSupportedException();
                     }
                 }
 
-                processContext.setIdentifications(info.getIdentifications());
+                processContext.setPath(info.getPath());
                 processContext.setApplication(application);
             }
 
-            if (!ValueUtil.isAnyNullOrEmpty(parentProcessSession.getID())) {
+            if (!ValueUtil.isAnyNullOrEmpty(parentProcessSession.getId())) {
                 SessionContentObject sessionContent = parentProcessSession.getContent();
                 if (ObjectUtil.allNotNull()) {
                     processContext.setEnvironmentVariables(sessionContent.getEnvironmentVariables());
@@ -83,9 +82,9 @@ public class ProcessCreateContextResolver extends AProcessCreateResolver {
                 processContext.setParameters(StringUtil.EMPTY);
             }
 
-            List<IdentificationDefinition> processContextWorkFolder = processCreator.getWorkFolder();
+            PathDefinition processContextWorkFolder = processCreator.getWorkFolder();
             if (ObjectUtil.allNotNull(processContextWorkFolder)) {
-                ObjectManager objectManager = this.factoryManager.getManager(ObjectManager.class);
+                ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
                 try {
                     InfoObject processContextWorkFolderInfo = objectManager.get(processContextWorkFolder);

@@ -1,28 +1,34 @@
 package indi.sly.system.kernel.objects.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.Consumer1;
-import indi.sly.system.common.lang.Function1;
-import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.values.IdentificationDefinition;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
+import indi.sly.system.kernel.core.prototypes.ObjectCollectionObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.prototypes.processors.*;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
-import indi.sly.system.kernel.objects.values.DumpDefinition;
+import indi.sly.system.kernel.objects.values.DumpCacheEntity;
+import indi.sly.system.kernel.objects.values.InfoCacheEntity;
+import indi.sly.system.kernel.objects.values.InfoContentCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoStatusDefinition;
+import indi.sly.system.kernel.security.prototypes.SecurityDescriptorCacheRepositoryObject;
+import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
+import indi.sly.system.kernel.security.values.SecurityDescriptorCacheEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -35,118 +41,242 @@ public class InfoFactory extends AFactory {
         this.infoResolvers = new CopyOnWriteArrayList<>();
     }
 
-    protected final List<AInfoResolver> infoResolvers;
+    private final List<AInfoResolver> infoResolvers;
+    private UUID infoCacheRepositoryId;
+    private UUID dumpCacheRepositoryId;
+    private UUID infoContentCacheRepositoryId;
+    private UUID securityDescriptorCacheRepositoryId;
 
     @Override
     public void init() {
-        this.infoResolvers.add(this.factoryManager.create(InfoCheckConditionResolver.class));
-        this.infoResolvers.add(this.factoryManager.create(InfoCloseThenDeleteIfTemporaryResolver.class));
-        this.infoResolvers.add(this.factoryManager.create(InfoDateResolver.class));
-        this.infoResolvers.add(this.factoryManager.create(InfoDumpResolver.class));
-        this.infoResolvers.add(this.factoryManager.create(InfoOpenOrCloseResolver.class));
-        this.infoResolvers.add(this.factoryManager.create(InfoParentResolver.class));
-        this.infoResolvers.add(this.factoryManager.create(InfoProcessAndThreadStatisticsResolver.class));
-        this.infoResolvers.add(this.factoryManager.create(InfoProcessInfoTableCloseResolver.class));
-        this.infoResolvers.add(this.factoryManager.create(InfoProcessInfoTableResolver.class));
-        this.infoResolvers.add(this.factoryManager.create(InfoSecurityDescriptorCreateResolver.class));
-        this.infoResolvers.add(this.factoryManager.create(InfoSecurityDescriptorResolver.class));
-        this.infoResolvers.add(this.factoryManager.create(InfoSelfResolver.class));
-        this.infoResolvers.add(this.factoryManager.create(InfoTypeInitializerResolver.class));
-
+        this.infoResolvers.add(this.coreManager.create(InfoCheckConditionResolver.class));
+        this.infoResolvers.add(this.coreManager.create(InfoCloseThenDeleteIfTemporaryResolver.class));
+        this.infoResolvers.add(this.coreManager.create(InfoDateResolver.class));
+        this.infoResolvers.add(this.coreManager.create(InfoDumpResolver.class));
+        this.infoResolvers.add(this.coreManager.create(InfoOpenOrCloseResolver.class));
+        this.infoResolvers.add(this.coreManager.create(InfoParentResolver.class));
+        this.infoResolvers.add(this.coreManager.create(InfoProcessAndThreadStatisticsResolver.class));
+        this.infoResolvers.add(this.coreManager.create(InfoProcessInfoTableCloseResolver.class));
+        this.infoResolvers.add(this.coreManager.create(InfoProcessInfoTableResolver.class));
+        this.infoResolvers.add(this.coreManager.create(InfoSecurityDescriptorCreateResolver.class));
+        this.infoResolvers.add(this.coreManager.create(InfoSecurityDescriptorResolver.class));
+        this.infoResolvers.add(this.coreManager.create(InfoSelfResolver.class));
+        this.infoResolvers.add(this.coreManager.create(InfoTypeInitializerResolver.class));
         Collections.sort(this.infoResolvers);
+
+        this.infoCacheRepositoryId = UUIDUtil.createRandom();
+        this.dumpCacheRepositoryId = UUIDUtil.createRandom();
+        this.infoContentCacheRepositoryId = UUIDUtil.createRandom();
+        this.securityDescriptorCacheRepositoryId = UUIDUtil.createRandom();
+
+        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.infoCacheRepositoryId, this.coreManager.create(InfoCacheRepositoryObject.class));
+        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.dumpCacheRepositoryId, this.coreManager.create(DumpCacheRepositoryObject.class));
+        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.infoContentCacheRepositoryId, this.coreManager.create(InfoContentCacheRepositoryObject.class));
+        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.securityDescriptorCacheRepositoryId, this.coreManager.create(SecurityDescriptorCacheRepositoryObject.class));
     }
 
     public InfoObject getRootInfo() {
-        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
-        return this.factoryManager.getCoreObjectRepository().getByHandle(SpaceType.KERNEL, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
+        return this.coreManager.getObjectCollection().getById(SpaceType.KERNEL, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
     }
 
-    private InfoObject buildInfo(InfoProcessorMediator processorMediator, UUID infoID, InfoStatusDefinition status) {
-        InfoObject info = this.factoryManager.create(InfoObject.class);
+    public void buildRootInfo() {
+        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        AInfoRepositoryObject infoRepository =
+                memoryManager.getInfoRepository(kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORY_ID);
+        InfoEntity info =
+                infoRepository.get(kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
+
+        ObjectCollectionObject coreObjectRepository = this.coreManager.getObjectCollection();
+
+        coreObjectRepository.addById(SpaceType.KERNEL, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID, this.buildInfo(info, null));
+    }
+
+    private InfoObject createInfo(InfoProcessorMediator processorMediator, InfoCacheEntity cache) {
+        InfoObject info = this.coreManager.create(InfoObject.class);
+
+        info.setCache(cache);
         info.factory = this;
         info.processorMediator = processorMediator;
-        info.id = infoID;
-        info.status = status;
 
         return info;
     }
 
-    private InfoObject buildInfo(InfoEntity info, UUID poolID, InfoObject parentInfo) {
-        InfoProcessorMediator processorMediator = this.factoryManager.create(InfoProcessorMediator.class);
+    public InfoObject buildInfo(InfoEntity info, InfoCacheEntity parentInfoCache) {
+        if (ObjectUtil.isAnyNull(info, parentInfoCache)) {
+            throw new ConditionParametersException();
+        }
+
+        InfoProcessorMediator processorMediator = this.coreManager.create(InfoProcessorMediator.class);
         for (AInfoResolver infoResolver : this.infoResolvers) {
             infoResolver.resolve(info, processorMediator);
         }
 
-        InfoStatusDefinition status = new InfoStatusDefinition();
+        TypeManager typeManager = this.coreManager.create(TypeManager.class);
+        TypeObject typeObject = typeManager.get(info.getType());
+        UUID poolId = typeObject.getInitializer().getPoolId(info.getId(), info.getType());
 
-        if (ObjectUtil.allNotNull(parentInfo)) {
-            status.getIdentifications().addAll(parentInfo.status.getIdentifications());
+        InfoCacheEntity cache = new InfoCacheEntity();
 
-            IdentificationDefinition identification;
+        cache.setInfoId(info.getId());
+        cache.setPoolId(poolId);
+        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setCacheRepositoryId(this.infoCacheRepositoryId);
+
+        if (ObjectUtil.allNotNull(parentInfoCache)) {
+            IdentifierDefinition identifier;
             if (StringUtil.isNameIllegal(info.getName())) {
-                identification = new IdentificationDefinition(info.getID());
+                identifier = new IdentifierDefinition(info.getId());
             } else {
-                identification = new IdentificationDefinition(info.getName());
+                identifier = new IdentifierDefinition(info.getName());
             }
-            status.getIdentifications().add(identification);
+            cache.setPath(new PathDefinition(parentInfoCache.getPath(), identifier));
         }
 
-        status.setPoolID(poolID);
-
-        return this.buildInfo(processorMediator, info.getID(), status);
+        return this.createInfo(processorMediator, cache);
     }
 
-    public void buildRootInfo() {
-        KernelConfigurationDefinition kernelConfiguration = this.factoryManager.getKernelSpace().getConfiguration();
+    public InfoObject rebuildInfo(UUID handle) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        MemoryManager memoryManager = this.factoryManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository =
-                memoryManager.getInfoRepository(kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID);
-        InfoEntity info =
-                infoRepository.get(kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
+        InfoCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.infoCacheRepositoryId);
+        InfoCacheEntity cache = cacheRepository.get(handle);
 
-        this.buildInfo(info, kernelConfiguration.MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORYOBJECT_ID, null)
-                .cache(SpaceType.KERNEL, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
+        return this.rebuildInfo(cache);
     }
 
-    public InfoObject buildInfo(InfoEntity info, InfoObject parentInfo) {
-        if (ObjectUtil.isAnyNull(info, parentInfo)) {
-            throw new ConditionParametersException();
+    public InfoObject rebuildInfo(InfoCacheEntity cache) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        InfoCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.infoCacheRepositoryId);
+        cacheRepository.refresh(cache);
+
+        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(cache.getPoolId());
+        InfoEntity info = infoRepository.get(cache.getInfoId());
+
+        InfoProcessorMediator processorMediator = this.coreManager.create(InfoProcessorMediator.class);
+        for (AInfoResolver infoResolver : this.infoResolvers) {
+            infoResolver.resolve(info, processorMediator);
         }
 
-        TypeManager typeManager = this.factoryManager.getManager(TypeManager.class);
-        TypeObject type = typeManager.get(info.getType());
-        UUID poolID = type.getInitializer().getPoolID(info.getID(), info.getType());
-
-        return this.buildInfo(info, poolID, parentInfo);
+        return this.createInfo(processorMediator, cache);
     }
 
-    public InfoObject buildInfo(InfoEntity info, InfoObject parentInfo,
-                                Function1<InfoObject, InfoObject> additionalProcess) {
-        if (ObjectUtil.isAnyNull(additionalProcess)) {
-            throw new ConditionParametersException();
-        }
+    private SecurityDescriptorObject createSecurityDescriptor(InfoProcessorMediator processorMediator, InfoObject info, SecurityDescriptorCacheEntity cache) {
+        SecurityDescriptorObject securityDescriptor = this.coreManager.create(SecurityDescriptorObject.class);
 
-        return additionalProcess.apply(this.buildInfo(info, parentInfo));
+        securityDescriptor.setBase(info);
+        securityDescriptor.setCache(cache);
+        info.processorMediator = processorMediator;
+
+        return securityDescriptor;
     }
 
-    private DumpObject buildDump(InfoObject info, Provider<DumpDefinition> funcRead, Consumer1<DumpDefinition> funcWrite) {
-        DumpObject dump = this.factoryManager.create(DumpObject.class);
+    public SecurityDescriptorObject buildSecurityDescriptor(InfoProcessorMediator processorMediator, InfoObject info, SecurityDescriptorCacheEntity cache) {
+        cache.setInfo(info.getCache());
+        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setCacheRepositoryId(this.securityDescriptorCacheRepositoryId);
 
-        dump.setParent(info);
-        dump.setSource(funcRead, funcWrite);
+        return this.createSecurityDescriptor(processorMediator, info, cache);
+    }
+
+    public SecurityDescriptorObject rebuildSecurityDescriptor(UUID handle) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        SecurityDescriptorCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.securityDescriptorCacheRepositoryId);
+        SecurityDescriptorCacheEntity cache = cacheRepository.get(handle);
+
+        return this.rebuildSecurityDescriptor(cache);
+    }
+
+    public SecurityDescriptorObject rebuildSecurityDescriptor(SecurityDescriptorCacheEntity cache) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        SecurityDescriptorCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.securityDescriptorCacheRepositoryId);
+        cacheRepository.refresh(cache);
+
+        InfoObject info = this.rebuildInfo(cache.getInfo());
+
+        return info.getSecurityDescriptor();
+    }
+
+    private AInfoContentObject createInfoContent(InfoProcessorMediator processorMediator, InfoObject info, InfoContentCacheEntity cache, Class<? extends AInfoContentObject> infoContentType) {
+        AInfoContentObject infoContent = this.coreManager.create(infoContentType);
+
+        infoContent.setCache(cache);
+        infoContent.setBase(info);
+        info.processorMediator = processorMediator;
+
+        return infoContent;
+    }
+
+    public AInfoContentObject buildInfoContent(InfoProcessorMediator processorMediator, InfoObject info, Class<? extends AInfoContentObject> infoContentType) {
+        InfoContentCacheEntity cache = new InfoContentCacheEntity();
+
+        cache.setInfo(info.getCache());
+        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setCacheRepositoryId(this.infoContentCacheRepositoryId);
+
+        return this.createInfoContent(processorMediator, info, cache, infoContentType);
+    }
+
+    public AInfoContentObject rebuildInfoContent(UUID handle) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        InfoContentCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.infoContentCacheRepositoryId);
+        InfoContentCacheEntity cache = cacheRepository.get(handle);
+
+        return this.rebuildInfoContent(cache);
+    }
+
+    public AInfoContentObject rebuildInfoContent(InfoContentCacheEntity cache) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        InfoContentCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.infoContentCacheRepositoryId);
+        cacheRepository.refresh(cache);
+
+        InfoObject info = this.rebuildInfo(cache.getInfo());
+
+        return info.getContent();
+    }
+
+    private DumpObject createDump(DumpCacheEntity cache) {
+        DumpObject dump = this.coreManager.create(DumpObject.class);
+
+        dump.setCache(cache);
 
         return dump;
     }
 
-    public DumpObject buildDump(InfoObject info, DumpDefinition dump) {
-        if (ObjectUtil.isAnyNull(dump)) {
+    public DumpObject buildDump(DumpCacheEntity cache) {
+        if (ObjectUtil.isAnyNull(cache)) {
             throw new ConditionParametersException();
         }
 
-        return this.buildDump(info, () -> dump, (source) -> {
-        });
+        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setCacheRepositoryId(this.dumpCacheRepositoryId);
+
+        return this.createDump(cache);
+    }
+
+    public DumpObject rebuildDump(UUID handle) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        DumpCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.dumpCacheRepositoryId);
+        DumpCacheEntity cache = cacheRepository.get(handle);
+
+        return this.rebuildDump(cache);
+    }
+
+    public DumpObject rebuildDump(DumpCacheEntity cache) {
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        DumpCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.dumpCacheRepositoryId);
+        cacheRepository.refresh(cache);
+
+        return this.createDump(cache);
     }
 }

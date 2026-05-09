@@ -1,7 +1,5 @@
 package indi.sly.system.common.values;
 
-import java.util.UUID;
-
-public interface IIDCapable {
-    UUID getID();
+public interface IIDCapable<T> {
+    T getID();
 }

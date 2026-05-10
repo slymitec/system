@@ -41,7 +41,6 @@ dependencies {
     implementation("org.springframework.security:spring-security-acl")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
-    implementation("cn.hutool:hutool-all:5.8.44")
     implementation("com.redis.om:redis-om-spring:2.0.4")
     implementation("org.apache.fory:fory-core:0.17.0")
     implementation("com.microsoft.sqlserver:mssql-jdbc:13.4.0.jre11")

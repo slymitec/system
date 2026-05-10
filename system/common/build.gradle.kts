@@ -1,6 +1,5 @@
 dependencies {
     implementation("jakarta.inject:jakarta.inject-api:2.0.1")
-    implementation("cn.hutool:hutool-all:5.8.44")
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("org.apache.commons:commons-lang3")
     implementation("org.apache.fory:fory-core:0.17.0")

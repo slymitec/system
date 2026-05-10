@@ -12,9 +12,10 @@ import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensio
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.prototypes.UserContentObject;
 import indi.sly.system.services.jobs.prototypes.UserContextObject;
-import indi.sly.system.services.jobs.values.UserContentResponseExceptionDefinition;
+import indi.sly.system.services.jobs.values.ClientResponseDefinition;
+import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
 import indi.sly.system.services.jobs.values.UserContentResponseDefinition;
-import indi.sly.system.services.jobs.values.UserContextRequestDefinition;
+import indi.sly.system.services.jobs.values.ClientRequestDefinition;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.websocket.*;
@@ -69,8 +70,8 @@ public class InterActiveController extends AController {
                 throw new StatusUnreadableException();
             }
 
-            UserContextRequestDefinition userContextRequest =
-                    ObjectUtil.transferFromStringOrDefaultProvider(UserContextRequestDefinition.class,
+            ClientRequestDefinition userContextRequest =
+                    ObjectUtil.transferFromStringOrDefaultProvider(ClientRequestDefinition.class,
                             message, () -> {
                                 throw new StatusUnreadableException();
                             });
@@ -83,23 +84,23 @@ public class InterActiveController extends AController {
 
             userContent.run();
 
-            UserContentResponseDefinition userContentResponse = userContext.getResponse();
+            ClientResponseDefinition clientResponse = userContext.getResponse();
 
             jobService.finishUserContext(userContext);
 
-            session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponse));
+            session.getAsyncRemote().sendText(ObjectUtil.transferToString(clientResponse));
         } catch (RuntimeException exception) {
-            UserContentResponseDefinition userContentResponse = new UserContentResponseDefinition();
+            ClientResponseDefinition clientResponse = new ClientResponseDefinition();
 
-            UserContentResponseExceptionDefinition userContentResponseException = userContentResponse.getException();
+            ClientResponseExceptionDefinition userContentResponseException = new ClientResponseExceptionDefinition();
 
-            userContentResponseException.setClazz(exception.getClass());
+            userContentResponseException.setClazz(exception.getClass().getName());
             StackTraceElement[] kernelExceptionStackTrace = exception.getStackTrace();
             if (kernelExceptionStackTrace.length != 0) {
                 try {
-                    userContentResponseException.setOwner(Class.forName(kernelExceptionStackTrace[0].getClassName()));
+                    userContentResponseException.setOwnerClazz(Class.forName(kernelExceptionStackTrace[0].getClassName()).getName());
                 } catch (ClassNotFoundException e) {
-                    userContentResponseException.setOwner(StatusUnexpectedException.class);
+                    userContentResponseException.setOwnerClazz(StatusUnexpectedException.class.getName());
                 }
                 userContentResponseException.setMethod(kernelExceptionStackTrace[0].getMethodName());
             }
@@ -109,7 +110,9 @@ public class InterActiveController extends AController {
             }
             userContentResponseException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
 
-            session.getAsyncRemote().sendText(ObjectUtil.transferToString(userContentResponse));
+            clientResponse.setException(userContentResponseException);
+
+            session.getAsyncRemote().sendText(ObjectUtil.transferToString(clientResponse));
         }
     }
 

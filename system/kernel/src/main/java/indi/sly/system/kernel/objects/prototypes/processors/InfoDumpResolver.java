@@ -25,7 +25,7 @@ public class InfoDumpResolver extends AInfoResolver {
             ProcessTokenObject processToken = process.getToken();
 
             DateTimeObject dateTime = this.coreManager.getDateTime();
-            long nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrent();
             dump.getDate().put(DateTimeType.CREATE, nowDateTime);
             dump.getDate().put(DateTimeType.ACCESS, nowDateTime);
 

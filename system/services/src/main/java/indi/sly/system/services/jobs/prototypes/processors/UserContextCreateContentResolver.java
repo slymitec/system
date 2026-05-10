@@ -14,23 +14,18 @@ import org.springframework.context.annotation.Scope;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserContextCreateContentResolver extends AUserContextCreateResolver {
     public UserContextCreateContentResolver() {
-        this.create = (userContext, userContextRequest) -> {
-            UserContentRequestDefinition userContentRequestRaw = userContextRequest.getContent();
+        this.create = (userContext, clientRequest) -> {
+            UserContentRequestDefinition userContentRequestRaw = clientRequest.getContent();
 
-            if (ObjectUtil.isAnyNull(userContentRequestRaw.getID()) || ValueUtil.isAnyNullOrEmpty(userContentRequestRaw.getTask(), userContentRequestRaw.getMethod())) {
+            if (ObjectUtil.isAnyNull(userContentRequestRaw.getId()) || ValueUtil.isAnyNullOrEmpty(userContentRequestRaw.getTask(), userContentRequestRaw.getMethod())) {
                 throw new ConditionParametersException();
-            }
-            for (String key : userContentRequestRaw.getRequest().keySet()) {
-                if (ValueUtil.isAnyNullOrEmpty(key)) {
-                    throw new ConditionParametersException();
-                }
             }
 
             UserContentRequestDefinition userContentRequest = userContext.getContent().getRequest();
-            userContentRequest.setID(userContentRequestRaw.getID());
+            userContentRequest.setId(userContentRequestRaw.getId());
             userContentRequest.setTask(userContentRequestRaw.getTask());
             userContentRequest.setMethod(userContentRequestRaw.getMethod());
-            userContentRequest.getRequest().putAll(userContentRequestRaw.getRequest());
+            userContentRequest.getParameters().addAll(userContentRequestRaw.getParameters());
 
             return userContext;
         };

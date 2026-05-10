@@ -8,7 +8,6 @@ import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.processes.prototypes.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -44,7 +43,7 @@ public class ThreadManager extends AManager {
         Stack<ThreadObject> threads = userSpace.getThreads();
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
 
         if (ObjectUtil.isAnyNull(threads) || threads.isEmpty()) {
             throw new StatusNotExistedException();

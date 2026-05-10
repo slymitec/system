@@ -58,27 +58,10 @@ public class JobFactory extends AFactory {
         Collections.sort(this.userContextFinishResolvers);
     }
 
-    private TaskObject buildTask(TaskProcessorMediator processorMediator, Provider<TaskDefinition> funcRead,
-                                 Consumer1<TaskDefinition> funcWrite) {
+    private TaskObject createTask(TaskProcessorMediator processorMediator, TaskDefinition definition) {
         TaskObject task = this.coreManager.create(TaskObject.class);
 
-        task.setSource(funcRead, funcWrite);
-        ReadWriteLock reentrantLock = new ReentrantReadWriteLock();
-        Lock reentrantLockRead = reentrantLock.readLock();
-        Lock reentrantLockWrite = reentrantLock.writeLock();
-        task.setLock((lock) -> {
-            if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-                reentrantLockRead.lock();
-            } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-                reentrantLockWrite.lock();
-            }
-        }, (lock) -> {
-            if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-                reentrantLockRead.unlock();
-            } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-                reentrantLockWrite.unlock();
-            }
-        });
+        task.setDefinition(definition);
         task.processorMediator = processorMediator;
         task.status = new TaskStatusDefinition();
 
@@ -95,8 +78,7 @@ public class JobFactory extends AFactory {
             resolver.resolve(task, processorMediator);
         }
 
-        return this.buildTask(processorMediator, () -> task, (source) -> {
-        });
+        return this.createTask(processorMediator, task);
     }
 
     public TaskBuilder createTask() {
@@ -107,10 +89,10 @@ public class JobFactory extends AFactory {
         return taskBuilder;
     }
 
-    private UserContextObject buildUserContext(Provider<UserContextDefinition> funcRead, Consumer1<UserContextDefinition> funcWrite) {
+    private UserContextObject createUserContext(UserContextDefinition definition) {
         UserContextObject userContext = this.coreManager.create(UserContextObject.class);
 
-        userContext.setSource(funcRead, funcWrite);
+        userContext.setDefinition(definition);
 
         return userContext;
     }
@@ -120,8 +102,7 @@ public class JobFactory extends AFactory {
             throw new ConditionParametersException();
         }
 
-        return this.buildUserContext(() -> userContext, (source) -> {
-        });
+        return this.createUserContext(userContext);
     }
 
     public UserContextCreateBuilder createUserContextCreator() {

@@ -2,26 +2,37 @@ package indi.sly.system.services.jobs.values;
 
 import indi.sly.system.common.values.ADefinition;
 
-public class UserContentResponseExceptionDefinition extends ADefinition<UserContentResponseExceptionDefinition> {
-    private Class<?> clazz;
-    private Class<?> owner;
+import java.util.UUID;
+
+public class ClientResponseExceptionDefinition extends ADefinition {
+    private UUID id;
+    private String clazz;
+    private String ownerClazz;
     private String method;
     private String message;
 
-    public Class<?> getClazz() {
+    public UUID getId() {
+        return this.id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getClazz() {
         return this.clazz;
     }
 
-    public void setClazz(Class<?> clazz) {
+    public void setClazz(String clazz) {
         this.clazz = clazz;
     }
 
-    public Class<?> getOwner() {
-        return owner;
+    public String getOwnerClazz() {
+        return ownerClazz;
     }
 
-    public void setOwner(Class<?> owner) {
-        this.owner = owner;
+    public void setOwnerClazz(String ownerClazz) {
+        this.ownerClazz = ownerClazz;
     }
 
     public String getMethod() {

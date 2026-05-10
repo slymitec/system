@@ -246,7 +246,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
             }
 
             DateTimeObject dateTime = this.coreManager.getDateTime();
-            long nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrent();
 
             index = UUIDUtil.createRandom();
 

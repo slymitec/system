@@ -68,6 +68,36 @@ public abstract class ACacheRepositoryObject<T extends ACacheEntity> extends AOb
         }
     }
 
+    public void refresh(UUID id) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
+            throw new ConditionParametersException();
+        }
+
+        Ulid ulid = Ulid.from(id);
+
+        T object = this.redisDocumentRepository.findById(ulid).orElseThrow(StatusNotExistedException::new);
+
+        if (ValueUtil.isAnyNullOrEmpty(object)) {
+            throw new ConditionParametersException();
+        }
+        
+        long duration = object.getDuration();
+
+        if (duration == CacheDurationType.INSTANT) {
+            this.redisDocumentRepository.setExpiration(ulid, 4L, TimeUnit.SECONDS);
+        } else if (duration == CacheDurationType.SHORT) {
+            this.redisDocumentRepository.setExpiration(ulid, 8L, TimeUnit.SECONDS);
+        } else if (duration == CacheDurationType.NORMAL) {
+            this.redisDocumentRepository.setExpiration(ulid, 16L, TimeUnit.SECONDS);
+        } else if (duration == CacheDurationType.LONG) {
+            this.redisDocumentRepository.setExpiration(ulid, 32L, TimeUnit.SECONDS);
+        } else if (duration == CacheDurationType.AGES) {
+            this.redisDocumentRepository.setExpiration(ulid, 64L, TimeUnit.SECONDS);
+        } else {
+            this.redisDocumentRepository.setExpiration(ulid, 2L, TimeUnit.SECONDS);
+        }
+    }
+
     public void refresh(T object) {
         if (ValueUtil.isAnyNullOrEmpty(object)) {
             throw new ConditionParametersException();

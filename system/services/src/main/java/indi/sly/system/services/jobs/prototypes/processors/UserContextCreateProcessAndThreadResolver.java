@@ -5,7 +5,7 @@ import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.services.core.prototypes.TransactionalActionObject;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.wrappers.UserContextProcessorMediator;
-import indi.sly.system.services.jobs.values.UserContextRequestProcessIDDefinition;
+import indi.sly.system.services.jobs.values.ClientRequestProcessIdDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -18,16 +18,16 @@ import java.util.UUID;
 public class UserContextCreateProcessAndThreadResolver extends AUserContextCreateResolver {
     public UserContextCreateProcessAndThreadResolver() {
         this.create = (userContext, userContextRequest) -> {
-            UserContextRequestProcessIDDefinition userContextRequestProcessID = userContextRequest.getProcessID();
+            ClientRequestProcessIdDefinition userContextRequestProcessID = userContextRequest.getProcessId();
 
-            UUID processID = userContextRequestProcessID.getID();
+            UUID processID = userContextRequestProcessID.getId();
 
             TransactionalActionObject transactionalAction = this.coreManager.create(TransactionalActionObject.class);
 
             ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
             ThreadObject thread = transactionalAction.runWithTransactional(() -> threadManager.create(processID));
 
-            userContext.setThreadID(thread.getId());
+            userContext.setThreadId(thread.getId());
 
             return userContext;
         };

@@ -1,13 +1,15 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors;
 
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandledObjectDefinition;
+import indi.sly.system.services.jobs.values.HandleContextDefinition;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -32,18 +34,18 @@ public class ObjectManagerTaskInitializer extends ATaskInitializer {
     }
 
     private void get(TaskRunConsumer run, TaskContentObject content) {
-        List<IdentifierDefinition> identifications = content.getParameterList(IdentifierDefinition.class, "identifications");
+        List<String> parameters = content.getParameters();
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
-        InfoObject info = objectManager.get(identifications);
+        InfoObject info = objectManager.get(ObjectUtil.transferFromString(PathDefinition.class, parameters.get(0)));
 
-        UUID handle = info.cache(SpaceType.USER);
+        UUID handle = info.cache();
 
-        HandledObjectDefinition handledObject = new HandledObjectDefinition();
-        handledObject.setHandle(handle);
-        handledObject.setType(info.getClass());
+        HandleContextDefinition handleContext = new HandleContextDefinition();
+        handleContext.setHandle(handle);
+        handleContext.setType(info.getClass());
 
-        content.setResult(handledObject);
+        content.setResult(handleContext);
     }
 }

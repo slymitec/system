@@ -3,19 +3,21 @@ package indi.sly.system.kernel.processes.values;
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.values.ADefinition;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ThreadRunDefinition extends ADefinition {
     public ThreadRunDefinition() {
-        this.parameters = new HashMap<>();
+        this.parameters = new ArrayList<>();
     }
 
-    private final Map<String, String> parameters;
+    private final List<String> parameters;
     private Object result;
     private AKernelException exception;
 
-    public Map<String, String> getParameters() {
+    public List<String> getParameters() {
         return this.parameters;
     }
 

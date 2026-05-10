@@ -44,8 +44,8 @@ public class BootProcessesResolver extends ABootResolver {
                     process.setSession(ObjectUtil.transferToByteArray(new ProcessSessionDefinition()));
                     ProcessStatisticsDefinition processStatistics = new ProcessStatisticsDefinition();
                     DateTimeObject dateTime = this.coreManager.getDateTime();
-                    processStatistics.getDate().put(DateTimeType.CREATE, dateTime.getCurrentDateTime());
-                    processStatistics.getDate().put(DateTimeType.ACCESS, dateTime.getCurrentDateTime());
+                    processStatistics.getDate().put(DateTimeType.CREATE, dateTime.getCurrent());
+                    processStatistics.getDate().put(DateTimeType.ACCESS, dateTime.getCurrent());
                     process.setStatistics(ObjectUtil.transferToByteArray(processStatistics));
                     ProcessTokenDefinition token = new ProcessTokenDefinition();
                     token.setAccountId(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);

@@ -5,8 +5,8 @@ import indi.sly.system.kernel.core.prototypes.AObject;
 
 import java.util.UUID;
 
-public class HandledObjectDefinition extends ADefinition<HandledObjectDefinition> {
-    public HandledObjectDefinition() {
+public class HandleContextDefinition extends ADefinition {
+    public HandleContextDefinition() {
     }
 
     private Class<? extends AObject> type;

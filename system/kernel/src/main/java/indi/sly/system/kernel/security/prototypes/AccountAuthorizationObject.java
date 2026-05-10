@@ -37,7 +37,7 @@ public class AccountAuthorizationObject extends ACacheableObject<AccountAuthoriz
         }
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
         long expiredTime =
                 this.coreManager.getKernelSpace().getConfiguration().SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME;
 
@@ -58,7 +58,7 @@ public class AccountAuthorizationObject extends ACacheableObject<AccountAuthoriz
         }
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
         long expiredTime = kernelConfiguration.SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME;
         if (nowDateTime - this.cache.getDate().get(DateTimeType.CREATE) > expiredTime) {
             throw new StatusExpiredException();

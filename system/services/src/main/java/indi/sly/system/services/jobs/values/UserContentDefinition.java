@@ -2,7 +2,7 @@ package indi.sly.system.services.jobs.values;
 
 import indi.sly.system.common.values.ADefinition;
 
-public class UserContentDefinition extends ADefinition<UserContentDefinition> {
+public class UserContentDefinition extends ADefinition {
     public UserContentDefinition() {
         this.request = new UserContentRequestDefinition();
         this.response = new UserContentResponseDefinition();

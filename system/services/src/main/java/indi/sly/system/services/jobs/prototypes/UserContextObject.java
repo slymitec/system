@@ -1,12 +1,11 @@
 package indi.sly.system.services.jobs.prototypes;
 
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ADefinitionObject;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
-import indi.sly.system.services.jobs.values.UserContentDefinition;
-import indi.sly.system.services.jobs.values.UserContentResponseDefinition;
-import indi.sly.system.services.jobs.values.UserContextDefinition;
+import indi.sly.system.services.jobs.values.*;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -16,56 +15,57 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserContextObject extends ADefinitionObject<UserContextDefinition> {
-    public UUID getThreadID() {
-        this.init();
-
+    public UUID getThreadId() {
         ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         if (threadManager.size() == 0) {
             throw new StatusRelationshipErrorException();
         }
         ThreadObject thread = threadManager.getCurrent();
-        if (!thread.getId().equals(this.value.getThreadID())) {
+        if (!thread.getId().equals(this.definition.getThreadId())) {
             throw new StatusRelationshipErrorException();
         }
 
-        return this.value.getThreadID();
+        return this.definition.getThreadId();
     }
 
     public UserContentObject getContent() {
-        this.init();
-
         ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         if (threadManager.size() == 0) {
             throw new StatusRelationshipErrorException();
         }
         ThreadObject thread = threadManager.getCurrent();
-        if (!thread.getId().equals(this.value.getThreadID())) {
+        if (!thread.getId().equals(this.definition.getThreadId())) {
             throw new StatusRelationshipErrorException();
         }
 
         UserContentObject userContent = this.coreManager.create(UserContentObject.class);
 
-        userContent.setSource(() -> this.value, (source) -> {
-        });
-        userContent.setLock(this::lock, this::unlock);
+        userContent.setDefinition(this.definition);
 
         return userContent;
     }
 
-    public UserContentResponseDefinition getResponse() {
-        this.init();
-
+    public ClientResponseDefinition getResponse() {
         ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         if (threadManager.size() == 0) {
             throw new StatusRelationshipErrorException();
         }
         ThreadObject thread = threadManager.getCurrent();
-        if (!thread.getId().equals(this.value.getThreadID())) {
+        if (!thread.getId().equals(this.definition.getThreadId())) {
             throw new StatusRelationshipErrorException();
         }
 
-        UserContentDefinition userContent = this.value.getContent();
+        UserContentResponseDefinition userContentResponse = this.definition.getContent().getResponse();
+        ClientResponseExceptionDefinition clientResponseException = this.definition.getException();
 
-        return userContent.getResponse();
+        ClientResponseDefinition clientResponse = new ClientResponseDefinition();
+
+        if (ObjectUtil.isAnyNull(clientResponseException)) {
+            clientResponse.setException(clientResponseException);
+        } else {
+            clientResponse.setContent(userContentResponse);
+        }
+
+        return clientResponse;
     }
 }

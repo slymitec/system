@@ -16,6 +16,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -25,15 +26,8 @@ public class TaskObject extends ADefinitionObject<TaskDefinition> {
     protected TaskProcessorMediator processorMediator;
     protected TaskStatusDefinition status;
 
-    public UUID getID() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            return this.value.getID();
-        } finally {
-            this.unlock(LockType.READ);
-        }
+    public UUID getId() {
+        return this.definition.getId();
     }
 
     public long getRuntime() {
@@ -43,30 +37,16 @@ public class TaskObject extends ADefinitionObject<TaskDefinition> {
     public void start() {
         List<TaskProcessorStartConsumer> resolvers = this.processorMediator.getStarts();
 
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            for (TaskProcessorStartConsumer resolver : resolvers) {
-                resolver.accept(this.value, this.status);
-            }
-        } finally {
-            this.unlock(LockType.READ);
+        for (TaskProcessorStartConsumer resolver : resolvers) {
+            resolver.accept(this.definition, this.status);
         }
     }
 
     public void finish() {
         List<TaskProcessorFinishConsumer> resolvers = this.processorMediator.getFinishes();
 
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            for (TaskProcessorFinishConsumer resolver : resolvers) {
-                resolver.accept(this.value, this.status);
-            }
-        } finally {
-            this.unlock(LockType.READ);
+        for (TaskProcessorFinishConsumer resolver : resolvers) {
+            resolver.accept(this.definition, this.status);
         }
     }
 
@@ -79,15 +59,8 @@ public class TaskObject extends ADefinitionObject<TaskDefinition> {
 
         List<TaskProcessorRunConsumer> resolvers = this.processorMediator.getRuns();
 
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            for (TaskProcessorRunConsumer resolver : resolvers) {
-                resolver.accept(this.value, this.status, name, this::run, content);
-            }
-        } finally {
-            this.unlock(LockType.READ);
+        for (TaskProcessorRunConsumer resolver : resolvers) {
+            resolver.accept(this.definition, this.status, name, this::run, content);
         }
     }
 
@@ -96,15 +69,8 @@ public class TaskObject extends ADefinitionObject<TaskDefinition> {
 
         List<TaskProcessorContentFunction> resolvers = this.processorMediator.getContents();
 
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            for (TaskProcessorContentFunction resolver : resolvers) {
-                threadContext = resolver.apply(this.value, this.status, threadContext);
-            }
-        } finally {
-            this.unlock(LockType.READ);
+        for (TaskProcessorContentFunction resolver : resolvers) {
+            threadContext = resolver.apply(this.definition, this.status, threadContext);
         }
 
         TaskContentObject taskContent = this.coreManager.create(TaskContentObject.class);

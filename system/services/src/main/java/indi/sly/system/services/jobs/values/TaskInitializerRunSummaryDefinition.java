@@ -5,7 +5,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.services.jobs.lang.TaskInitializerRunMethodConsumer;
 
-public class TaskInitializerRunSummaryDefinition extends ADefinition<TaskInitializerRunSummaryDefinition> {
+public class TaskInitializerRunSummaryDefinition extends ADefinition {
     private TaskInitializerRunDefinition taskInitializerRun;
 
     public void setTaskInitializerRun(TaskInitializerRunDefinition taskInitializerRun) {

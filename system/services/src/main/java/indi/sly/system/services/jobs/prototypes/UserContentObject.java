@@ -3,6 +3,7 @@ package indi.sly.system.services.jobs.prototypes;
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
+import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ADefinitionObject;
 import indi.sly.system.kernel.processes.ThreadManager;
@@ -20,51 +21,45 @@ import java.util.Map;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserContentObject extends ADefinitionObject<UserContextDefinition> {
     public String getTask() {
-        this.init();
-
         ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         if (threadManager.size() == 0) {
             throw new StatusRelationshipErrorException();
         }
         ThreadObject thread = threadManager.getCurrent();
-        if (!thread.getId().equals(this.value.getThreadID())) {
+        if (!thread.getId().equals(this.definition.getThreadId())) {
             throw new StatusRelationshipErrorException();
         }
 
-        return this.value.getContent().getRequest().getTask();
+        return this.definition.getContent().getRequest().getTask();
     }
 
     public String getMethod() {
-        this.init();
-
         ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         if (threadManager.size() == 0) {
             throw new StatusRelationshipErrorException();
         }
         ThreadObject thread = threadManager.getCurrent();
-        if (!thread.getId().equals(this.value.getThreadID())) {
+        if (!thread.getId().equals(this.definition.getThreadId())) {
             throw new StatusRelationshipErrorException();
         }
 
-        return this.value.getContent().getRequest().getMethod();
+        return this.definition.getContent().getRequest().getMethod();
     }
 
     public void run() {
-        this.init();
-
         ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         if (threadManager.size() == 0) {
             throw new StatusRelationshipErrorException();
         }
         ThreadObject thread = threadManager.getCurrent();
-        if (!thread.getId().equals(this.value.getThreadID())) {
+        if (!thread.getId().equals(this.definition.getThreadId())) {
             throw new StatusRelationshipErrorException();
         }
 
-        UserContentRequestDefinition userContentRequest = this.value.getContent().getRequest();
-        UserContentResponseDefinition userContentResponse = this.value.getContent().getResponse();
+        UserContentRequestDefinition userContentRequest = this.definition.getContent().getRequest();
+        UserContentResponseDefinition userContentResponse = this.definition.getContent().getResponse();
 
-        userContentResponse.setID(userContentRequest.getID());
+        userContentResponse.setId(userContentRequest.getId());
 
         JobService jobService = this.coreManager.getService(JobService.class);
         TaskObject task = jobService.getTask(userContentRequest.getTask());
@@ -73,39 +68,38 @@ public class UserContentObject extends ADefinitionObject<UserContextDefinition> 
 
         TaskContentObject taskContent = task.getContent();
 
-        Map<String, String> request = userContentRequest.getRequest();
-        for (Map.Entry<String, String> pair : request.entrySet()) {
-            taskContent.setParameter(pair.getKey(), pair.getValue());
-        }
+        taskContent.setParameter(userContentRequest.getParameters());
 
         task.run(userContentRequest.getMethod());
 
-        if (ObjectUtil.allNotNull(taskContent.getException())) {
+        if (ObjectUtil.isAnyNull(taskContent.getException())) {
+            userContentResponse.setValue(taskContent.getResult());
+        } else {
             AKernelException kernelException = taskContent.getException();
 
-            UserContentResponseExceptionDefinition userContentResponseException = userContentResponse.getException();
+            ClientResponseExceptionDefinition clientResponseException = new ClientResponseExceptionDefinition();
 
-            userContentResponseException.setClazz(kernelException.getClass());
+            clientResponseException.setId(userContentRequest.getId());
+
+            clientResponseException.setClazz(kernelException.getClass().getName());
             StackTraceElement[] kernelExceptionStackTrace = kernelException.getStackTrace();
             if (kernelExceptionStackTrace.length != 0) {
                 try {
-                    userContentResponseException.setOwner(Class.forName(kernelExceptionStackTrace[0].getClassName()));
+                    clientResponseException.setOwnerClazz(Class.forName(kernelExceptionStackTrace[0].getClassName()).getName());
                 } catch (ClassNotFoundException e) {
-                    userContentResponseException.setOwner(StatusUnexpectedException.class);
+                    clientResponseException.setOwnerClazz(StatusUnexpectedException.class.getName());
                 }
-                userContentResponseException.setMethod(kernelExceptionStackTrace[0].getMethodName());
+                clientResponseException.setMethod(kernelExceptionStackTrace[0].getMethodName());
             }
             String[] kernelExceptionStackTraceMessage = new String[kernelExceptionStackTrace.length];
             for (int i = 0; i < kernelExceptionStackTrace.length; i++) {
                 kernelExceptionStackTraceMessage[i] = kernelExceptionStackTrace[i].getClassName() + "." + kernelExceptionStackTrace[i].getMethodName() + "(...)";
             }
-            userContentResponseException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
-        } else {
-            userContentResponse.getResult().setValue(taskContent.getResult());
+            clientResponseException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
+
+            this.definition.setException(clientResponseException);
         }
 
         task.finish();
-
-        this.fresh();
     }
 }

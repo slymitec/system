@@ -20,6 +20,8 @@ import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
 import indi.sly.system.services.jobs.JobService;
+import indi.sly.system.services.jobs.values.ClientResponseDefinition;
+import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
 import indi.sly.system.services.jobs.values.UserContentResponseDefinition;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +36,7 @@ import jakarta.transaction.Transactional;
 public class StartUpController extends AController {
     @RequestMapping(value = {"/StartUp.action"}, method = {RequestMethod.GET})
     @Transactional
-    public UserContentResponseDefinition startup(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    public ClientResponseDefinition startup(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init();
 
         if (ObjectUtil.isAnyNull(this.coreManager)) {
@@ -88,16 +90,21 @@ public class StartUpController extends AController {
 
             this.coreManager.setUserSpace(null);
 
-            return new UserContentResponseDefinition();
+            return new ClientResponseDefinition();
         } else {
-            UserContentResponseDefinition userContentResponse = new UserContentResponseDefinition();
+            ClientResponseDefinition clientResponse = new ClientResponseDefinition();
 
-            userContentResponse.setID(UUIDUtil.getEmpty());
-            userContentResponse.getException().setClazz(StatusAlreadyFinishedException.class);
-            userContentResponse.getException().setOwner(StartUpController.class);
-            userContentResponse.getException().setMethod("startup");
+            ClientResponseExceptionDefinition clientResponseException = new ClientResponseExceptionDefinition();
 
-            return userContentResponse;
+            clientResponseException.setId(UUIDUtil.getEmpty());
+            clientResponseException.setClazz(StatusAlreadyFinishedException.class.getName());
+            clientResponseException.setOwnerClazz(StartUpController.class.getName());
+            clientResponseException.setMethod("startup");
+
+            clientResponse.setException(clientResponseException);
+
+            return clientResponse;
+
         }
     }
 }

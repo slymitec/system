@@ -2,7 +2,6 @@ package indi.sly.system.services.jobs.prototypes.processors;
 
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
@@ -21,7 +20,7 @@ public class TaskDateResolver extends ATaskResolver {
     public TaskDateResolver() {
         this.start = (task, status) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
-            long nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrent();
 
             Map<Long, Long> date = status.getDate();
             assert date != null;
@@ -30,7 +29,7 @@ public class TaskDateResolver extends ATaskResolver {
 
         this.finish = (task, status) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
-            long nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrent();
 
             Map<Long, Long> date = status.getDate();
             assert date != null;
@@ -39,7 +38,7 @@ public class TaskDateResolver extends ATaskResolver {
 
         this.run = (task, status, name, run, content) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
-            long nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrent();
 
             Map<Long, Long> date = status.getDate();
             assert date != null;
@@ -48,7 +47,7 @@ public class TaskDateResolver extends ATaskResolver {
 
         this.content = (task, status, threadContext) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
-            long nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrent();
 
             Map<Long, Long> date = status.getDate();
             assert date != null;

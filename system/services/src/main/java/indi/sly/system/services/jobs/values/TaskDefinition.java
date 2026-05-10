@@ -5,18 +5,18 @@ import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitia
 
 import java.util.UUID;
 
-public class TaskDefinition extends ADefinition<TaskDefinition> {
+public class TaskDefinition extends ADefinition {
     private UUID id;
     private long attribute;
     private String name;
     private UUID processID;
     private ATaskInitializer initializer;
 
-    public UUID getID() {
+    public UUID getId() {
         return this.id;
     }
 
-    public void setID(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

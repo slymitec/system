@@ -4,7 +4,6 @@ import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.kernel.processes.values.ThreadContextType;
@@ -29,7 +28,7 @@ public class ThreadBuilder extends ABuilder {
         }
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
 
         ThreadObject thread = this.factory.buildThread(processID);
 

@@ -11,10 +11,13 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
 import indi.sly.system.services.jobs.instances.prototypes.processors.*;
+import indi.sly.system.services.jobs.instances.prototypes.processors.core.CoreManagerTaskInitializer;
+import indi.sly.system.services.jobs.instances.prototypes.processors.core.DateTimeObjectTaskInitializer;
+import indi.sly.system.services.jobs.instances.prototypes.processors.core.SystemVersionObjectTaskInitializer;
 import indi.sly.system.services.jobs.prototypes.*;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
-import indi.sly.system.services.jobs.values.UserContextRequestDefinition;
+import indi.sly.system.services.jobs.values.ClientRequestDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -36,12 +39,15 @@ public class JobService extends AService {
 
             kernelSpace.setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
 
-            this.createTask("FactoryManager", TaskAttributeType.NULL, null, this.coreManager.create(FactoryManagerTaskInitializer.class));
+            this.createTask("CoreManager", TaskAttributeType.NULL, null, this.coreManager.create(CoreManagerTaskInitializer.class));
+            this.createTask("SystemVersionObject", TaskAttributeType.NULL, null, this.coreManager.create(SystemVersionObjectTaskInitializer.class));
+            this.createTask("DateTimeObject", TaskAttributeType.NULL, null, this.coreManager.create(DateTimeObjectTaskInitializer.class));
+
             this.createTask("ObjectManager", TaskAttributeType.NULL, null, this.coreManager.create(ObjectManagerTaskInitializer.class));
             this.createTask("ProcessManager", TaskAttributeType.NULL, null, this.coreManager.create(ProcessTaskInitializer.class));
             this.createTask("UserManager", TaskAttributeType.NULL, null, this.coreManager.create(UserManagerTaskInitializer.class));
 
-            this.createTask("HandleAction", TaskAttributeType.NULL, null, this.coreManager.create(HandleActionTaskInitializer.class));
+            //this.createTask("HandleAction", TaskAttributeType.NULL, null, this.coreManager.create(HandleActionTaskInitializer.class));
         }
     }
 
@@ -97,14 +103,14 @@ public class JobService extends AService {
         return this.factory.buildTask(task);
     }
 
-    public UserContextObject createUserContext(UserContextRequestDefinition userContextRequest) {
-        if (ObjectUtil.isAnyNull(userContextRequest)) {
+    public UserContextObject createUserContext(ClientRequestDefinition clientRequest) {
+        if (ObjectUtil.isAnyNull(clientRequest)) {
             throw new ConditionParametersException();
         }
 
         UserContextCreateBuilder userContextCreateBuilder = this.factory.createUserContextCreator();
 
-        return userContextCreateBuilder.create(userContextRequest);
+        return userContextCreateBuilder.create(clientRequest);
     }
 
     public void finishUserContext(UserContextObject userContext) {

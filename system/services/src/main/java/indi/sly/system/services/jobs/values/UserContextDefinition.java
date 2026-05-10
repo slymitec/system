@@ -4,23 +4,32 @@ import indi.sly.system.common.values.ADefinition;
 
 import java.util.UUID;
 
-public class UserContextDefinition extends ADefinition<UserContextDefinition> {
+public class UserContextDefinition extends ADefinition {
     public UserContextDefinition() {
         this.content = new UserContentDefinition();
     }
 
-    private UUID threadID;
+    private UUID threadId;
     private final UserContentDefinition content;
+    private ClientResponseExceptionDefinition exception;
 
-    public UUID getThreadID() {
-        return this.threadID;
+    public UUID getThreadId() {
+        return this.threadId;
     }
 
-    public void setThreadID(UUID threadID) {
-        this.threadID = threadID;
+    public void setThreadId(UUID threadId) {
+        this.threadId = threadId;
     }
 
     public UserContentDefinition getContent() {
         return this.content;
+    }
+
+    public ClientResponseExceptionDefinition getException() {
+        return this.exception;
+    }
+
+    public void setException(ClientResponseExceptionDefinition exception) {
+        this.exception = exception;
     }
 }

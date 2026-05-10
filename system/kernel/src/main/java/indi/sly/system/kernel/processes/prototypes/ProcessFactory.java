@@ -82,7 +82,7 @@ public class ProcessFactory extends AFactory {
         process.processorMediator = processorMediator;
 
         ProcessStatisticsObject processStatistics = process.getStatistics();
-        processStatistics.setDate(DateTimeType.ACCESS, dateTime.getCurrentDateTime());
+        processStatistics.setDate(DateTimeType.ACCESS, dateTime.getCurrent());
 
         return process;
     }

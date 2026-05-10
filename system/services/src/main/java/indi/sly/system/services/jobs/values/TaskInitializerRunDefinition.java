@@ -3,7 +3,7 @@ package indi.sly.system.services.jobs.values;
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.services.jobs.lang.TaskInitializerRunMethodConsumer;
 
-public class TaskInitializerRunDefinition extends ADefinition<TaskInitializerRunDefinition> {
+public class TaskInitializerRunDefinition extends ADefinition {
     private TaskInitializerRunMethodConsumer method;
     private long transaction;
 

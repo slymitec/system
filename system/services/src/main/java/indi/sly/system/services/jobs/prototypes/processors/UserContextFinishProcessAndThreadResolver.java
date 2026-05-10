@@ -26,7 +26,7 @@ public class UserContextFinishProcessAndThreadResolver extends AUserContextFinis
 
                 ThreadObject thread = threadManager.getCurrent();
 
-                if (!thread.getId().equals(userContext.getThreadID())) {
+                if (!thread.getId().equals(userContext.getThreadId())) {
                     throw new StatusRelationshipErrorException();
                 }
 

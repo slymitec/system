@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.wrappers.UserContextProcessorMediator;
-import indi.sly.system.services.jobs.values.UserContextRequestProcessIDDefinition;
+import indi.sly.system.services.jobs.values.ClientRequestProcessIdDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -16,9 +16,9 @@ import java.util.UUID;
 public class UserContextCreateProcessIDVerificationResolver extends AUserContextCreateResolver {
     public UserContextCreateProcessIDVerificationResolver() {
         this.create = (userContext, userContextRequest) -> {
-            UserContextRequestProcessIDDefinition userContextRequestProcessID = userContextRequest.getProcessID();
+            ClientRequestProcessIdDefinition userContextRequestProcessID = userContextRequest.getProcessId();
 
-            UUID processID = userContextRequestProcessID.getID();
+            UUID processID = userContextRequestProcessID.getId();
 
             if (ValueUtil.isAnyNullOrEmpty(processID)) {
                 throw new ConditionRefuseException();

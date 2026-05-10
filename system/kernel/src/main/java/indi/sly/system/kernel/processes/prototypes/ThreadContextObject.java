@@ -2,7 +2,6 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AChildDefinitionObject;
 import indi.sly.system.kernel.processes.values.ThreadContextDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -10,6 +9,7 @@ import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
 
+import java.util.List;
 import java.util.Map;
 
 @Named
@@ -25,15 +25,15 @@ public class ThreadContextObject extends AChildDefinitionObject<ThreadContextDef
         this.definition.setType(type);
     }
 
-    public Map<String, String> getParameters() {
-        Map<String, String> parameters = this.definition.getRun().getParameters();
+    public List<String> getParameters() {
+        List<String> parameters = this.definition.getRun().getParameters();
 
         return CollectionUtil.unmodifiable(parameters);
     }
 
-    public void setParameters(Map<String, String> parameters) {
+    public void setParameters(List<String> parameters) {
         this.definition.getRun().getParameters().clear();
-        this.definition.getRun().getParameters().putAll(parameters);
+        this.definition.getRun().getParameters().addAll(parameters);
     }
 
     public Object getResult() {

@@ -18,13 +18,13 @@ import java.time.Clock;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class DateTimeObject extends ACacheableObject<NoneCacheEntity> {
-    public long getCurrentDateTime() {
+    public long getCurrent() {
         KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
 
         return Clock.systemUTC().instant().toEpochMilli() + kernelSpace.getSystemTimeOffset();
     }
 
-    public void setDateTime(long dateTime) {
+    public void correct(long dateTime) {
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject currentProcess = processManager.getCurrent();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();

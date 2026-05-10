@@ -5,7 +5,7 @@ import indi.sly.system.common.values.ADefinition;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TaskStatusDefinition extends ADefinition<TaskStatusDefinition> {
+public class TaskStatusDefinition extends ADefinition {
     public TaskStatusDefinition() {
         this.date = new HashMap<>();
     }

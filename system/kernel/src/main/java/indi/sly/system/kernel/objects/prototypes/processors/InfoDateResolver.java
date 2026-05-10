@@ -3,7 +3,6 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.objects.lang.InfoProcessorCreateChildFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorReadContentFunction;
@@ -22,7 +21,7 @@ public class InfoDateResolver extends AInfoResolver {
     public InfoDateResolver() {
         this.open = (index, info, type, cache, openAttribute, arguments) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
-            long nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrent();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
             assert date != null;
@@ -35,7 +34,7 @@ public class InfoDateResolver extends AInfoResolver {
 
         this.createChild = (childInfo, info, type, cache, childType, identification) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
-            long nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrent();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(childInfo.getDate());
             assert date != null;
@@ -50,7 +49,7 @@ public class InfoDateResolver extends AInfoResolver {
 
         this.readContent = (content, info, type, cache) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
-            long nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrent();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
             assert date != null;
@@ -63,7 +62,7 @@ public class InfoDateResolver extends AInfoResolver {
 
         this.writeContent = (info, type, cache, content) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
-            long nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrent();
 
             Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
             assert date != null;

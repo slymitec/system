@@ -2,25 +2,23 @@ package indi.sly.system.services.jobs.values;
 
 import indi.sly.system.common.values.ADefinition;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
-public class UserContentRequestDefinition extends ADefinition<UserContentRequestDefinition> {
+public class UserContentRequestDefinition extends ADefinition {
     public UserContentRequestDefinition() {
-        this.request = new HashMap<>();
+        this.parameters = new ArrayList<>();
     }
 
     private UUID id;
     private String task;
     private String method;
-    private final Map<String, String> request;
+    private final List<String> parameters;
 
-    public UUID getID() {
+    public UUID getId() {
         return this.id;
     }
 
-    public void setID(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -40,7 +38,7 @@ public class UserContentRequestDefinition extends ADefinition<UserContentRequest
         this.method = method;
     }
 
-    public Map<String, String> getRequest() {
-        return this.request;
+    public List<String> getParameters() {
+        return this.parameters;
     }
 }

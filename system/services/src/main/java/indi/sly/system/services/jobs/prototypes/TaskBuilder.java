@@ -33,7 +33,7 @@ public class TaskBuilder extends ABuilder {
 
         TaskDefinition task = new TaskDefinition();
 
-        task.setID(UUIDUtil.createRandom());
+        task.setId(UUIDUtil.createRandom());
         task.setAttribute(attribute);
         task.setName(name);
         if (LogicalUtil.isAllExist(task.getAttribute(), TaskAttributeType.HAS_PROCESS)
@@ -42,8 +42,8 @@ public class TaskBuilder extends ABuilder {
         }
         task.setInitializer(initializer);
 
-        serviceSpace.getTasks().put(task.getID(), task);
-        serviceSpace.getNamedTaskIDs().put(task.getName(), task.getID());
+        serviceSpace.getTasks().put(task.getId(), task);
+        serviceSpace.getNamedTaskIDs().put(task.getName(), task.getId());
     }
 
     public void delete(String name) {
@@ -61,7 +61,7 @@ public class TaskBuilder extends ABuilder {
 
         TaskDefinition task = serviceSpace.getTasks().getOrDefault(taskID, null);
 
-        serviceSpace.getTasks().remove(task.getID());
+        serviceSpace.getTasks().remove(task.getId());
         serviceSpace.getNamedTaskIDs().remove(task.getName());
     }
 }

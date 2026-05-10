@@ -22,7 +22,6 @@ import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -75,7 +74,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
     public UUID getIndex() {
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
 
         ProcessEntity process = this.getSelf();
 
@@ -122,7 +121,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
     public PathDefinition getPath() {
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
 
         PathDefinition path;
 
@@ -152,7 +151,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
     public InfoOpenDefinition getOpen() {
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
 
         InfoOpenDefinition infoOpen;
 
@@ -182,7 +181,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
     public boolean isUnsupportedDelete() {
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
 
         boolean unsupportedDelete;
 
@@ -212,7 +211,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
     public void setUnsupportedDelete(boolean unsupportedDelete) {
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
 
         ProcessEntity process = this.getSelf();
 
@@ -242,7 +241,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         }
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
 
         PathDefinition path;
 

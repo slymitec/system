@@ -7,6 +7,9 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.core.prototypes.ObjectCollectionObject;
+import indi.sly.system.kernel.core.values.ACacheEntity;
+import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.repositories.prototypes.ACacheRepositoryObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -20,149 +23,53 @@ import java.util.*;
 public class TaskContentObject extends AObject {
     protected ThreadContextObject threadContext;
 
-    public Set<UUID> getAllHandles() {
-        ObjectCollectionObject coreObjectRepository = this.coreManager.getObjectCollection();
-
-        return coreObjectRepository.getAllHandles(SpaceType.USER);
-    }
-
-    public <T extends AObject> T getCache(UUID handle) {
-        if (ValueUtil.isAnyNullOrEmpty(handle)) {
-            throw new ConditionParametersException();
-        }
-
-        ObjectCollectionObject coreObjectRepository = this.coreManager.getObjectCollection();
-
-        return coreObjectRepository.getByHandle(SpaceType.USER, handle);
-    }
-
-    public <T extends AObject> T getCacheByParameterName(String name) {
-        UUID handle = this.getParameter(UUID.class, name);
-        if (ValueUtil.isAnyNullOrEmpty(handle)) {
-            throw new StatusNotExistedException();
-        }
-
-        return this.getCache(handle);
-    }
-
-    public <T extends AObject> T getCacheByParameterNameOrDefault(String name, T defaultValue) {
-        UUID handle = this.getParameter(UUID.class, name);
-        if (ValueUtil.isAnyNullOrEmpty(handle)) {
-            return defaultValue;
-        }
-
-        return this.getCache(handle);
-    }
-
-    public void deleteCache(UUID handle) {
-        if (ValueUtil.isAnyNullOrEmpty(handle)) {
-            throw new ConditionParametersException();
-        }
-
-        AObject object = this.getCache(handle);
-        object.uncache(SpaceType.USER);
-    }
-
-    public boolean isParameterExist(String name) {
-        if (StringUtil.isNameIllegal(name)) {
-            throw new ConditionParametersException();
-        }
-
-        Map<String, String> threadContextParameters = this.threadContext.getParameters();
-
-        return threadContextParameters.containsKey(name);
-    }
-
     @SuppressWarnings("unchecked")
-    public <T> T getParameter(Class<T> clazz, String name) {
-        if (clazz == String.class) {
-            return (T) this.getParameter(name);
-        }
-
-        return ObjectUtil.transferFromStringOrDefaultProvider(clazz, this.getParameter(name), () -> {
-            throw new StatusUnreadableException();
-        });
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T getParameterOrNull(Class<T> clazz, String name) {
-        if (clazz == String.class) {
-            return (T) this.getParameterOrNull(name);
-        }
-
-        if (!this.isParameterExist(name)) {
-            return null;
-        }
-
-        return ObjectUtil.transferFromStringOrDefaultProvider(clazz, this.getParameter(name), () -> {
-            throw new StatusUnreadableException();
-        });
-    }
-
-    public String getParameter(String name) {
-        return this.getParameterOrDefaultProvider(name, () -> {
-            throw new StatusNotExistedException();
-        });
-    }
-
-    public String getParameterOrNull(String name) {
-        return this.getParameterOrDefaultProvider(name, () -> null);
-    }
-
-    public <T> List<T> getParameterList(Class<T> clazz, String name) {
-        return ObjectUtil.transferListFromStringOrDefaultProvider(clazz, this.getParameter(name), () -> {
-            throw new StatusUnreadableException();
-        });
-    }
-
-    public <T> List<T> getParameterListOrNull(Class<T> clazz, String name) {
-        if (!this.isParameterExist(name)) {
-            return null;
-        }
-
-        return ObjectUtil.transferListFromStringOrDefaultProvider(clazz, this.getParameter(name), () -> {
-            throw new StatusUnreadableException();
-        });
-    }
-
-    public <TK, TV> Map<TK, TV> getParameterMap(Class<TK> keyClass, Class<TV> valueClass, String name) {
-        return ObjectUtil.transferMapFromStringOrDefaultProvider(keyClass, valueClass, this.getParameter(name), () -> {
-            throw new StatusUnreadableException();
-        });
-    }
-
-    public <TK, TV> Map<TK, TV> getParameterMapOrNull(Class<TK> keyClass, Class<TV> valueClass, String name) {
-        if (!this.isParameterExist(name)) {
-            return null;
-        }
-
-        return ObjectUtil.transferMapFromStringOrDefaultProvider(keyClass, valueClass, this.getParameter(name), () -> {
-            throw new StatusUnreadableException();
-        });
-    }
-
-    private String getParameterOrDefaultProvider(String name, Provider<String> defaultValue) {
-        if (ObjectUtil.isAnyNull(defaultValue) || StringUtil.isNameIllegal(name)) {
+    public <T extends ACacheEntity> T getCache(UUID cacheRepositoryId, UUID handle) {
+        if (ValueUtil.isAnyNullOrEmpty(cacheRepositoryId, handle)) {
             throw new ConditionParametersException();
         }
 
-        Map<String, String> threadContextParameters = this.threadContext.getParameters();
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        if (threadContextParameters.containsKey(name)) {
-            return threadContextParameters.get(name);
-        } else {
-            return defaultValue.acquire();
-        }
+        ACacheRepositoryObject<?> cacheRepository = memoryManager.getCacheRepository(cacheRepositoryId);
+
+        return (T) cacheRepository.get(handle);
     }
 
-    public void setParameter(String name, String value) {
-        if (StringUtil.isNameIllegal(name)) {
+    public void deleteCache(UUID cacheRepositoryId, UUID handle) {
+        if (ValueUtil.isAnyNullOrEmpty(cacheRepositoryId, handle)) {
             throw new ConditionParametersException();
         }
 
-        Map<String, String> threadContextParameters = new HashMap<>(this.threadContext.getParameters());
-        threadContextParameters.put(name, value);
-        this.threadContext.setParameters(threadContextParameters);
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        ACacheRepositoryObject<?> cacheRepository = memoryManager.getCacheRepository(cacheRepositoryId);
+
+        cacheRepository.delete(handle);
+    }
+
+    public void refreshCache(UUID cacheRepositoryId, UUID handle) {
+        if (ValueUtil.isAnyNullOrEmpty(cacheRepositoryId, handle)) {
+            throw new ConditionParametersException();
+        }
+
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+
+        ACacheRepositoryObject<?> cacheRepository = memoryManager.getCacheRepository(cacheRepositoryId);
+
+        cacheRepository.refresh(handle);
+    }
+
+    public List<String> getParameters() {
+        return this.threadContext.getParameters();
+    }
+
+    public void setParameter(List<String> parameters) {
+        if (ValueUtil.isAnyNullOrEmpty(parameters)) {
+            throw new ConditionParametersException();
+        }
+        
+        this.threadContext.setParameters(parameters);
     }
 
     public Object getResult() {

@@ -47,7 +47,7 @@ public class BootObjectsResolver extends ABootResolver {
                     info.setOpened(0L);
 
                     DateTimeObject dateTime = this.coreManager.getDateTime();
-                    long nowDateTime = dateTime.getCurrentDateTime();
+                    long nowDateTime = dateTime.getCurrent();
 
                     Map<Long, Long> date = new HashMap<>();
                     date.put(DateTimeType.CREATE, nowDateTime);

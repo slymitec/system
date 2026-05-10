@@ -34,7 +34,7 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
         return this.cache.getId().toUuid();
     }
 
-    public final UUID cache(long duration) {
+    public final UUID cache() {
         if (ObjectUtil.isAnyNull(this.cache)) {
             throw new StatusNotSupportedException();
         }

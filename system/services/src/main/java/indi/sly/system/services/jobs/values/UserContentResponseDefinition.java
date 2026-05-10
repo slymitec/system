@@ -4,29 +4,32 @@ import indi.sly.system.common.values.ADefinition;
 
 import java.util.UUID;
 
-public class UserContentResponseDefinition extends ADefinition<UserContentResponseDefinition> {
-    public UserContentResponseDefinition() {
-        this.result = new UserContentResponseResultDefinition();
-        this.exception = new UserContentResponseExceptionDefinition();
+public class UserContentResponseDefinition extends ADefinition {
+    private UUID id;
+    private String clazz;
+    private Object value;
+
+    public String getClazz() {
+        return this.clazz;
     }
 
-    private UUID id;
-    private final UserContentResponseResultDefinition result;
-    private final UserContentResponseExceptionDefinition exception;
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
+    }
 
-    public UUID getID() {
+    public Object getValue() {
+        return this.value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
+    public UUID getId() {
         return this.id;
     }
 
-    public void setID(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
-    }
-
-    public UserContentResponseResultDefinition getResult() {
-        return this.result;
-    }
-
-    public UserContentResponseExceptionDefinition getException() {
-        return this.exception;
     }
 }

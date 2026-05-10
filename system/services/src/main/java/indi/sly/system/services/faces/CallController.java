@@ -10,9 +10,10 @@ import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.prototypes.UserContentObject;
 import indi.sly.system.services.jobs.prototypes.UserContextObject;
+import indi.sly.system.services.jobs.values.ClientResponseDefinition;
 import indi.sly.system.services.jobs.values.UserContentResponseDefinition;
-import indi.sly.system.services.jobs.values.UserContentResponseExceptionDefinition;
-import indi.sly.system.services.jobs.values.UserContextRequestDefinition;
+import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
+import indi.sly.system.services.jobs.values.ClientRequestDefinition;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +47,7 @@ public class CallController extends AController {
     }
 
     @RequestMapping(value = {"/Call.action"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String onMessage(@RequestBody UserContextRequestDefinition userContextRequest, HttpSession session) {
+    public String onMessage(@RequestBody ClientRequestDefinition userContextRequest, HttpSession session) {
         this.initCallController(session);
 
         try {
@@ -58,25 +59,25 @@ public class CallController extends AController {
 
             userContent.run();
 
-            UserContentResponseDefinition userContentResponse = userContext.getResponse();
+            ClientResponseDefinition clientResponse = userContext.getResponse();
 
             jobService.finishUserContext(userContext);
 
             this.coreManager.setUserSpace(null);
 
-            return ObjectUtil.transferToString(userContentResponse);
+            return ObjectUtil.transferToString(clientResponse);
         } catch (RuntimeException exception) {
-            UserContentResponseDefinition userContentResponse = new UserContentResponseDefinition();
+            ClientResponseDefinition clientResponse = new ClientResponseDefinition();
 
-            UserContentResponseExceptionDefinition userContentResponseException = userContentResponse.getException();
+            ClientResponseExceptionDefinition userContentResponseException = new ClientResponseExceptionDefinition();
 
-            userContentResponseException.setClazz(exception.getClass());
+            userContentResponseException.setClazz(exception.getClass().getName());
             StackTraceElement[] kernelExceptionStackTrace = exception.getStackTrace();
             if (kernelExceptionStackTrace.length != 0) {
                 try {
-                    userContentResponseException.setOwner(Class.forName(kernelExceptionStackTrace[0].getClassName()));
+                    userContentResponseException.setOwnerClazz(Class.forName(kernelExceptionStackTrace[0].getClassName()).getName());
                 } catch (ClassNotFoundException e) {
-                    userContentResponseException.setOwner(StatusUnexpectedException.class);
+                    userContentResponseException.setOwnerClazz(StatusUnexpectedException.class.getName());
                 }
                 userContentResponseException.setMethod(kernelExceptionStackTrace[0].getMethodName());
             }
@@ -86,7 +87,9 @@ public class CallController extends AController {
             }
             userContentResponseException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
 
-            return ObjectUtil.transferToString(userContentResponse);
+            clientResponse.setException(userContentResponseException);
+
+            return ObjectUtil.transferToString(clientResponse);
         }
     }
 }

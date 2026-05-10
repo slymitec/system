@@ -1,12 +1,9 @@
 package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
@@ -57,7 +54,7 @@ public class SignalContentObject extends AInfoContentObject implements IByteValu
         SignalDefinition signal = this.init(this.read());
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
 
         List<SignalEntryDefinition> signalEntries = signal.pollAll();
 
@@ -81,7 +78,7 @@ public class SignalContentObject extends AInfoContentObject implements IByteValu
         ProcessObject process = processManager.getCurrent();
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
 
         SignalEntryDefinition signalEntry = new SignalEntryDefinition();
         signalEntry.setSource(process.getId());

@@ -319,7 +319,7 @@ public class UserFactory extends AFactory {
         cache.setPassword(password);
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
-        long nowDateTime = dateTime.getCurrentDateTime();
+        long nowDateTime = dateTime.getCurrent();
         cache.getDate().put(DateTimeType.CREATE, nowDateTime);
         cache.getDate().put(DateTimeType.ACCESS, nowDateTime);
 

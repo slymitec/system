@@ -2,7 +2,6 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
@@ -19,7 +18,7 @@ public class ProcessCreateStatisticsResolver extends AProcessCreateResolver {
     public ProcessCreateStatisticsResolver() {
         this.create = (process, parentProcess, processCreator) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
-            long nowDateTime = dateTime.getCurrentDateTime();
+            long nowDateTime = dateTime.getCurrent();
 
             ProcessStatisticsObject processStatistics = process.getStatistics();
             processStatistics.setDate(DateTimeType.CREATE, nowDateTime);

@@ -55,19 +55,4 @@ public class ObjectManager extends AManager {
 
         return info;
     }
-
-    //--
-    public InfoObject get(List<IdentifierDefinition> identifiers) {
-        if (ObjectUtil.isAnyNull(identifiers) || identifiers.size() > 256) {
-            throw new ConditionParametersException();
-        }
-
-        InfoObject info = this.factory.getRootInfo();
-
-        for (IdentifierDefinition identifier : identifiers) {
-            info = info.getChild(identifier);
-        }
-
-        return info;
-    }
 }

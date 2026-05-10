@@ -38,7 +38,7 @@ public class ObjectManagerTaskInitializer extends ATaskInitializer {
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
-        InfoObject info = objectManager.get(ObjectUtil.transferFromString(PathDefinition.class, parameters.get(0)));
+        InfoObject info = objectManager.get(ObjectUtil.transferFromString(PathDefinition.class, parameters.getFirst()));
 
         UUID handle = info.cache();
 

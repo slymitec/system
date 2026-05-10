@@ -1,6 +1,7 @@
 package indi.sly.system.services.faces;
 
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
+import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.common.supports.UUIDUtil;
@@ -22,7 +23,6 @@ import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensio
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.values.ClientResponseDefinition;
 import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
-import indi.sly.system.services.jobs.values.UserContentResponseDefinition;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -97,9 +97,9 @@ public class StartUpController extends AController {
             ClientResponseExceptionDefinition clientResponseException = new ClientResponseExceptionDefinition();
 
             clientResponseException.setId(UUIDUtil.getEmpty());
-            clientResponseException.setClazz(StatusAlreadyFinishedException.class.getName());
-            clientResponseException.setOwnerClazz(StartUpController.class.getName());
-            clientResponseException.setMethod("startup");
+            clientResponseException.setClazz(ClassUtil.getSimpleName(StatusAlreadyFinishedException.class));
+            clientResponseException.setOwnerClazz(ClassUtil.getSimpleName(StartUpController.class));
+            clientResponseException.setOwnerMethod("startup");
 
             clientResponse.setException(clientResponseException);
 

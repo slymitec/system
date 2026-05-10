@@ -14,6 +14,7 @@ import indi.sly.system.services.jobs.instances.prototypes.processors.*;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.CoreManagerTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.DateTimeObjectTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.SystemVersionObjectTaskInitializer;
+import indi.sly.system.services.jobs.instances.prototypes.processors.objects.ObjectManagerTaskInitializer;
 import indi.sly.system.services.jobs.prototypes.*;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
@@ -40,8 +41,8 @@ public class JobService extends AService {
             kernelSpace.setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
 
             this.createTask("CoreManager", TaskAttributeType.NULL, null, this.coreManager.create(CoreManagerTaskInitializer.class));
-            this.createTask("SystemVersionObject", TaskAttributeType.NULL, null, this.coreManager.create(SystemVersionObjectTaskInitializer.class));
-            this.createTask("DateTimeObject", TaskAttributeType.NULL, null, this.coreManager.create(DateTimeObjectTaskInitializer.class));
+            this.createTask("SystemVersionObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(SystemVersionObjectTaskInitializer.class));
+            this.createTask("DateTimeObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(DateTimeObjectTaskInitializer.class));
 
             this.createTask("ObjectManager", TaskAttributeType.NULL, null, this.coreManager.create(ObjectManagerTaskInitializer.class));
             this.createTask("ProcessManager", TaskAttributeType.NULL, null, this.coreManager.create(ProcessTaskInitializer.class));

@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.supports.CollectionUtil;
+import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.core.prototypes.AChildDefinitionObject;
 import indi.sly.system.kernel.processes.values.ThreadContextDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -16,13 +17,19 @@ import java.util.Map;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ThreadContextObject extends AChildDefinitionObject<ThreadContextDefinition, ThreadObject> {
     public long getType() {
-        long type = this.definition.getType();
-
-        return type;
+        return this.definition.getType();
     }
 
     public void setType(long type) {
         this.definition.setType(type);
+    }
+
+    public ACacheableObject<?> getCacheableObject() {
+        return this.definition.getRun().getCacheableObject();
+    }
+
+    public void setCacheableObject(ACacheableObject<?> cacheableObject) {
+        this.definition.getRun().setCacheableObject(cacheableObject);
     }
 
     public List<String> getParameters() {

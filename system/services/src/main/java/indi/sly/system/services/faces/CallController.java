@@ -1,7 +1,7 @@
 package indi.sly.system.services.faces;
 
 import indi.sly.system.common.lang.StatusNotReadyException;
-import indi.sly.system.common.lang.StatusUnexpectedException;
+import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
@@ -11,7 +11,6 @@ import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.prototypes.UserContentObject;
 import indi.sly.system.services.jobs.prototypes.UserContextObject;
 import indi.sly.system.services.jobs.values.ClientResponseDefinition;
-import indi.sly.system.services.jobs.values.UserContentResponseDefinition;
 import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
 import indi.sly.system.services.jobs.values.ClientRequestDefinition;
 import jakarta.servlet.http.HttpSession;
@@ -71,15 +70,11 @@ public class CallController extends AController {
 
             ClientResponseExceptionDefinition userContentResponseException = new ClientResponseExceptionDefinition();
 
-            userContentResponseException.setClazz(exception.getClass().getName());
+            userContentResponseException.setClazz(ClassUtil.getSimpleName(exception.getClass()));
             StackTraceElement[] kernelExceptionStackTrace = exception.getStackTrace();
             if (kernelExceptionStackTrace.length != 0) {
-                try {
-                    userContentResponseException.setOwnerClazz(Class.forName(kernelExceptionStackTrace[0].getClassName()).getName());
-                } catch (ClassNotFoundException e) {
-                    userContentResponseException.setOwnerClazz(StatusUnexpectedException.class.getName());
-                }
-                userContentResponseException.setMethod(kernelExceptionStackTrace[0].getMethodName());
+                userContentResponseException.setOwnerClazz(kernelExceptionStackTrace[0].getClassName());
+                userContentResponseException.setOwnerMethod(kernelExceptionStackTrace[0].getMethodName());
             }
             String[] kernelExceptionStackTraceMessage = new String[kernelExceptionStackTrace.length];
             for (int i = 0; i < kernelExceptionStackTrace.length; i++) {

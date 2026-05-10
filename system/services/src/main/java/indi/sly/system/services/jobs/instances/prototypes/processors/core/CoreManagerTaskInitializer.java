@@ -1,5 +1,6 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors.core;
 
+import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.systemversion.prototypes.SystemVersionObject;
 import indi.sly.system.services.core.values.TransactionType;
@@ -35,9 +36,7 @@ public class CoreManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = systemVersion.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition();
-        handleContext.setHandle(handle);
-        handleContext.setType(systemVersion.getClass());
+        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(systemVersion.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -47,9 +46,7 @@ public class CoreManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = dateTime.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition();
-        handleContext.setHandle(handle);
-        handleContext.setType(dateTime.getClass());
+        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(dateTime.getClass()), handle);
 
         content.setResult(handleContext);
     }

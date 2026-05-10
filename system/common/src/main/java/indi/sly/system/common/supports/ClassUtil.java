@@ -9,6 +9,14 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 public abstract class ClassUtil {
+    public static String getName(Class<?> clazz) {
+        return ClassUtils.getName(clazz);
+    }
+
+    public static String getSimpleName(Class<?> clazz) {
+        return ClassUtils.getSimpleName(clazz);
+    }
+
     public static String getAbbreviatedName(Class<? extends ABase> clazz, int lengthHint) {
         return ClassUtils.getAbbreviatedName(clazz, lengthHint);
     }

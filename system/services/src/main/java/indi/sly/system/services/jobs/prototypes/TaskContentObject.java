@@ -5,6 +5,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.core.prototypes.ObjectCollectionObject;
 import indi.sly.system.kernel.core.values.ACacheEntity;
@@ -24,40 +25,8 @@ public class TaskContentObject extends AObject {
     protected ThreadContextObject threadContext;
 
     @SuppressWarnings("unchecked")
-    public <T extends ACacheEntity> T getCache(UUID cacheRepositoryId, UUID handle) {
-        if (ValueUtil.isAnyNullOrEmpty(cacheRepositoryId, handle)) {
-            throw new ConditionParametersException();
-        }
-
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-
-        ACacheRepositoryObject<?> cacheRepository = memoryManager.getCacheRepository(cacheRepositoryId);
-
-        return (T) cacheRepository.get(handle);
-    }
-
-    public void deleteCache(UUID cacheRepositoryId, UUID handle) {
-        if (ValueUtil.isAnyNullOrEmpty(cacheRepositoryId, handle)) {
-            throw new ConditionParametersException();
-        }
-
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-
-        ACacheRepositoryObject<?> cacheRepository = memoryManager.getCacheRepository(cacheRepositoryId);
-
-        cacheRepository.delete(handle);
-    }
-
-    public void refreshCache(UUID cacheRepositoryId, UUID handle) {
-        if (ValueUtil.isAnyNullOrEmpty(cacheRepositoryId, handle)) {
-            throw new ConditionParametersException();
-        }
-
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-
-        ACacheRepositoryObject<?> cacheRepository = memoryManager.getCacheRepository(cacheRepositoryId);
-
-        cacheRepository.refresh(handle);
+    public <T extends ACacheableObject<?>> T getCacheableObject() {
+        return (T) this.threadContext.getCacheableObject();
     }
 
     public List<String> getParameters() {
@@ -68,7 +37,7 @@ public class TaskContentObject extends AObject {
         if (ValueUtil.isAnyNullOrEmpty(parameters)) {
             throw new ConditionParametersException();
         }
-        
+
         this.threadContext.setParameters(parameters);
     }
 

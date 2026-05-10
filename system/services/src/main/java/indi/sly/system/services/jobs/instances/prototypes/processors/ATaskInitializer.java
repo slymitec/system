@@ -1,9 +1,10 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors;
 
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.core.prototypes.processors.AInitializer;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.lang.TaskInitializerRunMethodConsumer;
@@ -14,7 +15,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Named
@@ -25,6 +28,7 @@ public abstract class ATaskInitializer extends AInitializer {
     }
 
     private final Map<String, TaskInitializerRunDefinition> runs;
+    protected Function1<? extends ACacheableObject<?>, UUID> cacheableObjectFunction;
 
     protected final void register(String name, TaskInitializerRunMethodConsumer runMethod) {
         this.register(name, runMethod, TransactionType.INDEPENDENCE);
@@ -69,5 +73,16 @@ public abstract class ATaskInitializer extends AInitializer {
         runSummary.setTaskInitializerRun(run);
 
         return runSummary;
+    }
+
+    public final ACacheableObject<?> getCacheableObject(UUID handle) {
+        if (ValueUtil.isAnyNullOrEmpty(handle)) {
+            throw new ConditionParametersException();
+        }
+        if (ObjectUtil.isAnyNull(this.cacheableObjectFunction)) {
+            throw new ConditionContextException();
+        }
+
+        return this.cacheableObjectFunction.apply(handle);
     }
 }

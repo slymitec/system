@@ -1,5 +1,7 @@
 package indi.sly.system.common.lang;
 
+import indi.sly.system.common.supports.ClassUtil;
+
 import java.io.Serial;
 
 public abstract class AKernelException extends RuntimeException {
@@ -7,7 +9,7 @@ public abstract class AKernelException extends RuntimeException {
     private static final long serialVersionUID = 3353990103481301713L;
 
     public AKernelException(Class<? extends AKernelException> type) {
-        super(type.getName());
+        super(ClassUtil.getSimpleName(type));
         this.type = type;
     }
 

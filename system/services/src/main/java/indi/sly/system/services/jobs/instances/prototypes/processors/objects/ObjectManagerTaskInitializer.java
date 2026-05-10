@@ -1,12 +1,12 @@
-package indi.sly.system.services.jobs.instances.prototypes.processors;
+package indi.sly.system.services.jobs.instances.prototypes.processors.objects;
 
+import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.PathDefinition;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.services.core.values.TransactionType;
+import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
 import indi.sly.system.services.jobs.values.HandleContextDefinition;
@@ -42,9 +42,7 @@ public class ObjectManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = info.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition();
-        handleContext.setHandle(handle);
-        handleContext.setType(info.getClass());
+        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(info.getClass()), handle);
 
         content.setResult(handleContext);
     }

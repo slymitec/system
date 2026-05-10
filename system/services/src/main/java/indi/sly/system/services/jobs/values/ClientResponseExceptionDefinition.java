@@ -8,7 +8,7 @@ public class ClientResponseExceptionDefinition extends ADefinition {
     private UUID id;
     private String clazz;
     private String ownerClazz;
-    private String method;
+    private String ownerMethod;
     private String message;
 
     public UUID getId() {
@@ -35,12 +35,12 @@ public class ClientResponseExceptionDefinition extends ADefinition {
         this.ownerClazz = ownerClazz;
     }
 
-    public String getMethod() {
-        return this.method;
+    public String getOwnerMethod() {
+        return this.ownerMethod;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public void setOwnerMethod(String ownerMethod) {
+        this.ownerMethod = ownerMethod;
     }
 
     public String getMessage() {

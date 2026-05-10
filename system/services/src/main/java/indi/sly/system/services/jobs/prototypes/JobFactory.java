@@ -41,13 +41,14 @@ public class JobFactory extends AFactory {
 
     @Override
     public void init() {
+        this.taskResolvers.add(this.coreManager.create(TaskCacheableObjectResolver.class));
         this.taskResolvers.add(this.coreManager.create(TaskCheckConditionResolver.class));
         this.taskResolvers.add(this.coreManager.create(TaskContentResolver.class));
         this.taskResolvers.add(this.coreManager.create(TaskDateResolver.class));
         this.taskResolvers.add(this.coreManager.create(TaskInitializerResolver.class));
         this.taskResolvers.add(this.coreManager.create(TaskProcessAndThreadResolver.class));
         this.taskResolvers.add(this.coreManager.create(TaskStatusRuntimeResolver.class));
-
+        
         this.userContextCreateResolvers.add(this.coreManager.create(UserContextCreateContentResolver.class));
         this.userContextCreateResolvers.add(this.coreManager.create(UserContextCreateProcessAndThreadResolver.class));
         this.userContextCreateResolvers.add(this.coreManager.create(UserContextCreateProcessIDVerificationResolver.class));

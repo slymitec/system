@@ -1,6 +1,7 @@
 package indi.sly.system.test;
 
 import indi.sly.system.common.lang.StatusUnreadableException;
+import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
@@ -19,6 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +82,7 @@ public class HtmlController extends AController {
         if (identifications2 != null) {
             for (IdentifierDefinition identification : identifications2) {
                 this.logger().error(identification.toString());
-                this.logger().error(identification.getType().getName());
+                this.logger().error(ClassUtil.getSimpleName(identification.getType()));
             }
         }
 

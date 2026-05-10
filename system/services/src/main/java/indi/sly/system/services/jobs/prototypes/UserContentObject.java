@@ -2,7 +2,6 @@ package indi.sly.system.services.jobs.prototypes;
 
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
-import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ADefinitionObject;
@@ -14,8 +13,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
-
-import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -81,15 +78,11 @@ public class UserContentObject extends ADefinitionObject<UserContextDefinition> 
 
             clientResponseException.setId(userContentRequest.getId());
 
-            clientResponseException.setClazz(kernelException.getClass().getName());
+            clientResponseException.setClazz(ClassUtil.getSimpleName(kernelException.getClass()));
             StackTraceElement[] kernelExceptionStackTrace = kernelException.getStackTrace();
             if (kernelExceptionStackTrace.length != 0) {
-                try {
-                    clientResponseException.setOwnerClazz(Class.forName(kernelExceptionStackTrace[0].getClassName()).getName());
-                } catch (ClassNotFoundException e) {
-                    clientResponseException.setOwnerClazz(StatusUnexpectedException.class.getName());
-                }
-                clientResponseException.setMethod(kernelExceptionStackTrace[0].getMethodName());
+                clientResponseException.setOwnerClazz(kernelExceptionStackTrace[0].getClassName());
+                clientResponseException.setOwnerMethod(kernelExceptionStackTrace[0].getMethodName());
             }
             String[] kernelExceptionStackTraceMessage = new String[kernelExceptionStackTrace.length];
             for (int i = 0; i < kernelExceptionStackTrace.length; i++) {

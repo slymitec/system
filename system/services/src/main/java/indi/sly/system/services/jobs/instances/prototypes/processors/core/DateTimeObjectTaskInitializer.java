@@ -20,6 +20,8 @@ import java.util.List;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class DateTimeObjectTaskInitializer extends ATaskInitializer {
     public DateTimeObjectTaskInitializer() {
+        this.cacheableObjectFunction = (handle) -> this.coreManager.getFactory().rebuildDateTime(handle);
+
         this.register("getCurrent", this::getCurrent, TransactionType.WHATEVER);
         this.register("correct", this::correct, TransactionType.WHATEVER);
     }
@@ -34,23 +36,14 @@ public class DateTimeObjectTaskInitializer extends ATaskInitializer {
 
     }
 
-    private DateTimeObject getCacheableObject(TaskContentObject content) {
-        List<String> parameters = content.getParameters();
-
-        HandleContextDefinition handleContext = ObjectUtil.transferFromString(HandleContextDefinition.class, parameters.get(0));
-
-        CoreManager coreManager = this.coreManager.getManager(CoreManager.class);
-        return coreManager.getFactory().rebuildDateTime(handleContext.getHandle());
-    }
-
     private void getCurrent(TaskRunConsumer run, TaskContentObject content) {
-        DateTimeObject dateTimeObject = this.getCacheableObject(content);
+        DateTimeObject dateTimeObject = content.getCacheableObject();
 
         content.setResult(dateTimeObject.getCurrent());
     }
 
     private void correct(TaskRunConsumer run, TaskContentObject content) {
-        DateTimeObject dateTimeObject = this.getCacheableObject(content);
+        DateTimeObject dateTimeObject = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
 

@@ -1,9 +1,9 @@
 package indi.sly.system.boot;
 
 import com.redis.om.spring.annotations.EnableRedisDocumentRepositories;
-import indi.sly.system.kernel.core.AContainer;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import indi.sly.system.common.AContainer;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.boot.web.server.servlet.context.ServletComponentScan;
 import org.springframework.context.annotation.Bean;

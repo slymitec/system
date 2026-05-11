@@ -1,11 +1,7 @@
 package indi.sly.system.boot;
 
 import com.redis.om.spring.annotations.EnableRedisDocumentRepositories;
-import indi.sly.system.common.ABase;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.AObject;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
+import indi.sly.system.kernel.core.AContainer;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import org.springframework.boot.persistence.autoconfigure.EntityScan;
@@ -14,11 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.SerializationException;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.converter.HttpMessageConverters;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -26,7 +17,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 
 @Configuration
 @ComponentScan(basePackages = SpringConfiguration.BASE_PACKAGES)
@@ -36,7 +26,7 @@ import java.util.UUID;
 @EnableRedisDocumentRepositories(basePackages = SpringConfiguration.BASE_PACKAGES)
 @EntityScan(basePackages = SpringConfiguration.BASE_PACKAGES)
 @ServletComponentScan(basePackages = SpringConfiguration.BASE_PACKAGES)
-public class SpringConfiguration extends ABase implements WebMvcConfigurer {
+public class SpringConfiguration extends AContainer implements WebMvcConfigurer {
     public static final String BASE_PACKAGES = "indi.sly.*";
 
     @Override

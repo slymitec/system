@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.core.containers;
+package indi.sly.system.kernel.core;
 
 import indi.sly.system.common.ABase;
 

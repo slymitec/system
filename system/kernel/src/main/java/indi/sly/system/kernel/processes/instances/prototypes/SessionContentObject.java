@@ -1,11 +1,9 @@
 package indi.sly.system.kernel.processes.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.MethodScope;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.values.MethodScopeType;
 import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
@@ -21,7 +19,6 @@ public class SessionContentObject extends AInfoContentObject implements IByteVal
         return session.getName();
     }
 
-    @MethodScope(value = MethodScopeType.ONLY_KERNEL)
     public void setName(String name) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();

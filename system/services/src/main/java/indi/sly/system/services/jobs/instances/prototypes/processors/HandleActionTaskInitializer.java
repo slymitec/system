@@ -1,23 +1,9 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors;
 
-import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.*;
-import indi.sly.system.common.values.MethodScopeType;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.prototypes.AObject;
-import indi.sly.system.services.core.values.TransactionType;
-import indi.sly.system.services.jobs.lang.TaskRunConsumer;
-import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextDefinition;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Set;
-import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)

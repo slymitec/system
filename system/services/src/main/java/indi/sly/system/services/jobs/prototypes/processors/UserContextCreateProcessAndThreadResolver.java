@@ -2,7 +2,7 @@ package indi.sly.system.services.jobs.prototypes.processors;
 
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
-import indi.sly.system.services.core.prototypes.TransactionalActionObject;
+import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.wrappers.UserContextProcessorMediator;
 import indi.sly.system.services.jobs.values.ClientRequestProcessIdDefinition;
@@ -22,7 +22,7 @@ public class UserContextCreateProcessAndThreadResolver extends AUserContextCreat
 
             UUID processID = userContextRequestProcessID.getId();
 
-            TransactionalActionObject transactionalAction = this.coreManager.create(TransactionalActionObject.class);
+            TransactionalActionComponent transactionalAction = this.coreManager.create(TransactionalActionComponent.class);
 
             ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
             ThreadObject thread = transactionalAction.runWithTransactional(() -> threadManager.create(processID));

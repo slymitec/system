@@ -3,7 +3,7 @@ package indi.sly.system.services.jobs.prototypes.processors;
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.services.core.prototypes.TransactionalActionObject;
+import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
@@ -50,7 +50,7 @@ public class TaskInitializerResolver extends ATaskResolver {
                     return null;
                 };
 
-                TransactionalActionObject transactionalAction = this.coreManager.create(TransactionalActionObject.class);
+                TransactionalActionComponent transactionalAction = this.coreManager.create(TransactionalActionComponent.class);
 
                 if (LogicalUtil.isAnyEqual(initializerRunTransaction, TransactionType.INDEPENDENCE)) {
                     transactionalAction.runWithIndependentTransactional(provider);

@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusNotReadyException;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.lang.InfoProcessorExecuteContentConsumer;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorReadContentFunction;
@@ -18,7 +19,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoProcessInfoTableResolver extends AInfoResolver {
+public class InfoProcessInfoTableResolver extends AResolver implements IInfoResolver {
     public InfoProcessInfoTableResolver() {
         this.open = (index, info, type, cache, openAttribute, arguments) -> {
             ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);

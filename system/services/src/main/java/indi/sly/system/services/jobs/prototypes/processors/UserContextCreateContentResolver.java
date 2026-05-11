@@ -3,6 +3,7 @@ package indi.sly.system.services.jobs.prototypes.processors;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.wrappers.UserContextProcessorMediator;
 import indi.sly.system.services.jobs.values.UserContentRequestDefinition;
@@ -12,7 +13,7 @@ import org.springframework.context.annotation.Scope;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserContextCreateContentResolver extends AUserContextCreateResolver {
+public class UserContextCreateContentResolver extends AResolver implements IUserContextCreateResolver {
     public UserContextCreateContentResolver() {
         this.create = (userContext, clientRequest) -> {
             UserContentRequestDefinition userContentRequestRaw = clientRequest.getContent();

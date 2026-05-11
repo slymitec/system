@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.lang.InfoProcessorSelfFunction;
@@ -12,7 +13,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoSelfResolver extends AInfoResolver {
+public class InfoSelfResolver extends AResolver implements IInfoResolver {
     public InfoSelfResolver() {
         this.info = (cache) -> {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);

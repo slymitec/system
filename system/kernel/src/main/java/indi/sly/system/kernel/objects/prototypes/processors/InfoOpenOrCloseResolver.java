@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.lang.InfoProcessorCloseFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
@@ -11,7 +12,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoOpenOrCloseResolver extends AInfoResolver {
+public class InfoOpenOrCloseResolver extends AResolver implements IInfoResolver {
     public InfoOpenOrCloseResolver() {
         this.open = (index, info, type, cache, openAttribute, arguments) -> {
             info.setOpened(info.getOpened() + 1);

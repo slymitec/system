@@ -5,7 +5,7 @@ import indi.sly.system.common.lang.StatusInsufficientResourcesException;
 import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
+import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.instances.values.PortDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class PortContentObject extends AInfoContentObject implements IByteValueProcess<PortDefinition> {
+public class PortContentObject extends AInfoContentObject implements IByteValueSupporter<PortDefinition> {
     public Set<UUID> getSourceProcessIDs() {
         PortDefinition port = this.init(this.read());
 

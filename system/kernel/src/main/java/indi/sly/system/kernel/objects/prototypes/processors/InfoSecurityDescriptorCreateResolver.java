@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
@@ -17,7 +18,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoSecurityDescriptorCreateResolver extends AInfoResolver {
+public class InfoSecurityDescriptorCreateResolver extends AResolver implements IInfoResolver {
     public InfoSecurityDescriptorCreateResolver() {
         this.createChild = (childInfo, info, type, cache, childTypeID, identification) -> {
             TypeManager typeManager = this.coreManager.getManager(TypeManager.class);

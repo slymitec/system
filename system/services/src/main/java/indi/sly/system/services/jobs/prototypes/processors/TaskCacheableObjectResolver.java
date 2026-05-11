@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TaskCacheableObjectResolver extends ATaskResolver {
+public class TaskCacheableObjectResolver extends AResolver implements ITaskResolver {
     public TaskCacheableObjectResolver() {
         this.content = (task, status, threadContext) -> {
             if (LogicalUtil.isAnyExist(task.getAttribute(), TaskAttributeType.OBJECT_IS_CACHEABLE) && ObjectUtil.isAnyNull(threadContext.getCacheableObject())) {

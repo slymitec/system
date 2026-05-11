@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.lang.InfoProcessorCloseFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -15,7 +16,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoProcessInfoTableCloseResolver extends AInfoResolver {
+public class InfoProcessInfoTableCloseResolver extends AResolver implements IInfoResolver {
     public InfoProcessInfoTableCloseResolver() {
         this.close = (info, type, cache) -> {
             ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);

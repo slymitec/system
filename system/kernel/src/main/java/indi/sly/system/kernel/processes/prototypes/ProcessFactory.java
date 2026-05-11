@@ -35,9 +35,9 @@ public class ProcessFactory extends AFactory {
         this.processEndResolvers = new CopyOnWriteArrayList<>();
     }
 
-    protected final List<AProcessResolver> processResolvers;
-    protected final List<AProcessCreateResolver> processCreatorResolvers;
-    protected final List<AProcessEndResolver> processEndResolvers;
+    protected final List<IProcessResolver> processResolvers;
+    protected final List<IProcessCreateResolver> processCreatorResolvers;
+    protected final List<IProcessEndResolver> processEndResolvers;
     private UUID processCacheRepositoryId;
     private UUID processChildCacheRepositoryId;
     private UUID processInfoEntryCacheRepositoryId;
@@ -103,7 +103,7 @@ public class ProcessFactory extends AFactory {
 
     public ProcessObject buildProcess(ProcessEntity process) {
         ProcessProcessorMediator processorMediator = this.coreManager.create(ProcessProcessorMediator.class);
-        for (AProcessResolver processResolver : this.processResolvers) {
+        for (IProcessResolver processResolver : this.processResolvers) {
             processResolver.resolve(process, processorMediator);
         }
 
@@ -134,7 +134,7 @@ public class ProcessFactory extends AFactory {
         ProcessEntity process = processRepository.get(cache.getProcessId());
 
         ProcessProcessorMediator processorMediator = this.coreManager.create(ProcessProcessorMediator.class);
-        for (AProcessResolver processResolver : this.processResolvers) {
+        for (IProcessResolver processResolver : this.processResolvers) {
             processResolver.resolve(process, processorMediator);
         }
 
@@ -143,7 +143,7 @@ public class ProcessFactory extends AFactory {
 
     public ProcessCreateBuilder createProcessCreator(ProcessObject parentProcess) {
         ProcessLifeProcessorMediator processorMediator = this.coreManager.create(ProcessLifeProcessorMediator.class);
-        for (AProcessCreateResolver processCreatorResolver : this.processCreatorResolvers) {
+        for (IProcessCreateResolver processCreatorResolver : this.processCreatorResolvers) {
             processCreatorResolver.resolve(processorMediator);
         }
 
@@ -162,7 +162,7 @@ public class ProcessFactory extends AFactory {
         }
 
         ProcessLifeProcessorMediator processorMediator = this.coreManager.create(ProcessLifeProcessorMediator.class);
-        for (AProcessEndResolver processEndResolver : this.processEndResolvers) {
+        for (IProcessEndResolver processEndResolver : this.processEndResolvers) {
             processEndResolver.resolve(processorMediator);
         }
 

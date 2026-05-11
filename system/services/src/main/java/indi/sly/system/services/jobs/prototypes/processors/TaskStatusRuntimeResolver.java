@@ -1,5 +1,6 @@
 package indi.sly.system.services.jobs.prototypes.processors;
 
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
@@ -12,7 +13,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TaskStatusRuntimeResolver extends ATaskResolver {
+public class TaskStatusRuntimeResolver extends AResolver implements ITaskResolver {
     public TaskStatusRuntimeResolver() {
         this.start = (task, status) -> status.setRuntime(TaskStatusRuntimeType.RUNNING);
 

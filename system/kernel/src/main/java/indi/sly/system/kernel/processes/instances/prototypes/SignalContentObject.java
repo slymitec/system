@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
-import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
+import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.values.SignalDefinition;
@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SignalContentObject extends AInfoContentObject implements IByteValueProcess<SignalDefinition> {
+public class SignalContentObject extends AInfoContentObject implements IByteValueSupporter<SignalDefinition> {
     public Set<UUID> getSourceProcessIDs() {
         SignalDefinition signal = this.init(this.read());
 

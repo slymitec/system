@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteStatusConsumer;
@@ -14,7 +15,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessStatisticsResolver extends AProcessResolver {
+public class ProcessStatisticsResolver extends AResolver implements IProcessResolver {
     private final ProcessProcessorReadStatusFunction readProcessStatus;
     private final ProcessProcessorWriteStatusConsumer writeProcessStatus;
 

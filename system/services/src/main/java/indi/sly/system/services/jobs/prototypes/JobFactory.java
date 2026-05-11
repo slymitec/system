@@ -1,11 +1,7 @@
 package indi.sly.system.services.jobs.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.Consumer1;
-import indi.sly.system.common.lang.Provider;
-import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.services.jobs.prototypes.processors.*;
 import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
@@ -21,9 +17,6 @@ import jakarta.inject.Named;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -35,9 +28,9 @@ public class JobFactory extends AFactory {
         this.userContextFinishResolvers = new CopyOnWriteArrayList<>();
     }
 
-    protected final List<ATaskResolver> taskResolvers;
-    protected final List<AUserContextCreateResolver> userContextCreateResolvers;
-    protected final List<AUserContextFinishResolver> userContextFinishResolvers;
+    protected final List<ITaskResolver> taskResolvers;
+    protected final List<IUserContextCreateResolver> userContextCreateResolvers;
+    protected final List<IUserContextFinishResolver> userContextFinishResolvers;
 
     @Override
     public void init() {
@@ -75,7 +68,7 @@ public class JobFactory extends AFactory {
         }
 
         TaskProcessorMediator processorMediator = this.coreManager.create(TaskProcessorMediator.class);
-        for (ATaskResolver resolver : this.taskResolvers) {
+        for (ITaskResolver resolver : this.taskResolvers) {
             resolver.resolve(task, processorMediator);
         }
 
@@ -109,7 +102,7 @@ public class JobFactory extends AFactory {
     public UserContextCreateBuilder createUserContextCreator() {
         UserContextProcessorMediator processorMediator = this.coreManager.create(UserContextProcessorMediator.class);
 
-        for (AUserContextCreateResolver userContextCreateResolver : this.userContextCreateResolvers) {
+        for (IUserContextCreateResolver userContextCreateResolver : this.userContextCreateResolvers) {
             userContextCreateResolver.resolve(processorMediator);
         }
 
@@ -124,7 +117,7 @@ public class JobFactory extends AFactory {
     public UserContextFinishBuilder createUserContextFinish() {
         UserContextProcessorMediator processorMediator = this.coreManager.create(UserContextProcessorMediator.class);
 
-        for (AUserContextFinishResolver userContextFinishResolver : this.userContextFinishResolvers) {
+        for (IUserContextFinishResolver userContextFinishResolver : this.userContextFinishResolvers) {
             userContextFinishResolver.resolve(processorMediator);
         }
 

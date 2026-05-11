@@ -10,6 +10,7 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -29,7 +30,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCreateContextResolver extends AProcessCreateResolver {
+public class ProcessCreateContextResolver extends AResolver implements IProcessCreateResolver {
     private final ProcessLifeProcessorCreateFunction create;
 
     public ProcessCreateContextResolver() {

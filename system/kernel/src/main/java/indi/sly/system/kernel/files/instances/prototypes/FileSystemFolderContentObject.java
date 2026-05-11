@@ -1,9 +1,7 @@
 package indi.sly.system.kernel.files.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
+import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -17,7 +15,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FileSystemFolderContentObject extends AInfoContentObject implements IByteValueProcess<FileSystemEntryDefinition> {
+public class FileSystemFolderContentObject extends AInfoContentObject implements IByteValueSupporter<FileSystemEntryDefinition> {
     public long getType() {
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 

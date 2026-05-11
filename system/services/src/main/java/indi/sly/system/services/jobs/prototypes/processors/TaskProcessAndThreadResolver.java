@@ -2,6 +2,7 @@ package indi.sly.system.services.jobs.prototypes.processors;
 
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadStatusObject;
@@ -17,7 +18,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TaskProcessAndThreadResolver extends ATaskResolver {
+public class TaskProcessAndThreadResolver extends AResolver implements ITaskResolver {
     public TaskProcessAndThreadResolver() {
         this.start = (task, status) -> {
             if (LogicalUtil.isAllExist(task.getAttribute(), TaskAttributeType.HAS_PROCESS)

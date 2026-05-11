@@ -2,6 +2,7 @@ package indi.sly.system.services.jobs.prototypes.processors;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.wrappers.UserContextProcessorMediator;
 import indi.sly.system.services.jobs.values.ClientRequestProcessIdDefinition;
@@ -13,7 +14,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserContextCreateProcessIDVerificationResolver extends AUserContextCreateResolver {
+public class UserContextCreateProcessIDVerificationResolver extends AResolver implements IUserContextCreateResolver {
     public UserContextCreateProcessIDVerificationResolver() {
         this.create = (userContext, userContextRequest) -> {
             ClientRequestProcessIdDefinition userContextRequestProcessID = userContextRequest.getProcessId();

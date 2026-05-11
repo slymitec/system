@@ -1,6 +1,7 @@
 package indi.sly.system.services.jobs.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
@@ -13,7 +14,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserContextFinishProcessAndThreadResolver extends AUserContextFinishResolver {
+public class UserContextFinishProcessAndThreadResolver extends AResolver implements IUserContextFinishResolver {
     public UserContextFinishProcessAndThreadResolver() {
         this.finish = (userContext) -> {
             TransactionalActionComponent transactionalAction = this.coreManager.create(TransactionalActionComponent.class);

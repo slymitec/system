@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
@@ -12,7 +13,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCreateInfoTableResolver extends AProcessCreateResolver {
+public class ProcessCreateInfoTableResolver extends AResolver implements IProcessCreateResolver {
     private final ProcessLifeProcessorCreateFunction create;
 
     public ProcessCreateInfoTableResolver() {

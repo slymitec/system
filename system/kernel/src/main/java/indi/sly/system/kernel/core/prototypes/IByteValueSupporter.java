@@ -2,7 +2,7 @@ package indi.sly.system.kernel.core.prototypes;
 
 import indi.sly.system.common.supports.ObjectUtil;
 
-public interface IByteValueProcess<T> {
+public interface IByteValueSupporter<T> {
     default T init(byte[] source) {
         if (ObjectUtil.isAnyNull(source)) {
             return null;

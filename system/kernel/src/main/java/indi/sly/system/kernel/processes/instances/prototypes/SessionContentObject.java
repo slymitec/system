@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
+import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionDefinition;
 
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class SessionContentObject extends AInfoContentObject implements IByteValueProcess<SessionDefinition> {
+public class SessionContentObject extends AInfoContentObject implements IByteValueSupporter<SessionDefinition> {
     public String getName() {
         SessionDefinition session = this.init(this.read());
 

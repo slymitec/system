@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
-import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
+import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntity, GroupObject> implements IByteValueProcess<UserTokenDefinition> {
+public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntity, GroupObject> implements IByteValueSupporter<UserTokenDefinition> {
     protected UserFactory factory;
 
     private GroupEntity getSelf() {

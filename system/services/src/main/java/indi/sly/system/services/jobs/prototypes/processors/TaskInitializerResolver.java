@@ -3,6 +3,7 @@ package indi.sly.system.services.jobs.prototypes.processors;
 import indi.sly.system.common.lang.AKernelException;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
@@ -20,7 +21,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TaskInitializerResolver extends ATaskResolver {
+public class TaskInitializerResolver extends AResolver implements ITaskResolver {
     public TaskInitializerResolver() {
         this.start = (task, status) -> {
             ATaskInitializer initializer = task.getInitializer();

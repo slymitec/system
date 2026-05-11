@@ -2,6 +2,7 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.lang.InfoProcessorCloseFunction;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoCloseThenDeleteIfTemporaryResolver extends AInfoResolver {
+public class InfoCloseThenDeleteIfTemporaryResolver extends AResolver implements IInfoResolver {
     public InfoCloseThenDeleteIfTemporaryResolver() {
         this.close = (info, type, cache) -> {
             if (!cache.getPath().get().isEmpty()

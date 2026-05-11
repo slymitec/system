@@ -1,6 +1,7 @@
 package indi.sly.system.services.jobs.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
@@ -15,7 +16,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TaskCheckConditionResolver extends ATaskResolver {
+public class TaskCheckConditionResolver extends AResolver implements ITaskResolver {
     public TaskCheckConditionResolver() {
         this.start = (task, status) -> {
             if (status.getRuntime() != TaskStatusRuntimeType.INITIALIZATION) {

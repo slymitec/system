@@ -1,5 +1,6 @@
 package indi.sly.system.services.jobs.prototypes.processors;
 
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
@@ -15,7 +16,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserContextCreateProcessAndThreadResolver extends AUserContextCreateResolver {
+public class UserContextCreateProcessAndThreadResolver extends AResolver implements IUserContextCreateResolver {
     public UserContextCreateProcessAndThreadResolver() {
         this.create = (userContext, userContextRequest) -> {
             ClientRequestProcessIdDefinition userContextRequestProcessID = userContextRequest.getProcessId();

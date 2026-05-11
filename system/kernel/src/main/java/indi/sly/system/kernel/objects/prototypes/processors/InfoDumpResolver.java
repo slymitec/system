@@ -2,6 +2,7 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.lang.InfoProcessorDumpFunction;
 import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
@@ -17,7 +18,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoDumpResolver extends AInfoResolver {
+public class InfoDumpResolver extends AResolver implements IInfoResolver {
     public InfoDumpResolver() {
         this.dump = (dump, info, type, cache) -> {
             ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);

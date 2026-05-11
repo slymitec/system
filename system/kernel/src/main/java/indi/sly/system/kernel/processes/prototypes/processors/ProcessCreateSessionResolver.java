@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
@@ -11,7 +12,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCreateSessionResolver extends AProcessCreateResolver {
+public class ProcessCreateSessionResolver extends AResolver implements IProcessCreateResolver {
     private final ProcessLifeProcessorCreateFunction create;
 
     public ProcessCreateSessionResolver() {

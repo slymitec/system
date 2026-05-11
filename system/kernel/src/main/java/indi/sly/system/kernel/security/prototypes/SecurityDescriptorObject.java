@@ -10,7 +10,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
-import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
+import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
@@ -34,7 +34,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDescriptorCacheEntity, InfoObject> implements IByteValueProcess<SecurityDescriptorDefinition> {
+public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDescriptorCacheEntity, InfoObject> implements IByteValueSupporter<SecurityDescriptorDefinition> {
     protected InfoProcessorMediator processorMediator;
 
     private InfoEntity getSelf() {

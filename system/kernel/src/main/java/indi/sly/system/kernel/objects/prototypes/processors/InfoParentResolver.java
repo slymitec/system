@@ -3,6 +3,7 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.lang.InfoProcessorParentFunction;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoParentResolver extends AInfoResolver {
+public class InfoParentResolver extends AResolver implements IInfoResolver {
     public InfoParentResolver() {
         this.parent = (status) -> {
             List<IdentifierDefinition> identifiers = new ArrayList<>(status.getPath().get());

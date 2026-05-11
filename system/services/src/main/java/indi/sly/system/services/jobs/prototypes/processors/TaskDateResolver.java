@@ -2,6 +2,7 @@ package indi.sly.system.services.jobs.prototypes.processors;
 
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TaskDateResolver extends ATaskResolver {
+public class TaskDateResolver extends AResolver implements ITaskResolver {
     public TaskDateResolver() {
         this.start = (task, status) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();

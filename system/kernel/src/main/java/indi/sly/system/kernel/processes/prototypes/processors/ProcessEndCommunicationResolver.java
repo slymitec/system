@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
@@ -11,7 +12,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessEndCommunicationResolver extends AProcessEndResolver {
+public class ProcessEndCommunicationResolver extends AResolver implements IProcessEndResolver {
     private final ProcessLifeProcessorEndFunction end;
 
     public ProcessEndCommunicationResolver() {

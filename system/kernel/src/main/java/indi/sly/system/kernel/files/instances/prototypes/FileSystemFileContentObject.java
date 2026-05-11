@@ -7,8 +7,7 @@ import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
+import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
@@ -24,7 +23,7 @@ import java.io.IOException;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FileSystemFileContentObject extends AInfoContentObject implements IByteValueProcess<FileSystemEntryDefinition> {
+public class FileSystemFileContentObject extends AInfoContentObject implements IByteValueSupporter<FileSystemEntryDefinition> {
     public long length() {
         FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
 

@@ -6,7 +6,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
-import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
+import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
@@ -29,7 +29,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueProcess<ProcessInfoTableDefinition> {
+public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessInfoTableDefinition> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -50,11 +50,11 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
             source = resolver.apply(source, process);
         }
 
-        return IByteValueProcess.super.init(source);
+        return IByteValueSupporter.super.init(source);
     }
 
     private void flush(ProcessEntity process, ProcessInfoTableDefinition value) {
-        byte[] source = IByteValueProcess.super.flush(value);
+        byte[] source = IByteValueSupporter.super.flush(value);
 
         Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessInfoTables();
 

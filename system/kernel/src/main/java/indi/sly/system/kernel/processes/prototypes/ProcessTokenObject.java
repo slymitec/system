@@ -11,7 +11,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
-import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
+import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionType;
@@ -36,7 +36,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueProcess<ProcessTokenDefinition> {
+public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessTokenDefinition> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -57,11 +57,11 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             source = resolver.apply(source, process);
         }
 
-        return IByteValueProcess.super.init(source);
+        return IByteValueSupporter.super.init(source);
     }
 
     private void flush(ProcessEntity process, ProcessTokenDefinition value) {
-        byte[] source = IByteValueProcess.super.flush(value);
+        byte[] source = IByteValueSupporter.super.flush(value);
 
         Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessTokens();
 

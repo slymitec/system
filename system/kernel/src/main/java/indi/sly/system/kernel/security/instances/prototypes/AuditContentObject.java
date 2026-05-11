@@ -3,9 +3,8 @@ package indi.sly.system.kernel.security.instances.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.PathDefinition;
-import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
+import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.security.instances.values.AuditDefinition;
 import indi.sly.system.kernel.security.values.UserIDDefinition;
@@ -18,7 +17,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AuditContentObject extends AInfoContentObject implements IByteValueProcess<AuditDefinition> {
+public class AuditContentObject extends AInfoContentObject implements IByteValueSupporter<AuditDefinition> {
     public UUID getProcessID() {
         AuditDefinition audit = this.init(this.read());
 

@@ -3,6 +3,7 @@ package indi.sly.system.kernel.objects.prototypes.processors;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.lang.InfoProcessorCreateChildFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorReadContentFunction;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InfoDateResolver extends AInfoResolver {
+public class InfoDateResolver extends AResolver implements IInfoResolver {
     public InfoDateResolver() {
         this.open = (index, info, type, cache, openAttribute, arguments) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();

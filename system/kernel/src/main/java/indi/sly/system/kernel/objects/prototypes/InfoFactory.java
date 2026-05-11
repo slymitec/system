@@ -41,7 +41,7 @@ public class InfoFactory extends AFactory {
         this.infoResolvers = new CopyOnWriteArrayList<>();
     }
 
-    private final List<AInfoResolver> infoResolvers;
+    private final List<IInfoResolver> infoResolvers;
     private UUID infoCacheRepositoryId;
     private UUID dumpCacheRepositoryId;
     private UUID infoContentCacheRepositoryId;
@@ -111,7 +111,7 @@ public class InfoFactory extends AFactory {
         }
 
         InfoProcessorMediator processorMediator = this.coreManager.create(InfoProcessorMediator.class);
-        for (AInfoResolver infoResolver : this.infoResolvers) {
+        for (IInfoResolver infoResolver : this.infoResolvers) {
             infoResolver.resolve(info, processorMediator);
         }
 
@@ -158,7 +158,7 @@ public class InfoFactory extends AFactory {
         InfoEntity info = infoRepository.get(cache.getInfoId());
 
         InfoProcessorMediator processorMediator = this.coreManager.create(InfoProcessorMediator.class);
-        for (AInfoResolver infoResolver : this.infoResolvers) {
+        for (IInfoResolver infoResolver : this.infoResolvers) {
             infoResolver.resolve(info, processorMediator);
         }
 

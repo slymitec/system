@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
+import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
@@ -13,7 +14,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessEndInfoTableResolver extends AProcessEndResolver {
+public class ProcessEndInfoTableResolver extends AResolver implements IProcessEndResolver {
     private final ProcessLifeProcessorEndFunction end;
 
     public ProcessEndInfoTableResolver() {

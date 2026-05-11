@@ -10,7 +10,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
-import indi.sly.system.kernel.core.prototypes.IByteValueProcess;
+import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -34,7 +34,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueProcess<ProcessCommunicationDefinition> {
+public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessCommunicationDefinition> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -55,11 +55,11 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             source = resolver.apply(source, process);
         }
 
-        return IByteValueProcess.super.init(source);
+        return IByteValueSupporter.super.init(source);
     }
 
     private void flush(ProcessEntity process, ProcessCommunicationDefinition value) {
-        byte[] source = IByteValueProcess.super.flush(value);
+        byte[] source = IByteValueSupporter.super.flush(value);
 
         Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessCommunications();
 

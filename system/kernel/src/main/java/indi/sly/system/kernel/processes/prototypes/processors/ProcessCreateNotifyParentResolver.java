@@ -7,7 +7,7 @@ import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.instances.values.SignalType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.mediators.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

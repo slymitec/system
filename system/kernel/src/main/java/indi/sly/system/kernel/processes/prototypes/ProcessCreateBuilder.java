@@ -7,7 +7,7 @@ import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.mediators.ProcessLifeProcessorMediator;
 import indi.sly.system.kernel.processes.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

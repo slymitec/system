@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
-import indi.sly.system.services.jobs.prototypes.wrappers.UserContextProcessorMediator;
+import indi.sly.system.services.jobs.prototypes.mediators.UserContextProcessorMediator;
 import indi.sly.system.services.jobs.values.UserContextDefinition;
 import indi.sly.system.services.jobs.values.ClientRequestDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

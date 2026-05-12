@@ -3,7 +3,7 @@ package indi.sly.system.services.jobs.prototypes.processors;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
-import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
+import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import indi.sly.system.services.jobs.values.TaskStatusRuntimeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

@@ -6,7 +6,7 @@ import indi.sly.system.kernel.objects.lang.InfoProcessorExecuteContentConsumer;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorReadContentFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorWriteContentConsumer;
-import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
+import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;

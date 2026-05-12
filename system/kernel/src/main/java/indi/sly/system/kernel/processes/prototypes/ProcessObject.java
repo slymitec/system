@@ -3,12 +3,8 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
-import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.ThreadManager;
-import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
-import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessCacheEntity;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -16,7 +12,6 @@ import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
 
-import java.util.Set;
 import java.util.UUID;
 
 @Named

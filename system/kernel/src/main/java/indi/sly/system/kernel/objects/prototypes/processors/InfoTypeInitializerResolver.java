@@ -11,7 +11,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObje
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.lang.*;
-import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
+import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;

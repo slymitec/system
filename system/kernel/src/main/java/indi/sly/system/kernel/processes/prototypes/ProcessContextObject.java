@@ -15,7 +15,7 @@ import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.*;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

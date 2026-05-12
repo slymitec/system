@@ -10,7 +10,7 @@ import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitia
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
-import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
+import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import indi.sly.system.services.jobs.values.TaskInitializerRunSummaryDefinition;

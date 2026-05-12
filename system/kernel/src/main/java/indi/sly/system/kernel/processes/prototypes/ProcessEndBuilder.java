@@ -3,7 +3,7 @@ package indi.sly.system.kernel.processes.prototypes;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.mediators.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

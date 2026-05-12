@@ -1,6 +1,6 @@
-package indi.sly.system.services.jobs.prototypes.wrappers;
+package indi.sly.system.services.jobs.prototypes.mediators;
 
-import indi.sly.system.kernel.core.prototypes.wrappers.AMediator;
+import indi.sly.system.kernel.core.prototypes.AMediator;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;

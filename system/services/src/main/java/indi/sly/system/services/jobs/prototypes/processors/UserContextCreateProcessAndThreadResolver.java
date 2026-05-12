@@ -5,7 +5,7 @@ import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
-import indi.sly.system.services.jobs.prototypes.wrappers.UserContextProcessorMediator;
+import indi.sly.system.services.jobs.prototypes.mediators.UserContextProcessorMediator;
 import indi.sly.system.services.jobs.values.ClientRequestProcessIdDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

@@ -5,7 +5,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
-import indi.sly.system.services.jobs.prototypes.wrappers.UserContextProcessorMediator;
+import indi.sly.system.services.jobs.prototypes.mediators.UserContextProcessorMediator;
 import indi.sly.system.services.jobs.values.UserContentRequestDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

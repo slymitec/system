@@ -4,7 +4,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.mediators.ProcessLifeProcessorMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

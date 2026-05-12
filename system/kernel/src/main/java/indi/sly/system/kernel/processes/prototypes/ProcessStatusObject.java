@@ -10,7 +10,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryOb
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteStatusConsumer;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessChildCacheEntity;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessStatusType;

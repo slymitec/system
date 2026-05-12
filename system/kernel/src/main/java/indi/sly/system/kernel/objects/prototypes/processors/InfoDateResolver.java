@@ -8,7 +8,7 @@ import indi.sly.system.kernel.objects.lang.InfoProcessorCreateChildFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorOpenFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorReadContentFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorWriteContentConsumer;
-import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
+import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

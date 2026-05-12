@@ -17,7 +17,7 @@ import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObjec
 import indi.sly.system.kernel.processes.instances.values.SessionType;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.*;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;

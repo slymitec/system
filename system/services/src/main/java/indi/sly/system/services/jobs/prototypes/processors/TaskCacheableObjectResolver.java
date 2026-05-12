@@ -7,7 +7,7 @@ import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
-import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
+import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.HandleContextDefinition;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;

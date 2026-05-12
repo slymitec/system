@@ -6,7 +6,7 @@ import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteStatusConsumer;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessStatisticsObject;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

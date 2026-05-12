@@ -2,14 +2,13 @@ package indi.sly.system.services.jobs.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.ADefinitionObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
-import indi.sly.system.services.jobs.prototypes.wrappers.TaskProcessorMediator;
+import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import indi.sly.system.services.jobs.values.TaskStatusDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

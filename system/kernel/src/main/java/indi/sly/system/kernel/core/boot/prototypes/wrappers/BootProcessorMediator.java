@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.core.boot.prototypes.wrappers;
 
 import indi.sly.system.kernel.core.boot.lang.BootStartConsumer;
-import indi.sly.system.kernel.core.prototypes.wrappers.AMediator;
+import indi.sly.system.kernel.core.prototypes.AMediator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

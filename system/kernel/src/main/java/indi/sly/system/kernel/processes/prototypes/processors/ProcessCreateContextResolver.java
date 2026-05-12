@@ -21,7 +21,7 @@ import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
-import indi.sly.system.kernel.processes.prototypes.wrappers.ProcessLifeProcessorMediator;
+import indi.sly.system.kernel.processes.prototypes.mediators.ProcessLifeProcessorMediator;
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

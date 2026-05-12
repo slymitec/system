@@ -1,6 +1,6 @@
-package indi.sly.system.kernel.objects.prototypes.wrappers;
+package indi.sly.system.kernel.objects.prototypes.mediators;
 
-import indi.sly.system.kernel.core.prototypes.wrappers.AMediator;
+import indi.sly.system.kernel.core.prototypes.AMediator;
 import indi.sly.system.kernel.objects.lang.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

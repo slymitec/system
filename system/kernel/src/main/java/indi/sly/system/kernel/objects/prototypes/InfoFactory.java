@@ -16,7 +16,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObje
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.prototypes.processors.*;
-import indi.sly.system.kernel.objects.prototypes.wrappers.InfoProcessorMediator;
+import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.DumpCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoContentCacheEntity;

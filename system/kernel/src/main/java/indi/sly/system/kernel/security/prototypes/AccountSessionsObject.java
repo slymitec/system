@@ -10,7 +10,7 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.security.values.AccountChildCacheEntity;
 import indi.sly.system.kernel.security.values.AccountEntity;
-import indi.sly.system.kernel.security.values.AccountSessionsDefinition;
+import indi.sly.system.kernel.security.values.AccountSessionsEntity;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -34,7 +34,7 @@ public class AccountSessionsObject extends AChildCacheableObject<AccountChildCac
         try {
             this.factory.lockAccount(this.cache.getAccount(), LockType.READ);
 
-            AccountSessionsDefinition accountSessions = ObjectUtil.transferFromByteArray(this.getSelf().getSessions());
+            AccountSessionsEntity accountSessions = this.getSelf().getSessions();
             return CollectionUtil.unmodifiable(accountSessions.getSessions());
         } finally {
             this.factory.unlockAccount(this.cache.getAccount(), LockType.READ);
@@ -49,10 +49,10 @@ public class AccountSessionsObject extends AChildCacheableObject<AccountChildCac
         try {
             this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
 
-            AccountSessionsDefinition accountSessions = ObjectUtil.transferFromByteArray(this.getSelf().getSessions());
+            AccountSessionsEntity accountSessions = this.getSelf().getSessions();
             accountSessions.getSessions().add(sessionID);
 
-            this.getSelf().setSessions(ObjectUtil.transferToByteArray(accountSessions));
+            this.getSelf().setSessions(accountSessions);
         } finally {
             this.factory.unlockAccount(this.cache.getAccount(), LockType.WRITE);
         }
@@ -66,10 +66,10 @@ public class AccountSessionsObject extends AChildCacheableObject<AccountChildCac
         try {
             this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
 
-            AccountSessionsDefinition accountSessions = ObjectUtil.transferFromByteArray(this.getSelf().getSessions());
+            AccountSessionsEntity accountSessions = this.getSelf().getSessions();
             accountSessions.getSessions().remove(sessionID);
 
-            this.getSelf().setSessions(ObjectUtil.transferToByteArray(accountSessions));
+            this.getSelf().setSessions(accountSessions);
         } finally {
             this.factory.unlockAccount(this.cache.getAccount(), LockType.WRITE);
         }

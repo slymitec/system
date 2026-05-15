@@ -12,10 +12,7 @@ import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.values.AccountEntity;
-import indi.sly.system.kernel.security.values.AccountSessionsDefinition;
-import indi.sly.system.kernel.security.values.PrivilegeType;
-import indi.sly.system.kernel.security.values.UserTokenDefinition;
+import indi.sly.system.kernel.security.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -47,11 +44,11 @@ public class AccountBuilder extends ABuilder {
         account.setId(UUID.randomUUID());
         account.setName(accountName);
         account.setPassword(accountPassword);
-        UserTokenDefinition userToken = new UserTokenDefinition();
+        UserTokenEntity userToken = new UserTokenEntity();
         KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
         userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
-        account.setToken(ObjectUtil.transferToByteArray(userToken));
-        account.setSessions(ObjectUtil.transferToByteArray(new AccountSessionsDefinition()));
+        account.setToken(userToken);
+        account.setSessions(new AccountSessionsEntity());
 
         try {
             userRepository.getAccount(accountName);

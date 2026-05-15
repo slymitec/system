@@ -12,10 +12,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObjec
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
-import indi.sly.system.kernel.security.values.GroupChildCacheEntity;
-import indi.sly.system.kernel.security.values.GroupEntity;
-import indi.sly.system.kernel.security.values.PrivilegeType;
-import indi.sly.system.kernel.security.values.UserTokenDefinition;
+import indi.sly.system.kernel.security.values.*;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -24,7 +21,7 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntity, GroupObject> implements IByteValueSupporter<UserTokenDefinition> {
+public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntity, GroupObject> {
     protected UserFactory factory;
 
     private GroupEntity getSelf() {
@@ -38,7 +35,7 @@ public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntit
         try {
             this.factory.lockGroup(this.cache.getGroup(), LockType.READ);
 
-            UserTokenDefinition userToken = this.init(this.getSelf().getToken());
+            UserTokenEntity userToken = this.getSelf().getToken();
             return userToken.getPrivileges();
         } finally {
             this.factory.unlockGroup(this.cache.getGroup(), LockType.READ);
@@ -58,10 +55,10 @@ public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntit
         try {
             this.factory.lockGroup(this.cache.getGroup(), LockType.WRITE);
 
-            UserTokenDefinition userToken = this.init(this.getSelf().getToken());
+            UserTokenEntity userToken = this.getSelf().getToken();
             userToken.setPrivileges(privileges);
 
-            this.getSelf().setToken(this.flush(userToken));
+            this.getSelf().setToken(userToken);
         } finally {
             this.factory.unlockGroup(this.cache.getGroup(), LockType.WRITE);
         }
@@ -71,7 +68,7 @@ public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntit
         try {
             this.factory.lockGroup(this.cache.getGroup(), LockType.READ);
 
-            UserTokenDefinition userToken = this.init(this.getSelf().getToken());
+            UserTokenEntity userToken = this.getSelf().getToken();
             return CollectionUtil.unmodifiable(userToken.getLimits());
         } finally {
             this.factory.unlockGroup(this.cache.getGroup(), LockType.READ);
@@ -95,11 +92,11 @@ public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntit
         try {
             this.factory.lockGroup(this.cache.getGroup(), LockType.WRITE);
 
-            UserTokenDefinition userToken = this.init(this.getSelf().getToken());
+            UserTokenEntity userToken = this.getSelf().getToken();
             userToken.getLimits().clear();
             userToken.getLimits().putAll(limits);
 
-            this.getSelf().setToken(this.flush(userToken));
+            this.getSelf().setToken(userToken);
         } finally {
             this.factory.unlockGroup(this.cache.getGroup(), LockType.WRITE);
         }

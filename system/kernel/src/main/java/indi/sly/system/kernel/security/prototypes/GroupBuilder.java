@@ -4,7 +4,6 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -14,7 +13,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObjec
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.values.GroupEntity;
 import indi.sly.system.kernel.security.values.PrivilegeType;
-import indi.sly.system.kernel.security.values.UserTokenDefinition;
+import indi.sly.system.kernel.security.values.UserTokenEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -42,10 +41,10 @@ public class GroupBuilder extends ABuilder {
         GroupEntity group = new GroupEntity();
         group.setId(UUID.randomUUID());
         group.setName(groupName);
-        UserTokenDefinition userToken = new UserTokenDefinition();
+        UserTokenEntity userToken = new UserTokenEntity();
         KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
         userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
-        group.setToken(ObjectUtil.transferToByteArray(userToken));
+        group.setToken(userToken);
 
         try {
             userRepository.getGroup(groupName);

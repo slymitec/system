@@ -37,10 +37,10 @@ public class BootUserResolver extends ABootResolver {
                     GroupEntity group = new GroupEntity();
                     group.setId(groupId);
                     group.setName(groupName);
-                    UserTokenDefinition userToken = new UserTokenDefinition();
+                    UserTokenEntity userToken = new UserTokenEntity();
                     userToken.setPrivileges(PrivilegeType.FULL);
                     userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
-                    group.setToken(ObjectUtil.transferToByteArray(userToken));
+                    group.setToken(userToken);
 
                     userRepository.add(group);
                 }
@@ -50,12 +50,12 @@ public class BootUserResolver extends ABootResolver {
                     GroupEntity group = new GroupEntity();
                     group.setId(groupId);
                     group.setName(groupName);
-                    UserTokenDefinition userToken = new UserTokenDefinition();
+                    UserTokenEntity userToken = new UserTokenEntity();
                     userToken.setPrivileges(LogicalUtil.or(PrivilegeType.CORE_MODIFY_DATETIME,
                             PrivilegeType.FILE_SYSTEM_ACCESS_MODIFY_MAPPING, PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT,
                             PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP));
                     userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
-                    group.setToken(ObjectUtil.transferToByteArray(userToken));
+                    group.setToken(userToken);
 
                     userRepository.add(group);
                 }
@@ -65,9 +65,9 @@ public class BootUserResolver extends ABootResolver {
                     GroupEntity group = new GroupEntity();
                     group.setId(groupId);
                     group.setName(groupName);
-                    UserTokenDefinition userToken = new UserTokenDefinition();
+                    UserTokenEntity userToken = new UserTokenEntity();
                     userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
-                    group.setToken(ObjectUtil.transferToByteArray(userToken));
+                    group.setToken(userToken);
 
                     userRepository.add(group);
                 }
@@ -80,8 +80,8 @@ public class BootUserResolver extends ABootResolver {
                     account.setName("System");
                     account.setPassword(StringUtil.EMPTY);
                     account.setGroups(new ArrayList<>(List.of(group)));
-                    account.setToken(ObjectUtil.transferToByteArray(new UserTokenDefinition()));
-                    account.setSessions(ObjectUtil.transferToByteArray(new AccountSessionsDefinition()));
+                    account.setToken(new UserTokenEntity());
+                    account.setSessions(new AccountSessionsEntity());
 
                     userRepository.add(account);
                 }

@@ -6,16 +6,16 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
-import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
+
 import indi.sly.system.kernel.security.values.AccountChildCacheEntity;
 import indi.sly.system.kernel.security.values.AccountEntity;
 import indi.sly.system.kernel.security.values.PrivilegeType;
-import indi.sly.system.kernel.security.values.UserTokenDefinition;
+import indi.sly.system.kernel.security.values.UserTokenEntity;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AccountTokenObject extends AChildCacheableObject<AccountChildCacheEntity, AccountObject> implements IByteValueSupporter<UserTokenDefinition> {
+public class AccountTokenObject extends AChildCacheableObject<AccountChildCacheEntity, AccountObject> {
     protected UserFactory factory;
 
     private AccountEntity getSelf() {
@@ -38,7 +38,7 @@ public class AccountTokenObject extends AChildCacheableObject<AccountChildCacheE
         try {
             this.factory.lockAccount(this.cache.getAccount(), LockType.READ);
 
-            UserTokenDefinition userToken = this.init(this.getSelf().getToken());
+            UserTokenEntity userToken = this.getSelf().getToken();
             return userToken.getPrivileges();
         } finally {
             this.factory.unlockAccount(this.cache.getAccount(), LockType.READ);
@@ -58,10 +58,10 @@ public class AccountTokenObject extends AChildCacheableObject<AccountChildCacheE
         try {
             this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
 
-            UserTokenDefinition userToken = this.init(this.getSelf().getToken());
+            UserTokenEntity userToken = this.getSelf().getToken();
             userToken.setPrivileges(privileges);
 
-            this.getSelf().setToken(this.flush(userToken));
+            this.getSelf().setToken(userToken);
         } finally {
             this.factory.unlockAccount(this.cache.getAccount(), LockType.WRITE);
         }
@@ -71,7 +71,7 @@ public class AccountTokenObject extends AChildCacheableObject<AccountChildCacheE
         try {
             this.factory.lockAccount(this.cache.getAccount(), LockType.READ);
 
-            UserTokenDefinition userToken = this.init(this.getSelf().getToken());
+            UserTokenEntity userToken = this.getSelf().getToken();
             return CollectionUtil.unmodifiable(userToken.getLimits());
         } finally {
             this.factory.unlockAccount(this.cache.getAccount(), LockType.READ);
@@ -95,11 +95,11 @@ public class AccountTokenObject extends AChildCacheableObject<AccountChildCacheE
         try {
             this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
 
-            UserTokenDefinition userToken = this.init(this.getSelf().getToken());
+            UserTokenEntity userToken = this.getSelf().getToken();
             userToken.getLimits().clear();
             userToken.getLimits().putAll(limits);
 
-            this.getSelf().setToken(this.flush(userToken));
+            this.getSelf().setToken(userToken);
         } finally {
             this.factory.unlockAccount(this.cache.getAccount(), LockType.WRITE);
         }

@@ -10,6 +10,7 @@ import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -36,7 +37,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessSessionDefinition> {
+public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessSessionEntity> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -48,25 +49,23 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
         return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
     }
 
-    private ProcessSessionDefinition init(ProcessEntity process) {
+    private ProcessSessionEntity init(ProcessEntity process) {
         Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessSessions();
 
-        byte[] source = null;
+        APersistentEntity source = null;
 
         for (ProcessProcessorReadComponentFunction resolver : resolvers) {
             source = resolver.apply(source, process);
         }
 
-        return IByteValueSupporter.super.init(source);
+        return (ProcessSessionEntity) source;
     }
 
-    private void flush(ProcessEntity process, ProcessSessionDefinition value) {
-        byte[] source = IByteValueSupporter.super.flush(value);
-
+    private void flush(ProcessEntity process, ProcessSessionEntity value) {
         Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessSessions();
 
         for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
-            resolver.accept(process, source);
+            resolver.accept(process, value);
         }
     }
 
@@ -76,7 +75,7 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessSessionDefinition processSession = this.init(process);
+            ProcessSessionEntity processSession = this.init(process);
 
             return processSession.getSessionID();
         } finally {
@@ -107,7 +106,7 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessSessionDefinition processSession = this.init(process);
+            ProcessSessionEntity processSession = this.init(process);
 
             UUID sessionID = processSession.getSessionID();
 
@@ -174,7 +173,7 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessSessionDefinition processSession = this.init(process);
+            ProcessSessionEntity processSession = this.init(process);
 
             UUID sessionID = processSession.getSessionID();
 
@@ -219,7 +218,7 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessSessionDefinition processSession = this.init(process);
+            ProcessSessionEntity processSession = this.init(process);
 
             if (processSession.isLink()) {
                 throw new StatusRelationshipErrorException();
@@ -247,7 +246,7 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessSessionDefinition processSession = this.init(process);
+            ProcessSessionEntity processSession = this.init(process);
 
             UUID sessionID = processSession.getSessionID();
 
@@ -280,7 +279,7 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessSessionDefinition processSession = this.init(process);
+            ProcessSessionEntity processSession = this.init(process);
 
             return processSession.isLink();
         } finally {
@@ -299,7 +298,7 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessSessionDefinition processSession = this.init(process);
+            ProcessSessionEntity processSession = this.init(process);
 
             UUID sessionID = processSession.getSessionID();
 

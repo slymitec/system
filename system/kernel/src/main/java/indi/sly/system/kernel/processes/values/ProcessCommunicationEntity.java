@@ -1,15 +1,12 @@
 package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.supports.*;
-import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.*;
 
-public class ProcessCommunicationDefinition extends ADefinition {
-    public ProcessCommunicationDefinition() {
+public class ProcessCommunicationEntity extends APersistentEntity {
+    public ProcessCommunicationEntity() {
         this.shared = ArrayUtil.EMPTY_BYTES;
         this.portIDs = new HashSet<>();
     }
@@ -42,7 +39,7 @@ public class ProcessCommunicationDefinition extends ADefinition {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProcessCommunicationDefinition that = (ProcessCommunicationDefinition) o;
+        ProcessCommunicationEntity that = (ProcessCommunicationEntity) o;
         return Arrays.equals(shared, that.shared) && portIDs.equals(that.portIDs) && Objects.equals(signalID,
                 that.signalID);
     }

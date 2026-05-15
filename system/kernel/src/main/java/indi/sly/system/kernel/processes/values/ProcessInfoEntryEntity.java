@@ -1,14 +1,13 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 
 import java.util.*;
 
-public class ProcessInfoEntryDefinition extends ADefinition {
-    public ProcessInfoEntryDefinition() {
+public class ProcessInfoEntryEntity extends APersistentEntity {
+    public ProcessInfoEntryEntity() {
         this.date = new HashMap<>();
     }
 
@@ -66,7 +65,7 @@ public class ProcessInfoEntryDefinition extends ADefinition {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        ProcessInfoEntryDefinition that = (ProcessInfoEntryDefinition) o;
+        ProcessInfoEntryEntity that = (ProcessInfoEntryEntity) o;
         return unsupportedDelete == that.unsupportedDelete && Objects.equals(index, that.index) && Objects.equals(date, that.date) && Objects.equals(id, that.id) && Objects.equals(path, that.path) && Objects.equals(infoOpen, that.infoOpen);
     }
 

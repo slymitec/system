@@ -35,24 +35,24 @@ public class BootProcessesResolver extends ABootResolver {
 
                     process.setId(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
                     process.setStatus(ProcessStatusType.RUNNING);
-                    process.setCommunication(ObjectUtil.transferToByteArray(new ProcessCommunicationDefinition()));
-                    ProcessContextDefinition context = new ProcessContextDefinition();
+                    process.setCommunication((new ProcessCommunicationEntity()));
+                    ProcessContextEntity context = new ProcessContextEntity();
                     context.setType(ProcessContextType.EXECUTABLE);
                     context.setParameters(StringUtil.EMPTY);
-                    process.setContext(ObjectUtil.transferToByteArray(context));
-                    process.setInfoTable(ObjectUtil.transferToByteArray(new ProcessInfoTableDefinition()));
-                    process.setSession(ObjectUtil.transferToByteArray(new ProcessSessionDefinition()));
-                    ProcessStatisticsDefinition processStatistics = new ProcessStatisticsDefinition();
+                    process.setContext(context);
+                    process.setInfoTable(new ProcessInfoTableEntity());
+                    process.setSession(new ProcessSessionEntity());
+                    ProcessStatisticsEntity processStatistics = new ProcessStatisticsEntity();
                     DateTimeObject dateTime = this.coreManager.getDateTime();
                     processStatistics.getDate().put(DateTimeType.CREATE, dateTime.getCurrent());
                     processStatistics.getDate().put(DateTimeType.ACCESS, dateTime.getCurrent());
-                    process.setStatistics(ObjectUtil.transferToByteArray(processStatistics));
-                    ProcessTokenDefinition token = new ProcessTokenDefinition();
+                    process.setStatistics(processStatistics);
+                    ProcessTokenEntity token = new ProcessTokenEntity();
                     token.setAccountId(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
                     token.setPrivileges(PrivilegeType.FULL);
                     token.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
                     token.getRoles().add(kernelConfiguration.SECURITY_ROLE_EXECUTABLE_ID);
-                    process.setToken(ObjectUtil.transferToByteArray(token));
+                    process.setToken(token);
 
                     processRepository.add(process);
                 }

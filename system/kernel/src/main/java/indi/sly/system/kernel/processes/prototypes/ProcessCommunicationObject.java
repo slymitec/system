@@ -11,6 +11,7 @@ import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -34,7 +35,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessCommunicationDefinition> {
+public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessCommunicationEntity> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -46,25 +47,23 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
     }
 
-    private ProcessCommunicationDefinition init(ProcessEntity process) {
+    private ProcessCommunicationEntity init(ProcessEntity process) {
         Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessCommunications();
 
-        byte[] source = null;
+        APersistentEntity source = null;
 
         for (ProcessProcessorReadComponentFunction resolver : resolvers) {
             source = resolver.apply(source, process);
         }
 
-        return IByteValueSupporter.super.init(source);
+        return (ProcessCommunicationEntity) source;
     }
 
-    private void flush(ProcessEntity process, ProcessCommunicationDefinition value) {
-        byte[] source = IByteValueSupporter.super.flush(value);
-
+    private void flush(ProcessEntity process, ProcessCommunicationEntity value) {
         Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessCommunications();
 
         for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
-            resolver.accept(process, source);
+            resolver.accept(process, value);
         }
     }
 
@@ -82,7 +81,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessCommunicationDefinition processCommunication = this.init(process);
+            ProcessCommunicationEntity processCommunication = this.init(process);
 
             byte[] processCommunicationShared = processCommunication.getShared();
 
@@ -119,7 +118,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessCommunicationDefinition processCommunication = this.init(process);
+            ProcessCommunicationEntity processCommunication = this.init(process);
 
             processCommunication.setShared(shared);
 
@@ -148,7 +147,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessCommunicationDefinition processCommunication = this.init(process);
+            ProcessCommunicationEntity processCommunication = this.init(process);
 
             return CollectionUtil.unmodifiable(processCommunication.getPortIDs());
         } finally {
@@ -179,7 +178,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessCommunicationDefinition processCommunication = this.init(process);
+            ProcessCommunicationEntity processCommunication = this.init(process);
 
             ProcessTokenObject processToken = this.base.getToken();
             if (processCommunication.getPortIDs().size() > processToken.getLimits().get(ProcessTokenLimitType.PORT_COUNT_MAX)) {
@@ -253,7 +252,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessCommunicationDefinition processCommunication = this.init(process);
+            ProcessCommunicationEntity processCommunication = this.init(process);
 
             Set<UUID> processCommunicationPortIDs = processCommunication.getPortIDs();
 
@@ -292,7 +291,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessCommunicationDefinition processCommunication = this.init(process);
+            ProcessCommunicationEntity processCommunication = this.init(process);
 
             Set<UUID> processCommunicationPortIDs = processCommunication.getPortIDs();
             if (processCommunicationPortIDs.contains(portID)) {
@@ -494,7 +493,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessCommunicationDefinition processCommunication = this.init(process);
+            ProcessCommunicationEntity processCommunication = this.init(process);
 
             return processCommunication.getSignalID();
         } finally {
@@ -523,7 +522,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessCommunicationDefinition processCommunication = this.init(process);
+            ProcessCommunicationEntity processCommunication = this.init(process);
 
             if (!ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalID())) {
                 throw new StatusAlreadyFinishedException();
@@ -585,7 +584,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessCommunicationDefinition processCommunication = this.init(process);
+            ProcessCommunicationEntity processCommunication = this.init(process);
 
             UUID signalID = processCommunication.getSignalID();
 
@@ -623,7 +622,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessCommunicationDefinition processCommunication = this.init(process);
+            ProcessCommunicationEntity processCommunication = this.init(process);
 
             signalID = processCommunication.getSignalID();
         } finally {
@@ -663,7 +662,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessCommunicationDefinition processCommunication = this.init(process);
+            ProcessCommunicationEntity processCommunication = this.init(process);
 
             signalID = processCommunication.getSignalID();
         } finally {
@@ -730,7 +729,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessCommunicationDefinition processCommunication = this.init(process);
+            ProcessCommunicationEntity processCommunication = this.init(process);
 
             signalID = processCommunication.getSignalID();
         } finally {

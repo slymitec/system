@@ -12,6 +12,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.instances.values.SessionType;
@@ -36,7 +37,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessTokenDefinition> {
+public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -48,25 +49,23 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
     }
 
-    private ProcessTokenDefinition init(ProcessEntity process) {
+    private ProcessTokenEntity init(ProcessEntity process) {
         Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessTokens();
 
-        byte[] source = null;
+        APersistentEntity source = null;
 
         for (ProcessProcessorReadComponentFunction resolver : resolvers) {
             source = resolver.apply(source, process);
         }
 
-        return IByteValueSupporter.super.init(source);
+        return (ProcessTokenEntity) source;
     }
 
-    private void flush(ProcessEntity process, ProcessTokenDefinition value) {
-        byte[] source = IByteValueSupporter.super.flush(value);
-
+    private void flush(ProcessEntity process, ProcessTokenEntity value) {
         Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessTokens();
 
         for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
-            resolver.accept(process, source);
+            resolver.accept(process, value);
         }
     }
 
@@ -101,7 +100,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessTokenDefinition processToken = this.init(process);
+            ProcessTokenEntity processToken = this.init(process);
 
             if (!ValueUtil.isAnyNullOrEmpty(processToken.getAccountId())
                     && !processToken.getAccountId().equals(accountAuthorizationSummary.getID())) {
@@ -138,7 +137,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessTokenDefinition processToken = this.init(process);
+            ProcessTokenEntity processToken = this.init(process);
 
             return processToken.getAccountId();
         } finally {
@@ -165,7 +164,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessTokenDefinition processToken = this.init(process);
+            ProcessTokenEntity processToken = this.init(process);
 
             processToken.setAccountId(currentProcessToken.getAccountId());
 
@@ -186,7 +185,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessTokenDefinition processToken = this.init(process);
+            ProcessTokenEntity processToken = this.init(process);
 
             return processToken.getPrivileges();
         } finally {
@@ -213,7 +212,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessTokenDefinition processToken = this.init(process);
+            ProcessTokenEntity processToken = this.init(process);
 
             processToken.setPrivileges(currentProcessToken.getPrivileges());
 
@@ -254,7 +253,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessTokenDefinition processToken = this.init(process);
+            ProcessTokenEntity processToken = this.init(process);
 
             processToken.setPrivileges(privileges);
 
@@ -279,7 +278,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessTokenDefinition processToken = this.init(process);
+            ProcessTokenEntity processToken = this.init(process);
 
             return CollectionUtil.unmodifiable(processToken.getLimits());
         } finally {
@@ -308,7 +307,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessTokenDefinition processToken = this.init(process);
+            ProcessTokenEntity processToken = this.init(process);
 
             Map<Long, Integer> processTokenLimits = processToken.getLimits();
             processTokenLimits.clear();
@@ -355,7 +354,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessTokenDefinition processToken = this.init(process);
+            ProcessTokenEntity processToken = this.init(process);
 
             Map<Long, Integer> processTokenLimits = processToken.getLimits();
             processTokenLimits.clear();
@@ -378,7 +377,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessTokenDefinition processToken = this.init(process);
+            ProcessTokenEntity processToken = this.init(process);
 
             return CollectionUtil.unmodifiable(processToken.getRoles());
         } finally {
@@ -452,7 +451,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessTokenDefinition processToken = this.init(process);
+            ProcessTokenEntity processToken = this.init(process);
 
             if (currentProcessToken.getAccountId().equals(processToken.getAccountId())) {
                 UserManager userManager = this.coreManager.getManager(UserManager.class);

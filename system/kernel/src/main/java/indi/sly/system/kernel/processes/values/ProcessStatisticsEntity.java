@@ -1,17 +1,13 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class ProcessStatisticsDefinition extends ADefinition {
-    public ProcessStatisticsDefinition() {
+public class ProcessStatisticsEntity extends APersistentEntity {
+    public ProcessStatisticsEntity() {
         this.date = new HashMap<>();
     }
 
@@ -393,7 +389,7 @@ public class ProcessStatisticsDefinition extends ADefinition {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProcessStatisticsDefinition that = (ProcessStatisticsDefinition) o;
+        ProcessStatisticsEntity that = (ProcessStatisticsEntity) o;
         return statusCumulation == that.statusCumulation && threadCumulation == that.threadCumulation && infoCreate == that.infoCreate && infoGet == that.infoGet && infoQuery == that.infoQuery && infoDelete == that.infoDelete && infoDump == that.infoDump && infoOpen == that.infoOpen && infoClose == that.infoClose && infoRead == that.infoRead && infoWrite == that.infoWrite && sharedReadCount == that.sharedReadCount && sharedReadBytes == that.sharedReadBytes && sharedWriteCount == that.sharedWriteCount && sharedWriteBytes == that.sharedWriteBytes && portCount == that.portCount && portReadCount == that.portReadCount && portReadBytes == that.portReadBytes && portWriteCount == that.portWriteCount && portWriteBytes == that.portWriteBytes && signalReadCount == that.signalReadCount && signalWriteCount == that.signalWriteCount && ioCreate == that.ioCreate && ioStatus == that.ioStatus && ioReadCount == that.ioReadCount && ioReadBytes == that.ioReadBytes && ioWriteCount == that.ioWriteCount && ioWriteBytes == that.ioWriteBytes && date.equals(that.date);
     }
 

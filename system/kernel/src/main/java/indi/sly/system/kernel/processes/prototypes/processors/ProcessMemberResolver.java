@@ -7,7 +7,7 @@ import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteStatusConsumer;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
-import indi.sly.system.kernel.processes.values.ProcessEntity;
+import indi.sly.system.kernel.processes.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -37,56 +37,32 @@ public class ProcessMemberResolver extends AResolver implements IProcessResolver
 
         this.readProcessCommunication = (communication, process) -> process.getCommunication();
         this.writeProcessCommunication = (process, communication) -> {
-            if (communication.length > 4096) {
-                throw new StatusOverflowException();
-            }
-
-            process.setCommunication(communication);
+            process.setCommunication((ProcessCommunicationEntity) communication);
         };
 
         this.readProcessContext = (context, process) -> process.getContext();
         this.writeProcessContext = (process, context) -> {
-            if (context.length > 4096) {
-                throw new StatusOverflowException();
-            }
-
-            process.setContext(context);
+            process.setContext((ProcessContextEntity) context);
         };
 
         this.readProcessInfoTable = (infoTable, process) -> process.getInfoTable();
         this.writeProcessInfoTable = (process, infoTable) -> {
-            if (infoTable.length > 4096) {
-                throw new StatusOverflowException();
-            }
-
-            process.setInfoTable(infoTable);
+            process.setInfoTable((ProcessInfoTableEntity) infoTable);
         };
 
         this.readProcessSession = (session, process) -> process.getSession();
         this.writeProcessSession = (process, session) -> {
-            if (session.length > 4096) {
-                throw new StatusOverflowException();
-            }
-
-            process.setSession(session);
+            process.setSession((ProcessSessionEntity) session);
         };
 
         this.readProcessStatistics = (statistics, process) -> process.getStatistics();
         this.writeProcessStatistics = (process, statistics) -> {
-            if (statistics.length > 4096) {
-                throw new StatusOverflowException();
-            }
-
-            process.setStatistics(statistics);
+            process.setStatistics((ProcessStatisticsEntity) statistics);
         };
 
         this.readProcessToken = (token, process) -> process.getToken();
         this.writeProcessToken = (process, token) -> {
-            if (token.length > 4096) {
-                throw new StatusOverflowException();
-            }
-
-            process.setToken(token);
+            process.setToken((ProcessTokenEntity) token);
         };
     }
 

@@ -1,16 +1,11 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ProcessSessionDefinition extends ADefinition {
+public class ProcessSessionEntity extends APersistentEntity {
     private UUID sessionID;
     private boolean link;
 
@@ -34,7 +29,7 @@ public class ProcessSessionDefinition extends ADefinition {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProcessSessionDefinition that = (ProcessSessionDefinition) o;
+        ProcessSessionEntity that = (ProcessSessionEntity) o;
         return link == that.link && Objects.equals(sessionID, that.sessionID);
     }
 

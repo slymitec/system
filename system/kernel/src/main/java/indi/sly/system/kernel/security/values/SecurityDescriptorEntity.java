@@ -5,13 +5,6 @@ import indi.sly.system.kernel.core.values.APersistentEntity;
 import java.util.*;
 
 public class SecurityDescriptorEntity extends APersistentEntity {
-    private boolean inherit;
-    private boolean hasChild;
-    private boolean canChangeOwner;
-    private final Set<UUID> owners;
-    private final Set<AccessControlDefinition> permissions;
-    private final Set<AccessControlDefinition> audits;
-
     public SecurityDescriptorEntity() {
         this.inherit = true;
         this.hasChild = false;
@@ -19,6 +12,13 @@ public class SecurityDescriptorEntity extends APersistentEntity {
         this.permissions = new HashSet<>();
         this.audits = new HashSet<>();
     }
+
+    private boolean inherit;
+    private boolean hasChild;
+    private boolean canChangeOwner;
+    private final Set<UUID> owners;
+    private final Set<AccessControlDefinition> permissions;
+    private final Set<AccessControlDefinition> audits;
 
     public boolean isHasChild() {
         return this.hasChild;

@@ -9,12 +9,13 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessChildCacheEntity;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
-import indi.sly.system.kernel.processes.values.ProcessStatisticsDefinition;
+import indi.sly.system.kernel.processes.values.ProcessStatisticsEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -26,7 +27,7 @@ import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessStatisticsDefinition> {
+public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -38,25 +39,23 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
     }
 
-    private ProcessStatisticsDefinition init(ProcessEntity process) {
+    private ProcessStatisticsEntity init(ProcessEntity process) {
         Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessStatistics();
 
-        byte[] source = null;
+        APersistentEntity source = null;
 
         for (ProcessProcessorReadComponentFunction resolver : resolvers) {
             source = resolver.apply(source, process);
         }
 
-        return IByteValueSupporter.super.init(source);
+        return (ProcessStatisticsEntity) source;
     }
 
-    private void flush(ProcessEntity process, ProcessStatisticsDefinition value) {
-        byte[] source = IByteValueSupporter.super.flush(value);
-
+    private void flush(ProcessEntity process, ProcessStatisticsEntity value) {
         Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessStatistics();
 
         for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
-            resolver.accept(process, source);
+            resolver.accept(process, value);
         }
     }
 
@@ -66,7 +65,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             Long value = processStatistics.getDate().getOrDefault(dataTime, null);
 
@@ -86,7 +85,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.getDate().put(dataTime, value);
 
@@ -104,7 +103,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             statistics.put("StatusCumulation", processStatistics.getStatusCumulation());
             statistics.put("ThreadCumulation", processStatistics.getThreadCumulation());
@@ -151,7 +150,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetStatusCumulation(value);
 
@@ -175,7 +174,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetThreadCumulation(value);
 
@@ -199,7 +198,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetInfoCreate(value);
 
@@ -223,7 +222,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetInfoGet(value);
 
@@ -247,7 +246,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetInfoQuery(value);
 
@@ -271,7 +270,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetInfoDelete(value);
 
@@ -295,7 +294,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetInfoDump(value);
 
@@ -319,7 +318,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetInfoOpen(value);
 
@@ -343,7 +342,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetInfoClose(value);
 
@@ -367,7 +366,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetInfoRead(value);
 
@@ -391,7 +390,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetInfoWrite(value);
 
@@ -415,7 +414,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetSharedReadCount(value);
 
@@ -439,7 +438,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetSharedReadBytes(value);
 
@@ -463,7 +462,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetSharedWriteCount(value);
 
@@ -487,7 +486,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetSharedWriteBytes(value);
 
@@ -511,7 +510,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetPortCount(value);
 
@@ -535,7 +534,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetPortReadCount(value);
 
@@ -559,7 +558,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetPortReadBytes(value);
 
@@ -583,7 +582,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetPortWriteCount(value);
 
@@ -607,7 +606,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetPortWriteBytes(value);
 
@@ -631,7 +630,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetSignalReadCount(value);
 
@@ -655,7 +654,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetSignalWriteCount(value);
 
@@ -679,7 +678,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetIoCreate(value);
 
@@ -703,7 +702,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetIoStatus(value);
 
@@ -727,7 +726,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetIoReadCount(value);
 
@@ -751,7 +750,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetIoReadBytes(value);
 
@@ -775,7 +774,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetIoWriteCount(value);
 
@@ -799,7 +798,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessStatisticsDefinition processStatistics = this.init(process);
+            ProcessStatisticsEntity processStatistics = this.init(process);
 
             processStatistics.offsetIoWriteBytes(value);
 

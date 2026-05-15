@@ -27,11 +27,14 @@ public class InfoEntity extends APersistentEntity {
     @Lob
     protected Map<Long, Long> date;
     @Column(length = 4096, name = "Security_Descriptor", nullable = true)
+    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
+    @Lob
     protected SecurityDescriptorEntity securityDescriptor;
     @Column(length = 1024, name = "Properties", nullable = false)
     @Convert(converter = BinarySerializationAttributeConverterComponent.class)
     @Lob
     protected Map<String, String> properties;
+    @Basic(fetch = FetchType.LAZY)
     @Column(length = 4096, name = "Content_Stream", nullable = true)
     @Lob
     protected byte[] content;

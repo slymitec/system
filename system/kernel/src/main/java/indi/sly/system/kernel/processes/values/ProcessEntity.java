@@ -1,10 +1,8 @@
 package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.kernel.core.values.APersistentEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import indi.sly.system.kernel.memory.repositories.prototypes.BinarySerializationAttributeConverterComponent;
+import jakarta.persistence.*;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -20,18 +18,33 @@ public class ProcessEntity extends APersistentEntity {
     protected long status;
     @Column(columnDefinition = "uniqueidentifier", name = "Parent_ProcessID", nullable = true)
     protected UUID parentProcessID;
+    @Basic(fetch = FetchType.LAZY)
     @Column(length = 4096, name = "Communication", nullable = false)
-    protected byte[] communication;
+    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
+    @Lob
+    protected ProcessCommunicationEntity communication;
+    @Basic(fetch = FetchType.LAZY)
     @Column(length = 4096, name = "Context", nullable = false)
-    protected byte[] context;
+    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
+    @Lob
+    protected ProcessContextEntity context;
     @Column(length = 4096, name = "Info_Table", nullable = false)
-    protected byte[] infoTable;
+    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
+    @Lob
+    protected ProcessInfoTableEntity infoTable;
     @Column(length = 4096, name = "Session_Info", nullable = false)
-    protected byte[] session;
+    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
+    @Lob
+    protected ProcessSessionEntity session;
+    @Basic(fetch = FetchType.LAZY)
     @Column(length = 4096, name = "Statistics_Info", nullable = false)
-    protected byte[] statistics;
+    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
+    @Lob
+    protected ProcessStatisticsEntity statistics;
     @Column(length = 4096, name = "Token", nullable = false)
-    protected byte[] token;
+    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
+    @Lob
+    protected ProcessTokenEntity token;
 
     public UUID getId() {
         return this.id;
@@ -57,63 +70,51 @@ public class ProcessEntity extends APersistentEntity {
         this.parentProcessID = parentProcessID;
     }
 
-    public byte[] getCommunication() {
+    public ProcessCommunicationEntity getCommunication() {
         return this.communication;
     }
 
-    public void setCommunication(byte[] communication) {
+    public void setCommunication(ProcessCommunicationEntity communication) {
         this.communication = communication;
     }
 
-    public byte[] getContext() {
+    public ProcessContextEntity getContext() {
         return this.context;
     }
 
-    public void setContext(byte[] context) {
+    public void setContext(ProcessContextEntity context) {
         this.context = context;
     }
 
-    public byte[] getInfoTable() {
+    public ProcessInfoTableEntity getInfoTable() {
         return this.infoTable;
     }
 
-    public void setInfoTable(byte[] infoTable) {
+    public void setInfoTable(ProcessInfoTableEntity infoTable) {
         this.infoTable = infoTable;
     }
 
-    public byte[] getSession() {
+    public ProcessSessionEntity getSession() {
         return this.session;
     }
 
-    public void setSession(byte[] session) {
+    public void setSession(ProcessSessionEntity session) {
         this.session = session;
     }
 
-    public byte[] getStatistics() {
+    public ProcessStatisticsEntity getStatistics() {
         return this.statistics;
     }
 
-    public void setStatistics(byte[] statistics) {
+    public void setStatistics(ProcessStatisticsEntity statistics) {
         this.statistics = statistics;
     }
 
-    public byte[] getToken() {
+    public ProcessTokenEntity getToken() {
         return this.token;
     }
 
-    public void setToken(byte[] token) {
+    public void setToken(ProcessTokenEntity token) {
         this.token = token;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ProcessEntity that = (ProcessEntity) o;
-        return status == that.status && Objects.equals(id, that.id) && Objects.equals(parentProcessID, that.parentProcessID) && Objects.deepEquals(communication, that.communication) && Objects.deepEquals(context, that.context) && Objects.deepEquals(infoTable, that.infoTable) && Objects.deepEquals(session, that.session) && Objects.deepEquals(statistics, that.statistics) && Objects.deepEquals(token, that.token);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, status, parentProcessID, Arrays.hashCode(communication), Arrays.hashCode(context), Arrays.hashCode(infoTable), Arrays.hashCode(session), Arrays.hashCode(statistics), Arrays.hashCode(token));
     }
 }

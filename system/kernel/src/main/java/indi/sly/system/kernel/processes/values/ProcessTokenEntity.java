@@ -1,16 +1,11 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.*;
 
-public class ProcessTokenDefinition extends ADefinition {
-    public ProcessTokenDefinition() {
+public class ProcessTokenEntity extends APersistentEntity {
+    public ProcessTokenEntity() {
         this.limits = new HashMap<>();
         this.roles = new HashSet<>();
     }
@@ -48,7 +43,7 @@ public class ProcessTokenDefinition extends ADefinition {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProcessTokenDefinition that = (ProcessTokenDefinition) o;
+        ProcessTokenEntity that = (ProcessTokenEntity) o;
         return privileges == that.privileges &&
                 Objects.equals(accountId, that.accountId) &&
                 limits.equals(that.limits) &&

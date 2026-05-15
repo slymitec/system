@@ -9,6 +9,7 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -28,7 +29,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEntryCacheEntity, ProcessInfoTableObject> implements IByteValueSupporter<ProcessInfoTableDefinition> {
+public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEntryCacheEntity, ProcessInfoTableObject> implements IByteValueSupporter<ProcessInfoTableEntity> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -42,25 +43,23 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         return this.processorMediator.getSelf().apply(this.cache.getProcessInfoTable().getProcess().getProcessId());
     }
 
-    private ProcessInfoTableDefinition init(ProcessEntity process) {
+    private ProcessInfoTableEntity init(ProcessEntity process) {
         Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessInfoTables();
 
-        byte[] source = null;
+        APersistentEntity source = null;
 
         for (ProcessProcessorReadComponentFunction resolver : resolvers) {
             source = resolver.apply(source, process);
         }
 
-        return IByteValueSupporter.super.init(source);
+        return (ProcessInfoTableEntity) source;
     }
 
-    private void flush(ProcessEntity process, ProcessInfoTableDefinition value) {
-        byte[] source = IByteValueSupporter.super.flush(value);
-
+    private void flush(ProcessEntity process, ProcessInfoTableEntity value) {
         Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessInfoTables();
 
         for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
-            resolver.accept(process, source);
+            resolver.accept(process, value);
         }
     }
 
@@ -85,9 +84,9 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
                 throw new StatusNotExistedException();
             }
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
-            ProcessInfoEntryDefinition processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
             this.flush(processInfoTable);
@@ -108,9 +107,9 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
                 throw new StatusNotExistedException();
             }
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
-            ProcessInfoEntryDefinition processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
             Map<Long, Long> processInfoEntryDate = processInfoEntry.getDate();
 
             return CollectionUtil.unmodifiable(processInfoEntryDate);
@@ -134,9 +133,9 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
                 throw new StatusNotExistedException();
             }
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
-            ProcessInfoEntryDefinition processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
             path = processInfoEntry.getPath();
@@ -164,9 +163,9 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
                 throw new StatusNotExistedException();
             }
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
-            ProcessInfoEntryDefinition processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
             infoOpen = processInfoEntry.getInfoOpen();
@@ -194,9 +193,9 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
                 throw new StatusNotExistedException();
             }
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
-            ProcessInfoEntryDefinition processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
             unsupportedDelete = processInfoEntry.isUnsupportedDelete();
@@ -222,9 +221,9 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
                 throw new StatusNotExistedException();
             }
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
-            ProcessInfoEntryDefinition processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
             processInfoEntry.setUnsupportedDelete(unsupportedDelete);
@@ -254,9 +253,9 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
                 throw new StatusNotExistedException();
             }
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
-            ProcessInfoEntryDefinition processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
             path = processInfoEntry.getPath();
@@ -283,9 +282,9 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
                 throw new StatusNotExistedException();
             }
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
-            ProcessInfoEntryDefinition processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
 
             if (processInfoEntry.isUnsupportedDelete()) {
                 throw new StatusDisabilityException();

@@ -12,6 +12,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
@@ -26,7 +27,7 @@ import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessContextObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessContextDefinition> {
+public class ProcessContextObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessContextEntity> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -38,25 +39,23 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
     }
 
-    private ProcessContextDefinition init(ProcessEntity process) {
+    private ProcessContextEntity init(ProcessEntity process) {
         Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessContexts();
 
-        byte[] source = null;
+        APersistentEntity source = null;
 
         for (ProcessProcessorReadComponentFunction resolver : resolvers) {
             source = resolver.apply(source, process);
         }
 
-        return IByteValueSupporter.super.init(source);
+        return (ProcessContextEntity) source;
     }
 
-    private void flush(ProcessEntity process, ProcessContextDefinition value) {
-        byte[] source = IByteValueSupporter.super.flush(value);
-
+    private void flush(ProcessEntity process, ProcessContextEntity value) {
         Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessContexts();
 
         for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
-            resolver.accept(process, source);
+            resolver.accept(process, value);
         }
     }
 
@@ -71,7 +70,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessContextDefinition processContext = this.init(process);
+            ProcessContextEntity processContext = this.init(process);
 
             return processContext.getType();
         } finally {
@@ -97,7 +96,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessContextDefinition processContext = this.init(process);
+            ProcessContextEntity processContext = this.init(process);
 
             processContext.setType(type);
 
@@ -118,7 +117,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessContextDefinition processContext = this.init(process);
+            ProcessContextEntity processContext = this.init(process);
 
             return processContext.getPath();
         } finally {
@@ -148,7 +147,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessContextDefinition processContext = this.init(process);
+            ProcessContextEntity processContext = this.init(process);
 
             processContext.setPath(path);
 
@@ -169,7 +168,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessContextDefinition processContext = this.init(process);
+            ProcessContextEntity processContext = this.init(process);
 
             return processContext.getApplication();
         } finally {
@@ -199,7 +198,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessContextDefinition processContext = this.init(process);
+            ProcessContextEntity processContext = this.init(process);
 
             processContext.setApplication(application);
 
@@ -220,7 +219,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessContextDefinition processContext = this.init(process);
+            ProcessContextEntity processContext = this.init(process);
 
             return CollectionUtil.unmodifiable(processContext.getEnvironmentVariables());
         } finally {
@@ -255,7 +254,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessContextDefinition processContext = this.init(process);
+            ProcessContextEntity processContext = this.init(process);
 
             Map<String, String> processContextEnvironmentVariable = processContext.getEnvironmentVariables();
             processContextEnvironmentVariable.clear();
@@ -278,7 +277,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessContextDefinition processContext = this.init(process);
+            ProcessContextEntity processContext = this.init(process);
 
             return processContext.getParameters();
         } finally {
@@ -308,7 +307,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessContextDefinition processContext = this.init(process);
+            ProcessContextEntity processContext = this.init(process);
 
             processContext.setParameters(parameters);
 
@@ -329,7 +328,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessContextDefinition processContext = this.init(process);
+            ProcessContextEntity processContext = this.init(process);
 
             return processContext.getWorkFolder();
         } finally {
@@ -364,7 +363,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
-            ProcessContextDefinition processContext = this.init(process);
+            ProcessContextEntity processContext = this.init(process);
 
             processContext.setWorkFolder(workFolder);
 

@@ -7,6 +7,7 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
@@ -29,7 +30,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessInfoTableDefinition> {
+public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessInfoTableEntity> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -41,25 +42,23 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
         return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
     }
 
-    private ProcessInfoTableDefinition init(ProcessEntity process) {
+    private ProcessInfoTableEntity init(ProcessEntity process) {
         Set<ProcessProcessorReadComponentFunction> resolvers = this.processorMediator.getReadProcessInfoTables();
 
-        byte[] source = null;
+        APersistentEntity source = null;
 
         for (ProcessProcessorReadComponentFunction resolver : resolvers) {
             source = resolver.apply(source, process);
         }
 
-        return IByteValueSupporter.super.init(source);
+        return (ProcessInfoTableEntity) source;
     }
 
-    private void flush(ProcessEntity process, ProcessInfoTableDefinition value) {
-        byte[] source = IByteValueSupporter.super.flush(value);
-
+    private void flush(ProcessEntity process, ProcessInfoTableEntity value) {
         Set<ProcessProcessorWriteComponentConsumer> resolvers = this.processorMediator.getWriteProcessInfoTables();
 
         for (ProcessProcessorWriteComponentConsumer resolver : resolvers) {
-            resolver.accept(process, source);
+            resolver.accept(process, value);
         }
     }
 
@@ -73,7 +72,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
             return CollectionUtil.unmodifiable(processInfoTable.list());
         } finally {
@@ -114,14 +113,14 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
                 throw new StatusNotSupportedException();
             }
 
-            ProcessInfoTableDefinition currentProcessInfoTableDefinition = currentProcessInfoTable.init(currentProcessInfoTable.getSelf());
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity currentProcessInfoTableEntity = currentProcessInfoTable.init(currentProcessInfoTable.getSelf());
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
-            ProcessInfoEntryDefinition processInfoEntry = currentProcessInfoTableDefinition.getByIndex(index);
-            currentProcessInfoTableDefinition.delete(index);
+            ProcessInfoEntryEntity processInfoEntry = currentProcessInfoTableEntity.getByIndex(index);
+            currentProcessInfoTableEntity.delete(index);
             processInfoTable.add(processInfoEntry);
 
-            currentProcessInfoTable.flush(currentProcessInfoTableDefinition);
+            currentProcessInfoTable.flush(currentProcessInfoTableEntity);
             this.flush(processInfoTable);
         } finally {
             currentProcessInfoTable.factory.unlockProcess(currentProcessInfoTable.cache.getProcess(), LockType.WRITE);
@@ -143,7 +142,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
             return processInfoTable.containByIndex(index);
         } finally {
@@ -165,7 +164,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
             return processInfoTable.containByID(id);
         } finally {
@@ -209,7 +208,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
         try {
             this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
             UUID index = processInfoTable.getByID(id).getIndex();
 
@@ -239,7 +238,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
                 throw new StatusAlreadyExistedException();
             }
 
-            ProcessInfoTableDefinition processInfoTable = this.init(process);
+            ProcessInfoTableEntity processInfoTable = this.init(process);
 
             if (processInfoTable.size() >= this.base.getToken().getLimits().get(ProcessTokenLimitType.INDEX_MAX)) {
                 throw new StatusInsufficientResourcesException();
@@ -250,7 +249,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
 
             index = UUIDUtil.createRandom();
 
-            ProcessInfoEntryDefinition processInfoEntry = new ProcessInfoEntryDefinition();
+            ProcessInfoEntryEntity processInfoEntry = new ProcessInfoEntryEntity();
             processInfoEntry.setIndex(index);
             processInfoEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
             processInfoEntry.setId(id);

@@ -1,20 +1,14 @@
 package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.*;
 
-public class ProcessContextDefinition extends ADefinition {
-    public ProcessContextDefinition() {
+public class ProcessContextEntity extends APersistentEntity {
+    public ProcessContextEntity() {
         this.environmentVariables = new HashMap<>();
     }
 
@@ -71,5 +65,17 @@ public class ProcessContextDefinition extends ADefinition {
 
     public void setWorkFolder(PathDefinition workFolder) {
         this.workFolder = workFolder;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ProcessContextEntity that = (ProcessContextEntity) o;
+        return type == that.type && Objects.equals(path, that.path) && Objects.equals(application, that.application) && Objects.equals(environmentVariables, that.environmentVariables) && Objects.equals(parameters, that.parameters) && Objects.equals(workFolder, that.workFolder);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, path, application, environmentVariables, parameters, workFolder);
     }
 }

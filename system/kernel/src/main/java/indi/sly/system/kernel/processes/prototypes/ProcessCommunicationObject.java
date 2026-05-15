@@ -10,7 +10,6 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
-import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -35,7 +34,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessCommunicationEntity> {
+public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -122,7 +121,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
             processCommunication.setShared(shared);
 
-            this.flush(processCommunication);
+            this.flush(process, processCommunication);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -226,7 +225,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
             processCommunication.getPortIDs().add(portID);
 
-            this.flush(processCommunication);
+            this.flush(process, processCommunication);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -270,7 +269,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
                 processCommunicationPortIDs.remove(processCommunicationPortID);
             }
 
-            this.flush(processCommunication);
+            this.flush(process, processCommunication);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -309,7 +308,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
             processCommunicationPortIDs.remove(portID);
 
-            this.flush(processCommunication);
+            this.flush(process, processCommunication);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -567,7 +566,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
             processCommunication.setSignalID(signalInfo.getId());
 
-            this.flush(processCommunication);
+            this.flush(process, processCommunication);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -603,7 +602,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
             processCommunication.setSignalID(null);
 
-            this.flush(processCommunication);
+            this.flush(process, processCommunication);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }

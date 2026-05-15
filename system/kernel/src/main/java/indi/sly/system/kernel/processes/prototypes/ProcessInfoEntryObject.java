@@ -8,7 +8,6 @@ import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
-import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -29,7 +28,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEntryCacheEntity, ProcessInfoTableObject> implements IByteValueSupporter<ProcessInfoTableEntity> {
+public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEntryCacheEntity, ProcessInfoTableObject> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -89,7 +88,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
             ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
             processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
-            this.flush(processInfoTable);
+            this.flush(process, processInfoTable);
         } finally {
             this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
         }
@@ -140,7 +139,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
             path = processInfoEntry.getPath();
 
-            this.flush(processInfoTable);
+            this.flush(process, processInfoTable);
         } finally {
             this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
         }
@@ -170,7 +169,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
             infoOpen = processInfoEntry.getInfoOpen();
 
-            this.flush(processInfoTable);
+            this.flush(process, processInfoTable);
         } finally {
             this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
         }
@@ -200,7 +199,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
             unsupportedDelete = processInfoEntry.isUnsupportedDelete();
 
-            this.flush(processInfoTable);
+            this.flush(process, processInfoTable);
         } finally {
             this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
         }
@@ -228,7 +227,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
             processInfoEntry.setUnsupportedDelete(unsupportedDelete);
 
-            this.flush(processInfoTable);
+            this.flush(process, processInfoTable);
         } finally {
             this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
         }
@@ -260,7 +259,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
             path = processInfoEntry.getPath();
 
-            this.flush(processInfoTable);
+            this.flush(process, processInfoTable);
         } finally {
             this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
         }
@@ -294,7 +293,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
             processInfoTable.delete(processInfoEntry.getIndex());
 
-            this.flush(processInfoTable);
+            this.flush(process, processInfoTable);
         } finally {
             this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
         }

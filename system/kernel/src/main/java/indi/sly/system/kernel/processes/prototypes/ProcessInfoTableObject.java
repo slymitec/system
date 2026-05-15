@@ -6,7 +6,6 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
-import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
@@ -30,7 +29,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessInfoTableEntity> {
+public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -120,8 +119,8 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
             currentProcessInfoTableEntity.delete(index);
             processInfoTable.add(processInfoEntry);
 
-            currentProcessInfoTable.flush(currentProcessInfoTableEntity);
-            this.flush(processInfoTable);
+            currentProcessInfoTable.flush(currentProcessInfoTable.getSelf(), currentProcessInfoTableEntity);
+            this.flush(process, processInfoTable);
         } finally {
             currentProcessInfoTable.factory.unlockProcess(currentProcessInfoTable.cache.getProcess(), LockType.WRITE);
             this.factory.unlockProcess(currentProcessInfoTable.cache.getProcess(), LockType.WRITE);
@@ -261,7 +260,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
 
             processInfoTable.add(processInfoEntry);
 
-            this.flush(processInfoTable);
+            this.flush(process,processInfoTable);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }

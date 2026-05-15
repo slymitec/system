@@ -11,7 +11,6 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
-import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
@@ -27,7 +26,7 @@ import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProcessContextObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> implements IByteValueSupporter<ProcessContextEntity> {
+public class ProcessContextObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
@@ -100,7 +99,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
 
             processContext.setType(type);
 
-            this.flush(processContext);
+            this.flush(process, processContext);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -151,7 +150,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
 
             processContext.setPath(path);
 
-            this.flush(processContext);
+            this.flush(process, processContext);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -202,7 +201,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
 
             processContext.setApplication(application);
 
-            this.flush(processContext);
+            this.flush(process, processContext);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -260,7 +259,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             processContextEnvironmentVariable.clear();
             processContextEnvironmentVariable.putAll(environmentVariable);
 
-            this.flush(processContext);
+            this.flush(process, processContext);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -311,7 +310,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
 
             processContext.setParameters(parameters);
 
-            this.flush(processContext);
+            this.flush(process, processContext);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -367,7 +366,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
 
             processContext.setWorkFolder(workFolder);
 
-            this.flush(processContext);
+            this.flush(process, processContext);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }

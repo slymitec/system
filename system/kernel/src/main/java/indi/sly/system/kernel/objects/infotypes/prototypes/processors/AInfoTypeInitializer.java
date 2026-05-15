@@ -86,23 +86,17 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         try {
             this.lockProcedure(info, LockType.READ);
 
-            return ObjectUtil.transferFromByteArray(info.getProperties());
+            return info.getProperties();
         } finally {
             this.unlockProcedure(info, LockType.READ);
         }
     }
 
     public void writePropertiesProcedure(InfoEntity info, Map<String, String> properties, InfoOpenDefinition infoOpen) {
-        byte[] propertiesSource = ObjectUtil.transferToByteArray(properties);
-
-        if (propertiesSource.length > 1024) {
-            throw new StatusOverflowException();
-        }
-
         try {
             this.lockProcedure(info, LockType.WRITE);
 
-            info.setProperties(propertiesSource);
+            info.setProperties(properties);
         } finally {
             this.unlockProcedure(info, LockType.WRITE);
         }

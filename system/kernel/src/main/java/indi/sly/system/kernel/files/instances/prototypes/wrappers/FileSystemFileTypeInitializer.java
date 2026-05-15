@@ -73,7 +73,7 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
         }
 
         if (isPropertiesModified) {
-            info.setProperties(ObjectUtil.transferToByteArray(properties));
+            info.setProperties(properties);
         }
 
         super.writeContentProcedure(info, infoOpen, source);

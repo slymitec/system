@@ -69,7 +69,7 @@ public class AccountEntity extends APersistentEntity {
     }
 
     public UserTokenEntity getToken() {
-        return token;
+        return this.token;
     }
 
     public void setToken(UserTokenEntity token) {
@@ -77,7 +77,7 @@ public class AccountEntity extends APersistentEntity {
     }
 
     public AccountSessionsEntity getSessions() {
-        return sessions;
+        return this.sessions;
     }
 
     public void setSessions(AccountSessionsEntity sessions) {

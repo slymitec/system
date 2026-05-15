@@ -14,6 +14,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.Map;
 
 @Named
@@ -24,11 +25,11 @@ public class InfoDateResolver extends AResolver implements IInfoResolver {
             DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrent();
 
-            Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
+            Map<Long, Long> date = info.getDate();
             assert date != null;
             date.put(DateTimeType.ACCESS, nowDateTime);
 
-            info.setDate(ObjectUtil.transferToByteArray(date));
+            info.setDate(date);
 
             return index;
         };
@@ -37,13 +38,13 @@ public class InfoDateResolver extends AResolver implements IInfoResolver {
             DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrent();
 
-            Map<Long, Long> date = ObjectUtil.transferFromByteArray(childInfo.getDate());
+            Map<Long, Long> date = childInfo.getDate();
             assert date != null;
             date.put(DateTimeType.CREATE, nowDateTime);
             date.put(DateTimeType.MODIFIED, nowDateTime);
             date.put(DateTimeType.ACCESS, nowDateTime);
 
-            childInfo.setDate(ObjectUtil.transferToByteArray(date));
+            childInfo.setDate(date);
 
             return childInfo;
         };
@@ -52,11 +53,11 @@ public class InfoDateResolver extends AResolver implements IInfoResolver {
             DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrent();
 
-            Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
+            Map<Long, Long> date = info.getDate();
             assert date != null;
             date.put(DateTimeType.ACCESS, nowDateTime);
 
-            info.setDate(ObjectUtil.transferToByteArray(date));
+            info.setDate(date);
 
             return content;
         };
@@ -65,11 +66,11 @@ public class InfoDateResolver extends AResolver implements IInfoResolver {
             DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrent();
 
-            Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
+            Map<Long, Long> date = info.getDate();
             assert date != null;
             date.put(DateTimeType.MODIFIED, nowDateTime);
 
-            info.setDate(ObjectUtil.transferToByteArray(date));
+            info.setDate(date);
         };
     }
 

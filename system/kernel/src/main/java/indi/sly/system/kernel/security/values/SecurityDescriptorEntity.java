@@ -1,16 +1,10 @@
 package indi.sly.system.kernel.security.values;
 
-import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.kernel.core.values.APersistentEntity;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.*;
 
-public class SecurityDescriptorDefinition extends ADefinition {
+public class SecurityDescriptorEntity extends APersistentEntity {
     private boolean inherit;
     private boolean hasChild;
     private boolean canChangeOwner;
@@ -18,7 +12,7 @@ public class SecurityDescriptorDefinition extends ADefinition {
     private final Set<AccessControlDefinition> permissions;
     private final Set<AccessControlDefinition> audits;
 
-    public SecurityDescriptorDefinition() {
+    public SecurityDescriptorEntity() {
         this.inherit = true;
         this.hasChild = false;
         this.owners = new HashSet<>();
@@ -60,5 +54,17 @@ public class SecurityDescriptorDefinition extends ADefinition {
 
     public Set<AccessControlDefinition> getAudits() {
         return this.audits;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        SecurityDescriptorEntity that = (SecurityDescriptorEntity) o;
+        return inherit == that.inherit && hasChild == that.hasChild && canChangeOwner == that.canChangeOwner && Objects.equals(owners, that.owners) && Objects.equals(permissions, that.permissions) && Objects.equals(audits, that.audits);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(inherit, hasChild, canChangeOwner, owners, permissions, audits);
     }
 }

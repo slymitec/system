@@ -1,9 +1,12 @@
 package indi.sly.system.kernel.objects.values;
 
 import indi.sly.system.kernel.core.values.APersistentEntity;
+import indi.sly.system.kernel.memory.repositories.prototypes.BinarySerializationAttributeConverterComponent;
+import indi.sly.system.kernel.security.values.SecurityDescriptorEntity;
 import jakarta.persistence.*;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -20,12 +23,17 @@ public class InfoEntity extends APersistentEntity {
     @Column(length = 256, name = "Name", nullable = true)
     protected String name;
     @Column(length = 256, name = "Date", nullable = false)
-    protected byte[] date;
+    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
+    @Lob
+    protected Map<Long, Long> date;
     @Column(length = 4096, name = "Security_Descriptor", nullable = true)
-    protected byte[] securityDescriptor;
+    protected SecurityDescriptorEntity securityDescriptor;
     @Column(length = 1024, name = "Properties", nullable = false)
-    protected byte[] properties;
+    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
+    @Lob
+    protected Map<String, String> properties;
     @Column(length = 4096, name = "Content_Stream", nullable = true)
+    @Lob
     protected byte[] content;
 
     public UUID getId() {
@@ -60,27 +68,27 @@ public class InfoEntity extends APersistentEntity {
         this.name = name;
     }
 
-    public byte[] getDate() {
+    public Map<Long, Long> getDate() {
         return this.date;
     }
 
-    public void setDate(byte[] date) {
+    public void setDate(Map<Long, Long> date) {
         this.date = date;
     }
 
-    public byte[] getSecurityDescriptor() {
+    public SecurityDescriptorEntity getSecurityDescriptor() {
         return this.securityDescriptor;
     }
 
-    public void setSecurityDescriptor(byte[] securityDescriptor) {
+    public void setSecurityDescriptor(SecurityDescriptorEntity securityDescriptor) {
         this.securityDescriptor = securityDescriptor;
     }
 
-    public byte[] getProperties() {
+    public Map<String, String> getProperties() {
         return this.properties;
     }
 
-    public void setProperties(byte[] properties) {
+    public void setProperties(Map<String, String> properties) {
         this.properties = properties;
     }
 
@@ -92,28 +100,16 @@ public class InfoEntity extends APersistentEntity {
         this.content = content;
     }
 
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InfoEntity that = (InfoEntity) o;
-        return id.equals(that.id) &&
-                type.equals(that.type) &&
-                opened == that.opened &&
-                Objects.equals(name, that.name) &&
-                Arrays.equals(date, that.date) &&
-                Arrays.equals(securityDescriptor, that.securityDescriptor) &&
-                Arrays.equals(properties, that.properties) &&
-                Arrays.equals(content, that.content);
+        return opened == that.opened && Objects.equals(id, that.id) && Objects.equals(type, that.type) && Objects.equals(name, that.name) && Objects.equals(date, that.date) && Objects.equals(securityDescriptor, that.securityDescriptor) && Objects.equals(properties, that.properties) && Objects.deepEquals(content, that.content);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, type, opened, name);
-        result = 31 * result + Arrays.hashCode(date);
-        result = 31 * result + Arrays.hashCode(securityDescriptor);
-        result = 31 * result + Arrays.hashCode(properties);
-        result = 31 * result + Arrays.hashCode(content);
-        return result;
+        return Objects.hash(id, type, opened, name, date, securityDescriptor, properties, Arrays.hashCode(content));
     }
 }

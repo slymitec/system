@@ -10,7 +10,6 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
-import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
@@ -34,7 +33,7 @@ import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDescriptorCacheEntity, InfoObject> implements IByteValueSupporter<SecurityDescriptorDefinition> {
+public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDescriptorCacheEntity, InfoObject> {
     protected InfoProcessorMediator processorMediator;
 
     private InfoEntity getSelf() {
@@ -72,7 +71,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         try {
             type.getInitializer().lockProcedure(info, LockType.READ);
 
-            SecurityDescriptorDefinition securityDescriptor = this.init(info.getSecurityDescriptor());
+            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (this.cache.isPermission()) {
                 if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
@@ -122,7 +121,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
                 if (parentSecurityDescriptor.cache.isPermission() || parentSecurityDescriptor.cache.isAudit()) {
                     parentInfoSelf = parentSecurityDescriptor.getSelf();
-                    securityDescriptor = parentSecurityDescriptor.init(parentInfoSelf.getSecurityDescriptor());
+                    securityDescriptor = parentInfoSelf.getSecurityDescriptor();
 
                     securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
                     if (parentSecurityDescriptor.cache.isPermission()) {
@@ -169,7 +168,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         try {
             type.getInitializer().lockProcedure(info, LockType.READ);
 
-            SecurityDescriptorDefinition securityDescriptor = this.init(info.getSecurityDescriptor());
+            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                     && !securityDescriptor.getOwners().contains(processToken.getAccountId())
@@ -202,7 +201,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         try {
             type.getInitializer().lockProcedure(info, LockType.WRITE);
 
-            SecurityDescriptorDefinition securityDescriptor = this.init(info.getSecurityDescriptor());
+            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                     && !securityDescriptor.getOwners().contains(processToken.getAccountId())
@@ -216,7 +215,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
             securityDescriptor.setInherit(inherit);
 
-            info.setSecurityDescriptor(this.flush(securityDescriptor));
+            info.setSecurityDescriptor(securityDescriptor);
         } finally {
             type.getInitializer().unlockProcedure(info, LockType.WRITE);
         }
@@ -237,7 +236,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         try {
             type.getInitializer().lockProcedure(info, LockType.READ);
 
-            SecurityDescriptorDefinition securityDescriptor = this.init(info.getSecurityDescriptor());
+            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                     && !securityDescriptor.getOwners().contains(processToken.getAccountId())
@@ -273,7 +272,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         try {
             type.getInitializer().lockProcedure(info, LockType.WRITE);
 
-            SecurityDescriptorDefinition securityDescriptor = this.init(info.getSecurityDescriptor());
+            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if ((!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                     && !securityDescriptor.getOwners().contains(processToken.getAccountId())
@@ -293,7 +292,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             securityDescriptor.getOwners().clear();
             securityDescriptor.getOwners().addAll(owners);
 
-            info.setSecurityDescriptor(this.flush(securityDescriptor));
+            info.setSecurityDescriptor(securityDescriptor);
         } finally {
             type.getInitializer().unlockProcedure(info, LockType.WRITE);
         }
@@ -307,7 +306,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             throw new StatusDisabilityException();
         }
 
-        List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
+        List<SecurityDescriptorEntity> securityDescriptors = new ArrayList<>();
 
         InfoEntity info = this.getSelf();
 
@@ -326,7 +325,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         try {
             type.getInitializer().lockProcedure(info, LockType.READ);
 
-            SecurityDescriptorDefinition securityDescriptor = this.init(info.getSecurityDescriptor());
+            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
             securityDescriptors.add(securityDescriptor);
 
             InfoObject parentInfo = this.base.getParent();
@@ -347,7 +346,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                     if (parentSecurityDescriptor.cache.isPermission()) {
                         parentInfoSelf = parentSecurityDescriptor.getSelf();
 
-                        securityDescriptor = parentSecurityDescriptor.init(parentInfoSelf.getSecurityDescriptor());
+                        securityDescriptor = parentInfoSelf.getSecurityDescriptor();
                         securityDescriptors.add(securityDescriptor);
 
                         if (!securityDescriptor.isInherit()) {
@@ -497,7 +496,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         try {
             type.getInitializer().lockProcedure(info, LockType.WRITE);
 
-            SecurityDescriptorDefinition securityDescriptor = this.init(info.getSecurityDescriptor());
+            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             for (AccessControlDefinition permission : permissions) {
                 if (!securityDescriptor.isHasChild() && LogicalUtil.isAnyExist(permission.getScope(),
@@ -522,7 +521,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             securityDescriptor.getPermissions().clear();
             securityDescriptor.getPermissions().addAll(permissions);
 
-            info.setSecurityDescriptor(this.flush(securityDescriptor));
+            info.setSecurityDescriptor(securityDescriptor);
         } finally {
             type.getInitializer().unlockProcedure(info, LockType.WRITE);
         }
@@ -561,7 +560,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             throw new StatusDisabilityException();
         }
 
-        List<SecurityDescriptorDefinition> securityDescriptors = new ArrayList<>();
+        List<SecurityDescriptorEntity> securityDescriptors = new ArrayList<>();
 
         InfoEntity info = this.getSelf();
 
@@ -575,7 +574,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         try {
             type.getInitializer().lockProcedure(info, LockType.READ);
 
-            SecurityDescriptorDefinition securityDescriptor = this.init(info.getSecurityDescriptor());
+            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
             securityDescriptors.add(securityDescriptor);
 
             InfoObject parentInfo = this.base.getParent();
@@ -595,7 +594,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                 if (parentSecurityDescriptor.cache.isAudit()) {
                     parentInfoSelf = parentSecurityDescriptor.getSelf();
 
-                    securityDescriptor = parentSecurityDescriptor.init(parentInfoSelf.getSecurityDescriptor());
+                    securityDescriptor = parentInfoSelf.getSecurityDescriptor();
                     securityDescriptors.add(securityDescriptor);
                 } else {
                     break;
@@ -708,7 +707,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         try {
             type.getInitializer().lockProcedure(info, LockType.WRITE);
 
-            SecurityDescriptorDefinition securityDescriptor = this.init(info.getSecurityDescriptor());
+            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (this.cache.isPermission() && !processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
                     && !securityDescriptor.getOwners().contains(processToken.getAccountId())
@@ -719,7 +718,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             securityDescriptor.getAudits().clear();
             securityDescriptor.getAudits().addAll(audits);
 
-            info.setSecurityDescriptor(this.flush(securityDescriptor));
+            info.setSecurityDescriptor(securityDescriptor);
         } finally {
             type.getInitializer().unlockProcedure(info, LockType.WRITE);
         }

@@ -39,7 +39,7 @@ public class GroupEntity extends APersistentEntity {
     }
 
     public UserTokenEntity getToken() {
-        return token;
+        return this.token;
     }
 
     public void setToken(UserTokenEntity token) {

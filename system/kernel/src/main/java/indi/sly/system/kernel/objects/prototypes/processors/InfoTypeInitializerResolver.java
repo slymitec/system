@@ -85,10 +85,9 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
                 }
             }
             Map<Long, Long> date = new HashMap<>();
-            childInfo.setDate(ObjectUtil.transferToByteArray(date));
+            childInfo.setDate(date);
             if (ObjectUtil.isAnyNull(childInfo.getProperties())) {
-                Map<String, String> childProperties = new HashMap<>();
-                childInfo.setProperties(ObjectUtil.transferToByteArray(childProperties));
+                childInfo.setProperties(new HashMap<>());
             }
 
             TypeManager typeManager = this.coreManager.getManager(TypeManager.class);

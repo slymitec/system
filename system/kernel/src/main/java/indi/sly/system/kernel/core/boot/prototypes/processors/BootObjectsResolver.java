@@ -53,9 +53,9 @@ public class BootObjectsResolver extends ABootResolver {
                     date.put(DateTimeType.CREATE, nowDateTime);
                     date.put(DateTimeType.MODIFIED, nowDateTime);
                     date.put(DateTimeType.ACCESS, nowDateTime);
-                    info.setDate(ObjectUtil.transferToByteArray(date));
+                    info.setDate(date);
 
-                    SecurityDescriptorDefinition securityDescriptor = new SecurityDescriptorDefinition();
+                    SecurityDescriptorEntity securityDescriptor = new SecurityDescriptorEntity();
                     securityDescriptor.getOwners().add(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
                     securityDescriptor.setInherit(false);
                     securityDescriptor.setHasChild(true);
@@ -74,10 +74,10 @@ public class BootObjectsResolver extends ABootResolver {
                     permission.setScope(AccessControlScopeType.ALL);
                     permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.READPROPERTIES_ALLOW));
                     securityDescriptor.getPermissions().add(permission);
-                    info.setSecurityDescriptor(ObjectUtil.transferToByteArray(securityDescriptor));
+                    info.setSecurityDescriptor(securityDescriptor);
 
                     Map<String, String> childProperties = new HashMap<>();
-                    info.setProperties(ObjectUtil.transferToByteArray(childProperties));
+                    info.setProperties(childProperties);
 
                     infoRepository.add(info);
                 }

@@ -107,7 +107,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     public Map<Long, Long> getDate() {
         InfoEntity info = this.getSelf();
 
-        Map<Long, Long> date = ObjectUtil.transferFromByteArray(info.getDate());
+        Map<Long, Long> date = info.getDate();
 
         return CollectionUtil.unmodifiable(date);
     }

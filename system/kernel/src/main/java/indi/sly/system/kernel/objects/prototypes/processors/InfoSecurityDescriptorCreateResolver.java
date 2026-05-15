@@ -10,7 +10,7 @@ import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.security.values.SecurityDescriptorDefinition;
+import indi.sly.system.kernel.security.values.SecurityDescriptorEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -26,7 +26,7 @@ public class InfoSecurityDescriptorCreateResolver extends AResolver implements I
 
             if (childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
-                SecurityDescriptorDefinition securityDescriptor = new SecurityDescriptorDefinition();
+                SecurityDescriptorEntity securityDescriptor = new SecurityDescriptorEntity();
 
                 if (childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                     ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
@@ -38,7 +38,7 @@ public class InfoSecurityDescriptorCreateResolver extends AResolver implements I
                     securityDescriptor.setHasChild(childType.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD));
                 }
 
-                childInfo.setSecurityDescriptor(ObjectUtil.transferToByteArray(securityDescriptor));
+                childInfo.setSecurityDescriptor(securityDescriptor);
             } else {
                 childInfo.setSecurityDescriptor(null);
             }

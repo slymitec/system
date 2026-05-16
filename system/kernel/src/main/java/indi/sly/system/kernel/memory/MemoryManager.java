@@ -28,6 +28,8 @@ public class MemoryManager extends AManager {
                     this.coreManager.create(ProcessRepositoryObject.class));
             this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
                     this.coreManager.create(UserRepositoryObject.class));
+            this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
+                    this.coreManager.create(CommunicationRepositoryObject.class));
         }
     }
 
@@ -57,5 +59,9 @@ public class MemoryManager extends AManager {
         }
 
         return this.coreManager.getObjectCollection().getById(SpaceType.KERNEL, id);
+    }
+
+    public CommunicationRepositoryObject getCommunicationRepository() {
+        return this.coreManager.getObjectCollection().getByClass(SpaceType.KERNEL, CommunicationRepositoryObject.class);
     }
 }

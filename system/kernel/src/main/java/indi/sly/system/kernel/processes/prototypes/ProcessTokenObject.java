@@ -462,7 +462,6 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             }
 
             Set<UUID> processTokenRoles = processToken.getRoles();
-
             processTokenRoles.clear();
             processTokenRoles.addAll(roles);
 

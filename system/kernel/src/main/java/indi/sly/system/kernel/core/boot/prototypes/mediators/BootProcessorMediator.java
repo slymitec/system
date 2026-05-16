@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.core.boot.prototypes.wrappers;
+package indi.sly.system.kernel.core.boot.prototypes.mediators;
 
 import indi.sly.system.kernel.core.boot.lang.BootStartConsumer;
 import indi.sly.system.kernel.core.prototypes.AMediator;

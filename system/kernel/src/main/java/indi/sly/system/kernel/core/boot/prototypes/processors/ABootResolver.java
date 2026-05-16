@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.core.boot.prototypes.processors;
 
-import indi.sly.system.kernel.core.boot.prototypes.wrappers.BootProcessorMediator;
+import indi.sly.system.kernel.core.boot.prototypes.mediators.BootProcessorMediator;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

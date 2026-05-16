@@ -1,11 +1,10 @@
 package indi.sly.system.kernel.core.boot.prototypes.processors;
 
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.boot.lang.BootStartConsumer;
-import indi.sly.system.kernel.core.boot.prototypes.wrappers.BootProcessorMediator;
+import indi.sly.system.kernel.core.boot.prototypes.mediators.BootProcessorMediator;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;

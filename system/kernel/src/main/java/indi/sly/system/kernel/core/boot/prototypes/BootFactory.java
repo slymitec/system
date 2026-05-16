@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.core.boot.prototypes;
 
 import indi.sly.system.kernel.core.boot.prototypes.processors.*;
-import indi.sly.system.kernel.core.boot.prototypes.wrappers.BootProcessorMediator;
+import indi.sly.system.kernel.core.boot.prototypes.mediators.BootProcessorMediator;
 import indi.sly.system.kernel.core.boot.values.BootDefinition;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.prototypes.AFactory;

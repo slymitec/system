@@ -75,8 +75,8 @@ public class BootObjectsResolver extends ABootResolver {
                     securityDescriptor.getPermissions().add(permission);
                     info.setSecurityDescriptor(securityDescriptor);
 
-                    Map<String, String> childProperties = new HashMap<>();
-                    info.setProperties(childProperties);
+                    Map<String, String> properties = new HashMap<>();
+                    info.setProperties(properties);
 
                     infoRepository.add(info);
                 }

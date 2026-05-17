@@ -408,7 +408,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         Set<UUID> roles = new HashSet<>();
         long processContextType = processContext.getType();
-        if (LogicalUtil.isAllExist(processContextType, ProcessContextType.SERVICE)) {
+        if (LogicalUtil.isAllExist(processContextType, ProcessContextType.EXECUTABLE_SERVICE)) {
             ApplicationDefinition processContextApplication = processContext.getApplication();
             if (ObjectUtil.allNotNull(processContextApplication)) {
                 roles.add(processContextApplication.getID());

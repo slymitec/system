@@ -285,7 +285,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
     }
 
     public void setParameters(String parameters) {
-        if (ObjectUtil.isAnyNull(parameters)) {
+        if (ValueUtil.isAnyNullOrEmpty(parameters)) {
             throw new ConditionParametersException();
         }
 

@@ -68,7 +68,7 @@ public class TypeManager extends AManager {
         return this.coreManager.getObjectCollection().getById(SpaceType.KERNEL, typeID);
     }
 
-    public synchronized TypeObject create(UUID typeID, String typeName, long attribute, Set<UUID> childTypes,
+    public TypeObject create(UUID typeID, String typeName, long attribute, Set<UUID> childTypes,
                                           AInfoTypeInitializer typeInitializer) {
         if (ObjectUtil.isAnyNull(typeID, childTypes, typeInitializer) || StringUtil.isNameIllegal(typeName)) {
             throw new ConditionParametersException();
@@ -77,7 +77,7 @@ public class TypeManager extends AManager {
         return this.factory.buildType(typeID, typeName, attribute, childTypes, typeInitializer);
     }
 
-    public synchronized void delete(UUID typeID) {
+    public void delete(UUID typeID) {
         if (ObjectUtil.isAnyNull(typeID)) {
             throw new ConditionParametersException();
         }

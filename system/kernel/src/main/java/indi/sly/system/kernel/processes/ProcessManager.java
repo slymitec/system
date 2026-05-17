@@ -171,4 +171,32 @@ public class ProcessManager extends AManager {
         ProcessEndBuilder processEndBuilder = this.factory.createProcessEnd(parentProcess, process);
         processEndBuilder.build();
     }
+
+    public void end(UUID processID) {
+        if (ValueUtil.isAnyNullOrEmpty(processID)) {
+            throw new ConditionParametersException();
+        }
+
+        ProcessObject currentProcess = this.getCurrent();
+        if (!currentProcess.getId().equals(processID)) {
+            ProcessTokenObject currentProcessToken = currentProcess.getToken();
+
+            if (!LogicalUtil.isAllExist(currentProcessToken.getPrivileges(), PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
+                throw new ConditionRefuseException();
+            }
+        }
+
+        ProcessObject process = this.getTarget(processID);
+        ProcessObject parentProcess = null;
+
+        if (!ValueUtil.isAnyNullOrEmpty(process.getParentId())) {
+            try {
+                parentProcess = this.getTarget(process.getParentId());
+            } catch (StatusNotExistedException _) {
+            }
+        }
+
+        ProcessEndBuilder processEndBuilder = this.factory.createProcessEnd(parentProcess, process);
+        processEndBuilder.build();
+    }
 }

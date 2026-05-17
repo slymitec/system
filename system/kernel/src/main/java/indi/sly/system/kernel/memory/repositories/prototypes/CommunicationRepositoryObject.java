@@ -6,10 +6,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import jakarta.annotation.Resource;
 import jakarta.inject.Named;
-import org.redisson.api.RAtomicLong;
-import org.redisson.api.RLock;
-import org.redisson.api.RReadWriteLock;
-import org.redisson.api.RedissonClient;
+import org.redisson.api.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -52,4 +49,19 @@ public class CommunicationRepositoryObject extends AObject {
         return this.redissonClient.getAtomicLong(key);
     }
 
+    public <T> RBucket<T> getBucket(UUID id) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
+            throw new ConditionParametersException();
+        }
+
+        return this.redissonClient.getBucket(Ulid.from(id).toString());
+    }
+
+    public <K, V> RMap<K, V> getMap(UUID id) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
+            throw new ConditionParametersException();
+        }
+
+        return this.redissonClient.getMap(Ulid.from(id).toString());
+    }
 }

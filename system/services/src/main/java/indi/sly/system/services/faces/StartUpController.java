@@ -19,6 +19,7 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
+import indi.sly.system.kernel.services.ServiceManager;
 import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.values.ClientResponseDefinition;
@@ -58,6 +59,7 @@ public class StartUpController extends AController {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
             ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
             ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ServiceManager serviceManager = this.coreManager.getManager(ServiceManager.class);
             ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
             TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
             UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -84,6 +86,7 @@ public class StartUpController extends AController {
                 userManager.startup(startup);
                 objectManager.startup(startup);
                 fileSystemManager.startup(startup);
+                serviceManager.startup(startup);
 
                 jobService.startup(startup);
             }

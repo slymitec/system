@@ -84,8 +84,8 @@ public class BootObjectsResolver extends ABootResolver {
                 InfoObject rootInfo = objectManager.get(new PathDefinition(List.of()));
                 Set<InfoSummaryDefinition> infoSummaries;
 
-                String[] childFolderNames = new String[]{"Audits", "Files", "Sessions"};
-                UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID};
+                String[] childFolderNames = new String[]{"Audits", "Files", "Sessions", "Services"};
+                UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};
 
                 for (int i = 0; i < childFolderNames.length; i++) {
                     infoSummaries = rootInfo.queryChild(new InfoWildcardDefinition(childFolderNames[i]));

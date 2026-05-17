@@ -51,8 +51,8 @@ public class BootUserResolver extends ABootResolver {
                     group.setName(groupName);
                     UserTokenEntity userToken = new UserTokenEntity();
                     userToken.setPrivileges(LogicalUtil.or(PrivilegeType.CORE_MODIFY_DATETIME,
-                            PrivilegeType.FILE_SYSTEM_ACCESS_MODIFY_MAPPING, PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT,
-                            PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP));
+                            PrivilegeType.FILE_SYSTEM_ACCESS_MODIFY_MAPPING, PrivilegeType.SERVICE_MODIFY,
+                            PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT, PrivilegeType.SECURITY_MODIFY_ACCOUNT_AND_GROUP));
                     userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_FULL_LIMIT);
                     group.setToken(userToken);
 

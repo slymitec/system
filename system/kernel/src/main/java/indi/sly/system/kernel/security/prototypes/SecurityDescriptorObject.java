@@ -401,33 +401,33 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         UserManager userManager = this.coreManager.getManager(UserManager.class);
 
         AccountObject account = userManager.getCurrentAccount();
-        UUID accountID = account.getId();
+        UUID accountId = account.getId();
         Set<GroupObject> groups = account.getGroups();
-        Set<UUID> groupIDs = new HashSet<>();
+        Set<UUID> groupIds = new HashSet<>();
         for (GroupObject group : groups) {
-            groupIDs.add(group.getId());
+            groupIds.add(group.getId());
         }
         Set<UUID> roles = processToken.getRoles();
 
         boolean allow = false;
 
         for (AccessControlDefinition pair : effectivePermissions) {
-            UserIDDefinition pairUserID = pair.getUserId();
-            if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.GROUP) && groupIDs.contains(pairUserID.getId())) {
+            UserIdDefinition pairUserId = pair.getUserId();
+            if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.GROUP) && groupIds.contains(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.ACCOUNT) && accountID.equals(pairUserID.getId())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.ACCOUNT) && accountId.equals(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.ROLE) && roles.contains(pairUserID.getId())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.ROLE) && roles.contains(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)
                         && (ObjectUtil.isAnyNull(permissionQueryFunc) || permissionQueryFunc.isRole())) {
                     allow = true;
@@ -435,23 +435,23 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.PROCESS) && process.getId().equals(pairUserID.getId())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.PROCESS) && process.getId().equals(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.PARENT_PROCESS)
-                    && !ValueUtil.isAnyNullOrEmpty(process.getParentId()) && process.getParentId().equals(pairUserID.getId())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.PARENT_PROCESS)
+                    && !ValueUtil.isAnyNullOrEmpty(process.getParentId()) && process.getParentId().equals(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.SESSION)
-                    && !ValueUtil.isAnyNullOrEmpty(processSession.getId()) && processSession.getId().equals(pairUserID.getId())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.SESSION)
+                    && !ValueUtil.isAnyNullOrEmpty(processSession.getId()) && processSession.getId().equals(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
                     allow = true;
                 }
@@ -527,7 +527,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         }
     }
 
-    private void writeAudit(Set<UserIDDefinition> userIDs, long value) {
+    private void writeAudit(Set<UserIdDefinition> userIds, long value) {
         KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
@@ -543,7 +543,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             auditInfo.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             AuditContentObject auditContent = (AuditContentObject) auditInfo.getContent();
-            auditContent.setUserIDs(userIDs);
+            auditContent.setUserIds(userIds);
             auditContent.setAudit(value);
             auditContent.setPath(this.cache.getInfo().getPath());
 
@@ -644,48 +644,48 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         UserManager userManager = this.coreManager.getManager(UserManager.class);
 
         AccountObject account = userManager.getCurrentAccount();
-        UUID accountID = account.getId();
+        UUID accountId = account.getId();
         Set<GroupObject> groups = account.getGroups();
-        Set<UUID> groupIDs = new HashSet<>();
+        Set<UUID> groupIds = new HashSet<>();
         for (GroupObject group : groups) {
-            groupIDs.add(group.getId());
+            groupIds.add(group.getId());
         }
         Set<UUID> roles = processToken.getRoles();
-        Set<UserIDDefinition> userIDs = new HashSet<>();
+        Set<UserIdDefinition> userIds = new HashSet<>();
 
         for (AccessControlDefinition pair : effectiveAudits) {
-            UserIDDefinition pairUserID = pair.getUserId();
-            if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.GROUP) && groupIDs.contains(pairUserID.getId())) {
+            UserIdDefinition pairUserId = pair.getUserId();
+            if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.GROUP) && groupIds.contains(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
-                    userIDs.add(pairUserID);
+                    userIds.add(pairUserId);
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.ACCOUNT) && accountID.equals(pairUserID.getId())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.ACCOUNT) && accountId.equals(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
-                    userIDs.add(pairUserID);
+                    userIds.add(pairUserId);
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.ROLE) && roles.contains(pairUserID.getId())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.ROLE) && roles.contains(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
-                    userIDs.add(pairUserID);
+                    userIds.add(pairUserId);
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.PROCESS) && process.getId().equals(pairUserID.getId())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.PROCESS) && process.getId().equals(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
-                    userIDs.add(pairUserID);
+                    userIds.add(pairUserId);
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.PARENT_PROCESS)
-                    && !ValueUtil.isAnyNullOrEmpty(process.getParentId()) && process.getParentId().equals(pairUserID.getId())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.PARENT_PROCESS)
+                    && !ValueUtil.isAnyNullOrEmpty(process.getParentId()) && process.getParentId().equals(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
-                    userIDs.add(pairUserID);
+                    userIds.add(pairUserId);
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserID.getType(), UserType.SESSION)
-                    && !ValueUtil.isAnyNullOrEmpty(processSession.getId()) && processSession.getId().equals(pairUserID.getId())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.SESSION)
+                    && !ValueUtil.isAnyNullOrEmpty(processSession.getId()) && processSession.getId().equals(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(audit, pair.getValue())) {
-                    userIDs.add(pairUserID);
+                    userIds.add(pairUserId);
                 }
             }
         }
 
-        if (!userIDs.isEmpty()) {
-            this.writeAudit(userIDs, audit);
+        if (!userIds.isEmpty()) {
+            this.writeAudit(userIds, audit);
         }
     }
 

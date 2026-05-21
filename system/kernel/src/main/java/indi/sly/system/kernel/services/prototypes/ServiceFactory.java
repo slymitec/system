@@ -17,7 +17,6 @@ import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.*;
 import indi.sly.system.kernel.services.instances.prototypes.ServiceContentObject;
 import indi.sly.system.kernel.services.instances.values.ServiceDefinition;
-import indi.sly.system.kernel.services.values.ServiceStatusEntity;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -46,7 +45,7 @@ public class ServiceFactory extends AFactory {
         SecurityDescriptorObject securityDescriptor = service.getSecurityDescriptor();
         Set<AccessControlDefinition> permissions = new HashSet<>();
         AccessControlDefinition permission = new AccessControlDefinition();
-        permission.setUserId(new UserIDDefinition(serviceId, UserType.ROLE));
+        permission.setUserId(new UserIdDefinition(serviceId, UserType.ROLE));
         permission.setScope(AccessControlScopeType.THIS);
         permission.setValue(PermissionType.FULLCONTROL_ALLOW);
         permissions.add(permission);

@@ -192,18 +192,18 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             SecurityDescriptorObject securityDescriptor = portInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
-            permission.setUserId(new UserIDDefinition(this.base.getId(), UserType.PROCESS));
+            permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PROCESS));
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(PermissionType.FULLCONTROL_ALLOW);
             permissions.add(permission);
             permission = new AccessControlDefinition();
-            permission.setUserId(new UserIDDefinition(this.base.getId(), UserType.PARENT_PROCESS));
+            permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PARENT_PROCESS));
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
             permissions.add(permission);
             for (UUID sourceProcessID : sourceProcessIDs) {
                 permission = new AccessControlDefinition();
-                permission.setUserId(new UserIDDefinition(sourceProcessID, UserType.PROCESS));
+                permission.setUserId(new UserIdDefinition(sourceProcessID, UserType.PROCESS));
                 permission.setScope(AccessControlScopeType.THIS);
                 permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
                 permissions.add(permission);
@@ -374,18 +374,18 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         SecurityDescriptorObject securityDescriptor = portInfo.getSecurityDescriptor();
         Set<AccessControlDefinition> permissions = new HashSet<>();
         AccessControlDefinition permission = new AccessControlDefinition();
-        permission.setUserId(new UserIDDefinition(this.base.getId(), UserType.PROCESS));
+        permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PROCESS));
         permission.setScope(AccessControlScopeType.THIS);
         permission.setValue(PermissionType.FULLCONTROL_ALLOW);
         permissions.add(permission);
         permission = new AccessControlDefinition();
-        permission.setUserId(new UserIDDefinition(this.base.getId(), UserType.PARENT_PROCESS));
+        permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PARENT_PROCESS));
         permission.setScope(AccessControlScopeType.THIS);
         permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
         permissions.add(permission);
         for (UUID sourceProcessID : sourceProcessIDs) {
             permission = new AccessControlDefinition();
-            permission.setUserId(new UserIDDefinition(sourceProcessID, UserType.PROCESS));
+            permission.setUserId(new UserIdDefinition(sourceProcessID, UserType.PROCESS));
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
             permissions.add(permission);
@@ -535,18 +535,18 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             SecurityDescriptorObject securityDescriptor = signalInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
-            permission.setUserId(new UserIDDefinition(this.base.getId(), UserType.PROCESS));
+            permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PROCESS));
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(PermissionType.FULLCONTROL_ALLOW);
             permissions.add(permission);
             permission = new AccessControlDefinition();
-            permission.setUserId(new UserIDDefinition(this.base.getId(), UserType.PARENT_PROCESS));
+            permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PARENT_PROCESS));
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
             permissions.add(permission);
             for (UUID sourceProcessID : sourceProcessIDs) {
                 permission = new AccessControlDefinition();
-                permission.setUserId(new UserIDDefinition(sourceProcessID, UserType.PROCESS));
+                permission.setUserId(new UserIdDefinition(sourceProcessID, UserType.PROCESS));
                 permission.setScope(AccessControlScopeType.THIS);
                 permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
                 permissions.add(permission);
@@ -682,18 +682,18 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         SecurityDescriptorObject securityDescriptor = signalInfo.getSecurityDescriptor();
         Set<AccessControlDefinition> permissions = new HashSet<>();
         AccessControlDefinition permission = new AccessControlDefinition();
-        permission.setUserId(new UserIDDefinition(this.base.getId(), UserType.PROCESS));
+        permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PROCESS));
         permission.setScope(AccessControlScopeType.THIS);
         permission.setValue(PermissionType.FULLCONTROL_ALLOW);
         permissions.add(permission);
         permission = new AccessControlDefinition();
-        permission.setUserId(new UserIDDefinition(this.base.getId(), UserType.PARENT_PROCESS));
+        permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PARENT_PROCESS));
         permission.setScope(AccessControlScopeType.THIS);
         permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
         permissions.add(permission);
         for (UUID sourceProcessID : sourceProcessIDs) {
             permission = new AccessControlDefinition();
-            permission.setUserId(new UserIDDefinition(sourceProcessID, UserType.PROCESS));
+            permission.setUserId(new UserIdDefinition(sourceProcessID, UserType.PROCESS));
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
             permissions.add(permission);

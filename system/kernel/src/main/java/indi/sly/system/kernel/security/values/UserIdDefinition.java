@@ -5,8 +5,8 @@ import indi.sly.system.common.values.ADefinition;
 import java.util.Objects;
 import java.util.UUID;
 
-public class UserIDDefinition extends ADefinition {
-    public UserIDDefinition(UUID id, long type) {
+public class UserIdDefinition extends ADefinition {
+    public UserIdDefinition(UUID id, long type) {
         this.id = id;
         this.type = type;
     }
@@ -24,9 +24,8 @@ public class UserIDDefinition extends ADefinition {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserIDDefinition that = (UserIDDefinition) o;
+        UserIdDefinition that = (UserIdDefinition) o;
         return type == that.type && Objects.equals(id, that.id);
     }
 

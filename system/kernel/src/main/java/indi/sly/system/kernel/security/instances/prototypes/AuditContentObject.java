@@ -7,7 +7,7 @@ import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.security.instances.values.AuditDefinition;
-import indi.sly.system.kernel.security.values.UserIDDefinition;
+import indi.sly.system.kernel.security.values.UserIdDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -21,13 +21,13 @@ public class AuditContentObject extends AInfoContentObject implements IByteValue
     public UUID getProcessID() {
         AuditDefinition audit = this.init(this.read());
 
-        return audit.getProcessID();
+        return audit.getProcessId();
     }
 
     public UUID getAccountID() {
         AuditDefinition audit = this.init(this.read());
 
-        return audit.getAccountID();
+        return audit.getAccountId();
     }
 
     public PathDefinition getPath() {
@@ -48,21 +48,21 @@ public class AuditContentObject extends AInfoContentObject implements IByteValue
         this.flush(audit);
     }
 
-    public Set<UserIDDefinition> getUserIDs() {
+    public Set<UserIdDefinition> getUserIds() {
         AuditDefinition audit = this.init(this.read());
 
-        return CollectionUtil.unmodifiable(audit.getUserIDs());
+        return CollectionUtil.unmodifiable(audit.getUserIds());
     }
 
-    public void setUserIDs(Set<UserIDDefinition> userUDs) {
-        if (ObjectUtil.isAnyNull(userUDs)) {
+    public void setUserIds(Set<UserIdDefinition> userIds) {
+        if (ObjectUtil.isAnyNull(userIds)) {
             throw new ConditionParametersException();
         }
 
         AuditDefinition audit = this.init(this.read());
 
-        audit.getUserIDs().clear();
-        audit.getUserIDs().addAll(userUDs);
+        audit.getUserIds().clear();
+        audit.getUserIds().addAll(userIds);
 
         this.flush(audit);
     }

@@ -5,15 +5,15 @@ import indi.sly.system.common.values.ADefinition;
 import java.util.Objects;
 
 public class AccessControlDefinition extends ADefinition {
-    private UserIDDefinition userId;
+    private UserIdDefinition userId;
     private long scope;
     private long value;
 
-    public UserIDDefinition getUserId() {
+    public UserIdDefinition getUserId() {
         return this.userId;
     }
 
-    public void setUserId(UserIDDefinition userId) {
+    public void setUserId(UserIdDefinition userId) {
         this.userId = userId;
     }
 

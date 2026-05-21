@@ -209,7 +209,7 @@ public class UserManager extends AManager {
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
-            permission.setUserId(new UserIDDefinition(account.getId(), UserType.ACCOUNT));
+            permission.setUserId(new UserIdDefinition(account.getId(), UserType.ACCOUNT));
             permission.setScope(AccessControlScopeType.ALL);
             permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
             permissions.add(permission);
@@ -225,7 +225,7 @@ public class UserManager extends AManager {
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
-            permission.setUserId(new UserIDDefinition(account.getId(), UserType.ACCOUNT));
+            permission.setUserId(new UserIdDefinition(account.getId(), UserType.ACCOUNT));
             permission.setScope(AccessControlScopeType.ALL);
             permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
             permissions.add(permission);

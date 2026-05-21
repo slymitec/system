@@ -128,12 +128,12 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
             SecurityDescriptorObject securityDescriptor = sessionInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
             AccessControlDefinition permission = new AccessControlDefinition();
-            permission.setUserId(new UserIDDefinition(accountID, UserType.ACCOUNT));
+            permission.setUserId(new UserIdDefinition(accountID, UserType.ACCOUNT));
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
             permissions.add(permission);
             permission = new AccessControlDefinition();
-            permission.setUserId(new UserIDDefinition(sessionID, UserType.SESSION));
+            permission.setUserId(new UserIdDefinition(sessionID, UserType.SESSION));
             permission.setScope(AccessControlScopeType.THIS);
             permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW));
             permissions.add(permission);

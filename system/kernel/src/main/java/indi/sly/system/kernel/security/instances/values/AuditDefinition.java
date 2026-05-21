@@ -2,35 +2,35 @@ package indi.sly.system.kernel.security.instances.values;
 
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.common.values.PathDefinition;
-import indi.sly.system.kernel.security.values.UserIDDefinition;
+import indi.sly.system.kernel.security.values.UserIdDefinition;
 
 import java.util.*;
 
 public class AuditDefinition extends ADefinition {
     public AuditDefinition() {
-        this.userIDs = new HashSet<>();
+        this.userIds = new HashSet<>();
     }
 
-    private UUID processID;
-    private UUID accountID;
+    private UUID processId;
+    private UUID accountId;
     private PathDefinition path;
-    private final Set<UserIDDefinition> userIDs;
+    private final Set<UserIdDefinition> userIds;
     private long audit;
 
-    public UUID getProcessID() {
-        return this.processID;
+    public UUID getProcessId() {
+        return this.processId;
     }
 
-    public void setProcessID(UUID processID) {
-        this.processID = processID;
+    public void setProcessId(UUID processId) {
+        this.processId = processId;
     }
 
-    public UUID getAccountID() {
-        return this.accountID;
+    public UUID getAccountId() {
+        return this.accountId;
     }
 
-    public void setAccountID(UUID accountID) {
-        this.accountID = accountID;
+    public void setAccountId(UUID accountId) {
+        this.accountId = accountId;
     }
 
     public PathDefinition getPath() {
@@ -41,8 +41,8 @@ public class AuditDefinition extends ADefinition {
         this.path = path;
     }
 
-    public Set<UserIDDefinition> getUserIDs() {
-        return this.userIDs;
+    public Set<UserIdDefinition> getUserIds() {
+        return this.userIds;
     }
 
     public long getAudit() {
@@ -57,11 +57,11 @@ public class AuditDefinition extends ADefinition {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AuditDefinition that = (AuditDefinition) o;
-        return audit == that.audit && Objects.equals(processID, that.processID) && Objects.equals(accountID, that.accountID) && Objects.equals(path, that.path) && Objects.equals(userIDs, that.userIDs);
+        return audit == that.audit && Objects.equals(processId, that.processId) && Objects.equals(accountId, that.accountId) && Objects.equals(path, that.path) && Objects.equals(userIds, that.userIds);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(processID, accountID, path, userIDs, audit);
+        return Objects.hash(processId, accountId, path, userIds, audit);
     }
 }

@@ -12,11 +12,11 @@ import java.util.UUID;
 @Table(name = "Kernel_Processes")
 public class ProcessEntity extends APersistentEntity {
     @Id
-    @Column(columnDefinition = "uniqueidentifier", name = "ID", nullable = false, updatable = false)
+    @Column(columnDefinition = "uniqueidentifier", name = "Id", nullable = false, updatable = false)
     protected UUID id;
     @Column(name = "Status", nullable = false)
     protected long status;
-    @Column(columnDefinition = "uniqueidentifier", name = "Parent_ProcessID", nullable = true)
+    @Column(columnDefinition = "uniqueidentifier", name = "Parent_ProcessId", nullable = true)
     protected UUID parentProcessID;
     @Basic(fetch = FetchType.LAZY)
     @Column(length = 4096, name = "Communication", nullable = false)

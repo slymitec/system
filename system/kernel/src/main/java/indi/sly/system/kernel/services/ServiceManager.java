@@ -148,9 +148,9 @@ public class ServiceManager extends AManager {
                 executeInfo.close();
             }
 
-            throw e;
-        } finally {
             serviceInfo.close();
+
+            throw e;
         }
     }
 

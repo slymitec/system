@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.services.values;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import jakarta.persistence.*;
 
@@ -54,13 +55,17 @@ public class ServiceStatusEntity extends APersistentEntity {
     }
 
     public void addDependency(ServiceStatusEntity dependency) {
-        this.dependencies.add(dependency);
-        dependency.getDependents().add(this);
+        if (ObjectUtil.allNotNull(dependency)) {
+            this.dependencies.add(dependency);
+            dependency.getDependents().add(this);
+        }
     }
 
     public void removeDependency(ServiceStatusEntity dependency) {
-        this.dependencies.remove(dependency);
-        dependency.getDependents().remove(this);
+        if (ObjectUtil.allNotNull(dependency)) {
+            this.dependencies.remove(dependency);
+            dependency.getDependents().remove(this);
+        }
     }
 
     public Set<ServiceStatusEntity> getDependencies() {

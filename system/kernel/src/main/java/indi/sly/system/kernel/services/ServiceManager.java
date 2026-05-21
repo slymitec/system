@@ -185,18 +185,18 @@ public class ServiceManager extends AManager {
                 serviceRepository.lock(dependencyService, LockType.WRITE);
                 try {
                     serviceStatus.removeDependency(dependencyService);
-
-                    if (dependencyService.getDependents().isEmpty() && !dependencyService.isIndependence()) {
-                        this.stop(dependencyService.getId());
-                    }
                 } finally {
                     serviceRepository.unlock(dependencyService, LockType.WRITE);
                 }
-            }
 
-            serviceRepository.delete(serviceStatus);
+                if (dependencyService.getDependents().isEmpty() && !dependencyService.isIndependence()) {
+                    this.stop(dependencyService.getId());
+                }
+            }
         } finally {
             serviceRepository.unlock(serviceStatus, LockType.WRITE);
         }
+
+        serviceRepository.delete(serviceStatus);
     }
 }

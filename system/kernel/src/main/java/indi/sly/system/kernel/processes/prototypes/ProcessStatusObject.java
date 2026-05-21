@@ -203,6 +203,9 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             throw new StatusRelationshipErrorException();
         }
 
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
+
         ProcessEntity process = this.getSelf();
 
         ProcessCommunicationObject processCommunication = this.base.getCommunication();
@@ -222,12 +225,10 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
                 resolver.accept(process, ProcessStatusType.ZOMBIE);
             }
-
-            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-            ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
-            processRepository.delete(processRepository.get(this.base.getId()));
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
+
+        processRepository.delete(processRepository.get(this.base.getId()));
     }
 }

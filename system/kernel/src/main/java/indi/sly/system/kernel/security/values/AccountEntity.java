@@ -15,7 +15,7 @@ public class AccountEntity extends APersistentEntity {
     }
 
     @Id
-    @Column(columnDefinition = "uniqueidentifier", name = "ID", nullable = false, updatable = false)
+    @Column(columnDefinition = "uniqueidentifier", name = "Id", nullable = false, updatable = false)
     protected UUID id;
     @Column(length = 256, name = "Name", nullable = false)
     protected String name;

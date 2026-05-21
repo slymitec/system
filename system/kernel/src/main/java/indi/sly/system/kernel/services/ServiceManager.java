@@ -3,14 +3,14 @@ package indi.sly.system.kernel.services;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.CommunicationRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.ServiceRepositoryObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -24,10 +24,8 @@ import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.services.instances.prototypes.ServiceContentObject;
 import indi.sly.system.kernel.services.instances.values.ServiceStartType;
 import indi.sly.system.kernel.services.prototypes.ServiceFactory;
-import indi.sly.system.kernel.services.values.ServiceEntryDefinition;
+import indi.sly.system.kernel.services.values.ServiceStatusEntity;
 import jakarta.inject.Named;
-import org.redisson.api.RLock;
-import org.redisson.api.RMap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -67,7 +65,7 @@ public class ServiceManager extends AManager {
         this.factory.deleteService(serviceId);
     }
 
-    private void start(UUID serviceId, Set<UUID> serviceIdJobs) {
+    private void start(UUID serviceId, boolean independence, Set<UUID> serviceIdJobs) {
         if (ValueUtil.isAnyNullOrEmpty(serviceId) || ObjectUtil.isAnyNull(serviceIdJobs)) {
             throw new ConditionParametersException();
         }
@@ -75,16 +73,12 @@ public class ServiceManager extends AManager {
             throw new StatusRelationshipErrorException();
         }
 
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
-
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         UserManager userManager = this.coreManager.getManager(UserManager.class);
 
-        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
-        RLock lock = communicationRepository.getReadWriteLock(kernelConfiguration.SERVICE_TABLE_LOCK_ID).writeLock();
-        RMap<UUID, ServiceEntryDefinition> serviceTable = communicationRepository.getMap(kernelConfiguration.SERVICE_TABLE_ID);
+        ServiceRepositoryObject serviceRepository = memoryManager.getServiceRepository();
 
         PathDefinition path = new PathDefinition(List.of(new IdentifierDefinition("Services"), new IdentifierDefinition(serviceId)));
 
@@ -100,22 +94,21 @@ public class ServiceManager extends AManager {
             throw new StatusRelationshipErrorException();
         }
 
-        List<UUID> startedServiceDependencies = new ArrayList<>();
-        List<UUID> occupiedServiceDependencies = new ArrayList<>();
+        ServiceStatusEntity serviceStatus = new ServiceStatusEntity();
+        serviceStatus.setId(UUIDUtil.createRandom());
+        serviceStatus.setIndependence(independence);
+
         InfoObject executeInfo = null;
         UUID executeInfoIndex = null;
-        lock.lock();
         try {
             for (UUID dependencyServerId : serviceContent.getDependencies()) {
-                ServiceEntryDefinition dependencyServiceEntry = serviceTable.getOrDefault(dependencyServerId, null);
-
-                if (ObjectUtil.isAnyNull(dependencyServiceEntry)) {
-                    this.start(dependencyServerId, serviceIdJobs);
-                    startedServiceDependencies.add(dependencyServerId);
-                } else {
-                    dependencyServiceEntry.setOccupy(dependencyServiceEntry.getOccupy() + 1);
-                    occupiedServiceDependencies.add(dependencyServerId);
+                if (!serviceRepository.contain(dependencyServerId)) {
+                    this.start(dependencyServerId, false, serviceIdJobs);
                 }
+
+                ServiceStatusEntity dependencyService = serviceRepository.get(dependencyServerId);
+
+                serviceStatus.addDependency(dependencyService);
             }
 
             AccountAuthorizationObject authorize = userManager.authorize(serviceContent.getAccountId());
@@ -140,37 +133,22 @@ public class ServiceManager extends AManager {
             ProcessInfoEntryObject processInfoTableEntry = processInfoTable.getByIndex(serviceInfoIndex);
             processInfoTableEntry.setUnsupportedDelete(true);
 
-            ServiceEntryDefinition serviceTableEntry = new ServiceEntryDefinition();
-            serviceTableEntry.getDependencies().addAll(serviceContent.getDependencies());
-            serviceTableEntry.setOccupy(1L);
-            serviceTableEntry.setProcessId(process.getId());
-            serviceTable.put(serviceId, serviceTableEntry);
+            serviceStatus.setProcessId(process.getId());
+
+            serviceRepository.add(serviceStatus);
         } catch (Exception e) {
-            serviceInfo.close();
-
-            for (UUID dependencyServerId : startedServiceDependencies) {
-                this.stop(dependencyServerId);
-            }
-            for (UUID dependencyServerId : occupiedServiceDependencies) {
-                ServiceEntryDefinition serviceDependencyTableEntry = serviceTable.getOrDefault(dependencyServerId, null);
-
-                if (ObjectUtil.allNotNull(serviceDependencyTableEntry)) {
-                    serviceDependencyTableEntry.setOccupy(serviceDependencyTableEntry.getOccupy() - 1);
-                }
-            }
-
             if (ObjectUtil.allNotNull(executeInfo) && !ValueUtil.isAnyNullOrEmpty(executeInfoIndex)) {
                 executeInfo.close();
             }
 
             throw e;
         } finally {
-            lock.unlock();
+            serviceInfo.close();
         }
     }
 
     public void start(UUID serviceId) {
-        this.start(serviceId, new HashSet<>());
+        this.start(serviceId, true, new HashSet<>());
     }
 
     public void stop(UUID serviceId) {
@@ -178,51 +156,32 @@ public class ServiceManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
-
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
-        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
-        RLock lock = communicationRepository.getReadWriteLock(kernelConfiguration.SERVICE_TABLE_LOCK_ID).writeLock();
-        RMap<UUID, ServiceEntryDefinition> serviceTable = communicationRepository.getMap(kernelConfiguration.SERVICE_TABLE_ID);
+        ServiceRepositoryObject serviceRepository = memoryManager.getServiceRepository();
 
-        lock.lock();
-        try {
-            ServiceEntryDefinition serviceTableEntry = serviceTable.getOrDefault(serviceId, null);
-            if (ObjectUtil.isAnyNull(serviceTableEntry)) {
-                throw new StatusNotExistedException();
-            }
+        ServiceStatusEntity serviceStatus = serviceRepository.get(serviceId);
 
-            if (serviceTableEntry.getOccupy() > 1) {
-                throw new StatusRelationshipErrorException();
-            }
+        if (!serviceStatus.getDependents().isEmpty()) {
+            throw new StatusRelationshipErrorException();
+        }
 
-            UUID processId = serviceTableEntry.getProcessId();
-            processManager.end(processId);
+        UUID processId = serviceStatus.getProcessId();
+        processManager.end(processId);
 
-            serviceTableEntry.setOccupy(0L);
+        Set<ServiceStatusEntity> serverDependencies = serviceStatus.getDependencies();
+        for (ServiceStatusEntity dependencyService : serverDependencies) {
+            serviceStatus.removeDependency(dependencyService);
 
-            List<UUID> serverDependencies = serviceTableEntry.getDependencies();
-            for (UUID dependencyServerId : serverDependencies) {
-                ServiceEntryDefinition serviceDependencyTableEntry = serviceTable.getOrDefault(dependencyServerId, null);
-
-                if (ObjectUtil.allNotNull(serviceDependencyTableEntry)) {
-
-                    if (serviceDependencyTableEntry.getOccupy() == 1) {
-                        try {
-                            this.stop(dependencyServerId);
-                        } catch (RuntimeException _) {
-                        }
-                    } else if (serviceDependencyTableEntry.getOccupy() != 0) {
-                        serviceDependencyTableEntry.setOccupy(serviceDependencyTableEntry.getOccupy() - 1);
-                    }
+            if (dependencyService.getDependents().isEmpty() && !dependencyService.isIndependence()) {
+                try {
+                    this.stop(dependencyService.getId());
+                } catch (RuntimeException _) {
                 }
             }
-
-            serviceTable.remove(serviceId);
-        } finally {
-            lock.unlock();
         }
+
+        serviceRepository.delete(serviceStatus);
     }
 }

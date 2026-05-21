@@ -15,9 +15,9 @@ public class InfoRelationEntity extends APersistentEntity {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(columnDefinition = "uniqueidentifier", name = "ID", nullable = false, updatable = false)
+    @Column(columnDefinition = "uniqueidentifier", name = "Id", nullable = false, updatable = false)
     protected UUID id;
-    @Column(columnDefinition = "uniqueidentifier", name = "ParentID", nullable = false, updatable = false)
+    @Column(columnDefinition = "uniqueidentifier", name = "ParentId", nullable = false, updatable = false)
     protected UUID parentId;
     @Column(columnDefinition = "uniqueidentifier", name = "Type", nullable = false)
     protected UUID type;

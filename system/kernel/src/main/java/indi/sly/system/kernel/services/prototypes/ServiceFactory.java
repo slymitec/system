@@ -9,7 +9,7 @@ import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.CommunicationRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.ServiceRepositoryObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -17,10 +17,8 @@ import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.*;
 import indi.sly.system.kernel.services.instances.prototypes.ServiceContentObject;
 import indi.sly.system.kernel.services.instances.values.ServiceDefinition;
-import indi.sly.system.kernel.services.values.ServiceEntryDefinition;
+import indi.sly.system.kernel.services.values.ServiceStatusEntity;
 import jakarta.inject.Named;
-import org.redisson.api.RLock;
-import org.redisson.api.RMap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -44,7 +42,7 @@ public class ServiceFactory extends AFactory {
 
         InfoObject servicesInfo = objectManager.get(new PathDefinition(List.of(new IdentifierDefinition("Services"))));
 
-        InfoObject service = servicesInfo.createChild(kernelConfiguration.SERVICE_INSTANCE_SERVICE_ID, new IdentifierDefinition(serviceId));
+        InfoObject service = servicesInfo.createChild(kernelConfiguration.SERVICE_TYPE_INSTANCE_SERVICE_ID, new IdentifierDefinition(serviceId));
         SecurityDescriptorObject securityDescriptor = service.getSecurityDescriptor();
         Set<AccessControlDefinition> permissions = new HashSet<>();
         AccessControlDefinition permission = new AccessControlDefinition();
@@ -86,21 +84,11 @@ public class ServiceFactory extends AFactory {
             throw new ConditionParametersException();
         }
 
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
-
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
-        RLock lock = communicationRepository.getReadWriteLock(kernelConfiguration.SERVICE_TABLE_LOCK_ID).writeLock();
-        RMap<UUID, ServiceEntryDefinition> ServiceTable = communicationRepository.getMap(kernelConfiguration.SERVICE_TABLE_ID);
+        ServiceRepositoryObject serviceRepository = memoryManager.getServiceRepository();
 
-        try {
-            lock.lock();
-
-            if (ServiceTable.containsKey(serviceId)) {
-                throw new StatusRelationshipErrorException();
-            }
-        } finally {
-            lock.unlock();
+        if(serviceRepository.contain(serviceId)){
+            throw new StatusRelationshipErrorException();
         }
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);

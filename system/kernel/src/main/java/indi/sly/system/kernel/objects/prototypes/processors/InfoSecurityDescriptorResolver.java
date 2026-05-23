@@ -10,7 +10,7 @@ import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeT
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
+import indi.sly.system.kernel.objects.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.AuditType;
 import indi.sly.system.kernel.security.values.PermissionType;
 import indi.sly.system.kernel.security.values.SecurityDescriptorCacheEntity;

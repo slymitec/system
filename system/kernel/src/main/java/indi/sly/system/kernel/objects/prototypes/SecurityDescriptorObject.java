@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.security.prototypes;
+package indi.sly.system.kernel.objects.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.CollectionUtil;
@@ -13,7 +13,6 @@ import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
-import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
@@ -23,6 +22,8 @@ import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.instances.prototypes.AuditContentObject;
+import indi.sly.system.kernel.security.prototypes.AccountObject;
+import indi.sly.system.kernel.security.prototypes.GroupObject;
 import indi.sly.system.kernel.security.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,10 +36,6 @@ import java.util.*;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDescriptorCacheEntity, InfoObject> {
     protected InfoProcessorMediator processorMediator;
-
-    public void setProcessorMediator(InfoProcessorMediator processorMediator) {
-        this.processorMediator = processorMediator;
-    }
 
     private InfoEntity getSelf() {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfo().getInfoId())) {

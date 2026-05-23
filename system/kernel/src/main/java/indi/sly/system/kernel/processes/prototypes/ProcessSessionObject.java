@@ -23,7 +23,7 @@ import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMed
 import indi.sly.system.kernel.processes.values.*;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountObject;
-import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
+import indi.sly.system.kernel.objects.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.*;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

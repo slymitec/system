@@ -3,7 +3,6 @@ package indi.sly.system.kernel.objects.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
@@ -22,7 +21,6 @@ import indi.sly.system.kernel.objects.values.DumpCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoContentCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.SecurityDescriptorCacheEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -157,7 +155,7 @@ public class InfoFactory extends AFactory {
 
         securityDescriptor.setBase(info);
         securityDescriptor.setCache(cache);
-        securityDescriptor.setProcessorMediator(processorMediator);
+        securityDescriptor.processorMediator = processorMediator;
 
         return securityDescriptor;
     }

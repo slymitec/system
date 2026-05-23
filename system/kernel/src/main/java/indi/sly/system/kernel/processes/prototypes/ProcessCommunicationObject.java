@@ -1,30 +1,24 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.values.PathDefinition;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
+import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.values.APersistentEntity;
-import indi.sly.system.kernel.objects.ObjectManager;
-import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
-import indi.sly.system.kernel.processes.ProcessManager;
+import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.repositories.prototypes.CommunicationRepositoryObject;
 import indi.sly.system.kernel.processes.ThreadManager;
-import indi.sly.system.kernel.processes.instances.prototypes.PortContentObject;
-import indi.sly.system.kernel.processes.instances.prototypes.SignalContentObject;
-import indi.sly.system.kernel.processes.instances.values.SignalEntryDefinition;
+import indi.sly.system.kernel.processes.values.PortDefinition;
+import indi.sly.system.kernel.processes.values.SignalDefinition;
+import indi.sly.system.kernel.processes.values.SignalEntryDefinition;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.*;
-import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
-import indi.sly.system.kernel.security.values.*;
+import org.redisson.api.RBucket;
+import org.redisson.api.RSet;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -77,9 +71,8 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-
             ProcessCommunicationEntity processCommunication = this.init(process);
 
             byte[] processCommunicationShared = processCommunication.getShared();
@@ -114,9 +107,8 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             ProcessCommunicationEntity processCommunication = this.init(process);
 
             processCommunication.setShared(shared);
@@ -136,19 +128,19 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         threadStatistics.addSharedWriteBytes(shared.length);
     }
 
-    public Set<UUID> getPortIDs() {
+    public Set<UUID> getPortIds() {
         if (LogicalUtil.allNotEqual(this.base.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+            RSet<UUID> processCommunicationPortSet = communicationRepository.getSet("Process", this.base.getId(), "Communication_Ports");
 
-            ProcessCommunicationEntity processCommunication = this.init(process);
-
-            return CollectionUtil.unmodifiable(processCommunication.getPortIDs());
+            return CollectionUtil.unmodifiable(processCommunicationPortSet);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
         }
@@ -164,68 +156,32 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new StatusRelationshipErrorException();
         }
 
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
-        PathDefinition path = new PathDefinition(List.of(new IdentifierDefinition("Ports")));
+        ProcessTokenObject processToken = this.base.getToken();
 
-        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
+        UUID portId;
 
-        UUID portID;
-
-        ProcessEntity process = this.getSelf();
-
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+            RSet<UUID> processCommunicationPorts = communicationRepository.getSet("Process", this.base.getId(), "Communication_Ports");
 
-            ProcessCommunicationEntity processCommunication = this.init(process);
-
-            ProcessTokenObject processToken = this.base.getToken();
-            if (processCommunication.getPortIDs().size() > processToken.getLimits().get(ProcessTokenLimitType.PORT_COUNT_MAX)) {
+            if (processCommunicationPorts.size() > processToken.getLimits().get(ProcessTokenLimitType.PORT_COUNT_MAX)) {
                 throw new ConditionRefuseException();
             }
 
-            InfoObject portsInfo = objectManager.get(path);
+            portId = UUIDUtil.createRandom();
+            PortDefinition port = new PortDefinition();
 
-            InfoObject portInfo = portsInfo.createChild(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_ID,
-                    new IdentifierDefinition(UUID.randomUUID()));
+            port.setProcessId(this.base.getId());
+            port.getSourceProcessIds().addAll(sourceProcessIDs);
+            port.setLimit(processToken.getLimits().get(ProcessTokenLimitType.PORT_LENGTH_MAX));
 
-            SecurityDescriptorObject securityDescriptor = portInfo.getSecurityDescriptor();
-            Set<AccessControlDefinition> permissions = new HashSet<>();
-            AccessControlDefinition permission = new AccessControlDefinition();
-            permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PROCESS));
-            permission.setScope(AccessControlScopeType.THIS);
-            permission.setValue(PermissionType.FULLCONTROL_ALLOW);
-            permissions.add(permission);
-            permission = new AccessControlDefinition();
-            permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PARENT_PROCESS));
-            permission.setScope(AccessControlScopeType.THIS);
-            permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
-            permissions.add(permission);
-            for (UUID sourceProcessID : sourceProcessIDs) {
-                permission = new AccessControlDefinition();
-                permission.setUserId(new UserIdDefinition(sourceProcessID, UserType.PROCESS));
-                permission.setScope(AccessControlScopeType.THIS);
-                permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
-                permissions.add(permission);
-            }
-            securityDescriptor.setPermissions(permissions);
+            RBucket<PortDefinition> portBucket = communicationRepository.getBucket("Port", portId, null);
 
-            portsInfo.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
-
-            PortContentObject portContent = (PortContentObject) portInfo.getContent();
-            portContent.setSourceProcessIDs(sourceProcessIDs);
-
-            portsInfo.close();
-
-            ProcessInfoTableObject processInfoTable = this.base.getInfoTable();
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(portInfo.getId());
-            processInfoEntry.setUnsupportedDelete(true);
-
-            portID = portInfo.getId();
-
-            processCommunication.getPortIDs().add(portID);
-
-            this.flush(process, processCommunication);
+            portBucket.set(port);
+            processCommunicationPorts.add(portId);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -237,7 +193,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         ThreadStatisticsObject threadStatistics = thread.getStatistics();
         threadStatistics.addPortCount(1);
 
-        return portID;
+        return portId;
     }
 
     public void deleteAllPort() {
@@ -246,37 +202,29 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+            RSet<UUID> processCommunicationPorts = communicationRepository.getSet("Process", this.base.getId(), "Communication_Ports");
 
-            ProcessCommunicationEntity processCommunication = this.init(process);
-
-            Set<UUID> processCommunicationPortIDs = processCommunication.getPortIDs();
-
-            ProcessInfoTableObject processInfoTable = this.base.getInfoTable();
-
-            for (UUID processCommunicationPortID : processCommunicationPortIDs) {
-                if (processInfoTable.containById(processCommunicationPortID)) {
-                    ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(processCommunicationPortID);
-                    processInfoEntry.setUnsupportedDelete(false);
-
-                    InfoObject info = processInfoEntry.getInfo();
-                    info.close();
+            RBucket<PortDefinition> portBucket;
+            for (UUID processCommunicationPort : processCommunicationPorts) {
+                portBucket = communicationRepository.getBucket("Port", processCommunicationPort, null);
+                if (portBucket.isExists()) {
+                    portBucket.delete();
                 }
-
-                processCommunicationPortIDs.remove(processCommunicationPortID);
             }
 
-            this.flush(process, processCommunication);
+            processCommunicationPorts.clear();
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
     }
 
-    public void deletePort(UUID portID) {
-        if (ObjectUtil.isAnyNull(portID)) {
+    public void deletePort(UUID portId) {
+        if (ObjectUtil.isAnyNull(portId)) {
             throw new ConditionParametersException();
         }
 
@@ -285,37 +233,30 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+            RSet<UUID> processCommunicationPorts = communicationRepository.getSet("Process", this.base.getId(), "Communication_Ports");
 
-            ProcessCommunicationEntity processCommunication = this.init(process);
-
-            Set<UUID> processCommunicationPortIDs = processCommunication.getPortIDs();
-            if (processCommunicationPortIDs.contains(portID)) {
+            if (!processCommunicationPorts.contains(portId)) {
                 throw new StatusNotExistedException();
             }
 
-            ProcessInfoTableObject processInfoTable = this.base.getInfoTable();
-            if (processInfoTable.containById(portID)) {
-                ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(portID);
-                processInfoEntry.setUnsupportedDelete(false);
-
-                InfoObject info = processInfoEntry.getInfo();
-                info.close();
+            RBucket<PortDefinition> portBucket = communicationRepository.getBucket("Port", portId, null);
+            if (portBucket.isExists()) {
+                portBucket.delete();
             }
 
-            processCommunicationPortIDs.remove(portID);
-
-            this.flush(process, processCommunication);
+            processCommunicationPorts.remove(portId);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
     }
 
-    public Set<UUID> getPortSourceProcessIDs(UUID portID) {
-        if (ObjectUtil.isAnyNull(portID)) {
+    public Set<UUID> getPortSourceProcessIDs(UUID portId) {
+        if (ObjectUtil.isAnyNull(portId)) {
             throw new ConditionParametersException();
         }
 
@@ -324,91 +265,30 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new StatusRelationshipErrorException();
         }
 
-        if (!this.getPortIDs().contains(portID)) {
-            throw new StatusNotExistedException();
-        }
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
-        PathDefinition path
-                = new PathDefinition(List.of(new IdentifierDefinition("Ports"), new IdentifierDefinition(portID)));
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+        try {
+            RSet<UUID> processCommunicationPorts = communicationRepository.getSet("Process", this.base.getId(), "Communication_Ports");
 
-        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
-        InfoObject portInfo = objectManager.get(path);
+            if (!processCommunicationPorts.contains(portId)) {
+                throw new StatusNotExistedException();
+            }
 
-        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
-        ProcessObject currentProcess = processManager.getCurrent();
-        ProcessInfoTableObject currentProcessInfoTable = currentProcess.getInfoTable();
+            RBucket<PortDefinition> portBucket = communicationRepository.getBucket("Port", portId, null);
+            if (!portBucket.isExists()) {
+                throw new StatusNotExistedException();
+            }
 
-        boolean contain = currentProcessInfoTable.containById(portInfo.getId());
-        if (!contain) {
-            portInfo.open(InfoOpenAttributeType.OPEN_ONLY_READ);
-        }
-        PortContentObject portContent = (PortContentObject) portInfo.getContent();
-        Set<UUID> sourceProcessIDs = portContent.getSourceProcessIDs();
-        if (!contain) {
-            portInfo.close();
-        }
-
-        return sourceProcessIDs;
-    }
-
-    public void setPortSourceProcessIDs(UUID portID, Set<UUID> sourceProcessIDs) {
-        if (ValueUtil.isAnyNullOrEmpty(portID) || ObjectUtil.isAnyNull(sourceProcessIDs)) {
-            throw new ConditionParametersException();
-        }
-
-        if (!this.base.isCurrent() || LogicalUtil.allNotEqual(this.base.getStatus().get(),
-                ProcessStatusType.RUNNING)) {
-            throw new StatusRelationshipErrorException();
-        }
-
-        if (!this.getPortIDs().contains(portID)) {
-            throw new StatusNotExistedException();
-        }
-
-        PathDefinition path
-                = new PathDefinition(List.of(new IdentifierDefinition("Ports"), new IdentifierDefinition(portID)));
-
-        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
-        InfoObject portInfo = objectManager.get(path);
-
-        SecurityDescriptorObject securityDescriptor = portInfo.getSecurityDescriptor();
-        Set<AccessControlDefinition> permissions = new HashSet<>();
-        AccessControlDefinition permission = new AccessControlDefinition();
-        permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PROCESS));
-        permission.setScope(AccessControlScopeType.THIS);
-        permission.setValue(PermissionType.FULLCONTROL_ALLOW);
-        permissions.add(permission);
-        permission = new AccessControlDefinition();
-        permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PARENT_PROCESS));
-        permission.setScope(AccessControlScopeType.THIS);
-        permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
-        permissions.add(permission);
-        for (UUID sourceProcessID : sourceProcessIDs) {
-            permission = new AccessControlDefinition();
-            permission.setUserId(new UserIdDefinition(sourceProcessID, UserType.PROCESS));
-            permission.setScope(AccessControlScopeType.THIS);
-            permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
-            permissions.add(permission);
-        }
-        securityDescriptor.setPermissions(permissions);
-
-        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
-        ProcessObject currentProcess = processManager.getCurrent();
-        ProcessInfoTableObject currentProcessInfoTable = currentProcess.getInfoTable();
-
-        boolean contain = currentProcessInfoTable.containById(portInfo.getId());
-        if (!contain) {
-            portInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
-        }
-        PortContentObject portContent = (PortContentObject) portInfo.getContent();
-        portContent.setSourceProcessIDs(sourceProcessIDs);
-        if (!contain) {
-            portInfo.close();
+            return CollectionUtil.unmodifiable(portBucket.get().getSourceProcessIds());
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
         }
     }
 
-    public byte[] receivePort(UUID portID) {
-        if (ObjectUtil.isAnyNull(portID)) {
+    public void setPortSourceProcessIDs(UUID portId, Set<UUID> sourceProcessIDs) {
+        if (ValueUtil.isAnyNullOrEmpty(portId) || ObjectUtil.isAnyNull(sourceProcessIDs)) {
             throw new ConditionParametersException();
         }
 
@@ -417,18 +297,68 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new StatusRelationshipErrorException();
         }
 
-        if (!this.getPortIDs().contains(portID)) {
-            throw new StatusNotExistedException();
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
+
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+        try {
+            RSet<UUID> processCommunicationPorts = communicationRepository.getSet("Process", this.base.getId(), "Communication_Ports");
+
+            if (!processCommunicationPorts.contains(portId)) {
+                throw new StatusNotExistedException();
+            }
+
+            RBucket<PortDefinition> portBucket = communicationRepository.getBucket("Port", portId, null);
+            if (!portBucket.isExists()) {
+                throw new StatusNotExistedException();
+            }
+
+            PortDefinition port = portBucket.get();
+            port.getSourceProcessIds().clear();
+            port.getSourceProcessIds().addAll(sourceProcessIDs);
+
+            portBucket.set(port);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
+    }
+
+    public byte[] receivePort(UUID portId) {
+        if (ObjectUtil.isAnyNull(portId)) {
+            throw new ConditionParametersException();
         }
 
-        PathDefinition path
-                = new PathDefinition(List.of(new IdentifierDefinition("Ports"), new IdentifierDefinition(portID)));
+        if (!this.base.isCurrent() || LogicalUtil.allNotEqual(this.base.getStatus().get(),
+                ProcessStatusType.RUNNING)) {
+            throw new StatusRelationshipErrorException();
+        }
 
-        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
-        InfoObject portInfo = objectManager.get(path);
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
-        PortContentObject portContent = (PortContentObject) portInfo.getContent();
-        byte[] value = portContent.receive();
+        byte[] value;
+
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+        try {
+            RSet<UUID> processCommunicationPorts = communicationRepository.getSet("Process", this.base.getId(), "Communication_Ports");
+
+            if (!processCommunicationPorts.contains(portId)) {
+                throw new StatusNotExistedException();
+            }
+
+            RBucket<PortDefinition> portBucket = communicationRepository.getBucket("Port", portId, null);
+            if (!portBucket.isExists()) {
+                throw new StatusNotExistedException();
+            }
+
+            PortDefinition port = portBucket.get();
+            value = port.getValue();
+            port.setValue(ArrayUtil.EMPTY_BYTES);
+
+            portBucket.set(port);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
 
         ProcessStatisticsObject processStatistics = this.base.getStatistics();
         processStatistics.addPortReadCount(1);
@@ -442,8 +372,8 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         return value;
     }
 
-    public void sendPort(UUID portID, byte[] value) {
-        if (ValueUtil.isAnyNullOrEmpty(portID) || ObjectUtil.isAnyNull(value)) {
+    public void sendPort(UUID portId, byte[] value) {
+        if (ValueUtil.isAnyNullOrEmpty(portId) || ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();
         }
 
@@ -452,25 +382,26 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new StatusRelationshipErrorException();
         }
 
-        PathDefinition path
-                = new PathDefinition(List.of(new IdentifierDefinition("Ports"), new IdentifierDefinition(portID)));
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
-        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
-        InfoObject portInfo = objectManager.get(path);
+        RBucket<PortDefinition> portBucket = communicationRepository.getBucket("Port", portId, null);
 
-        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
-        ProcessObject currentProcess = processManager.getCurrent();
-        ProcessInfoTableObject currentProcessInfoTable = currentProcess.getInfoTable();
-
-        boolean contain = currentProcessInfoTable.containById(portInfo.getId());
-        if (!contain) {
-            portInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+        if (!portBucket.isExists()) {
+            throw new StatusNotExistedException();
         }
-        PortContentObject portContent = (PortContentObject) portInfo.getContent();
-        portContent.send(value);
-        if (!contain) {
-            portInfo.close();
+
+        PortDefinition port = portBucket.get();
+
+        if (!port.getSourceProcessIds().contains(this.base.getId()) && !port.getProcessId().equals(this.base.getId())) {
+            throw new StatusRelationshipErrorException();
         }
+        if (port.size() + value.length >= port.getLimit()) {
+            throw new StatusInsufficientResourcesException();
+        }
+        port.setValue(ArrayUtil.combineBytes(port.getValue(), value));
+
+        portBucket.set(port);
 
         ProcessStatisticsObject processStatistics = this.base.getStatistics();
         processStatistics.addPortWriteCount(1);
@@ -482,19 +413,23 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         threadStatistics.addPortWriteBytes(value.length);
     }
 
-    public UUID getSignalID() {
+    public UUID getSignalId() {
         if (LogicalUtil.allNotEqual(this.base.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+            RBucket<UUID> processCommunicationSignalBucket = communicationRepository.getBucket("Process", this.base.getId(), "Communication_Signal");
 
-            ProcessCommunicationEntity processCommunication = this.init(process);
+            if (!processCommunicationSignalBucket.isExists()) {
+                throw new StatusNotExistedException();
+            }
 
-            return processCommunication.getSignalID();
+            return processCommunicationSignalBucket.get();
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
         }
@@ -510,63 +445,26 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new StatusRelationshipErrorException();
         }
 
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
-        PathDefinition path = new PathDefinition(List.of(new IdentifierDefinition("Signals")));
+        ProcessTokenObject processToken = this.base.getToken();
 
-        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
-
-        ProcessEntity process = this.getSelf();
-
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+            RBucket<SignalDefinition> processCommunicationSignalBucket = communicationRepository.getBucket("Process", this.base.getId(), "Communication_Signal");
 
-            ProcessCommunicationEntity processCommunication = this.init(process);
-
-            if (!ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalID())) {
+            if (processCommunicationSignalBucket.isExists()) {
                 throw new StatusAlreadyFinishedException();
             }
 
-            InfoObject signalsInfo = objectManager.get(path);
+            SignalDefinition signal = new SignalDefinition();
 
-            InfoObject signalInfo = signalsInfo.createChild(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID,
-                    new IdentifierDefinition(UUID.randomUUID()));
+            signal.setProcessId(this.base.getId());
+            signal.getSourceProcessIds().addAll(sourceProcessIDs);
+            signal.setLimit(processToken.getLimits().get(ProcessTokenLimitType.SIGNAL_LENGTH_MAX));
 
-            SecurityDescriptorObject securityDescriptor = signalInfo.getSecurityDescriptor();
-            Set<AccessControlDefinition> permissions = new HashSet<>();
-            AccessControlDefinition permission = new AccessControlDefinition();
-            permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PROCESS));
-            permission.setScope(AccessControlScopeType.THIS);
-            permission.setValue(PermissionType.FULLCONTROL_ALLOW);
-            permissions.add(permission);
-            permission = new AccessControlDefinition();
-            permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PARENT_PROCESS));
-            permission.setScope(AccessControlScopeType.THIS);
-            permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
-            permissions.add(permission);
-            for (UUID sourceProcessID : sourceProcessIDs) {
-                permission = new AccessControlDefinition();
-                permission.setUserId(new UserIdDefinition(sourceProcessID, UserType.PROCESS));
-                permission.setScope(AccessControlScopeType.THIS);
-                permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
-                permissions.add(permission);
-            }
-            securityDescriptor.setPermissions(permissions);
-
-            signalInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
-
-            SignalContentObject signalContent = (SignalContentObject) signalInfo.getContent();
-            signalContent.setSourceProcessIDs(sourceProcessIDs);
-
-            signalInfo.close();
-
-            ProcessInfoTableObject processInfoTable = this.base.getInfoTable();
-            ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(signalInfo.getId());
-            processInfoEntry.setUnsupportedDelete(true);
-
-            processCommunication.setSignalID(signalInfo.getId());
-
-            this.flush(process, processCommunication);
+            processCommunicationSignalBucket.set(signal);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -578,31 +476,16 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+            RBucket<SignalDefinition> processCommunicationSignalBucket = communicationRepository.getBucket("Process", this.base.getId(), "Communication_Signal");
 
-            ProcessCommunicationEntity processCommunication = this.init(process);
-
-            UUID signalID = processCommunication.getSignalID();
-
-            if (ValueUtil.isAnyNullOrEmpty(signalID)) {
-                throw new StatusAlreadyFinishedException();
+            if (processCommunicationSignalBucket.isExists()) {
+                processCommunicationSignalBucket.delete();
             }
-
-            ProcessInfoTableObject processInfoTable = this.base.getInfoTable();
-            if (processInfoTable.containById(signalID)) {
-                ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(signalID);
-                processInfoEntry.setUnsupportedDelete(false);
-
-                InfoObject info = processInfoEntry.getInfo();
-                info.close();
-            }
-
-            processCommunication.setSignalID(null);
-
-            this.flush(process, processCommunication);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -614,34 +497,21 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new StatusRelationshipErrorException();
         }
 
-        UUID signalID;
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
-        ProcessEntity process = this.getSelf();
-
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+            RBucket<SignalDefinition> processCommunicationSignalBucket = communicationRepository.getBucket("Process", this.base.getId(), "Communication_Signal");
 
-            ProcessCommunicationEntity processCommunication = this.init(process);
+            if (!processCommunicationSignalBucket.isExists()) {
+                throw new StatusNotExistedException();
+            }
 
-            signalID = processCommunication.getSignalID();
+            return CollectionUtil.unmodifiable(processCommunicationSignalBucket.get().getSourceProcessIds());
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
         }
-
-        if (ValueUtil.isAnyNullOrEmpty(signalID)) {
-            throw new StatusNotExistedException();
-        }
-
-        PathDefinition path
-                = new PathDefinition(List.of(new IdentifierDefinition("Signals"), new IdentifierDefinition(signalID)));
-
-        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
-        InfoObject signalInfo = objectManager.get(path);
-
-        SignalContentObject signalContent = (SignalContentObject) signalInfo.getContent();
-        Set<UUID> sourceProcessIDs = signalContent.getSourceProcessIDs();
-
-        return sourceProcessIDs;
     }
 
     public void setSignalSourceProcessIDs(Set<UUID> sourceProcessIDs) {
@@ -654,64 +524,24 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new StatusRelationshipErrorException();
         }
 
-        UUID signalID;
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
-        ProcessEntity process = this.getSelf();
-
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+            RBucket<SignalDefinition> processCommunicationSignalBucket = communicationRepository.getBucket("Process", this.base.getId(), "Communication_Signal");
 
-            ProcessCommunicationEntity processCommunication = this.init(process);
+            if (!processCommunicationSignalBucket.isExists()) {
+                throw new StatusNotExistedException();
+            }
 
-            signalID = processCommunication.getSignalID();
+            SignalDefinition signal = processCommunicationSignalBucket.get();
+            signal.getSourceProcessIds().clear();
+            signal.getSourceProcessIds().addAll(sourceProcessIDs);
+
+            processCommunicationSignalBucket.set(signal);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
-
-        if (ValueUtil.isAnyNullOrEmpty(signalID)) {
-            throw new StatusNotExistedException();
-        }
-
-        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
-
-        PathDefinition path
-                = new PathDefinition(List.of(new IdentifierDefinition("Signals"), new IdentifierDefinition(signalID)));
-
-        InfoObject signalInfo = objectManager.get(path);
-
-        SecurityDescriptorObject securityDescriptor = signalInfo.getSecurityDescriptor();
-        Set<AccessControlDefinition> permissions = new HashSet<>();
-        AccessControlDefinition permission = new AccessControlDefinition();
-        permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PROCESS));
-        permission.setScope(AccessControlScopeType.THIS);
-        permission.setValue(PermissionType.FULLCONTROL_ALLOW);
-        permissions.add(permission);
-        permission = new AccessControlDefinition();
-        permission.setUserId(new UserIdDefinition(this.base.getId(), UserType.PARENT_PROCESS));
-        permission.setScope(AccessControlScopeType.THIS);
-        permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
-        permissions.add(permission);
-        for (UUID sourceProcessID : sourceProcessIDs) {
-            permission = new AccessControlDefinition();
-            permission.setUserId(new UserIdDefinition(sourceProcessID, UserType.PROCESS));
-            permission.setScope(AccessControlScopeType.THIS);
-            permission.setValue(PermissionType.CREATECHILD_WRITEDATA_ALLOW);
-            permissions.add(permission);
-        }
-        securityDescriptor.setPermissions(permissions);
-
-        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
-        ProcessObject currentProcess = processManager.getCurrent();
-        ProcessInfoTableObject currentProcessInfoTable = currentProcess.getInfoTable();
-
-        boolean contain = currentProcessInfoTable.containById(signalInfo.getId());
-        if (!contain) {
-            signalInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
-        }
-        SignalContentObject signalContent = (SignalContentObject) signalInfo.getContent();
-        signalContent.setSourceProcessIDs(sourceProcessIDs);
-        if (!contain) {
-            signalInfo.close();
         }
     }
 
@@ -721,41 +551,30 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new StatusRelationshipErrorException();
         }
 
-        UUID signalID;
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
-        ProcessEntity process = this.getSelf();
+        DateTimeObject dateTime = this.coreManager.getDateTime();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+            RBucket<SignalDefinition> processCommunicationSignalBucket = communicationRepository.getBucket("Process", this.base.getId(), "Communication_Signal");
 
-            ProcessCommunicationEntity processCommunication = this.init(process);
+            if (!processCommunicationSignalBucket.isExists()) {
+                throw new StatusNotExistedException();
+            }
 
-            signalID = processCommunication.getSignalID();
+            SignalDefinition signal = processCommunicationSignalBucket.get();
+            List<SignalEntryDefinition> signalEntries = signal.pollAll();
+            long nowDateTime = dateTime.getCurrent();
+            for (SignalEntryDefinition signalEntry : signalEntries) {
+                signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+            }
+
+            return CollectionUtil.unmodifiable(signalEntries);
         } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
-
-        if (ValueUtil.isAnyNullOrEmpty(signalID)) {
-            throw new StatusNotExistedException();
-        }
-
-        PathDefinition path
-                = new PathDefinition(List.of(new IdentifierDefinition("Signals"), new IdentifierDefinition(signalID)));
-
-        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
-        InfoObject signalInfo = objectManager.get(path);
-
-        SignalContentObject signalContent = (SignalContentObject) signalInfo.getContent();
-        List<SignalEntryDefinition> signalEntries = signalContent.receive();
-
-        ProcessStatisticsObject processStatistics = this.base.getStatistics();
-        processStatistics.addSignalReadCount(signalEntries.size());
-        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
-        ThreadObject thread = threadManager.getCurrent();
-        ThreadStatisticsObject threadStatistics = thread.getStatistics();
-        threadStatistics.addSignalReadCount(signalEntries.size());
-
-        return CollectionUtil.unmodifiable(signalEntries);
     }
 
     public void sendSignal(UUID signalID, long key, long value) {
@@ -768,25 +587,34 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new StatusRelationshipErrorException();
         }
 
-        PathDefinition path
-                = new PathDefinition(List.of(new IdentifierDefinition("Signals"), new IdentifierDefinition(signalID)));
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CommunicationRepositoryObject communicationRepository = memoryManager.getCommunicationRepository();
 
-        ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
-        InfoObject signalInfo = objectManager.get(path);
+        DateTimeObject dateTime = this.coreManager.getDateTime();
 
-        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
-        ProcessObject process = processManager.getCurrent();
-        ProcessInfoTableObject processInfoTable = process.getInfoTable();
+        RBucket<SignalDefinition> processCommunicationSignalBucket = communicationRepository.getBucket("Process", this.base.getId(), "Communication_Signal");
 
-        boolean contain = processInfoTable.containById(signalInfo.getId());
-        if (!contain) {
-            signalInfo.open(InfoOpenAttributeType.OPEN_SHARED_WRITE);
+        if (!processCommunicationSignalBucket.isExists()) {
+            throw new StatusNotExistedException();
         }
-        SignalContentObject signalContent = (SignalContentObject) signalInfo.getContent();
-        signalContent.send(key, value);
-        if (!contain) {
-            signalInfo.close();
+
+        SignalDefinition signal = processCommunicationSignalBucket.get();
+
+        if (!signal.getSourceProcessIds().contains(this.base.getId()) && !signal.getProcessId().equals(this.base.getId())) {
+            throw new StatusRelationshipErrorException();
         }
+        if (signal.size() >= signal.getLimit()) {
+            throw new StatusInsufficientResourcesException();
+        }
+        SignalEntryDefinition signalEntry = new SignalEntryDefinition();
+        long nowDateTime = dateTime.getCurrent();
+        signalEntry.setSource(this.base.getId());
+        signalEntry.setKey(key);
+        signalEntry.setValue(value);
+        signalEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
+        signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+        signal.add(signalEntry);
+        processCommunicationSignalBucket.set(signal);
 
         ProcessStatisticsObject processStatistics = this.base.getStatistics();
         processStatistics.addSignalWriteCount(1);

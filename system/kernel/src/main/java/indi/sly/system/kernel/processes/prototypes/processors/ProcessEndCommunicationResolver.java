@@ -20,9 +20,7 @@ public class ProcessEndCommunicationResolver extends AResolver implements IProce
             ProcessCommunicationObject processCommunication = process.getCommunication();
 
             processCommunication.deleteAllPort();
-            if (!ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalID())) {
-                processCommunication.deleteSignal();
-            }
+            processCommunication.deleteSignal();
 
             return process;
         };

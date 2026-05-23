@@ -41,7 +41,7 @@ public class ServiceFactory extends AFactory {
 
         InfoObject servicesInfo = objectManager.get(new PathDefinition(List.of(new IdentifierDefinition("Services"))));
 
-        InfoObject service = servicesInfo.createChild(kernelConfiguration.SERVICE_TYPE_INSTANCE_SERVICE_ID, new IdentifierDefinition(serviceId));
+        InfoObject service = servicesInfo.createChild(kernelConfiguration.SERVICE_TYPES_INSTANCE_SERVICE_ID, new IdentifierDefinition(serviceId));
         SecurityDescriptorObject securityDescriptor = service.getSecurityDescriptor();
         Set<AccessControlDefinition> permissions = new HashSet<>();
         AccessControlDefinition permission = new AccessControlDefinition();

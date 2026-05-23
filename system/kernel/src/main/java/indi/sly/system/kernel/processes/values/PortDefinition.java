@@ -1,37 +1,32 @@
-package indi.sly.system.kernel.processes.instances.values;
+package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.supports.ArrayUtil;
-import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.*;
 
 public class PortDefinition extends ADefinition {
     public PortDefinition() {
-        this.sourceProcessIDs = new HashSet<>();
+        this.sourceProcessIds = new HashSet<>();
         this.value = ArrayUtil.EMPTY_BYTES;
     }
 
-    private UUID processID;
-    private final Set<UUID> sourceProcessIDs;
+    private UUID processId;
+    private final Set<UUID> sourceProcessIds;
     private byte[] value;
     private int limit;
 
-    public UUID getProcessID() {
-        return this.processID;
+    public UUID getProcessId() {
+        return this.processId;
     }
 
-    public void setProcessID(UUID processID) {
-        this.processID = processID;
+    public void setProcessId(UUID processId) {
+        this.processId = processId;
     }
 
-    public Set<UUID> getSourceProcessIDs() {
-        return this.sourceProcessIDs;
+    public Set<UUID> getSourceProcessIds() {
+        return this.sourceProcessIds;
     }
 
     public int size() {
@@ -60,19 +55,13 @@ public class PortDefinition extends ADefinition {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PortDefinition that = (PortDefinition) o;
-        return limit == that.limit &&
-                Objects.equals(processID, that.processID) &&
-                sourceProcessIDs.equals(that.sourceProcessIDs) &&
-                Arrays.equals(value, that.value);
+        return limit == that.limit && Objects.equals(processId, that.processId) && Objects.equals(sourceProcessIds, that.sourceProcessIds) && Objects.deepEquals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(processID, sourceProcessIDs, limit);
-        result = 31 * result + Arrays.hashCode(value);
-        return result;
+        return Objects.hash(processId, sourceProcessIds, Arrays.hashCode(value), limit);
     }
 }

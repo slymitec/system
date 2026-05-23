@@ -8,12 +8,9 @@ import java.util.*;
 public class ProcessCommunicationEntity extends APersistentEntity {
     public ProcessCommunicationEntity() {
         this.shared = ArrayUtil.EMPTY_BYTES;
-        this.portIDs = new HashSet<>();
     }
 
     private byte[] shared;
-    private final Set<UUID> portIDs;
-    private UUID signalID;
 
     public byte[] getShared() {
         return this.shared;
@@ -23,31 +20,15 @@ public class ProcessCommunicationEntity extends APersistentEntity {
         this.shared = shared;
     }
 
-    public Set<UUID> getPortIDs() {
-        return this.portIDs;
-    }
-
-    public UUID getSignalID() {
-        return this.signalID;
-    }
-
-    public void setSignalID(UUID signalID) {
-        this.signalID = signalID;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProcessCommunicationEntity that = (ProcessCommunicationEntity) o;
-        return Arrays.equals(shared, that.shared) && portIDs.equals(that.portIDs) && Objects.equals(signalID,
-                that.signalID);
+        return Objects.deepEquals(shared, that.shared);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(portIDs, signalID);
-        result = 31 * result + Arrays.hashCode(shared);
-        return result;
+        return Arrays.hashCode(shared);
     }
 }

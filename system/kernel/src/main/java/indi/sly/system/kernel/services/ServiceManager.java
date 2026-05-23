@@ -10,9 +10,13 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ServiceRepositoryObject;
 import indi.sly.system.kernel.objects.ObjectManager;
+import indi.sly.system.kernel.objects.TypeManager;
+import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
+import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -23,6 +27,7 @@ import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.services.instances.prototypes.ServiceContentObject;
+import indi.sly.system.kernel.services.instances.prototypes.processors.ServiceTypeInitializer;
 import indi.sly.system.kernel.services.instances.values.ServiceStartType;
 import indi.sly.system.kernel.services.prototypes.ServiceFactory;
 import indi.sly.system.kernel.services.values.ServiceStatusEntity;
@@ -46,6 +51,20 @@ public class ServiceManager extends AManager {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
             this.factory = this.coreManager.create(ServiceFactory.class);
             this.factory.init();
+        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
+            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
+
+            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+
+            long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_READ,
+                    TypeInitializerAttributeType.CAN_BE_INHERITED, TypeInitializerAttributeType.CAN_NOT_CHANGE_OWNER,
+                    TypeInitializerAttributeType.HAS_AUDIT, TypeInitializerAttributeType.HAS_CONTENT,
+                    TypeInitializerAttributeType.HAS_PERMISSION, TypeInitializerAttributeType.HAS_PROPERTIES);
+            Set<UUID> childTypes = Set.of();
+            AInfoTypeInitializer typeInitializer = this.coreManager.create(ServiceTypeInitializer.class);
+
+            typeManager.create(kernelConfiguration.SERVICE_TYPES_INSTANCE_SERVICE_ID,
+                    kernelConfiguration.SERVICE_TYPES_INSTANCE_SERVICE_NAME, attribute, childTypes, typeInitializer);
         }
     }
 

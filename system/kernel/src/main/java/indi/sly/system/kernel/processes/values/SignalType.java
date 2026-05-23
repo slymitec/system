@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.processes.instances.values;
+package indi.sly.system.kernel.processes.values;
 
 public interface SignalType {
     long TYPE_UNKNOWN = 0L;

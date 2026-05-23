@@ -5,7 +5,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
-import indi.sly.system.kernel.processes.instances.values.SignalType;
+import indi.sly.system.kernel.processes.values.SignalType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessLifeProcessorMediator;
@@ -26,7 +26,7 @@ public class ProcessEndNotifyParentResolver extends AResolver implements IProces
                 ProcessCommunicationObject parentProcessCommunication = parentProcess.getCommunication();
                 ProcessCommunicationObject processCommunication = process.getCommunication();
 
-                UUID signalID = parentProcessCommunication.getSignalID();
+                UUID signalID = parentProcessCommunication.getSignalId();
 
                 if (!ValueUtil.isAnyNullOrEmpty(signalID)) {
                     try {

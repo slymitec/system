@@ -1,12 +1,7 @@
-package indi.sly.system.kernel.processes.instances.values;
+package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.supports.NumberUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -52,13 +47,9 @@ public class SignalEntryDefinition extends ADefinition {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SignalEntryDefinition that = (SignalEntryDefinition) o;
-        return key == that.key &&
-                value == that.value &&
-                Objects.equals(source, that.source) &&
-                date.equals(that.date);
+        return key == that.key && value == that.value && Objects.equals(source, that.source) && Objects.equals(date, that.date);
     }
 
     @Override

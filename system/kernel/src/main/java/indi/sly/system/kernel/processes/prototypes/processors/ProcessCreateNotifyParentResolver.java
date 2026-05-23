@@ -4,7 +4,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
-import indi.sly.system.kernel.processes.instances.values.SignalType;
+import indi.sly.system.kernel.processes.values.SignalType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessCommunicationObject;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessLifeProcessorMediator;
@@ -24,7 +24,7 @@ public class ProcessCreateNotifyParentResolver extends AResolver implements IPro
             if (ObjectUtil.allNotNull(parentProcess)) {
                 ProcessCommunicationObject parentProcessCommunication = parentProcess.getCommunication();
 
-                UUID signalID = parentProcessCommunication.getSignalID();
+                UUID signalID = parentProcessCommunication.getSignalId();
 
                 if (!ValueUtil.isAnyNullOrEmpty(signalID)) {
                     parentProcessCommunication.sendSignal(signalID, SignalType.TYPE_PROCESS,

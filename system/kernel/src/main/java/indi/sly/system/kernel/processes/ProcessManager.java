@@ -17,9 +17,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryOb
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
-import indi.sly.system.kernel.processes.instances.prototypes.processors.PortTypeInitializer;
 import indi.sly.system.kernel.processes.instances.prototypes.processors.SessionTypeInitializer;
-import indi.sly.system.kernel.processes.instances.prototypes.processors.SignalTypeInitializer;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.processes.values.ThreadStatusType;
@@ -57,17 +55,7 @@ public class ProcessManager extends AManager {
                     TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
                     TypeInitializerAttributeType.HAS_PROPERTIES, TypeInitializerAttributeType.TEMPORARY);
             Set<UUID> childTypes = Set.of();
-            AInfoTypeInitializer typeInitializer = this.coreManager.create(PortTypeInitializer.class);
-
-            typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_ID,
-                    kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_PORT_NAME, attribute, childTypes, typeInitializer);
-
-            typeInitializer = this.coreManager.create(SignalTypeInitializer.class);
-
-            typeManager.create(kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_ID,
-                    kernelConfiguration.PROCESSES_COMMUNICATION_INSTANCE_SIGNAL_NAME, attribute, childTypes, typeInitializer);
-
-            typeInitializer = this.coreManager.create(SessionTypeInitializer.class);
+            AInfoTypeInitializer typeInitializer = this.coreManager.create(SessionTypeInitializer.class);
 
             typeManager.create(kernelConfiguration.PROCESSES_SESSION_INSTANCE_ID,
                     kernelConfiguration.PROCESSES_SESSION_INSTANCE_NAME, attribute, childTypes, typeInitializer);

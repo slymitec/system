@@ -1,37 +1,32 @@
-package indi.sly.system.kernel.processes.instances.values;
+package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.supports.NumberUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.*;
 
 public class SignalDefinition extends ADefinition {
     public SignalDefinition() {
-        this.sourceProcessIDs = new HashSet<>();
+        this.sourceProcessIds = new HashSet<>();
         this.signalEntries = new ArrayList<>();
     }
 
-    private UUID processID;
-    private final Set<UUID> sourceProcessIDs;
+    private UUID processId;
+    private final Set<UUID> sourceProcessIds;
     private final List<SignalEntryDefinition> signalEntries;
     private int limit;
 
-    public UUID getProcessID() {
-        return this.processID;
+    public UUID getProcessId() {
+        return this.processId;
     }
 
-    public void setProcessID(UUID processID) {
-        this.processID = processID;
+    public void setProcessId(UUID processId) {
+        this.processId = processId;
     }
 
-    public Set<UUID> getSourceProcessIDs() {
-        return this.sourceProcessIDs;
+    public Set<UUID> getSourceProcessIds() {
+        return this.sourceProcessIds;
     }
 
     public int getLimit() {
@@ -68,17 +63,13 @@ public class SignalDefinition extends ADefinition {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SignalDefinition that = (SignalDefinition) o;
-        return limit == that.limit &&
-                Objects.equals(processID, that.processID) &&
-                sourceProcessIDs.equals(that.sourceProcessIDs) &&
-                signalEntries.equals(that.signalEntries);
+        return limit == that.limit && Objects.equals(processId, that.processId) && Objects.equals(sourceProcessIds, that.sourceProcessIds) && Objects.equals(signalEntries, that.signalEntries);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(processID, sourceProcessIDs, signalEntries, limit);
+        return Objects.hash(processId, sourceProcessIds, signalEntries, limit);
     }
 }

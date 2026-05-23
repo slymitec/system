@@ -18,50 +18,51 @@ public class CommunicationRepositoryObject extends AObject {
     @Resource
     private RedissonClient redissonClient;
 
-    public RLock getLock(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+    private String acquireKey(String prefix, UUID id, String parameter) {
+        if (ValueUtil.isAnyNullOrEmpty(prefix, id)) {
             throw new ConditionParametersException();
         }
 
-        return this.redissonClient.getLock(Ulid.from(id).toString());
-    }
-
-    public RReadWriteLock getReadWriteLock(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
-            throw new ConditionParametersException();
-        }
-
-        return this.redissonClient.getReadWriteLock(Ulid.from(id).toString());
-    }
-
-    public RAtomicLong getAtomicLong(UUID id, String parameter) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
-            throw new ConditionParametersException();
-        }
-
-        String key;
         if (ValueUtil.isAnyNullOrEmpty(parameter)) {
-            key = Ulid.from(id).toString();
+            return prefix + "_" + Ulid.from(id);
         } else {
-            key = Ulid.from(id) + parameter;
+            return prefix + "_" + Ulid.from(id) + "_" + parameter;
         }
+    }
+
+    public RLock getLock(String prefix, UUID id, String parameter) {
+        String key = this.acquireKey(prefix, id, parameter);
+
+        return this.redissonClient.getLock(key);
+    }
+
+    public RReadWriteLock getReadWriteLock(String prefix, UUID id, String parameter) {
+        String key = this.acquireKey(prefix, id, parameter);
+
+        return this.redissonClient.getReadWriteLock(key);
+    }
+
+    public RAtomicLong getAtomicLong(String prefix, UUID id, String parameter) {
+        String key = this.acquireKey(prefix, id, parameter);
 
         return this.redissonClient.getAtomicLong(key);
     }
 
-    public <T> RBucket<T> getBucket(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
-            throw new ConditionParametersException();
-        }
+    public <T> RBucket<T> getBucket(String prefix, UUID id, String parameter) {
+        String key = this.acquireKey(prefix, id, parameter);
 
-        return this.redissonClient.getBucket(Ulid.from(id).toString());
+        return this.redissonClient.getBucket(key);
     }
 
-    public <K, V> RMap<K, V> getMap(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
-            throw new ConditionParametersException();
-        }
+    public <V> RSet<V> getSet(String prefix, UUID id, String parameter) {
+        String key = this.acquireKey(prefix, id, parameter);
 
-        return this.redissonClient.getMap(Ulid.from(id).toString());
+        return this.redissonClient.getSet(key);
+    }
+
+    public <K, V> RMap<K, V> getMap(String prefix, UUID id, String parameter) {
+        String key = this.acquireKey(prefix, id, parameter);
+
+        return this.redissonClient.getMap(key);
     }
 }

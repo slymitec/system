@@ -41,10 +41,6 @@ public class SignalDefinition extends ADefinition {
         return this.signalEntries.size();
     }
 
-    public boolean isEmpty() {
-        return this.signalEntries.isEmpty();
-    }
-
     public List<SignalEntryDefinition> pollAll() {
         List<SignalEntryDefinition> resultSignalEntries = new ArrayList<>(this.signalEntries);
 

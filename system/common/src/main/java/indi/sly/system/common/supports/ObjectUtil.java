@@ -1,12 +1,12 @@
 package indi.sly.system.common.supports;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import indi.sly.system.common.lang.*;
 import org.apache.fory.Fory;
 import org.apache.fory.ThreadSafeFory;
 import org.apache.fory.config.Language;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public abstract class ObjectUtil {
     private static final String TO_STRING_NULL_OBJECT = "null";
-    private static final ObjectMapper SERIALIZATION_JSON = new ObjectMapper();
+    private static final JsonMapper SERIALIZATION_JSON =  JsonMapper.builder().build();
     private static final ThreadSafeFory SERIALIZATION_BINARY = Fory.builder().withLanguage(Language.JAVA).withAsyncCompilation(true).requireClassRegistration(false).buildThreadSafeFory();
 
     public static boolean isNull(final Object value) {
@@ -190,7 +190,7 @@ public abstract class ObjectUtil {
     public static String transferToString(Object value) {
         try {
             return ObjectUtil.SERIALIZATION_JSON.writeValueAsString(value);
-        } catch (JsonProcessingException ignored) {
+        } catch (JacksonException _) {
             throw new StatusUnexpectedException();
         }
     }

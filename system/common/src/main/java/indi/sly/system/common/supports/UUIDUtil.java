@@ -22,6 +22,10 @@ public abstract class UUIDUtil {
         return new UUID(mostSigBits, leastSigBits);
     }
 
+    public static String toString(UUID uuid) {
+        return uuid.toString();
+    }
+
     public static UUID readFormBytes(byte[] value) {
         if (ObjectUtil.isAnyNull(value) || value.length != 16) {
             throw new ConditionParametersException();

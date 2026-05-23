@@ -30,7 +30,7 @@ public class CacheRepositoryObject extends AObject {
 
     @PostConstruct
     public void init() {
-        this.liveObjectService = redissonClient.getLiveObjectService();
+        this.liveObjectService = this.redissonClient.getLiveObjectService();
     }
 
     public <T extends ACacheEntity> boolean contain(Class<T> clazz, UUID id) {

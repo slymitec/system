@@ -25,9 +25,9 @@ public class CommunicationRepositoryObject extends AObject {
         }
 
         if (ValueUtil.isAnyNullOrEmpty(parameter)) {
-            return prefix + "_" + ObjectUtil.transferToString(id);
+            return prefix + "_" + UUIDUtil.toString(id);
         } else {
-            return prefix + "_" + ObjectUtil.transferToString(id) + "_" + parameter;
+            return prefix + "_" + UUIDUtil.toString(id) + "_" + parameter;
         }
     }
 

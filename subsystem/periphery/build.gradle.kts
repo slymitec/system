@@ -3,8 +3,8 @@ dependencies {
 
     implementation("jakarta.inject:jakarta.inject-api:2.0.1")
     implementation("org.apache.commons:commons-lang3")
-    implementation("com.fasterxml.jackson.core:jackson-core")
-    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("tools.jackson.core:jackson-core")
+    implementation("tools.jackson.core:jackson-databind")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-restclient")
     implementation("org.java-websocket:Java-WebSocket:1.6.0")

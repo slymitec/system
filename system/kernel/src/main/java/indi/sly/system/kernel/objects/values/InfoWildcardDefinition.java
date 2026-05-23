@@ -1,23 +1,19 @@
 package indi.sly.system.kernel.objects.values;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.ADefinition;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.UUID;
 
 @JsonSerialize(using = InfoWildcardDefinition.InfoWildcardDefinitionSerializer.class)
@@ -65,26 +61,22 @@ public class InfoWildcardDefinition extends ADefinition {
         this.fuzzy = StringUtil.isNameIllegal(value);
     }
 
-    public static class InfoWildcardDefinitionSerializer extends JsonSerializer<InfoWildcardDefinition> {
+    public static class InfoWildcardDefinitionSerializer extends ValueSerializer<InfoWildcardDefinition> {
         @Override
-        public void serialize(InfoWildcardDefinition value, JsonGenerator generator, SerializerProvider serializer) throws IOException {
+        public void serialize(InfoWildcardDefinition value, JsonGenerator generator, SerializationContext ctxt) throws JacksonException {
             if (value.type == String.class) {
                 generator.writeString(StringUtil.readFormBytes(value.value));
             } else if (value.type == UUID.class) {
-                generator.writeObject("<" + UUIDUtil.readFormBytes(value.value) + ">");
+                generator.writeString("<" + UUIDUtil.readFormBytes(value.value) + ">");
             }
         }
     }
 
-    public static class InfoWildcardDefinitionDeserializer extends JsonDeserializer<InfoWildcardDefinition> {
+    public static class InfoWildcardDefinitionDeserializer extends ValueDeserializer<InfoWildcardDefinition> {
         @Override
-        public InfoWildcardDefinition deserialize(JsonParser parser, DeserializationContext context) {
+        public InfoWildcardDefinition deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
             String value;
-            try {
-                value = parser.getText();
-            } catch (IOException ignored) {
-                throw new StatusUnreadableException();
-            }
+            value = parser.getString();
 
             InfoWildcardDefinition infoWildcard;
 

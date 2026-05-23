@@ -1,17 +1,17 @@
 package indi.sly.system.common.values;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.*;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -43,18 +43,18 @@ public class PathDefinition extends ADefinition {
         return CollectionUtil.unmodifiable(this.identifiers);
     }
 
-    public static class PathDefinitionSerializer extends JsonSerializer<PathDefinition> {
+    public static class PathDefinitionSerializer extends ValueSerializer<PathDefinition> {
         @Override
-        public void serialize(PathDefinition value, JsonGenerator generator, SerializerProvider serializer) throws IOException {
+        public void serialize(PathDefinition value, JsonGenerator generator, SerializationContext ctxt) throws JacksonException {
             String[] texts = new String[value.identifiers.size()];
 
             for (int i = 0; i < value.identifiers.size(); i++) {
                 IdentifierDefinition identification = value.identifiers.get(i);
 
                 if (identification.getType() == String.class) {
-                    texts[i] = ObjectUtil.transferToString(StringUtil.readFormBytes(identification.getValue()));
+                    texts[i] = StringUtil.readFormBytes(identification.getValue());
                 } else if (identification.getType() == UUID.class) {
-                    texts[i] = "<" + ObjectUtil.transferToString(UUIDUtil.readFormBytes(identification.getValue())) + ">";
+                    texts[i] = "<" + UUIDUtil.toString(UUIDUtil.readFormBytes(identification.getValue())) + ">";
                 }
             }
 
@@ -62,15 +62,11 @@ public class PathDefinition extends ADefinition {
         }
     }
 
-    public static class PathDefinitionDeserializer extends JsonDeserializer<PathDefinition> {
+    public static class PathDefinitionDeserializer extends ValueDeserializer<PathDefinition> {
         @Override
-        public PathDefinition deserialize(JsonParser parser, DeserializationContext context) {
+        public PathDefinition deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
             String value;
-            try {
-                value = parser.getText();
-            } catch (IOException ignored) {
-                throw new StatusUnreadableException();
-            }
+            value = parser.getString();
 
             String[] texts = value.split("\\\\");
 
@@ -78,21 +74,21 @@ public class PathDefinition extends ADefinition {
 
             for (String text : texts) {
                 IdentifierDefinition identification;
-                if (text.startsWith("<") && text.endsWith(">")) {
-                    UUID id = ObjectUtil.transferFromString(UUID.class, text.substring(1, text.length() - 1));
+                if (text.isEmpty()) {
+                    continue;
+                } else if (text.startsWith("<") && text.endsWith(">")) {
+                    UUID id = UUID.fromString(text.substring(1, text.length() - 1));
                     if (ValueUtil.isAnyNullOrEmpty(id)) {
                         throw new StatusUnreadableException();
                     }
 
                     identification = new IdentifierDefinition(id);
                 } else {
-                    String name = ObjectUtil.transferFromString(String.class, text);
-
-                    if (!StringUtil.isNameIllegal(name)) {
+                    if (StringUtil.isNameIllegal(text)) {
                         throw new StatusUnreadableException();
                     }
 
-                    identification = new IdentifierDefinition(name);
+                    identification = new IdentifierDefinition(text);
                 }
                 identifications.add(identification);
             }

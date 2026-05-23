@@ -1,50 +1,50 @@
 package indi.sly.system.test;
 
-import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.kernel.processes.values.SignalDefinition;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
+import org.redisson.codec.TypedJsonJackson3Codec;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import tools.jackson.databind.json.JsonMapper;
 
-import java.time.Duration;
-import java.time.LocalTime;
-import java.util.UUID;
+import java.util.List;
 
 @RestController
 public class RedisController {
     @Resource
-    private RedisTemplate<String, byte[]> redisTemplate;
+    private RedissonClient redissonClient;
 
-    @RequestMapping(value = {"/Redis.action"}, method = {RequestMethod.GET})
-    public Object Redis(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        UUID id = UUIDUtil.getFormLongs(7156, 7156);
+    @RequestMapping(value = {"/Redison.action"}, method = {RequestMethod.GET})
+    public Object Redison(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+//
+//        TypedJsonJackson3Codec codec = new TypedJsonJackson3Codec(SignalDefinition.class);
+//
+//        RBucket<PathDefinition> processCommunicationSignalBucket = redissonClient.getBucket("A", codec);
+//
+        PathDefinition path = new PathDefinition(List.of(new IdentifierDefinition(UUIDUtil.getFormLongs(1, 2)), new IdentifierDefinition("Hello")));
 
-        this.add(id, new byte[]{1, 2, 3, 4, 5, 6, 7, 8}, null);
-        return "success";
-    }
+        String s = ObjectUtil.transferToString(path);
 
-    private String convertKey(UUID id) {
-        return "Memory:CacheRepository:" + id.toString();
-    }
+        System.out.println(s);
 
-    public void add(UUID id, byte[] value, Duration duration) {
-        if (ValueUtil.isAnyNullOrEmpty(id, value)) {
-            throw new ConditionParametersException();
-        }
+        PathDefinition pathDefinition = JsonMapper.builder().build().readValue(s, PathDefinition.class);
 
-        if (ObjectUtil.isAnyNull(duration)) {
-            this.redisTemplate.opsForValue().set(this.convertKey(id), value);
-        } else {
-            this.redisTemplate.opsForValue().set(this.convertKey(id), value, duration);
-        }
+        return pathDefinition.get();
+
+
+//        processCommunicationSignalBucket.set(path);
+
+
+        //return "ok";
     }
 }

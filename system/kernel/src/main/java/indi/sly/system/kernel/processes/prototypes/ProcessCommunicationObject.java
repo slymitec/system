@@ -212,9 +212,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             RBucket<PortDefinition> portBucket;
             for (UUID processCommunicationPort : processCommunicationPorts) {
                 portBucket = communicationRepository.getBucket("Port", processCommunicationPort, null);
-                if (portBucket.isExists()) {
-                    portBucket.delete();
-                }
+                portBucket.delete();
             }
 
             processCommunicationPorts.clear();
@@ -245,9 +243,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             }
 
             RBucket<PortDefinition> portBucket = communicationRepository.getBucket("Port", portId, null);
-            if (portBucket.isExists()) {
-                portBucket.delete();
-            }
+            portBucket.delete();
 
             processCommunicationPorts.remove(portId);
         } finally {
@@ -483,9 +479,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             RBucket<SignalDefinition> processCommunicationSignalBucket = communicationRepository.getBucket("Process", this.base.getId(), "Communication_Signal");
 
-            if (processCommunicationSignalBucket.isExists()) {
-                processCommunicationSignalBucket.delete();
-            }
+            processCommunicationSignalBucket.delete();
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }

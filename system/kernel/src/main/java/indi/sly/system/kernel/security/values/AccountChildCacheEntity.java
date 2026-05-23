@@ -1,14 +1,14 @@
 package indi.sly.system.kernel.security.values;
 
-import com.redis.om.spring.annotations.Document;
 import indi.sly.system.kernel.core.values.ACacheEntity;
-import org.springframework.data.annotation.Reference;
+import org.redisson.api.annotation.REntity;
+import org.redisson.api.annotation.RObjectField;
 
 import java.util.Objects;
 
-@Document("AccountChildObject")
+@REntity
 public class AccountChildCacheEntity extends ACacheEntity {
-    @Reference
+    @RObjectField
     private AccountCacheEntity account;
 
     public AccountCacheEntity getAccount() {

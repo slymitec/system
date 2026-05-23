@@ -1,34 +1,21 @@
 package indi.sly.system.kernel.core.values;
 
-import com.github.f4b6a3.ulid.Ulid;
-import jakarta.persistence.Id;
-import jakarta.persistence.Version;
+import org.redisson.api.annotation.RId;
 
 import java.util.Objects;
 import java.util.UUID;
 
 public abstract class ACacheEntity extends AEntity {
-    @Id
-    private Ulid id;
-    private UUID cacheRepositoryId;
+    @RId
+    private UUID id;
     private long duration;
-    @Version
-    private long version;
 
-    public Ulid getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Ulid id) {
+    public void setId(UUID id) {
         this.id = id;
-    }
-
-    public UUID getCacheRepositoryId() {
-        return cacheRepositoryId;
-    }
-
-    public void setCacheRepositoryId(UUID cacheRepositoryId) {
-        this.cacheRepositoryId = cacheRepositoryId;
     }
 
     public long getDuration() {
@@ -39,24 +26,16 @@ public abstract class ACacheEntity extends AEntity {
         this.duration = duration;
     }
 
-    public long getVersion() {
-        return version;
-    }
-
-    public void setVersion(long version) {
-        this.version = version;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        ACacheEntity that = (ACacheEntity) o;
-        return duration == that.duration && Objects.equals(id, that.id) && Objects.equals(cacheRepositoryId, that.cacheRepositoryId);
+        ACacheEntity cache = (ACacheEntity) o;
+        return duration == cache.duration && Objects.equals(id, cache.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cacheRepositoryId, duration);
+        return Objects.hash(id, duration);
     }
 }

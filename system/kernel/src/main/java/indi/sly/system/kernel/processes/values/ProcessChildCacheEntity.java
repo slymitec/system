@@ -1,14 +1,14 @@
 package indi.sly.system.kernel.processes.values;
 
-import com.redis.om.spring.annotations.Document;
 import indi.sly.system.kernel.core.values.ACacheEntity;
-import org.springframework.data.annotation.Reference;
+import org.redisson.api.annotation.REntity;
+import org.redisson.api.annotation.RObjectField;
 
 import java.util.Objects;
 
-@Document("ProcessChildObject")
+@REntity
 public class ProcessChildCacheEntity extends ACacheEntity {
-    @Reference
+    @RObjectField
     private ProcessCacheEntity process;
 
     public ProcessCacheEntity getProcess() {

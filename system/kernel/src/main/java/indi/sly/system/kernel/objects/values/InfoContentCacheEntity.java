@@ -1,14 +1,14 @@
 package indi.sly.system.kernel.objects.values;
 
-import com.redis.om.spring.annotations.Document;
 import indi.sly.system.kernel.core.values.ACacheEntity;
-import org.springframework.data.annotation.Reference;
+import org.redisson.api.annotation.REntity;
+import org.redisson.api.annotation.RObjectField;
 
 import java.util.Objects;
 
-@Document("InfoContentObject")
+@REntity
 public class InfoContentCacheEntity extends ACacheEntity {
-    @Reference
+    @RObjectField
     private InfoCacheEntity info;
 
     public InfoCacheEntity getInfo() {

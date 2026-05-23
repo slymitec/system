@@ -1,12 +1,12 @@
 package indi.sly.system.kernel.security.values;
 
-import com.redis.om.spring.annotations.Document;
 import indi.sly.system.kernel.core.values.ACacheEntity;
+import org.redisson.api.annotation.REntity;
 
 import java.util.Objects;
 import java.util.UUID;
 
-@Document("GroupObject")
+@REntity
 public class GroupCacheEntity extends ACacheEntity {
     private UUID groupId;
 

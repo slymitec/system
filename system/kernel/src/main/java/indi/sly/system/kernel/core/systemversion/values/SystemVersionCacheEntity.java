@@ -1,11 +1,11 @@
 package indi.sly.system.kernel.core.systemversion.values;
 
-import com.redis.om.spring.annotations.Document;
 import indi.sly.system.kernel.core.values.ACacheEntity;
+import org.redisson.api.annotation.REntity;
 
 import java.util.Objects;
 
-@Document("SystemVersionObject")
+@REntity
 public class SystemVersionCacheEntity extends ACacheEntity {
     private String systemVersion;
 

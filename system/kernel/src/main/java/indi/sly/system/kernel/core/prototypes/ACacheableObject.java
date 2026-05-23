@@ -1,18 +1,13 @@
 package indi.sly.system.kernel.core.prototypes;
 
-import com.github.f4b6a3.ulid.Ulid;
-import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
 import indi.sly.system.kernel.core.values.ACacheEntity;
 import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.ACacheRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
 
-import java.time.Duration;
 import java.util.UUID;
 
 public class ACacheableObject<T extends ACacheEntity> extends AObject {
@@ -31,7 +26,7 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
             throw new StatusNotSupportedException();
         }
 
-        return this.cache.getId().toUuid();
+        return this.cache.getId();
     }
 
     public final UUID cache() {
@@ -43,11 +38,11 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
         }
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-        ACacheRepositoryObject<T> objectRepository = memoryManager.getCacheRepository(this.cache.getCacheRepositoryId());
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        objectRepository.add(this.cache);
+        cacheRepository.add(this.cache);
 
-        return this.cache.getId().toUuid();
+        return this.cache.getId();
     }
 
     public final void uncache() {
@@ -59,11 +54,11 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
         }
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-        ACacheRepositoryObject<T> objectRepository = memoryManager.getCacheRepository(this.cache.getCacheRepositoryId());
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        UUID id = this.cache.getId().toUuid();
+        UUID id = this.cache.getId();
 
-        objectRepository.delete(id);
+        cacheRepository.delete(cache.getClass(), id);
 
         this.cache.setId(null);
     }

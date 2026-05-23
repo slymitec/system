@@ -65,7 +65,6 @@ public class AccountAuthorizationObject extends ACacheableObject<AccountAuthoriz
         }
 
         this.cache.getDate().put(DateTimeType.ACCESS, nowDateTime);
-        this.factory.updateAccountAuthorization(this.cache);
 
         Set<GroupTokenObject> groupTokens = new HashSet<>();
         Set<GroupObject> groups = account.getGroups();

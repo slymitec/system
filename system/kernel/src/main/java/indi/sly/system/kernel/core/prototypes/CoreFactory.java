@@ -3,11 +3,11 @@ package indi.sly.system.kernel.core.prototypes;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.systemversion.prototypes.SystemVersionCacheRepositoryObject;
 import indi.sly.system.kernel.core.systemversion.prototypes.SystemVersionObject;
 import indi.sly.system.kernel.core.systemversion.values.SystemVersionCacheEntity;
 import indi.sly.system.kernel.core.values.NoneCacheEntity;
 import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -25,19 +25,8 @@ import java.util.jar.JarFile;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CoreFactory extends AFactory {
-    public CoreFactory() {
-    }
-
-    private UUID systemVersionCacheRepositoryId;
-    private UUID noneCacheRepositoryId;
-
     @Override
     public void init() {
-        this.systemVersionCacheRepositoryId = UUID.randomUUID();
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.systemVersionCacheRepositoryId, this.coreManager.create(SystemVersionCacheRepositoryObject.class));
-
-        this.noneCacheRepositoryId = UUID.randomUUID();
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.systemVersionCacheRepositoryId, this.coreManager.create(NoneCacheRepositoryObject.class));
     }
 
     private SystemVersionObject createSystemVersion(SystemVersionCacheEntity cache) {
@@ -83,7 +72,6 @@ public class CoreFactory extends AFactory {
 
         cache.setSystemVersion(version);
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.systemVersionCacheRepositoryId);
 
         return this.createSystemVersion(cache);
     }
@@ -91,8 +79,8 @@ public class CoreFactory extends AFactory {
     public SystemVersionObject rebuildSystemVersion(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        SystemVersionCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.systemVersionCacheRepositoryId);
-        SystemVersionCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        SystemVersionCacheEntity cache = cacheRepository.get(SystemVersionCacheEntity.class, handle);
 
         return this.rebuildSystemVersion(cache);
     }
@@ -100,8 +88,8 @@ public class CoreFactory extends AFactory {
     public SystemVersionObject rebuildSystemVersion(SystemVersionCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        SystemVersionCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.systemVersionCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(SystemVersionCacheEntity.class, cache);
 
         return this.createSystemVersion(cache);
     }
@@ -118,7 +106,6 @@ public class CoreFactory extends AFactory {
         NoneCacheEntity cache = new NoneCacheEntity();
 
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.noneCacheRepositoryId);
 
         return this.createDateTime(cache);
     }
@@ -126,8 +113,8 @@ public class CoreFactory extends AFactory {
     public DateTimeObject rebuildDateTime(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        NoneCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.noneCacheRepositoryId);
-        NoneCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        NoneCacheEntity cache = cacheRepository.get(NoneCacheEntity.class,handle);
 
         return this.rebuildDateTime(cache);
     }
@@ -135,8 +122,8 @@ public class CoreFactory extends AFactory {
     public DateTimeObject rebuildDateTime(NoneCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        NoneCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.noneCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(NoneCacheEntity.class,cache);
 
         return this.createDateTime(cache);
     }

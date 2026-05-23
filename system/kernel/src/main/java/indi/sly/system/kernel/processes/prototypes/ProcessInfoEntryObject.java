@@ -299,6 +299,5 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         }
 
         this.cache.setIndex(null);
-        this.factory.updateProcessInfoEntry(this.cache);
     }
 }

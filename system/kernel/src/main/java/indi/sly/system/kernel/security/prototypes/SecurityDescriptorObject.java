@@ -36,6 +36,10 @@ import java.util.*;
 public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDescriptorCacheEntity, InfoObject> {
     protected InfoProcessorMediator processorMediator;
 
+    public void setProcessorMediator(InfoProcessorMediator processorMediator) {
+        this.processorMediator = processorMediator;
+    }
+
     private InfoEntity getSelf() {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfo().getInfoId())) {
             throw new ConditionContextException();

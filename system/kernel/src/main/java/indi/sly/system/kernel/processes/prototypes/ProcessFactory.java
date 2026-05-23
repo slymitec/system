@@ -8,6 +8,7 @@ import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.prototypes.processors.*;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessLifeProcessorMediator;
@@ -38,9 +39,6 @@ public class ProcessFactory extends AFactory {
     protected final List<IProcessResolver> processResolvers;
     protected final List<IProcessCreateResolver> processCreatorResolvers;
     protected final List<IProcessEndResolver> processEndResolvers;
-    private UUID processCacheRepositoryId;
-    private UUID processChildCacheRepositoryId;
-    private UUID processInfoEntryCacheRepositoryId;
 
     @Override
     public void init() {
@@ -63,13 +61,6 @@ public class ProcessFactory extends AFactory {
         Collections.sort(this.processResolvers);
         Collections.sort(this.processCreatorResolvers);
         Collections.sort(this.processEndResolvers);
-
-        this.processCacheRepositoryId = UUID.randomUUID();
-        this.processChildCacheRepositoryId = UUID.randomUUID();
-        this.processInfoEntryCacheRepositoryId = UUID.randomUUID();
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.processCacheRepositoryId, this.coreManager.create(ProcessCacheRepositoryObject.class));
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.processChildCacheRepositoryId, this.coreManager.create(ProcessChildRepositoryObject.class));
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.processInfoEntryCacheRepositoryId, this.coreManager.create(ProcessInfoEntryRepositoryObject.class));
     }
 
     public ProcessObject createProcess(ProcessProcessorMediator processorMediator, ProcessCacheEntity cache) {
@@ -110,7 +101,6 @@ public class ProcessFactory extends AFactory {
         ProcessCacheEntity cache = new ProcessCacheEntity();
         cache.setProcessId(process.getId());
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.processCacheRepositoryId);
 
         return this.createProcess(processorMediator, cache);
     }
@@ -118,8 +108,8 @@ public class ProcessFactory extends AFactory {
     public ProcessObject rebuildProcess(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processCacheRepositoryId);
-        ProcessCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        ProcessCacheEntity cache = cacheRepository.get(ProcessCacheEntity.class, handle);
 
         return this.rebuildProcess(cache);
     }
@@ -127,8 +117,8 @@ public class ProcessFactory extends AFactory {
     public ProcessObject rebuildProcess(ProcessCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(ProcessCacheEntity.class, cache);
 
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
         ProcessEntity process = processRepository.get(cache.getProcessId());
@@ -192,7 +182,6 @@ public class ProcessFactory extends AFactory {
 
         cache.setProcess(process.getCache());
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.processChildCacheRepositoryId);
 
         return this.createProcessStatus(processorMediator, process, cache);
     }
@@ -200,8 +189,8 @@ public class ProcessFactory extends AFactory {
     public ProcessStatusObject rebuildProcessStatus(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        ProcessChildCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        ProcessChildCacheEntity cache = cacheRepository.get(ProcessChildCacheEntity.class, handle);
 
         return this.rebuildProcessStatus(cache);
     }
@@ -209,8 +198,8 @@ public class ProcessFactory extends AFactory {
     public ProcessStatusObject rebuildProcessStatus(ProcessChildCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(ProcessChildCacheEntity.class, cache);
 
         ProcessObject process = this.rebuildProcess(cache.getProcess());
 
@@ -222,6 +211,7 @@ public class ProcessFactory extends AFactory {
 
         processCommunication.setBase(process);
         processCommunication.setCache(cache);
+        processCommunication.factory = this;
         processCommunication.processorMediator = processorMediator;
 
         return processCommunication;
@@ -232,7 +222,6 @@ public class ProcessFactory extends AFactory {
 
         cache.setProcess(process.getCache());
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.processChildCacheRepositoryId);
 
         return this.createProcessCommunication(processorMediator, process, cache);
     }
@@ -240,8 +229,8 @@ public class ProcessFactory extends AFactory {
     public ProcessCommunicationObject rebuildProcessCommunication(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        ProcessChildCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        ProcessChildCacheEntity cache = cacheRepository.get(ProcessChildCacheEntity.class, handle);
 
         return this.rebuildProcessCommunication(cache);
     }
@@ -249,8 +238,8 @@ public class ProcessFactory extends AFactory {
     public ProcessCommunicationObject rebuildProcessCommunication(ProcessChildCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(ProcessChildCacheEntity.class, cache);
 
         ProcessObject process = this.rebuildProcess(cache.getProcess());
 
@@ -262,6 +251,7 @@ public class ProcessFactory extends AFactory {
 
         processInfoTable.setBase(process);
         processInfoTable.setCache(cache);
+        processInfoTable.factory = this;
         processInfoTable.processorMediator = processorMediator;
 
         return processInfoTable;
@@ -272,7 +262,6 @@ public class ProcessFactory extends AFactory {
 
         cache.setProcess(process.getCache());
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.processChildCacheRepositoryId);
 
         return this.createProcessInfoTable(processorMediator, process, cache);
     }
@@ -280,8 +269,8 @@ public class ProcessFactory extends AFactory {
     public ProcessInfoTableObject rebuildProcessInfoTable(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        ProcessChildCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        ProcessChildCacheEntity cache = cacheRepository.get(ProcessChildCacheEntity.class, handle);
 
         return this.rebuildProcessInfoTable(cache);
     }
@@ -289,8 +278,8 @@ public class ProcessFactory extends AFactory {
     public ProcessInfoTableObject rebuildProcessInfoTable(ProcessChildCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(ProcessChildCacheEntity.class, cache);
 
         ProcessObject process = this.rebuildProcess(cache.getProcess());
 
@@ -302,6 +291,7 @@ public class ProcessFactory extends AFactory {
 
         processInfoEntry.setBase(processInfoTable);
         processInfoEntry.setCache(cache);
+        processInfoEntry.factory = this;
         processInfoEntry.processorMediator = processorMediator;
 
         return processInfoEntry;
@@ -313,7 +303,6 @@ public class ProcessFactory extends AFactory {
         cache.setProcessInfoTable(processInfoTable.getCache());
         cache.setIndex(index);
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.processChildCacheRepositoryId);
 
         return this.createProcessInfoEntry(processorMediator, processInfoTable, cache);
     }
@@ -321,8 +310,8 @@ public class ProcessFactory extends AFactory {
     public ProcessInfoEntryObject rebuildProcessInfoEntry(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessInfoEntryRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processInfoEntryCacheRepositoryId);
-        ProcessInfoEntryCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        ProcessInfoEntryCacheEntity cache = cacheRepository.get(ProcessInfoEntryCacheEntity.class, handle);
 
         return this.rebuildProcessInfoEntry(cache);
     }
@@ -330,19 +319,12 @@ public class ProcessFactory extends AFactory {
     public ProcessInfoEntryObject rebuildProcessInfoEntry(ProcessInfoEntryCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessInfoEntryRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processInfoEntryCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(ProcessInfoEntryCacheEntity.class, cache);
 
         ProcessInfoTableObject processInfoTable = this.rebuildProcessInfoTable(cache.getProcessInfoTable());
 
         return processInfoTable.getByIndex(cache.getIndex());
-    }
-
-    public void updateProcessInfoEntry(ProcessInfoEntryCacheEntity cache) {
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-
-        ProcessInfoEntryRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processInfoEntryCacheRepositoryId);
-        cacheRepository.update(cache);
     }
 
     private ProcessContextObject createProcessContext(ProcessProcessorMediator processorMediator, ProcessObject process, ProcessChildCacheEntity cache) {
@@ -350,6 +332,7 @@ public class ProcessFactory extends AFactory {
 
         processContext.setBase(process);
         processContext.setCache(cache);
+        processContext.factory = this;
         processContext.processorMediator = processorMediator;
 
         return processContext;
@@ -360,7 +343,6 @@ public class ProcessFactory extends AFactory {
 
         cache.setProcess(process.getCache());
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.processChildCacheRepositoryId);
 
         return this.createProcessContext(processorMediator, process, cache);
     }
@@ -368,8 +350,8 @@ public class ProcessFactory extends AFactory {
     public ProcessContextObject rebuildProcessContext(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        ProcessChildCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        ProcessChildCacheEntity cache = cacheRepository.get(ProcessChildCacheEntity.class, handle);
 
         return this.rebuildProcessContext(cache);
     }
@@ -377,8 +359,8 @@ public class ProcessFactory extends AFactory {
     public ProcessContextObject rebuildProcessContext(ProcessChildCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(ProcessChildCacheEntity.class, cache);
 
         ProcessObject process = this.rebuildProcess(cache.getProcess());
 
@@ -401,7 +383,6 @@ public class ProcessFactory extends AFactory {
 
         cache.setProcess(process.getCache());
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.processChildCacheRepositoryId);
 
         return this.createProcessSession(processorMediator, process, cache);
     }
@@ -409,8 +390,8 @@ public class ProcessFactory extends AFactory {
     public ProcessSessionObject rebuildProcessSession(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        ProcessChildCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        ProcessChildCacheEntity cache = cacheRepository.get(ProcessChildCacheEntity.class, handle);
 
         return this.rebuildProcessSession(cache);
     }
@@ -418,8 +399,8 @@ public class ProcessFactory extends AFactory {
     public ProcessSessionObject rebuildProcessSession(ProcessChildCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(ProcessChildCacheEntity.class, cache);
 
         ProcessObject process = this.rebuildProcess(cache.getProcess());
 
@@ -442,7 +423,6 @@ public class ProcessFactory extends AFactory {
 
         cache.setProcess(process.getCache());
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.processChildCacheRepositoryId);
 
         return this.createProcessStatistics(processorMediator, process, cache);
     }
@@ -450,8 +430,8 @@ public class ProcessFactory extends AFactory {
     public ProcessStatisticsObject rebuildProcessStatistics(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        ProcessChildCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        ProcessChildCacheEntity cache = cacheRepository.get(ProcessChildCacheEntity.class, handle);
 
         return this.rebuildProcessStatistics(cache);
     }
@@ -459,8 +439,8 @@ public class ProcessFactory extends AFactory {
     public ProcessStatisticsObject rebuildProcessStatistics(ProcessChildCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(ProcessChildCacheEntity.class, cache);
 
         ProcessObject process = this.rebuildProcess(cache.getProcess());
 
@@ -483,7 +463,6 @@ public class ProcessFactory extends AFactory {
 
         cache.setProcess(process.getCache());
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.processChildCacheRepositoryId);
 
         return this.createProcessToken(processorMediator, process, cache);
     }
@@ -491,8 +470,8 @@ public class ProcessFactory extends AFactory {
     public ProcessTokenObject rebuildProcessToken(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        ProcessChildCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        ProcessChildCacheEntity cache = cacheRepository.get(ProcessChildCacheEntity.class, handle);
 
         return this.rebuildProcessToken(cache);
     }
@@ -500,8 +479,8 @@ public class ProcessFactory extends AFactory {
     public ProcessTokenObject rebuildProcessToken(ProcessChildCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        ProcessChildRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.processChildCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(ProcessChildCacheEntity.class, cache);
 
         ProcessObject process = this.rebuildProcess(cache.getProcess());
 

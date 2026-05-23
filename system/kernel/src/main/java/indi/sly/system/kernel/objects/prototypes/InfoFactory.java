@@ -13,6 +13,7 @@ import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.core.prototypes.ObjectCollectionObject;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
+import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.prototypes.processors.*;
@@ -21,7 +22,6 @@ import indi.sly.system.kernel.objects.values.DumpCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoContentCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.security.prototypes.SecurityDescriptorCacheRepositoryObject;
 import indi.sly.system.kernel.security.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.SecurityDescriptorCacheEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -42,10 +42,6 @@ public class InfoFactory extends AFactory {
     }
 
     private final List<IInfoResolver> infoResolvers;
-    private UUID infoCacheRepositoryId;
-    private UUID dumpCacheRepositoryId;
-    private UUID infoContentCacheRepositoryId;
-    private UUID securityDescriptorCacheRepositoryId;
 
     @Override
     public void init() {
@@ -63,16 +59,6 @@ public class InfoFactory extends AFactory {
         this.infoResolvers.add(this.coreManager.create(InfoSelfResolver.class));
         this.infoResolvers.add(this.coreManager.create(InfoTypeInitializerResolver.class));
         Collections.sort(this.infoResolvers);
-
-        this.infoCacheRepositoryId = UUIDUtil.createRandom();
-        this.dumpCacheRepositoryId = UUIDUtil.createRandom();
-        this.infoContentCacheRepositoryId = UUIDUtil.createRandom();
-        this.securityDescriptorCacheRepositoryId = UUIDUtil.createRandom();
-
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.infoCacheRepositoryId, this.coreManager.create(InfoCacheRepositoryObject.class));
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.dumpCacheRepositoryId, this.coreManager.create(DumpCacheRepositoryObject.class));
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.infoContentCacheRepositoryId, this.coreManager.create(InfoContentCacheRepositoryObject.class));
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.securityDescriptorCacheRepositoryId, this.coreManager.create(SecurityDescriptorCacheRepositoryObject.class));
     }
 
     public InfoObject getRootInfo() {
@@ -106,7 +92,7 @@ public class InfoFactory extends AFactory {
     }
 
     public InfoObject buildInfo(InfoEntity info, InfoCacheEntity parentInfoCache) {
-        if (ObjectUtil.isAnyNull(info, parentInfoCache)) {
+        if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
         }
 
@@ -124,7 +110,6 @@ public class InfoFactory extends AFactory {
         cache.setInfoId(info.getId());
         cache.setPoolId(poolId);
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.infoCacheRepositoryId);
 
         if (ObjectUtil.allNotNull(parentInfoCache)) {
             IdentifierDefinition identifier;
@@ -134,6 +119,8 @@ public class InfoFactory extends AFactory {
                 identifier = new IdentifierDefinition(info.getName());
             }
             cache.setPath(new PathDefinition(parentInfoCache.getPath(), identifier));
+        } else {
+            cache.setPath(new PathDefinition(List.of()));
         }
 
         return this.createInfo(processorMediator, cache);
@@ -142,8 +129,8 @@ public class InfoFactory extends AFactory {
     public InfoObject rebuildInfo(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        InfoCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.infoCacheRepositoryId);
-        InfoCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        InfoCacheEntity cache = cacheRepository.get(InfoCacheEntity.class, handle);
 
         return this.rebuildInfo(cache);
     }
@@ -151,8 +138,8 @@ public class InfoFactory extends AFactory {
     public InfoObject rebuildInfo(InfoCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        InfoCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.infoCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(InfoCacheEntity.class, cache);
 
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(cache.getPoolId());
         InfoEntity info = infoRepository.get(cache.getInfoId());
@@ -170,7 +157,7 @@ public class InfoFactory extends AFactory {
 
         securityDescriptor.setBase(info);
         securityDescriptor.setCache(cache);
-        info.processorMediator = processorMediator;
+        securityDescriptor.setProcessorMediator(processorMediator);
 
         return securityDescriptor;
     }
@@ -178,7 +165,6 @@ public class InfoFactory extends AFactory {
     public SecurityDescriptorObject buildSecurityDescriptor(InfoProcessorMediator processorMediator, InfoObject info, SecurityDescriptorCacheEntity cache) {
         cache.setInfo(info.getCache());
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.securityDescriptorCacheRepositoryId);
 
         return this.createSecurityDescriptor(processorMediator, info, cache);
     }
@@ -186,8 +172,8 @@ public class InfoFactory extends AFactory {
     public SecurityDescriptorObject rebuildSecurityDescriptor(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        SecurityDescriptorCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.securityDescriptorCacheRepositoryId);
-        SecurityDescriptorCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        SecurityDescriptorCacheEntity cache = cacheRepository.get(SecurityDescriptorCacheEntity.class, handle);
 
         return this.rebuildSecurityDescriptor(cache);
     }
@@ -195,8 +181,8 @@ public class InfoFactory extends AFactory {
     public SecurityDescriptorObject rebuildSecurityDescriptor(SecurityDescriptorCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        SecurityDescriptorCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.securityDescriptorCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(SecurityDescriptorCacheEntity.class, cache);
 
         InfoObject info = this.rebuildInfo(cache.getInfo());
 
@@ -218,7 +204,6 @@ public class InfoFactory extends AFactory {
 
         cache.setInfo(info.getCache());
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.infoContentCacheRepositoryId);
 
         return this.createInfoContent(processorMediator, info, cache, infoContentType);
     }
@@ -226,8 +211,8 @@ public class InfoFactory extends AFactory {
     public AInfoContentObject rebuildInfoContent(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        InfoContentCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.infoContentCacheRepositoryId);
-        InfoContentCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        InfoContentCacheEntity cache = cacheRepository.get(InfoContentCacheEntity.class, handle);
 
         return this.rebuildInfoContent(cache);
     }
@@ -235,8 +220,8 @@ public class InfoFactory extends AFactory {
     public AInfoContentObject rebuildInfoContent(InfoContentCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        InfoContentCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.infoContentCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(InfoContentCacheEntity.class, cache);
 
         InfoObject info = this.rebuildInfo(cache.getInfo());
 
@@ -257,7 +242,6 @@ public class InfoFactory extends AFactory {
         }
 
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.dumpCacheRepositoryId);
 
         return this.createDump(cache);
     }
@@ -265,8 +249,8 @@ public class InfoFactory extends AFactory {
     public DumpObject rebuildDump(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        DumpCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.dumpCacheRepositoryId);
-        DumpCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        DumpCacheEntity cache = cacheRepository.get(DumpCacheEntity.class, handle);
 
         return this.rebuildDump(cache);
     }
@@ -274,8 +258,8 @@ public class InfoFactory extends AFactory {
     public DumpObject rebuildDump(DumpCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        DumpCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.dumpCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(DumpCacheEntity.class, cache);
 
         return this.createDump(cache);
     }

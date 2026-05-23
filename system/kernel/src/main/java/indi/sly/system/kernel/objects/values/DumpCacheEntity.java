@@ -1,14 +1,13 @@
 package indi.sly.system.kernel.objects.values;
 
-import com.redis.om.spring.annotations.Document;
-import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.values.ACacheEntity;
 import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryDefinition;
+import org.redisson.api.annotation.REntity;
 
 import java.util.*;
 
-@Document("DumpObject")
+@REntity
 public class DumpCacheEntity extends ACacheEntity {
     public DumpCacheEntity() {
         this.date = new HashMap<>();

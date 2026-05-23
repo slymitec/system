@@ -95,26 +95,6 @@ public class BootObjectsResolver extends ABootResolver {
                     }
                 }
 
-                childFolderNames = new String[]{"Ports", "Signals"};
-                childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};
-
-                for (int i = 0; i < childFolderNames.length; i++) {
-                    infoSummaries = rootInfo.queryChild(new InfoWildcardDefinition(childFolderNames[i]));
-
-                    if (infoSummaries.isEmpty()) {
-                        InfoObject childInfo = rootInfo.createChild(childFolderTypes[i], new IdentifierDefinition(childFolderNames[i]));
-
-                        SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
-                        Set<AccessControlDefinition> permissions = new HashSet<>();
-                        AccessControlDefinition permission = new AccessControlDefinition();
-                        permission.setUserId(new UserIdDefinition(kernelConfiguration.SECURITY_GROUP_USERS_ID, UserType.GROUP));
-                        permission.setScope(AccessControlScopeType.ALL);
-                        permission.setValue(PermissionType.DELETECHILD_ALLOW);
-                        permissions.add(permission);
-                        auditSecurityDescriptor.setPermissions(permissions);
-                    }
-                }
-
                 InfoObject parentInfo = rootInfo.getChild(new IdentifierDefinition("Sessions"));
                 InfoWildcardDefinition wildcard = new InfoWildcardDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME);
                 infoSummaries = parentInfo.queryChild(wildcard);

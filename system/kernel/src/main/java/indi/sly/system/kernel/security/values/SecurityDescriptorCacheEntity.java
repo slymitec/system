@@ -1,20 +1,15 @@
 package indi.sly.system.kernel.security.values;
 
-import com.redis.om.spring.annotations.Document;
-import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.values.ACacheEntity;
 import indi.sly.system.kernel.objects.values.InfoCacheEntity;
-import org.springframework.data.annotation.Reference;
+import org.redisson.api.annotation.REntity;
+import org.redisson.api.annotation.RObjectField;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
 
-@Document("SecurityDescriptorObject")
+@REntity
 public class SecurityDescriptorCacheEntity extends ACacheEntity {
-    @Reference
+    @RObjectField
     private InfoCacheEntity info;
     private boolean permission;
     private boolean audit;

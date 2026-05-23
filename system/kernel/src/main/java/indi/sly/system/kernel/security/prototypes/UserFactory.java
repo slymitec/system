@@ -10,6 +10,7 @@ import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;
+import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -25,28 +26,8 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserFactory extends AFactory {
-    private UUID accountCacheRepositoryId;
-    private UUID groupCacheRepositoryId;
-    private UUID accountChildCacheRepositoryId;
-    private UUID groupChildCacheRepositoryId;
-    private UUID accountAuthorizationCacheRepositoryId;
-
     @Override
     public void init() {
-        this.accountCacheRepositoryId = UUIDUtil.createRandom();
-        this.groupCacheRepositoryId = UUIDUtil.createRandom();
-
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.accountCacheRepositoryId, this.coreManager.create(AccountCacheRepositoryObject.class));
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.groupCacheRepositoryId, this.coreManager.create(GroupCacheRepositoryObject.class));
-
-        this.accountChildCacheRepositoryId = UUIDUtil.createRandom();
-        this.groupChildCacheRepositoryId = UUIDUtil.createRandom();
-
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.accountChildCacheRepositoryId, this.coreManager.create(AccountChildCacheRepositoryObject.class));
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.groupChildCacheRepositoryId, this.coreManager.create(GroupChildCacheRepositoryObject.class));
-
-        this.accountAuthorizationCacheRepositoryId = UUIDUtil.createRandom();
-        this.coreManager.getObjectCollection().addById(SpaceType.KERNEL, this.groupChildCacheRepositoryId, this.coreManager.create(AccountAuthorizationCacheRepositoryObject.class));
     }
 
     private AccountObject createAccount(AccountCacheEntity cache) {
@@ -81,7 +62,6 @@ public class UserFactory extends AFactory {
 
         cache.setAccountId(accountId);
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.accountCacheRepositoryId);
 
         return this.createAccount(cache);
     }
@@ -89,8 +69,8 @@ public class UserFactory extends AFactory {
     public AccountObject rebuildAccount(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        AccountCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.accountCacheRepositoryId);
-        AccountCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        AccountCacheEntity cache = cacheRepository.get(AccountCacheEntity.class, handle);
 
         return this.createAccount(cache);
     }
@@ -98,8 +78,8 @@ public class UserFactory extends AFactory {
     public AccountObject rebuildAccount(AccountCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        AccountCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.accountCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(AccountCacheEntity.class, cache);
 
         return this.createAccount(cache);
     }
@@ -136,7 +116,6 @@ public class UserFactory extends AFactory {
 
         cache.setGroupId(groupId);
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.groupCacheRepositoryId);
 
         return this.createGroup(cache);
     }
@@ -144,8 +123,8 @@ public class UserFactory extends AFactory {
     public GroupObject rebuildGroup(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        GroupCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.groupCacheRepositoryId);
-        GroupCacheEntity cache = cacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        GroupCacheEntity cache = cacheRepository.get(GroupCacheEntity.class, handle);
 
         return this.createGroup(cache);
     }
@@ -153,8 +132,8 @@ public class UserFactory extends AFactory {
     public GroupObject rebuildGroup(GroupCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        GroupCacheRepositoryObject cacheRepository = memoryManager.getCacheRepository(this.groupCacheRepositoryId);
-        cacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(GroupCacheEntity.class, cache);
 
         return this.createGroup(cache);
     }
@@ -196,7 +175,6 @@ public class UserFactory extends AFactory {
 
         cache.setAccount(account.getCache());
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.accountChildCacheRepositoryId);
 
         return this.createAccountToken(account, cache);
     }
@@ -204,8 +182,8 @@ public class UserFactory extends AFactory {
     public AccountTokenObject rebuildAccountToken(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        AccountChildCacheRepositoryObject accountTokenCacheRepository = memoryManager.getCacheRepository(this.accountChildCacheRepositoryId);
-        AccountChildCacheEntity cache = accountTokenCacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        AccountChildCacheEntity cache = cacheRepository.get(AccountChildCacheEntity.class, handle);
 
         return this.rebuildAccountToken(cache);
     }
@@ -213,8 +191,8 @@ public class UserFactory extends AFactory {
     public AccountTokenObject rebuildAccountToken(AccountChildCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        AccountChildCacheRepositoryObject accountTokenCacheRepository = memoryManager.getCacheRepository(this.accountChildCacheRepositoryId);
-        accountTokenCacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(AccountChildCacheEntity.class, cache);
 
         AccountObject account = this.rebuildAccount(cache.getAccount());
 
@@ -236,7 +214,6 @@ public class UserFactory extends AFactory {
 
         cache.setAccount(account.getCache());
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.accountCacheRepositoryId);
 
         return this.createAccountSessions(account, cache);
     }
@@ -244,8 +221,8 @@ public class UserFactory extends AFactory {
     public AccountSessionsObject rebuildAccountSessions(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        AccountChildCacheRepositoryObject accountSessionsCacheRepository = memoryManager.getCacheRepository(this.accountCacheRepositoryId);
-        AccountChildCacheEntity cache = accountSessionsCacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        AccountChildCacheEntity cache = cacheRepository.get(AccountChildCacheEntity.class, handle);
 
         return this.rebuildAccountSessions(cache);
     }
@@ -253,8 +230,8 @@ public class UserFactory extends AFactory {
     public AccountSessionsObject rebuildAccountSessions(AccountChildCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        AccountChildCacheRepositoryObject accountSessionsCacheRepository = memoryManager.getCacheRepository(this.accountCacheRepositoryId);
-        accountSessionsCacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(AccountChildCacheEntity.class, cache);
 
         AccountObject account = this.rebuildAccount(cache.getAccount());
 
@@ -275,7 +252,6 @@ public class UserFactory extends AFactory {
         GroupChildCacheEntity cache = new GroupChildCacheEntity();
 
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.groupChildCacheRepositoryId);
 
         return this.createGroupToken(group, cache);
     }
@@ -283,8 +259,8 @@ public class UserFactory extends AFactory {
     public GroupTokenObject rebuildGroupToken(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        GroupChildCacheRepositoryObject groupTokenCacheRepository = memoryManager.getCacheRepository(this.groupChildCacheRepositoryId);
-        GroupChildCacheEntity cache = groupTokenCacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        GroupChildCacheEntity cache = cacheRepository.get(GroupChildCacheEntity.class, handle);
 
         return this.rebuildGroupToken(cache);
     }
@@ -292,8 +268,8 @@ public class UserFactory extends AFactory {
     public GroupTokenObject rebuildGroupToken(GroupChildCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        GroupChildCacheRepositoryObject groupTokenCacheRepository = memoryManager.getCacheRepository(this.groupChildCacheRepositoryId);
-        groupTokenCacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(GroupChildCacheEntity.class, cache);
 
         GroupObject group = this.rebuildGroup(cache.getGroup());
 
@@ -313,7 +289,6 @@ public class UserFactory extends AFactory {
         AccountAuthorizationCacheEntity cache = new AccountAuthorizationCacheEntity();
 
         cache.setDuration(CacheDurationType.NORMAL);
-        cache.setCacheRepositoryId(this.accountCacheRepositoryId);
 
         cache.setAccount(account.getCache());
         cache.setPassword(password);
@@ -335,8 +310,8 @@ public class UserFactory extends AFactory {
     public AccountAuthorizationObject rebuildAccountAuthorization(UUID handle) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        AccountAuthorizationCacheRepositoryObject accountAuthorizationCacheRepository = memoryManager.getCacheRepository(this.accountAuthorizationCacheRepositoryId);
-        AccountAuthorizationCacheEntity cache = accountAuthorizationCacheRepository.get(handle);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        AccountAuthorizationCacheEntity cache = cacheRepository.get(AccountAuthorizationCacheEntity.class, handle);
 
         return this.rebuildGAccountAuthorization(cache);
     }
@@ -344,16 +319,9 @@ public class UserFactory extends AFactory {
     public AccountAuthorizationObject rebuildGAccountAuthorization(AccountAuthorizationCacheEntity cache) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-        AccountAuthorizationCacheRepositoryObject accountAuthorizationCacheRepository = memoryManager.getCacheRepository(this.accountAuthorizationCacheRepositoryId);
-        accountAuthorizationCacheRepository.refresh(cache);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+        cacheRepository.refresh(AccountAuthorizationCacheEntity.class, cache);
 
         return this.createAccountAuthorization(cache);
-    }
-
-    public void updateAccountAuthorization(AccountAuthorizationCacheEntity cache) {
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-
-        AccountAuthorizationCacheRepositoryObject accountAuthorizationCacheRepository = memoryManager.getCacheRepository(this.accountAuthorizationCacheRepositoryId);
-        accountAuthorizationCacheRepository.update(cache);
     }
 }

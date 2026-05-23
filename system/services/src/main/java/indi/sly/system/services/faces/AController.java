@@ -15,6 +15,9 @@ public abstract class AController extends APrototype {
         KernelSpaceDefinition kernelSpace = SpringHelper.getInstance(KernelSpaceDefinition.class);
 
         this.coreManager = (CoreManager) kernelSpace.getClassedObjects().getOrDefault(CoreManager.class, null);
-        this.coreManager.check();
+
+        if (ObjectUtil.allNotNull(this.coreManager)) {
+            this.coreManager.check();
+        }
     }
 }

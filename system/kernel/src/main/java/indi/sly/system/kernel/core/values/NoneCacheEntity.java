@@ -1,10 +1,10 @@
 package indi.sly.system.kernel.core.values;
 
-import com.redis.om.spring.annotations.Document;
+import org.redisson.api.annotation.REntity;
 
 import java.util.Objects;
 
-@Document("NoneObject")
+@REntity
 public class NoneCacheEntity extends ACacheEntity {
     @Override
     public boolean equals(Object o) {

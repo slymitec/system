@@ -1,7 +1,8 @@
 package indi.sly.system.kernel.memory.repositories.prototypes;
 
-import com.github.f4b6a3.ulid.Ulid;
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import jakarta.annotation.Resource;
@@ -24,9 +25,9 @@ public class CommunicationRepositoryObject extends AObject {
         }
 
         if (ValueUtil.isAnyNullOrEmpty(parameter)) {
-            return prefix + "_" + Ulid.from(id);
+            return prefix + "_" + ObjectUtil.transferToString(id);
         } else {
-            return prefix + "_" + Ulid.from(id) + "_" + parameter;
+            return prefix + "_" + ObjectUtil.transferToString(id) + "_" + parameter;
         }
     }
 

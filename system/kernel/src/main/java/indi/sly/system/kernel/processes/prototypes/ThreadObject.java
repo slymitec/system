@@ -13,21 +13,19 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ThreadObject extends ADefinitionObject<ThreadDefinition> {
     public ThreadObject() {
-        this.thread = new ThreadDefinition();
+        this.definition = new ThreadDefinition();
     }
 
-    private final ThreadDefinition thread;
-
     public UUID getId() {
-        return this.thread.getId();
+        return this.definition.getId();
     }
 
     public UUID getProcessId() {
-        return this.thread.getProcessId();
+        return this.definition.getProcessId();
     }
 
     public void setProcessId(UUID id) {
-        this.thread.setProcessId(id);
+        this.definition.setProcessId(id);
     }
 
     public synchronized ThreadStatusObject getStatus() {
@@ -43,7 +41,7 @@ public class ThreadObject extends ADefinitionObject<ThreadDefinition> {
         ThreadContextObject threadContext = this.coreManager.create(ThreadContextObject.class);
 
         threadContext.setBase(this);
-        threadContext.setDefinition(threadContext.getDefinition());
+        threadContext.setDefinition(this.definition.getContext());
 
         return threadContext;
     }
@@ -52,7 +50,7 @@ public class ThreadObject extends ADefinitionObject<ThreadDefinition> {
         ThreadStatisticsObject threadStatistics = this.coreManager.create(ThreadStatisticsObject.class);
 
         threadStatistics.setBase(this);
-        threadStatistics.setDefinition(this.thread.getStatistics());
+        threadStatistics.setDefinition(this.definition.getStatistics());
 
         return threadStatistics;
     }

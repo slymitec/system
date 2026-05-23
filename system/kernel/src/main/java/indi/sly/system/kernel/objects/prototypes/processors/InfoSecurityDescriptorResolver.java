@@ -29,6 +29,7 @@ public class InfoSecurityDescriptorResolver extends AResolver implements IInfoRe
         this.securityDescriptor = (info, type, cache) -> {
             SecurityDescriptorCacheEntity securityDescriptorCache = new SecurityDescriptorCacheEntity();
 
+            securityDescriptorCache.setInfo(cache);
             securityDescriptorCache.setPermission(type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION));
             securityDescriptorCache.setAudit(type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT));
 

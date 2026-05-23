@@ -25,13 +25,15 @@ public class MemoryManager extends AManager {
                     this.coreManager.create(DatabaseInfoRepositoryObject.class));
 
             this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
-                    this.coreManager.create(ProcessRepositoryObject.class));
-            this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
-                    this.coreManager.create(UserRepositoryObject.class));
+                    this.coreManager.create(CacheRepositoryObject.class));
             this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
                     this.coreManager.create(CommunicationRepositoryObject.class));
             this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
+                    this.coreManager.create(ProcessRepositoryObject.class));
+            this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
                     this.coreManager.create(ServiceRepositoryObject.class));
+            this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
+                    this.coreManager.create(UserRepositoryObject.class));
         }
     }
 
@@ -55,12 +57,8 @@ public class MemoryManager extends AManager {
         return this.coreManager.getObjectCollection().getByClass(SpaceType.KERNEL, UserRepositoryObject.class);
     }
 
-    public <T extends ACacheRepositoryObject<?>> T getCacheRepository(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
-            throw new ConditionParametersException();
-        }
-
-        return this.coreManager.getObjectCollection().getById(SpaceType.KERNEL, id);
+    public CacheRepositoryObject getCacheRepository() {
+        return this.coreManager.getObjectCollection().getByClass(SpaceType.KERNEL, CacheRepositoryObject.class);
     }
 
     public CommunicationRepositoryObject getCommunicationRepository() {

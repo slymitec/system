@@ -20,6 +20,7 @@ import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
+import indi.sly.system.kernel.services.ServiceManager;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -53,6 +54,7 @@ public class CoreManager extends AManager {
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(ObjectManager.class));
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(ProcessManager.class));
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(ThreadManager.class));
+            this.objectCollection.addByClass(SpaceType.KERNEL, this.create(ServiceManager.class));
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(TypeManager.class));
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(UserManager.class));
 

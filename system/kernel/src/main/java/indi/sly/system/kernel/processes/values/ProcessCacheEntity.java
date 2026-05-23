@@ -1,13 +1,12 @@
 package indi.sly.system.kernel.processes.values;
 
-import com.redis.om.spring.annotations.Document;
-import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.values.ACacheEntity;
+import org.redisson.api.annotation.REntity;
 
 import java.util.Objects;
 import java.util.UUID;
 
-@Document("ProcessObject")
+@REntity
 public class ProcessCacheEntity extends ACacheEntity {
     private UUID processId;
 

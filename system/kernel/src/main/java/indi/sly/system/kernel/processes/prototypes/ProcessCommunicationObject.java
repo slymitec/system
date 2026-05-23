@@ -422,10 +422,10 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             RBucket<UUID> processCommunicationSignalBucket = communicationRepository.getBucket("Process", this.base.getId(), "Communication_Signal");
 
             if (!processCommunicationSignalBucket.isExists()) {
-                throw new StatusNotExistedException();
+                return null;
+            } else {
+                return processCommunicationSignalBucket.get();
             }
-
-            return processCommunicationSignalBucket.get();
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
         }

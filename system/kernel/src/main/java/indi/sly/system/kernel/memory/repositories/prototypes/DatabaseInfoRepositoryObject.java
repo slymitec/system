@@ -148,7 +148,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         CriteriaQuery<InfoRelationEntity> criteriaQuery = criteriaBuilder.createQuery(InfoRelationEntity.class);
         Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
         criteriaQuery.select(root);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("parentID"), info.getId()));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), info.getId()));
         criteriaQuery.where(criteriaBuilder.equal(root.get("id"), id));
         TypedQuery<InfoRelationEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
         List<InfoRelationEntity> relations = typedQuery.getResultList();
@@ -170,7 +170,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         CriteriaQuery<InfoRelationEntity> criteriaQuery = criteriaBuilder.createQuery(InfoRelationEntity.class);
         Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
         criteriaQuery.select(root);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("parentID"), info.getId()));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), info.getId()));
         criteriaQuery.where(criteriaBuilder.equal(root.get("name"), name));
         TypedQuery<InfoRelationEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
         List<InfoRelationEntity> relations = typedQuery.getResultList();
@@ -192,7 +192,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         CriteriaQuery<InfoRelationEntity> criteriaQuery = criteriaBuilder.createQuery(InfoRelationEntity.class);
         Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
         criteriaQuery.select(root);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("parentID"), info.getId()));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), info.getId()));
         if (!ValueUtil.isAnyNullOrEmpty(wildcard)) {
             if (wildcard.isFuzzy()) {
                 if (wildcard.getType() == String.class) {
@@ -228,7 +228,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
         criteriaQuery.select(criteriaBuilder.count(root));
-        criteriaQuery.where(criteriaBuilder.equal(root.get("parentID"), info.getId()));
+        criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), info.getId()));
         if (!ValueUtil.isAnyNullOrEmpty(wildcard)) {
             if (wildcard.isFuzzy()) {
                 if (wildcard.getType() == String.class) {

@@ -1,15 +1,14 @@
 package indi.sly.system.kernel.objects.values;
 
-import com.redis.om.spring.annotations.Document;
-import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.values.ACacheEntity;
+import org.redisson.api.annotation.REntity;
 
-import java.util.List;
+
 import java.util.Objects;
 import java.util.UUID;
 
-@Document("InfoObject")
+@REntity
 public class InfoCacheEntity extends ACacheEntity {
     private UUID infoId;
     private UUID poolId;

@@ -1,13 +1,13 @@
 package indi.sly.system.kernel.security.values;
 
-import com.redis.om.spring.annotations.Document;
 import indi.sly.system.kernel.processes.values.ProcessChildCacheEntity;
+import org.redisson.api.annotation.REntity;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-@Document("AccountAuthorizationObject")
+@REntity
 public class AccountAuthorizationCacheEntity extends AccountChildCacheEntity {
     public AccountAuthorizationCacheEntity() {
         this.date = new HashMap<>();

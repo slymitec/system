@@ -1,6 +1,5 @@
 package indi.sly.system.boot;
 
-import com.redis.om.spring.annotations.EnableRedisDocumentRepositories;
 import indi.sly.system.common.AContainer;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -23,7 +22,6 @@ import java.nio.charset.StandardCharsets;
 @EnableAsync
 @EnableAutoConfiguration()
 @EnableJpaRepositories(basePackages = SpringConfiguration.BASE_PACKAGES)
-@EnableRedisDocumentRepositories(basePackages = SpringConfiguration.BASE_PACKAGES)
 @EntityScan(basePackages = SpringConfiguration.BASE_PACKAGES)
 @ServletComponentScan(basePackages = SpringConfiguration.BASE_PACKAGES)
 public class SpringConfiguration extends AContainer implements WebMvcConfigurer {

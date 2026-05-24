@@ -22,9 +22,9 @@ import java.util.UUID;
 @JsonSerialize(using = InfoWildcardDefinition.InfoWildcardDefinitionSerializer.class)
 @JsonDeserialize(using = InfoWildcardDefinition.InfoWildcardDefinitionDeserializer.class)
 public class InfoWildcardDefinition extends ADefinition {
-    private byte[] value;
-    private Class<?> type;
-    private boolean fuzzy;
+    private final byte[] value;
+    private final Class<?> type;
+    private final boolean fuzzy;
 
     public byte[] getValue() {
         return value;

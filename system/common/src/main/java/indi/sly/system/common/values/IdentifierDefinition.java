@@ -8,8 +8,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 public final class IdentifierDefinition extends ADefinition {
-    private byte[] value;
-    private Class<?> type;
+    private final byte[] value;
+    private final Class<?> type;
 
     public byte[] getValue() {
         return this.value;

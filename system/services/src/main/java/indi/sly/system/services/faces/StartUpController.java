@@ -95,11 +95,14 @@ public class StartUpController extends AController {
 
             return new ClientResponseDefinition();
         } else {
+            KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+            KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+
             ClientResponseDefinition clientResponse = new ClientResponseDefinition();
 
             ClientResponseExceptionDefinition clientResponseException = new ClientResponseExceptionDefinition();
 
-            clientResponseException.setId(UUIDUtil.getEmpty());
+            clientResponseException.setId(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
             clientResponseException.setClazz(ClassUtil.getSimpleName(StatusAlreadyFinishedException.class));
             clientResponseException.setOwnerClazz(ClassUtil.getSimpleName(StartUpController.class));
             clientResponseException.setOwnerMethod("startup");

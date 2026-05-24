@@ -14,8 +14,8 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserContextCreateProcessIDVerificationResolver extends AResolver implements IUserContextCreateResolver {
-    public UserContextCreateProcessIDVerificationResolver() {
+public class UserContextCreateProcessIdVerificationResolver extends AResolver implements IUserContextCreateResolver {
+    public UserContextCreateProcessIdVerificationResolver() {
         this.create = (userContext, userContextRequest) -> {
             ClientRequestProcessIdDefinition userContextRequestProcessID = userContextRequest.getProcessId();
 

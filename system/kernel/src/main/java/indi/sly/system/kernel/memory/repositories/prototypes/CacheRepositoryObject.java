@@ -92,7 +92,6 @@ public class CacheRepositoryObject extends AObject {
         if (ObjectUtil.isAnyNull(clazz, cache)) {
             throw new ConditionParametersException();
         }
-
         if (ValueUtil.isAnyNullOrEmpty(cache.getId())) {
             return;
         }
@@ -100,7 +99,6 @@ public class CacheRepositoryObject extends AObject {
         if (!this.liveObjectService.isLiveObject(cache)) {
             cache = this.liveObjectService.attach(cache);
         }
-
         if (ObjectUtil.isNull(cache)) {
             throw new StatusNotExistedException();
         }

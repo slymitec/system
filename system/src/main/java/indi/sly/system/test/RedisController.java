@@ -44,7 +44,11 @@ public class RedisController extends ATestController {
         InfoObject info = manager.get(new PathDefinition(List.of(new IdentifierDefinition("Files"))));
         UUID cache = info.cache();
 
-        return cache.toString();
+        InfoObject info2 = manager.getFactory().rebuildInfo(cache);
+
+        info2.getCache().setPath(new PathDefinition(List.of(new IdentifierDefinition("Sessions"))));
+
+        return info2.toString();
 
 //        RLiveObjectService liveObjectService = this.redissonClient.getLiveObjectService();
 //

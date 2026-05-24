@@ -30,14 +30,13 @@ public class ProcessAdditionalCreatorDefinition extends ADefinition {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ProcessAdditionalCreatorDefinition that = (ProcessAdditionalCreatorDefinition) o;
+    public final boolean equals(Object o) {
+        if (!(o instanceof ProcessAdditionalCreatorDefinition that)) return false;
         return inheritSession == that.inheritSession && contextType == that.contextType;
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(inheritSession, contextType);
     }
 }

@@ -54,14 +54,13 @@ public class AuditDefinition extends ADefinition {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        AuditDefinition that = (AuditDefinition) o;
+    public final boolean equals(Object o) {
+        if (!(o instanceof AuditDefinition that)) return false;
         return audit == that.audit && Objects.equals(processId, that.processId) && Objects.equals(accountId, that.accountId) && Objects.equals(path, that.path) && Objects.equals(userIds, that.userIds);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(processId, accountId, path, userIds, audit);
     }
 }

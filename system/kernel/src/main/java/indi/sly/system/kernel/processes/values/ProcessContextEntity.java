@@ -69,8 +69,7 @@ public class ProcessContextEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ProcessContextEntity that = (ProcessContextEntity) o;
+        if (!(o instanceof ProcessContextEntity that)) return false;
         return type == that.type && Objects.equals(path, that.path) && Objects.equals(application, that.application) && Objects.equals(environmentVariables, that.environmentVariables) && Objects.equals(parameters, that.parameters) && Objects.equals(workFolder, that.workFolder);
     }
 

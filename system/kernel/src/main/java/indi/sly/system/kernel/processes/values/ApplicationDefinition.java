@@ -46,14 +46,13 @@ public class ApplicationDefinition extends ADefinition {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ApplicationDefinition that = (ApplicationDefinition) o;
+    public final boolean equals(Object o) {
+        if (!(o instanceof ApplicationDefinition that)) return false;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(serverURL, that.serverURL) && Objects.equals(configurations, that.configurations);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(id, name, serverURL, configurations);
     }
 }

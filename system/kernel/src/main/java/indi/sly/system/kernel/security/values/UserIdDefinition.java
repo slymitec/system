@@ -23,14 +23,13 @@ public class UserIdDefinition extends ADefinition {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        UserIdDefinition that = (UserIdDefinition) o;
+    public final boolean equals(Object o) {
+        if (!(o instanceof UserIdDefinition that)) return false;
         return type == that.type && Objects.equals(id, that.id);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(id, type);
     }
 }

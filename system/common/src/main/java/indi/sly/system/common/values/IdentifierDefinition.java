@@ -3,6 +3,8 @@ package indi.sly.system.common.values;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.*;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 
 public final class IdentifierDefinition extends ADefinition {
@@ -49,5 +51,16 @@ public final class IdentifierDefinition extends ADefinition {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof IdentifierDefinition that)) return false;
+        return Objects.deepEquals(value, that.value) && Objects.equals(type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Arrays.hashCode(value), type);
     }
 }

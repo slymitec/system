@@ -19,14 +19,12 @@ public class SystemVersionCacheEntity extends ACacheEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        SystemVersionCacheEntity that = (SystemVersionCacheEntity) o;
-        return Objects.equals(systemVersion, that.systemVersion);
+        if (!(o instanceof SystemVersionCacheEntity cache)) return false;
+        return Objects.equals(id, cache.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), systemVersion);
+        return Objects.hashCode(id);
     }
 }

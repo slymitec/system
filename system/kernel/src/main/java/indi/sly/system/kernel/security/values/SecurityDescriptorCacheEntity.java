@@ -40,14 +40,12 @@ public class SecurityDescriptorCacheEntity extends ACacheEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        SecurityDescriptorCacheEntity that = (SecurityDescriptorCacheEntity) o;
-        return permission == that.permission && audit == that.audit && Objects.equals(info, that.info);
+        if (!(o instanceof SecurityDescriptorCacheEntity cache)) return false;
+        return Objects.equals(id, cache.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), info, permission, audit);
+        return Objects.hashCode(id);
     }
 }

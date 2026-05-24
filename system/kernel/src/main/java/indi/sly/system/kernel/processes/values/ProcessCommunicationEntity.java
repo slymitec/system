@@ -22,8 +22,7 @@ public class ProcessCommunicationEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ProcessCommunicationEntity that = (ProcessCommunicationEntity) o;
+        if (!(o instanceof ProcessCommunicationEntity that)) return false;
         return Objects.deepEquals(shared, that.shared);
     }
 

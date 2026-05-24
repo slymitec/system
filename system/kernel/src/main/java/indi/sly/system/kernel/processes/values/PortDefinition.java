@@ -54,14 +54,13 @@ public class PortDefinition extends ADefinition {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        PortDefinition that = (PortDefinition) o;
+    public final boolean equals(Object o) {
+        if (!(o instanceof PortDefinition that)) return false;
         return limit == that.limit && Objects.equals(processId, that.processId) && Objects.equals(sourceProcessIds, that.sourceProcessIds) && Objects.deepEquals(value, that.value);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(processId, sourceProcessIds, Arrays.hashCode(value), limit);
     }
 }

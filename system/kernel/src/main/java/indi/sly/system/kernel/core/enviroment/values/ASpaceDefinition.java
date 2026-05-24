@@ -57,5 +57,4 @@ public abstract class ASpaceDefinition<T> extends ADefinition {
     public void setObjectLimit(long coreObjectLimit) {
         this.objectLimit = coreObjectLimit;
     }
-
 }

@@ -3,6 +3,7 @@ package indi.sly.system.kernel.objects.values;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.memory.repositories.prototypes.BinarySerializationAttributeConverterComponent;
 import indi.sly.system.kernel.security.values.SecurityDescriptorEntity;
+import indi.sly.system.kernel.services.values.ServiceStatusEntity;
 import jakarta.persistence.*;
 
 import java.util.Arrays;
@@ -103,16 +104,14 @@ public class InfoEntity extends APersistentEntity {
         this.content = content;
     }
 
-
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        InfoEntity that = (InfoEntity) o;
-        return opened == that.opened && Objects.equals(id, that.id) && Objects.equals(type, that.type) && Objects.equals(name, that.name) && Objects.equals(date, that.date) && Objects.equals(securityDescriptor, that.securityDescriptor) && Objects.equals(properties, that.properties) && Objects.deepEquals(content, that.content);
+        if (!(o instanceof InfoEntity that)) return false;
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, opened, name, date, securityDescriptor, properties, Arrays.hashCode(content));
+        return Objects.hashCode(id);
     }
 }

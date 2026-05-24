@@ -4,16 +4,12 @@ import indi.sly.system.kernel.core.values.APersistentEntity;
 
 import jakarta.persistence.*;
 
-import java.io.Serial;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "Kernel_Info_Relations")
 public class InfoRelationEntity extends APersistentEntity {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     @Id
     @Column(columnDefinition = "uniqueidentifier", name = "Id", nullable = false, updatable = false)
     protected UUID id;
@@ -61,13 +57,12 @@ public class InfoRelationEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        InfoRelationEntity that = (InfoRelationEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(parentId, that.parentId) && Objects.equals(type, that.type) && Objects.equals(name, that.name);
+        if (!(o instanceof InfoRelationEntity that)) return false;
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parentId, type, name);
+        return Objects.hashCode(id);
     }
 }

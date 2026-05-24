@@ -40,14 +40,12 @@ public class InfoCacheEntity extends ACacheEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        InfoCacheEntity cache = (InfoCacheEntity) o;
-        return Objects.equals(infoId, cache.infoId) && Objects.equals(poolId, cache.poolId) && Objects.equals(path, cache.path);
+        if (!(o instanceof InfoCacheEntity cache)) return false;
+        return Objects.equals(id, cache.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), infoId, poolId, path);
+        return Objects.hashCode(id);
     }
 }

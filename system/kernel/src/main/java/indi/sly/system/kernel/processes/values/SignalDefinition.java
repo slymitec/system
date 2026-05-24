@@ -58,14 +58,13 @@ public class SignalDefinition extends ADefinition {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        SignalDefinition that = (SignalDefinition) o;
+    public final boolean equals(Object o) {
+        if (!(o instanceof SignalDefinition that)) return false;
         return limit == that.limit && Objects.equals(processId, that.processId) && Objects.equals(sourceProcessIds, that.sourceProcessIds) && Objects.equals(signalEntries, that.signalEntries);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(processId, sourceProcessIds, signalEntries, limit);
     }
 }

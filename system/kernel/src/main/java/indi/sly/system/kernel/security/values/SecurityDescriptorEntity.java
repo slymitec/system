@@ -58,8 +58,7 @@ public class SecurityDescriptorEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        SecurityDescriptorEntity that = (SecurityDescriptorEntity) o;
+        if (!(o instanceof SecurityDescriptorEntity that)) return false;
         return inherit == that.inherit && hasChild == that.hasChild && canChangeOwner == that.canChangeOwner && Objects.equals(owners, that.owners) && Objects.equals(permissions, that.permissions) && Objects.equals(audits, that.audits);
     }
 

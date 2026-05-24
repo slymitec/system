@@ -77,14 +77,13 @@ public class ServiceDefinition extends ADefinition {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ServiceDefinition that = (ServiceDefinition) o;
+    public final boolean equals(Object o) {
+        if (!(o instanceof ServiceDefinition that)) return false;
         return mode == that.mode && start == that.start && Objects.equals(dependencies, that.dependencies) && Objects.equals(secret, that.secret) && Objects.equals(path, that.path) && Objects.equals(accountId, that.accountId) && Objects.equals(environmentVariables, that.environmentVariables) && Objects.equals(parameters, that.parameters);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(dependencies, secret, path, accountId, mode, start, environmentVariables, parameters);
     }
 }

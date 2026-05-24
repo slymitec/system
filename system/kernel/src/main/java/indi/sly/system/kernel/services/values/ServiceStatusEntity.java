@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.services.values;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import jakarta.persistence.*;
@@ -26,20 +26,17 @@ public class ServiceStatusEntity extends APersistentEntity {
     protected UUID processId;
 
     @ManyToMany
-    @JoinTable(name = "Kernel_ServiceStatus_Relations", joinColumns = @JoinColumn(name = "ParentId"), inverseJoinColumns = @JoinColumn(name = "ChildId")
-    )
-    @JsonIgnoreProperties("dependencies")
-    private Set<ServiceStatusEntity> dependencies;
+    @JoinTable(name = "Kernel_ServiceStatus_Relations", joinColumns = @JoinColumn(name = "ParentId"), inverseJoinColumns = @JoinColumn(name = "ChildId"))
+    private final Set<ServiceStatusEntity> dependencies;
 
     @ManyToMany(mappedBy = "dependencies")
-    @JsonIgnoreProperties("dependents")
-    private Set<ServiceStatusEntity> dependents;
+    private final Set<ServiceStatusEntity> dependents;
 
     @Column(name = "Independence", nullable = false)
     private boolean independence;
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(UUID id) {
@@ -55,25 +52,27 @@ public class ServiceStatusEntity extends APersistentEntity {
     }
 
     public void addDependency(ServiceStatusEntity dependency) {
-        if (ObjectUtil.allNotNull(dependency)) {
+        if (ObjectUtil.allNotNull(dependency) && !this.dependencies.contains(dependency)) {
             this.dependencies.add(dependency);
-            dependency.getDependents().add(this);
+            dependency.dependents.add(this);
         }
     }
 
     public void removeDependency(ServiceStatusEntity dependency) {
-        if (ObjectUtil.allNotNull(dependency)) {
+        if (ObjectUtil.allNotNull(dependency) && this.dependencies.contains(dependency)) {
             this.dependencies.remove(dependency);
-            dependency.getDependents().remove(this);
+            if (dependency.dependents.contains(this)) {
+                dependency.dependents.remove(this);
+            }
         }
     }
 
     public Set<ServiceStatusEntity> getDependencies() {
-        return this.dependencies;
+        return CollectionUtil.unmodifiable(this.dependencies);
     }
 
     public Set<ServiceStatusEntity> getDependents() {
-        return this.dependents;
+        return CollectionUtil.unmodifiable(this.dependents);
     }
 
     public boolean isIndependence() {
@@ -86,13 +85,12 @@ public class ServiceStatusEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ServiceStatusEntity that = (ServiceStatusEntity) o;
-        return independence == that.independence && Objects.equals(id, that.id) && Objects.equals(processId, that.processId) && Objects.equals(dependencies, that.dependencies);
+        if (!(o instanceof ServiceStatusEntity that)) return false;
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, processId, dependencies, independence);
+        return Objects.hashCode(id);
     }
 }

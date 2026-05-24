@@ -387,18 +387,12 @@ public class ProcessStatisticsEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProcessStatisticsEntity that = (ProcessStatisticsEntity) o;
-        return statusCumulation == that.statusCumulation && threadCumulation == that.threadCumulation && infoCreate == that.infoCreate && infoGet == that.infoGet && infoQuery == that.infoQuery && infoDelete == that.infoDelete && infoDump == that.infoDump && infoOpen == that.infoOpen && infoClose == that.infoClose && infoRead == that.infoRead && infoWrite == that.infoWrite && sharedReadCount == that.sharedReadCount && sharedReadBytes == that.sharedReadBytes && sharedWriteCount == that.sharedWriteCount && sharedWriteBytes == that.sharedWriteBytes && portCount == that.portCount && portReadCount == that.portReadCount && portReadBytes == that.portReadBytes && portWriteCount == that.portWriteCount && portWriteBytes == that.portWriteBytes && signalReadCount == that.signalReadCount && signalWriteCount == that.signalWriteCount && ioCreate == that.ioCreate && ioStatus == that.ioStatus && ioReadCount == that.ioReadCount && ioReadBytes == that.ioReadBytes && ioWriteCount == that.ioWriteCount && ioWriteBytes == that.ioWriteBytes && date.equals(that.date);
+        if (!(o instanceof ProcessStatisticsEntity that)) return false;
+        return statusCumulation == that.statusCumulation && threadCumulation == that.threadCumulation && infoCreate == that.infoCreate && infoGet == that.infoGet && infoQuery == that.infoQuery && infoDelete == that.infoDelete && infoDump == that.infoDump && infoOpen == that.infoOpen && infoClose == that.infoClose && infoRead == that.infoRead && infoWrite == that.infoWrite && sharedReadCount == that.sharedReadCount && sharedReadBytes == that.sharedReadBytes && sharedWriteCount == that.sharedWriteCount && sharedWriteBytes == that.sharedWriteBytes && portCount == that.portCount && portReadCount == that.portReadCount && portReadBytes == that.portReadBytes && portWriteCount == that.portWriteCount && portWriteBytes == that.portWriteBytes && signalReadCount == that.signalReadCount && signalWriteCount == that.signalWriteCount && ioCreate == that.ioCreate && ioStatus == that.ioStatus && ioReadCount == that.ioReadCount && ioReadBytes == that.ioReadBytes && ioWriteCount == that.ioWriteCount && ioWriteBytes == that.ioWriteBytes && Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, statusCumulation, threadCumulation, infoCreate, infoGet, infoQuery, infoDelete,
-                infoDump, infoOpen, infoClose, infoRead, infoWrite, sharedReadCount, sharedReadBytes,
-                sharedWriteCount, sharedWriteBytes, portCount, portReadCount, portReadBytes, portWriteCount,
-                portWriteBytes, signalReadCount, signalWriteCount, ioCreate, ioStatus, ioReadCount, ioReadBytes,
-                ioWriteCount, ioWriteBytes);
+        return Objects.hash(date, statusCumulation, threadCumulation, infoCreate, infoGet, infoQuery, infoDelete, infoDump, infoOpen, infoClose, infoRead, infoWrite, sharedReadCount, sharedReadBytes, sharedWriteCount, sharedWriteBytes, portCount, portReadCount, portReadBytes, portWriteCount, portWriteBytes, signalReadCount, signalWriteCount, ioCreate, ioStatus, ioReadCount, ioReadBytes, ioWriteCount, ioWriteBytes);
     }
 }

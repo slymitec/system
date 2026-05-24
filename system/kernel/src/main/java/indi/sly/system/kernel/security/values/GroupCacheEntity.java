@@ -20,14 +20,12 @@ public class GroupCacheEntity extends ACacheEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        GroupCacheEntity that = (GroupCacheEntity) o;
-        return Objects.equals(groupId, that.groupId);
+        if (!(o instanceof GroupCacheEntity cache)) return false;
+        return Objects.equals(id, cache.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), groupId);
+        return Objects.hashCode(id);
     }
 }

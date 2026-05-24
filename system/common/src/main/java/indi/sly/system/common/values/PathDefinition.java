@@ -78,31 +78,32 @@ public class PathDefinition extends ADefinition {
 
         @Override
         public PathDefinition deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
-            String value;
-            value = parser.getString();
-
-            String[] texts = value.split("\\\\");
+            String[] values = parser.getString().split("\\\\");
 
             List<IdentifierDefinition> identifications = new ArrayList<>();
 
-            for (String text : texts) {
+            for (String value : values) {
                 IdentifierDefinition identification;
-                if (text.isEmpty()) {
+                if (value.isEmpty()) {
                     continue;
-                } else if (text.startsWith("<") && text.endsWith(">")) {
-                    UUID id = UUID.fromString(text.substring(1, text.length() - 1));
+                } else if (value.startsWith("<") && value.endsWith(">")) {
+                    UUID id;
+                    try {
+                        id = UUID.fromString(value.substring(1, value.length() - 1));
+                    } catch (Exception e) {
+                        id = null;
+                    }
                     if (ValueUtil.isAnyNullOrEmpty(id)) {
                         throw new StatusUnreadableException();
                     }
 
                     identification = new IdentifierDefinition(id);
+                } else if (!StringUtil.isNameIllegal(value)) {
+                    identification = new IdentifierDefinition(value);
                 } else {
-                    if (StringUtil.isNameIllegal(text)) {
-                        throw new StatusUnreadableException();
-                    }
-
-                    identification = new IdentifierDefinition(text);
+                    throw new StatusUnreadableException();
                 }
+
                 identifications.add(identification);
             }
 
@@ -111,14 +112,13 @@ public class PathDefinition extends ADefinition {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        PathDefinition that = (PathDefinition) o;
+    public final boolean equals(Object o) {
+        if (!(o instanceof PathDefinition that)) return false;
         return Objects.equals(identifiers, that.identifiers);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hashCode(identifiers);
     }
 }

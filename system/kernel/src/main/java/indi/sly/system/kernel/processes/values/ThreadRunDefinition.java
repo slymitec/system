@@ -46,5 +46,4 @@ public class ThreadRunDefinition extends ADefinition {
     public void setException(AKernelException exception) {
         this.exception = exception;
     }
-
 }

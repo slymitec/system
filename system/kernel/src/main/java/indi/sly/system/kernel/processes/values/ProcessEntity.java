@@ -117,4 +117,15 @@ public class ProcessEntity extends APersistentEntity {
     public void setToken(ProcessTokenEntity token) {
         this.token = token;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ProcessEntity process)) return false;
+        return Objects.equals(id, process.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

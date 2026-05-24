@@ -48,13 +48,12 @@ public class GroupEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        GroupEntity that = (GroupEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(token, that.token);
+        if (!(o instanceof GroupEntity that)) return false;
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, token);
+        return Objects.hashCode(id);
     }
 }

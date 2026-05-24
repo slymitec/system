@@ -17,8 +17,7 @@ public class AccountSessionsEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        AccountSessionsEntity that = (AccountSessionsEntity) o;
+        if (!(o instanceof AccountSessionsEntity that)) return false;
         return Objects.equals(sessions, that.sessions);
     }
 

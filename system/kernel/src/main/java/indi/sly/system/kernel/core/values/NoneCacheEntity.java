@@ -8,12 +8,12 @@ import java.util.Objects;
 public class NoneCacheEntity extends ACacheEntity {
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        return super.equals(o);
+        if (!(o instanceof NoneCacheEntity cache)) return false;
+        return Objects.equals(id, cache.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode());
+        return Objects.hashCode(id);
     }
 }

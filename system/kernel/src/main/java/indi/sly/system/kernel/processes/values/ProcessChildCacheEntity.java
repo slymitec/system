@@ -21,14 +21,12 @@ public class ProcessChildCacheEntity extends ACacheEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        ProcessChildCacheEntity that = (ProcessChildCacheEntity) o;
-        return Objects.equals(process, that.process);
+        if (!(o instanceof ProcessChildCacheEntity cache)) return false;
+        return Objects.equals(id, cache.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), process);
+        return Objects.hashCode(id);
     }
 }

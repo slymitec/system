@@ -64,8 +64,7 @@ public class ProcessInfoEntryEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ProcessInfoEntryEntity that = (ProcessInfoEntryEntity) o;
+        if (!(o instanceof ProcessInfoEntryEntity that)) return false;
         return unsupportedDelete == that.unsupportedDelete && Objects.equals(index, that.index) && Objects.equals(date, that.date) && Objects.equals(id, that.id) && Objects.equals(path, that.path) && Objects.equals(infoOpen, that.infoOpen);
     }
 

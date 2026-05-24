@@ -41,13 +41,8 @@ public class ProcessTokenEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProcessTokenEntity that = (ProcessTokenEntity) o;
-        return privileges == that.privileges &&
-                Objects.equals(accountId, that.accountId) &&
-                limits.equals(that.limits) &&
-                roles.equals(that.roles);
+        if (!(o instanceof ProcessTokenEntity that)) return false;
+        return privileges == that.privileges && Objects.equals(accountId, that.accountId) && Objects.equals(limits, that.limits) && Objects.equals(roles, that.roles);
     }
 
     @Override

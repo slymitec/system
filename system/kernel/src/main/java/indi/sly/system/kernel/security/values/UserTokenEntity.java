@@ -28,8 +28,7 @@ public class UserTokenEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        UserTokenEntity that = (UserTokenEntity) o;
+        if (!(o instanceof UserTokenEntity that)) return false;
         return privileges == that.privileges && Objects.equals(limits, that.limits);
     }
 

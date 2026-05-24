@@ -21,14 +21,12 @@ public class AccountChildCacheEntity extends ACacheEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        AccountChildCacheEntity that = (AccountChildCacheEntity) o;
-        return Objects.equals(account, that.account);
+        if (!(o instanceof AccountChildCacheEntity cache)) return false;
+        return Objects.equals(id, cache.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), account);
+        return Objects.hashCode(id);
     }
 }

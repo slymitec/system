@@ -20,14 +20,12 @@ public class ProcessCacheEntity extends ACacheEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        ProcessCacheEntity that = (ProcessCacheEntity) o;
-        return Objects.equals(processId, that.processId);
+        if (!(o instanceof ProcessCacheEntity cache)) return false;
+        return Objects.equals(id, cache.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), processId);
+        return Objects.hashCode(id);
     }
 }

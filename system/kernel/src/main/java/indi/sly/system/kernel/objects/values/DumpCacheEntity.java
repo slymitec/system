@@ -63,14 +63,12 @@ public class DumpCacheEntity extends ACacheEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        DumpCacheEntity that = (DumpCacheEntity) o;
-        return Objects.equals(date, that.date) && Objects.equals(processID, that.processID) && Objects.equals(accountID, that.accountID) && Objects.equals(path, that.path) && Objects.equals(infoOpen, that.infoOpen) && Objects.equals(securityDescriptorSummary, that.securityDescriptorSummary);
+        if (!(o instanceof DumpCacheEntity cache)) return false;
+        return Objects.equals(id, cache.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), date, processID, accountID, path, infoOpen, securityDescriptorSummary);
+        return Objects.hashCode(id);
     }
 }

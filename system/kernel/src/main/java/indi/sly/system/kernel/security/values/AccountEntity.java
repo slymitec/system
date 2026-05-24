@@ -22,8 +22,7 @@ public class AccountEntity extends APersistentEntity {
     @Column(length = 256, name = "password", nullable = true)
     protected String password;
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "Kernel_Accounts_Groups", joinColumns = {@JoinColumn(name = "AccountID")}, inverseJoinColumns =
-            {@JoinColumn(name = "GroupID")})
+    @JoinTable(name = "Kernel_Accounts_Groups", joinColumns = {@JoinColumn(name = "AccountId")}, inverseJoinColumns = {@JoinColumn(name = "GroupId")})
     protected List<GroupEntity> groups;
     @Basic(fetch = FetchType.LAZY)
     @Column(length = 4096, name = "Token", nullable = false)
@@ -86,14 +85,12 @@ public class AccountEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        AccountEntity that = (AccountEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(password, that.password) && Objects.equals(groups, that.groups) && Objects.equals(token, that.token) && Objects.equals(sessions, that.sessions);
+        if (!(o instanceof AccountEntity that)) return false;
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), id, name, password, groups, token, sessions);
+        return Objects.hashCode(id);
     }
 }

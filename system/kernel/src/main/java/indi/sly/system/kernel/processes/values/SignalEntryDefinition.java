@@ -46,14 +46,13 @@ public class SignalEntryDefinition extends ADefinition {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        SignalEntryDefinition that = (SignalEntryDefinition) o;
+    public final boolean equals(Object o) {
+        if (!(o instanceof SignalEntryDefinition that)) return false;
         return key == that.key && value == that.value && Objects.equals(source, that.source) && Objects.equals(date, that.date);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(source, key, value, date);
     }
 }

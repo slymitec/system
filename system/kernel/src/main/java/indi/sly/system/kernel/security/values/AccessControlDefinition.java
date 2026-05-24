@@ -34,15 +34,13 @@ public class AccessControlDefinition extends ADefinition {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AccessControlDefinition that = (AccessControlDefinition) o;
-        return scope == that.scope && value == that.value && userId.equals(that.userId);
+    public final boolean equals(Object o) {
+        if (!(o instanceof AccessControlDefinition that)) return false;
+        return scope == that.scope && value == that.value && Objects.equals(userId, that.userId);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Objects.hash(userId, scope, value);
     }
 }

@@ -85,10 +85,8 @@ public class ProcessInfoTableEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProcessInfoTableEntity that = (ProcessInfoTableEntity) o;
-        return indexTable.equals(that.indexTable) && idTable.equals(that.idTable);
+        if (!(o instanceof ProcessInfoTableEntity that)) return false;
+        return Objects.equals(indexTable, that.indexTable) && Objects.equals(idTable, that.idTable);
     }
 
     @Override

@@ -27,8 +27,7 @@ public class ProcessSessionEntity extends APersistentEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ProcessSessionEntity that = (ProcessSessionEntity) o;
+        if (!(o instanceof ProcessSessionEntity that)) return false;
         return type == that.type && Objects.equals(sessionId, that.sessionId);
     }
 

@@ -19,9 +19,9 @@ import java.util.UUID;
 public class UserContextCreateProcessAndThreadResolver extends AResolver implements IUserContextCreateResolver {
     public UserContextCreateProcessAndThreadResolver() {
         this.create = (userContext, userContextRequest) -> {
-            ClientRequestProcessIdDefinition userContextRequestProcessID = userContextRequest.getProcessId();
+            ClientRequestProcessIdDefinition userContextRequestProcessId = userContextRequest.getProcessId();
 
-            UUID processId = userContextRequestProcessID.getId();
+            UUID processId = userContextRequestProcessId.getId();
 
             TransactionalActionComponent transactionalAction = this.coreManager.create(TransactionalActionComponent.class);
 

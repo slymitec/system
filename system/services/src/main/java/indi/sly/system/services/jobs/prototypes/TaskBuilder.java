@@ -38,7 +38,7 @@ public class TaskBuilder extends ABuilder {
         task.setName(name);
         if (LogicalUtil.isAllExist(task.getAttribute(), TaskAttributeType.HAS_PROCESS)
                 && !ValueUtil.isAnyNullOrEmpty(processID)) {
-            task.setProcessID(processID);
+            task.setProcessId(processID);
         }
         task.setInitializer(initializer);
 

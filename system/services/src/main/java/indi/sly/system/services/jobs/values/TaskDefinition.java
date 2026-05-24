@@ -9,7 +9,7 @@ public class TaskDefinition extends ADefinition {
     private UUID id;
     private long attribute;
     private String name;
-    private UUID processID;
+    private UUID processId;
     private ATaskInitializer initializer;
 
     public UUID getId() {
@@ -36,12 +36,12 @@ public class TaskDefinition extends ADefinition {
         this.name = name;
     }
 
-    public UUID getProcessID() {
-        return this.processID;
+    public UUID getProcessId() {
+        return this.processId;
     }
 
-    public void setProcessID(UUID processID) {
-        this.processID = processID;
+    public void setProcessId(UUID processId) {
+        this.processId = processId;
     }
 
     public ATaskInitializer getInitializer() {

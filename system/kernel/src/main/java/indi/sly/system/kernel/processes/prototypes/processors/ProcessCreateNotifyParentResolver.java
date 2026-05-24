@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.UUID;
 
 @Named
@@ -24,10 +25,8 @@ public class ProcessCreateNotifyParentResolver extends AResolver implements IPro
             if (ObjectUtil.allNotNull(parentProcess)) {
                 ProcessCommunicationObject parentProcessCommunication = parentProcess.getCommunication();
 
-                UUID signalId = parentProcessCommunication.getSignalId();
-
-                if (!ValueUtil.isAnyNullOrEmpty(signalId)) {
-                    parentProcessCommunication.sendSignal(signalId, SignalType.TYPE_PROCESS,
+                if (parentProcessCommunication.isSignalExist()) {
+                    parentProcessCommunication.sendSignal(parentProcess.getId(), SignalType.TYPE_PROCESS,
                             LogicalUtil.or(SignalType.ACTION_CREATE, SignalType.RESULT_SUCCESS));
                 }
             }

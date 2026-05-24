@@ -409,7 +409,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         threadStatistics.addPortWriteBytes(value.length);
     }
 
-    public UUID getSignalId() {
+    public boolean isSignalExist() {
         if (LogicalUtil.allNotEqual(this.base.getStatus().get(), ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
         }
@@ -421,11 +421,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             RBucket<SignalDefinition> processCommunicationSignalBucket = communicationRepository.getBucket("Process", this.base.getId(), "Communication_Signal");
 
-            if (!processCommunicationSignalBucket.isExists()) {
-                return null;
-            } else {
-                return processCommunicationSignalBucket.get().getProcessId();
-            }
+            return processCommunicationSignalBucket.isExists();
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
         }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -27,8 +28,7 @@ public class BootProcessesLaterResolver extends ABootResolver {
 
                 ProcessCommunicationObject communication = process.getCommunication();
 
-                UUID signalId = communication.getSignalId();
-                if (ValueUtil.isAnyNullOrEmpty(signalId)) {
+                if (!communication.isSignalExist()) {
                     communication.createSignal(new HashSet<>());
                 }
             }

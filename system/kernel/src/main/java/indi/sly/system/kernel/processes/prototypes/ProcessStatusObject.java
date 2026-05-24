@@ -212,7 +212,7 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
         ProcessInfoTableObject processInfoTable = this.base.getInfoTable();
         ProcessSessionObject processSession = this.base.getSession();
 
-        if (!processCommunication.getPortIds().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processCommunication.getSignalId())
+        if (!processCommunication.getPortIds().isEmpty() || processCommunication.isSignalExist()
                 || !processInfoTable.list().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processSession.getId())) {
             throw new StatusIsUsedException();
         }

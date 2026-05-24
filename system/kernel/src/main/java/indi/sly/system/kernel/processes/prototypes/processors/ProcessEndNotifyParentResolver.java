@@ -13,6 +13,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.UUID;
 
 @Named
@@ -26,11 +27,9 @@ public class ProcessEndNotifyParentResolver extends AResolver implements IProces
                 ProcessCommunicationObject parentProcessCommunication = parentProcess.getCommunication();
                 ProcessCommunicationObject processCommunication = process.getCommunication();
 
-                UUID signalId = parentProcessCommunication.getSignalId();
-
-                if (!ValueUtil.isAnyNullOrEmpty(signalId)) {
+                if (parentProcessCommunication.isSignalExist()) {
                     try {
-                        processCommunication.sendSignal(signalId, SignalType.TYPE_PROCESS,
+                        processCommunication.sendSignal(parentProcess.getId(), SignalType.TYPE_PROCESS,
                                 LogicalUtil.or(SignalType.ACTION_DELETE, SignalType.RESULT_SUCCESS));
                     } catch (AKernelException ignored) {
                     }

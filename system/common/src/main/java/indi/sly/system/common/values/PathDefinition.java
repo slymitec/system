@@ -11,6 +11,8 @@ import tools.jackson.databind.ValueDeserializer;
 import tools.jackson.databind.ValueSerializer;
 import tools.jackson.databind.annotation.JsonDeserialize;
 import tools.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.jsontype.TypeDeserializer;
+import tools.jackson.databind.jsontype.TypeSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +47,11 @@ public class PathDefinition extends ADefinition {
 
     public static class PathDefinitionSerializer extends ValueSerializer<PathDefinition> {
         @Override
+        public void serializeWithType(PathDefinition value, JsonGenerator generator, SerializationContext ctxt, TypeSerializer typeSer) throws JacksonException {
+            this.serialize(value, generator, ctxt);
+        }
+
+        @Override
         public void serialize(PathDefinition value, JsonGenerator generator, SerializationContext ctxt) throws JacksonException {
             String[] texts = new String[value.identifiers.size()];
 
@@ -63,6 +70,11 @@ public class PathDefinition extends ADefinition {
     }
 
     public static class PathDefinitionDeserializer extends ValueDeserializer<PathDefinition> {
+        @Override
+        public Object deserializeWithType(JsonParser parser, DeserializationContext context, TypeDeserializer typeDeserializer) throws JacksonException {
+            return this.deserialize(parser, context);
+        }
+
         @Override
         public PathDefinition deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
             String value;

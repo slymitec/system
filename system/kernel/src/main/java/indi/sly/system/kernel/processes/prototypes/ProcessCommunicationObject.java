@@ -451,7 +451,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             RBucket<SignalDefinition> processCommunicationSignalBucket = communicationRepository.getBucket("Process", this.base.getId(), "Communication_Signal");
 
             if (processCommunicationSignalBucket.isExists()) {
-                throw new StatusAlreadyFinishedException();
+                throw new StatusAlreadyExistedException();
             }
 
             SignalDefinition signal = new SignalDefinition();

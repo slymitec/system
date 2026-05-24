@@ -58,7 +58,7 @@ public class CacheRepositoryObject extends AObject {
     }
 
     public <T extends ACacheEntity> T add(T cache) {
-        if (ValueUtil.isAnyNullOrEmpty(cache, cache.getId())) {
+        if (ObjectUtil.isAnyNull(cache)) {
             throw new ConditionParametersException();
         }
 

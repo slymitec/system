@@ -3,7 +3,6 @@ package indi.sly.system.test;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.kernel.processes.instances.values.SessionType;
 import indi.sly.system.services.faces.AController;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
@@ -65,7 +64,7 @@ public class TestController extends AController {
         ProcessSessionObject processSession = process.getSession();
 
         if (ValueUtil.isAnyNullOrEmpty(processSession.getId())) {
-            processSession.create("Main", SessionType.CLI);
+            //processSession.create("Main", SessionType.CLI);
         }
         result.put("ProcessSessionID", processSession.getId());
 

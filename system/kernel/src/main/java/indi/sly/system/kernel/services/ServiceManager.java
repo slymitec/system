@@ -24,6 +24,9 @@ import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.values.ProcessAdditionalCreatorDefinition;
+import indi.sly.system.kernel.processes.values.ProcessContextType;
+import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.services.instances.prototypes.ServiceContentObject;
@@ -150,7 +153,10 @@ public class ServiceManager extends AManager {
             executeInfo = objectManager.get(executePath);
             executeInfoIndex = executeInfo.open(InfoOpenAttributeType.OPEN_ONLY_READ);
 
-            ProcessObject process = processManager.create(authorize, executeInfoIndex, serviceContent.getParameters(), workFolderPath);
+            ProcessAdditionalCreatorDefinition processAdditionalCreator = new ProcessAdditionalCreatorDefinition();
+            processAdditionalCreator.setContextType(ProcessContextType.EXECUTABLE_SERVICE);
+
+            ProcessObject process = processManager.create(authorize, executeInfoIndex, serviceContent.getParameters(), workFolderPath, processAdditionalCreator);
 
             ProcessContextObject processContext = process.getContext();
             processContext.setEnvironmentVariables(serviceContent.getEnvironmentVariables());

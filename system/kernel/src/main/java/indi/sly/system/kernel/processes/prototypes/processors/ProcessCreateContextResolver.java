@@ -1,10 +1,8 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.lang.AKernelException;
-import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.StatusUnreadableException;
-import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
@@ -14,13 +12,10 @@ import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
-import indi.sly.system.kernel.processes.instances.values.SessionType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessLifeProcessorMediator;
 import indi.sly.system.kernel.processes.values.ApplicationDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -38,8 +33,9 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
             KernelConfigurationDefinition configuration = this.coreManager.getKernelSpace().getConfiguration();
 
             ProcessContextObject processContext = process.getContext();
-            ProcessSessionObject parentProcessSession = parentProcess.getSession();
             ProcessContextObject parentProcessContext = parentProcess.getContext();
+
+            processContext.setType(processCreator.getContextType());
 
             if (!ValueUtil.isAnyNullOrEmpty(processCreator.getFileIndex())) {
                 ProcessInfoTableObject parentProcessInfoTable = parentProcess.getInfoTable();
@@ -59,22 +55,8 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
                             throw new StatusUnreadableException();
                         });
 
-                if (!ValueUtil.isAnyNullOrEmpty(parentProcessSession.getId())) {
-                    SessionContentObject sessionContent = parentProcessSession.getContent();
-                    if (ObjectUtil.allNotNull(sessionContent) && LogicalUtil.allNotEqual(sessionContent.getType(), application.getSupportedSession(), SessionType.KNOWN)) {
-                        throw new StatusNotSupportedException();
-                    }
-                }
-
                 processContext.setPath(info.getPath());
                 processContext.setApplication(application);
-            }
-
-            if (!ValueUtil.isAnyNullOrEmpty(parentProcessSession.getId())) {
-                SessionContentObject sessionContent = parentProcessSession.getContent();
-                if (ObjectUtil.allNotNull()) {
-                    processContext.setEnvironmentVariables(sessionContent.getEnvironmentVariables());
-                }
             }
 
             if (!ValueUtil.isAnyNullOrEmpty(processCreator.getParameters())) {

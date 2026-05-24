@@ -1,20 +1,21 @@
 package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 
-import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ProcessCreatorDefinition extends ADefinition {
     public ProcessCreatorDefinition() {
-        this.inheritSessionID = true;
+        this.inheritSession = true;
+        this.contextType = ProcessContextType.EXECUTABLE;
     }
 
     private AccountAuthorizationObject accountAuthorization;
-    private boolean inheritSessionID;
+    private boolean inheritSession;
+    private long contextType;
     private UUID fileIndex;
     private String parameters;
     private PathDefinition workFolder;
@@ -27,12 +28,20 @@ public class ProcessCreatorDefinition extends ADefinition {
         this.accountAuthorization = accountAuthorization;
     }
 
-    public boolean isInheritSessionID() {
-        return inheritSessionID;
+    public boolean isInheritSession() {
+        return inheritSession;
     }
 
-    public void setInheritSessionID(boolean inheritSessionID) {
-        this.inheritSessionID = inheritSessionID;
+    public void setInheritSession(boolean inheritSession) {
+        this.inheritSession = inheritSession;
+    }
+
+    public long getContextType() {
+        return this.contextType;
+    }
+
+    public void setContextType(long contextType) {
+        this.contextType = contextType;
     }
 
     public UUID getFileIndex() {

@@ -16,6 +16,7 @@ import tools.jackson.databind.jsontype.TypeSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @JsonSerialize(using = PathDefinition.PathDefinitionSerializer.class)
@@ -107,5 +108,17 @@ public class PathDefinition extends ADefinition {
 
             return new PathDefinition(identifications);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PathDefinition that = (PathDefinition) o;
+        return Objects.equals(identifiers, that.identifiers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(identifiers);
     }
 }

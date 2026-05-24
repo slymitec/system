@@ -50,8 +50,8 @@ public class ProcessFactory extends AFactory {
         this.processCreatorResolvers.add(this.coreManager.create(ProcessCreateStatisticsResolver.class));
         this.processCreatorResolvers.add(this.coreManager.create(ProcessCreateTokenResolver.class));
         this.processCreatorResolvers.add(this.coreManager.create(ProcessCreateTokenRuleResolver.class));
+        this.processEndResolvers.add(this.coreManager.create(ProcessEndCheckResolver.class));
         this.processEndResolvers.add(this.coreManager.create(ProcessEndCommunicationResolver.class));
-        this.processEndResolvers.add(this.coreManager.create(ProcessEndSessionResolver.class));
         this.processEndResolvers.add(this.coreManager.create(ProcessEndInfoTableResolver.class));
         this.processEndResolvers.add(this.coreManager.create(ProcessEndNotifyParentResolver.class));
         this.processResolvers.add(this.coreManager.create(ProcessMemberResolver.class));

@@ -24,7 +24,6 @@ import indi.sly.system.kernel.objects.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
@@ -111,14 +110,14 @@ public class UserManager extends AManager {
         return this.getTargetAccount(processToken.getAccountId());
     }
 
-    public AccountObject getAccount(UUID accountID) {
-        if (ValueUtil.isAnyNullOrEmpty(accountID)) {
+    public AccountObject getAccount(UUID accountId) {
+        if (ValueUtil.isAnyNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
 
         AccountObject currentAccount = this.getCurrentAccount();
 
-        if (currentAccount.getId().equals(accountID)) {
+        if (currentAccount.getId().equals(accountId)) {
             return currentAccount;
         } else {
             ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
@@ -126,13 +125,12 @@ public class UserManager extends AManager {
             ProcessObject process = processManager.getCurrent();
             ProcessTokenObject processToken = process.getToken();
             ProcessSessionObject processSession = process.getSession();
-            SessionContentObject processSessionContent = processSession.getContent();
 
-            if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT) || !accountID.equals(processSessionContent.getAccountID())) {
+            if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
                 throw new ConditionRefuseException();
             }
 
-            return this.getTargetAccount(accountID);
+            return this.getTargetAccount(accountId);
         }
     }
 
@@ -151,11 +149,10 @@ public class UserManager extends AManager {
             ProcessObject process = processManager.getCurrent();
             ProcessTokenObject processToken = process.getToken();
             ProcessSessionObject processSession = process.getSession();
-            SessionContentObject processSessionContent = processSession.getContent();
 
             AccountObject account = this.getTargetAccount(accountName);
 
-            if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT) || !account.getId().equals(processSessionContent.getAccountID())) {
+            if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
                 throw new ConditionRefuseException();
             }
 

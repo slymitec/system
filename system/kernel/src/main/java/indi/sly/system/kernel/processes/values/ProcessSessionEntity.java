@@ -6,35 +6,34 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ProcessSessionEntity extends APersistentEntity {
-    private UUID sessionID;
-    private boolean link;
+    private UUID sessionId;
+    private long type;
 
-    public boolean isLink() {
-        return this.link;
+    public long getType() {
+        return this.type;
     }
 
-    public void setLink(boolean link) {
-        this.link = link;
+    public void setType(long type) {
+        this.type = type;
     }
 
-    public UUID getSessionID() {
-        return this.sessionID;
+    public UUID getSessionId() {
+        return this.sessionId;
     }
 
-    public void setSessionID(UUID sessionID) {
-        this.sessionID = sessionID;
+    public void setSessionId(UUID sessionId) {
+        this.sessionId = sessionId;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProcessSessionEntity that = (ProcessSessionEntity) o;
-        return link == that.link && Objects.equals(sessionID, that.sessionID);
+        return type == that.type && Objects.equals(sessionId, that.sessionId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sessionID, link);
+        return Objects.hash(sessionId, type);
     }
 }

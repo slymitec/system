@@ -11,14 +11,11 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.PathDefinition;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
-import indi.sly.system.kernel.objects.TypeManager;
-import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
-import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
-import indi.sly.system.kernel.processes.instances.prototypes.processors.SessionTypeInitializer;
 import indi.sly.system.kernel.processes.prototypes.*;
+import indi.sly.system.kernel.processes.values.ProcessAdditionalCreatorDefinition;
+import indi.sly.system.kernel.processes.values.ProcessContextType;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.processes.values.ThreadStatusType;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
@@ -46,19 +43,6 @@ public class ProcessManager extends AManager {
             this.factory = this.coreManager.create(ProcessFactory.class);
             this.factory.init();
         } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
-            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
-
-            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
-
-            long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,
-                    TypeInitializerAttributeType.CAN_NOT_CHANGE_OWNER, TypeInitializerAttributeType.HAS_AUDIT,
-                    TypeInitializerAttributeType.HAS_CONTENT, TypeInitializerAttributeType.HAS_PERMISSION,
-                    TypeInitializerAttributeType.HAS_PROPERTIES, TypeInitializerAttributeType.TEMPORARY);
-            Set<UUID> childTypes = Set.of();
-            AInfoTypeInitializer typeInitializer = this.coreManager.create(SessionTypeInitializer.class);
-
-            typeManager.create(kernelConfiguration.PROCESSES_SESSION_INSTANCE_ID,
-                    kernelConfiguration.PROCESSES_SESSION_INSTANCE_NAME, attribute, childTypes, typeInitializer);
         }
     }
 
@@ -121,7 +105,11 @@ public class ProcessManager extends AManager {
         return this.get(processID, null);
     }
 
-    public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, String parameters, PathDefinition workFolder) {
+    public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, String parameters, PathDefinition workFolder, ProcessAdditionalCreatorDefinition additionalCreator) {
+        if (ValueUtil.isAnyNullOrEmpty(fileIndex)) {
+            throw new ConditionParametersException();
+        }
+
         ProcessCreatorDefinition processCreator = new ProcessCreatorDefinition();
 
         if (ObjectUtil.allNotNull(accountAuthorization)) {
@@ -139,6 +127,11 @@ public class ProcessManager extends AManager {
             processCreator.setWorkFolder(workFolder);
         }
 
+        if (ObjectUtil.allNotNull(additionalCreator)) {
+            processCreator.setInheritSession(additionalCreator.isInheritSession());
+            processCreator.setContextType(additionalCreator.getContextType());
+        }
+
         ProcessObject process = this.getCurrent();
         ProcessCreateBuilder processCreateBuilder = this.factory.createProcessCreator(process);
 
@@ -152,7 +145,7 @@ public class ProcessManager extends AManager {
         if (!ValueUtil.isAnyNullOrEmpty(process.getParentId())) {
             try {
                 parentProcess = this.getTarget(process.getParentId());
-            } catch (StatusNotExistedException ignored) {
+            } catch (StatusNotExistedException _) {
             }
         }
 
@@ -160,21 +153,12 @@ public class ProcessManager extends AManager {
         processEndBuilder.build();
     }
 
-    public void end(UUID processID) {
-        if (ValueUtil.isAnyNullOrEmpty(processID)) {
+    public void end(UUID processId) {
+        if (ValueUtil.isAnyNullOrEmpty(processId)) {
             throw new ConditionParametersException();
         }
 
-        ProcessObject currentProcess = this.getCurrent();
-        if (!currentProcess.getId().equals(processID)) {
-            ProcessTokenObject currentProcessToken = currentProcess.getToken();
-
-            if (!LogicalUtil.isAllExist(currentProcessToken.getPrivileges(), PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
-                throw new ConditionRefuseException();
-            }
-        }
-
-        ProcessObject process = this.getTarget(processID);
+        ProcessObject process = this.getTarget(processId);
         ProcessObject parentProcess = null;
 
         if (!ValueUtil.isAnyNullOrEmpty(process.getParentId())) {

@@ -14,11 +14,10 @@ public class ApplicationDefinition extends ADefinition {
 
     private UUID id;
     private String name;
-    private long supportedSession;
     private String serverURL;
     private final Map<String, String> configurations;
 
-    public UUID getID() {
+    public UUID getId() {
         return this.id;
     }
 
@@ -32,14 +31,6 @@ public class ApplicationDefinition extends ADefinition {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public long getSupportedSession() {
-        return this.supportedSession;
-    }
-
-    public void setSupportedSession(long supportedSession) {
-        this.supportedSession = supportedSession;
     }
 
     public String getServerURL() {
@@ -56,15 +47,14 @@ public class ApplicationDefinition extends ADefinition {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ApplicationDefinition that = (ApplicationDefinition) o;
-        return supportedSession == that.supportedSession && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(serverURL, that.serverURL) && configurations.equals(that.configurations);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(serverURL, that.serverURL) && Objects.equals(configurations, that.configurations);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, supportedSession, serverURL, configurations);
+        return Objects.hash(id, name, serverURL, configurations);
     }
 }
 

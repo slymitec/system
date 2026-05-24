@@ -1,10 +1,13 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
+import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessLifeProcessorMediator;
+import indi.sly.system.kernel.security.values.PrivilegeType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -20,9 +23,8 @@ public class ProcessCreateSessionResolver extends AResolver implements IProcessC
             ProcessSessionObject parentProcessSession = parentProcess.getSession();
             ProcessSessionObject processSession = process.getSession();
 
-            if (processCreator.isInheritSessionID() && !ValueUtil.isAnyNullOrEmpty(parentProcessSession.getId())
-                    && parentProcessSession.isLink()) {
-                processSession.inheritID();
+            if (processCreator.isInheritSession() && !ValueUtil.isAnyNullOrEmpty(parentProcessSession.getId())) {
+                processSession.inherit();
             }
 
             return process;

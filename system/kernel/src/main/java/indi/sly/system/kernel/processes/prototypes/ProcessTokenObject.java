@@ -13,8 +13,6 @@ import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefiniti
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.instances.prototypes.SessionContentObject;
-import indi.sly.system.kernel.processes.instances.values.SessionType;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
@@ -411,34 +409,12 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         if (LogicalUtil.isAllExist(processContextType, ProcessContextType.EXECUTABLE_SERVICE)) {
             ApplicationDefinition processContextApplication = processContext.getApplication();
             if (ObjectUtil.allNotNull(processContextApplication)) {
-                roles.add(processContextApplication.getID());
+                roles.add(processContextApplication.getId());
             }
         } else if (LogicalUtil.isAllExist(processContextType, ProcessContextType.BATCH)) {
             roles.add(kernelConfiguration.SECURITY_ROLE_BATCHES_ID);
         } else if (LogicalUtil.isAllExist(processContextType, ProcessContextType.EXECUTABLE)) {
             roles.add(kernelConfiguration.SECURITY_ROLE_EXECUTABLE_ID);
-        }
-
-        ProcessSessionObject processSession;
-        if (this.base.isCurrent()) {
-            processSession = this.base.getSession();
-        } else {
-            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
-            ProcessObject process = processManager.getCurrent();
-            processSession = process.getSession();
-        }
-        if (!ValueUtil.isAnyNullOrEmpty(processSession.getId())) {
-            SessionContentObject sessionContent = processSession.getContent();
-            if (ObjectUtil.allNotNull(sessionContent)) {
-                long sessionContentType = sessionContent.getType();
-                if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.API)) {
-                    roles.add(kernelConfiguration.SECURITY_ROLE_API_ID);
-                } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.GUI)) {
-                    roles.add(kernelConfiguration.SECURITY_ROLE_GUI_ID);
-                } else if (LogicalUtil.isAnyEqual(sessionContentType, SessionType.CLI)) {
-                    roles.add(kernelConfiguration.SECURITY_ROLE_CLI_ID);
-                }
-            }
         }
 
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);

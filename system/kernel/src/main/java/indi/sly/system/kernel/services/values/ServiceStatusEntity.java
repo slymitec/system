@@ -26,13 +26,13 @@ public class ServiceStatusEntity extends APersistentEntity {
     protected UUID processId;
 
     @ManyToMany
-    @JoinTable(name = "Kernel_ServiceStatus_Relations", joinColumns = @JoinColumn(name = "parentId"), inverseJoinColumns = @JoinColumn(name = "childId")
+    @JoinTable(name = "Kernel_ServiceStatus_Relations", joinColumns = @JoinColumn(name = "ParentId"), inverseJoinColumns = @JoinColumn(name = "ChildId")
     )
-    @JsonIgnoreProperties("dependents")
+    @JsonIgnoreProperties("dependencies")
     private Set<ServiceStatusEntity> dependencies;
 
     @ManyToMany(mappedBy = "dependencies")
-    @JsonIgnoreProperties("dependencies")
+    @JsonIgnoreProperties("dependents")
     private Set<ServiceStatusEntity> dependents;
 
     @Column(name = "Independence", nullable = false)

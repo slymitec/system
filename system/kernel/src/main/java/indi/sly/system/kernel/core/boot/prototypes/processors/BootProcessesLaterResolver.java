@@ -27,8 +27,8 @@ public class BootProcessesLaterResolver extends ABootResolver {
 
                 ProcessCommunicationObject communication = process.getCommunication();
 
-                UUID signalID = communication.getSignalId();
-                if (ValueUtil.isAnyNullOrEmpty(signalID)) {
+                UUID signalId = communication.getSignalId();
+                if (ValueUtil.isAnyNullOrEmpty(signalId)) {
                     communication.createSignal(new HashSet<>());
                 }
             }

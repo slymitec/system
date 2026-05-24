@@ -26,11 +26,11 @@ public class ProcessEndNotifyParentResolver extends AResolver implements IProces
                 ProcessCommunicationObject parentProcessCommunication = parentProcess.getCommunication();
                 ProcessCommunicationObject processCommunication = process.getCommunication();
 
-                UUID signalID = parentProcessCommunication.getSignalId();
+                UUID signalId = parentProcessCommunication.getSignalId();
 
-                if (!ValueUtil.isAnyNullOrEmpty(signalID)) {
+                if (!ValueUtil.isAnyNullOrEmpty(signalId)) {
                     try {
-                        processCommunication.sendSignal(signalID, SignalType.TYPE_PROCESS,
+                        processCommunication.sendSignal(signalId, SignalType.TYPE_PROCESS,
                                 LogicalUtil.or(SignalType.ACTION_DELETE, SignalType.RESULT_SUCCESS));
                     } catch (AKernelException ignored) {
                     }

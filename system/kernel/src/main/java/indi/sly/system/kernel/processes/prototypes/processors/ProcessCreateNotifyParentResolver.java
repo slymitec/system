@@ -24,10 +24,10 @@ public class ProcessCreateNotifyParentResolver extends AResolver implements IPro
             if (ObjectUtil.allNotNull(parentProcess)) {
                 ProcessCommunicationObject parentProcessCommunication = parentProcess.getCommunication();
 
-                UUID signalID = parentProcessCommunication.getSignalId();
+                UUID signalId = parentProcessCommunication.getSignalId();
 
-                if (!ValueUtil.isAnyNullOrEmpty(signalID)) {
-                    parentProcessCommunication.sendSignal(signalID, SignalType.TYPE_PROCESS,
+                if (!ValueUtil.isAnyNullOrEmpty(signalId)) {
+                    parentProcessCommunication.sendSignal(signalId, SignalType.TYPE_PROCESS,
                             LogicalUtil.or(SignalType.ACTION_CREATE, SignalType.RESULT_SUCCESS));
                 }
             }

@@ -74,7 +74,7 @@ public class UserContentObject extends ADefinitionObject<UserContextDefinition> 
         } else {
             AKernelException kernelException = taskContent.getException();
 
-            ClientResponseExceptionDefinition clientResponseException = new ClientResponseExceptionDefinition();
+            ClientResponseExceptionDefinition clientResponseException = this.definition.getException();
 
             clientResponseException.setId(userContentRequest.getId());
 
@@ -89,8 +89,6 @@ public class UserContentObject extends ADefinitionObject<UserContextDefinition> 
                 kernelExceptionStackTraceMessage[i] = kernelExceptionStackTrace[i].getClassName() + "." + kernelExceptionStackTrace[i].getMethodName() + "(...)";
             }
             clientResponseException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
-
-            this.definition.setException(clientResponseException);
         }
 
         task.finish();

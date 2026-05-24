@@ -2,6 +2,7 @@ package indi.sly.system.services.jobs.prototypes;
 
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.ADefinitionObject;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
@@ -60,10 +61,10 @@ public class UserContextObject extends ADefinitionObject<UserContextDefinition> 
 
         ClientResponseDefinition clientResponse = new ClientResponseDefinition();
 
-        if (ObjectUtil.isAnyNull(clientResponseException)) {
-            clientResponse.setException(clientResponseException);
-        } else {
+        if (ValueUtil.isAnyNullOrEmpty(clientResponseException.getId())) {
             clientResponse.setContent(userContentResponse);
+        } else {
+            clientResponse.setException(clientResponseException);
         }
 
         return clientResponse;

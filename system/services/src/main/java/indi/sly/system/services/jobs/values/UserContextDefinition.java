@@ -7,11 +7,12 @@ import java.util.UUID;
 public class UserContextDefinition extends ADefinition {
     public UserContextDefinition() {
         this.content = new UserContentDefinition();
+        this.exception = new ClientResponseExceptionDefinition();
     }
 
     private UUID threadId;
     private final UserContentDefinition content;
-    private ClientResponseExceptionDefinition exception;
+    private final ClientResponseExceptionDefinition exception;
 
     public UUID getThreadId() {
         return this.threadId;
@@ -27,9 +28,5 @@ public class UserContextDefinition extends ADefinition {
 
     public ClientResponseExceptionDefinition getException() {
         return this.exception;
-    }
-
-    public void setException(ClientResponseExceptionDefinition exception) {
-        this.exception = exception;
     }
 }

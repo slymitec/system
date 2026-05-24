@@ -9,6 +9,14 @@ public class UserContentResponseDefinition extends ADefinition {
     private String clazz;
     private Object value;
 
+    public UUID getId() {
+        return this.id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public String getClazz() {
         return this.clazz;
     }
@@ -23,13 +31,5 @@ public class UserContentResponseDefinition extends ADefinition {
 
     public void setValue(Object value) {
         this.value = value;
-    }
-
-    public UUID getId() {
-        return this.id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 }

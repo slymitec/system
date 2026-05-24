@@ -19,9 +19,9 @@ public class UserContextCreateProcessIDVerificationResolver extends AResolver im
         this.create = (userContext, userContextRequest) -> {
             ClientRequestProcessIdDefinition userContextRequestProcessID = userContextRequest.getProcessId();
 
-            UUID processID = userContextRequestProcessID.getId();
+            UUID processId = userContextRequestProcessID.getId();
 
-            if (ValueUtil.isAnyNullOrEmpty(processID)) {
+            if (ValueUtil.isAnyNullOrEmpty(processId)) {
                 throw new ConditionRefuseException();
             }
 

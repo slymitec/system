@@ -21,12 +21,12 @@ public class UserContextCreateProcessAndThreadResolver extends AResolver impleme
         this.create = (userContext, userContextRequest) -> {
             ClientRequestProcessIdDefinition userContextRequestProcessID = userContextRequest.getProcessId();
 
-            UUID processID = userContextRequestProcessID.getId();
+            UUID processId = userContextRequestProcessID.getId();
 
             TransactionalActionComponent transactionalAction = this.coreManager.create(TransactionalActionComponent.class);
 
             ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
-            ThreadObject thread = transactionalAction.runWithTransactional(() -> threadManager.create(processID));
+            ThreadObject thread = transactionalAction.runWithTransactional(() -> threadManager.create(processId));
 
             userContext.setThreadId(thread.getId());
 

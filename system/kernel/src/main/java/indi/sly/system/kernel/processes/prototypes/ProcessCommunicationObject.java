@@ -395,7 +395,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
         this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            return cacheRepository.contain(PortCacheEntity.class, this.base.getId());
+            return cacheRepository.contain(SignalCacheEntity.class, this.base.getId());
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
         }
@@ -418,7 +418,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
         this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            if (cacheRepository.contain(PortCacheEntity.class, this.base.getId())) {
+            if (cacheRepository.contain(SignalCacheEntity.class, this.base.getId())) {
                 throw new StatusAlreadyExistedException();
             }
 

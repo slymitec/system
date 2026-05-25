@@ -10,6 +10,7 @@ import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
+import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.instances.prototypes.processors.*;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.CoreManagerTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.DateTimeObjectTaskInitializer;
@@ -36,9 +37,11 @@ public class JobService extends AService {
             this.factory.init();
         } else if (startup == StartupType.STEP_INIT_SERVICE) {
             KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
-            KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
-            kernelSpace.setServiceSpace(new ServiceKernelSpaceExtensionDefinition());
+            ServiceKernelSpaceExtensionDefinition serviceSpace = new ServiceKernelSpaceExtensionDefinition();
+            TransactionalActionComponent transactionalAction = this.coreManager.create(TransactionalActionComponent.class);
+            serviceSpace.setTransactionalAction(transactionalAction);
+            kernelSpace.setServiceSpace(serviceSpace);
 
             this.createTask("CoreManager", TaskAttributeType.NULL, null, this.coreManager.create(CoreManagerTaskInitializer.class));
             this.createTask("SystemVersionObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(SystemVersionObjectTaskInitializer.class));

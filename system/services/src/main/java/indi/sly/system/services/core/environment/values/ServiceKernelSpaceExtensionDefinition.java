@@ -1,6 +1,7 @@
 package indi.sly.system.services.core.environment.values;
 
 import indi.sly.system.kernel.core.enviroment.values.AKernelSpaceExtensionDefinition;
+import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 
 import java.util.Map;
@@ -13,8 +14,17 @@ public class ServiceKernelSpaceExtensionDefinition extends AKernelSpaceExtension
         this.namedTaskIDs = new ConcurrentHashMap<>();
     }
 
+    private TransactionalActionComponent transactionalAction;
     private final Map<UUID, TaskDefinition> tasks;
     private final Map<String, UUID> namedTaskIDs;
+
+    public TransactionalActionComponent getTransactionalAction() {
+        return this.transactionalAction;
+    }
+
+    public void setTransactionalAction(TransactionalActionComponent transactionalAction) {
+        this.transactionalAction = transactionalAction;
+    }
 
     public Map<UUID, TaskDefinition> getTasks() {
         return this.tasks;

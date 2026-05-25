@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
+import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.lang.UserContextProcessorFinishFunction;
 import indi.sly.system.services.jobs.prototypes.mediators.UserContextProcessorMediator;
@@ -17,7 +18,8 @@ import jakarta.inject.Named;
 public class UserContextFinishThreadResolver extends AResolver implements IUserContextFinishResolver {
     public UserContextFinishThreadResolver() {
         this.finish = (userContext) -> {
-            TransactionalActionComponent transactionalAction = this.coreManager.create(TransactionalActionComponent.class);
+            ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.coreManager.getKernelSpace().getServiceSpace();
+            TransactionalActionComponent transactionalAction = serviceSpace.getTransactionalAction();
 
             ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
             transactionalAction.runWithTransactional(() -> {

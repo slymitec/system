@@ -2,6 +2,7 @@ package indi.sly.system.kernel.memory.repositories.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
@@ -14,10 +15,12 @@ import jakarta.inject.Named;
 import org.redisson.api.RLiveObject;
 import org.redisson.api.RLiveObjectService;
 import org.redisson.api.RedissonClient;
+import org.redisson.api.condition.Condition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.time.Duration;
+import java.util.Collection;
 import java.util.UUID;
 
 @Named
@@ -25,7 +28,6 @@ import java.util.UUID;
 public class CacheRepositoryObject extends AObject {
     @Resource
     private RedissonClient redissonClient;
-
     private RLiveObjectService liveObjectService;
 
     @PostConstruct
@@ -57,13 +59,17 @@ public class CacheRepositoryObject extends AObject {
         }
     }
 
-    public <T extends ACacheEntity> T add(T cache) {
-        if (ObjectUtil.isAnyNull(cache)) {
+    public <T extends ACacheEntity> Collection<T> gets(Class<T> clazz, Condition condition) {
+        if (ObjectUtil.isAnyNull(condition)) {
             throw new ConditionParametersException();
         }
 
-        if (ValueUtil.isAnyNullOrEmpty(cache.getId())) {
-            cache.setId(UUIDUtil.createRandom());
+        return this.liveObjectService.find(clazz, condition);
+    }
+
+    public <T extends ACacheEntity> T add(T cache) {
+        if (ObjectUtil.isAnyNull(cache)) {
+            throw new ConditionParametersException();
         }
 
         cache = this.liveObjectService.persist(cache);
@@ -81,8 +87,10 @@ public class CacheRepositoryObject extends AObject {
             liveObject.expire(Duration.ofSeconds(32L));
         } else if (duration == CacheDurationType.AGES) {
             liveObject.expire(Duration.ofSeconds(64L));
+        } else if (duration == CacheDurationType.PERMANENT) {
+            liveObject.clearExpire();
         } else {
-            liveObject.expire(Duration.ofSeconds(128L));
+            liveObject.expire(Duration.ofSeconds(2L));
         }
 
         return cache;
@@ -116,8 +124,10 @@ public class CacheRepositoryObject extends AObject {
             liveObject.expire(Duration.ofSeconds(32L));
         } else if (duration == CacheDurationType.AGES) {
             liveObject.expire(Duration.ofSeconds(64L));
+        } else if (duration == CacheDurationType.PERMANENT) {
+            liveObject.clearExpire();
         } else {
-            liveObject.expire(Duration.ofSeconds(128L));
+            liveObject.expire(Duration.ofSeconds(2L));
         }
     }
 

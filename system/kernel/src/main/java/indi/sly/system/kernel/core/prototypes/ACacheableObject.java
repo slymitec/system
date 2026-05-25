@@ -1,9 +1,13 @@
 package indi.sly.system.kernel.core.prototypes;
 
+import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
 import indi.sly.system.kernel.core.values.ACacheEntity;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
@@ -37,10 +41,14 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
             throw new StatusAlreadyFinishedException();
         }
 
+        if (ValueUtil.isAnyNullOrEmpty(cache.getId())) {
+            cache.setId(UUIDUtil.createRandom());
+        }
+
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        cacheRepository.add(this.cache);
+        this.cache = cacheRepository.add(this.cache);
 
         return this.cache.getId();
     }
@@ -61,5 +69,26 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
         cacheRepository.delete(cache.getClass(), id);
 
         this.cache.setId(null);
+    }
+
+    public final void expire(long duration) {
+        if (ObjectUtil.isAnyNull(this.cache)) {
+            throw new StatusNotSupportedException();
+        }
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getId())) {
+            throw new StatusAlreadyFinishedException();
+        }
+
+        if (LogicalUtil.isAnyEqual(duration, CacheDurationType.PERMANENT)) {
+            throw new ConditionRefuseException();
+        }
+        this.cache.setDuration(duration);
+
+        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
+        CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
+
+        @SuppressWarnings("unchecked")
+        Class<T> clazz = (Class<T>) cache.getClass();
+        cacheRepository.refresh(clazz, this.cache);
     }
 }

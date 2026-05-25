@@ -2,16 +2,20 @@ package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.kernel.core.values.ACacheEntity;
+import org.redisson.api.annotation.REntity;
+import org.redisson.api.annotation.RIndex;
 
 import java.util.*;
 
-public class PortDefinition extends ADefinition {
-    public PortDefinition() {
+@REntity
+public class PortCacheEntity extends ACacheEntity {
+    public PortCacheEntity() {
         this.sourceProcessIds = new HashSet<>();
         this.value = ArrayUtil.EMPTY_BYTES;
     }
 
+    @RIndex
     private UUID processId;
     private final Set<UUID> sourceProcessIds;
     private byte[] value;
@@ -54,13 +58,13 @@ public class PortDefinition extends ADefinition {
     }
 
     @Override
-    public final boolean equals(Object o) {
-        if (!(o instanceof PortDefinition that)) return false;
-        return limit == that.limit && Objects.equals(processId, that.processId) && Objects.equals(sourceProcessIds, that.sourceProcessIds) && Objects.deepEquals(value, that.value);
+    public boolean equals(Object o) {
+        if (!(o instanceof PortCacheEntity cache)) return false;
+        return Objects.equals(id, cache.id);
     }
 
     @Override
-    public final int hashCode() {
-        return Objects.hash(processId, sourceProcessIds, Arrays.hashCode(value), limit);
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

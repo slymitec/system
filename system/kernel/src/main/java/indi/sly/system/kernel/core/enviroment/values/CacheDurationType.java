@@ -1,9 +1,10 @@
 package indi.sly.system.kernel.core.enviroment.values;
 
 public interface CacheDurationType {
-    long INSTANT = 0;
-    long SHORT = 1;
-    long NORMAL = 2;
-    long LONG = 3;
-    long AGES = 4;
+    long INSTANT = 0L;
+    long SHORT = 1L;
+    long NORMAL = 2L;
+    long LONG = 3L;
+    long AGES = 4L;
+    long PERMANENT = -1L;
 }

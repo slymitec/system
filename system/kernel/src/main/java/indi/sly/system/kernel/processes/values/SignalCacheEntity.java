@@ -3,27 +3,22 @@ package indi.sly.system.kernel.processes.values;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.kernel.core.values.ACacheEntity;
+import org.redisson.api.annotation.REntity;
+import org.redisson.api.annotation.RIndex;
 
 import java.util.*;
 
-public class SignalDefinition extends ADefinition {
-    public SignalDefinition() {
+@REntity
+public class SignalCacheEntity extends ACacheEntity {
+    public SignalCacheEntity() {
         this.sourceProcessIds = new HashSet<>();
         this.signalEntries = new ArrayList<>();
     }
 
-    private UUID processId;
     private final Set<UUID> sourceProcessIds;
     private final List<SignalEntryDefinition> signalEntries;
     private int limit;
-
-    public UUID getProcessId() {
-        return this.processId;
-    }
-
-    public void setProcessId(UUID processId) {
-        this.processId = processId;
-    }
 
     public Set<UUID> getSourceProcessIds() {
         return this.sourceProcessIds;
@@ -58,13 +53,13 @@ public class SignalDefinition extends ADefinition {
     }
 
     @Override
-    public final boolean equals(Object o) {
-        if (!(o instanceof SignalDefinition that)) return false;
-        return limit == that.limit && Objects.equals(processId, that.processId) && Objects.equals(sourceProcessIds, that.sourceProcessIds) && Objects.equals(signalEntries, that.signalEntries);
+    public boolean equals(Object o) {
+        if (!(o instanceof SignalCacheEntity cache)) return false;
+        return Objects.equals(id, cache.id);
     }
 
     @Override
-    public final int hashCode() {
-        return Objects.hash(processId, sourceProcessIds, signalEntries, limit);
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

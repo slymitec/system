@@ -41,6 +41,6 @@ public class UserContextCreateContentResolver extends AResolver implements IUser
 
     @Override
     public int order() {
-        return 0;
+        return 1;
     }
 }

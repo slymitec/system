@@ -6,6 +6,7 @@ import java.util.UUID;
 
 public class ClientRequestProcessIdDefinition extends ADefinition {
     private UUID id;
+    private long type;
     private String secret;
     private String verification;
 
@@ -15,6 +16,14 @@ public class ClientRequestProcessIdDefinition extends ADefinition {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public long getType() {
+        return this.type;
+    }
+
+    public void setType(long type) {
+        this.type = type;
     }
 
     public String getSecret() {

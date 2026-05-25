@@ -14,8 +14,8 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserContextFinishProcessAndThreadResolver extends AResolver implements IUserContextFinishResolver {
-    public UserContextFinishProcessAndThreadResolver() {
+public class UserContextFinishThreadResolver extends AResolver implements IUserContextFinishResolver {
+    public UserContextFinishThreadResolver() {
         this.finish = (userContext) -> {
             TransactionalActionComponent transactionalAction = this.coreManager.create(TransactionalActionComponent.class);
 

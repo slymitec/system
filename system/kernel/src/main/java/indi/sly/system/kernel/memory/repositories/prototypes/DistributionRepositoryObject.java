@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.memory.repositories.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.AObject;
@@ -15,7 +14,7 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CommunicationRepositoryObject extends AObject {
+public class DistributionRepositoryObject extends AObject {
     @Resource
     private RedissonClient redissonClient;
 

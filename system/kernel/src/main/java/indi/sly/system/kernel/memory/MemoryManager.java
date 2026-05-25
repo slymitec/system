@@ -27,7 +27,7 @@ public class MemoryManager extends AManager {
             this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
                     this.coreManager.create(CacheRepositoryObject.class));
             this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
-                    this.coreManager.create(CommunicationRepositoryObject.class));
+                    this.coreManager.create(DistributionRepositoryObject.class));
             this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
                     this.coreManager.create(ProcessRepositoryObject.class));
             this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
@@ -61,8 +61,8 @@ public class MemoryManager extends AManager {
         return this.coreManager.getObjectCollection().getByClass(SpaceType.KERNEL, CacheRepositoryObject.class);
     }
 
-    public CommunicationRepositoryObject getCommunicationRepository() {
-        return this.coreManager.getObjectCollection().getByClass(SpaceType.KERNEL, CommunicationRepositoryObject.class);
+    public DistributionRepositoryObject getDistributionRepository() {
+        return this.coreManager.getObjectCollection().getByClass(SpaceType.KERNEL, DistributionRepositoryObject.class);
     }
 
     public ServiceRepositoryObject getServiceRepository() {

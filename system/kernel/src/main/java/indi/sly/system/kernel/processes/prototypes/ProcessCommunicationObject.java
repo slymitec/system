@@ -10,7 +10,6 @@ import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
-import indi.sly.system.kernel.memory.repositories.prototypes.CommunicationRepositoryObject;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.values.PortCacheEntity;
 import indi.sly.system.kernel.processes.values.SignalCacheEntity;
@@ -19,8 +18,6 @@ import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFuncti
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
 import indi.sly.system.kernel.processes.values.*;
-import org.redisson.api.RBucket;
-import org.redisson.api.RSet;
 import org.redisson.api.condition.Conditions;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

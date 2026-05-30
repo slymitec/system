@@ -15,6 +15,7 @@ import indi.sly.system.services.jobs.instances.prototypes.processors.*;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.CoreManagerTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.DateTimeObjectTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.SystemVersionObjectTaskInitializer;
+import indi.sly.system.services.jobs.instances.prototypes.processors.objects.InfoObjectTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.objects.ObjectManagerTaskInitializer;
 import indi.sly.system.services.jobs.prototypes.*;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
@@ -48,6 +49,8 @@ public class JobService extends AService {
             this.createTask("DateTimeObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(DateTimeObjectTaskInitializer.class));
 
             this.createTask("ObjectManager", TaskAttributeType.NULL, null, this.coreManager.create(ObjectManagerTaskInitializer.class));
+            this.createTask("InfoObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(InfoObjectTaskInitializer.class));
+
             this.createTask("ProcessManager", TaskAttributeType.NULL, null, this.coreManager.create(ProcessTaskInitializer.class));
             this.createTask("UserManager", TaskAttributeType.NULL, null, this.coreManager.create(UserManagerTaskInitializer.class));
 

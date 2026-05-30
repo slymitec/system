@@ -37,9 +37,9 @@ public class DateTimeObjectTaskInitializer extends ATaskInitializer {
     }
 
     private void getCurrent(TaskRunConsumer run, TaskContentObject content) {
-        DateTimeObject dateTimeObject = content.getCacheableObject();
+        DateTimeObject dateTime = content.getCacheableObject();
 
-        content.setResult(dateTimeObject.getCurrent());
+        content.setResult(dateTime.getCurrent());
     }
 
     private void correct(TaskRunConsumer run, TaskContentObject content) {

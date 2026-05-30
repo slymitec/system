@@ -1,5 +1,6 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors.objects;
 
+import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.PathDefinition;
@@ -38,7 +39,17 @@ public class ObjectManagerTaskInitializer extends ATaskInitializer {
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
-        InfoObject info = objectManager.get(ObjectUtil.transferFromString(PathDefinition.class, parameters.getFirst()));
+        if (parameters.isEmpty()) {
+            throw new ConditionParametersException();
+        }
+
+        PathDefinition path = ObjectUtil.transferFromString(PathDefinition.class, parameters.getFirst());
+
+        if (ObjectUtil.isAnyNull(path)) {
+            throw new ConditionParametersException();
+        }
+
+        InfoObject info = objectManager.get(path);
 
         UUID handle = info.cache();
 

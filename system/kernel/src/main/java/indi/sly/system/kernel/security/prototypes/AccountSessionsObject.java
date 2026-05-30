@@ -31,9 +31,8 @@ public class AccountSessionsObject extends AChildCacheableObject<AccountChildCac
     }
 
     public Set<UUID> listSessions() {
+        this.factory.lockAccount(this.cache.getAccount(), LockType.READ);
         try {
-            this.factory.lockAccount(this.cache.getAccount(), LockType.READ);
-
             AccountSessionsEntity accountSessions = this.getSelf().getSessions();
             return CollectionUtil.unmodifiable(accountSessions.getSessions());
         } finally {
@@ -46,9 +45,8 @@ public class AccountSessionsObject extends AChildCacheableObject<AccountChildCac
             throw new ConditionParametersException();
         }
 
+        this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
         try {
-            this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
-
             AccountSessionsEntity accountSessions = this.getSelf().getSessions();
             accountSessions.getSessions().add(sessionID);
 
@@ -63,9 +61,8 @@ public class AccountSessionsObject extends AChildCacheableObject<AccountChildCac
             throw new ConditionParametersException();
         }
 
+        this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
         try {
-            this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
-
             AccountSessionsEntity accountSessions = this.getSelf().getSessions();
             accountSessions.getSessions().remove(sessionID);
 

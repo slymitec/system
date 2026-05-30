@@ -40,9 +40,8 @@ public class AccountObject extends ACacheableObject<AccountCacheEntity> {
     }
 
     public String getName() {
+        this.factory.lockAccount(this.cache, LockType.READ);
         try {
-            this.factory.lockAccount(this.cache, LockType.READ);
-
             return this.getSelf().getName();
         } finally {
             this.factory.unlockAccount(this.cache, LockType.READ);
@@ -50,9 +49,8 @@ public class AccountObject extends ACacheableObject<AccountCacheEntity> {
     }
 
     public String getPassword() {
+        this.factory.lockAccount(this.cache, LockType.READ);
         try {
-            this.factory.lockAccount(this.cache, LockType.READ);
-
             return this.getSelf().getPassword();
         } finally {
             this.factory.unlockAccount(this.cache, LockType.READ);
@@ -69,9 +67,8 @@ public class AccountObject extends ACacheableObject<AccountCacheEntity> {
             throw new ConditionRefuseException();
         }
 
+        this.factory.lockAccount(this.cache, LockType.WRITE);
         try {
-            this.factory.lockAccount(this.cache, LockType.WRITE);
-
             this.getSelf().setPassword(password);
         } finally {
             this.factory.unlockAccount(this.cache, LockType.WRITE);
@@ -81,9 +78,8 @@ public class AccountObject extends ACacheableObject<AccountCacheEntity> {
     public Set<GroupObject> getGroups() {
         UserManager userManager = this.coreManager.getManager(UserManager.class);
 
+        this.factory.lockAccount(this.cache, LockType.READ);
         try {
-            this.factory.lockAccount(this.cache, LockType.READ);
-
             Set<GroupObject> groups = new HashSet<>();
 
             for (GroupEntity group : this.getSelf().getGroups()) {
@@ -113,9 +109,8 @@ public class AccountObject extends ACacheableObject<AccountCacheEntity> {
 
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
+        this.factory.lockAccount(this.cache, LockType.WRITE);
         try {
-            this.factory.lockAccount(this.cache, LockType.WRITE);
-
             AccountEntity account = this.getSelf();
 
             if (ObjectUtil.isAnyNull(account.getGroups())) {

@@ -69,9 +69,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        try {
-            type.getInitializer().lockProcedure(info, LockType.READ);
-
+       type.getInitializer().lockProcedure(info, LockType.READ); 
+       try {     
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (this.cache.isPermission()) {
@@ -166,9 +165,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        try {
-            type.getInitializer().lockProcedure(info, LockType.READ);
-
+       type.getInitializer().lockProcedure(info, LockType.READ); 
+       try {     
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
@@ -199,9 +197,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        try {
-            type.getInitializer().lockProcedure(info, LockType.WRITE);
-
+       type.getInitializer().lockProcedure(info, LockType.WRITE); 
+       try {     
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
@@ -234,9 +231,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        try {
-            type.getInitializer().lockProcedure(info, LockType.READ);
-
+       type.getInitializer().lockProcedure(info, LockType.READ); 
+       try {     
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
@@ -270,9 +266,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        try {
-            type.getInitializer().lockProcedure(info, LockType.WRITE);
-
+       type.getInitializer().lockProcedure(info, LockType.WRITE); 
+       try {     
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if ((!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
@@ -323,9 +318,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             return false;
         }
 
-        try {
-            type.getInitializer().lockProcedure(info, LockType.READ);
-
+       type.getInitializer().lockProcedure(info, LockType.READ); 
+       try {     
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
             securityDescriptors.add(securityDescriptor);
 
@@ -494,9 +488,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        try {
-            type.getInitializer().lockProcedure(info, LockType.WRITE);
-
+       type.getInitializer().lockProcedure(info, LockType.WRITE); 
+       try {     
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             for (AccessControlDefinition permission : permissions) {
@@ -572,9 +565,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         ProcessTokenObject processToken = process.getToken();
         ProcessSessionObject processSession = process.getSession();
 
-        try {
-            type.getInitializer().lockProcedure(info, LockType.READ);
-
+       type.getInitializer().lockProcedure(info, LockType.READ); 
+       try {     
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
             securityDescriptors.add(securityDescriptor);
 
@@ -705,9 +697,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        try {
-            type.getInitializer().lockProcedure(info, LockType.WRITE);
-
+       type.getInitializer().lockProcedure(info, LockType.WRITE); 
+       try {     
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (this.cache.isPermission() && !processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)

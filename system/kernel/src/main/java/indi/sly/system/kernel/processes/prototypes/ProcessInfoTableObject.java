@@ -99,8 +99,8 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
             currentProcessInfoTable.factory.lockProcess(currentProcessInfoTable.cache.getProcess(), LockType.WRITE);
 
             InfoObject info = currentProcessInfoTable.getByIndex(index).getInfo();
@@ -160,9 +160,8 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-
             ProcessInfoTableEntity processInfoTable = this.init(process);
 
             return processInfoTable.containByID(id);
@@ -184,9 +183,8 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
             throw new StatusNotExistedException();
         }
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-
             return this.factory.buildProcessInfoEntry(processorMediator, this, index);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
@@ -204,9 +202,8 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-
             ProcessInfoTableEntity processInfoTable = this.init(process);
 
             UUID index = processInfoTable.getByID(id).getIndex();
@@ -230,9 +227,8 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             if (this.containById(id)) {
                 throw new StatusAlreadyExistedException();
             }

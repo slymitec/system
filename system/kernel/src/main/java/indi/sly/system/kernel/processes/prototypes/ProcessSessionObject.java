@@ -70,9 +70,8 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
     public UUID getId() {
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-
             ProcessSessionEntity processSession = this.init(process);
 
             return processSession.getSessionId();
@@ -92,9 +91,8 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             ProcessSessionEntity processSession = this.init(process);
 
             processSession.setSessionId(id);
@@ -108,9 +106,8 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
     public long getType() {
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-
             ProcessSessionEntity processSession = this.init(process);
 
             return processSession.getType();
@@ -130,9 +127,8 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             ProcessSessionEntity processSession = this.init(process);
 
             if (ValueUtil.isAnyNullOrEmpty(processSession.getSessionId())) {
@@ -162,9 +158,8 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             ProcessSessionEntity processSession = this.init(process);
 
             if (ValueUtil.isAnyNullOrEmpty(processSession.getSessionId())) {

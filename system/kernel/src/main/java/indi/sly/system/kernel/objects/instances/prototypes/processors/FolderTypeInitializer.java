@@ -48,9 +48,8 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
+        this.lockProcedure(info, LockType.WRITE);
         try {
-            this.lockProcedure(info, LockType.WRITE);
-
             InfoWildcardDefinition wildcard = new InfoWildcardDefinition(childInfo.getName());
             if (infoRepository.countRelation(info, wildcard) > 0) {
                 throw new StatusAlreadyExistedException();
@@ -80,9 +79,8 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
+        this.lockProcedure(info, LockType.READ);
         try {
-            this.lockProcedure(info, LockType.READ);
-
             InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoName);
 
             infoSummary.setID(infoRelation.getId());
@@ -102,9 +100,8 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
+        this.lockProcedure(info, LockType.READ);
         try {
-            this.lockProcedure(info, LockType.READ);
-
             List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
             for (InfoRelationEntity infoRelation : infoRelations) {
                 InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
@@ -132,9 +129,8 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
+        this.lockProcedure(info, LockType.WRITE);
         try {
-            this.lockProcedure(info, LockType.WRITE);
-
             InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoName);
 
             infoRepository.deleteRelation(infoRelation);

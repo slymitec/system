@@ -30,9 +30,8 @@ public class GroupObject extends ACacheableObject<GroupCacheEntity> {
     }
 
     public String getName() {
+        this.factory.lockGroup(this.cache, LockType.READ);
         try {
-            this.factory.lockGroup(this.cache, LockType.READ);
-
             return this.getSelf().getName();
         } finally {
             this.factory.unlockGroup(this.cache, LockType.READ);

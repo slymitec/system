@@ -38,9 +38,8 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
     public long get() {
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-
             Long status = ProcessStatusType.NULL;
 
             Set<ProcessProcessorReadStatusFunction> resolvers = this.processorMediator.getReadProcessStatuses();
@@ -70,9 +69,8 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             throw new ConditionRefuseException();
         }
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
             for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
@@ -118,9 +116,8 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             }
         }
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
             for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
@@ -163,9 +160,8 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             }
         }
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
             for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
@@ -184,9 +180,8 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
             for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
@@ -217,9 +212,8 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             throw new StatusIsUsedException();
         }
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
             for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {

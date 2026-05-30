@@ -94,9 +94,8 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             ProcessTokenEntity processToken = this.init(process);
 
             if (!ValueUtil.isAnyNullOrEmpty(processToken.getAccountId())
@@ -131,9 +130,8 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-
             ProcessTokenEntity processToken = this.init(process);
 
             return processToken.getAccountId();
@@ -158,9 +156,8 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             ProcessTokenEntity processToken = this.init(process);
 
             processToken.setAccountId(currentProcessToken.getAccountId());
@@ -179,9 +176,8 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-
             ProcessTokenEntity processToken = this.init(process);
 
             return processToken.getPrivileges();
@@ -206,9 +202,8 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             ProcessTokenEntity processToken = this.init(process);
 
             processToken.setPrivileges(currentProcessToken.getPrivileges());
@@ -247,9 +242,8 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             ProcessTokenEntity processToken = this.init(process);
 
             processToken.setPrivileges(privileges);
@@ -272,9 +266,8 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-
             ProcessTokenEntity processToken = this.init(process);
 
             return CollectionUtil.unmodifiable(processToken.getLimits());
@@ -301,9 +294,8 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             ProcessTokenEntity processToken = this.init(process);
 
             Map<Long, Integer> processTokenLimits = processToken.getLimits();
@@ -348,9 +340,8 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             ProcessTokenEntity processToken = this.init(process);
 
             Map<Long, Integer> processTokenLimits = processToken.getLimits();
@@ -371,9 +362,8 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-
             ProcessTokenEntity processToken = this.init(process);
 
             return CollectionUtil.unmodifiable(processToken.getRoles());
@@ -423,9 +413,8 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         ProcessEntity process = this.getSelf();
 
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
         try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-
             ProcessTokenEntity processToken = this.init(process);
 
             if (currentProcessToken.getAccountId().equals(processToken.getAccountId())) {

@@ -31,6 +31,26 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
         this.cacheableObjectFunction = (handle) -> this.coreManager.getFactory().rebuildDateTime(handle);
 
         this.register("getId", this::getId, TransactionType.WHATEVER);
+        this.register("getType", this::getType, TransactionType.WHATEVER);
+        this.register("getOpened", this::getOpened, TransactionType.WHATEVER);
+        this.register("getName", this::getName, TransactionType.WHATEVER);
+        this.register("getPath", this::getPath, TransactionType.WHATEVER);
+        this.register("getIndex", this::getIndex, TransactionType.WHATEVER);
+        this.register("getParent", this::getParent, TransactionType.WHATEVER);
+        this.register("getDate", this::getDate, TransactionType.WHATEVER);
+        this.register("getSecurityDescriptor", this::getSecurityDescriptor, TransactionType.WHATEVER);
+        this.register("dump", this::dump, TransactionType.WHATEVER);
+        this.register("open", this::open, TransactionType.WHATEVER);
+        this.register("close", this::close, TransactionType.WHATEVER);
+        this.register("getOpenAttribute", this::getOpenAttribute, TransactionType.WHATEVER);
+        this.register("createChild", this::createChild, TransactionType.WHATEVER);
+        this.register("getChild", this::getChild, TransactionType.WHATEVER);
+        this.register("deleteChild", this::deleteChild, TransactionType.WHATEVER);
+        this.register("queryChild", this::queryChild, TransactionType.WHATEVER);
+        this.register("renameChild", this::renameChild, TransactionType.WHATEVER);
+        this.register("readProperties", this::readProperties, TransactionType.WHATEVER);
+        this.register("writeProperties", this::writeProperties, TransactionType.WHATEVER);
+        this.register("getContent", this::getContent, TransactionType.WHATEVER);
     }
 
     @Override

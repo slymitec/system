@@ -5,6 +5,7 @@ import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentifierDefinition;
 import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.DumpObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
@@ -28,7 +29,7 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoObjectTaskInitializer extends ATaskInitializer {
     public InfoObjectTaskInitializer() {
-        this.cacheableObjectFunction = (handle) -> this.coreManager.getFactory().rebuildDateTime(handle);
+        this.cacheableObjectFunction = (handle) -> this.coreManager.getManager(ObjectManager.class).getFactory().rebuildInfo(handle);
 
         this.register("getId", this::getId, TransactionType.WHATEVER);
         this.register("getType", this::getType, TransactionType.WHATEVER);

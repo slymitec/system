@@ -58,7 +58,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
         }
     }
 
-    public long getDate(long dataTime) {
+    public Map<Long, Long> getDate() {
         ProcessEntity process = this.getSelf();
 
         try {
@@ -66,13 +66,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
 
             ProcessStatisticsEntity processStatistics = this.init(process);
 
-            Long value = processStatistics.getDate().getOrDefault(dataTime, null);
-
-            if (ObjectUtil.isAnyNull(value)) {
-                throw new ConditionParametersException();
-            }
-
-            return value;
+            return CollectionUtil.unmodifiable(processStatistics.getDate());
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
         }

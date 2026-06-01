@@ -23,7 +23,7 @@ public class ProcessCreateTokenResolver extends AResolver implements IProcessCre
             if (ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.isLegal()) {
                 processToken.injectAccountAuthorization(accountAuthorization);
             } else {
-                processToken.inheritAccountID();
+                processToken.inheritAccountId();
                 processToken.inheritPrivileges();
                 processToken.inheritLimits();
             }

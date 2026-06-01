@@ -18,8 +18,9 @@ import indi.sly.system.services.jobs.instances.prototypes.processors.objects.Dum
 import indi.sly.system.services.jobs.instances.prototypes.processors.objects.InfoObjectTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.objects.ObjectManagerTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.objects.SecurityDescriptorObjectTaskInitializer;
-import indi.sly.system.services.jobs.instances.prototypes.processors.processes.ProcessObjectTaskInitializer;
+import indi.sly.system.services.jobs.instances.prototypes.processors.processes.*;
 import indi.sly.system.services.jobs.instances.prototypes.processors.security.*;
+import indi.sly.system.services.jobs.instances.prototypes.processors.services.ServicesManagerTaskInitializer;
 import indi.sly.system.services.jobs.prototypes.*;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
@@ -58,6 +59,14 @@ public class JobService extends AService {
 
             this.createTask("ProcessManager", TaskAttributeType.NULL, null, this.coreManager.create(ProcessObjectTaskInitializer.class));
             this.createTask("ProcessObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessObjectTaskInitializer.class));
+            this.createTask("ProcessCommunicationObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessCommunicationObjectTaskInitializer.class));
+            this.createTask("ProcessContextObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessContextObjectTaskInitializer.class));
+            this.createTask("ProcessInfoEntryObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessInfoEntryObjectTaskInitializer.class));
+            this.createTask("ProcessInfoTableObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessInfoTableObjectTaskInitializer.class));
+            this.createTask("ProcessSessionObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessSessionObjectTaskInitializer.class));
+            this.createTask("ProcessStatisticsObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessStatisticsObjectTaskInitializer.class));
+            this.createTask("ProcessStatusObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessStatusObjectTaskInitializer.class));
+            this.createTask("ProcessTokenObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessTokenObjectTaskInitializer.class));
 
             this.createTask("UserManager", TaskAttributeType.NULL, null, this.coreManager.create(UserManagerTaskInitializer.class));
             this.createTask("AccountAuthorization", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(AccountAuthorizationObjectTaskInitializer.class));
@@ -66,6 +75,8 @@ public class JobService extends AService {
             this.createTask("AccountTokenObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(AccountTokenObjectTaskInitializer.class));
             this.createTask("GroupObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(GroupObjectTaskInitializer.class));
             this.createTask("GroupTokenObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(GroupTokenObjectTaskInitializer.class));
+
+            this.createTask("ServicesManager", TaskAttributeType.NULL, null, this.coreManager.create(ServicesManagerTaskInitializer.class));
         }
     }
 

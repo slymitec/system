@@ -140,7 +140,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         }
     }
 
-    public void inheritAccountID() {
+    public void inheritAccountId() {
         if (this.base.isCurrent() || LogicalUtil.allNotEqual(this.base.getStatus().get(),
                 ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
@@ -429,6 +429,50 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             Set<UUID> processTokenRoles = processToken.getRoles();
             processTokenRoles.clear();
             processTokenRoles.addAll(roles);
+
+            this.flush(process, processToken);
+        } finally {
+            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        }
+    }
+
+    public void addRoles(Set<UUID> roles) {
+        if (ObjectUtil.isAnyNull(roles)) {
+            throw new ConditionParametersException();
+        }
+
+        if (this.base.isCurrent()) {
+            if (LogicalUtil.allNotEqual(this.base.getStatus().get(), ProcessStatusType.RUNNING)) {
+                throw new StatusRelationshipErrorException();
+            } else {
+                if (!this.isPrivileges(PrivilegeType.SECURITY_ADD_ROLE)) {
+                    throw new ConditionRefuseException();
+                }
+            }
+        } else {
+            if (LogicalUtil.allNotEqual(this.base.getStatus().get(), ProcessStatusType.RUNNING)) {
+                throw new StatusRelationshipErrorException();
+            }
+
+            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+            ProcessObject currentProcess = processManager.getCurrent();
+            ProcessTokenObject currentProcessToken = currentProcess.getToken();
+
+            if (!currentProcess.getId().equals(this.base.getParentId())) {
+                throw new ConditionRefuseException();
+            }
+            if (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_ADD_ROLE)) {
+                throw new ConditionRefuseException();
+            }
+        }
+
+        ProcessEntity process = this.getSelf();
+
+        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+        try {
+            ProcessTokenEntity processToken = this.init(process);
+
+            processToken.getRoles().addAll(roles);
 
             this.flush(process, processToken);
         } finally {

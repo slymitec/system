@@ -256,7 +256,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         }
     }
 
-    public Set<UUID> getPortSourceProcessIDs(UUID portId) {
+    public Set<UUID> getPortSourceProcessIds(UUID portId) {
         if (ObjectUtil.isAnyNull(portId)) {
             throw new ConditionParametersException();
         }
@@ -283,7 +283,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         }
     }
 
-    public void setPortSourceProcessIDs(UUID portId, Set<UUID> sourceProcessIDs) {
+    public void setPortSourceProcessIds(UUID portId, Set<UUID> sourceProcessIDs) {
         if (ValueUtil.isAnyNullOrEmpty(portId) || ObjectUtil.isAnyNull(sourceProcessIDs)) {
             throw new ConditionParametersException();
         }
@@ -452,7 +452,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         }
     }
 
-    public Set<UUID> getSignalSourceProcessIDs() {
+    public Set<UUID> getSignalSourceProcessIds() {
         if (!this.base.isCurrent() || LogicalUtil.allNotEqual(this.base.getStatus().get(),
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
@@ -471,7 +471,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         }
     }
 
-    public void setSignalSourceProcessIDs(Set<UUID> sourceProcessIDs) {
+    public void setSignalSourceProcessIds(Set<UUID> sourceProcessIDs) {
         if (ObjectUtil.isAnyNull(sourceProcessIDs)) {
             throw new ConditionParametersException();
         }

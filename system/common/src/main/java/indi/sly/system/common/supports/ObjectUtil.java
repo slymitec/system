@@ -11,6 +11,7 @@ import tools.jackson.databind.json.JsonMapper;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public abstract class ObjectUtil {
     private static final String TO_STRING_NULL_OBJECT = "null";
@@ -210,6 +211,28 @@ public abstract class ObjectUtil {
 
         try {
             return ObjectUtil.SERIALIZATION_JSON.readValue(value, clazz);
+        } catch (Exception ignored) {
+            return defaultProvider.acquire();
+        }
+    }
+
+    public static <T> Set<T> transferSetFromString(Class<T> clazz, String value) {
+        return ObjectUtil.transferSetFromStringOrDefaultProvider(clazz, value, () -> null);
+    }
+
+    public static <T> Set<T> transferSetFromStringOrDefault(Class<T> clazz, String value, Set<T> defaultValue) {
+        return ObjectUtil.transferSetFromStringOrDefaultProvider(clazz, value, () -> defaultValue);
+    }
+
+    public static <T> Set<T> transferSetFromStringOrDefaultProvider(Class<T> clazz, String value, Provider<Set<T>> defaultProvider) {
+        if (ObjectUtil.isAnyNull(clazz, defaultProvider)) {
+            throw new ConditionParametersException();
+        }
+
+        JavaType type = ObjectUtil.SERIALIZATION_JSON.getTypeFactory().constructParametricType(Set.class, clazz);
+
+        try {
+            return ObjectUtil.SERIALIZATION_JSON.readValue(value, type);
         } catch (Exception ignored) {
             return defaultProvider.acquire();
         }

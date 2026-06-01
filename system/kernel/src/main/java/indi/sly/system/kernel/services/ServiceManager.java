@@ -26,7 +26,6 @@ import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.values.ProcessAdditionalCreatorDefinition;
 import indi.sly.system.kernel.processes.values.ProcessContextType;
-import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.services.instances.prototypes.ServiceContentObject;
@@ -140,7 +139,7 @@ public class ServiceManager extends AManager {
                 }
             }
 
-            AccountAuthorizationObject authorize = userManager.authorize(serviceContent.getAccountId());
+            AccountAuthorizationObject authorize = userManager.authorizeById(serviceContent.getAccountId());
 
             PathDefinition executePath = serviceContent.getPath();
 

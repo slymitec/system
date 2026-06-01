@@ -69,7 +69,7 @@ public class TestController extends AController {
         result.put("ProcessSessionID", processSession.getId());
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
-        AccountAuthorizationObject authorize = userManager.authorize(process.getToken().getAccountId());
+        AccountAuthorizationObject authorize = userManager.authorizeById(process.getToken().getAccountId());
         AccountAuthorizationSummaryDefinition accountAuthorizationSummary = authorize.checkAndGetSummary();
 
         result.put("accountAuthorizationSummary", accountAuthorizationSummary);

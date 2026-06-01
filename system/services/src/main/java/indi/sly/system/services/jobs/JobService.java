@@ -7,7 +7,6 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
@@ -15,8 +14,14 @@ import indi.sly.system.services.jobs.instances.prototypes.processors.*;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.CoreManagerTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.DateTimeObjectTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.SystemVersionObjectTaskInitializer;
+import indi.sly.system.services.jobs.instances.prototypes.processors.objects.DumpObjectTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.objects.InfoObjectTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.objects.ObjectManagerTaskInitializer;
+import indi.sly.system.services.jobs.instances.prototypes.processors.processes.ProcessObjectTaskInitializer;
+import indi.sly.system.services.jobs.instances.prototypes.processors.security.AccountAuthorizationObjectTaskInitializer;
+import indi.sly.system.services.jobs.instances.prototypes.processors.security.AccountObjectTaskInitializer;
+import indi.sly.system.services.jobs.instances.prototypes.processors.security.GroupObjectTaskInitializer;
+import indi.sly.system.services.jobs.instances.prototypes.processors.security.UserManagerTaskInitializer;
 import indi.sly.system.services.jobs.prototypes.*;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
@@ -49,10 +54,16 @@ public class JobService extends AService {
             this.createTask("DateTimeObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(DateTimeObjectTaskInitializer.class));
 
             this.createTask("ObjectManager", TaskAttributeType.NULL, null, this.coreManager.create(ObjectManagerTaskInitializer.class));
+            this.createTask("DumpObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(DumpObjectTaskInitializer.class));
             this.createTask("InfoObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(InfoObjectTaskInitializer.class));
 
-            this.createTask("ProcessManager", TaskAttributeType.NULL, null, this.coreManager.create(ProcessTaskInitializer.class));
+            this.createTask("ProcessManager", TaskAttributeType.NULL, null, this.coreManager.create(ProcessObjectTaskInitializer.class));
+            this.createTask("ProcessObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessObjectTaskInitializer.class));
+
             this.createTask("UserManager", TaskAttributeType.NULL, null, this.coreManager.create(UserManagerTaskInitializer.class));
+            this.createTask("AccountAuthorization", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(AccountAuthorizationObjectTaskInitializer.class));
+            this.createTask("AccountObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(AccountObjectTaskInitializer.class));
+            this.createTask("GroupObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(GroupObjectTaskInitializer.class));
 
             //this.createTask("HandleAction", TaskAttributeType.NULL, null, this.coreManager.create(HandleActionTaskInitializer.class));
         }

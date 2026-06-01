@@ -110,7 +110,7 @@ public class UserManager extends AManager {
         return this.getTargetAccount(processToken.getAccountId());
     }
 
-    public AccountObject getAccount(UUID accountId) {
+    public AccountObject getAccountById(UUID accountId) {
         if (ValueUtil.isAnyNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
@@ -134,7 +134,7 @@ public class UserManager extends AManager {
         }
     }
 
-    public AccountObject getAccount(String accountName) {
+    public AccountObject getAccountByName(String accountName) {
         if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }
@@ -160,7 +160,7 @@ public class UserManager extends AManager {
         }
     }
 
-    public GroupObject getGroup(UUID groupID) {
+    public GroupObject getGroupById(UUID groupID) {
         if (ValueUtil.isAnyNullOrEmpty(groupID)) {
             throw new ConditionParametersException();
         }
@@ -175,7 +175,7 @@ public class UserManager extends AManager {
         return this.factory.buildGroup(groupID);
     }
 
-    public GroupObject getGroup(String groupName) {
+    public GroupObject getGroupByName(String groupName) {
         if (StringUtil.isNameIllegal(groupName)) {
             throw new ConditionParametersException();
         }
@@ -243,7 +243,7 @@ public class UserManager extends AManager {
     public void deleteAccount(UUID accountID) {
         AccountBuilder accountBuilder = this.factory.createAccount();
 
-        AccountObject account = this.getAccount(accountID);
+        AccountObject account = this.getAccountById(accountID);
         AccountSessionsObject accountSessions = account.getSessions();
 
         if (!accountSessions.listSessions().isEmpty()) {
@@ -259,8 +259,8 @@ public class UserManager extends AManager {
         groupBuilder.delete(groupID);
     }
 
-    public AccountAuthorizationObject authorize(UUID accountID) {
-        if (ValueUtil.isAnyNullOrEmpty(accountID)) {
+    public AccountAuthorizationObject authorizeById(UUID accountId) {
+        if (ValueUtil.isAnyNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
 
@@ -268,7 +268,7 @@ public class UserManager extends AManager {
         ProcessObject process = processManager.getCurrent();
         ProcessTokenObject processToken = process.getToken();
 
-        AccountObject account = this.getTargetAccount(accountID);
+        AccountObject account = this.getTargetAccount(accountId);
 
         if (!processToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)) {
             throw new ConditionRefuseException();
@@ -277,11 +277,11 @@ public class UserManager extends AManager {
         return this.factory.buildAccountAuthorization(account, account.getPassword(), processToken, null);
     }
 
-    public AccountAuthorizationObject authorize(String accountName, String accountPassword) {
-        return this.authorize(accountName, accountPassword, null);
+    public AccountAuthorizationObject authorizeByName(String accountName, String accountPassword) {
+        return this.authorizeByNameWithToken(accountName, accountPassword, null);
     }
 
-    public AccountAuthorizationObject authorize(String accountName, String accountPassword, AccountAuthorizationTokenDefinition accountAuthorizationToken) {
+    public AccountAuthorizationObject authorizeByNameWithToken(String accountName, String accountPassword, AccountAuthorizationTokenDefinition accountAuthorizationToken) {
         if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }

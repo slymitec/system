@@ -83,7 +83,7 @@ public class AccountObject extends ACacheableObject<AccountCacheEntity> {
             Set<GroupObject> groups = new HashSet<>();
 
             for (GroupEntity group : this.getSelf().getGroups()) {
-                groups.add(userManager.getGroup(group.getId()));
+                groups.add(userManager.getGroupById(group.getId()));
             }
 
             return CollectionUtil.unmodifiable(groups);

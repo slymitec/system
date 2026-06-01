@@ -15,7 +15,6 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.processes.values.ProcessAdditionalCreatorDefinition;
-import indi.sly.system.kernel.processes.values.ProcessContextType;
 import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
 import indi.sly.system.kernel.processes.values.ThreadStatusType;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
@@ -25,7 +24,6 @@ import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
 
-import java.util.Set;
 import java.util.UUID;
 
 @Named
@@ -50,15 +48,15 @@ public class ProcessManager extends AManager {
     public void shutdown() {
     }
 
-    private ProcessObject getTarget(UUID processID) {
-        if (ValueUtil.isAnyNullOrEmpty(processID)) {
+    private ProcessObject getTarget(UUID processId) {
+        if (ValueUtil.isAnyNullOrEmpty(processId)) {
             throw new ConditionParametersException();
         }
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
-        return this.factory.buildProcess(processRepository.get(processID));
+        return this.factory.buildProcess(processRepository.get(processId));
     }
 
     public ProcessObject getCurrent() {
@@ -74,17 +72,17 @@ public class ProcessManager extends AManager {
         return this.getTarget(thread.getProcessId());
     }
 
-    public ProcessObject get(UUID processID, AccountAuthorizationObject accountAuthorization) {
-        if (ValueUtil.isAnyNullOrEmpty(processID)) {
+    public ProcessObject getWithAuthorization(UUID processId, AccountAuthorizationObject accountAuthorization) {
+        if (ValueUtil.isAnyNullOrEmpty(processId)) {
             throw new ConditionParametersException();
         }
 
         ProcessObject currentProcess = this.getCurrent();
-        if (currentProcess.getId().equals(processID)) {
+        if (currentProcess.getId().equals(processId)) {
             return currentProcess;
         }
 
-        ProcessObject process = this.getTarget(processID);
+        ProcessObject process = this.getTarget(processId);
 
         ProcessSessionObject processSession = process.getSession();
         ProcessTokenObject processToken = process.getToken();
@@ -101,8 +99,8 @@ public class ProcessManager extends AManager {
         return process;
     }
 
-    public ProcessObject get(UUID processID) {
-        return this.get(processID, null);
+    public ProcessObject get(UUID processId) {
+        return this.getWithAuthorization(processId, null);
     }
 
     public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, String parameters, PathDefinition workFolder, ProcessAdditionalCreatorDefinition additionalCreator) {

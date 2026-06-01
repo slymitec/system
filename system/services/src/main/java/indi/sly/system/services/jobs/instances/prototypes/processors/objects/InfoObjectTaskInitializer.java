@@ -29,7 +29,7 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoObjectTaskInitializer extends ATaskInitializer {
     public InfoObjectTaskInitializer() {
-        this.cacheableObjectFunction = (handle) -> this.coreManager.getManager(ObjectManager.class).getFactory().rebuildInfo(handle);
+        this.cacheableObjectFunction = (handle) -> this.coreManager.getManager(ObjectManager.class).getFactory().rebuildDump(handle);
 
         this.register("getId", this::getId, TransactionType.INDEPENDENCE);
         this.register("getType", this::getType, TransactionType.INDEPENDENCE);

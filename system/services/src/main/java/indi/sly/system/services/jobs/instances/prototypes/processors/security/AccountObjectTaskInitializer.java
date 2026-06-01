@@ -3,8 +3,6 @@ package indi.sly.system.services.jobs.instances.prototypes.processors.security;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.*;
 import indi.sly.system.services.core.values.TransactionType;
@@ -26,7 +24,7 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AccountObjectTaskInitializer extends ATaskInitializer {
     public AccountObjectTaskInitializer() {
-        this.cacheableObjectFunction = (handle) -> this.coreManager.getManager(ObjectManager.class).getFactory().rebuildInfo(handle);
+        this.cacheableObjectFunction = (handle) -> this.coreManager.getManager(UserManager.class).getFactory().rebuildAccount(handle);
 
         this.register("getId", this::getId, TransactionType.INDEPENDENCE);
         this.register("getName", this::getName, TransactionType.INDEPENDENCE);

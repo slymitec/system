@@ -27,6 +27,8 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessObjectTaskInitializer extends ATaskInitializer {
     public ProcessObjectTaskInitializer() {
+        this.cacheableObjectFunction = (handle) -> this.coreManager.getManager(ProcessManager.class).getFactory().rebuildProcess(handle);
+
         this.register("getCurrent", this::getCurrent, TransactionType.INDEPENDENCE);
     }
 

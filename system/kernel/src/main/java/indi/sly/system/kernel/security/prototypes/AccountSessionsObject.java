@@ -40,15 +40,15 @@ public class AccountSessionsObject extends AChildCacheableObject<AccountChildCac
         }
     }
 
-    public void addSession(UUID sessionID) {
-        if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
+    public void addSession(UUID sessionId) {
+        if (ValueUtil.isAnyNullOrEmpty(sessionId)) {
             throw new ConditionParametersException();
         }
 
         this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
         try {
             AccountSessionsEntity accountSessions = this.getSelf().getSessions();
-            accountSessions.getSessions().add(sessionID);
+            accountSessions.getSessions().add(sessionId);
 
             this.getSelf().setSessions(accountSessions);
         } finally {
@@ -56,15 +56,15 @@ public class AccountSessionsObject extends AChildCacheableObject<AccountChildCac
         }
     }
 
-    public void deleteSession(UUID sessionID) {
-        if (ValueUtil.isAnyNullOrEmpty(sessionID)) {
+    public void deleteSession(UUID sessionId) {
+        if (ValueUtil.isAnyNullOrEmpty(sessionId)) {
             throw new ConditionParametersException();
         }
 
         this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
         try {
             AccountSessionsEntity accountSessions = this.getSelf().getSessions();
-            accountSessions.getSessions().remove(sessionID);
+            accountSessions.getSessions().remove(sessionId);
 
             this.getSelf().setSessions(accountSessions);
         } finally {

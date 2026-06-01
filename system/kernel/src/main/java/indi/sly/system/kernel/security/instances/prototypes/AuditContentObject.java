@@ -18,13 +18,13 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AuditContentObject extends AInfoContentObject implements IByteValueSupporter<AuditDefinition> {
-    public UUID getProcessID() {
+    public UUID getProcessId() {
         AuditDefinition audit = this.init(this.read());
 
         return audit.getProcessId();
     }
 
-    public UUID getAccountID() {
+    public UUID getAccountId() {
         AuditDefinition audit = this.init(this.read());
 
         return audit.getAccountId();

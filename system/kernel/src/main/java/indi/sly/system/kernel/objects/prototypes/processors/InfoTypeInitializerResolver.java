@@ -114,9 +114,9 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
             AInfoTypeInitializer childTypeInitializer = typeManager.get(infoSummary.getType()).getInitializer();
 
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-            UUID childRepositoryId = childTypeInitializer.getPoolId(infoSummary.getID(), infoSummary.getType());
+            UUID childRepositoryId = childTypeInitializer.getPoolId(infoSummary.getId(), infoSummary.getType());
             AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryId);
-            childInfo = infoRepository.get(infoSummary.getID());
+            childInfo = infoRepository.get(infoSummary.getId());
 
             childTypeInitializer.getProcedure(childInfo, identification);
 

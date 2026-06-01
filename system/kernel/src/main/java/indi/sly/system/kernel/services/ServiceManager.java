@@ -117,8 +117,9 @@ public class ServiceManager extends AManager {
         }
 
         ServiceStatusEntity serviceStatus = new ServiceStatusEntity();
-        serviceStatus.setId(UUIDUtil.createRandom());
+        serviceStatus.setId(serviceId);
         serviceStatus.setIndependence(independence);
+        serviceStatus.setMode(serviceContent.getMode());
 
         InfoObject executeInfo = null;
         UUID executeInfoIndex = null;

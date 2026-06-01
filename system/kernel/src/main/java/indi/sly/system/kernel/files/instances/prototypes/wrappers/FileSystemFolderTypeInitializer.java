@@ -200,7 +200,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
                 InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoName);
 
-                infoSummary.setID(infoRelation.getId());
+                infoSummary.setId(infoRelation.getId());
                 infoSummary.setType(infoRelation.getType());
                 infoSummary.setName(infoRelation.getName());
             } finally {
@@ -229,7 +229,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 throw new StatusUnexpectedException();
             }
 
-            infoSummary.setID(UUIDUtil.readFormBytes(childInfoRelationID));
+            infoSummary.setId(UUIDUtil.readFormBytes(childInfoRelationID));
             infoSummary.setType(UUIDUtil.readFormBytes(childInfoRelationType));
             infoSummary.setName(childInfoName);
         }
@@ -258,7 +258,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
                 for (InfoRelationEntity infoRelation : infoRelations) {
                     InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
-                    infoSummary.setID(infoRelation.getId());
+                    infoSummary.setId(infoRelation.getId());
                     infoSummary.setType(infoRelation.getType());
                     infoSummary.setName(infoRelation.getName());
 
@@ -294,7 +294,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 }
 
                 InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
-                infoSummary.setID(UUIDUtil.readFormBytes(childInfoRelationID));
+                infoSummary.setId(UUIDUtil.readFormBytes(childInfoRelationID));
                 infoSummary.setType(UUIDUtil.readFormBytes(childInfoRelationType));
                 infoSummary.setName(childInfoName);
 

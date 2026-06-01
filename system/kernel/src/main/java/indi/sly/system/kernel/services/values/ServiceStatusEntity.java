@@ -32,6 +32,9 @@ public class ServiceStatusEntity extends APersistentEntity {
     @ManyToMany(mappedBy = "dependencies")
     private final Set<ServiceStatusEntity> dependents;
 
+    @Column(name = "Mode", nullable = false)
+    protected Long mode;
+
     @Column(name = "Independence", nullable = false)
     private boolean independence;
 
@@ -73,6 +76,14 @@ public class ServiceStatusEntity extends APersistentEntity {
 
     public Set<ServiceStatusEntity> getDependents() {
         return CollectionUtil.unmodifiable(this.dependents);
+    }
+
+    public long getMode() {
+        return this.mode;
+    }
+
+    public void setMode(long mode) {
+        this.mode = mode;
     }
 
     public boolean isIndependence() {

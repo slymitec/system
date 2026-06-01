@@ -83,7 +83,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
         try {
             InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoName);
 
-            infoSummary.setID(infoRelation.getId());
+            infoSummary.setId(infoRelation.getId());
             infoSummary.setType(infoRelation.getType());
             infoSummary.setName(infoRelation.getName());
         } finally {
@@ -105,7 +105,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
             List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
             for (InfoRelationEntity infoRelation : infoRelations) {
                 InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
-                infoSummary.setID(infoRelation.getId());
+                infoSummary.setId(infoRelation.getId());
                 infoSummary.setType(infoRelation.getType());
                 infoSummary.setName(infoRelation.getName());
 

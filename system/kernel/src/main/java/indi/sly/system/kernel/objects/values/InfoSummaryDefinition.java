@@ -1,13 +1,7 @@
 package indi.sly.system.kernel.objects.values;
 
-import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.util.Objects;
 import java.util.UUID;
 
 public class InfoSummaryDefinition extends ADefinition {
@@ -15,11 +9,11 @@ public class InfoSummaryDefinition extends ADefinition {
     private UUID type;
     private String name;
 
-    public UUID getID() {
+    public UUID getId() {
         return id;
     }
 
-    public void setID(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

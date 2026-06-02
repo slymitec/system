@@ -26,12 +26,12 @@ public class BootFactory extends AFactory {
     }
 
     public BootObject buildBoot() {
-        BootProcessorMediator processorMediator = this.factoryManager.create(BootProcessorMediator.class);
+        BootProcessorMediator processorMediator = this.coreManager.create(BootProcessorMediator.class);
         for (ABootResolver bootResolver : this.bootResolvers) {
             bootResolver.resolve(processorMediator);
         }
 
-        BootObject boot = this.factoryManager.create(BootObject.class);
+        BootObject boot = this.coreManager.create(BootObject.class);
 
         boot.processorMediator = processorMediator;
 

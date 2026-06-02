@@ -35,9 +35,10 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":periphery"))
 
-    implementation("jakarta.inject:jakarta.inject-api:2.0.1")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-restclient")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    implementation("org.redisson:redisson-spring-boot-starter:4.4.0")
     testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

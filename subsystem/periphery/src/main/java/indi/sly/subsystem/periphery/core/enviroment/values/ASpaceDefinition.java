@@ -13,45 +13,47 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Named
-public abstract class ASpaceDefinition<T> extends ADefinition<T> {
+public abstract class ASpaceDefinition extends ADefinition {
     public ASpaceDefinition() {
-        this.handledObjects = new ConcurrentHashMap<>();
-        this.classedHandles = new ConcurrentHashMap<>();
-        ReentrantReadWriteLock coreObjectLock = new ReentrantReadWriteLock();
-        this.coreObjectReadLock = coreObjectLock.readLock();
-        this.coreObjectWriteLock = coreObjectLock.writeLock();
-        this.coreObjectLimit = 0L;
+        this.objects = new ConcurrentHashMap<>();
+        this.classedObjects = new ConcurrentHashMap<>();
+
+        ReentrantReadWriteLock objectLock = new ReentrantReadWriteLock();
+        this.objectReadLock = objectLock.readLock();
+        this.objectWriteLock = objectLock.writeLock();
+
+        this.objectLimit = 0L;
     }
 
-    private final Map<UUID, AObject> handledObjects;
-    private final Map<Class<? extends AObject>, UUID> classedHandles;
-    private final Lock coreObjectReadLock;
-    private final Lock coreObjectWriteLock;
-    private long coreObjectLimit;
+    private final Map<UUID, AObject> objects;
+    private final Map<Class<? extends AObject>, AObject> classedObjects;
+    private final Lock objectReadLock;
+    private final Lock objectWriteLock;
+    private long objectLimit;
 
-    public Map<UUID, AObject> getHandledObjects() {
-        return this.handledObjects;
+    public Map<UUID, AObject> getObjects() {
+        return this.objects;
     }
 
-    public Map<Class<? extends AObject>, UUID> getClassedHandles() {
-        return this.classedHandles;
+    public Map<Class<? extends AObject>, AObject> getClassedObjects() {
+        return this.classedObjects;
     }
 
-    public Lock getCoreObjectLock(long lock) {
+    public Lock getObjectLock(long lock) {
         if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-            return this.coreObjectReadLock;
+            return this.objectReadLock;
         } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-            return this.coreObjectWriteLock;
+            return this.objectWriteLock;
         } else {
             return null;
         }
     }
 
-    public long getCoreObjectLimit() {
-        return this.coreObjectLimit;
+    public long getObjectLimit() {
+        return this.objectLimit;
     }
 
-    public void setCoreObjectLimit(long coreObjectLimit) {
-        this.coreObjectLimit = coreObjectLimit;
+    public void setObjectLimit(long coreObjectLimit) {
+        this.objectLimit = coreObjectLimit;
     }
 }

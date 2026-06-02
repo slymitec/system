@@ -30,16 +30,16 @@ public class CallManager extends AManager {
     @Override
     public void startup(long startup) {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
-            this.factory = this.factoryManager.create(CallFactory.class);
+            this.factory = this.coreManager.create(CallFactory.class);
             this.factory.init();
         } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_PERIPHERY)) {
-            KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+            KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
             this.createConnection(kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_NAME, ConnectionAttributeType.NULL,
-                    kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS_WEBSOCKET, this.factoryManager.create(HttpConnectionInitializer.class));
+                    kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS_WEBSOCKET, this.coreManager.create(HttpConnectionInitializer.class));
             this.createConnection(kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_NAME_WEBSOCKET, ConnectionAttributeType.NULL,
-                    kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS_WEBSOCKET, this.factoryManager.create(WebSocketConnectionInitializer.class));
+                    kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS_WEBSOCKET, this.coreManager.create(WebSocketConnectionInitializer.class));
 
         }
     }
@@ -79,7 +79,7 @@ public class CallManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
 
         UUID connectID = kernelSpace.getNamedConnectionIDs().getOrDefault(name, null);
 

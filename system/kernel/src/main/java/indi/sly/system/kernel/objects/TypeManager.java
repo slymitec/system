@@ -88,7 +88,7 @@ public class TypeManager extends AManager {
     }
 
     public Set<UUID> list() {
-        Set<UUID> infoTypeIDs = this.coreManager.getKernelSpace().getInfoTypeIDs();
+        Set<UUID> infoTypeIDs = this.coreManager.getKernelSpace().getInfoTypeIds();
 
         return CollectionUtil.unmodifiable(infoTypeIDs);
     }

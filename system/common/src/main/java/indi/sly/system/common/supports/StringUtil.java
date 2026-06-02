@@ -70,25 +70,4 @@ public abstract class StringUtil {
 
         return value.getBytes(StringUtil.DEFAULT_CHARSET);
     }
-
-    public static String readExternal(ObjectInput in) throws IOException {
-        if (ObjectUtil.isAnyNull(in)) {
-            throw new NullPointerException();
-        }
-
-        return NumberUtil.readExternalBoolean(in) ? in.readUTF() : null;
-    }
-
-    public static void writeExternal(ObjectOutput out, String value) throws IOException {
-        if (ObjectUtil.isAnyNull(out)) {
-            throw new NullPointerException();
-        }
-
-        if (value == null) {
-            NumberUtil.writeExternalBoolean(out, false);
-        } else {
-            NumberUtil.writeExternalBoolean(out, true);
-            out.writeUTF(value);
-        }
-    }
 }

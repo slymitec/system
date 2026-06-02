@@ -3,23 +3,12 @@ package indi.sly.system.kernel.objects.prototypes;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.core.prototypes.ObjectCollectionObject;
-import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.objects.ObjectManager;
-import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.infotypes.values.TypeDefinition;
-import indi.sly.system.kernel.objects.values.InfoContentCacheEntity;
-import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
-import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -60,7 +49,7 @@ public class TypeFactory extends AFactory {
             type.getChildTypes().addAll(childTypes);
         }
 
-        Set<UUID> infoTypeIDs = this.coreManager.getKernelSpace().getInfoTypeIDs();
+        Set<UUID> infoTypeIDs = this.coreManager.getKernelSpace().getInfoTypeIds();
 
         if (infoTypeIDs.contains(typeID)) {
             throw new StatusAlreadyExistedException();
@@ -78,7 +67,7 @@ public class TypeFactory extends AFactory {
             throw new ConditionParametersException();
         }
 
-        Set<UUID> infoTypeIDs = this.coreManager.getKernelSpace().getInfoTypeIDs();
+        Set<UUID> infoTypeIDs = this.coreManager.getKernelSpace().getInfoTypeIds();
 
         type.getInitializer().uninstall();
 

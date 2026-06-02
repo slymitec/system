@@ -27,7 +27,7 @@ public class ConnectionBuilder extends ABuilder {
             throw new ConditionParametersException();
         }
 
-        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
 
         if (kernelSpace.getNamedConnectionIDs().containsKey(name)) {
             throw new StatusAlreadyExistedException();
@@ -50,7 +50,7 @@ public class ConnectionBuilder extends ABuilder {
             throw new ConditionParametersException();
         }
 
-        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
+        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
 
         UUID connectionID = kernelSpace.getNamedConnectionIDs().getOrDefault(name, null);
 

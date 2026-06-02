@@ -22,6 +22,10 @@ public abstract class UUIDUtil {
         return new UUID(mostSigBits, leastSigBits);
     }
 
+    public static String toString(UUID uuid) {
+        return uuid.toString();
+    }
+
     public static UUID readFormBytes(byte[] value) {
         if (ObjectUtil.isAnyNull(value) || value.length != 16) {
             throw new ConditionParametersException();
@@ -63,28 +67,4 @@ public abstract class UUIDUtil {
 
         return result;
     }
-
-    public static UUID readExternal(ObjectInput in) throws IOException {
-        if (ObjectUtil.isAnyNull(in)) {
-            throw new NullPointerException();
-        }
-
-        return NumberUtil.readExternalBoolean(in) ? UUIDUtil.getFormLongs(NumberUtil.readExternalLong(in),
-                NumberUtil.readExternalLong(in)) : null;
-    }
-
-    public static void writeExternal(ObjectOutput out, UUID value) throws IOException {
-        if (ObjectUtil.isAnyNull(out)) {
-            throw new NullPointerException();
-        }
-
-        if (value == null) {
-            NumberUtil.writeExternalBoolean(out, false);
-        } else {
-            NumberUtil.writeExternalBoolean(out, true);
-            NumberUtil.writeExternalLong(out, value.getMostSignificantBits());
-            NumberUtil.writeExternalLong(out, value.getLeastSignificantBits());
-        }
-    }
-
 }

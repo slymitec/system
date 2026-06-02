@@ -1,6 +1,6 @@
 package indi.sly.subsystem.periphery.core.prototypes;
 
-import indi.sly.subsystem.periphery.core.FactoryManager;
+import indi.sly.subsystem.periphery.core.CoreManager;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -13,10 +13,10 @@ import java.lang.reflect.Constructor;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CorePrototypeValueBuilder extends ABuilder {
-    public final void setFactoryManager(FactoryManager factoryManager) {
-        if (ObjectUtil.allNotNull(factoryManager)) {
-            this.factoryManager = factoryManager;
+public class PrototypeBuilder extends ABuilder {
+    public final void setFactoryManager(CoreManager coreManager) {
+        if (ObjectUtil.allNotNull(coreManager)) {
+            this.coreManager = coreManager;
         }
     }
 
@@ -49,7 +49,7 @@ public class CorePrototypeValueBuilder extends ABuilder {
             throw new StatusNotSupportedException();
         }
 
-        corePrototype.factoryManager = this.factoryManager;
+        corePrototype.coreManager = this.coreManager;
 
         return corePrototype;
     }

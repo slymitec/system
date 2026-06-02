@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Named
 @Singleton
-public class KernelSpaceDefinition extends ASpaceDefinition<KernelSpaceDefinition> {
+public class KernelSpaceDefinition extends ASpaceDefinition {
     public KernelSpaceDefinition() {
         this.configuration = new KernelConfigurationDefinition();
         this.connections = new ConcurrentHashMap<>();

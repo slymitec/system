@@ -35,22 +35,4 @@ public abstract class ClassUtil {
         } while (child != null);
         return false;
     }
-
-    public static <T> Class<T> readExternal(ObjectInput in) throws ClassNotFoundException, IOException {
-        if (ObjectUtil.isAnyNull(in)) {
-            throw new NullPointerException();
-        }
-
-        @SuppressWarnings("unchecked")
-        Class<T> value = (Class<T>) in.readObject();
-        return value;
-    }
-
-    public static void writeExternal(ObjectOutput out, Class<?> value) throws IOException {
-        if (ObjectUtil.isAnyNull(out)) {
-            throw new NullPointerException();
-        }
-
-        out.writeObject(value);
-    }
 }

@@ -16,12 +16,12 @@ import java.util.concurrent.locks.Lock;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CoreObjectRepositoryObject extends AObject {
+public class ObjectCollectionObject extends AObject {
     private ASpaceDefinition<?> getSpace(long space) {
         if (LogicalUtil.isAnyEqual(space, SpaceType.KERNEL)) {
-            return this.factoryManager.getKernelSpace();
+            return this.coreManager.getKernelSpace();
         } else if (LogicalUtil.isAnyEqual(space, SpaceType.USER)) {
-            return this.factoryManager.getUserSpace();
+            return this.coreManager.getUserSpace();
         } else {
             throw new ConditionParametersException();
         }
@@ -142,8 +142,8 @@ public class CoreObjectRepositoryObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        if (ObjectUtil.isAnyNull(coreObject.factoryManager)) {
-            coreObject.factoryManager = this.factoryManager;
+        if (ObjectUtil.isAnyNull(coreObject.coreManager)) {
+            coreObject.coreManager = this.coreManager;
         }
 
         Class<? extends AObject> clazz = coreObject.getClass();
@@ -172,8 +172,8 @@ public class CoreObjectRepositoryObject extends AObject {
         if (ObjectUtil.isAnyNull(coreObject)) {
             throw new ConditionParametersException();
         }
-        if (ObjectUtil.isAnyNull(coreObject.factoryManager)) {
-            coreObject.factoryManager = this.factoryManager;
+        if (ObjectUtil.isAnyNull(coreObject.coreManager)) {
+            coreObject.coreManager = this.coreManager;
         }
 
         UUID handle = UUIDUtil.createRandom();

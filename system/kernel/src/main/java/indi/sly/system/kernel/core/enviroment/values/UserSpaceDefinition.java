@@ -6,7 +6,7 @@ import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 
 import java.util.Stack;
 
-public class UserSpaceDefinition extends ASpaceDefinition<UserSpaceDefinition> {
+public class UserSpaceDefinition extends ASpaceDefinition {
     public UserSpaceDefinition() {
         this.threads = new ThreadLocal<>();
     }

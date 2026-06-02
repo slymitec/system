@@ -1,18 +1,22 @@
 package indi.sly.system.common.supports;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import indi.sly.system.common.lang.*;
+import org.apache.fory.Fory;
+import org.apache.fory.ThreadSafeFory;
+import org.apache.fory.config.Language;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.json.JsonMapper;
 
-import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public abstract class ObjectUtil {
     private static final String TO_STRING_NULL_OBJECT = "null";
-    private static final ObjectMapper JSON_HELPER = new ObjectMapper();
+    private static final JsonMapper SERIALIZATION_JSON =  JsonMapper.builder().build();
+    private static final ThreadSafeFory SERIALIZATION_BINARY = Fory.builder().withLanguage(Language.JAVA).withAsyncCompilation(true).requireClassRegistration(false).buildThreadSafeFory();
 
     public static boolean isNull(final Object value) {
         return ObjectUtil.isAnyNull(value);
@@ -175,89 +179,19 @@ public abstract class ObjectUtil {
         return value.toString();
     }
 
-    public static <T extends ISerializeCapable<?>> T readExternal(ObjectInput in) throws ClassNotFoundException,
-            IOException {
-        if (ObjectUtil.isAnyNull(in)) {
-            throw new NullPointerException();
-        }
-
-        if (NumberUtil.readExternalBoolean(in)) {
-            @SuppressWarnings("unchecked")
-            T value = (T) in.readObject();
-            return value;
-        } else {
-            return null;
-        }
-    }
-
-    public static <T extends ISerializeCapable<?>> void writeExternal(ObjectOutput out, T value) throws IOException {
-        if (ObjectUtil.isAnyNull(out)) {
-            throw new NullPointerException();
-        }
-
-        if (value == null) {
-            NumberUtil.writeExternalBoolean(out, false);
-        } else {
-            NumberUtil.writeExternalBoolean(out, true);
-            out.writeObject(value);
-        }
-    }
-
     public static byte[] transferToByteArray(Object value) {
-        if (ObjectUtil.isAnyNull(value)) {
-            return null;
-        }
-
-        byte[] stream;
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            objectOutputStream.writeObject(value);
-            objectOutputStream.flush();
-            stream = byteArrayOutputStream.toByteArray();
-            objectOutputStream.close();
-            objectOutputStream.close();
-        } catch (IOException ex) {
-            throw new StatusUnexpectedException();
-        }
-
-        return stream;
+        return ObjectUtil.SERIALIZATION_BINARY.serialize(value);
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T transferFromByteArray(byte[] stream) {
-        if (ObjectUtil.isAnyNull(stream)) {
-            return null;
-        }
-
-        Object object;
-
-        try {
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(stream);
-            ObjectInputStream outInputStream = new ObjectInputStream(byteArrayInputStream);
-            object = outInputStream.readObject();
-            outInputStream.close();
-            byteArrayInputStream.close();
-        } catch (IOException | ClassNotFoundException ex) {
-            throw new StatusUnexpectedException();
-        }
-
-        if (ObjectUtil.isAnyNull(object)) {
-            throw new StatusUnexpectedException();
-        }
-
-        try {
-            return (T) object;
-        } catch (ClassCastException e) {
-            throw new StatusRelationshipErrorException();
-        }
+        return (T) ObjectUtil.SERIALIZATION_BINARY.deserialize(stream);
     }
 
     public static String transferToString(Object value) {
         try {
-            return ObjectUtil.JSON_HELPER.writeValueAsString(value);
-        } catch (JsonProcessingException ignored) {
+            return ObjectUtil.SERIALIZATION_JSON.writeValueAsString(value);
+        } catch (JacksonException _) {
             throw new StatusUnexpectedException();
         }
     }
@@ -276,7 +210,29 @@ public abstract class ObjectUtil {
         }
 
         try {
-            return ObjectUtil.JSON_HELPER.readValue(value, clazz);
+            return ObjectUtil.SERIALIZATION_JSON.readValue(value, clazz);
+        } catch (Exception ignored) {
+            return defaultProvider.acquire();
+        }
+    }
+
+    public static <T> Set<T> transferSetFromString(Class<T> clazz, String value) {
+        return ObjectUtil.transferSetFromStringOrDefaultProvider(clazz, value, () -> null);
+    }
+
+    public static <T> Set<T> transferSetFromStringOrDefault(Class<T> clazz, String value, Set<T> defaultValue) {
+        return ObjectUtil.transferSetFromStringOrDefaultProvider(clazz, value, () -> defaultValue);
+    }
+
+    public static <T> Set<T> transferSetFromStringOrDefaultProvider(Class<T> clazz, String value, Provider<Set<T>> defaultProvider) {
+        if (ObjectUtil.isAnyNull(clazz, defaultProvider)) {
+            throw new ConditionParametersException();
+        }
+
+        JavaType type = ObjectUtil.SERIALIZATION_JSON.getTypeFactory().constructParametricType(Set.class, clazz);
+
+        try {
+            return ObjectUtil.SERIALIZATION_JSON.readValue(value, type);
         } catch (Exception ignored) {
             return defaultProvider.acquire();
         }
@@ -295,10 +251,10 @@ public abstract class ObjectUtil {
             throw new ConditionParametersException();
         }
 
-        JavaType type = ObjectUtil.JSON_HELPER.getTypeFactory().constructParametricType(List.class, clazz);
+        JavaType type = ObjectUtil.SERIALIZATION_JSON.getTypeFactory().constructParametricType(List.class, clazz);
 
         try {
-            return ObjectUtil.JSON_HELPER.readValue(value, type);
+            return ObjectUtil.SERIALIZATION_JSON.readValue(value, type);
         } catch (Exception ignored) {
             return defaultProvider.acquire();
         }
@@ -317,10 +273,10 @@ public abstract class ObjectUtil {
             throw new ConditionParametersException();
         }
 
-        JavaType type = ObjectUtil.JSON_HELPER.getTypeFactory().constructParametricType(Map.class, keyClass, valueClass);
+        JavaType type = ObjectUtil.SERIALIZATION_JSON.getTypeFactory().constructParametricType(Map.class, keyClass, valueClass);
 
         try {
-            return ObjectUtil.JSON_HELPER.readValue(value, type);
+            return ObjectUtil.SERIALIZATION_JSON.readValue(value, type);
         } catch (Exception ignored) {
             return defaultProvider.acquire();
         }

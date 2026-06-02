@@ -8,8 +8,8 @@ import indi.sly.subsystem.periphery.core.enviroment.values.KernelSpaceDefinition
 import indi.sly.subsystem.periphery.core.enviroment.values.SpaceType;
 import indi.sly.subsystem.periphery.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.subsystem.periphery.core.prototypes.APrototype;
-import indi.sly.subsystem.periphery.core.prototypes.CoreObjectRepositoryObject;
-import indi.sly.subsystem.periphery.core.prototypes.CorePrototypeValueBuilder;
+import indi.sly.subsystem.periphery.core.prototypes.ObjectCollectionObject;
+import indi.sly.subsystem.periphery.core.prototypes.PrototypeBuilder;
 import indi.sly.subsystem.periphery.proxies.ProxyManager;
 import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.supports.LogicalUtil;
@@ -21,24 +21,24 @@ import org.springframework.context.annotation.Scope;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FactoryManager extends AManager {
+public class CoreManager extends AManager {
     protected BootFactory bootFactory;
 
     @Override
     public void startup(long startup) {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
-            this.factoryManager = this;
-            this.factoryManager.check();
+            this.coreManager = this;
+            this.coreManager.check();
 
-            this.corePrototypeValueBuilder = SpringHelper.getInstance(CorePrototypeValueBuilder.class);
-            this.corePrototypeValueBuilder.setFactoryManager(this);
+            this.prototypeBuilder = SpringHelper.getInstance(PrototypeBuilder.class);
+            this.prototypeBuilder.setFactoryManager(this);
 
-            this.coreObjectRepository = this.factoryManager.create(CoreObjectRepositoryObject.class);
+            this.coreObjectRepository = this.coreManager.create(ObjectCollectionObject.class);
             this.coreObjectRepository.setLimit(SpaceType.KERNEL, Long.MAX_VALUE);
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this);
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(CallManager.class));
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(ProxyManager.class));
-            this.bootFactory = this.factoryManager.create(BootFactory.class);
+            this.bootFactory = this.coreManager.create(BootFactory.class);
             this.bootFactory.init();
             BootObject boot = this.bootFactory.buildBoot();
             this.coreObjectRepository.addByClass(SpaceType.KERNEL, boot);
@@ -51,20 +51,20 @@ public class FactoryManager extends AManager {
 
     @Override
     public void check() {
-        if (ObjectUtil.isAnyNull(this.factoryManager)) {
+        if (ObjectUtil.isAnyNull(this.coreManager)) {
             throw new ConditionContextException();
         }
     }
 
-    private CorePrototypeValueBuilder corePrototypeValueBuilder;
-    private CoreObjectRepositoryObject coreObjectRepository;
+    private PrototypeBuilder prototypeBuilder;
+    private ObjectCollectionObject coreObjectRepository;
 
-    public CoreObjectRepositoryObject getCoreObjectRepository() {
+    public ObjectCollectionObject getCoreObjectRepository() {
         return this.coreObjectRepository;
     }
 
     public <T extends APrototype> T create(Class<T> clazz) {
-        return this.corePrototypeValueBuilder.createPrototype(clazz);
+        return this.prototypeBuilder.createPrototype(clazz);
     }
 
     public <T extends AManager> T getManager(Class<T> clazz) {

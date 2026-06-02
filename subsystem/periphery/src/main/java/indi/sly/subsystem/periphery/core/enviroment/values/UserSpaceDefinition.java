@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Scope;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserSpaceDefinition extends ASpaceDefinition<UserSpaceDefinition> {
+public class UserSpaceDefinition extends ASpaceDefinition {
     public UserSpaceDefinition() {
     }
 }

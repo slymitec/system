@@ -16,7 +16,7 @@ import java.util.concurrent.locks.Lock;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ObjectCollectionObject extends AObject {
-    private ASpaceDefinition<?> getSpace(long space) {
+    private ASpaceDefinition getSpace(long space) {
         if (LogicalUtil.isAnyEqual(space, SpaceType.KERNEL)) {
             return this.coreManager.getKernelSpace();
         } else if (LogicalUtil.isAnyEqual(space, SpaceType.USER)) {

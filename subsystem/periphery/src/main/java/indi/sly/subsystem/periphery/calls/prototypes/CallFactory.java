@@ -31,16 +31,16 @@ public class CallFactory extends AFactory {
 
     @Override
     public void init() {
-        this.connectionResolvers.add(this.factoryManager.create(ConnectionCheckConditionResolver.class));
-        this.connectionResolvers.add(this.factoryManager.create(ConnectionInitializerResolver.class));
-        this.connectionResolvers.add(this.factoryManager.create(ConnectionStatusRuntimeResolver.class));
+        this.connectionResolvers.add(this.coreManager.create(ConnectionCheckConditionResolver.class));
+        this.connectionResolvers.add(this.coreManager.create(ConnectionInitializerResolver.class));
+        this.connectionResolvers.add(this.coreManager.create(ConnectionStatusRuntimeResolver.class));
 
         Collections.sort(this.connectionResolvers);
     }
 
     private ConnectionObject buildConnection(ConnectionProcessorMediator processorMediator, Provider<ConnectionDefinition> funcRead,
                                              Consumer1<ConnectionDefinition> funcWrite) {
-        ConnectionObject connection = this.factoryManager.create(ConnectionObject.class);
+        ConnectionObject connection = this.coreManager.create(ConnectionObject.class);
 
         connection.setSource(funcRead, funcWrite);
         connection.processorMediator = processorMediator;
@@ -55,7 +55,7 @@ public class CallFactory extends AFactory {
             throw new ConditionParametersException();
         }
 
-        ConnectionProcessorMediator processorMediator = this.factoryManager.create(ConnectionProcessorMediator.class);
+        ConnectionProcessorMediator processorMediator = this.coreManager.create(ConnectionProcessorMediator.class);
         for (AConnectionResolver resolver : this.connectionResolvers) {
             resolver.resolve(connection, processorMediator);
         }
@@ -65,7 +65,7 @@ public class CallFactory extends AFactory {
     }
 
     public ConnectionBuilder createConnection() {
-        ConnectionBuilder connectionBuilder = this.factoryManager.create(ConnectionBuilder.class);
+        ConnectionBuilder connectionBuilder = this.coreManager.create(ConnectionBuilder.class);
 
         connectionBuilder.factory = this;
 

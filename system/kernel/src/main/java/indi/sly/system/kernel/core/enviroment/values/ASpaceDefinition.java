@@ -14,7 +14,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Named
-public abstract class ASpaceDefinition<T> extends ADefinition {
+public abstract class ASpaceDefinition extends ADefinition {
     public ASpaceDefinition() {
         this.objects = new ConcurrentHashMap<>();
         this.classedObjects = new ConcurrentHashMap<>();

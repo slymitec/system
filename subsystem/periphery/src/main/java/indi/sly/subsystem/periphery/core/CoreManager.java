@@ -33,15 +33,17 @@ public class CoreManager extends AManager {
             this.prototypeBuilder = SpringHelper.getInstance(PrototypeBuilder.class);
             this.prototypeBuilder.setFactoryManager(this);
 
-            this.coreObjectRepository = this.coreManager.create(ObjectCollectionObject.class);
-            this.coreObjectRepository.setLimit(SpaceType.KERNEL, Long.MAX_VALUE);
-            this.coreObjectRepository.addByClass(SpaceType.KERNEL, this);
-            this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(CallManager.class));
-            this.coreObjectRepository.addByClass(SpaceType.KERNEL, this.create(ProxyManager.class));
+            this.objectCollection = this.coreManager.create(ObjectCollectionObject.class);
+            this.objectCollection.setLimit(SpaceType.KERNEL, Long.MAX_VALUE);
+            this.objectCollection.addByClass(SpaceType.KERNEL, this);
+            this.objectCollection.addByClass(SpaceType.KERNEL, this.create(CallManager.class));
+            this.objectCollection.addByClass(SpaceType.KERNEL, this.create(ProxyManager.class));
+
             this.bootFactory = this.coreManager.create(BootFactory.class);
             this.bootFactory.init();
+
             BootObject boot = this.bootFactory.buildBoot();
-            this.coreObjectRepository.addByClass(SpaceType.KERNEL, boot);
+            this.objectCollection.addByClass(SpaceType.KERNEL, boot);
         }
     }
 
@@ -57,10 +59,10 @@ public class CoreManager extends AManager {
     }
 
     private PrototypeBuilder prototypeBuilder;
-    private ObjectCollectionObject coreObjectRepository;
+    private ObjectCollectionObject objectCollection;
 
-    public ObjectCollectionObject getCoreObjectRepository() {
-        return this.coreObjectRepository;
+    public ObjectCollectionObject getObjectCollection() {
+        return this.objectCollection;
     }
 
     public <T extends APrototype> T create(Class<T> clazz) {
@@ -68,7 +70,7 @@ public class CoreManager extends AManager {
     }
 
     public <T extends AManager> T getManager(Class<T> clazz) {
-        T manager = this.coreObjectRepository.getByClass(SpaceType.KERNEL, clazz);
+        T manager = this.objectCollection.getByClass(SpaceType.KERNEL, clazz);
 
         manager.check();
 

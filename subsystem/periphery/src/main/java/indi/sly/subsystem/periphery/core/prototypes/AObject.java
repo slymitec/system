@@ -27,7 +27,7 @@ public class AObject extends APrototype {
             throw new StatusAlreadyFinishedException();
         }
 
-        ObjectCollectionObject coreObjectRepository = this.coreManager.getCoreObjectRepository();
+        ObjectCollectionObject coreObjectRepository = this.coreManager.getObjectCollection();
 
         coreObjectRepository.addByHandle(space, handle, this);
 
@@ -45,7 +45,7 @@ public class AObject extends APrototype {
             throw new StatusAlreadyFinishedException();
         }
 
-        ObjectCollectionObject coreObjectRepository = this.coreManager.getCoreObjectRepository();
+        ObjectCollectionObject coreObjectRepository = this.coreManager.getObjectCollection();
 
         coreObjectRepository.deleteByHandle(space, this.handle);
 

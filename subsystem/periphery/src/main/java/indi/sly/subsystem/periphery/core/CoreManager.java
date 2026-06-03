@@ -10,6 +10,7 @@ import indi.sly.subsystem.periphery.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.subsystem.periphery.core.prototypes.APrototype;
 import indi.sly.subsystem.periphery.core.prototypes.ObjectCollectionObject;
 import indi.sly.subsystem.periphery.core.prototypes.PrototypeBuilder;
+import indi.sly.subsystem.periphery.memory.MemoryManager;
 import indi.sly.subsystem.periphery.proxies.ProxyManager;
 import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.supports.LogicalUtil;
@@ -37,6 +38,7 @@ public class CoreManager extends AManager {
             this.objectCollection.setLimit(SpaceType.KERNEL, Long.MAX_VALUE);
             this.objectCollection.addByClass(SpaceType.KERNEL, this);
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(CallManager.class));
+            this.objectCollection.addByClass(SpaceType.KERNEL, this.create(MemoryManager.class));
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(ProxyManager.class));
 
             this.bootFactory = this.coreManager.create(BootFactory.class);

@@ -1,9 +1,10 @@
 package indi.sly.subsystem.periphery.memory.repositories.prototypes;
 
+import indi.sly.subsystem.periphery.core.prototypes.AObject;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.kernel.core.prototypes.AObject;
+
 import jakarta.annotation.Resource;
 import jakarta.inject.Named;
 import org.redisson.api.*;

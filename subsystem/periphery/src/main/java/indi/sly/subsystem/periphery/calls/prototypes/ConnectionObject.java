@@ -8,7 +8,7 @@ import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
 import indi.sly.subsystem.periphery.calls.values.ConnectionStatusDefinition;
 import indi.sly.subsystem.periphery.calls.values.ClientResponseDefinition;
 import indi.sly.subsystem.periphery.calls.values.ClientRequestDefinition;
-import indi.sly.subsystem.periphery.core.prototypes.AIndependentValueProcessObject;
+import indi.sly.subsystem.periphery.core.prototypes.ADefinitionObject;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.LockType;
@@ -21,19 +21,12 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ConnectionObject extends AIndependentValueProcessObject<ConnectionDefinition> {
+public class ConnectionObject extends ADefinitionObject<ConnectionDefinition> {
     protected ConnectionProcessorMediator processorMediator;
     protected ConnectionStatusDefinition status;
 
     public UUID getId() {
-        try {
-            this.lock(LockType.READ);
-            this.init();
-
-            return this.value.getId();
-        } finally {
-            this.unlock(LockType.READ);
-        }
+        return this.definition.getId();
     }
 
     public long getRuntime() {
@@ -43,30 +36,16 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
     public void connect() {
         List<ConnectionProcessorConnectConsumer> resolvers = this.processorMediator.getConnects();
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            for (ConnectionProcessorConnectConsumer resolver : resolvers) {
-                resolver.accept(this.value, this.status);
-            }
-        } finally {
-            this.unlock(LockType.WRITE);
+        for (ConnectionProcessorConnectConsumer resolver : resolvers) {
+            resolver.accept(this.definition, this.status);
         }
     }
 
     public void disconnect() {
         List<ConnectionProcessorDisconnectConsumer> resolvers = this.processorMediator.getDisconnects();
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            for (ConnectionProcessorDisconnectConsumer resolver : resolvers) {
-                resolver.accept(this.value, this.status);
-            }
-        } finally {
-            this.unlock(LockType.WRITE);
+        for (ConnectionProcessorDisconnectConsumer resolver : resolvers) {
+            resolver.accept(this.definition, this.status);
         }
     }
 
@@ -79,15 +58,8 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
 
         List<ConnectionProcessorCallFunction> resolvers = this.processorMediator.getCalls();
 
-        try {
-            this.lock(LockType.WRITE);
-            this.init();
-
-            for (ConnectionProcessorCallFunction resolver : resolvers) {
-                userContentResponse = resolver.apply(this.value, this.status, userContextRequest, userContentResponse);
-            }
-        } finally {
-            this.unlock(LockType.WRITE);
+        for (ConnectionProcessorCallFunction resolver : resolvers) {
+            userContentResponse = resolver.apply(this.definition, this.status, userContextRequest, userContentResponse);
         }
 
         return userContentResponse;

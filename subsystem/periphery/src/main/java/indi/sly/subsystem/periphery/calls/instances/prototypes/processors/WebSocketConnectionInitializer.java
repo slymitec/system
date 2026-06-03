@@ -62,11 +62,11 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
 
                     @Override
                     public void onMessage(String message) {
-                        UserContentResponseDefinition userContentResponse = ObjectUtil.transferFromStringOrDefaultProvider(UserContentResponseDefinition.class, message, () -> {
+                        ClientResponseDefinition userContentResponse = ObjectUtil.transferFromStringOrDefaultProvider(ClientResponseDefinition.class, message, () -> {
                             throw new StatusUnreadableException();
                         });
 
-                        Map<UUID, UserContentResponseDefinition> responses = webSocketConnectionStatusExtension.getResponses();
+                        Map<UUID, ClientResponseDefinition> responses = webSocketConnectionStatusExtension.getResponses();
                         Map<UUID, Lock> locks = webSocketConnectionStatusExtension.getLocks();
                         Map<UUID, Condition> conditions = webSocketConnectionStatusExtension.getConditions();
 
@@ -139,7 +139,7 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
     }
 
     @Override
-    public UserContentResponseDefinition call(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
+    public ClientResponseDefinition call(ClientRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
         WebSocketConnectionStatusExtensionDefinition webSocketConnectionStatusExtension;
 
         if (ObjectUtil.isAnyNull(status.getExtension()) || status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition) {
@@ -151,7 +151,7 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
         WebSocketClient webSocketClient = webSocketConnectionStatusExtension.getWebSocketClient();
 
         UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
-        UUID id = userContentRequest.getID();
+        UUID id = userContentRequest.getId();
 
         Map<UUID, Lock> locks = webSocketConnectionStatusExtension.getLocks();
         Map<UUID, Condition> conditions = webSocketConnectionStatusExtension.getConditions();
@@ -163,12 +163,12 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
 
         webSocketClient.send(ObjectUtil.transferToString(userContextRequest));
 
-        Map<UUID, UserContentResponseDefinition> responses = webSocketConnectionStatusExtension.getResponses();
+        Map<UUID, ClientResponseDefinition> responses = webSocketConnectionStatusExtension.getResponses();
 
-        Future<UserContentResponseDefinition> userContentResponseFuture = webSocketConnectionStatusExtension.getExecutor().submit(() -> {
+        Future<ClientResponseDefinition> userContentResponseFuture = webSocketConnectionStatusExtension.getExecutor().submit(() -> {
             Lock lock = locks.getOrDefault(id, null);
 
-            UserContentResponseDefinition userContentResponse = new UserContentResponseDefinition();
+            ClientResponseDefinition userContentResponse = new ClientResponseDefinition();
 
             if (ObjectUtil.allNotNull(lock)) {
                 try {
@@ -200,7 +200,7 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
             return userContentResponse;
         });
 
-        UserContentResponseDefinition userContentResponse;
+        ClientResponseDefinition userContentResponse;
         try {
             userContentResponse = userContentResponseFuture.get();
         } catch (InterruptedException | ExecutionException e) {

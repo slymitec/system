@@ -1,32 +1,25 @@
 package indi.sly.subsystem.periphery.calls.values;
 
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.ADefinition;
 
-import java.util.UUID;
-
-public class UserContentResponseDefinition extends ADefinition<UserContentResponseDefinition> {
+public class UserContentResponseDefinition extends ADefinition {
     public UserContentResponseDefinition() {
-        this.result = new UserContentResponseResultDefinition();
-        this.exception = new UserContentResponseExceptionDefinition();
     }
 
-    private UUID id;
-    private final UserContentResponseResultDefinition result;
-    private final UserContentResponseExceptionDefinition exception;
+    private Class<?> clazz;
+    private Object value;
 
-    public UUID getID() {
-        return this.id;
+    public Class<?> getClazz() {
+        return this.clazz;
     }
 
-    public void setID(UUID id) {
-        this.id = id;
+    public Object getValue() {
+        return this.value;
     }
 
-    public UserContentResponseResultDefinition getResult() {
-        return this.result;
-    }
-
-    public UserContentResponseExceptionDefinition getException() {
-        return this.exception;
+    public void setValue(Object value) {
+        this.value = value;
+        this.clazz = ObjectUtil.isAnyNull(this.value) ? null : this.value.getClass();
     }
 }

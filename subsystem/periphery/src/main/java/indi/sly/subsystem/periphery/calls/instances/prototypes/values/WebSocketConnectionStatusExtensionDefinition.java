@@ -1,6 +1,6 @@
 package indi.sly.subsystem.periphery.calls.instances.prototypes.values;
 
-import indi.sly.subsystem.periphery.calls.values.UserContentResponseDefinition;
+import indi.sly.subsystem.periphery.calls.values.ClientResponseDefinition;
 import org.java_websocket.client.WebSocketClient;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ public class WebSocketConnectionStatusExtensionDefinition extends AConnectionSta
     private WebSocketClient webSocketClient;
     private final Map<UUID, Lock> locks;
     private final Map<UUID, Condition> conditions;
-    private final Map<UUID, UserContentResponseDefinition> responses;
+    private final Map<UUID, ClientResponseDefinition> responses;
 
     public ExecutorService getExecutor() {
         return this.executor;
@@ -47,7 +47,7 @@ public class WebSocketConnectionStatusExtensionDefinition extends AConnectionSta
         return this.conditions;
     }
 
-    public Map<UUID, UserContentResponseDefinition> getResponses() {
+    public Map<UUID, ClientResponseDefinition> getResponses() {
         return this.responses;
     }
 }

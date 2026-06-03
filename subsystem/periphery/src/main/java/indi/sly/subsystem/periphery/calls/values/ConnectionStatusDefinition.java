@@ -4,7 +4,7 @@ import indi.sly.subsystem.periphery.calls.instances.prototypes.values.AConnectio
 import indi.sly.subsystem.periphery.calls.prototypes.ConnectionObject;
 import indi.sly.system.common.values.ADefinition;
 
-public class ConnectionStatusDefinition extends ADefinition<ConnectionStatusDefinition> {
+public class ConnectionStatusDefinition extends ADefinition {
     public ConnectionStatusDefinition() {
     }
 

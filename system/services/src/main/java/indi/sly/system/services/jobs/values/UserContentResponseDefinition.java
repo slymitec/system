@@ -1,28 +1,19 @@
 package indi.sly.system.services.jobs.values;
 
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.ADefinition;
 
 import java.util.UUID;
 
 public class UserContentResponseDefinition extends ADefinition {
-    private UUID id;
-    private String clazz;
+    public UserContentResponseDefinition() {
+    }
+
+    private Class<?> clazz;
     private Object value;
 
-    public UUID getId() {
-        return this.id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getClazz() {
+    public Class<?> getClazz() {
         return this.clazz;
-    }
-
-    public void setClazz(String clazz) {
-        this.clazz = clazz;
     }
 
     public Object getValue() {
@@ -31,5 +22,6 @@ public class UserContentResponseDefinition extends ADefinition {
 
     public void setValue(Object value) {
         this.value = value;
+        this.clazz = ObjectUtil.isAnyNull(this.value) ? null : this.value.getClass();
     }
 }

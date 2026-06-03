@@ -27,7 +27,7 @@ public class ConnectionBuilder extends ABuilder {
             throw new ConditionParametersException();
         }
 
-        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
 
         if (kernelSpace.getNamedConnectionIDs().containsKey(name)) {
             throw new StatusAlreadyExistedException();
@@ -35,14 +35,14 @@ public class ConnectionBuilder extends ABuilder {
 
         ConnectionDefinition connection = new ConnectionDefinition();
 
-        connection.setID(UUIDUtil.createRandom());
+        connection.setId(UUIDUtil.createRandom());
         connection.setAttribute(attribute);
         connection.setName(name);
         connection.setAddress(address);
         connection.setInitializer(initializer);
 
-        kernelSpace.getConnections().put(connection.getID(), connection);
-        kernelSpace.getNamedConnectionIDs().put(connection.getName(), connection.getID());
+        kernelSpace.getConnections().put(connection.getId(), connection);
+        kernelSpace.getNamedConnectionIDs().put(connection.getName(), connection.getId());
     }
 
     public void delete(String name) {
@@ -50,7 +50,7 @@ public class ConnectionBuilder extends ABuilder {
             throw new ConditionParametersException();
         }
 
-        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+        KernelSpaceDefinition kernelSpace = this.factoryManager.getKernelSpace();
 
         UUID connectionID = kernelSpace.getNamedConnectionIDs().getOrDefault(name, null);
 
@@ -60,7 +60,7 @@ public class ConnectionBuilder extends ABuilder {
 
         ConnectionDefinition connection = kernelSpace.getConnections().getOrDefault(connectionID, null);
 
-        kernelSpace.getConnections().remove(connection.getID());
+        kernelSpace.getConnections().remove(connection.getId());
         kernelSpace.getNamedConnectionIDs().remove(connection.getName());
     }
 }

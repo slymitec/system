@@ -34,7 +34,7 @@ public class ConnectionCheckConditionResolver extends AConnectionResolver {
             if (LogicalUtil.allNotEqual(status.getRuntime(), ConnectStatusRuntimeType.CONNECTED)) {
                 throw new StatusRelationshipErrorException();
             }
-            if (ValueUtil.isAnyNullOrEmpty(userContextRequest.getContent().getID())) {
+            if (ValueUtil.isAnyNullOrEmpty(userContextRequest.getContent().getId())) {
                 throw new ConditionParametersException();
             }
 

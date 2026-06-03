@@ -6,8 +6,8 @@ import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorCallFunction;
 import indi.sly.subsystem.periphery.calls.prototypes.wrappers.ConnectionProcessorMediator;
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
 import indi.sly.subsystem.periphery.calls.values.ConnectionStatusDefinition;
-import indi.sly.subsystem.periphery.calls.values.UserContentResponseDefinition;
-import indi.sly.subsystem.periphery.calls.values.UserContextRequestDefinition;
+import indi.sly.subsystem.periphery.calls.values.ClientResponseDefinition;
+import indi.sly.subsystem.periphery.calls.values.ClientRequestDefinition;
 import indi.sly.subsystem.periphery.core.prototypes.AIndependentValueProcessObject;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -25,12 +25,12 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
     protected ConnectionProcessorMediator processorMediator;
     protected ConnectionStatusDefinition status;
 
-    public UUID getID() {
+    public UUID getId() {
         try {
             this.lock(LockType.READ);
             this.init();
 
-            return this.value.getID();
+            return this.value.getId();
         } finally {
             this.unlock(LockType.READ);
         }
@@ -70,12 +70,12 @@ public class ConnectionObject extends AIndependentValueProcessObject<ConnectionD
         }
     }
 
-    public UserContentResponseDefinition call(UserContextRequestDefinition userContextRequest) {
+    public ClientResponseDefinition call(ClientRequestDefinition userContextRequest) {
         if (ObjectUtil.isAnyNull(userContextRequest)) {
             throw new ConditionParametersException();
         }
 
-        UserContentResponseDefinition userContentResponse = null;
+        ClientResponseDefinition userContentResponse = null;
 
         List<ConnectionProcessorCallFunction> resolvers = this.processorMediator.getCalls();
 

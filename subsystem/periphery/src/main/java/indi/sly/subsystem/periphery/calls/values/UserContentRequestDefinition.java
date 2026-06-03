@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class UserContentRequestDefinition extends ADefinition<UserContentRequestDefinition> {
+public class UserContentRequestDefinition extends ADefinition {
     public UserContentRequestDefinition() {
         this.request = new HashMap<>();
     }
@@ -16,7 +16,7 @@ public class UserContentRequestDefinition extends ADefinition<UserContentRequest
     private String method;
     private final Map<String, String> request;
 
-    public UUID getID() {
+    public UUID getId() {
         return this.id;
     }
 

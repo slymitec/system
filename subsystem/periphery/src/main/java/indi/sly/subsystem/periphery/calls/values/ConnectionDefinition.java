@@ -5,18 +5,18 @@ import indi.sly.system.common.values.ADefinition;
 
 import java.util.UUID;
 
-public class ConnectionDefinition extends ADefinition<ConnectionDefinition> {
+public class ConnectionDefinition extends ADefinition {
     private UUID id;
     private long attribute;
     private String name;
     private String address;
     private AConnectionInitializer initializer;
 
-    public UUID getID() {
+    public UUID getId() {
         return this.id;
     }
 
-    public void setID(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

@@ -48,7 +48,7 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
     }
 
     @Override
-    public UserContentResponseDefinition call(UserContextRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
+    public ClientResponseDefinition call(ClientRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
         HttpConnectionStatusExtensionDefinition httpConnectionStatusExtension;
 
         if (ObjectUtil.isAnyNull(status.getExtension()) || status.getExtension() instanceof HttpConnectionStatusExtensionDefinition) {
@@ -61,12 +61,12 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
 
         UserContentRequestDefinition userContentRequest = userContextRequest.getContent();
 
-        UserContentResponseDefinition userContentResponse = systemRestClient
+        ClientResponseDefinition userContentResponse = systemRestClient
                 .post()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(userContentRequest)
                 .retrieve()
-                .body(UserContentResponseDefinition.class);
+                .body(ClientResponseDefinition.class);
 
         if (ObjectUtil.isAnyNull(userContentResponse)) {
             throw new StatusUnexpectedException();

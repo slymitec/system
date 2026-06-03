@@ -3,6 +3,7 @@ package indi.sly.subsystem.periphery.calls.instances.prototypes.processors;
 import indi.sly.subsystem.periphery.calls.instances.prototypes.values.WebSocketConnectionStatusExtensionDefinition;
 import indi.sly.subsystem.periphery.calls.prototypes.ConnectionObject;
 import indi.sly.subsystem.periphery.calls.values.*;
+import indi.sly.subsystem.periphery.core.prototypes.processors.AInitializer;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
@@ -26,123 +27,121 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class WebSocketConnectionInitializer extends AConnectionInitializer {
+public class WebSocketConnectionInitializer extends AInitializer implements IConnectionInitializer {
     @Override
     public synchronized void connect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
-        synchronized (this) {
-            WebSocketConnectionStatusExtensionDefinition webSocketConnectionStatusExtension;
-            WebSocketClient webSocketClient;
+        WebSocketConnectionStatusExtensionDefinition webSocketConnectionStatusExtension;
+        WebSocketClient webSocketClient;
 
-            if (ObjectUtil.allNotNull(status.getExtension())) {
-                if (status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition) {
-                    webSocketConnectionStatusExtension = (WebSocketConnectionStatusExtensionDefinition) status.getExtension();
+        if (ObjectUtil.allNotNull(status.getExtension())) {
+            if (status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition) {
+                webSocketConnectionStatusExtension = (WebSocketConnectionStatusExtensionDefinition) status.getExtension();
 
-                    webSocketClient = webSocketConnectionStatusExtension.getWebSocketClient();
+                webSocketClient = webSocketConnectionStatusExtension.getWebSocketClient();
 
-                    webSocketClient.reconnect();
-                } else {
-                    throw new StatusRelationshipErrorException();
-                }
+                webSocketClient.reconnect();
             } else {
-                URI address;
-                try {
-                    address = new URI(connection.getAddress());
-                } catch (URISyntaxException e) {
-                    throw new ConditionParametersException();
+                throw new StatusRelationshipErrorException();
+            }
+        } else {
+            URI address;
+            try {
+                address = new URI(connection.getAddress());
+            } catch (URISyntaxException e) {
+                throw new ConditionParametersException();
+            }
+
+            webSocketConnectionStatusExtension = new WebSocketConnectionStatusExtensionDefinition();
+
+            webSocketConnectionStatusExtension.setExecutor(Executors.newCachedThreadPool());
+
+            webSocketClient = new WebSocketClient(address, new Draft_6455()) {
+                @Override
+                public void onOpen(ServerHandshake handshakeData) {
                 }
 
-                webSocketConnectionStatusExtension = new WebSocketConnectionStatusExtensionDefinition();
+                @Override
+                public void onMessage(String message) {
+                    ClientResponseDefinition userContentResponse = ObjectUtil.transferFromStringOrDefaultProvider(ClientResponseDefinition.class, message, () -> {
+                        throw new StatusUnreadableException();
+                    });
 
-                webSocketConnectionStatusExtension.setExecutor(Executors.newCachedThreadPool());
+                    Map<UUID, ClientResponseDefinition> responses = webSocketConnectionStatusExtension.getResponses();
+                    Map<UUID, Lock> locks = webSocketConnectionStatusExtension.getLocks();
+                    Map<UUID, Condition> conditions = webSocketConnectionStatusExtension.getConditions();
 
-                webSocketClient = new WebSocketClient(address, new Draft_6455()) {
-                    @Override
-                    public void onOpen(ServerHandshake handshakeData) {
+                    UUID id;
+                    if (ObjectUtil.allNotNull(userContentResponse.getException())) {
+                        id = userContentResponse.getException().getId();
+                    } else {
+                        id = userContentResponse.getContent().getId();
                     }
 
-                    @Override
-                    public void onMessage(String message) {
-                        ClientResponseDefinition userContentResponse = ObjectUtil.transferFromStringOrDefaultProvider(ClientResponseDefinition.class, message, () -> {
-                            throw new StatusUnreadableException();
-                        });
+                    Lock lock = locks.getOrDefault(id, null);
+                    if (ObjectUtil.allNotNull(lock)) {
+                        lock.lock();
+                        try {
+                            responses.put(id, userContentResponse);
+                            locks.remove(id);
+                            Condition condition = conditions.remove(id);
 
-                        Map<UUID, ClientResponseDefinition> responses = webSocketConnectionStatusExtension.getResponses();
-                        Map<UUID, Lock> locks = webSocketConnectionStatusExtension.getLocks();
-                        Map<UUID, Condition> conditions = webSocketConnectionStatusExtension.getConditions();
-
-                        UUID id = userContentResponse.getContent().getId();
-
-                        Lock lock = locks.getOrDefault(id, null);
-                        if (ObjectUtil.allNotNull(lock)) {
-                            try {
-                                lock.lock();
-
-                                responses.put(id, userContentResponse);
-                                locks.remove(id);
-                                conditions.remove(id);
-
-                                Condition condition = conditions.getOrDefault(id, null);
-
-                                if (ObjectUtil.allNotNull(condition)) {
-                                    condition.signalAll();
-                                }
-                            } finally {
-                                lock.unlock();
+                            if (ObjectUtil.allNotNull(condition)) {
+                                condition.signalAll();
                             }
+                        } finally {
+                            lock.unlock();
                         }
                     }
+                }
 
-                    @Override
-                    public void onClose(int code, String reason, boolean remote) {
-                        ConnectionObject connection = status.getConnection();
-                        connection.clone();
-                    }
+                @Override
+                public void onClose(int code, String reason, boolean remote) {
+                    ConnectionObject connection = status.getConnection();
+                    connection.disconnect();
+                }
 
-                    @Override
-                    public void onError(Exception ex) {
-                    }
-                };
-                webSocketConnectionStatusExtension.setWebSocketClient(webSocketClient);
+                @Override
+                public void onError(Exception ex) {
+                }
+            };
+            webSocketClient.connect();
+            webSocketConnectionStatusExtension.setWebSocketClient(webSocketClient);
 
-                status.setExtension(webSocketConnectionStatusExtension);
-            }
+            status.setExtension(webSocketConnectionStatusExtension);
         }
     }
 
     @Override
-    public synchronized void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
+    public void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
         WebSocketConnectionStatusExtensionDefinition webSocketConnectionStatusExtension;
 
-        if (ObjectUtil.isAnyNull(status.getExtension()) || status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition) {
+        if (ObjectUtil.isAnyNull(status.getExtension()) || !(status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition)) {
             throw new StatusRelationshipErrorException();
         } else {
             webSocketConnectionStatusExtension = (WebSocketConnectionStatusExtensionDefinition) status.getExtension();
         }
 
-        synchronized (this) {
-            webSocketConnectionStatusExtension.getExecutor().shutdown();
-            webSocketConnectionStatusExtension.setExecutor(null);
+        webSocketConnectionStatusExtension.getExecutor().shutdown();
+        webSocketConnectionStatusExtension.setExecutor(null);
 
-            WebSocketClient webSocketClient = webSocketConnectionStatusExtension.getWebSocketClient();
-            if(webSocketClient.isOpen() )
-            {
-                webSocketClient.close();
-            }
-            webSocketConnectionStatusExtension.setWebSocketClient(null);
-
-            webSocketConnectionStatusExtension.getLocks().clear();
-            webSocketConnectionStatusExtension.getConditions().clear();
-            webSocketConnectionStatusExtension.getResponses().clear();
-
-            status.setExtension(null);
+        WebSocketClient webSocketClient = webSocketConnectionStatusExtension.getWebSocketClient();
+        if (webSocketClient.isOpen()) {
+            webSocketClient.close();
         }
+        webSocketConnectionStatusExtension.setWebSocketClient(null);
+
+        webSocketConnectionStatusExtension.getLocks().clear();
+        webSocketConnectionStatusExtension.getConditions().clear();
+        webSocketConnectionStatusExtension.getResponses().clear();
+
+        status.setExtension(null);
     }
 
     @Override
     public ClientResponseDefinition call(ClientRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
         WebSocketConnectionStatusExtensionDefinition webSocketConnectionStatusExtension;
 
-        if (ObjectUtil.isAnyNull(status.getExtension()) || status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition) {
+        if (ObjectUtil.isAnyNull(status.getExtension()) || !(status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition)) {
             throw new StatusRelationshipErrorException();
         } else {
             webSocketConnectionStatusExtension = (WebSocketConnectionStatusExtensionDefinition) status.getExtension();

@@ -1,6 +1,6 @@
 package indi.sly.subsystem.periphery.calls.prototypes.processors;
 
-import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.AConnectionInitializer;
+import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.IConnectionInitializer;
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorConnectConsumer;
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorDisconnectConsumer;
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorCallFunction;
@@ -16,13 +16,13 @@ import org.springframework.context.annotation.Scope;
 public class ConnectionInitializerResolver extends AConnectionResolver {
     public ConnectionInitializerResolver() {
         this.connect = (connection, status) -> {
-            AConnectionInitializer initializer = connection.getInitializer();
+            IConnectionInitializer initializer = connection.getInitializer();
 
             initializer.connect(connection, status);
         };
 
         this.disconnect = (connection, status) -> {
-            AConnectionInitializer initializer = connection.getInitializer();
+            IConnectionInitializer initializer = connection.getInitializer();
 
             initializer.disconnect(connection, status);
         };
@@ -32,7 +32,7 @@ public class ConnectionInitializerResolver extends AConnectionResolver {
                 return userContentResponse;
             }
 
-            AConnectionInitializer initializer = connection.getInitializer();
+            IConnectionInitializer initializer = connection.getInitializer();
             userContentResponse = initializer.call(userContextRequest, status);
 
             return userContentResponse;

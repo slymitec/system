@@ -9,15 +9,10 @@ import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-@Named
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class AConnectionInitializer extends AInitializer {
-    public AConnectionInitializer() {
-    }
+public interface IConnectionInitializer {
+    void connect(ConnectionDefinition connection, ConnectionStatusDefinition status);
 
-    public abstract void connect(ConnectionDefinition connection, ConnectionStatusDefinition status);
+    void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status);
 
-    public abstract void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status);
-
-    public abstract ClientResponseDefinition call(ClientRequestDefinition userContextRequest, ConnectionStatusDefinition status);
+    ClientResponseDefinition call(ClientRequestDefinition userContextRequest, ConnectionStatusDefinition status);
 }

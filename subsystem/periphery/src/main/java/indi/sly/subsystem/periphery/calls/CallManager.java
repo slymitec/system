@@ -1,6 +1,6 @@
 package indi.sly.subsystem.periphery.calls;
 
-import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.AConnectionInitializer;
+import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.IConnectionInitializer;
 import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.HttpConnectionInitializer;
 import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.WebSocketConnectionInitializer;
 import indi.sly.subsystem.periphery.calls.prototypes.CallFactory;
@@ -54,7 +54,7 @@ public class CallManager extends AManager {
 
     protected CallFactory factory;
 
-    public void createConnection(String name, long attribute, String address, AConnectionInitializer initializer) {
+    public void createConnection(String name, long attribute, String address, IConnectionInitializer initializer) {
         if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(initializer)) {
             throw new ConditionParametersException();
         }
@@ -81,13 +81,13 @@ public class CallManager extends AManager {
 
         KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
 
-        UUID connectID = kernelSpace.getNamedConnectionIDs().getOrDefault(name, null);
+        UUID connectId = kernelSpace.getNamedConnectionIDs().getOrDefault(name, null);
 
-        if (ValueUtil.isAnyNullOrEmpty(connectID)) {
+        if (ValueUtil.isAnyNullOrEmpty(connectId)) {
             throw new StatusNotExistedException();
         }
 
-        ConnectionDefinition connection = kernelSpace.getConnections().getOrDefault(connectID, null);
+        ConnectionDefinition connection = kernelSpace.getConnections().getOrDefault(connectId, null);
 
         if (ObjectUtil.isAnyNull(connection)) {
             throw new StatusNotExistedException();

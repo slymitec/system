@@ -69,6 +69,4 @@ public class CallFactory extends AFactory {
 
         return connectionBuilder;
     }
-
-
 }

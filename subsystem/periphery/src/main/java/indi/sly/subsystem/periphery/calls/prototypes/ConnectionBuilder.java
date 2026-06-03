@@ -1,6 +1,6 @@
 package indi.sly.subsystem.periphery.calls.prototypes;
 
-import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.AConnectionInitializer;
+import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.IConnectionInitializer;
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
 import indi.sly.subsystem.periphery.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.subsystem.periphery.core.prototypes.ABuilder;
@@ -22,7 +22,7 @@ import java.util.UUID;
 public class ConnectionBuilder extends ABuilder {
     protected CallFactory factory;
 
-    public void create(String name, long attribute, String address, AConnectionInitializer initializer) {
+    public void create(String name, long attribute, String address, IConnectionInitializer initializer) {
         if (StringUtil.isNameIllegal(name) || ValueUtil.isAnyNullOrEmpty(address) || ObjectUtil.isAnyNull(initializer)) {
             throw new ConditionParametersException();
         }

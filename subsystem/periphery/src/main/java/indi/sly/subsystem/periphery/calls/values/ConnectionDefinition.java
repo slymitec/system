@@ -1,6 +1,6 @@
 package indi.sly.subsystem.periphery.calls.values;
 
-import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.AConnectionInitializer;
+import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.IConnectionInitializer;
 import indi.sly.system.common.values.ADefinition;
 
 import java.util.UUID;
@@ -10,7 +10,7 @@ public class ConnectionDefinition extends ADefinition {
     private long attribute;
     private String name;
     private String address;
-    private AConnectionInitializer initializer;
+    private IConnectionInitializer initializer;
 
     public UUID getId() {
         return this.id;
@@ -44,11 +44,11 @@ public class ConnectionDefinition extends ADefinition {
         this.address = address;
     }
 
-    public AConnectionInitializer getInitializer() {
+    public IConnectionInitializer getInitializer() {
         return this.initializer;
     }
 
-    public void setInitializer(AConnectionInitializer initializer) {
+    public void setInitializer(IConnectionInitializer initializer) {
         this.initializer = initializer;
     }
 }

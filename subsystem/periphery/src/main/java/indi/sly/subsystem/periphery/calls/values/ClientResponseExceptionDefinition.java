@@ -2,7 +2,7 @@ package indi.sly.subsystem.periphery.calls.values;
 
 import indi.sly.system.common.values.ADefinition;
 
-public class UserContentResponseExceptionDefinition extends ADefinition<UserContentResponseExceptionDefinition> {
+public class ClientResponseExceptionDefinition extends ADefinition {
     private Class<?> clazz;
     private Class<?> owner;
     private String method;

@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
-public class WebSocketConnectionStatusExtensionDefinition extends AConnectionStatusExtensionDefinition<WebSocketConnectionStatusExtensionDefinition> {
+public class WebSocketConnectionStatusExtensionDefinition extends AConnectionStatusExtensionDefinition {
     public WebSocketConnectionStatusExtensionDefinition() {
         this.locks = new ConcurrentHashMap<>();
         this.conditions = new ConcurrentHashMap<>();

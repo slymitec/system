@@ -70,7 +70,7 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
                         Map<UUID, Lock> locks = webSocketConnectionStatusExtension.getLocks();
                         Map<UUID, Condition> conditions = webSocketConnectionStatusExtension.getConditions();
 
-                        UUID id = userContentResponse.getID();
+                        UUID id = userContentResponse.getContent().getId();
 
                         Lock lock = locks.getOrDefault(id, null);
                         if (ObjectUtil.allNotNull(lock)) {

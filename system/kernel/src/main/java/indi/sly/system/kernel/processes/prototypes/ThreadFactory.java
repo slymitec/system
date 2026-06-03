@@ -14,10 +14,10 @@ public class ThreadFactory extends AFactory {
     public void init() {
     }
 
-    public ThreadObject buildThread(UUID processID) {
+    public ThreadObject buildThread(UUID processId) {
         ThreadObject thread = this.coreManager.create(ThreadObject.class);
 
-        thread.setProcessId(processID);
+        thread.setProcessId(processId);
 
         return thread;
     }

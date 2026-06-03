@@ -10,7 +10,7 @@ public class ConnectionStatusDefinition extends ADefinition {
 
     private ConnectionObject connection;
     private long runtime;
-    private AConnectionStatusExtensionDefinition<? extends AConnectionStatusExtensionDefinition<?>> extension;
+    private AConnectionStatusExtensionDefinition extension;
 
     public ConnectionObject getConnection() {
         return this.connection;
@@ -32,7 +32,7 @@ public class ConnectionStatusDefinition extends ADefinition {
         return this.extension;
     }
 
-    public void setExtension(AConnectionStatusExtensionDefinition<? extends AConnectionStatusExtensionDefinition<?>> extension) {
+    public void setExtension(AConnectionStatusExtensionDefinition extension) {
         this.extension = extension;
     }
 }

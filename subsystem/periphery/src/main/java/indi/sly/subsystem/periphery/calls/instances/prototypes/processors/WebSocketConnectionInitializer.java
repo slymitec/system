@@ -122,6 +122,13 @@ public class WebSocketConnectionInitializer extends AInitializer implements ICon
         }
 
         webSocketConnectionStatusExtension.getExecutor().shutdown();
+        try {
+            if(webSocketConnectionStatusExtension.getExecutor().awaitTermination(1,TimeUnit.SECONDS)){
+                webSocketConnectionStatusExtension.getExecutor().shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         webSocketConnectionStatusExtension.setExecutor(null);
 
         WebSocketClient webSocketClient = webSocketConnectionStatusExtension.getWebSocketClient();
@@ -170,9 +177,8 @@ public class WebSocketConnectionInitializer extends AInitializer implements ICon
             ClientResponseDefinition userContentResponse = new ClientResponseDefinition();
 
             if (ObjectUtil.allNotNull(lock)) {
+                lock.lock();
                 try {
-                    lock.lock();
-
                     Condition condition = conditions.getOrDefault(id, null);
 
                     while (locks.containsKey(id)) {
@@ -188,7 +194,6 @@ public class WebSocketConnectionInitializer extends AInitializer implements ICon
                             conditions.remove(id);
                         }
                     }
-
                 } finally {
                     lock.unlock();
                 }

@@ -3,7 +3,7 @@ package indi.sly.subsystem.periphery.calls.prototypes.wrappers;
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorConnectConsumer;
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorDisconnectConsumer;
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorCallFunction;
-import indi.sly.subsystem.periphery.core.prototypes.mediators.AMediator;
+import indi.sly.subsystem.periphery.core.prototypes.wrappers.AMediator;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

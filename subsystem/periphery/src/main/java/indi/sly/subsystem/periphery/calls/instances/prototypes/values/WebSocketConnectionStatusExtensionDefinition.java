@@ -5,6 +5,7 @@ import org.java_websocket.client.WebSocketClient;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.locks.Condition;
@@ -12,42 +13,21 @@ import java.util.concurrent.locks.Lock;
 
 public class WebSocketConnectionStatusExtensionDefinition extends AConnectionStatusExtensionDefinition {
     public WebSocketConnectionStatusExtensionDefinition() {
-        this.locks = new ConcurrentHashMap<>();
-        this.conditions = new ConcurrentHashMap<>();
-        this.responses = new ConcurrentHashMap<>();
+        this.pendingRequests = new ConcurrentHashMap<>();
     }
 
-    private ExecutorService executor;
     private WebSocketClient webSocketClient;
-    private final Map<UUID, Lock> locks;
-    private final Map<UUID, Condition> conditions;
-    private final Map<UUID, ClientResponseDefinition> responses;
-
-    public ExecutorService getExecutor() {
-        return this.executor;
-    }
-
-    public void setExecutor(ExecutorService executor) {
-        this.executor = executor;
-    }
+    private final Map<UUID, CompletableFuture<ClientResponseDefinition>> pendingRequests;
 
     public WebSocketClient getWebSocketClient() {
-        return this.webSocketClient;
+        return webSocketClient;
     }
 
     public void setWebSocketClient(WebSocketClient webSocketClient) {
         this.webSocketClient = webSocketClient;
     }
 
-    public Map<UUID, Lock> getLocks() {
-        return this.locks;
-    }
-
-    public Map<UUID, Condition> getConditions() {
-        return this.conditions;
-    }
-
-    public Map<UUID, ClientResponseDefinition> getResponses() {
-        return this.responses;
+    public Map<UUID, CompletableFuture<ClientResponseDefinition>> getPendingRequests() {
+        return pendingRequests;
     }
 }

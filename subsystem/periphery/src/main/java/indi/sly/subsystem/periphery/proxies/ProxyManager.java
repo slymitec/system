@@ -2,6 +2,7 @@ package indi.sly.subsystem.periphery.proxies;
 
 import indi.sly.subsystem.periphery.core.AManager;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
+import indi.sly.subsystem.periphery.proxies.prototypes.ProxyTransactionObject;
 import indi.sly.system.common.supports.LogicalUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -22,5 +23,7 @@ public class ProxyManager extends AManager {
     public void shutdown() {
     }
 
-
+    public ProxyTransactionObject createProxyTransaction() {
+        return null;
+    }
 }

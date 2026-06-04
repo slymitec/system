@@ -79,11 +79,10 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
                     public void onMessage(String message) {
                         UUID id = null;
                         try {
-                            ClientResponseDefinition response =
-                                    ObjectUtil.transferFromStringOrDefaultProvider(
-                                            ClientResponseDefinition.class, message, () -> {
-                                                throw new StatusUnreadableException();
-                                            });
+                            ClientResponseDefinition response = ObjectUtil.transferFromStringOrDefaultProvider(
+                                    ClientResponseDefinition.class, message, () -> {
+                                        throw new StatusUnreadableException();
+                                    });
 
                             if (ObjectUtil.allNotNull(response.getException())) {
                                 id = response.getException().getId();
@@ -142,19 +141,19 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
     public void disconnect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
         writeLock.lock();
         try {
-            if (!(status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition ext)) {
+            if (!(status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition webSocketConnectionStatusExtension)) {
                 return;
             }
 
-            cancelAllPendingRequests(ext.getPendingRequests());
+            cancelAllPendingRequests(webSocketConnectionStatusExtension.getPendingRequests());
 
-            WebSocketClient webSocketClient = ext.getWebSocketClient();
+            WebSocketClient webSocketClient = webSocketConnectionStatusExtension.getWebSocketClient();
             if (ObjectUtil.allNotNull(webSocketClient)) {
                 try {
                     webSocketClient.close();
                 } catch (Exception ignored) {
                 }
-                ext.setWebSocketClient(null);
+                webSocketConnectionStatusExtension.setWebSocketClient(null);
             }
             status.setExtension(null);
         } finally {
@@ -166,11 +165,11 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
     public ClientResponseDefinition call(ClientRequestDefinition request, ConnectionStatusDefinition status) {
         readLock.lock();
         try {
-            if (!(status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition ext)) {
+            if (!(status.getExtension() instanceof WebSocketConnectionStatusExtensionDefinition webSocketConnectionStatusExtension)) {
                 throw new StatusRelationshipErrorException();
             }
 
-            WebSocketClient webSocketClient = ext.getWebSocketClient();
+            WebSocketClient webSocketClient = webSocketConnectionStatusExtension.getWebSocketClient();
             if (ObjectUtil.isAnyNull(webSocketClient)) {
                 throw new StatusRelationshipErrorException();
             }
@@ -185,7 +184,7 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
                 throw new ConditionParametersException();
             }
 
-            Map<UUID, CompletableFuture<ClientResponseDefinition>> pendingRequests = ext.getPendingRequests();
+            Map<UUID, CompletableFuture<ClientResponseDefinition>> pendingRequests = webSocketConnectionStatusExtension.getPendingRequests();
             CompletableFuture<ClientResponseDefinition> future = new CompletableFuture<>();
             pendingRequests.put(id, future);
 

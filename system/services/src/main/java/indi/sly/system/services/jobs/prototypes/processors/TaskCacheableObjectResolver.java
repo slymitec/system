@@ -23,7 +23,7 @@ import java.util.List;
 public class TaskCacheableObjectResolver extends AResolver implements ITaskResolver {
     public TaskCacheableObjectResolver() {
         this.content = (task, status, threadContext) -> {
-            if (LogicalUtil.isAnyExist(task.getAttribute(), TaskAttributeType.OBJECT_IS_CACHEABLE) && ObjectUtil.isAnyNull(threadContext.getCacheableObject())) {
+            if (!LogicalUtil.isAnyExist(task.getAttribute(), TaskAttributeType.OBJECT_IS_NOT_CACHEABLE) && ObjectUtil.isAnyNull(threadContext.getCacheableObject())) {
                 List<String> parameters = threadContext.getParameters();
                 if (parameters.isEmpty()) {
                     throw new ConditionParametersException();

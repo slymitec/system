@@ -51,40 +51,40 @@ public class JobService extends AService {
             serviceSpace.setTransactionalAction(transactionalAction);
             kernelSpace.setServiceSpace(serviceSpace);
 
-            this.createTask("CoreManager", TaskAttributeType.NULL, null, this.coreManager.create(CoreManagerTaskInitializer.class));
-            this.createTask("SystemVersionObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(SystemVersionObjectTaskInitializer.class));
-            this.createTask("DateTimeObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(DateTimeObjectTaskInitializer.class));
+            this.createTask("CoreManager", TaskAttributeType.OBJECT_IS_NOT_CACHEABLE, null, this.coreManager.create(CoreManagerTaskInitializer.class));
+            this.createTask("SystemVersionObject", TaskAttributeType.NULL, null, this.coreManager.create(SystemVersionObjectTaskInitializer.class));
+            this.createTask("DateTimeObject", TaskAttributeType.NULL, null, this.coreManager.create(DateTimeObjectTaskInitializer.class));
 
-            this.createTask("ObjectManager", TaskAttributeType.NULL, null, this.coreManager.create(ObjectManagerTaskInitializer.class));
-            this.createTask("DumpObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(DumpObjectTaskInitializer.class));
-            this.createTask("InfoObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(InfoObjectTaskInitializer.class));
-            this.createTask("SecurityDescriptorObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(SecurityDescriptorObjectTaskInitializer.class));
-            this.createTask("InfoContentObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(NoneInfoContentObjectTaskInitializer.class));
-            this.createTask("FolderContentObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(NoneInfoContentObjectTaskInitializer.class));
-            this.createTask("NamelessFolderContentObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(NoneInfoContentObjectTaskInitializer.class));
+            this.createTask("ObjectManager", TaskAttributeType.OBJECT_IS_NOT_CACHEABLE, null, this.coreManager.create(ObjectManagerTaskInitializer.class));
+            this.createTask("DumpObject", TaskAttributeType.NULL, null, this.coreManager.create(DumpObjectTaskInitializer.class));
+            this.createTask("InfoObject", TaskAttributeType.NULL, null, this.coreManager.create(InfoObjectTaskInitializer.class));
+            this.createTask("SecurityDescriptorObject", TaskAttributeType.NULL, null, this.coreManager.create(SecurityDescriptorObjectTaskInitializer.class));
+            this.createTask("InfoContentObject", TaskAttributeType.NULL, null, this.coreManager.create(NoneInfoContentObjectTaskInitializer.class));
+            this.createTask("FolderContentObject", TaskAttributeType.NULL, null, this.coreManager.create(NoneInfoContentObjectTaskInitializer.class));
+            this.createTask("NamelessFolderContentObject", TaskAttributeType.NULL, null, this.coreManager.create(NoneInfoContentObjectTaskInitializer.class));
 
-            this.createTask("ProcessManager", TaskAttributeType.NULL, null, this.coreManager.create(ProcessObjectTaskInitializer.class));
-            this.createTask("ProcessObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessObjectTaskInitializer.class));
-            this.createTask("ProcessCommunicationObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessCommunicationObjectTaskInitializer.class));
-            this.createTask("ProcessContextObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessContextObjectTaskInitializer.class));
-            this.createTask("ProcessInfoEntryObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessInfoEntryObjectTaskInitializer.class));
-            this.createTask("ProcessInfoTableObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessInfoTableObjectTaskInitializer.class));
-            this.createTask("ProcessSessionObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessSessionObjectTaskInitializer.class));
-            this.createTask("ProcessStatisticsObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessStatisticsObjectTaskInitializer.class));
-            this.createTask("ProcessStatusObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessStatusObjectTaskInitializer.class));
-            this.createTask("ProcessTokenObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ProcessTokenObjectTaskInitializer.class));
+            this.createTask("ProcessManager", TaskAttributeType.OBJECT_IS_NOT_CACHEABLE, null, this.coreManager.create(ProcessManagerTaskInitializer.class));
+            this.createTask("ProcessObject", TaskAttributeType.NULL, null, this.coreManager.create(ProcessObjectTaskInitializer.class));
+            this.createTask("ProcessCommunicationObject", TaskAttributeType.NULL, null, this.coreManager.create(ProcessCommunicationObjectTaskInitializer.class));
+            this.createTask("ProcessContextObject", TaskAttributeType.NULL, null, this.coreManager.create(ProcessContextObjectTaskInitializer.class));
+            this.createTask("ProcessInfoEntryObject", TaskAttributeType.NULL, null, this.coreManager.create(ProcessInfoEntryObjectTaskInitializer.class));
+            this.createTask("ProcessInfoTableObject", TaskAttributeType.NULL, null, this.coreManager.create(ProcessInfoTableObjectTaskInitializer.class));
+            this.createTask("ProcessSessionObject", TaskAttributeType.NULL, null, this.coreManager.create(ProcessSessionObjectTaskInitializer.class));
+            this.createTask("ProcessStatisticsObject", TaskAttributeType.NULL, null, this.coreManager.create(ProcessStatisticsObjectTaskInitializer.class));
+            this.createTask("ProcessStatusObject", TaskAttributeType.NULL, null, this.coreManager.create(ProcessStatusObjectTaskInitializer.class));
+            this.createTask("ProcessTokenObject", TaskAttributeType.NULL, null, this.coreManager.create(ProcessTokenObjectTaskInitializer.class));
 
-            this.createTask("UserManager", TaskAttributeType.NULL, null, this.coreManager.create(UserManagerTaskInitializer.class));
-            this.createTask("AccountAuthorization", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(AccountAuthorizationObjectTaskInitializer.class));
-            this.createTask("AccountObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(AccountObjectTaskInitializer.class));
-            this.createTask("AccountSessionsObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(AccountSessionsObjectTaskInitializer.class));
-            this.createTask("AccountTokenObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(AccountTokenObjectTaskInitializer.class));
-            this.createTask("GroupObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(GroupObjectTaskInitializer.class));
-            this.createTask("GroupTokenObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(GroupTokenObjectTaskInitializer.class));
-            this.createTask("AuditContentObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(AuditContentObjectTaskInitializer.class));
+            this.createTask("UserManager", TaskAttributeType.OBJECT_IS_NOT_CACHEABLE, null, this.coreManager.create(UserManagerTaskInitializer.class));
+            this.createTask("AccountAuthorization", TaskAttributeType.NULL, null, this.coreManager.create(AccountAuthorizationObjectTaskInitializer.class));
+            this.createTask("AccountObject", TaskAttributeType.NULL, null, this.coreManager.create(AccountObjectTaskInitializer.class));
+            this.createTask("AccountSessionsObject", TaskAttributeType.NULL, null, this.coreManager.create(AccountSessionsObjectTaskInitializer.class));
+            this.createTask("AccountTokenObject", TaskAttributeType.NULL, null, this.coreManager.create(AccountTokenObjectTaskInitializer.class));
+            this.createTask("GroupObject", TaskAttributeType.NULL, null, this.coreManager.create(GroupObjectTaskInitializer.class));
+            this.createTask("GroupTokenObject", TaskAttributeType.NULL, null, this.coreManager.create(GroupTokenObjectTaskInitializer.class));
+            this.createTask("AuditContentObject", TaskAttributeType.NULL, null, this.coreManager.create(AuditContentObjectTaskInitializer.class));
 
-            this.createTask("ServicesManager", TaskAttributeType.NULL, null, this.coreManager.create(ServicesManagerTaskInitializer.class));
-            this.createTask("ServiceContentObject", TaskAttributeType.OBJECT_IS_CACHEABLE, null, this.coreManager.create(ServiceContentObjectTaskInitializer.class));
+            this.createTask("ServicesManager", TaskAttributeType.OBJECT_IS_NOT_CACHEABLE, null, this.coreManager.create(ServicesManagerTaskInitializer.class));
+            this.createTask("ServiceContentObject", TaskAttributeType.NULL, null, this.coreManager.create(ServiceContentObjectTaskInitializer.class));
         }
     }
 

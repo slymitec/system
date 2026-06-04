@@ -23,6 +23,8 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ObjectManagerTaskInitializer extends ATaskInitializer {
     public ObjectManagerTaskInitializer() {
+        this.cacheableObjectFunction = (_) -> this.coreManager.getManager(ObjectManager.class);
+
         this.register("get", this::get, TransactionType.INDEPENDENCE);
     }
 

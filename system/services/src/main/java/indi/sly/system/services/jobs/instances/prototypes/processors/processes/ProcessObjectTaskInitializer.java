@@ -4,8 +4,9 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.processes.values.ProcessAdditionalCreatorDefinition;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
@@ -29,7 +30,16 @@ public class ProcessObjectTaskInitializer extends ATaskInitializer {
     public ProcessObjectTaskInitializer() {
         this.cacheableObjectFunction = (handle) -> this.coreManager.getManager(ProcessManager.class).getFactory().rebuildProcess(handle);
 
-        this.register("getCurrent", this::getCurrent, TransactionType.INDEPENDENCE);
+        this.register("getId", this::getId, TransactionType.INDEPENDENCE);
+        this.register("getParentId", this::getParentId, TransactionType.INDEPENDENCE);
+        this.register("isCurrent", this::isCurrent, TransactionType.INDEPENDENCE);
+        this.register("getStatus", this::getStatus, TransactionType.INDEPENDENCE);
+        this.register("getCommunication", this::getCommunication, TransactionType.INDEPENDENCE);
+        this.register("getContext", this::getContext, TransactionType.INDEPENDENCE);
+        this.register("getInfoTable", this::getInfoTable, TransactionType.INDEPENDENCE);
+        this.register("getSession", this::getSession, TransactionType.INDEPENDENCE);
+        this.register("getStatistics", this::getStatistics, TransactionType.INDEPENDENCE);
+        this.register("getToken", this::getToken, TransactionType.INDEPENDENCE);
     }
 
     @Override
@@ -40,108 +50,105 @@ public class ProcessObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getCurrent(TaskRunConsumer run, TaskContentObject content) {
-        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+    private void getId(TaskRunConsumer run, TaskContentObject content) {
+        ProcessObject process = content.getCacheableObject();
 
-        ProcessObject process = processManager.getCurrent();
+        content.setResult(process.getId());
+    }
 
-        UUID handle = process.cache();
+    private void getParentId(TaskRunConsumer run, TaskContentObject content) {
+        ProcessObject process = content.getCacheableObject();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(process.getClass()), handle);
+        content.setResult(process.getParentId());
+    }
+
+    private void isCurrent(TaskRunConsumer run, TaskContentObject content) {
+        ProcessObject process = content.getCacheableObject();
+
+        content.setResult(process.isCurrent());
+    }
+
+    private void getStatus(TaskRunConsumer run, TaskContentObject content) {
+        ProcessObject process = content.getCacheableObject();
+
+        ProcessStatusObject processStatus = process.getStatus();
+
+        UUID handle = processStatus.cache();
+
+        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processStatus.getClass()), handle);
 
         content.setResult(handleContext);
     }
 
-    private void getWithAuthorization(TaskRunConsumer run, TaskContentObject content) {
-        List<String> parameters = content.getParameters();
+    private void getCommunication(TaskRunConsumer run, TaskContentObject content) {
+        ProcessObject process = content.getCacheableObject();
 
-        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
-        UserManager userManager = this.coreManager.getManager(UserManager.class);
-        UserFactory userFactory = userManager.getFactory();
+        ProcessCommunicationObject processCommunication = process.getCommunication();
 
-        if (parameters.size() < 2) {
-            throw new ConditionParametersException();
-        }
+        UUID handle = processCommunication.cache();
 
-        UUID processId = ObjectUtil.transferFromString(UUID.class, parameters.getFirst());
-        UUID accountAuthorizationHandle = ObjectUtil.transferFromString(UUID.class, parameters.get(1));
-        AccountAuthorizationObject accountAuthorization = userFactory.rebuildAccountAuthorization(accountAuthorizationHandle);
-
-        ProcessObject process = processManager.getWithAuthorization(processId, accountAuthorization);
-
-        UUID handle = process.cache();
-
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(process.getClass()), handle);
+        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processCommunication.getClass()), handle);
 
         content.setResult(handleContext);
     }
 
-    private void get(TaskRunConsumer run, TaskContentObject content) {
-        List<String> parameters = content.getParameters();
+    private void getContext(TaskRunConsumer run, TaskContentObject content) {
+        ProcessObject process = content.getCacheableObject();
 
-        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
-        UserManager userManager = this.coreManager.getManager(UserManager.class);
+        ProcessContextObject processContext = process.getContext();
 
-        if (parameters.isEmpty()) {
-            throw new ConditionParametersException();
-        }
+        UUID handle = processContext.cache();
 
-        UUID processId = ObjectUtil.transferFromString(UUID.class, parameters.getFirst());
-
-        ProcessObject process = processManager.get(processId);
-
-        UUID handle = process.cache();
-
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(process.getClass()), handle);
+        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processContext.getClass()), handle);
 
         content.setResult(handleContext);
     }
 
-    private void create(TaskRunConsumer run, TaskContentObject content) {
-        List<String> parameters = content.getParameters();
+    private void getInfoTable(TaskRunConsumer run, TaskContentObject content) {
+        ProcessObject process = content.getCacheableObject();
 
-        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
-        UserManager userManager = this.coreManager.getManager(UserManager.class);
-        UserFactory userFactory = userManager.getFactory();
+        ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-        if (parameters.size() < 5) {
-            throw new ConditionParametersException();
-        }
+        UUID handle = processInfoTable.cache();
 
-        UUID accountAuthorizationHandle = ObjectUtil.transferFromString(UUID.class, parameters.getFirst());
-        AccountAuthorizationObject accountAuthorization = userFactory.rebuildAccountAuthorization(accountAuthorizationHandle);
-        UUID fileIndex = ObjectUtil.transferFromString(UUID.class, parameters.get(1));
-        String processParameters = ObjectUtil.transferFromString(String.class, parameters.get(2));
-        PathDefinition workFolder = ObjectUtil.transferFromString(PathDefinition.class, parameters.get(3));
-        ProcessAdditionalCreatorDefinition additionalCreator = ObjectUtil.transferFromString(ProcessAdditionalCreatorDefinition.class, parameters.get(4));
-
-        ProcessObject process = processManager.create(accountAuthorization, fileIndex, processParameters, workFolder, additionalCreator);
-
-        UUID handle = process.cache();
-
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(process.getClass()), handle);
+        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processInfoTable.getClass()), handle);
 
         content.setResult(handleContext);
     }
 
-    private void endCurrent(TaskRunConsumer run, TaskContentObject content) {
-        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+    private void getSession(TaskRunConsumer run, TaskContentObject content) {
+        ProcessObject process = content.getCacheableObject();
 
-        processManager.endCurrent();
+        ProcessSessionObject processSession = process.getSession();
+
+        UUID handle = processSession.cache();
+
+        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processSession.getClass()), handle);
+
+        content.setResult(handleContext);
     }
 
-    private void end(TaskRunConsumer run, TaskContentObject content) {
-        List<String> parameters = content.getParameters();
+    private void getStatistics(TaskRunConsumer run, TaskContentObject content) {
+        ProcessObject process = content.getCacheableObject();
 
-        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
-        UserManager userManager = this.coreManager.getManager(UserManager.class);
+        ProcessStatisticsObject processStatistics = process.getStatistics();
 
-        if (parameters.isEmpty()) {
-            throw new ConditionParametersException();
-        }
+        UUID handle = processStatistics.cache();
 
-        UUID processId = ObjectUtil.transferFromString(UUID.class, parameters.getFirst());
+        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processStatistics.getClass()), handle);
 
-        processManager.end(processId);
+        content.setResult(handleContext);
+    }
+
+    private void getToken(TaskRunConsumer run, TaskContentObject content) {
+        ProcessObject process = content.getCacheableObject();
+
+        ProcessTokenObject processToken = process.getToken();
+
+        UUID handle = processToken.cache();
+
+        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processToken.getClass()), handle);
+
+        content.setResult(handleContext);
     }
 }

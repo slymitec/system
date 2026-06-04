@@ -25,6 +25,8 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserManagerTaskInitializer extends ATaskInitializer {
     public UserManagerTaskInitializer() {
+        this.cacheableObjectFunction = (_) -> this.coreManager.getManager(UserManager.class);
+
         this.register("getCurrentAccount", this::getCurrentAccount, TransactionType.INDEPENDENCE);
         this.register("getAccountById", this::getAccountById, TransactionType.INDEPENDENCE);
         this.register("getAccountByName", this::getAccountByName, TransactionType.INDEPENDENCE);

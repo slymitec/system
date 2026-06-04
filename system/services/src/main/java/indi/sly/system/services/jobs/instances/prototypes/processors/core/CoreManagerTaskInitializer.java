@@ -19,6 +19,8 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CoreManagerTaskInitializer extends ATaskInitializer {
     public CoreManagerTaskInitializer() {
+        this.cacheableObjectFunction = (_) -> this.coreManager;
+
         this.register("getSystemVersion", this::getSystemVersion, TransactionType.WHATEVER);
         this.register("getDateTime", this::getDateTime, TransactionType.WHATEVER);
     }

@@ -15,7 +15,7 @@ import org.springframework.web.client.RestClient;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class HttpConnectionInitializer extends AInitializer implements IConnectionInitializer {
+public class HttpConnectionInitializer extends AConnectionInitializer {
     @Override
     public synchronized void connect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
         synchronized (this) {

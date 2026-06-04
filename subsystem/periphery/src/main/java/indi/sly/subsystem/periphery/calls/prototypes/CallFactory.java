@@ -1,6 +1,6 @@
 package indi.sly.subsystem.periphery.calls.prototypes;
 
-import indi.sly.subsystem.periphery.calls.prototypes.processors.AConnectionResolver;
+import indi.sly.subsystem.periphery.calls.prototypes.processors.IConnectionResolver;
 import indi.sly.subsystem.periphery.calls.prototypes.processors.ConnectionCheckConditionResolver;
 import indi.sly.subsystem.periphery.calls.prototypes.processors.ConnectionInitializerResolver;
 import indi.sly.subsystem.periphery.calls.prototypes.processors.ConnectionStatusRuntimeResolver;
@@ -9,8 +9,6 @@ import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
 import indi.sly.subsystem.periphery.calls.values.ConnectionStatusDefinition;
 import indi.sly.subsystem.periphery.core.prototypes.AFactory;
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.Consumer1;
-import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.ObjectUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -27,7 +25,7 @@ public class CallFactory extends AFactory {
         this.connectionResolvers = new ArrayList<>();
     }
 
-    protected final List<AConnectionResolver> connectionResolvers;
+    protected final List<IConnectionResolver> connectionResolvers;
 
     @Override
     public void init() {
@@ -55,7 +53,7 @@ public class CallFactory extends AFactory {
         }
 
         ConnectionProcessorMediator processorMediator = this.coreManager.create(ConnectionProcessorMediator.class);
-        for (AConnectionResolver resolver : this.connectionResolvers) {
+        for (IConnectionResolver resolver : this.connectionResolvers) {
             resolver.resolve(connection, processorMediator);
         }
 

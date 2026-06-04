@@ -1,4 +1,4 @@
-package indi.sly.subsystem.periphery.core.prototypes.wrappers;
+package indi.sly.subsystem.periphery.core.prototypes.mediators;
 
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

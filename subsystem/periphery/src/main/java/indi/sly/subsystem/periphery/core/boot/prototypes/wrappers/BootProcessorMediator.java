@@ -1,7 +1,7 @@
 package indi.sly.subsystem.periphery.core.boot.prototypes.wrappers;
 
 import indi.sly.subsystem.periphery.core.boot.lang.BootStartConsumer;
-import indi.sly.subsystem.periphery.core.prototypes.wrappers.AMediator;
+import indi.sly.subsystem.periphery.core.prototypes.mediators.AMediator;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

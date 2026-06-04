@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class WebSocketConnectionInitializer extends AInitializer implements IConnectionInitializer {
+public class WebSocketConnectionInitializer extends AConnectionInitializer {
     @Override
     public synchronized void connect(ConnectionDefinition connection, ConnectionStatusDefinition status) {
         WebSocketConnectionStatusExtensionDefinition webSocketConnectionStatusExtension;
@@ -123,7 +123,7 @@ public class WebSocketConnectionInitializer extends AInitializer implements ICon
 
         webSocketConnectionStatusExtension.getExecutor().shutdown();
         try {
-            if(webSocketConnectionStatusExtension.getExecutor().awaitTermination(1,TimeUnit.SECONDS)){
+            if (webSocketConnectionStatusExtension.getExecutor().awaitTermination(1, TimeUnit.SECONDS)) {
                 webSocketConnectionStatusExtension.getExecutor().shutdownNow();
             }
         } catch (InterruptedException e) {

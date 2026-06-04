@@ -1,4 +1,4 @@
-package indi.sly.subsystem.periphery.core.prototypes.wrappers;
+package indi.sly.subsystem.periphery.core.prototypes.mediators;
 
 import indi.sly.subsystem.periphery.core.prototypes.APrototype;
 import jakarta.inject.Named;

@@ -5,13 +5,14 @@ import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorDisconnectCons
 import indi.sly.subsystem.periphery.calls.prototypes.wrappers.ConnectionProcessorMediator;
 import indi.sly.subsystem.periphery.calls.values.ConnectStatusRuntimeType;
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
+import indi.sly.subsystem.periphery.core.prototypes.processors.AResolver;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ConnectionStatusRuntimeResolver extends AConnectionResolver {
+public class ConnectionStatusRuntimeResolver extends AResolver implements IConnectionResolver {
     public ConnectionStatusRuntimeResolver() {
         this.connect = (connection, status) -> status.setRuntime(ConnectStatusRuntimeType.CONNECTED);
 

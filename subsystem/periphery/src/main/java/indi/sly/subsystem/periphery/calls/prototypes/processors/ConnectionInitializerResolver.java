@@ -1,11 +1,12 @@
 package indi.sly.subsystem.periphery.calls.prototypes.processors;
 
-import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.IConnectionInitializer;
+import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.AConnectionInitializer;
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorConnectConsumer;
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorDisconnectConsumer;
 import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorCallFunction;
 import indi.sly.subsystem.periphery.calls.prototypes.wrappers.ConnectionProcessorMediator;
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
+import indi.sly.subsystem.periphery.core.prototypes.processors.AResolver;
 import indi.sly.system.common.supports.ObjectUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -13,16 +14,16 @@ import org.springframework.context.annotation.Scope;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ConnectionInitializerResolver extends AConnectionResolver {
+public class ConnectionInitializerResolver extends AResolver implements IConnectionResolver {
     public ConnectionInitializerResolver() {
         this.connect = (connection, status) -> {
-            IConnectionInitializer initializer = connection.getInitializer();
+            AConnectionInitializer initializer = connection.getInitializer();
 
             initializer.connect(connection, status);
         };
 
         this.disconnect = (connection, status) -> {
-            IConnectionInitializer initializer = connection.getInitializer();
+            AConnectionInitializer initializer = connection.getInitializer();
 
             initializer.disconnect(connection, status);
         };
@@ -32,7 +33,7 @@ public class ConnectionInitializerResolver extends AConnectionResolver {
                 return userContentResponse;
             }
 
-            IConnectionInitializer initializer = connection.getInitializer();
+            AConnectionInitializer initializer = connection.getInitializer();
             userContentResponse = initializer.call(userContextRequest, status);
 
             return userContentResponse;

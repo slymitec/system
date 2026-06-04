@@ -6,6 +6,7 @@ import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorCallFunction;
 import indi.sly.subsystem.periphery.calls.prototypes.wrappers.ConnectionProcessorMediator;
 import indi.sly.subsystem.periphery.calls.values.ConnectStatusRuntimeType;
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
+import indi.sly.subsystem.periphery.core.prototypes.processors.AResolver;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
@@ -16,7 +17,7 @@ import org.springframework.context.annotation.Scope;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ConnectionCheckConditionResolver extends AConnectionResolver {
+public class ConnectionCheckConditionResolver extends AResolver implements IConnectionResolver {
     public ConnectionCheckConditionResolver() {
         this.connect = (connection, status) -> {
             if (LogicalUtil.allNotEqual(status.getRuntime(), ConnectStatusRuntimeType.INITIALIZATION, ConnectStatusRuntimeType.DISCONNECTED)) {

@@ -30,6 +30,7 @@ public abstract class ATaskInitializer extends AInitializer {
     public ATaskInitializer() {
         this.runs = new ConcurrentHashMap<>();
 
+        this.register("cache", this::cache, TransactionType.WHATEVER);
         this.register("unCache", this::unCache, TransactionType.WHATEVER);
         this.register("expire", this::expire, TransactionType.WHATEVER);
     }
@@ -91,6 +92,12 @@ public abstract class ATaskInitializer extends AInitializer {
         }
 
         return this.cacheableObjectFunction.apply(handle);
+    }
+
+    private void cache(TaskRunConsumer run, TaskContentObject content) {
+        ACacheableObject<?> cacheableObject = content.getCacheableObject();
+
+        content.setResult(cacheableObject.getHandle());
     }
 
     private void unCache(TaskRunConsumer run, TaskContentObject content) {

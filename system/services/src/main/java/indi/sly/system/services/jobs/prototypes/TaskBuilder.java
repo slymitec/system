@@ -20,7 +20,7 @@ import java.util.UUID;
 public class TaskBuilder extends ABuilder {
     protected JobFactory factory;
 
-    public void create(String name, long attribute, UUID processID, ATaskInitializer initializer) {
+    public void create(String name, long attribute, UUID processId, ATaskInitializer initializer) {
         if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(initializer)) {
             throw new ConditionParametersException();
         }
@@ -37,8 +37,8 @@ public class TaskBuilder extends ABuilder {
         task.setAttribute(attribute);
         task.setName(name);
         if (LogicalUtil.isAllExist(task.getAttribute(), TaskAttributeType.HAS_PROCESS)
-                && !ValueUtil.isAnyNullOrEmpty(processID)) {
-            task.setProcessId(processID);
+                && !ValueUtil.isAnyNullOrEmpty(processId)) {
+            task.setProcessId(processId);
         }
         task.setInitializer(initializer);
 

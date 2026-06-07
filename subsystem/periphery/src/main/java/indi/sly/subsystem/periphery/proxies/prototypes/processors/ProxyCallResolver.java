@@ -7,7 +7,6 @@ import indi.sly.subsystem.periphery.core.prototypes.ACacheableObject;
 import indi.sly.subsystem.periphery.core.prototypes.processors.AResolver;
 import indi.sly.subsystem.periphery.proxies.ProxyManager;
 import indi.sly.subsystem.periphery.proxies.lang.ProxyInvokeFunction;
-import indi.sly.subsystem.periphery.proxies.prototypes.ProxyFactory;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.ProxyProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.values.HandleContextDefinition;
 import indi.sly.subsystem.periphery.proxies.values.ProxyCacheEntity;
@@ -102,11 +101,8 @@ public class ProxyCallResolver extends AResolver implements IProxyResolver {
                     }
 
                     ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
-                    ProxyFactory proxyFactory = proxyManager.getFactory();
 
-                    //;
-
-                    return null;
+                    return proxyManager.getFactory().buildProxy(handleContext.getClazz());
 
                 } else {
                     if (!ClassUtil.getSimpleName(responseClazz).equals(clientResponseContent.getClazz())) {

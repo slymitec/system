@@ -1,11 +1,6 @@
 package indi.sly.system.common.lang;
 
-import java.io.Serial;
-
-public class StatusDisabilityException extends AKernelException {
-	@Serial
-	private static final long serialVersionUID = 1135676122457146736L;
-
+public class StatusDisabilityException extends ASystemException {
 	public StatusDisabilityException() {
 		super(StatusDisabilityException.class);
 	}

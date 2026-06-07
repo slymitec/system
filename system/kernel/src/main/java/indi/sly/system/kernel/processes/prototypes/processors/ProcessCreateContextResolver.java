@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
-import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.lang.ASystemException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -75,7 +75,7 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
                     if (!configuration.FILES_TYPES_INSTANCE_FOLDER_ID.equals(processContextWorkFolderInfo.getType())) {
                         processContextWorkFolder = null;
                     }
-                } catch (AKernelException ignored) {
+                } catch (ASystemException ignored) {
                     processContextWorkFolder = null;
                 }
             }

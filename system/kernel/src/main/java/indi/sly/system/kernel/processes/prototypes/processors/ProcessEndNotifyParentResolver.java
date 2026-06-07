@@ -1,9 +1,8 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
-import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.lang.ASystemException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.values.SignalType;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
@@ -13,8 +12,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
-
-import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -31,7 +28,7 @@ public class ProcessEndNotifyParentResolver extends AResolver implements IProces
                     try {
                         processCommunication.sendSignal(parentProcess.getId(), SignalType.TYPE_PROCESS,
                                 LogicalUtil.or(SignalType.ACTION_DELETE, SignalType.RESULT_SUCCESS));
-                    } catch (AKernelException ignored) {
+                    } catch (ASystemException ignored) {
                     }
                 }
             }

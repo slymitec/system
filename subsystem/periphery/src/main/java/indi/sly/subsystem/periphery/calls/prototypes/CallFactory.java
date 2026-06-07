@@ -36,7 +36,7 @@ public class CallFactory extends AFactory {
         Collections.sort(this.connectionResolvers);
     }
 
-    private ConnectionObject buildConnection(ConnectionProcessorMediator processorMediator, ConnectionDefinition definition) {
+    private ConnectionObject createConnection(ConnectionProcessorMediator processorMediator, ConnectionDefinition definition) {
         ConnectionObject connection = this.coreManager.create(ConnectionObject.class);
 
         connection.setDefinition(definition);
@@ -57,7 +57,7 @@ public class CallFactory extends AFactory {
             resolver.resolve(connection, processorMediator);
         }
 
-        return this.buildConnection(processorMediator, connection);
+        return this.createConnection(processorMediator, connection);
     }
 
     public ConnectionBuilder createConnection() {

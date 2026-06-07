@@ -81,7 +81,7 @@ public class CallManager extends AManager {
 
         KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
 
-        UUID connectId = kernelSpace.getNamedConnectionIDs().getOrDefault(name, null);
+        UUID connectId = kernelSpace.getNamedConnectionIds().getOrDefault(name, null);
 
         if (ValueUtil.isAnyNullOrEmpty(connectId)) {
             throw new StatusNotExistedException();

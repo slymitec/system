@@ -1,6 +1,6 @@
 package indi.sly.system.services.jobs.prototypes;
 
-import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.lang.ASystemException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -70,25 +70,30 @@ public class UserContentObject extends ADefinitionObject<UserContextDefinition> 
         task.run(userContentRequest.getMethod());
 
         if (ObjectUtil.isAnyNull(taskContent.getException())) {
-            userContentResponse.setValue(taskContent.getResult());
+            Object result = taskContent.getResult();
+
+            userContentResponse.setValue(ObjectUtil.transferToString(result));
+
+            if (ObjectUtil.allNotNull(result)) {
+                userContentResponse.setClazz(ClassUtil.getSimpleName(result.getClass()));
+            } else {
+                userContentResponse.setClazz(ClassUtil.getSimpleName(Void.class));
+            }
         } else {
-            AKernelException kernelException = taskContent.getException();
+            ASystemException systemException = taskContent.getException();
 
             ClientResponseExceptionDefinition clientResponseException = this.definition.getException();
 
             clientResponseException.setId(userContentRequest.getId());
+            clientResponseException.setClazz(ClassUtil.getSimpleName(systemException.getClass()));
+            for (StackTraceElement stackTraceElement : systemException.getStackTrace()) {
+                ClientResponseExceptionTraceDefinition clientResponseExceptionTrace = new ClientResponseExceptionTraceDefinition();
 
-            clientResponseException.setClazz(ClassUtil.getSimpleName(kernelException.getClass()));
-            StackTraceElement[] kernelExceptionStackTrace = kernelException.getStackTrace();
-            if (kernelExceptionStackTrace.length != 0) {
-                clientResponseException.setOwnerClazz(kernelExceptionStackTrace[0].getClassName());
-                clientResponseException.setOwnerMethod(kernelExceptionStackTrace[0].getMethodName());
+                clientResponseExceptionTrace.setClazz(ClassUtil.getSimpleName(stackTraceElement.getClass()));
+                clientResponseExceptionTrace.setMethod(stackTraceElement.getMethodName());
+
+                clientResponseException.getTrace().add(clientResponseExceptionTrace);
             }
-            String[] kernelExceptionStackTraceMessage = new String[kernelExceptionStackTrace.length];
-            for (int i = 0; i < kernelExceptionStackTrace.length; i++) {
-                kernelExceptionStackTraceMessage[i] = kernelExceptionStackTrace[i].getClassName() + "." + kernelExceptionStackTrace[i].getMethodName() + "(...)";
-            }
-            clientResponseException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
         }
 
         task.finish();

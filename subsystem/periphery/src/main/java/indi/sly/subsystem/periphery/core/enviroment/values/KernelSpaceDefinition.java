@@ -14,21 +14,21 @@ public class KernelSpaceDefinition extends ASpaceDefinition {
     public KernelSpaceDefinition() {
         this.configuration = new KernelConfigurationDefinition();
         this.connections = new ConcurrentHashMap<>();
-        this.namedConnectionIDs = new ConcurrentHashMap<>();
+        this.namedConnectionIds = new ConcurrentHashMap<>();
         this.userSpace = new UserSpaceDefinition();
     }
 
     private final KernelConfigurationDefinition configuration;
     private final Map<UUID, ConnectionDefinition> connections;
-    private final Map<String, UUID> namedConnectionIDs;
+    private final Map<String, UUID> namedConnectionIds;
     private final UserSpaceDefinition userSpace;
 
     public Map<UUID, ConnectionDefinition> getConnections() {
         return this.connections;
     }
 
-    public Map<String, UUID> getNamedConnectionIDs() {
-        return this.namedConnectionIDs;
+    public Map<String, UUID> getNamedConnectionIds() {
+        return this.namedConnectionIds;
     }
 
     public KernelConfigurationDefinition getConfiguration() {

@@ -1,11 +1,6 @@
 package indi.sly.system.common.lang;
 
-import java.io.Serial;
-
-public class ConditionParametersException extends AKernelException {
-    @Serial
-    private static final long serialVersionUID = 4006294428736602907L;
-
+public class ConditionParametersException extends ASystemException {
     public ConditionParametersException() {
         super(ConditionParametersException.class);
     }

@@ -1,10 +1,42 @@
+server:
+  port: 8081
+  servlet:
+    session:
+      timeout: 60m
+  tomcat:
+    uri-encoding: UTF-8
+
 spring:
   application:
-    name: SlySystem
+    name: SlySubSystem
   banner:
     location: classpath:logo.txt
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: "jdbc:sqlserver://;database=SlySystem;server=10.28.1.16;port=21433;encrypt=optional;trustServerCertificate=true"
+    username: "sa"
+    password: "sly7156+database"
   task:
     execution:
       pool:
         core-size: 16
         keep-alive: 4s
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  redis:
+    redisson:
+      config: |
+        codec: !<org.redisson.codec.Kryo5Codec> {}
+        singleServerConfig:
+          address: "redis://10.28.1.16:6379"
+        
+  jpa:
+    database: SQL_SERVER
+    database-platform: "org.hibernate.dialect.SQLServerDialect"
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: true

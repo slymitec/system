@@ -24,6 +24,7 @@ import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensio
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.values.ClientResponseDefinition;
 import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
+import indi.sly.system.services.jobs.values.ClientResponseExceptionTraceDefinition;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -102,10 +103,12 @@ public class StartUpController extends AController {
 
             ClientResponseExceptionDefinition clientResponseException = new ClientResponseExceptionDefinition();
 
-            clientResponseException.setId(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
+            clientResponseException.setId(UUIDUtil.getEmpty());
             clientResponseException.setClazz(ClassUtil.getSimpleName(StatusAlreadyFinishedException.class));
-            clientResponseException.setOwnerClazz(ClassUtil.getSimpleName(StartUpController.class));
-            clientResponseException.setOwnerMethod("startup");
+            ClientResponseExceptionTraceDefinition clientResponseExceptionTrace = new ClientResponseExceptionTraceDefinition();
+            clientResponseExceptionTrace.setClazz(ClassUtil.getSimpleName(StartUpController.class));
+            clientResponseExceptionTrace.setMethod("startup");
+            clientResponseException.getTrace().add(clientResponseExceptionTrace);
 
             clientResponse.setException(clientResponseException);
 

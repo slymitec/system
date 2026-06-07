@@ -7,7 +7,7 @@ import java.util.UUID;
 public class UserContentResponseDefinition extends ADefinition {
     private UUID id;
     private String clazz;
-    private Object value;
+    private String value;
 
     public UUID getId() {
         return this.id;
@@ -25,11 +25,11 @@ public class UserContentResponseDefinition extends ADefinition {
         this.clazz = clazz;
     }
 
-    public Object getValue() {
+    public String getValue() {
         return this.value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(String value) {
         this.value = value;
     }
 }

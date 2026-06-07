@@ -542,7 +542,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             auditContent.setPath(this.cache.getInfo().getPath());
 
             auditInfo.close();
-        } catch (AKernelException ignored) {
+        } catch (ASystemException ignored) {
         }
     }
 

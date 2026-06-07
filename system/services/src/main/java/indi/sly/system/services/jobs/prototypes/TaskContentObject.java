@@ -43,11 +43,11 @@ public class TaskContentObject extends AObject {
         this.threadContext.setResult(value);
     }
 
-    public AKernelException getException() {
+    public ASystemException getException() {
         return this.threadContext.getRunException();
     }
 
-    public void setException(AKernelException exception) {
+    public void setException(ASystemException exception) {
         if (ObjectUtil.isAnyNull(exception)) {
             throw new ConditionParametersException();
         }

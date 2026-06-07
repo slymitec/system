@@ -3,6 +3,7 @@ package indi.sly.system.services.faces;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
@@ -15,6 +16,7 @@ import indi.sly.system.services.jobs.prototypes.UserContextObject;
 import indi.sly.system.services.jobs.values.ClientResponseDefinition;
 import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
 import indi.sly.system.services.jobs.values.ClientRequestDefinition;
+import indi.sly.system.services.jobs.values.ClientResponseExceptionTraceDefinition;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.websocket.*;
@@ -91,21 +93,21 @@ public class InterActiveController extends AController {
         } catch (RuntimeException exception) {
             ClientResponseDefinition clientResponse = new ClientResponseDefinition();
 
-            ClientResponseExceptionDefinition userContentResponseException = new ClientResponseExceptionDefinition();
+            ClientResponseExceptionDefinition clientResponseException = new ClientResponseExceptionDefinition();
 
-            userContentResponseException.setClazz(ClassUtil.getSimpleName(exception.getClass()));
-            StackTraceElement[] kernelExceptionStackTrace = exception.getStackTrace();
-            if (kernelExceptionStackTrace.length != 0) {
-                userContentResponseException.setOwnerClazz(kernelExceptionStackTrace[0].getClassName());
-                userContentResponseException.setOwnerMethod(kernelExceptionStackTrace[0].getMethodName());
-            }
-            String[] kernelExceptionStackTraceMessage = new String[kernelExceptionStackTrace.length];
-            for (int i = 0; i < kernelExceptionStackTrace.length; i++) {
-                kernelExceptionStackTraceMessage[i] = kernelExceptionStackTrace[i].getClassName() + "." + kernelExceptionStackTrace[i].getMethodName() + "(...)";
-            }
-            userContentResponseException.setMessage(String.join(", ", kernelExceptionStackTraceMessage));
+            clientResponseException.setId(UUIDUtil.getEmpty());
 
-            clientResponse.setException(userContentResponseException);
+            clientResponseException.setClazz(ClassUtil.getSimpleName(exception.getClass()));
+            for (StackTraceElement stackTraceElement : exception.getStackTrace()) {
+                ClientResponseExceptionTraceDefinition clientResponseExceptionTrace = new ClientResponseExceptionTraceDefinition();
+
+                clientResponseExceptionTrace.setClazz(ClassUtil.getSimpleName(stackTraceElement.getClass()));
+                clientResponseExceptionTrace.setMethod(stackTraceElement.getMethodName());
+
+                clientResponseException.getTrace().add(clientResponseExceptionTrace);
+            }
+
+            clientResponse.setException(clientResponseException);
 
             session.getAsyncRemote().sendText(ObjectUtil.transferToString(clientResponse));
         }

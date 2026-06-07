@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.lang.ASystemException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.core.prototypes.AChildDefinitionObject;
@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Scope;
 import jakarta.inject.Named;
 
 import java.util.List;
-import java.util.Map;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -53,13 +52,13 @@ public class ThreadContextObject extends AChildDefinitionObject<ThreadContextDef
         this.definition.getRun().setResult(result);
     }
 
-    public AKernelException getRunException() {
-        AKernelException exception = this.definition.getRun().getException();
+    public ASystemException getRunException() {
+        ASystemException exception = this.definition.getRun().getException();
 
         return exception;
     }
 
-    public void setRunException(AKernelException exception) {
+    public void setRunException(ASystemException exception) {
         this.definition.getRun().setException(exception);
     }
 }

@@ -1,6 +1,6 @@
 package indi.sly.system.services.jobs.prototypes.processors;
 
-import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.lang.ASystemException;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
@@ -64,7 +64,7 @@ public class TaskInitializerResolver extends AResolver implements ITaskResolver 
                 } else if (LogicalUtil.isAnyEqual(initializerRunTransaction, TransactionType.WHATEVER)) {
                     transactionalAction.runWithWhatever(provider);
                 }
-            } catch (AKernelException exception) {
+            } catch (ASystemException exception) {
                 content.setException(exception);
             }
         };

@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.lang.AKernelException;
+import indi.sly.system.common.lang.ASystemException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -54,7 +54,7 @@ public class InfoSecurityDescriptorResolver extends AResolver implements IInfoRe
                 try {
                     List<SecurityDescriptorSummaryDefinition> securityDescriptorSummary = securityDescriptor.getSummary();
                     dump.getSecurityDescriptorSummary().addAll(securityDescriptorSummary);
-                } catch (AKernelException ignored) {
+                } catch (ASystemException ignored) {
                 }
             }
 

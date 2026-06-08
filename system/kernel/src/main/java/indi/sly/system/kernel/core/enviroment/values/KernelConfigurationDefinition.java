@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public class KernelConfigurationDefinition extends ADefinition {
     public final long CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT = 16L;
+        public final UUID CORE_PROTOTYPE_DATETIME_SYSTEM_TIME_OFFSET
+                = UUIDUtil.getFormLongs(1978793907977537155L, -7186786965693311562L);
 
     public final UUID FILES_TYPES_INSTANCE_FILE_ID
             = UUIDUtil.getFormLongs(5141458603474635654L, -6744682139694385633L);
@@ -83,9 +85,6 @@ public class KernelConfigurationDefinition extends ADefinition {
             = UUIDUtil.getFormLongs(-623865349106545073L, -6997297376516953324L);
     public final String SERVICE_TYPES_INSTANCE_SERVICE_NAME = "Service";
 
-
-    //    public final UUID CORE_ENVIRONMENT_USER_SPACE_EXTENSION_SERVICE
-    //            = UUIDUtil.getFormLongs(1978793907977537155L, -7186786965693311562L);
     // public final UUID * = UUIDUtil.getFormLongs(-3687831299068770016L, -5951841443637097351L);
     // public final UUID * = UUIDUtil.getFormLongs(-1889690034818560723L, -6740428121948687006L);
     // public final UUID * = UUIDUtil.getFormLongs(-6717814366200446673L, -7746254531580977695L);

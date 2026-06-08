@@ -21,7 +21,6 @@ public class KernelSpaceDefinition extends ASpaceDefinition {
     private final Set<UUID> infoTypeIds;
     private final ThreadLocal<UserSpaceDefinition> userSpace;
     private AKernelSpaceExtensionDefinition<?> serviceSpace;
-    private long systemTimeOffset;
 
     public KernelConfigurationDefinition getConfiguration() {
         return configuration;
@@ -49,13 +48,5 @@ public class KernelSpaceDefinition extends ASpaceDefinition {
 
     public void setServiceSpace(AKernelSpaceExtensionDefinition<?> serviceSpace) {
         this.serviceSpace = serviceSpace;
-    }
-
-    public long getSystemTimeOffset() {
-        return systemTimeOffset;
-    }
-
-    public void setSystemTimeOffset(long systemTimeOffset) {
-        this.systemTimeOffset = systemTimeOffset;
     }
 }

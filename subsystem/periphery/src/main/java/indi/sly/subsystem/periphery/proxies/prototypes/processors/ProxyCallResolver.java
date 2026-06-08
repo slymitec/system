@@ -30,7 +30,7 @@ public class ProxyCallResolver extends AResolver implements IProxyResolver {
     private final ProxyInvokeFunction invoke;
 
     public ProxyCallResolver() {
-        this.invoke = (result, proxy, method, responseClazz, parameters) -> {
+        this.invoke = (clientResponse, proxy, method, parameters) -> {
             CallManager callManager = this.coreManager.getManager(CallManager.class);
 
             ClientRequestDefinition clientRequest = new ClientRequestDefinition();
@@ -51,7 +51,7 @@ public class ProxyCallResolver extends AResolver implements IProxyResolver {
 
             ConnectionObject connection = callManager.getConnection(proxy.getContext().getCall());
 
-            ClientResponseDefinition clientResponse = connection.call(clientRequest);
+            clientResponse = connection.call(clientRequest);
 
             UserContentResponseDefinition clientResponseContent = clientResponse.getContent();
             ClientResponseExceptionDefinition clientResponseException = clientResponse.getException();
@@ -59,63 +59,13 @@ public class ProxyCallResolver extends AResolver implements IProxyResolver {
                 if (!clientResponseException.getId().equals(clientRequestContent.getId())) {
                     throw new StatusRelationshipErrorException();
                 }
-
-                ASystemException causeSystemException;
-                try {
-                    Class<?> causeSystemExceptionClass = Class.forName("indi.sly.system.common.lang" + clientResponseException.getClazz());
-
-                    causeSystemException = (ASystemException) causeSystemExceptionClass.getDeclaredConstructor().newInstance();
-
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                         InvocationTargetException | NoSuchMethodException _) {
-                    causeSystemException = new StatusUnexpectedException();
-                }
-
-                StackTraceElement[] stackTraceElements = new StackTraceElement[clientResponseException.getTrace().size()];
-                for (int i = 0; i < clientResponseException.getTrace().size(); i++) {
-                    ClientResponseExceptionTraceDefinition clientResponseExceptionTrace = clientResponseException.getTrace().get(i);
-                    stackTraceElements[i] = new StackTraceElement(clientResponseExceptionTrace.getClazz(), clientResponseExceptionTrace.getMethod(), StringUtil.EMPTY, 1);
-                }
-
-                causeSystemException.setStackTrace(stackTraceElements);
-
-                throw new SystemException(causeSystemException);
             } else {
                 if (!clientResponseContent.getId().equals(clientRequestContent.getId())) {
                     throw new StatusRelationshipErrorException();
                 }
-
-                if (ClassUtil.isThisOrSuperContain(responseClazz, ACacheableObject.class)) {
-                    if (ClassUtil.getSimpleName(HandleContextDefinition.class).equals(clientResponseContent.getClazz())) {
-                        throw new StatusRelationshipErrorException();
-                    }
-
-                    HandleContextDefinition handleContext = ObjectUtil.transferFromString(HandleContextDefinition.class, clientResponseContent.getValue());
-
-                    if (ClassUtil.getSimpleName(HandleContextDefinition.class).equals(clientResponseContent.getClazz())) {
-                        throw new StatusRelationshipErrorException();
-                    }
-
-                    if (ClassUtil.getSimpleName(HandleContextDefinition.class).equals(handleContext.getClazz())) {
-                        throw new StatusRelationshipErrorException();
-                    }
-
-                    ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
-
-                    return proxyManager.getFactory().buildProxy(handleContext.getClazz());
-
-                } else {
-                    if (!ClassUtil.getSimpleName(responseClazz).equals(clientResponseContent.getClazz())) {
-                        throw new StatusRelationshipErrorException();
-                    }
-
-                    if (responseClazz != Void.class) {
-                        return ObjectUtil.transferFromString(responseClazz, clientResponseContent.getValue());
-                    } else {
-                        return null;
-                    }
-                }
             }
+
+            return clientResponse;
         };
     }
 

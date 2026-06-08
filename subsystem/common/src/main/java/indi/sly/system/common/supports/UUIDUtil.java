@@ -1,5 +1,6 @@
 package indi.sly.system.common.supports;
 
+import com.github.f4b6a3.uuid.UuidCreator;
 import indi.sly.system.common.lang.ConditionParametersException;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ public abstract class UUIDUtil {
     public static final UUID EMPTY = new UUID(0, 0);
 
     public static UUID createRandom() {
-        return UUID.randomUUID();
+        return UuidCreator.getTimeOrderedEpoch();
     }
 
     public static UUID getEmpty() {

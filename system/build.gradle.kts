@@ -40,6 +40,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("com.github.f4b6a3:uuid-creator:6.1.1")
     implementation("com.microsoft.sqlserver:mssql-jdbc:13.4.0.jre11")
     implementation("org.redisson:redisson-spring-boot-starter:4.4.0")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")

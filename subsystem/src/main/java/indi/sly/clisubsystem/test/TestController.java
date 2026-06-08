@@ -1,6 +1,7 @@
 package indi.sly.clisubsystem.test;
 
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -16,12 +17,15 @@ import java.util.UUID;
 public class TestController {
     @RequestMapping(value = {"/Test.action"}, method = {RequestMethod.GET})
     public Object test(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        UUID uuid = null;
+        StringBuilder result = new StringBuilder();
 
-        String s = ObjectUtil.transferToString(uuid);
+        UUID random;
+        for (int i = 0; i < 128; i++) {
+            random = UUIDUtil.createRandom();
 
-        UUID uuid1 = ObjectUtil.transferFromString(UUID.class, s);
+            result.append(" UUIDUtil.getFormLongs(").append(random.getMostSignificantBits()).append("L, ").append(random.getLeastSignificantBits()).append("L);<br />");
+        }
 
-        return uuid1 == null;
+        return result.toString();
     }
 }

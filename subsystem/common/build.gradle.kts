@@ -2,7 +2,7 @@ dependencies {
     implementation("jakarta.inject:jakarta.inject-api:2.0.1")
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("org.apache.commons:commons-lang3")
-    implementation("org.apache.fory:fory-core:0.17.0")
+    implementation("org.apache.fory:fory-core:1.1.0")
     implementation("com.github.f4b6a3:uuid-creator:6.1.1")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("tools.jackson.core:jackson-core")

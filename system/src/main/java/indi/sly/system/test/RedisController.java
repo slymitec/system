@@ -16,11 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
-import org.redisson.api.RLiveObjectService;
-import org.redisson.api.RedissonClient;
-import org.redisson.api.annotation.REntity;
-import org.redisson.api.annotation.RId;
-import org.redisson.codec.TypedJsonJackson3Codec;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,9 +27,6 @@ import java.util.UUID;
 @RestController
 @Transactional
 public class RedisController extends ATestController {
-    @Resource
-    private RedissonClient redissonClient;
-
     @RequestMapping(value = {"/Redison.action"}, method = {RequestMethod.GET})
     public Object Redison(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.initall(request, response, session);

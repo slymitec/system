@@ -5,7 +5,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation("org.redisson:redisson-spring-boot-starter:4.4.0")
+    implementation("org.redisson:redisson-spring-boot-starter:4.6.0")
     implementation("tools.jackson.core:jackson-core")
     implementation("tools.jackson.core:jackson-databind")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")

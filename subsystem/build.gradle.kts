@@ -1,6 +1,6 @@
 plugins {
     java
-    id("org.springframework.boot") version ("4.0.5")
+    id("org.springframework.boot") version ("4.1.0")
     id("io.spring.dependency-management") version ("1.1.7")
 }
 
@@ -36,12 +36,9 @@ dependencies {
     implementation(project(":periphery"))
 
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation("org.springframework.boot:spring-boot-starter-restclient")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
-    implementation("com.github.f4b6a3:uuid-creator:6.1.1")
     implementation("com.microsoft.sqlserver:mssql-jdbc:13.4.0.jre11")
-    implementation("org.redisson:redisson-spring-boot-starter:4.4.0")
-    testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
+    implementation("org.redisson:redisson-spring-boot-starter:4.6.0")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

@@ -12,6 +12,5 @@ dependencies {
     implementation("tools.jackson.core:jackson-core")
     implementation("tools.jackson.core:jackson-databind")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

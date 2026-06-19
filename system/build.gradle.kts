@@ -4,6 +4,12 @@ plugins {
     id("io.spring.dependency-management") version ("1.1.7")
 }
 
+val projectName = "SLY System"
+val projectVersion = "1.0.0.0"
+val projectNameSpace = "indi.sly.system"
+val javaLanguageVersion = 25
+val textEncoding = "UTF-8"
+
 allprojects {
     group = projectNameSpace
     version = projectVersion
@@ -14,9 +20,9 @@ allprojects {
 }
 
 subprojects {
-    apply(plugin = "java")
-    apply(plugin = "org.springframework.boot")
-    apply(plugin = "io.spring.dependency-management")
+    pluginManager.apply("java")
+    pluginManager.apply("org.springframework.boot")
+    pluginManager.apply("io.spring.dependency-management")
 
     tasks.bootJar {
         enabled = false
@@ -26,7 +32,7 @@ subprojects {
         enabled = true
     }
 
-    tasks.test {
+    tasks.withType<Test> {
         useJUnitPlatform()
     }
 }
@@ -41,18 +47,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("com.microsoft.sqlserver:mssql-jdbc:13.4.0.jre11")
-    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-data-redis-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-websocket-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
-
-var projectName = "SLY System"
-var projectVersion = "1.0.0.0"
-var projectNameSpace = "indi.sly.system"
-var javaLanguageVersion = 25
-var textEncoding = "UTF-8"
 
 java {
     toolchain {

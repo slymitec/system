@@ -39,9 +39,8 @@ public class ObjectCollectionObject extends AObject {
     public long getLimit(long space) {
         Lock lock = this.getLock(space, LockType.READ);
 
+        lock.lock();
         try {
-            lock.lock();
-
             return this.getSpace(space).getObjectLimit();
         } finally {
             lock.unlock();
@@ -51,9 +50,8 @@ public class ObjectCollectionObject extends AObject {
     public void setLimit(long space, long limit) {
         Lock lock = this.getLock(space, LockType.WRITE);
 
+        lock.lock();
         try {
-            lock.lock();
-
             this.getSpace(space).setObjectLimit(limit);
         } finally {
             lock.unlock();
@@ -68,9 +66,8 @@ public class ObjectCollectionObject extends AObject {
 
         Lock lock = this.getLock(space, LockType.READ);
 
+        lock.lock();
         try {
-            lock.lock();
-
             Map<UUID, AObject> objects = this.getSpace(space).getObjects();
 
             AObject object = objects.getOrDefault(id, null);
@@ -92,9 +89,8 @@ public class ObjectCollectionObject extends AObject {
 
         Lock lock = this.getLock(space, LockType.READ);
 
+        lock.lock();
         try {
-            lock.lock();
-
             Map<Class<? extends AObject>, AObject> classedObjects = this.getSpace(space).getClassedObjects();
 
             AObject object = classedObjects.getOrDefault(clazz, null);
@@ -121,9 +117,8 @@ public class ObjectCollectionObject extends AObject {
 
         Lock lock = this.getLock(space, LockType.READ);
 
+        lock.lock();
         try {
-            lock.lock();
-
             Map<UUID, AObject> objects = this.getSpace(space).getObjects();
 
             if (objects.containsKey(id)) {
@@ -148,9 +143,8 @@ public class ObjectCollectionObject extends AObject {
 
         Lock lock = this.getLock(space, LockType.READ);
 
+        lock.lock();
         try {
-            lock.lock();
-
             Map<Class<? extends AObject>, AObject> classedObjects = this.getSpace(space).getClassedObjects();
 
             if (classedObjects.containsKey(clazz)) {
@@ -170,9 +164,8 @@ public class ObjectCollectionObject extends AObject {
 
         Lock lock = this.getLock(space, LockType.READ);
 
+        lock.lock();
         try {
-            lock.lock();
-
             Map<UUID, AObject> objects = this.getSpace(space).getObjects();
 
             return objects.containsKey(id);
@@ -188,9 +181,8 @@ public class ObjectCollectionObject extends AObject {
 
         Lock lock = this.getLock(space, LockType.READ);
 
+        lock.lock();
         try {
-            lock.lock();
-
             Map<Class<? extends AObject>, AObject> classedObjects = this.getSpace(space).getClassedObjects();
 
             return classedObjects.containsKey(clazz);
@@ -206,9 +198,8 @@ public class ObjectCollectionObject extends AObject {
 
         Lock lock = this.getLock(space, LockType.WRITE);
 
+        lock.lock();
         try {
-            lock.lock();
-
             Map<UUID, AObject> objects = this.getSpace(space).getObjects();
 
             AObject object = objects.getOrDefault(id, null);
@@ -229,9 +220,8 @@ public class ObjectCollectionObject extends AObject {
 
         Lock lock = this.getLock(space, LockType.WRITE);
 
+        lock.lock();
         try {
-            lock.lock();
-
             Map<Class<? extends AObject>, AObject> classedObjects = this.getSpace(space).getClassedObjects();
 
             AObject object = classedObjects.getOrDefault(clazz, null);

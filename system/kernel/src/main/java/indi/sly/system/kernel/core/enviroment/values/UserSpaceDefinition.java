@@ -3,9 +3,13 @@ package indi.sly.system.kernel.core.enviroment.values;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
+import jakarta.inject.Named;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.Stack;
 
+@Named
+@RequestScope
 public class UserSpaceDefinition extends ASpaceDefinition {
     public UserSpaceDefinition() {
         this.threads = new ThreadLocal<>();

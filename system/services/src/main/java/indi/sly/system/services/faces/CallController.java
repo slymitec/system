@@ -3,11 +3,13 @@ package indi.sly.system.services.faces;
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.prototypes.UserContentObject;
 import indi.sly.system.services.jobs.prototypes.UserContextObject;
@@ -23,9 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CallController extends AController {
-    protected void initCallController(HttpSession session) {
-        UserSpaceDefinition userSpace = (UserSpaceDefinition) session.getAttribute("userSpace");
-
+    protected void initCallController() {
         if (ObjectUtil.isAnyNull(this.coreManager)) {
             synchronized (this) {
                 if (ObjectUtil.isAnyNull(this.coreManager)) {
@@ -34,9 +34,8 @@ public class CallController extends AController {
             }
         }
 
-        if (ObjectUtil.isAnyNull(userSpace)) {
-            throw new StatusNotReadyException();
-        }
+        UserSpaceDefinition userSpace = SpringHelper.getInstance(UserSpaceDefinition.class);
+        userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
 
         this.coreManager.setUserSpace(userSpace);
 
@@ -48,8 +47,8 @@ public class CallController extends AController {
     }
 
     @RequestMapping(value = {"/Call.action"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String onMessage(@RequestBody ClientRequestDefinition userContextRequest, HttpSession session) {
-        this.initCallController(session);
+    public String onMessage(@RequestBody ClientRequestDefinition userContextRequest) {
+        this.initCallController();
 
         ClientResponseDefinition clientResponse;
         try {

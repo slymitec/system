@@ -1,6 +1,5 @@
 package indi.sly.system.services.faces;
 
-import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
@@ -17,7 +16,6 @@ import indi.sly.system.services.jobs.values.ClientResponseDefinition;
 import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
 import indi.sly.system.services.jobs.values.ClientRequestDefinition;
 import indi.sly.system.services.jobs.values.ClientResponseExceptionTraceDefinition;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

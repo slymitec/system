@@ -51,29 +51,22 @@ public class CallController extends AController {
     public String onMessage(@RequestBody ClientRequestDefinition userContextRequest, HttpSession session) {
         this.initCallController(session);
 
+        ClientResponseDefinition clientResponse;
         try {
             JobService jobService = this.coreManager.getService(JobService.class);
 
             UserContextObject userContext = jobService.createUserContext(userContextRequest);
-
             UserContentObject userContent = userContext.getContent();
 
             userContent.run();
 
-            ClientResponseDefinition clientResponse = userContext.getResponse();
-
+            clientResponse = userContext.getResponse();
             jobService.finishUserContext(userContext);
-
-            this.coreManager.setUserSpace(null);
-
-            return ObjectUtil.transferToString(clientResponse);
         } catch (RuntimeException exception) {
-            ClientResponseDefinition clientResponse = new ClientResponseDefinition();
-
+            clientResponse = new ClientResponseDefinition();
             ClientResponseExceptionDefinition clientResponseException = new ClientResponseExceptionDefinition();
 
             clientResponseException.setId(UUIDUtil.getEmpty());
-
             clientResponseException.setClazz(ClassUtil.getSimpleName(exception.getClass()));
             for (StackTraceElement stackTraceElement : exception.getStackTrace()) {
                 ClientResponseExceptionTraceDefinition clientResponseExceptionTrace = new ClientResponseExceptionTraceDefinition();
@@ -83,10 +76,13 @@ public class CallController extends AController {
 
                 clientResponseException.getTrace().add(clientResponseExceptionTrace);
             }
-
             clientResponse.setException(clientResponseException);
 
             return ObjectUtil.transferToString(clientResponse);
+        } finally {
+            this.coreManager.setUserSpace(null);
         }
+
+        return ObjectUtil.transferToString(clientResponse);
     }
 }

@@ -27,11 +27,6 @@ import java.nio.charset.StandardCharsets;
 public class SpringConfiguration extends AContainer implements WebMvcConfigurer {
     public static final String BASE_PACKAGES = "indi.sly.*";
 
-    @Override
-    public void configureMessageConverters(HttpMessageConverters.ServerBuilder builder) {
-        builder.addCustomConverter(new StringHttpMessageConverter(StandardCharsets.UTF_8));
-    }
-
     @Bean
     public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();

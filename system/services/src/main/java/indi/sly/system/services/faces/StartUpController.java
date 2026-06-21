@@ -50,7 +50,7 @@ public class StartUpController extends AController {
             KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
-            UserSpaceDefinition userSpace = new UserSpaceDefinition();
+            UserSpaceDefinition  userSpace = SpringHelper.getInstance(UserSpaceDefinition.class);
             userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
             this.coreManager.setUserSpace(userSpace);
             this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
@@ -113,7 +113,6 @@ public class StartUpController extends AController {
             clientResponse.setException(clientResponseException);
 
             return clientResponse;
-
         }
     }
 }

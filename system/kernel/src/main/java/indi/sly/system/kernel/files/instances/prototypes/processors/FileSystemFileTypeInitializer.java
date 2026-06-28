@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.files.instances.prototypes.wrappers;
+package indi.sly.system.kernel.files.instances.prototypes.processors;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.ArrayUtil;

@@ -37,7 +37,7 @@ public class CallManager extends AManager {
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
             this.createConnection(kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_NAME, ConnectionAttributeType.NULL,
-                    kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS_WEBSOCKET, this.coreManager.create(HttpConnectionInitializer.class));
+                    kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS, this.coreManager.create(HttpConnectionInitializer.class));
             this.createConnection(kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_NAME_WEBSOCKET, ConnectionAttributeType.NULL,
                     kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS_WEBSOCKET, this.coreManager.create(WebSocketConnectionInitializer.class));
 

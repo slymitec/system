@@ -14,9 +14,9 @@ allprojects {
 }
 
 subprojects {
-    apply(plugin = "java")
-    apply(plugin = "org.springframework.boot")
-    apply(plugin = "io.spring.dependency-management")
+    pluginManager.apply("java")
+    pluginManager.apply("org.springframework.boot")
+    pluginManager.apply("io.spring.dependency-management")
 
     tasks.bootJar {
         enabled = false

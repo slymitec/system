@@ -14,7 +14,7 @@ allprojects {
 }
 
 subprojects {
-    pluginManager.apply("java")
+    pluginManager.apply("java-library")
     pluginManager.apply("org.springframework.boot")
     pluginManager.apply("io.spring.dependency-management")
 
@@ -35,9 +35,7 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":periphery"))
 
-    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
-    implementation("org.redisson:redisson-spring-boot-starter:4.6.0")
     runtimeOnly("com.microsoft.sqlserver:mssql-jdbc:13.4.0.jre11")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

@@ -4,6 +4,12 @@ plugins {
     id("io.spring.dependency-management") version ("1.1.7")
 }
 
+var projectName = "SLY SubSystem"
+var projectVersion = "1.0.0.0"
+var projectNameSpace = "indi.sly.subsystem"
+var javaLanguageVersion = 25
+var textEncoding = "UTF-8";
+
 allprojects {
     group = projectNameSpace
     version = projectVersion
@@ -40,12 +46,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
-
-var projectName = "SLY SubSystem"
-var projectVersion = "1.0.0.0"
-var projectNameSpace = "indi.sly.subsystem"
-var javaLanguageVersion = 25
-var textEncoding = "UTF-8";
 
 java {
     toolchain {

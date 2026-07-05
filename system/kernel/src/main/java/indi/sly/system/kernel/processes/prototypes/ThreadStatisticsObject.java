@@ -103,10 +103,6 @@ public class ThreadStatisticsObject extends AChildDefinitionObject<ThreadStatist
         this.definition.offsetInfoDump(value);
     }
 
-    public long getInfoOpen() {
-        return this.definition.getInfoOpen();
-    }
-
     public void addInfoOpen(long value) {
         if (value < 0) {
             throw new ConditionParametersException();
@@ -168,10 +164,7 @@ public class ThreadStatisticsObject extends AChildDefinitionObject<ThreadStatist
             throw new ConditionParametersException();
         }
 
-
         this.definition.offsetSharedWriteBytes(value);
-
-
     }
 
     public void addPortCount(long value) {
@@ -227,10 +220,7 @@ public class ThreadStatisticsObject extends AChildDefinitionObject<ThreadStatist
             throw new ConditionParametersException();
         }
 
-
         this.definition.offsetSignalWriteCount(value);
-
-
     }
 
     public void addIoCreate(long value) {

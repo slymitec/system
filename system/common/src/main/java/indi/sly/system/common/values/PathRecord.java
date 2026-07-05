@@ -16,13 +16,12 @@ import tools.jackson.databind.jsontype.TypeSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
-@JsonSerialize(using = PathDefinition.PathDefinitionSerializer.class)
-@JsonDeserialize(using = PathDefinition.PathDefinitionDeserializer.class)
-public class PathDefinition extends ADefinition {
-    public PathDefinition(List<IdentifierDefinition> identifiers) {
+@JsonSerialize(using = PathRecord.PathDefinitionSerializer.class)
+@JsonDeserialize(using = PathRecord.PathDefinitionDeserializer.class)
+public record PathRecord(List<IdentifierRecord> identifiers) {
+    public PathRecord(List<IdentifierRecord> identifiers) {
         this.identifiers = new ArrayList<>();
 
         if (ObjectUtil.allNotNull(identifiers)) {
@@ -30,39 +29,39 @@ public class PathDefinition extends ADefinition {
         }
     }
 
-    public PathDefinition(PathDefinition path, IdentifierDefinition identifier) {
-        this.identifiers = new ArrayList<>();
+    public PathRecord(PathRecord path, IdentifierRecord identifier) {
+        this(new ArrayList<>());
 
-        this.identifiers.addAll(path.identifiers);
-
+        if (ObjectUtil.allNotNull(path)) {
+            this.identifiers.addAll(path.identifiers);
+        }
         if (ObjectUtil.allNotNull(identifier)) {
             this.identifiers.add(identifier);
         }
     }
 
-    private final List<IdentifierDefinition> identifiers;
-
-    public List<IdentifierDefinition> get() {
+    @Override
+    public List<IdentifierRecord> identifiers() {
         return CollectionUtil.unmodifiable(this.identifiers);
     }
 
-    public static class PathDefinitionSerializer extends ValueSerializer<PathDefinition> {
+    public static class PathDefinitionSerializer extends ValueSerializer<PathRecord> {
         @Override
-        public void serializeWithType(PathDefinition value, JsonGenerator generator, SerializationContext ctxt, TypeSerializer typeSer) throws JacksonException {
+        public void serializeWithType(PathRecord value, JsonGenerator generator, SerializationContext ctxt, TypeSerializer typeSer) throws JacksonException {
             this.serialize(value, generator, ctxt);
         }
 
         @Override
-        public void serialize(PathDefinition value, JsonGenerator generator, SerializationContext ctxt) throws JacksonException {
+        public void serialize(PathRecord value, JsonGenerator generator, SerializationContext ctxt) throws JacksonException {
             String[] texts = new String[value.identifiers.size()];
 
             for (int i = 0; i < value.identifiers.size(); i++) {
-                IdentifierDefinition identification = value.identifiers.get(i);
+                IdentifierRecord identification = value.identifiers.get(i);
 
-                if (identification.getType() == String.class) {
-                    texts[i] = StringUtil.readFormBytes(identification.getValue());
-                } else if (identification.getType() == UUID.class) {
-                    texts[i] = "<" + UUIDUtil.toString(UUIDUtil.readFormBytes(identification.getValue())) + ">";
+                if (identification.type() == String.class) {
+                    texts[i] = StringUtil.readFormBytes(identification.value());
+                } else if (identification.type() == UUID.class) {
+                    texts[i] = "<" + UUIDUtil.toString(UUIDUtil.readFormBytes(identification.value())) + ">";
                 }
             }
 
@@ -70,20 +69,20 @@ public class PathDefinition extends ADefinition {
         }
     }
 
-    public static class PathDefinitionDeserializer extends ValueDeserializer<PathDefinition> {
+    public static class PathDefinitionDeserializer extends ValueDeserializer<PathRecord> {
         @Override
         public Object deserializeWithType(JsonParser parser, DeserializationContext context, TypeDeserializer typeDeserializer) throws JacksonException {
             return this.deserialize(parser, context);
         }
 
         @Override
-        public PathDefinition deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
+        public PathRecord deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
             String[] values = parser.getString().split("\\\\");
 
-            List<IdentifierDefinition> identifications = new ArrayList<>();
+            List<IdentifierRecord> identifications = new ArrayList<>();
 
             for (String value : values) {
-                IdentifierDefinition identification;
+                IdentifierRecord identification;
                 if (value.isEmpty()) {
                     continue;
                 } else if (value.startsWith("<") && value.endsWith(">")) {
@@ -97,9 +96,9 @@ public class PathDefinition extends ADefinition {
                         throw new StatusUnreadableException();
                     }
 
-                    identification = new IdentifierDefinition(id);
+                    identification = new IdentifierRecord(id);
                 } else if (!StringUtil.isNameIllegal(value)) {
-                    identification = new IdentifierDefinition(value);
+                    identification = new IdentifierRecord(value);
                 } else {
                     throw new StatusUnreadableException();
                 }
@@ -107,18 +106,7 @@ public class PathDefinition extends ADefinition {
                 identifications.add(identification);
             }
 
-            return new PathDefinition(identifications);
+            return new PathRecord(identifications);
         }
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (!(o instanceof PathDefinition that)) return false;
-        return Objects.equals(identifiers, that.identifiers);
-    }
-
-    @Override
-    public final int hashCode() {
-        return Objects.hashCode(identifiers);
     }
 }

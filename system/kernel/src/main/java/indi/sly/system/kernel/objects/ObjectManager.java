@@ -3,8 +3,8 @@ package indi.sly.system.kernel.objects;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -14,8 +14,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
-
-import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -40,16 +38,16 @@ public class ObjectManager extends AManager {
     public void shutdown() {
     }
 
-    public InfoObject get(PathDefinition path) {
+    public InfoObject get(PathRecord path) {
         KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
-        if (ObjectUtil.isAnyNull(path) || path.get().size() > kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH) {
+        if (ObjectUtil.isAnyNull(path) || path.identifiers().size() > kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH) {
             throw new ConditionParametersException();
         }
 
         InfoObject info = this.factory.getRootInfo();
 
-        for (IdentifierDefinition identifier : path.get()) {
+        for (IdentifierRecord identifier : path.identifiers()) {
             info = info.getChild(identifier);
         }
 

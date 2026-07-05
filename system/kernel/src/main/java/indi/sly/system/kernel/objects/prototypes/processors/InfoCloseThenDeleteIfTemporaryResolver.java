@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
@@ -22,13 +22,13 @@ import java.util.List;
 public class InfoCloseThenDeleteIfTemporaryResolver extends AResolver implements IInfoResolver {
     public InfoCloseThenDeleteIfTemporaryResolver() {
         this.close = (info, type, cache) -> {
-            if (!cache.getPath().get().isEmpty()
+            if (!cache.getPath().identifiers().isEmpty()
                     && type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.TEMPORARY) && info.getOpened() <= 0) {
-                List<IdentifierDefinition> identifiers = new ArrayList<>(cache.getPath().get());
-                IdentifierDefinition identifier = identifiers.removeLast();
+                List<IdentifierRecord> identifiers = new ArrayList<>(cache.getPath().identifiers());
+                IdentifierRecord identifier = identifiers.removeLast();
 
                 ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
-                InfoObject parentInfo = objectManager.get(new PathDefinition(identifiers));
+                InfoObject parentInfo = objectManager.get(new PathRecord(identifiers));
 
                 parentInfo.deleteChild(identifier);
 

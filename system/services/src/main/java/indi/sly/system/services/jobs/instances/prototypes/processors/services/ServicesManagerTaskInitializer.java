@@ -2,7 +2,7 @@ package indi.sly.system.services.jobs.instances.prototypes.processors.services;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.services.ServiceManager;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
@@ -49,7 +49,7 @@ public class ServicesManagerTaskInitializer extends ATaskInitializer {
         UUID serviceId = ObjectUtil.transferFromString(UUID.class, parameters.getFirst());
         List<UUID> dependencies = ObjectUtil.transferListFromString(UUID.class, parameters.get(2));
         String secret = ObjectUtil.transferFromString(String.class, parameters.get(3));
-        PathDefinition path = ObjectUtil.transferFromString(PathDefinition.class, parameters.get(4));
+        PathRecord path = ObjectUtil.transferFromString(PathRecord.class, parameters.get(4));
         UUID accountId = ObjectUtil.transferFromString(UUID.class, parameters.get(5));
         long mode = ObjectUtil.transferFromString(Long.class, parameters.get(6));
         long start = ObjectUtil.transferFromString(Long.class, parameters.get(7));

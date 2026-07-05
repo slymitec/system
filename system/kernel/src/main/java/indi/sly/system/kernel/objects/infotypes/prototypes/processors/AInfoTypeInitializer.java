@@ -1,8 +1,7 @@
 package indi.sly.system.kernel.objects.infotypes.prototypes.processors;
 
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.processors.AInitializer;
 import indi.sly.system.kernel.memory.MemoryManager;
@@ -35,7 +34,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
     public void deleteProcedure(InfoEntity info) {
     }
 
-    public void getProcedure(InfoEntity info, IdentifierDefinition identification) {
+    public void getProcedure(InfoEntity info, IdentifierRecord identification) {
     }
 
     public final void lockProcedure(InfoEntity info, long lock) {
@@ -65,7 +64,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         throw new StatusNotSupportedException();
     }
 
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierDefinition identification) {
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierRecord identification) {
         throw new StatusNotSupportedException();
     }
 
@@ -73,12 +72,12 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         throw new StatusNotSupportedException();
     }
 
-    public void renameChildProcedure(InfoEntity info, IdentifierDefinition oldIdentification,
-                                     IdentifierDefinition newIdentification) {
+    public void renameChildProcedure(InfoEntity info, IdentifierRecord oldIdentification,
+                                     IdentifierRecord newIdentification) {
         throw new StatusNotSupportedException();
     }
 
-    public void deleteChildProcedure(InfoEntity info, IdentifierDefinition identification) {
+    public void deleteChildProcedure(InfoEntity info, IdentifierRecord identification) {
         throw new StatusNotSupportedException();
     }
 

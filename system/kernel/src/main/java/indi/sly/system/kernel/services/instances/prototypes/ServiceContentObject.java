@@ -5,7 +5,7 @@ import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -82,13 +82,13 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
         this.write(this.flush(service));
     }
 
-    public PathDefinition getPath() {
+    public PathRecord getPath() {
         ServiceDefinition service = this.init(this.read());
 
         return service.getPath();
     }
 
-    public void setPath(PathDefinition path) {
+    public void setPath(PathRecord path) {
         if (ObjectUtil.isAnyNull(path)) {
             throw new ConditionParametersException();
         }

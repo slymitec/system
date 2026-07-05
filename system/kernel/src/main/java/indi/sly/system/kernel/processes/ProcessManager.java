@@ -8,7 +8,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.memory.MemoryManager;
@@ -103,7 +103,7 @@ public class ProcessManager extends AManager {
         return this.getWithAuthorization(processId, null);
     }
 
-    public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, String parameters, PathDefinition workFolder, ProcessAdditionalCreatorDefinition additionalCreator) {
+    public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, String parameters, PathRecord workFolder, ProcessAdditionalCreatorDefinition additionalCreator) {
         if (ValueUtil.isAnyNullOrEmpty(fileIndex)) {
             throw new ConditionParametersException();
         }
@@ -121,7 +121,7 @@ public class ProcessManager extends AManager {
         } else {
             processCreator.setParameters(StringUtil.EMPTY);
         }
-        if (ObjectUtil.allNotNull(workFolder) && !workFolder.get().isEmpty()) {
+        if (ObjectUtil.allNotNull(workFolder) && !workFolder.identifiers().isEmpty()) {
             processCreator.setWorkFolder(workFolder);
         }
 

@@ -2,10 +2,9 @@ package indi.sly.system.services.jobs.instances.prototypes.processors.processes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
-import indi.sly.system.kernel.security.prototypes.*;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
@@ -115,7 +114,7 @@ public class ProcessContextObjectTaskInitializer extends ATaskInitializer {
             throw new ConditionParametersException();
         }
 
-        PathDefinition workFolder = ObjectUtil.transferFromString(PathDefinition.class, parameters.getFirst());
+        PathRecord workFolder = ObjectUtil.transferFromString(PathRecord.class, parameters.getFirst());
 
         processContext.setWorkFolder(workFolder);
     }

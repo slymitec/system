@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 
 import java.util.*;
@@ -13,11 +13,11 @@ public class ProcessContextEntity extends APersistentEntity {
     }
 
     private long type;
-    private PathDefinition path;
+    private PathRecord path;
     private ApplicationDefinition application;
     private final Map<String, String> environmentVariables;
     private String parameters;
-    private PathDefinition workFolder;
+    private PathRecord workFolder;
 
     public long getType() {
         return this.type;
@@ -39,11 +39,11 @@ public class ProcessContextEntity extends APersistentEntity {
         this.application = application;
     }
 
-    public PathDefinition getPath() {
+    public PathRecord getPath() {
         return this.path;
     }
 
-    public void setPath(PathDefinition path) {
+    public void setPath(PathRecord path) {
         this.path = path;
     }
 
@@ -59,11 +59,11 @@ public class ProcessContextEntity extends APersistentEntity {
         this.parameters = parameters;
     }
 
-    public PathDefinition getWorkFolder() {
+    public PathRecord getWorkFolder() {
         return workFolder;
     }
 
-    public void setWorkFolder(PathDefinition workFolder) {
+    public void setWorkFolder(PathRecord workFolder) {
         this.workFolder = workFolder;
     }
 

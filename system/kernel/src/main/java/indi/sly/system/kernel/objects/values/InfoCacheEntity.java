@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.objects.values;
 
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.values.ACacheEntity;
 import org.redisson.api.annotation.REntity;
 
@@ -12,7 +12,7 @@ import java.util.UUID;
 public class InfoCacheEntity extends ACacheEntity {
     private UUID infoId;
     private UUID poolId;
-    private PathDefinition path;
+    private PathRecord path;
 
     public UUID getInfoId() {
         return this.infoId;
@@ -30,11 +30,11 @@ public class InfoCacheEntity extends ACacheEntity {
         this.poolId = poolId;
     }
 
-    public PathDefinition getPath() {
+    public PathRecord getPath() {
         return this.path;
     }
 
-    public void setPath(PathDefinition path) {
+    public void setPath(PathRecord path) {
         this.path = path;
     }
 

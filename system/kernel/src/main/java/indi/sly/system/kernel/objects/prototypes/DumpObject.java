@@ -1,8 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes;
 
 import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.objects.values.DumpCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
@@ -31,7 +30,7 @@ public class DumpObject extends ACacheableObject<DumpCacheEntity> {
         return this.cache.getAccountID();
     }
 
-    public PathDefinition getPath() {
+    public PathRecord getPath() {
         return this.cache.getPath();
     }
 

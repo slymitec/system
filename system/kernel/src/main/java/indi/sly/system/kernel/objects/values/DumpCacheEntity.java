@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.objects.values;
 
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.values.ACacheEntity;
 import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryDefinition;
 import org.redisson.api.annotation.REntity;
@@ -17,7 +17,7 @@ public class DumpCacheEntity extends ACacheEntity {
     private final Map<Long, Long> date;
     private UUID processID;
     private UUID accountID;
-    private PathDefinition path;
+    private PathRecord path;
     private InfoOpenDefinition infoOpen;
     private final List<SecurityDescriptorSummaryDefinition> securityDescriptorSummary;
 
@@ -41,11 +41,11 @@ public class DumpCacheEntity extends ACacheEntity {
         this.accountID = accountID;
     }
 
-    public PathDefinition getPath() {
+    public PathRecord getPath() {
         return this.path;
     }
 
-    public void setPath(PathDefinition path) {
+    public void setPath(PathRecord path) {
         this.path = path;
     }
 

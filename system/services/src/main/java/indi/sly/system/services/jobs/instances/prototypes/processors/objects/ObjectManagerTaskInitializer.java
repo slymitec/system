@@ -3,7 +3,7 @@ package indi.sly.system.services.jobs.instances.prototypes.processors.objects;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.services.core.values.TransactionType;
@@ -45,7 +45,7 @@ public class ObjectManagerTaskInitializer extends ATaskInitializer {
             throw new ConditionParametersException();
         }
 
-        PathDefinition path = ObjectUtil.transferFromString(PathDefinition.class, parameters.getFirst());
+        PathRecord path = ObjectUtil.transferFromString(PathRecord.class, parameters.getFirst());
 
         if (ObjectUtil.isAnyNull(path)) {
             throw new ConditionParametersException();

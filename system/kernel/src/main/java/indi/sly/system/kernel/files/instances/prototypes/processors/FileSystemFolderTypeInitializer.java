@@ -2,7 +2,7 @@ package indi.sly.system.kernel.files.instances.prototypes.processors;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
-import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFolderContentObject;
@@ -78,9 +78,9 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void getProcedure(InfoEntity info, IdentifierDefinition identification) {
-        if (identification.getType() == String.class) {
-            String childInfoName = StringUtil.readFormBytes(identification.getValue());
+    public void getProcedure(InfoEntity info, IdentifierRecord identification) {
+        if (identification.type() == String.class) {
+            String childInfoName = StringUtil.readFormBytes(identification.value());
             if (!childInfoName.equals(info.getName())) {
                 info.setName(childInfoName);
             }
@@ -180,15 +180,15 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierDefinition identification) {
-        if (identification.getType() != String.class) {
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierRecord identification) {
+        if (identification.type() != String.class) {
             throw new StatusNotSupportedException();
         }
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
         assert entry != null;
 
-        String childInfoName = StringUtil.readFormBytes(identification.getValue());
+        String childInfoName = StringUtil.readFormBytes(identification.value());
         InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
@@ -314,13 +314,13 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void renameChildProcedure(InfoEntity info, IdentifierDefinition oldIdentification, IdentifierDefinition newIdentification) {
-        if (oldIdentification.getType() != String.class || newIdentification.getType() != String.class) {
+    public void renameChildProcedure(InfoEntity info, IdentifierRecord oldIdentification, IdentifierRecord newIdentification) {
+        if (oldIdentification.type() != String.class || newIdentification.type() != String.class) {
             throw new StatusNotSupportedException();
         }
 
-        String oldChildInfoName = StringUtil.readFormBytes(oldIdentification.getValue());
-        String newChildInfoName = StringUtil.readFormBytes(oldIdentification.getValue());
+        String oldChildInfoName = StringUtil.readFormBytes(oldIdentification.value());
+        String newChildInfoName = StringUtil.readFormBytes(oldIdentification.value());
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
         assert entry != null;
@@ -375,15 +375,15 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, IdentifierDefinition identification) {
-        if (identification.getType() != String.class) {
+    public void deleteChildProcedure(InfoEntity info, IdentifierRecord identification) {
+        if (identification.type() != String.class) {
             throw new StatusNotSupportedException();
         }
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
         assert entry != null;
 
-        String childInfoName = StringUtil.readFormBytes(identification.getValue());
+        String childInfoName = StringUtil.readFormBytes(identification.value());
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);

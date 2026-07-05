@@ -67,9 +67,9 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
             }
 
             if (ValueUtil.isAnyNullOrEmpty(childInfo.getId())) {
-                if (identification.getType().equals(UUID.class)) {
-                    childInfo.setId(UUIDUtil.readFormBytes(identification.getValue()));
-                } else if (identification.getType().equals(String.class)) {
+                if (identification.type().equals(UUID.class)) {
+                    childInfo.setId(UUIDUtil.readFormBytes(identification.value()));
+                } else if (identification.type().equals(String.class)) {
                     childInfo.setId(UUIDUtil.createRandom());
                 }
             }
@@ -78,10 +78,10 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
             }
             childInfo.setOpened(0);
             if (ValueUtil.isAnyNullOrEmpty(childInfo.getName())) {
-                if (identification.getType().equals(UUID.class)) {
+                if (identification.type().equals(UUID.class)) {
                     childInfo.setName(null);
-                } else if (identification.getType().equals(String.class)) {
-                    childInfo.setName(StringUtil.readFormBytes(identification.getValue()));
+                } else if (identification.type().equals(String.class)) {
+                    childInfo.setName(StringUtil.readFormBytes(identification.value()));
                 }
             }
             Map<Long, Long> date = new HashMap<>();
@@ -163,8 +163,8 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
             AInfoTypeInitializer typeInitializer = type.getInitializer();
             typeInitializer.renameChildProcedure(info, oldIdentification, newIdentification);
 
-            if (newIdentification.getType().equals(String.class)) {
-                childInfo.setName(StringUtil.readFormBytes(newIdentification.getValue()));
+            if (newIdentification.type().equals(String.class)) {
+                childInfo.setName(StringUtil.readFormBytes(newIdentification.value()));
             }
         };
 

@@ -6,7 +6,7 @@ import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
@@ -65,7 +65,7 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
                 processContext.setParameters(StringUtil.EMPTY);
             }
 
-            PathDefinition processContextWorkFolder = processCreator.getWorkFolder();
+            PathRecord processContextWorkFolder = processCreator.getWorkFolder();
             if (ObjectUtil.allNotNull(processContextWorkFolder)) {
                 ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 

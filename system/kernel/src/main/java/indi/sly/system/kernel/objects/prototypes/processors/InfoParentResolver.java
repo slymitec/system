@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusNotExistedException;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.lang.InfoProcessorParentFunction;
@@ -22,7 +22,7 @@ import java.util.List;
 public class InfoParentResolver extends AResolver implements IInfoResolver {
     public InfoParentResolver() {
         this.parent = (status) -> {
-            List<IdentifierDefinition> identifiers = new ArrayList<>(status.getPath().get());
+            List<IdentifierRecord> identifiers = new ArrayList<>(status.getPath().identifiers());
             if (identifiers.isEmpty()) {
                 throw new StatusNotExistedException();
             }
@@ -30,7 +30,7 @@ public class InfoParentResolver extends AResolver implements IInfoResolver {
             identifiers.removeLast();
 
             ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
-            InfoObject parentInfo = objectManager.get(new PathDefinition(identifiers));
+            InfoObject parentInfo = objectManager.get(new PathRecord(identifiers));
 
             return parentInfo;
         };

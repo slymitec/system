@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
 
@@ -14,7 +14,7 @@ public class ProcessInfoEntryEntity extends APersistentEntity {
     private UUID index;
     private final Map<Long, Long> date;
     private UUID id;
-    private PathDefinition path;
+    private PathRecord path;
     private InfoOpenDefinition infoOpen;
     private boolean unsupportedDelete;
 
@@ -38,11 +38,11 @@ public class ProcessInfoEntryEntity extends APersistentEntity {
         this.id = id;
     }
 
-    public PathDefinition getPath() {
+    public PathRecord getPath() {
         return path;
     }
 
-    public void setPath(PathDefinition path) {
+    public void setPath(PathRecord path) {
         this.path = path;
     }
 

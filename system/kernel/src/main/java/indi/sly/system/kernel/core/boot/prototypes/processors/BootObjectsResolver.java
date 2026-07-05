@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.core.boot.prototypes.processors;
 
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.boot.lang.BootStartConsumer;
 import indi.sly.system.kernel.core.boot.prototypes.mediators.BootProcessorMediator;
 import indi.sly.system.kernel.core.boot.values.StartupType;
@@ -81,7 +81,7 @@ public class BootObjectsResolver extends ABootResolver {
                     infoRepository.add(info);
                 }
             } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_AFTER_KERNEL)) {
-                InfoObject rootInfo = objectManager.get(new PathDefinition(List.of()));
+                InfoObject rootInfo = objectManager.get(new PathRecord(List.of()));
                 Set<InfoSummaryDefinition> infoSummaries;
 
                 String[] childFolderNames = new String[]{"Audits", "Files", "Sessions", "Services"};
@@ -91,15 +91,15 @@ public class BootObjectsResolver extends ABootResolver {
                     infoSummaries = rootInfo.queryChild(new InfoWildcardDefinition(childFolderNames[i]));
 
                     if (infoSummaries.isEmpty()) {
-                        rootInfo.createChild(childFolderTypes[i], new IdentifierDefinition(childFolderNames[i]));
+                        rootInfo.createChild(childFolderTypes[i], new IdentifierRecord(childFolderNames[i]));
                     }
                 }
 
-                InfoObject parentInfo = rootInfo.getChild(new IdentifierDefinition("Sessions"));
+                InfoObject parentInfo = rootInfo.getChild(new IdentifierRecord("Sessions"));
                 InfoWildcardDefinition wildcard = new InfoWildcardDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME);
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
-                    InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME));
+                    InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierRecord(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME));
 
                     SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                     Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -116,10 +116,10 @@ public class BootObjectsResolver extends ABootResolver {
                     auditSecurityDescriptor.setInherit(true);
                 }
 
-                parentInfo = rootInfo.getChild(new IdentifierDefinition("Audits"));
+                parentInfo = rootInfo.getChild(new IdentifierRecord("Audits"));
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
-                    InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME));
+                    InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierRecord(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME));
 
                     SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
                     Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -132,17 +132,17 @@ public class BootObjectsResolver extends ABootResolver {
                     auditSecurityDescriptor.setInherit(false);
                 }
 
-                parentInfo = rootInfo.getChild(new IdentifierDefinition("Files"));
+                parentInfo = rootInfo.getChild(new IdentifierRecord("Files"));
                 wildcard = new InfoWildcardDefinition("Main");
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
-                    parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierDefinition("Main"));
+                    parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierRecord("Main"));
                 }
-                parentInfo = parentInfo.getChild(new IdentifierDefinition("Main"));
+                parentInfo = parentInfo.getChild(new IdentifierRecord("Main"));
                 wildcard = new InfoWildcardDefinition("Home");
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
-                    parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierDefinition("Home"));
+                    parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierRecord("Home"));
                 }
             }
         };

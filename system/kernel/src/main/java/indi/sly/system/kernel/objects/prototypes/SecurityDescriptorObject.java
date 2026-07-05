@@ -5,9 +5,9 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -530,10 +530,10 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         AccountObject account = userManager.getCurrentAccount();
 
         try {
-            InfoObject auditsInfo = objectManager.get(new PathDefinition(List.of(new IdentifierDefinition("Audits"), new IdentifierDefinition(account.getName()))));
+            InfoObject auditsInfo = objectManager.get(new PathRecord(List.of(new IdentifierRecord("Audits"), new IdentifierRecord(account.getName()))));
 
             InfoObject auditInfo = auditsInfo.createChild(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID,
-                    new IdentifierDefinition(UUID.randomUUID()));
+                    new IdentifierRecord(UUID.randomUUID()));
             auditInfo.open(InfoOpenAttributeType.OPEN_EXCLUSIVE);
 
             AuditContentObject auditContent = (AuditContentObject) auditInfo.getContent();

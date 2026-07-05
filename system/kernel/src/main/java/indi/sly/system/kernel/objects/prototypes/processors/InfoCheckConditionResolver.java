@@ -31,7 +31,7 @@ public class InfoCheckConditionResolver extends AResolver implements IInfoResolv
                 throw new StatusNotSupportedException();
             }
 
-            if (cache.getPath().get().isEmpty()) {
+            if (cache.getPath().identifiers().isEmpty()) {
                 throw new StatusNotSupportedException();
             }
 
@@ -40,7 +40,7 @@ public class InfoCheckConditionResolver extends AResolver implements IInfoResolv
 
         this.createChild = (childInfo, info, type, cache, childType, identification) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
-                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
+                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.type() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
             Set<UUID> childTypes = type.getChildTypes();
@@ -53,7 +53,7 @@ public class InfoCheckConditionResolver extends AResolver implements IInfoResolv
 
         this.getChild = (childInfo, info, type, cache, identification) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
-                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
+                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.type() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
 
@@ -62,7 +62,7 @@ public class InfoCheckConditionResolver extends AResolver implements IInfoResolv
 
         this.deleteChild = (info, type, cache, identification) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
-                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.getType() == UUID.class)) {
+                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.type() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
         };
@@ -79,7 +79,7 @@ public class InfoCheckConditionResolver extends AResolver implements IInfoResolv
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD) || (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS))) {
                 throw new StatusNotSupportedException();
             }
-            if (oldIdentification.getType() == UUID.class || newIdentification.getType() == UUID.class) {
+            if (oldIdentification.type() == UUID.class || newIdentification.type() == UUID.class) {
                 throw new StatusNotSupportedException();
             }
         };

@@ -1,10 +1,9 @@
 package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class ProcessCreatorDefinition extends ADefinition {
@@ -18,7 +17,7 @@ public class ProcessCreatorDefinition extends ADefinition {
     private long contextType;
     private UUID fileIndex;
     private String parameters;
-    private PathDefinition workFolder;
+    private PathRecord workFolder;
 
     public AccountAuthorizationObject getAccountAuthorization() {
         return this.accountAuthorization;
@@ -60,11 +59,11 @@ public class ProcessCreatorDefinition extends ADefinition {
         this.parameters = parameters;
     }
 
-    public PathDefinition getWorkFolder() {
+    public PathRecord getWorkFolder() {
         return this.workFolder;
     }
 
-    public void setWorkFolder(PathDefinition workFolder) {
+    public void setWorkFolder(PathRecord workFolder) {
         this.workFolder = workFolder;
     }
 }

@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
@@ -117,11 +117,11 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         }
     }
 
-    public PathDefinition getPath() {
+    public PathRecord getPath() {
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();
 
-        PathDefinition path;
+        PathRecord path;
 
         ProcessEntity process = this.getSelf();
 
@@ -241,7 +241,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();
 
-        PathDefinition path;
+        PathRecord path;
 
         ProcessEntity process = this.getSelf();
 

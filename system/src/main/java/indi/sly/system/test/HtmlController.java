@@ -5,7 +5,7 @@ import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -71,18 +71,18 @@ public class HtmlController extends AController {
         this.logger().error(s2);
 
 
-        List<IdentifierDefinition> identifications =
-                List.of(new IdentifierDefinition(UUIDUtil.createRandom()), new IdentifierDefinition("text"));
+        List<IdentifierRecord> identifications =
+                List.of(new IdentifierRecord(UUIDUtil.createRandom()), new IdentifierRecord("text"));
 
         result.put("ids", identifications);
 
         String value = ObjectUtil.transferToString(identifications);
 
-        List<IdentifierDefinition> identifications2 = ObjectUtil.transferListFromString(IdentifierDefinition.class, value);
+        List<IdentifierRecord> identifications2 = ObjectUtil.transferListFromString(IdentifierRecord.class, value);
         if (identifications2 != null) {
-            for (IdentifierDefinition identification : identifications2) {
+            for (IdentifierRecord identification : identifications2) {
                 this.logger().error(identification.toString());
-                this.logger().error(ClassUtil.getSimpleName(identification.getType()));
+                this.logger().error(ClassUtil.getSimpleName(identification.type()));
             }
         }
 

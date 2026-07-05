@@ -2,10 +2,8 @@ package indi.sly.system.services.jobs.instances.prototypes.processors.services.i
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.objects.ObjectManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
-import indi.sly.system.kernel.security.instances.prototypes.AuditContentObject;
 import indi.sly.system.kernel.services.instances.prototypes.ServiceContentObject;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
@@ -92,7 +90,7 @@ public class ServiceContentObjectTaskInitializer extends ATaskInitializer {
             throw new ConditionParametersException();
         }
 
-        PathDefinition path = ObjectUtil.transferFromString(PathDefinition.class, parameters.getFirst());
+        PathRecord path = ObjectUtil.transferFromString(PathRecord.class, parameters.getFirst());
 
         serviceContent.setPath(path);
     }

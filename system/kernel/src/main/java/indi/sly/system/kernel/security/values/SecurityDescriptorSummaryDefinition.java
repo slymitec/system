@@ -1,8 +1,7 @@
 package indi.sly.system.kernel.security.values;
 
 import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 
 import java.util.*;
 
@@ -12,18 +11,18 @@ public class SecurityDescriptorSummaryDefinition extends ADefinition {
         this.audits = new HashSet<>();
     }
 
-    private PathDefinition path;
+    private PathRecord path;
     private boolean inherit;
     private boolean permission;
     private boolean audit;
     private final Set<AccessControlDefinition> permissions;
     private final Set<AccessControlDefinition> audits;
 
-    public PathDefinition getPath() {
+    public PathRecord getPath() {
         return this.path;
     }
 
-    public void setPath(PathDefinition path) {
+    public void setPath(PathRecord path) {
         this.path = path;
     }
 

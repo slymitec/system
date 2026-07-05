@@ -3,7 +3,7 @@ package indi.sly.system.services.jobs.instances.prototypes.processors.processes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.values.ProcessAdditionalCreatorDefinition;
@@ -117,7 +117,7 @@ public class ProcessManagerTaskInitializer extends ATaskInitializer {
         AccountAuthorizationObject accountAuthorization = userFactory.rebuildAccountAuthorization(accountAuthorizationHandle);
         UUID fileIndex = ObjectUtil.transferFromString(UUID.class, parameters.get(1));
         String processParameters = ObjectUtil.transferFromString(String.class, parameters.get(2));
-        PathDefinition workFolder = ObjectUtil.transferFromString(PathDefinition.class, parameters.get(3));
+        PathRecord workFolder = ObjectUtil.transferFromString(PathRecord.class, parameters.get(3));
         ProcessAdditionalCreatorDefinition additionalCreator = ObjectUtil.transferFromString(ProcessAdditionalCreatorDefinition.class, parameters.get(4));
 
         ProcessObject process = processManager.create(accountAuthorization, fileIndex, processParameters, workFolder, additionalCreator);

@@ -5,7 +5,7 @@ import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.files.instances.values.FileSystemFilePropertyTypes;
@@ -40,9 +40,9 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void getProcedure(InfoEntity info, IdentifierDefinition identification) {
-        if (identification.getType() == String.class) {
-            String childInfoName = StringUtil.readFormBytes(identification.getValue());
+    public void getProcedure(InfoEntity info, IdentifierRecord identification) {
+        if (identification.type() == String.class) {
+            String childInfoName = StringUtil.readFormBytes(identification.value());
             if (!childInfoName.equals(info.getName())) {
                 info.setName(childInfoName);
             }

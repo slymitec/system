@@ -3,8 +3,7 @@ package indi.sly.system.services.jobs.instances.prototypes.processors.objects;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.DumpObject;
@@ -183,7 +182,7 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
         }
 
         UUID childType = ObjectUtil.transferFromString(UUID.class, parameters.getFirst());
-        IdentifierDefinition identifier = ObjectUtil.transferFromString(IdentifierDefinition.class, parameters.get(1));
+        IdentifierRecord identifier = ObjectUtil.transferFromString(IdentifierRecord.class, parameters.get(1));
 
         InfoObject childInfo = info.createChild(childType, identifier);
 
@@ -203,7 +202,7 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
             throw new ConditionParametersException();
         }
 
-        IdentifierDefinition identifier = ObjectUtil.transferFromString(IdentifierDefinition.class, parameters.getFirst());
+        IdentifierRecord identifier = ObjectUtil.transferFromString(IdentifierRecord.class, parameters.getFirst());
 
         InfoObject childInfo = info.getChild(identifier);
 
@@ -223,7 +222,7 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
             throw new ConditionParametersException();
         }
 
-        IdentifierDefinition identifier = ObjectUtil.transferFromString(IdentifierDefinition.class, parameters.getFirst());
+        IdentifierRecord identifier = ObjectUtil.transferFromString(IdentifierRecord.class, parameters.getFirst());
 
         info.deleteChild(identifier);
     }
@@ -251,8 +250,8 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
             throw new ConditionParametersException();
         }
 
-        IdentifierDefinition oldIdentifier = ObjectUtil.transferFromString(IdentifierDefinition.class, parameters.getFirst());
-        IdentifierDefinition newIdentifier = ObjectUtil.transferFromString(IdentifierDefinition.class, parameters.get(1));
+        IdentifierRecord oldIdentifier = ObjectUtil.transferFromString(IdentifierRecord.class, parameters.getFirst());
+        IdentifierRecord newIdentifier = ObjectUtil.transferFromString(IdentifierRecord.class, parameters.get(1));
 
         info.renameChild(oldIdentifier, newIdentifier);
     }

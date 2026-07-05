@@ -3,11 +3,10 @@ package indi.sly.system.kernel.services;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -74,7 +73,7 @@ public class ServiceManager extends AManager {
     public void shutdown() {
     }
 
-    public void createService(UUID serviceId, List<UUID> dependencies, String secret, PathDefinition path, UUID accountId,
+    public void createService(UUID serviceId, List<UUID> dependencies, String secret, PathRecord path, UUID accountId,
                               long mode, long start, Map<String, String> environmentVariables, String parameters) {
         if (ValueUtil.isAnyNullOrEmpty(serviceId, accountId, parameters, secret) || ObjectUtil.isAnyNull(dependencies, path, environmentVariables)) {
             throw new ConditionParametersException();
@@ -102,7 +101,7 @@ public class ServiceManager extends AManager {
 
         ServiceRepositoryObject serviceRepository = memoryManager.getServiceRepository();
 
-        PathDefinition path = new PathDefinition(List.of(new IdentifierDefinition("Services"), new IdentifierDefinition(serviceId)));
+        PathRecord path = new PathRecord(List.of(new IdentifierRecord("Services"), new IdentifierRecord(serviceId)));
 
         InfoObject serviceInfo = objectManager.get(path);
 
@@ -142,13 +141,13 @@ public class ServiceManager extends AManager {
 
             AccountAuthorizationObject authorize = userManager.authorizeById(serviceContent.getAccountId());
 
-            PathDefinition executePath = serviceContent.getPath();
+            PathRecord executePath = serviceContent.getPath();
 
-            ArrayList<IdentifierDefinition> workFolderPathList = new ArrayList<>(executePath.get());
+            ArrayList<IdentifierRecord> workFolderPathList = new ArrayList<>(executePath.identifiers());
             if (!workFolderPathList.isEmpty()) {
                 workFolderPathList.removeLast();
             }
-            PathDefinition workFolderPath = new PathDefinition(workFolderPathList);
+            PathRecord workFolderPath = new PathRecord(workFolderPathList);
 
             executeInfo = objectManager.get(executePath);
             executeInfoIndex = executeInfo.open(InfoOpenAttributeType.OPEN_ONLY_READ);

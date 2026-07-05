@@ -1,17 +1,9 @@
 package indi.sly.system.test;
 
-import indi.sly.system.common.lang.StatusNotReadyException;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.PathDefinition;
-import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
-import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
+import indi.sly.system.common.values.IdentifierRecord;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
-import indi.sly.system.services.faces.AController;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -21,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -33,12 +24,12 @@ public class RedisController extends ATestController {
 
 
         ObjectManager manager = this.coreManager.getManager(ObjectManager.class);
-        InfoObject info = manager.get(new PathDefinition(List.of(new IdentifierDefinition("Files"))));
+        InfoObject info = manager.get(new PathRecord(List.of(new IdentifierRecord("Files"))));
         UUID cache = info.cache();
 
         InfoObject info2 = manager.getFactory().rebuildInfo(cache);
 
-        info2.getCache().setPath(new PathDefinition(List.of(new IdentifierDefinition("Sessions"))));
+        info2.getCache().setPath(new PathRecord(List.of(new IdentifierRecord("Sessions"))));
 
         return info2.toString();
 

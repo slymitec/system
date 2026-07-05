@@ -4,7 +4,6 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.common.values.PathDefinition;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonGenerator;
 import tools.jackson.core.JsonParser;

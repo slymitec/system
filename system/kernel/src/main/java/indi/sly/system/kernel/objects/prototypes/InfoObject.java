@@ -5,9 +5,9 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
@@ -73,7 +73,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         return this.getSelf().getName();
     }
 
-    public PathDefinition getPath() {
+    public PathRecord getPath() {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
@@ -96,7 +96,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public InfoObject getParent() {
-        if (this.cache.getPath().get().isEmpty()) {
+        if (this.cache.getPath().identifiers().isEmpty()) {
             return null;
         } else {
             return this.processorMediator.getParent().apply(this.cache);
@@ -209,7 +209,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         }
     }
 
-    public InfoObject createChild(UUID childType, IdentifierDefinition identifier) {
+    public InfoObject createChild(UUID childType, IdentifierRecord identifier) {
         if (ObjectUtil.isAnyNull(identifier)) {
             throw new ConditionParametersException();
         }
@@ -234,7 +234,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         return this.factory.buildInfo(childInfo, this.cache);
     }
 
-    public InfoObject getChild(IdentifierDefinition identifier) {
+    public InfoObject getChild(IdentifierRecord identifier) {
         if (ObjectUtil.isAnyNull(identifier)) {
             throw new ConditionParametersException();
         }
@@ -259,7 +259,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         return this.factory.buildInfo(childInfo, this.cache);
     }
 
-    public void deleteChild(IdentifierDefinition identifier) {
+    public void deleteChild(IdentifierRecord identifier) {
         if (ObjectUtil.isAnyNull(identifier)) {
             throw new ConditionParametersException();
         }
@@ -297,7 +297,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         return infoSummaries;
     }
 
-    public void renameChild(IdentifierDefinition oldIdentifier, IdentifierDefinition newIdentifier) {
+    public void renameChild(IdentifierRecord oldIdentifier, IdentifierRecord newIdentifier) {
         if (ObjectUtil.isAnyNull(oldIdentifier, newIdentifier)) {
             throw new ConditionParametersException();
         }

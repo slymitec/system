@@ -3,7 +3,7 @@ package indi.sly.system.kernel.objects.instances.prototypes.processors;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
@@ -68,12 +68,12 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierDefinition identification) {
-        if (identification.getType() != String.class) {
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierRecord identification) {
+        if (identification.type() != String.class) {
             throw new StatusNotSupportedException();
         }
 
-        String childInfoName = StringUtil.readFormBytes(identification.getValue());
+        String childInfoName = StringUtil.readFormBytes(identification.value());
         InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
@@ -119,12 +119,12 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, IdentifierDefinition identification) {
-        if (identification.getType() != String.class) {
+    public void deleteChildProcedure(InfoEntity info, IdentifierRecord identification) {
+        if (identification.type() != String.class) {
             throw new StatusNotSupportedException();
         }
 
-        String childInfoName = StringUtil.readFormBytes(identification.getValue());
+        String childInfoName = StringUtil.readFormBytes(identification.value());
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));

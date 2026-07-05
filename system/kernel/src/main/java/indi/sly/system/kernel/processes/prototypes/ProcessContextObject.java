@@ -9,7 +9,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -105,7 +105,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         }
     }
 
-    public PathDefinition getPath() {
+    public PathRecord getPath() {
         if (LogicalUtil.allNotEqual(this.base.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
@@ -124,7 +124,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         }
     }
 
-    public void setPath(PathDefinition path) {
+    public void setPath(PathRecord path) {
         if (ObjectUtil.isAnyNull(path)) {
             throw new ConditionParametersException();
         }
@@ -316,7 +316,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         }
     }
 
-    public PathDefinition getWorkFolder() {
+    public PathRecord getWorkFolder() {
         if (LogicalUtil.allNotEqual(this.base.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
@@ -335,7 +335,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         }
     }
 
-    public void setWorkFolder(PathDefinition workFolder) {
+    public void setWorkFolder(PathRecord workFolder) {
         if (ObjectUtil.isAnyNull(workFolder)) {
             throw new ConditionParametersException();
         }

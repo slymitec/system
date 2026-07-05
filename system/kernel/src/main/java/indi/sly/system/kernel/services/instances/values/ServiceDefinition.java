@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.services.instances.values;
 
 import indi.sly.system.common.values.ADefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 
 import java.util.*;
 
@@ -13,7 +13,7 @@ public class ServiceDefinition extends ADefinition {
 
     private final List<UUID> dependencies;
     private String secret;
-    private PathDefinition path;
+    private PathRecord path;
     private UUID accountId;
     private long mode;
     private long start;
@@ -32,11 +32,11 @@ public class ServiceDefinition extends ADefinition {
         this.secret = secret;
     }
 
-    public PathDefinition getPath() {
+    public PathRecord getPath() {
         return this.path;
     }
 
-    public void setPath(PathDefinition path) {
+    public void setPath(PathRecord path) {
         this.path = path;
     }
 

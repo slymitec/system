@@ -4,8 +4,8 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;
@@ -39,9 +39,9 @@ public class ServiceFactory extends AFactory {
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
-        InfoObject servicesInfo = objectManager.get(new PathDefinition(List.of(new IdentifierDefinition("Services"))));
+        InfoObject servicesInfo = objectManager.get(new PathRecord(List.of(new IdentifierRecord("Services"))));
 
-        InfoObject service = servicesInfo.createChild(kernelConfiguration.SERVICE_TYPES_INSTANCE_SERVICE_ID, new IdentifierDefinition(serviceId));
+        InfoObject service = servicesInfo.createChild(kernelConfiguration.SERVICE_TYPES_INSTANCE_SERVICE_ID, new IdentifierRecord(serviceId));
         SecurityDescriptorObject securityDescriptor = service.getSecurityDescriptor();
         Set<AccessControlDefinition> permissions = new HashSet<>();
         AccessControlDefinition permission = new AccessControlDefinition();
@@ -59,7 +59,7 @@ public class ServiceFactory extends AFactory {
         service.close();
     }
 
-    public void build(UUID serviceId, List<UUID> dependencies, String secret, PathDefinition path, UUID accountId,
+    public void build(UUID serviceId, List<UUID> dependencies, String secret, PathRecord path, UUID accountId,
                       long mode, long start, Map<String, String> environmentVariables, String parameters) {
         if (ValueUtil.isAnyNullOrEmpty(serviceId, accountId, parameters, secret) || ObjectUtil.isAnyNull(dependencies, path, environmentVariables)) {
             throw new ConditionParametersException();
@@ -92,8 +92,8 @@ public class ServiceFactory extends AFactory {
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
-        InfoObject servicesInfo = objectManager.get(new PathDefinition(List.of(new IdentifierDefinition("Services"))));
+        InfoObject servicesInfo = objectManager.get(new PathRecord(List.of(new IdentifierRecord("Services"))));
 
-        servicesInfo.deleteChild(new IdentifierDefinition(serviceId));
+        servicesInfo.deleteChild(new IdentifierRecord(serviceId));
     }
 }

@@ -3,7 +3,7 @@ package indi.sly.system.kernel.security.instances.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.security.instances.values.AuditDefinition;
@@ -30,13 +30,13 @@ public class AuditContentObject extends AInfoContentObject implements IByteValue
         return audit.getAccountId();
     }
 
-    public PathDefinition getPath() {
+    public PathRecord getPath() {
         AuditDefinition audit = this.init(this.read());
 
         return audit.getPath();
     }
 
-    public void setPath(PathDefinition path) {
+    public void setPath(PathRecord path) {
         if (ObjectUtil.isAnyNull(path)) {
             throw new ConditionParametersException();
         }

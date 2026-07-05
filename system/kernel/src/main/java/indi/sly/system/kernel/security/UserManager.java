@@ -8,8 +8,8 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
@@ -199,10 +199,10 @@ public class UserManager extends AManager {
 
         InfoWildcardDefinition wildcard = new InfoWildcardDefinition(account.getName());
 
-        InfoObject parentInfo = objectManager.get(new PathDefinition(List.of(new IdentifierDefinition("Audits"))));
+        InfoObject parentInfo = objectManager.get(new PathRecord(List.of(new IdentifierRecord("Audits"))));
         Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierDefinition(account.getName()));
+            InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierRecord(account.getName()));
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();
@@ -215,10 +215,10 @@ public class UserManager extends AManager {
             auditSecurityDescriptor.setInherit(false);
         }
 
-        parentInfo = objectManager.get(new PathDefinition(List.of(new IdentifierDefinition("Files"), new IdentifierDefinition("Main"), new IdentifierDefinition("Home"))));
+        parentInfo = objectManager.get(new PathRecord(List.of(new IdentifierRecord("Files"), new IdentifierRecord("Main"), new IdentifierRecord("Home"))));
         infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
-            InfoObject childInfo = parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierDefinition(account.getName()));
+            InfoObject childInfo = parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierRecord(account.getName()));
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
             Set<AccessControlDefinition> permissions = new HashSet<>();

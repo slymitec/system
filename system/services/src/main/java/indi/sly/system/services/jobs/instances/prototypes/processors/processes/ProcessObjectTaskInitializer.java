@@ -1,16 +1,8 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors.processes;
 
-import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ClassUtil;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.PathDefinition;
-import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.*;
-import indi.sly.system.kernel.processes.values.ProcessAdditionalCreatorDefinition;
-import indi.sly.system.kernel.security.UserManager;
-import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
-import indi.sly.system.kernel.security.prototypes.UserFactory;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
@@ -21,7 +13,6 @@ import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.List;
 import java.util.UUID;
 
 @Named

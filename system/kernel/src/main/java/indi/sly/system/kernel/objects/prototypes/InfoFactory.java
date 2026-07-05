@@ -3,8 +3,8 @@ package indi.sly.system.kernel.objects.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
@@ -110,15 +110,15 @@ public class InfoFactory extends AFactory {
         cache.setDuration(CacheDurationType.NORMAL);
 
         if (ObjectUtil.allNotNull(parentInfoCache)) {
-            IdentifierDefinition identifier;
+            IdentifierRecord identifier;
             if (StringUtil.isNameIllegal(info.getName())) {
-                identifier = new IdentifierDefinition(info.getId());
+                identifier = new IdentifierRecord(info.getId());
             } else {
-                identifier = new IdentifierDefinition(info.getName());
+                identifier = new IdentifierRecord(info.getName());
             }
-            cache.setPath(new PathDefinition(parentInfoCache.getPath(), identifier));
+            cache.setPath(new PathRecord(parentInfoCache.getPath(), identifier));
         } else {
-            cache.setPath(new PathDefinition(List.of()));
+            cache.setPath(new PathRecord(List.of()));
         }
 
         return this.createInfo(processorMediator, cache);

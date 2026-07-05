@@ -2,16 +2,14 @@ package indi.sly.system.kernel.core.boot.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
-import indi.sly.system.common.values.PathDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
+import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.boot.lang.BootStartConsumer;
 import indi.sly.system.kernel.core.boot.prototypes.mediators.BootProcessorMediator;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ServiceRepositoryObject;
 import indi.sly.system.kernel.objects.ObjectManager;
-import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
@@ -38,7 +36,7 @@ public class BootServicesResolver extends ABootResolver {
             ServiceManager serviceManager = this.coreManager.getManager(ServiceManager.class);
 
             if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_AFTER_SERVICE)) {
-                PathDefinition path = new PathDefinition(List.of(new IdentifierDefinition("Services")));
+                PathRecord path = new PathRecord(List.of(new IdentifierRecord("Services")));
 
                 InfoObject services = objectManager.get(path);
 
@@ -50,7 +48,7 @@ public class BootServicesResolver extends ABootResolver {
                 for (InfoSummaryDefinition infoSummary : infoSummaries) {
                     UUID id = infoSummary.getId();
 
-                    InfoObject service = services.getChild(new IdentifierDefinition(id));
+                    InfoObject service = services.getChild(new IdentifierRecord(id));
 
                     if (service.getOpened() != 0) {
                         ServiceRepositoryObject serviceRepository = memoryManager.getServiceRepository();

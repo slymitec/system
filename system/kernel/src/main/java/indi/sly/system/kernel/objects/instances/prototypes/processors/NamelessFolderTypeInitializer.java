@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.IdentifierDefinition;
+import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
@@ -69,12 +69,12 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierDefinition identification) {
-        if (identification.getType() != UUID.class) {
+    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierRecord identification) {
+        if (identification.type() != UUID.class) {
             throw new StatusNotSupportedException();
         }
 
-        UUID childInfoID = UUIDUtil.readFormBytes(identification.getValue());
+        UUID childInfoID = UUIDUtil.readFormBytes(identification.value());
         InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
@@ -124,12 +124,12 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, IdentifierDefinition identification) {
-        if (identification.getType() != UUID.class) {
+    public void deleteChildProcedure(InfoEntity info, IdentifierRecord identification) {
+        if (identification.type() != UUID.class) {
             throw new StatusNotSupportedException();
         }
 
-        UUID childInfoID = UUIDUtil.readFormBytes(identification.getValue());
+        UUID childInfoID = UUIDUtil.readFormBytes(identification.value());
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));

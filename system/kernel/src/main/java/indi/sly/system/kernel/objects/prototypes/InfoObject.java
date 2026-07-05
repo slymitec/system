@@ -33,6 +33,14 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     protected InfoFactory factory;
     protected InfoProcessorMediator processorMediator;
 
+    private InfoEntity getSelf() {
+        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
+            throw new ConditionContextException();
+        }
+
+        return this.processorMediator.getSelf().apply(this.cache);
+    }
+
     public UUID getId() {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
@@ -71,14 +79,6 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         }
 
         return this.cache.getPath();
-    }
-
-    private InfoEntity getSelf() {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
-            throw new ConditionContextException();
-        }
-
-        return this.processorMediator.getSelf().apply(this.cache);
     }
 
     public UUID getIndex() {

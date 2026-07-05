@@ -73,19 +73,19 @@ public class UserManager extends AManager {
     public void shutdown() {
     }
 
-    private AccountObject getTargetAccount(UUID accountID) {
-        if (ValueUtil.isAnyNullOrEmpty(accountID)) {
+    private AccountObject getTargetAccount(UUID accountId) {
+        if (ValueUtil.isAnyNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
-        if (!userRepository.containAccount(accountID)) {
+        if (!userRepository.containAccount(accountId)) {
             throw new StatusNotExistedException();
         }
 
-        return this.factory.buildAccount(accountID);
+        return this.factory.buildAccount(accountId);
     }
 
     private AccountObject getTargetAccount(String accountName) {

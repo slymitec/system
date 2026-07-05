@@ -91,7 +91,7 @@ public class ProcessManager extends AManager {
 
         if (!currentProcessToken.getAccountId().equals(processToken.getAccountId())
                 && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                && !(ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.checkAndGetSummary().getID().equals(processToken.getAccountId())))
+                && !(ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.checkAndGetSummary().getId().equals(processToken.getAccountId())))
                 && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
             throw new ConditionRefuseException();
         }

@@ -99,11 +99,11 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             ProcessTokenEntity processToken = this.init(process);
 
             if (!ValueUtil.isAnyNullOrEmpty(processToken.getAccountId())
-                    && !processToken.getAccountId().equals(accountAuthorizationSummary.getID())) {
+                    && !processToken.getAccountId().equals(accountAuthorizationSummary.getId())) {
                 throw new ConditionRefuseException();
             }
 
-            processToken.setAccountId(accountAuthorizationSummary.getID());
+            processToken.setAccountId(accountAuthorizationSummary.getId());
             AccountAuthorizationTokenDefinition accountAuthorizationToken = accountAuthorizationSummary.getToken();
             processToken.setPrivileges(accountAuthorizationToken.getPrivileges());
             Map<Long, Integer> processTokenLimits = processToken.getLimits();

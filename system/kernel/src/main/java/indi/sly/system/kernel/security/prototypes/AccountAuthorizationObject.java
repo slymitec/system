@@ -74,7 +74,7 @@ public class AccountAuthorizationObject extends ACacheableObject<AccountAuthoriz
         AccountTokenObject accountToken = account.getToken();
 
         AccountAuthorizationSummaryDefinition accountAuthorization = new AccountAuthorizationSummaryDefinition();
-        accountAuthorization.setID(account.getId());
+        accountAuthorization.setId(account.getId());
         accountAuthorization.setName(account.getName());
         accountAuthorization.setPassword(account.getPassword());
 

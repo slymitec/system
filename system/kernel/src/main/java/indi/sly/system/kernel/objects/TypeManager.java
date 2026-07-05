@@ -60,31 +60,31 @@ public class TypeManager extends AManager {
         }
     }
 
-    public TypeObject get(UUID typeID) {
-        if (ValueUtil.isAnyNullOrEmpty(typeID)) {
+    public TypeObject get(UUID typeId) {
+        if (ValueUtil.isAnyNullOrEmpty(typeId)) {
             throw new ConditionParametersException();
         }
 
-        return this.coreManager.getObjectCollection().getById(SpaceType.KERNEL, typeID);
+        return this.coreManager.getObjectCollection().getById(SpaceType.KERNEL, typeId);
     }
 
-    public TypeObject create(UUID typeID, String typeName, long attribute, Set<UUID> childTypes,
+    public TypeObject create(UUID typeId, String typeName, long attribute, Set<UUID> childTypes,
                                           AInfoTypeInitializer typeInitializer) {
-        if (ObjectUtil.isAnyNull(typeID, childTypes, typeInitializer) || StringUtil.isNameIllegal(typeName)) {
+        if (ObjectUtil.isAnyNull(typeId, childTypes, typeInitializer) || StringUtil.isNameIllegal(typeName)) {
             throw new ConditionParametersException();
         }
 
-        return this.factory.buildType(typeID, typeName, attribute, childTypes, typeInitializer);
+        return this.factory.buildType(typeId, typeName, attribute, childTypes, typeInitializer);
     }
 
-    public void delete(UUID typeID) {
-        if (ObjectUtil.isAnyNull(typeID)) {
+    public void delete(UUID typeId) {
+        if (ObjectUtil.isAnyNull(typeId)) {
             throw new ConditionParametersException();
         }
 
-        TypeObject type = this.get(typeID);
+        TypeObject type = this.get(typeId);
 
-        this.factory.deleteType(typeID, type);
+        this.factory.deleteType(typeId, type);
     }
 
     public Set<UUID> list() {

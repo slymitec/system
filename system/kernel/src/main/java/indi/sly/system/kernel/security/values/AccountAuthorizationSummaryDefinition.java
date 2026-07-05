@@ -14,12 +14,12 @@ public class AccountAuthorizationSummaryDefinition {
     private final AccountAuthorizationTokenDefinition token;
     private final Set<UUID> sessions;
 
-    public UUID getID() {
+    public UUID getId() {
         return this.id;
     }
 
-    public void setID(UUID ID) {
-        this.id = ID;
+    public void setId(UUID Id) {
+        this.id = Id;
     }
 
     public String getName() {

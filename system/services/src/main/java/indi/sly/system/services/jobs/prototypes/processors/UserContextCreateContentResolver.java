@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.mediators.UserContextProcessorMediator;
-import indi.sly.system.services.jobs.values.UserContentRequestDefinition;
+import indi.sly.system.services.jobs.values.UserContentRequestRecord;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -16,17 +16,13 @@ import org.springframework.context.annotation.Scope;
 public class UserContextCreateContentResolver extends AResolver implements IUserContextCreateResolver {
     public UserContextCreateContentResolver() {
         this.create = (userContext, clientRequest) -> {
-            UserContentRequestDefinition userContentRequestRaw = clientRequest.getContent();
+            UserContentRequestRecord userContentRequest = clientRequest.content();
 
-            if (ObjectUtil.isAnyNull(userContentRequestRaw.getId()) || ValueUtil.isAnyNullOrEmpty(userContentRequestRaw.getTask(), userContentRequestRaw.getMethod())) {
+            if (ObjectUtil.isAnyNull(userContentRequest) || ValueUtil.isAnyNullOrEmpty(userContentRequest.id(), userContentRequest.task(), userContentRequest.method())) {
                 throw new ConditionParametersException();
             }
 
-            UserContentRequestDefinition userContentRequest = userContext.getContent().getRequest();
-            userContentRequest.setId(userContentRequestRaw.getId());
-            userContentRequest.setTask(userContentRequestRaw.getTask());
-            userContentRequest.setMethod(userContentRequestRaw.getMethod());
-            userContentRequest.getParameters().addAll(userContentRequestRaw.getParameters());
+            userContext.getContent().setRequest(userContentRequest);
 
             return userContext;
         };

@@ -3,19 +3,22 @@ package indi.sly.system.services.jobs.values;
 import indi.sly.system.common.values.ADefinition;
 
 public class UserContentDefinition extends ADefinition {
-    public UserContentDefinition() {
-        this.request = new UserContentRequestDefinition();
-        this.response = new UserContentResponseDefinition();
-    }
+    private UserContentRequestRecord request;
+    private UserContentResponseRecord response;
 
-    private final UserContentRequestDefinition request;
-    private final UserContentResponseDefinition response;
-
-    public UserContentRequestDefinition getRequest() {
+    public UserContentRequestRecord getRequest() {
         return request;
     }
 
-    public UserContentResponseDefinition getResponse() {
+    public void setRequest(UserContentRequestRecord request) {
+        this.request = request;
+    }
+
+    public UserContentResponseRecord getResponse() {
         return response;
+    }
+
+    public void setResponse(UserContentResponseRecord response) {
+        this.response = response;
     }
 }

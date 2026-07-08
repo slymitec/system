@@ -1,13 +1,14 @@
 package indi.sly.system.services.jobs.prototypes.processors;
 
+import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
-import indi.sly.system.kernel.processes.values.ProcessStatusType;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.mediators.UserContextProcessorMediator;
-import indi.sly.system.services.jobs.values.ClientRequestProcessIdDefinition;
+import indi.sly.system.services.jobs.values.ClientRequestProcessIdRecord;
 import indi.sly.system.services.jobs.values.ClientRequestType;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -20,15 +21,19 @@ import java.util.UUID;
 public class UserContextCreateCheckClientProcessIdResolver extends AResolver implements IUserContextCreateResolver {
     public UserContextCreateCheckClientProcessIdResolver() {
         this.create = (userContext, userContextRequest) -> {
-            ClientRequestProcessIdDefinition userContextRequestProcessId = userContextRequest.getProcessId();
+            ClientRequestProcessIdRecord userContextRequestProcessId = userContextRequest.processId();
 
-            UUID processId = userContextRequestProcessId.getId();
+            if (ObjectUtil.isNull(userContextRequestProcessId)) {
+                throw new ConditionRefuseException();
+            }
+
+            UUID processId = userContextRequestProcessId.id();
 
             if (ValueUtil.isAnyNullOrEmpty(processId)) {
                 throw new ConditionRefuseException();
             }
 
-            long clientType = userContextRequestProcessId.getType();
+            long clientType = userContextRequestProcessId.type();
             if (LogicalUtil.isAnyEqual(clientType, ClientRequestType.CLIENT)) {
                 // Check
             } else if (LogicalUtil.isAnyEqual(clientType, ClientRequestType.APPLICATION)) {

@@ -1,7 +1,6 @@
 package indi.sly.system.services.jobs.prototypes;
 
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.ADefinitionObject;
 import indi.sly.system.kernel.processes.ThreadManager;
@@ -46,7 +45,7 @@ public class UserContextObject extends ADefinitionObject<UserContextDefinition> 
         return userContent;
     }
 
-    public ClientResponseDefinition getResponse() {
+    public ClientResponseRecord getResponse() {
         ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         if (threadManager.size() == 0) {
             throw new StatusRelationshipErrorException();
@@ -56,15 +55,15 @@ public class UserContextObject extends ADefinitionObject<UserContextDefinition> 
             throw new StatusRelationshipErrorException();
         }
 
-        UserContentResponseDefinition userContentResponse = this.definition.getContent().getResponse();
-        ClientResponseExceptionDefinition clientResponseException = this.definition.getException();
+        UserContentResponseRecord userContentResponse = this.definition.getContent().getResponse();
+        ClientResponseExceptionRecord clientResponseException = this.definition.getException();
 
-        ClientResponseDefinition clientResponse = new ClientResponseDefinition();
+        ClientResponseRecord clientResponse;
 
-        if (ValueUtil.isAnyNullOrEmpty(clientResponseException.getId())) {
-            clientResponse.setContent(userContentResponse);
+        if (ValueUtil.isAnyNullOrEmpty(clientResponseException.id())) {
+            clientResponse = new ClientResponseRecord(userContentResponse);
         } else {
-            clientResponse.setException(clientResponseException);
+            clientResponse = new ClientResponseRecord(clientResponseException);
         }
 
         return clientResponse;

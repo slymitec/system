@@ -22,8 +22,8 @@ import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.services.ServiceManager;
 import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
 import indi.sly.system.services.jobs.JobService;
-import indi.sly.system.services.jobs.values.ClientResponseDefinition;
-import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
+import indi.sly.system.services.jobs.values.ClientResponseRecord;
+import indi.sly.system.services.jobs.values.ClientResponseExceptionRecord;
 import indi.sly.system.services.jobs.values.ClientResponseExceptionTraceRecord;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,11 +34,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class StartUpController extends AController {
     @RequestMapping(value = {"/StartUp.action"}, method = {RequestMethod.GET})
     @Transactional
-    public ClientResponseDefinition startup(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    public ClientResponseRecord startup(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init();
 
         if (ObjectUtil.isAnyNull(this.coreManager)) {
@@ -94,21 +97,18 @@ public class StartUpController extends AController {
 
             this.coreManager.setUserSpace(null);
 
-            return new ClientResponseDefinition();
+            return new ClientResponseRecord(null, null);
         } else {
             KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
-            ClientResponseDefinition clientResponse = new ClientResponseDefinition();
 
-            ClientResponseExceptionDefinition clientResponseException = new ClientResponseExceptionDefinition();
-
-            clientResponseException.setId(UUIDUtil.getEmpty());
-            clientResponseException.setClazz(ClassUtil.getSimpleName(StatusAlreadyFinishedException.class));
+            List<ClientResponseExceptionTraceRecord> clientResponseExceptionTraces = new ArrayList<>();
             ClientResponseExceptionTraceRecord clientResponseExceptionTrace = new ClientResponseExceptionTraceRecord(ClassUtil.getSimpleName(StartUpController.class), "startup");
-            clientResponseException.getTrace().add(clientResponseExceptionTrace);
+            clientResponseExceptionTraces.add(clientResponseExceptionTrace);
 
-            clientResponse.setException(clientResponseException);
+            ClientResponseExceptionRecord clientResponseException = new ClientResponseExceptionRecord(UUIDUtil.getEmpty(), ClassUtil.getSimpleName(StatusAlreadyFinishedException.class), clientResponseExceptionTraces);
+            ClientResponseRecord clientResponse = new ClientResponseRecord(clientResponseException);
 
             return clientResponse;
         }

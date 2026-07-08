@@ -13,9 +13,9 @@ import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensio
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.prototypes.UserContentObject;
 import indi.sly.system.services.jobs.prototypes.UserContextObject;
-import indi.sly.system.services.jobs.values.ClientResponseDefinition;
-import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
-import indi.sly.system.services.jobs.values.ClientRequestDefinition;
+import indi.sly.system.services.jobs.values.ClientResponseRecord;
+import indi.sly.system.services.jobs.values.ClientResponseExceptionRecord;
+import indi.sly.system.services.jobs.values.ClientRequestRecord;
 import indi.sly.system.services.jobs.values.ClientResponseExceptionTraceRecord;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +23,8 @@ import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @ServerEndpoint(value = "/InterActive.action")
@@ -71,8 +73,8 @@ public class InterActiveController extends AController {
                 throw new StatusUnreadableException();
             }
 
-            ClientRequestDefinition userContextRequest =
-                    ObjectUtil.transferFromStringOrDefaultProvider(ClientRequestDefinition.class,
+            ClientRequestRecord userContextRequest =
+                    ObjectUtil.transferFromStringOrDefaultProvider(ClientRequestRecord.class,
                             message, () -> {
                                 throw new StatusUnreadableException();
                             });
@@ -85,26 +87,21 @@ public class InterActiveController extends AController {
 
             userContent.run();
 
-            ClientResponseDefinition clientResponse = userContext.getResponse();
+            ClientResponseRecord clientResponse = userContext.getResponse();
 
             jobService.finishUserContext(userContext);
 
             session.getAsyncRemote().sendText(ObjectUtil.transferToString(clientResponse));
         } catch (RuntimeException exception) {
-            ClientResponseDefinition clientResponse = new ClientResponseDefinition();
-
-            ClientResponseExceptionDefinition clientResponseException = new ClientResponseExceptionDefinition();
-
-            clientResponseException.setId(UUIDUtil.getEmpty());
-
-            clientResponseException.setClazz(ClassUtil.getSimpleName(exception.getClass()));
+            List<ClientResponseExceptionTraceRecord> clientResponseExceptionTraces = new ArrayList<>();
             for (StackTraceElement stackTraceElement : exception.getStackTrace()) {
                 ClientResponseExceptionTraceRecord clientResponseExceptionTrace = new ClientResponseExceptionTraceRecord(ClassUtil.getSimpleName(stackTraceElement.getClass()), stackTraceElement.getMethodName());
 
-                clientResponseException.getTrace().add(clientResponseExceptionTrace);
+                clientResponseExceptionTraces.add(clientResponseExceptionTrace);
             }
 
-            clientResponse.setException(clientResponseException);
+            ClientResponseExceptionRecord clientResponseException = new ClientResponseExceptionRecord(UUIDUtil.getEmpty(), ClassUtil.getSimpleName(exception.getClass()), clientResponseExceptionTraces);
+            ClientResponseRecord clientResponse = new ClientResponseRecord(clientResponseException);
 
             session.getAsyncRemote().sendText(ObjectUtil.transferToString(clientResponse));
         }

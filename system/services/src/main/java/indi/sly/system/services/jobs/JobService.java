@@ -27,7 +27,7 @@ import indi.sly.system.services.jobs.instances.prototypes.processors.services.in
 import indi.sly.system.services.jobs.prototypes.*;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
-import indi.sly.system.services.jobs.values.ClientRequestDefinition;
+import indi.sly.system.services.jobs.values.ClientRequestRecord;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -140,7 +140,7 @@ public class JobService extends AService {
         return this.factory.buildTask(task);
     }
 
-    public UserContextObject createUserContext(ClientRequestDefinition clientRequest) {
+    public UserContextObject createUserContext(ClientRequestRecord clientRequest) {
         if (ObjectUtil.isAnyNull(clientRequest)) {
             throw new ConditionParametersException();
         }

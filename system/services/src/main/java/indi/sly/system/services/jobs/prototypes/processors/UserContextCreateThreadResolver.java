@@ -7,7 +7,7 @@ import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtens
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.mediators.UserContextProcessorMediator;
-import indi.sly.system.services.jobs.values.ClientRequestProcessIdDefinition;
+import indi.sly.system.services.jobs.values.ClientRequestProcessIdRecord;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -20,9 +20,9 @@ import java.util.UUID;
 public class UserContextCreateThreadResolver extends AResolver implements IUserContextCreateResolver {
     public UserContextCreateThreadResolver() {
         this.create = (userContext, userContextRequest) -> {
-            ClientRequestProcessIdDefinition userContextRequestProcessId = userContextRequest.getProcessId();
+            ClientRequestProcessIdRecord userContextRequestProcessId = userContextRequest.processId();
 
-            UUID processId = userContextRequestProcessId.getId();
+            UUID processId = userContextRequestProcessId.id();
 
             ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.coreManager.getKernelSpace().getServiceSpace();
             TransactionalActionComponent transactionalAction = serviceSpace.getTransactionalAction();

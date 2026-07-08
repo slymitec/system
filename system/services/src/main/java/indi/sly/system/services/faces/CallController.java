@@ -12,14 +12,17 @@ import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensio
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.prototypes.UserContentObject;
 import indi.sly.system.services.jobs.prototypes.UserContextObject;
-import indi.sly.system.services.jobs.values.ClientResponseDefinition;
-import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
-import indi.sly.system.services.jobs.values.ClientRequestDefinition;
+import indi.sly.system.services.jobs.values.ClientResponseRecord;
+import indi.sly.system.services.jobs.values.ClientResponseExceptionRecord;
+import indi.sly.system.services.jobs.values.ClientRequestRecord;
 import indi.sly.system.services.jobs.values.ClientResponseExceptionTraceRecord;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class CallController extends AController {
@@ -45,10 +48,10 @@ public class CallController extends AController {
     }
 
     @RequestMapping(value = {"/Call.action"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String onMessage(@RequestBody ClientRequestDefinition userContextRequest) {
+    public String onMessage(@RequestBody ClientRequestRecord userContextRequest) {
         this.initCallController();
 
-        ClientResponseDefinition clientResponse;
+        ClientResponseRecord clientResponse;
         try {
             JobService jobService = this.coreManager.getService(JobService.class);
 
@@ -60,17 +63,15 @@ public class CallController extends AController {
             clientResponse = userContext.getResponse();
             jobService.finishUserContext(userContext);
         } catch (RuntimeException exception) {
-            clientResponse = new ClientResponseDefinition();
-            ClientResponseExceptionDefinition clientResponseException = new ClientResponseExceptionDefinition();
-
-            clientResponseException.setId(UUIDUtil.getEmpty());
-            clientResponseException.setClazz(ClassUtil.getSimpleName(exception.getClass()));
+            List<ClientResponseExceptionTraceRecord> ClientResponseExceptionTraceRecords = new ArrayList<>();
             for (StackTraceElement stackTraceElement : exception.getStackTrace()) {
                 ClientResponseExceptionTraceRecord clientResponseExceptionTrace = new ClientResponseExceptionTraceRecord(ClassUtil.getSimpleName(stackTraceElement.getClass()), stackTraceElement.getMethodName());
 
-                clientResponseException.getTrace().add(clientResponseExceptionTrace);
+                ClientResponseExceptionTraceRecords.add(clientResponseExceptionTrace);
             }
-            clientResponse.setException(clientResponseException);
+
+            ClientResponseExceptionRecord clientResponseException = new ClientResponseExceptionRecord(UUIDUtil.getEmpty(), ClassUtil.getSimpleName(exception.getClass()), ClientResponseExceptionTraceRecords);
+            clientResponse = new ClientResponseRecord(clientResponseException);
 
             return ObjectUtil.transferToString(clientResponse);
         } finally {

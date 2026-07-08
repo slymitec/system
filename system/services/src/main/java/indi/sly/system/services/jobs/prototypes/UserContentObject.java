@@ -14,6 +14,9 @@ import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserContentObject extends ADefinitionObject<UserContextDefinition> {
@@ -27,7 +30,7 @@ public class UserContentObject extends ADefinitionObject<UserContextDefinition> 
             throw new StatusRelationshipErrorException();
         }
 
-        return this.definition.getContent().getRequest().getTask();
+        return this.definition.getContent().getRequest().task();
     }
 
     public String getMethod() {
@@ -40,7 +43,7 @@ public class UserContentObject extends ADefinitionObject<UserContextDefinition> 
             throw new StatusRelationshipErrorException();
         }
 
-        return this.definition.getContent().getRequest().getMethod();
+        return this.definition.getContent().getRequest().method();
     }
 
     public void run() {
@@ -53,44 +56,45 @@ public class UserContentObject extends ADefinitionObject<UserContextDefinition> 
             throw new StatusRelationshipErrorException();
         }
 
-        UserContentRequestDefinition userContentRequest = this.definition.getContent().getRequest();
-        UserContentResponseDefinition userContentResponse = this.definition.getContent().getResponse();
-
-        userContentResponse.setId(userContentRequest.getId());
+        UserContentRequestRecord userContentRequest = this.definition.getContent().getRequest();
 
         JobService jobService = this.coreManager.getService(JobService.class);
-        TaskObject task = jobService.getTask(userContentRequest.getTask());
+        TaskObject task = jobService.getTask(userContentRequest.task());
 
         task.start();
 
         TaskContentObject taskContent = task.getContent();
 
-        taskContent.setParameter(userContentRequest.getParameters());
+        taskContent.setParameter(userContentRequest.parameters());
 
-        task.run(userContentRequest.getMethod());
+        task.run(userContentRequest.method());
 
         if (ObjectUtil.isAnyNull(taskContent.getException())) {
             Object result = taskContent.getResult();
 
-            userContentResponse.setValue(ObjectUtil.transferToString(result));
-
+            String clazz;
             if (ObjectUtil.allNotNull(result)) {
-                userContentResponse.setClazz(ClassUtil.getSimpleName(result.getClass()));
+                clazz = ClassUtil.getSimpleName(result.getClass());
             } else {
-                userContentResponse.setClazz(ClassUtil.getSimpleName(Void.class));
+                clazz = ClassUtil.getSimpleName(Void.class);
             }
+
+            UserContentResponseRecord userContentResponse = new UserContentResponseRecord(userContentRequest.id(), ObjectUtil.transferToString(result), clazz);
+
+            this.definition.getContent().setResponse(userContentResponse);
         } else {
             ASystemException systemException = taskContent.getException();
 
-            ClientResponseExceptionDefinition clientResponseException = this.definition.getException();
-
-            clientResponseException.setId(userContentRequest.getId());
-            clientResponseException.setClazz(ClassUtil.getSimpleName(systemException.getClass()));
+            List<ClientResponseExceptionTraceRecord> clientResponseExceptionTraces = new ArrayList<>();
             for (StackTraceElement stackTraceElement : systemException.getStackTrace()) {
                 ClientResponseExceptionTraceRecord clientResponseExceptionTrace = new ClientResponseExceptionTraceRecord(ClassUtil.getSimpleName(stackTraceElement.getClass()), stackTraceElement.getMethodName());
 
-                clientResponseException.getTrace().add(clientResponseExceptionTrace);
+                clientResponseExceptionTraces.add(clientResponseExceptionTrace);
             }
+
+            ClientResponseExceptionRecord clientResponseException = new ClientResponseExceptionRecord(userContentRequest.id(), ClassUtil.getSimpleName(systemException.getClass()), clientResponseExceptionTraces);
+
+            this.definition.setException(clientResponseException);
         }
 
         task.finish();

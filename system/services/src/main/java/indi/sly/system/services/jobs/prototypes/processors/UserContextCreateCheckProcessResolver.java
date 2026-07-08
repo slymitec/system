@@ -13,7 +13,7 @@ import indi.sly.system.kernel.services.instances.values.ServiceModeType;
 import indi.sly.system.kernel.services.values.ServiceStatusEntity;
 import indi.sly.system.services.jobs.lang.UserContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.mediators.UserContextProcessorMediator;
-import indi.sly.system.services.jobs.values.ClientRequestProcessIdDefinition;
+import indi.sly.system.services.jobs.values.ClientRequestProcessIdRecord;
 import indi.sly.system.services.jobs.values.ClientRequestType;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Scope;
 public class UserContextCreateCheckProcessResolver extends AResolver implements IUserContextCreateResolver {
     public UserContextCreateCheckProcessResolver() {
         this.create = (userContext, userContextRequest) -> {
-            ClientRequestProcessIdDefinition userContextRequestProcessId = userContextRequest.getProcessId();
+            ClientRequestProcessIdRecord userContextRequestProcessId = userContextRequest.processId();
 
             ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
@@ -37,7 +37,7 @@ public class UserContextCreateCheckProcessResolver extends AResolver implements 
                 ServiceStatusEntity serviceStatus = serviceRepository.get(processContext.getApplication().id());
                 long mode = serviceStatus.getMode();
 
-                if (LogicalUtil.isAnyEqual(mode, ServiceModeType.ONLY_APPLICATION) && LogicalUtil.allNotEqual(userContextRequestProcessId.getType(), ClientRequestType.APPLICATION)) {
+                if (LogicalUtil.isAnyEqual(mode, ServiceModeType.ONLY_APPLICATION) && LogicalUtil.allNotEqual(userContextRequestProcessId.type(), ClientRequestType.APPLICATION)) {
                     throw new ConditionRefuseException();
                 }
             }

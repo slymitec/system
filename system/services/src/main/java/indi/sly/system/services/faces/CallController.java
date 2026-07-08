@@ -4,11 +4,11 @@ import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
-import indi.sly.system.kernel.core.enviroment.values.KernelSpace;
+import indi.sly.system.kernel.core.enviroment.configutations.KernelConfiguration;
+import indi.sly.system.kernel.core.enviroment.containers.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.enviroment.values.UserSpace;
-import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
+import indi.sly.system.kernel.core.enviroment.containers.UserSpace;
+import indi.sly.system.services.core.environment.values.ServiceUserExtensionSpaceDefinition;
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.prototypes.UserContentObject;
 import indi.sly.system.services.jobs.prototypes.UserContextObject;
@@ -36,7 +36,7 @@ public class CallController extends AController {
         }
 
         UserSpace userSpace = SpringHelper.getInstance(UserSpace.class);
-        userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
+        userSpace.setServiceSpace(new ServiceUserExtensionSpaceDefinition());
 
         this.coreManager.setUserSpace(userSpace);
 

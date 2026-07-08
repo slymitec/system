@@ -3,7 +3,7 @@ package indi.sly.system.kernel.files;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
+import indi.sly.system.kernel.core.enviroment.configutations.KernelConfiguration;
 import indi.sly.system.kernel.files.instances.prototypes.processors.FileSystemFileTypeInitializer;
 import indi.sly.system.kernel.files.instances.prototypes.processors.FileSystemFolderTypeInitializer;
 import indi.sly.system.kernel.objects.TypeManager;

@@ -7,8 +7,8 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelSpace;
-import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
+import indi.sly.system.kernel.core.enviroment.containers.KernelSpace;
+import indi.sly.system.services.core.environment.values.ServiceKernelExtensionSpaceDefinition;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.instances.prototypes.processors.*;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.CoreManagerTaskInitializer;
@@ -46,7 +46,7 @@ public class JobService extends AService {
         } else if (startup == StartupType.STEP_INIT_SERVICE) {
             KernelSpace kernelSpace = this.coreManager.getKernelSpace();
 
-            ServiceKernelSpaceExtensionDefinition serviceSpace = new ServiceKernelSpaceExtensionDefinition();
+            ServiceKernelExtensionSpaceDefinition serviceSpace = new ServiceKernelExtensionSpaceDefinition();
             TransactionalActionComponent transactionalAction = this.coreManager.create(TransactionalActionComponent.class);
             serviceSpace.setTransactionalAction(transactionalAction);
             kernelSpace.setServiceSpace(serviceSpace);
@@ -123,9 +123,9 @@ public class JobService extends AService {
             throw new ConditionParametersException();
         }
 
-        ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.coreManager.getKernelSpace().getServiceSpace();
+        ServiceKernelExtensionSpaceDefinition serviceSpace = (ServiceKernelExtensionSpaceDefinition) this.coreManager.getKernelSpace().getServiceSpace();
 
-        UUID taskID = serviceSpace.getNamedTaskIDs().getOrDefault(name, null);
+        UUID taskID = serviceSpace.getNamedTaskIds().getOrDefault(name, null);
 
         if (ValueUtil.isAnyNullOrEmpty(taskID)) {
             throw new StatusNotExistedException();

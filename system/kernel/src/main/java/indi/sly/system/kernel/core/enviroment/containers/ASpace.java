@@ -1,8 +1,7 @@
-package indi.sly.system.kernel.core.enviroment.values;
+package indi.sly.system.kernel.core.enviroment.containers;
 
-import indi.sly.system.common.AContainer;
+import indi.sly.system.common.containers.AContainer;
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AObject;
 

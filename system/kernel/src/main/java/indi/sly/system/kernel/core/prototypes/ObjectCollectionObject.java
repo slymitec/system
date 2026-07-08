@@ -3,7 +3,7 @@ package indi.sly.system.kernel.core.prototypes;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.enviroment.values.ASpace;
+import indi.sly.system.kernel.core.enviroment.containers.ASpace;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

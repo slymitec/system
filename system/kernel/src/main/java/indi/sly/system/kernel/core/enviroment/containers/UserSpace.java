@@ -1,4 +1,4 @@
-package indi.sly.system.kernel.core.enviroment.values;
+package indi.sly.system.kernel.core.enviroment.containers;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -16,7 +16,7 @@ public class UserSpace extends ASpace {
     }
 
     private final ThreadLocal<Stack<ThreadObject>> threads;
-    private AUserSpaceExtensionDefinition<?> serviceSpace;
+    private AUserExtensionSpaceDefinition serviceSpace;
 
     public Stack<ThreadObject> getThreads() {
         return this.threads.get();
@@ -30,11 +30,11 @@ public class UserSpace extends ASpace {
         this.threads.set(threads);
     }
 
-    public AUserSpaceExtensionDefinition<?> getServiceSpace() {
+    public AUserExtensionSpaceDefinition getServiceSpace() {
         return this.serviceSpace;
     }
 
-    public void setServiceSpace(AUserSpaceExtensionDefinition<?> serviceSpace) {
+    public void setServiceSpace(AUserExtensionSpaceDefinition serviceSpace) {
         this.serviceSpace = serviceSpace;
     }
 }

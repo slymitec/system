@@ -1,4 +1,6 @@
-package indi.sly.system.common;
+package indi.sly.system.common.containers;
+
+import indi.sly.system.common.ABase;
 
 public abstract class AContainer extends ABase {
     public AContainer(){

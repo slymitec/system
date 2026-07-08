@@ -1,8 +1,8 @@
 package indi.sly.system.kernel.core.date.prototypes;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
-import indi.sly.system.kernel.core.enviroment.values.KernelSpace;
+import indi.sly.system.kernel.core.enviroment.configutations.KernelConfiguration;
+import indi.sly.system.kernel.core.enviroment.containers.KernelSpace;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.core.values.NoneCacheEntity;
 import indi.sly.system.kernel.memory.MemoryManager;

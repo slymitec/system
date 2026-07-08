@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.ASystemException;
 import indi.sly.system.common.lang.Provider;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
-import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
+import indi.sly.system.services.core.environment.values.ServiceKernelExtensionSpaceDefinition;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
@@ -52,7 +52,7 @@ public class TaskInitializerResolver extends AResolver implements ITaskResolver 
                     return null;
                 };
 
-                ServiceKernelSpaceExtensionDefinition serviceSpace = (ServiceKernelSpaceExtensionDefinition) this.coreManager.getKernelSpace().getServiceSpace();
+                ServiceKernelExtensionSpaceDefinition serviceSpace = (ServiceKernelExtensionSpaceDefinition) this.coreManager.getKernelSpace().getServiceSpace();
                 TransactionalActionComponent transactionalAction = serviceSpace.getTransactionalAction();
 
                 if (LogicalUtil.isAnyEqual(initializerRunTransaction, TransactionType.INDEPENDENCE)) {

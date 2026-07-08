@@ -8,10 +8,10 @@ import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.CoreManager;
 import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
-import indi.sly.system.kernel.core.enviroment.values.KernelSpace;
+import indi.sly.system.kernel.core.enviroment.configutations.KernelConfiguration;
+import indi.sly.system.kernel.core.enviroment.containers.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.enviroment.values.UserSpace;
+import indi.sly.system.kernel.core.enviroment.containers.UserSpace;
 import indi.sly.system.kernel.files.FileSystemManager;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -20,7 +20,7 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.services.ServiceManager;
-import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
+import indi.sly.system.services.core.environment.values.ServiceUserExtensionSpaceDefinition;
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.values.ClientResponseRecord;
 import indi.sly.system.services.jobs.values.ClientResponseExceptionRecord;
@@ -54,7 +54,7 @@ public class StartUpController extends AController {
             KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
             UserSpace userSpace = SpringHelper.getInstance(UserSpace.class);
-            userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
+            userSpace.setServiceSpace(new ServiceUserExtensionSpaceDefinition());
             this.coreManager.setUserSpace(userSpace);
             this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 

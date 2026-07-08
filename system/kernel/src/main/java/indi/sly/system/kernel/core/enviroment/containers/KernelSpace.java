@@ -1,6 +1,7 @@
-package indi.sly.system.kernel.core.enviroment.values;
+package indi.sly.system.kernel.core.enviroment.containers;
 
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.kernel.core.enviroment.configutations.KernelConfiguration;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
@@ -20,7 +21,7 @@ public class KernelSpace extends ASpace {
     private final KernelConfiguration configuration;
     private final Set<UUID> infoTypeIds;
     private final ThreadLocal<UserSpace> userSpace;
-    private AKernelSpaceExtensionDefinition serviceSpace;
+    private AKernelExtensionSpaceDefinition serviceSpace;
 
     public KernelConfiguration getConfiguration() {
         return configuration;
@@ -42,11 +43,11 @@ public class KernelSpace extends ASpace {
         }
     }
 
-    public AKernelSpaceExtensionDefinition getServiceSpace() {
+    public AKernelExtensionSpaceDefinition getServiceSpace() {
         return this.serviceSpace;
     }
 
-    public void setServiceSpace(AKernelSpaceExtensionDefinition serviceSpace) {
+    public void setServiceSpace(AKernelExtensionSpaceDefinition serviceSpace) {
         this.serviceSpace = serviceSpace;
     }
 }

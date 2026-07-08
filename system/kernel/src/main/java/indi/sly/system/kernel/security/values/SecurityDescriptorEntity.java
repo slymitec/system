@@ -17,8 +17,8 @@ public class SecurityDescriptorEntity extends APersistentEntity {
     private boolean hasChild;
     private boolean canChangeOwner;
     private final Set<UUID> owners;
-    private final Set<AccessControlDefinition> permissions;
-    private final Set<AccessControlDefinition> audits;
+    private final Set<AccessControlRecord> permissions;
+    private final Set<AccessControlRecord> audits;
 
     public boolean isHasChild() {
         return this.hasChild;
@@ -48,11 +48,11 @@ public class SecurityDescriptorEntity extends APersistentEntity {
         return this.owners;
     }
 
-    public Set<AccessControlDefinition> getPermissions() {
+    public Set<AccessControlRecord> getPermissions() {
         return this.permissions;
     }
 
-    public Set<AccessControlDefinition> getAudits() {
+    public Set<AccessControlRecord> getAudits() {
         return this.audits;
     }
 

@@ -205,11 +205,11 @@ public class UserManager extends AManager {
             InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierRecord(account.getName()));
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
-            Set<AccessControlDefinition> permissions = new HashSet<>();
-            AccessControlDefinition permission = new AccessControlDefinition();
-            permission.setUserId(new UserIdDefinition(account.getId(), UserType.ACCOUNT));
-            permission.setScope(AccessControlScopeType.ALL);
-            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
+            Set<AccessControlRecord> permissions = new HashSet<>();
+            AccessControlRecord permission = new AccessControlRecord(
+                    new UserIdRecord(account.getId(), UserType.ACCOUNT),
+                    AccessControlScopeType.ALL,
+                    LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
             auditSecurityDescriptor.setInherit(false);
@@ -221,11 +221,11 @@ public class UserManager extends AManager {
             InfoObject childInfo = parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierRecord(account.getName()));
 
             SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
-            Set<AccessControlDefinition> permissions = new HashSet<>();
-            AccessControlDefinition permission = new AccessControlDefinition();
-            permission.setUserId(new UserIdDefinition(account.getId(), UserType.ACCOUNT));
-            permission.setScope(AccessControlScopeType.ALL);
-            permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
+            Set<AccessControlRecord> permissions = new HashSet<>();
+            AccessControlRecord permission = new AccessControlRecord(
+                    new UserIdRecord(account.getId(), UserType.ACCOUNT),
+                    AccessControlScopeType.ALL,
+                    LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
             permissions.add(permission);
             auditSecurityDescriptor.setPermissions(permissions);
             auditSecurityDescriptor.setInherit(false);

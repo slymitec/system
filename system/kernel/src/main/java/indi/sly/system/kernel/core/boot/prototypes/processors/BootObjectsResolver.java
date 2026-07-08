@@ -58,20 +58,11 @@ public class BootObjectsResolver extends ABootResolver {
                     securityDescriptor.getOwners().add(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID);
                     securityDescriptor.setInherit(false);
                     securityDescriptor.setHasChild(true);
-                    AccessControlDefinition permission = new AccessControlDefinition();
-                    permission.setUserId(new UserIdDefinition(kernelConfiguration.SECURITY_GROUP_SYSTEMS_ID, UserType.GROUP));
-                    permission.setScope(AccessControlScopeType.ALL);
-                    permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+                    AccessControlRecord permission = new AccessControlRecord(new UserIdRecord(kernelConfiguration.SECURITY_GROUP_SYSTEMS_ID, UserType.GROUP), AccessControlScopeType.ALL, PermissionType.FULLCONTROL_ALLOW);
                     securityDescriptor.getPermissions().add(permission);
-                    permission = new AccessControlDefinition();
-                    permission.setUserId(new UserIdDefinition(kernelConfiguration.SECURITY_GROUP_ADMINISTRATORS_ID, UserType.GROUP));
-                    permission.setScope(AccessControlScopeType.ALL);
-                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
+                    permission = new AccessControlRecord(new UserIdRecord(kernelConfiguration.SECURITY_GROUP_ADMINISTRATORS_ID, UserType.GROUP), AccessControlScopeType.ALL, LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
                     securityDescriptor.getPermissions().add(permission);
-                    permission = new AccessControlDefinition();
-                    permission.setUserId(new UserIdDefinition(kernelConfiguration.SECURITY_GROUP_USERS_ID, UserType.GROUP));
-                    permission.setScope(AccessControlScopeType.ALL);
-                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.READPROPERTIES_ALLOW));
+                    permission = new AccessControlRecord(new UserIdRecord(kernelConfiguration.SECURITY_GROUP_USERS_ID, UserType.GROUP), AccessControlScopeType.ALL, LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.READPROPERTIES_ALLOW));
                     securityDescriptor.getPermissions().add(permission);
                     info.setSecurityDescriptor(securityDescriptor);
 
@@ -102,15 +93,13 @@ public class BootObjectsResolver extends ABootResolver {
                     InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierRecord(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME));
 
                     SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
-                    Set<AccessControlDefinition> permissions = new HashSet<>();
-                    AccessControlDefinition permission = new AccessControlDefinition();
-                    permission.setUserId(new UserIdDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID, UserType.ACCOUNT));
-                    permission.setScope(AccessControlScopeType.ALL);
-                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
+                    Set<AccessControlRecord> permissions = new HashSet<>();
+                    AccessControlRecord permission = new AccessControlRecord(
+                            new UserIdRecord(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID, UserType.ACCOUNT),
+                            AccessControlScopeType.ALL,
+                            LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
                     permissions.add(permission);
-                    permission.setUserId(new UserIdDefinition(kernelConfiguration.SECURITY_GROUP_USERS_ID, UserType.GROUP));
-                    permission.setScope(AccessControlScopeType.ALL);
-                    permission.setValue(PermissionType.DELETECHILD_ALLOW);
+                    permission = new AccessControlRecord(new UserIdRecord(kernelConfiguration.SECURITY_GROUP_USERS_ID, UserType.GROUP), AccessControlScopeType.ALL, PermissionType.DELETECHILD_ALLOW);
                     permissions.add(permission);
                     auditSecurityDescriptor.setPermissions(permissions);
                     auditSecurityDescriptor.setInherit(true);
@@ -122,11 +111,11 @@ public class BootObjectsResolver extends ABootResolver {
                     InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierRecord(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME));
 
                     SecurityDescriptorObject auditSecurityDescriptor = childInfo.getSecurityDescriptor();
-                    Set<AccessControlDefinition> permissions = new HashSet<>();
-                    AccessControlDefinition permission = new AccessControlDefinition();
-                    permission.setUserId(new UserIdDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID, UserType.ACCOUNT));
-                    permission.setScope(AccessControlScopeType.ALL);
-                    permission.setValue(LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
+                    Set<AccessControlRecord> permissions = new HashSet<>();
+                    AccessControlRecord permission = new AccessControlRecord(
+                            new UserIdRecord(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_ID, UserType.ACCOUNT),
+                            AccessControlScopeType.ALL,
+                            LogicalUtil.or(PermissionType.LISTCHILD_READDATA_ALLOW, PermissionType.TRAVERSE_EXECUTE_ALLOW, PermissionType.CREATECHILD_WRITEDATA_ALLOW, PermissionType.READPROPERTIES_ALLOW, PermissionType.WRITEPROPERTIES_ALLOW, PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, PermissionType.DELETECHILD_ALLOW));
                     permissions.add(permission);
                     auditSecurityDescriptor.setPermissions(permissions);
                     auditSecurityDescriptor.setInherit(false);

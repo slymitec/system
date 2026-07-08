@@ -15,8 +15,8 @@ public class SecurityDescriptorSummaryDefinition extends ADefinition {
     private boolean inherit;
     private boolean permission;
     private boolean audit;
-    private final Set<AccessControlDefinition> permissions;
-    private final Set<AccessControlDefinition> audits;
+    private final Set<AccessControlRecord> permissions;
+    private final Set<AccessControlRecord> audits;
 
     public PathRecord getPath() {
         return this.path;
@@ -50,11 +50,11 @@ public class SecurityDescriptorSummaryDefinition extends ADefinition {
         this.audit = audit;
     }
 
-    public Set<AccessControlDefinition> getPermissions() {
+    public Set<AccessControlRecord> getPermissions() {
         return this.permissions;
     }
 
-    public Set<AccessControlDefinition> getAudits() {
+    public Set<AccessControlRecord> getAudits() {
         return this.audits;
     }
 }

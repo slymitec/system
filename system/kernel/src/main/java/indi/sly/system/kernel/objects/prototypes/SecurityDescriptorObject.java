@@ -360,32 +360,32 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             type.getInitializer().unlockProcedure(info, LockType.READ);
         }
 
-        Set<AccessControlDefinition> effectivePermissions = new HashSet<>();
+        Set<AccessControlRecord> effectivePermissions = new HashSet<>();
         boolean securityDescriptorHasChild;
         for (int i = 0; i < securityDescriptors.size(); i++) {
-            for (AccessControlDefinition accessControl : securityDescriptors.get(i).getPermissions()) {
-                if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.THIS)) {
+            for (AccessControlRecord accessControl : securityDescriptors.get(i).getPermissions()) {
+                if (LogicalUtil.isAllExist(accessControl.scope(), AccessControlScopeType.THIS)) {
                     if (i == securityDescriptors.size() - 1) {
                         effectivePermissions.add(accessControl);
                     }
                 }
                 securityDescriptorHasChild = securityDescriptors.getLast().isHasChild();
-                if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.CHILD_HAS_CHILD)) {
+                if (LogicalUtil.isAllExist(accessControl.scope(), AccessControlScopeType.CHILD_HAS_CHILD)) {
                     if (i == securityDescriptors.size() - 2 && securityDescriptorHasChild) {
                         effectivePermissions.add(accessControl);
                     }
                 }
-                if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.CHILD_HAS_NOT_CHILD)) {
+                if (LogicalUtil.isAllExist(accessControl.scope(), AccessControlScopeType.CHILD_HAS_NOT_CHILD)) {
                     if (i == securityDescriptors.size() - 2 && !securityDescriptorHasChild) {
                         effectivePermissions.add(accessControl);
                     }
                 }
-                if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.HIERARCHICAL_HAS_CHILD)) {
+                if (LogicalUtil.isAllExist(accessControl.scope(), AccessControlScopeType.HIERARCHICAL_HAS_CHILD)) {
                     if (i < securityDescriptors.size() - 1 && securityDescriptorHasChild) {
                         effectivePermissions.add(accessControl);
                     }
                 }
-                if (LogicalUtil.isAllExist(accessControl.getScope(), AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD)) {
+                if (LogicalUtil.isAllExist(accessControl.scope(), AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD)) {
                     if (i < securityDescriptors.size() - 1 && !securityDescriptorHasChild) {
                         effectivePermissions.add(accessControl);
                     }
@@ -406,51 +406,51 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         boolean allow = false;
 
-        for (AccessControlDefinition pair : effectivePermissions) {
-            UserIdDefinition pairUserId = pair.getUserId();
-            if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.GROUP) && groupIds.contains(pairUserId.getId())) {
-                if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
+        for (AccessControlRecord pair : effectivePermissions) {
+            UserIdRecord pairUserId = pair.userId();
+            if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.GROUP) && groupIds.contains(pairUserId.id())) {
+                if (LogicalUtil.isAllExist(pair.value(), permission)) {
                     allow = true;
                 }
-                if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
+                if (LogicalUtil.isAnyExist(pair.value(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.ACCOUNT) && accountId.equals(pairUserId.getId())) {
-                if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.ACCOUNT) && accountId.equals(pairUserId.id())) {
+                if (LogicalUtil.isAllExist(pair.value(), permission)) {
                     allow = true;
                 }
-                if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
+                if (LogicalUtil.isAnyExist(pair.value(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.ROLE) && roles.contains(pairUserId.getId())) {
-                if (LogicalUtil.isAllExist(pair.getValue(), permission)
+            } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.ROLE) && roles.contains(pairUserId.id())) {
+                if (LogicalUtil.isAllExist(pair.value(), permission)
                         && (ObjectUtil.isAnyNull(permissionQueryFunc) || permissionQueryFunc.role())) {
                     allow = true;
                 }
-                if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
+                if (LogicalUtil.isAnyExist(pair.value(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.PROCESS) && process.getId().equals(pairUserId.getId())) {
-                if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.PROCESS) && process.getId().equals(pairUserId.id())) {
+                if (LogicalUtil.isAllExist(pair.value(), permission)) {
                     allow = true;
                 }
-                if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
+                if (LogicalUtil.isAnyExist(pair.value(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.PARENT_PROCESS)
-                    && !ValueUtil.isAnyNullOrEmpty(process.getParentId()) && process.getParentId().equals(pairUserId.getId())) {
-                if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.PARENT_PROCESS)
+                    && !ValueUtil.isAnyNullOrEmpty(process.getParentId()) && process.getParentId().equals(pairUserId.id())) {
+                if (LogicalUtil.isAllExist(pair.value(), permission)) {
                     allow = true;
                 }
-                if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
+                if (LogicalUtil.isAnyExist(pair.value(), permission << 1)) {
                     return true;
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.SESSION)
-                    && !ValueUtil.isAnyNullOrEmpty(processSession.getId()) && processSession.getId().equals(pairUserId.getId())) {
-                if (LogicalUtil.isAllExist(pair.getValue(), permission)) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.SESSION)
+                    && !ValueUtil.isAnyNullOrEmpty(processSession.getId()) && processSession.getId().equals(pairUserId.id())) {
+                if (LogicalUtil.isAllExist(pair.value(), permission)) {
                     allow = true;
                 }
-                if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
+                if (LogicalUtil.isAnyExist(pair.value(), permission << 1)) {
                     return true;
                 }
             }
@@ -473,7 +473,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         this.checkPermission(permission, null);
     }
 
-    public void setPermissions(Set<AccessControlDefinition> permissions) {
+    public void setPermissions(Set<AccessControlRecord> permissions) {
         if (ObjectUtil.isAnyNull(permissions)) {
             throw new ConditionParametersException();
         }
@@ -492,8 +492,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
        try {     
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-            for (AccessControlDefinition permission : permissions) {
-                if (!securityDescriptor.isHasChild() && LogicalUtil.isAnyExist(permission.getScope(),
+            for (AccessControlRecord permission : permissions) {
+                if (!securityDescriptor.isHasChild() && LogicalUtil.isAnyExist(permission.scope(),
                         LogicalUtil.or(AccessControlScopeType.CHILD_HAS_CHILD,
                                 AccessControlScopeType.CHILD_HAS_NOT_CHILD,
                                 AccessControlScopeType.HIERARCHICAL_HAS_CHILD,
@@ -521,7 +521,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         }
     }
 
-    private void writeAudit(Set<UserIdDefinition> userIds, long value) {
+    private void writeAudit(Set<UserIdRecord> userIds, long value) {
         KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
@@ -601,32 +601,32 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             type.getInitializer().unlockProcedure(info, LockType.READ);
         }
 
-        Set<AccessControlDefinition> effectiveAudits = new HashSet<>();
+        Set<AccessControlRecord> effectiveAudits = new HashSet<>();
         boolean securityDescriptorHasChild;
         for (int i = 0; i < securityDescriptors.size(); i++) {
-            for (AccessControlDefinition pair : securityDescriptors.get(i).getAudits()) {
-                if (LogicalUtil.isAllExist(pair.getScope(), AccessControlScopeType.THIS)) {
+            for (AccessControlRecord pair : securityDescriptors.get(i).getAudits()) {
+                if (LogicalUtil.isAllExist(pair.scope(), AccessControlScopeType.THIS)) {
                     if (i == securityDescriptors.size() - 1) {
                         effectiveAudits.add(pair);
                     }
                 }
                 securityDescriptorHasChild = securityDescriptors.getLast().isHasChild();
-                if (LogicalUtil.isAllExist(pair.getScope(), AccessControlScopeType.CHILD_HAS_CHILD)) {
+                if (LogicalUtil.isAllExist(pair.scope(), AccessControlScopeType.CHILD_HAS_CHILD)) {
                     if (i == securityDescriptors.size() - 2 && securityDescriptorHasChild) {
                         effectiveAudits.add(pair);
                     }
                 }
-                if (LogicalUtil.isAllExist(pair.getScope(), AccessControlScopeType.CHILD_HAS_NOT_CHILD)) {
+                if (LogicalUtil.isAllExist(pair.scope(), AccessControlScopeType.CHILD_HAS_NOT_CHILD)) {
                     if (i == securityDescriptors.size() - 2 && !securityDescriptorHasChild) {
                         effectiveAudits.add(pair);
                     }
                 }
-                if (LogicalUtil.isAllExist(pair.getScope(), AccessControlScopeType.HIERARCHICAL_HAS_CHILD)) {
+                if (LogicalUtil.isAllExist(pair.scope(), AccessControlScopeType.HIERARCHICAL_HAS_CHILD)) {
                     if (i < securityDescriptors.size() - 1 && securityDescriptorHasChild) {
                         effectiveAudits.add(pair);
                     }
                 }
-                if (LogicalUtil.isAllExist(pair.getScope(), AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD)) {
+                if (LogicalUtil.isAllExist(pair.scope(), AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD)) {
                     if (i < securityDescriptors.size() - 1 && !securityDescriptorHasChild) {
                         effectiveAudits.add(pair);
                     }
@@ -644,34 +644,34 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             groupIds.add(group.getId());
         }
         Set<UUID> roles = processToken.getRoles();
-        Set<UserIdDefinition> userIds = new HashSet<>();
+        Set<UserIdRecord> userIds = new HashSet<>();
 
-        for (AccessControlDefinition pair : effectiveAudits) {
-            UserIdDefinition pairUserId = pair.getUserId();
-            if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.GROUP) && groupIds.contains(pairUserId.getId())) {
-                if (LogicalUtil.isAllExist(audit, pair.getValue())) {
+        for (AccessControlRecord pair : effectiveAudits) {
+            UserIdRecord pairUserId = pair.userId();
+            if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.GROUP) && groupIds.contains(pairUserId.id())) {
+                if (LogicalUtil.isAllExist(audit, pair.value())) {
                     userIds.add(pairUserId);
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.ACCOUNT) && accountId.equals(pairUserId.getId())) {
-                if (LogicalUtil.isAllExist(audit, pair.getValue())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.ACCOUNT) && accountId.equals(pairUserId.id())) {
+                if (LogicalUtil.isAllExist(audit, pair.value())) {
                     userIds.add(pairUserId);
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.ROLE) && roles.contains(pairUserId.getId())) {
-                if (LogicalUtil.isAllExist(audit, pair.getValue())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.ROLE) && roles.contains(pairUserId.id())) {
+                if (LogicalUtil.isAllExist(audit, pair.value())) {
                     userIds.add(pairUserId);
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.PROCESS) && process.getId().equals(pairUserId.getId())) {
-                if (LogicalUtil.isAllExist(audit, pair.getValue())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.PROCESS) && process.getId().equals(pairUserId.id())) {
+                if (LogicalUtil.isAllExist(audit, pair.value())) {
                     userIds.add(pairUserId);
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.PARENT_PROCESS)
-                    && !ValueUtil.isAnyNullOrEmpty(process.getParentId()) && process.getParentId().equals(pairUserId.getId())) {
-                if (LogicalUtil.isAllExist(audit, pair.getValue())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.PARENT_PROCESS)
+                    && !ValueUtil.isAnyNullOrEmpty(process.getParentId()) && process.getParentId().equals(pairUserId.id())) {
+                if (LogicalUtil.isAllExist(audit, pair.value())) {
                     userIds.add(pairUserId);
                 }
-            } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.SESSION)
-                    && !ValueUtil.isAnyNullOrEmpty(processSession.getId()) && processSession.getId().equals(pairUserId.getId())) {
-                if (LogicalUtil.isAllExist(audit, pair.getValue())) {
+            } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.SESSION)
+                    && !ValueUtil.isAnyNullOrEmpty(processSession.getId()) && processSession.getId().equals(pairUserId.id())) {
+                if (LogicalUtil.isAllExist(audit, pair.value())) {
                     userIds.add(pairUserId);
                 }
             }
@@ -682,7 +682,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         }
     }
 
-    public void setAudits(Set<AccessControlDefinition> audits) {
+    public void setAudits(Set<AccessControlRecord> audits) {
         if (ObjectUtil.isAnyNull(audits)) {
             throw new ConditionParametersException();
         }

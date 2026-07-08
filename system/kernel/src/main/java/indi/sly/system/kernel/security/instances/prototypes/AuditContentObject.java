@@ -7,7 +7,7 @@ import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.security.instances.values.AuditDefinition;
-import indi.sly.system.kernel.security.values.UserIdDefinition;
+import indi.sly.system.kernel.security.values.UserIdRecord;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -48,13 +48,13 @@ public class AuditContentObject extends AInfoContentObject implements IByteValue
         this.flush(audit);
     }
 
-    public Set<UserIdDefinition> getUserIds() {
+    public Set<UserIdRecord> getUserIds() {
         AuditDefinition audit = this.init(this.read());
 
         return CollectionUtil.unmodifiable(audit.getUserIds());
     }
 
-    public void setUserIds(Set<UserIdDefinition> userIds) {
+    public void setUserIds(Set<UserIdRecord> userIds) {
         if (ObjectUtil.isAnyNull(userIds)) {
             throw new ConditionParametersException();
         }

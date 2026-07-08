@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.SecurityDescriptorObject;
-import indi.sly.system.kernel.security.values.AccessControlDefinition;
+import indi.sly.system.kernel.security.values.AccessControlRecord;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
@@ -96,7 +96,7 @@ public class SecurityDescriptorObjectTaskInitializer extends ATaskInitializer {
             throw new ConditionParametersException();
         }
 
-        Set<AccessControlDefinition> permissions = ObjectUtil.transferSetFromString(AccessControlDefinition.class, parameters.getFirst());
+        Set<AccessControlRecord> permissions = ObjectUtil.transferSetFromString(AccessControlRecord.class, parameters.getFirst());
 
         securityDescriptor.setPermissions(permissions);
     }
@@ -110,7 +110,7 @@ public class SecurityDescriptorObjectTaskInitializer extends ATaskInitializer {
             throw new ConditionParametersException();
         }
 
-        Set<AccessControlDefinition> audits = ObjectUtil.transferSetFromString(AccessControlDefinition.class, parameters.getFirst());
+        Set<AccessControlRecord> audits = ObjectUtil.transferSetFromString(AccessControlRecord.class, parameters.getFirst());
 
         securityDescriptor.setAudits(audits);
     }

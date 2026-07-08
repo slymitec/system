@@ -43,11 +43,8 @@ public class ServiceFactory extends AFactory {
 
         InfoObject service = servicesInfo.createChild(kernelConfiguration.SERVICE_TYPES_INSTANCE_SERVICE_ID, new IdentifierRecord(serviceId));
         SecurityDescriptorObject securityDescriptor = service.getSecurityDescriptor();
-        Set<AccessControlDefinition> permissions = new HashSet<>();
-        AccessControlDefinition permission = new AccessControlDefinition();
-        permission.setUserId(new UserIdDefinition(serviceId, UserType.ROLE));
-        permission.setScope(AccessControlScopeType.THIS);
-        permission.setValue(PermissionType.FULLCONTROL_ALLOW);
+        Set<AccessControlRecord> permissions = new HashSet<>();
+        AccessControlRecord permission = new AccessControlRecord(new UserIdRecord(serviceId, UserType.ROLE), AccessControlScopeType.THIS, PermissionType.FULLCONTROL_ALLOW);
         permissions.add(permission);
         securityDescriptor.setPermissions(permissions);
 
@@ -86,7 +83,7 @@ public class ServiceFactory extends AFactory {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         ServiceRepositoryObject serviceRepository = memoryManager.getServiceRepository();
 
-        if(serviceRepository.contain(serviceId)){
+        if (serviceRepository.contain(serviceId)) {
             throw new StatusRelationshipErrorException();
         }
 

@@ -2,7 +2,7 @@ package indi.sly.system.kernel.security.instances.values;
 
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.common.values.PathRecord;
-import indi.sly.system.kernel.security.values.UserIdDefinition;
+import indi.sly.system.kernel.security.values.UserIdRecord;
 
 import java.util.*;
 
@@ -14,7 +14,7 @@ public class AuditDefinition extends ADefinition {
     private UUID processId;
     private UUID accountId;
     private PathRecord path;
-    private final Set<UserIdDefinition> userIds;
+    private final Set<UserIdRecord> userIds;
     private long audit;
 
     public UUID getProcessId() {
@@ -41,7 +41,7 @@ public class AuditDefinition extends ADefinition {
         this.path = path;
     }
 
-    public Set<UserIdDefinition> getUserIds() {
+    public Set<UserIdRecord> getUserIds() {
         return this.userIds;
     }
 

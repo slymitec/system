@@ -4,7 +4,7 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.objects.values.DumpCacheEntity;
-import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenRecord;
 import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -34,7 +34,7 @@ public class DumpObject extends ACacheableObject<DumpCacheEntity> {
         return this.cache.getPath();
     }
 
-    public InfoOpenDefinition getInfoOpen() {
+    public InfoOpenRecord getInfoOpen() {
         return this.cache.getInfoOpen();
     }
 

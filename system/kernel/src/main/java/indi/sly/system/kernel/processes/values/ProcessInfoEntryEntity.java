@@ -2,7 +2,7 @@ package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.values.APersistentEntity;
-import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenRecord;
 
 import java.util.*;
 
@@ -15,7 +15,7 @@ public class ProcessInfoEntryEntity extends APersistentEntity {
     private final Map<Long, Long> date;
     private UUID id;
     private PathRecord path;
-    private InfoOpenDefinition infoOpen;
+    private InfoOpenRecord infoOpen;
     private boolean unsupportedDelete;
 
     public UUID getIndex() {
@@ -46,11 +46,11 @@ public class ProcessInfoEntryEntity extends APersistentEntity {
         this.path = path;
     }
 
-    public InfoOpenDefinition getInfoOpen() {
+    public InfoOpenRecord getInfoOpen() {
         return this.infoOpen;
     }
 
-    public void setInfoOpen(InfoOpenDefinition infoOpen) {
+    public void setInfoOpen(InfoOpenRecord infoOpen) {
         this.infoOpen = infoOpen;
     }
 

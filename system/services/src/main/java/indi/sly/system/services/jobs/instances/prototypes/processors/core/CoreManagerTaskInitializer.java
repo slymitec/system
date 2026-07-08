@@ -7,7 +7,7 @@ import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextDefinition;
+import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -38,7 +38,7 @@ public class CoreManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = systemVersion.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(systemVersion.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(systemVersion.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -48,7 +48,7 @@ public class CoreManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = dateTime.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(dateTime.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(dateTime.getClass()), handle);
 
         content.setResult(handleContext);
     }

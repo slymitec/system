@@ -54,10 +54,10 @@ public abstract class AInfoTypeInitializer extends AInitializer {
     public void dumpProcedure(InfoEntity info, DumpCacheEntity dump) {
     }
 
-    public void openProcedure(InfoEntity info, InfoOpenDefinition infoOpen, Object[] arguments) {
+    public void openProcedure(InfoEntity info, InfoOpenRecord infoOpen, Object[] arguments) {
     }
 
-    public void closeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
+    public void closeProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
     }
 
     public void createChildProcedure(InfoEntity info, InfoEntity childInfo) {
@@ -81,7 +81,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         throw new StatusNotSupportedException();
     }
 
-    public Map<String, String> readPropertiesProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
+    public Map<String, String> readPropertiesProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
         try {
             this.lockProcedure(info, LockType.READ);
 
@@ -91,7 +91,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         }
     }
 
-    public void writePropertiesProcedure(InfoEntity info, Map<String, String> properties, InfoOpenDefinition infoOpen) {
+    public void writePropertiesProcedure(InfoEntity info, Map<String, String> properties, InfoOpenRecord infoOpen) {
         try {
             this.lockProcedure(info, LockType.WRITE);
 
@@ -101,9 +101,9 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         }
     }
 
-    public abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen);
+    public abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenRecord infoOpen);
 
-    public byte[] readContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
+    public byte[] readContentProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
         try {
             this.lockProcedure(info, LockType.READ);
 
@@ -113,7 +113,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         }
     }
 
-    public void writeContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen, byte[] source) {
+    public void writeContentProcedure(InfoEntity info, InfoOpenRecord infoOpen, byte[] source) {
         if (source.length > 4096) {
             throw new StatusOverflowException();
         }
@@ -127,6 +127,6 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         }
     }
 
-    public void executeContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
+    public void executeContentProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
     }
 }

@@ -7,7 +7,7 @@ import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextDefinition;
+import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -66,7 +66,7 @@ public class ProcessObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = processStatus.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processStatus.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processStatus.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -78,7 +78,7 @@ public class ProcessObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = processCommunication.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processCommunication.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processCommunication.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -90,7 +90,7 @@ public class ProcessObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = processContext.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processContext.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processContext.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -102,7 +102,7 @@ public class ProcessObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = processInfoTable.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processInfoTable.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processInfoTable.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -114,7 +114,7 @@ public class ProcessObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = processSession.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processSession.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processSession.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -126,7 +126,7 @@ public class ProcessObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = processStatistics.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processStatistics.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processStatistics.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -138,7 +138,7 @@ public class ProcessObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = processToken.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(processToken.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processToken.getClass()), handle);
 
         content.setResult(handleContext);
     }

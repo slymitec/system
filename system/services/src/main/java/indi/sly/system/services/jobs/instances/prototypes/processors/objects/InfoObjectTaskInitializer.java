@@ -14,7 +14,7 @@ import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextDefinition;
+import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -104,7 +104,7 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = parentInfo.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(info.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(info.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -122,7 +122,7 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = securityDescriptor.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(securityDescriptor.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(securityDescriptor.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -134,7 +134,7 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = dump.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(dump.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(dump.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -188,7 +188,7 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = childInfo.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(childInfo.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(childInfo.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -208,7 +208,7 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = childInfo.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(childInfo.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(childInfo.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -283,7 +283,7 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = infoContent.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(infoContent.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(infoContent.getClass()), handle);
 
         content.setResult(handleContext);
     }

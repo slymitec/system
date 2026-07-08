@@ -18,7 +18,7 @@ public class DumpCacheEntity extends ACacheEntity {
     private UUID processID;
     private UUID accountID;
     private PathRecord path;
-    private InfoOpenDefinition infoOpen;
+    private InfoOpenRecord infoOpen;
     private final List<SecurityDescriptorSummaryDefinition> securityDescriptorSummary;
 
     public Map<Long, Long> getDate() {
@@ -49,11 +49,11 @@ public class DumpCacheEntity extends ACacheEntity {
         this.path = path;
     }
 
-    public InfoOpenDefinition getInfoOpen() {
+    public InfoOpenRecord getInfoOpen() {
         return this.infoOpen;
     }
 
-    public void setInfoOpen(InfoOpenDefinition infoOpen) {
+    public void setInfoOpen(InfoOpenRecord infoOpen) {
         this.infoOpen = infoOpen;
     }
 

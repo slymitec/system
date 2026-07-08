@@ -8,13 +8,12 @@ import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextDefinition;
+import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.List;
 import java.util.UUID;
 
 @Named
@@ -69,7 +68,7 @@ public class ProcessInfoEntryObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = info.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(info.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(info.getClass()), handle);
 
         content.setResult(handleContext);
     }

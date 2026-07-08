@@ -9,7 +9,7 @@ import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextDefinition;
+import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -82,12 +82,12 @@ public class AccountObjectTaskInitializer extends ATaskInitializer {
 
         Set<GroupObject> groups = account.getGroups();
 
-        Set<HandleContextDefinition> handleContexts = new HashSet<>();
+        Set<HandleContextRecord> handleContexts = new HashSet<>();
 
         for (GroupObject group : groups) {
             UUID handle = group.cache();
 
-            HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(group.getClass()), handle);
+            HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(group.getClass()), handle);
 
             handleContexts.add(handleContext);
         }
@@ -126,7 +126,7 @@ public class AccountObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = accountToken.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(accountToken.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(accountToken.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -138,7 +138,7 @@ public class AccountObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = accountSession.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(accountSession.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(accountSession.getClass()), handle);
 
         content.setResult(handleContext);
     }

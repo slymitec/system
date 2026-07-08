@@ -6,9 +6,9 @@ import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.services.jobs.lang.TaskInitializerRunMethodConsumer;
 
 public class TaskInitializerRunSummaryDefinition extends ADefinition {
-    private TaskInitializerRunDefinition taskInitializerRun;
+    private TaskInitializerRunRecord taskInitializerRun;
 
-    public void setTaskInitializerRun(TaskInitializerRunDefinition taskInitializerRun) {
+    public void setTaskInitializerRun(TaskInitializerRunRecord taskInitializerRun) {
         this.taskInitializerRun = taskInitializerRun;
     }
 
@@ -17,7 +17,7 @@ public class TaskInitializerRunSummaryDefinition extends ADefinition {
             throw new ConditionContextException();
         }
 
-        return this.taskInitializerRun.getMethod();
+        return this.taskInitializerRun.method();
     }
 
     public long getTransaction() {
@@ -25,6 +25,6 @@ public class TaskInitializerRunSummaryDefinition extends ADefinition {
             throw new ConditionContextException();
         }
 
-        return this.taskInitializerRun.getTransaction();
+        return this.taskInitializerRun.transaction();
     }
 }

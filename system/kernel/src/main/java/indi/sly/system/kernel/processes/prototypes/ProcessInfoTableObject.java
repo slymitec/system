@@ -13,7 +13,7 @@ import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeT
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
-import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenRecord;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
@@ -250,13 +250,12 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
             processInfoEntry.setId(id);
             processInfoEntry.setPath(cache.getPath());
 
-            InfoOpenDefinition infoOpen = new InfoOpenDefinition();
-            infoOpen.setAttribute(openAttribute);
+            InfoOpenRecord infoOpen = new InfoOpenRecord(openAttribute, null);
             processInfoEntry.setInfoOpen(infoOpen);
 
             processInfoTable.add(processInfoEntry);
 
-            this.flush(process,processInfoTable);
+            this.flush(process, processInfoTable);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }

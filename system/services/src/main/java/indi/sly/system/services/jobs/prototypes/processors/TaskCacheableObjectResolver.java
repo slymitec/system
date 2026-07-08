@@ -8,7 +8,7 @@ import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
-import indi.sly.system.services.jobs.values.HandleContextDefinition;
+import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
@@ -31,8 +31,8 @@ public class TaskCacheableObjectResolver extends AResolver implements ITaskResol
 
                 ATaskInitializer initializer = task.getInitializer();
 
-                HandleContextDefinition handleContext = ObjectUtil.transferFromString(HandleContextDefinition.class, parameters.getFirst());
-                ACacheableObject<?> cacheableObject = initializer.getCacheableObject(handleContext.getHandle());
+                HandleContextRecord handleContext = ObjectUtil.transferFromString(HandleContextRecord.class, parameters.getFirst());
+                ACacheableObject<?> cacheableObject = initializer.getCacheableObject(handleContext.handle());
 
                 threadContext.setCacheableObject(cacheableObject);
 

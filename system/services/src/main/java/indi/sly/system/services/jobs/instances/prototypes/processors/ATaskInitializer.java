@@ -4,7 +4,6 @@ import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.core.prototypes.processors.AInitializer;
 import indi.sly.system.services.core.values.TransactionType;
@@ -12,7 +11,7 @@ import indi.sly.system.services.jobs.lang.TaskInitializerRunMethodConsumer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
 import indi.sly.system.services.jobs.values.TaskDefinition;
-import indi.sly.system.services.jobs.values.TaskInitializerRunDefinition;
+import indi.sly.system.services.jobs.values.TaskInitializerRunRecord;
 import indi.sly.system.services.jobs.values.TaskInitializerRunSummaryDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,7 +34,7 @@ public abstract class ATaskInitializer extends AInitializer {
         this.register("expire", this::expire, TransactionType.WHATEVER);
     }
 
-    private final Map<String, TaskInitializerRunDefinition> runs;
+    private final Map<String, TaskInitializerRunRecord> runs;
     protected Function1<? extends ACacheableObject<?>, UUID> cacheableObjectFunction;
 
     protected final void register(String name, TaskInitializerRunMethodConsumer runMethod) {
@@ -47,9 +46,7 @@ public abstract class ATaskInitializer extends AInitializer {
             throw new ConditionParametersException();
         }
 
-        TaskInitializerRunDefinition run = new TaskInitializerRunDefinition();
-        run.setMethod(runMethod);
-        run.setTransaction(runTransaction);
+        TaskInitializerRunRecord run = new TaskInitializerRunRecord(runMethod, runTransaction);
 
         this.runs.put(name, run);
     }
@@ -71,7 +68,7 @@ public abstract class ATaskInitializer extends AInitializer {
             throw new ConditionParametersException();
         }
 
-        TaskInitializerRunDefinition run = this.runs.getOrDefault(name, null);
+        TaskInitializerRunRecord run = this.runs.getOrDefault(name, null);
 
         if (ObjectUtil.isAnyNull(run)) {
             throw new StatusNotExistedException();

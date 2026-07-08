@@ -12,7 +12,7 @@ import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
-import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenRecord;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
@@ -147,11 +147,11 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         return path;
     }
 
-    public InfoOpenDefinition getOpen() {
+    public InfoOpenRecord getOpen() {
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();
 
-        InfoOpenDefinition infoOpen;
+        InfoOpenRecord infoOpen;
 
         ProcessEntity process = this.getSelf();
 
@@ -289,7 +289,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
                 throw new StatusDisabilityException();
             }
 
-            processInfoEntry.getInfoOpen().setAttribute(InfoOpenAttributeType.CLOSE);
+            processInfoEntry.setInfoOpen(processInfoEntry.getInfoOpen().withAttribute(InfoOpenAttributeType.CLOSE));
 
             processInfoTable.delete(processInfoEntry.getIndex());
 

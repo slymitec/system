@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.processes.values.ProcessAdditionalCreatorDefinition;
+import indi.sly.system.kernel.processes.values.ProcessAdditionalCreatorRecord;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.UserFactory;
@@ -14,7 +14,7 @@ import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextDefinition;
+import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -52,7 +52,7 @@ public class ProcessManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = process.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(process.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(process.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -76,7 +76,7 @@ public class ProcessManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = process.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(process.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(process.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -97,7 +97,7 @@ public class ProcessManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = process.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(process.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(process.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -118,13 +118,13 @@ public class ProcessManagerTaskInitializer extends ATaskInitializer {
         UUID fileIndex = ObjectUtil.transferFromString(UUID.class, parameters.get(1));
         String processParameters = ObjectUtil.transferFromString(String.class, parameters.get(2));
         PathRecord workFolder = ObjectUtil.transferFromString(PathRecord.class, parameters.get(3));
-        ProcessAdditionalCreatorDefinition additionalCreator = ObjectUtil.transferFromString(ProcessAdditionalCreatorDefinition.class, parameters.get(4));
+        ProcessAdditionalCreatorRecord additionalCreator = ObjectUtil.transferFromString(ProcessAdditionalCreatorRecord.class, parameters.get(4));
 
         ProcessObject process = processManager.create(accountAuthorization, fileIndex, processParameters, workFolder, additionalCreator);
 
         UUID handle = process.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(process.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(process.getClass()), handle);
 
         content.setResult(handleContext);
     }

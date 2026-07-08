@@ -140,7 +140,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
+    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
         return FolderContentObject.class;
     }
 }

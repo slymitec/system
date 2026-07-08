@@ -14,7 +14,7 @@ import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.prototypes.*;
-import indi.sly.system.kernel.processes.values.ProcessAdditionalCreatorDefinition;
+import indi.sly.system.kernel.processes.values.ProcessAdditionalCreatorRecord;
 import indi.sly.system.kernel.processes.values.ProcessContextType;
 import indi.sly.system.kernel.processes.values.ProcessCreatorRecord;
 import indi.sly.system.kernel.processes.values.ThreadStatusType;
@@ -104,15 +104,15 @@ public class ProcessManager extends AManager {
         return this.getWithAuthorization(processId, null);
     }
 
-    public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, String parameters, PathRecord workFolder, ProcessAdditionalCreatorDefinition additionalCreator) {
+    public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, String parameters, PathRecord workFolder, ProcessAdditionalCreatorRecord additionalCreator) {
         if (ValueUtil.isAnyNullOrEmpty(fileIndex)) {
             throw new ConditionParametersException();
         }
 
         ProcessCreatorRecord processCreator = new ProcessCreatorRecord(
                 accountAuthorization,
-                !ObjectUtil.allNotNull(additionalCreator) || additionalCreator.isInheritSession(),
-                ObjectUtil.allNotNull(additionalCreator) ? additionalCreator.getContextType() : ProcessContextType.EXECUTABLE,
+                !ObjectUtil.allNotNull(additionalCreator) || additionalCreator.inheritSession(),
+                ObjectUtil.allNotNull(additionalCreator) ? additionalCreator.contextType() : ProcessContextType.EXECUTABLE,
                 fileIndex,
                 !ValueUtil.isAnyNullOrEmpty(parameters) ? parameters : StringUtil.EMPTY,
                 ObjectUtil.allNotNull(workFolder) && !workFolder.identifiers().isEmpty() ? workFolder : null

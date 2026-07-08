@@ -13,7 +13,7 @@ import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
+import indi.sly.system.kernel.objects.values.InfoOpenRecord;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -50,12 +50,12 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenDefinition infoOpen) {
+    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
         return FileSystemFileContentObject.class;
     }
 
     @Override
-    public void writeContentProcedure(InfoEntity info, InfoOpenDefinition infoOpen, byte[] source) {
+    public void writeContentProcedure(InfoEntity info, InfoOpenRecord infoOpen, byte[] source) {
         Map<String, String> properties = this.readPropertiesProcedure(info, infoOpen);
         assert properties != null;
 

@@ -10,7 +10,7 @@ import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextDefinition;
+import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -89,7 +89,7 @@ public class ProcessInfoTableObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = ProcessInfoEntry.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(ProcessInfoEntry.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(ProcessInfoEntry.getClass()), handle);
 
         content.setResult(handleContext);
     }
@@ -109,7 +109,7 @@ public class ProcessInfoTableObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = ProcessInfoEntry.cache();
 
-        HandleContextDefinition handleContext = new HandleContextDefinition(ClassUtil.getSimpleName(ProcessInfoEntry.getClass()), handle);
+        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(ProcessInfoEntry.getClass()), handle);
 
         content.setResult(handleContext);
     }

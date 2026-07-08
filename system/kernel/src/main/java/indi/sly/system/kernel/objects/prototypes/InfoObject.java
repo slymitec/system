@@ -205,7 +205,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         } else {
             ProcessInfoEntryObject processInfoTableEntry = processInfoTable.getById(this.cache.getInfoId());
 
-            return processInfoTableEntry.getOpen().getAttribute();
+            return processInfoTableEntry.getOpen().attribute();
         }
     }
 
@@ -356,7 +356,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         ProcessObject process = processManager.getCurrent();
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
-        InfoOpenDefinition infoOpen = null;
+        InfoOpenRecord infoOpen = null;
         if (processInfoTable.containById(this.getId())) {
             ProcessInfoEntryObject processInfoEntry = processInfoTable.getById(this.getId());
             infoOpen = processInfoEntry.getOpen();

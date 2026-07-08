@@ -11,8 +11,8 @@ import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.values.AccountAuthorizationCacheEntity;
-import indi.sly.system.kernel.security.values.AccountAuthorizationSummaryDefinition;
-import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
+import indi.sly.system.kernel.security.values.AccountAuthorizationSummaryRecord;
+import indi.sly.system.kernel.security.values.AccountAuthorizationTokenRecord;
 import indi.sly.system.kernel.security.values.PrivilegeType;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -48,7 +48,7 @@ public class AccountAuthorizationObject extends ACacheableObject<AccountAuthoriz
         return true;
     }
 
-    public AccountAuthorizationSummaryDefinition checkAndGetSummary() {
+    public AccountAuthorizationSummaryRecord checkAndGetSummary() {
         KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
         AccountObject account = this.factory.rebuildAccount(this.cache.getAccount());
@@ -73,24 +73,19 @@ public class AccountAuthorizationObject extends ACacheableObject<AccountAuthoriz
         }
         AccountTokenObject accountToken = account.getToken();
 
-        AccountAuthorizationSummaryDefinition accountAuthorization = new AccountAuthorizationSummaryDefinition();
-        accountAuthorization.setId(account.getId());
-        accountAuthorization.setName(account.getName());
-        accountAuthorization.setPassword(account.getPassword());
+        long accountAuthorizationTokenPrivileges = PrivilegeType.NULL;
+        Map<Long, Integer> accountAuthorizationTokenLimits = new HashMap<>();
+        Set<UUID> accountAuthorizationTokenRoles = new HashSet<>();
 
-        AccountAuthorizationTokenDefinition accountAuthorizationToken = accountAuthorization.getToken();
-        Map<Long, Integer> accountAuthorizationTokenLimits = accountAuthorizationToken.getLimits();
         for (GroupTokenObject userToken : groupTokens) {
-            accountAuthorizationToken.setPrivileges(LogicalUtil.or(accountAuthorizationToken.getPrivileges(),
-                    userToken.getPrivileges()));
+            accountAuthorizationTokenPrivileges = LogicalUtil.or(accountAuthorizationTokenPrivileges, userToken.getPrivileges());
 
             for (Map.Entry<Long, Integer> pair : userToken.getLimits().entrySet()) {
                 int value = accountAuthorizationTokenLimits.getOrDefault(pair.getKey(), Integer.MAX_VALUE);
                 accountAuthorizationTokenLimits.put(pair.getKey(), Integer.min(value, pair.getValue()));
             }
         }
-        accountAuthorizationToken.setPrivileges(LogicalUtil.or(accountAuthorizationToken.getPrivileges(),
-                accountToken.getPrivileges()));
+        accountAuthorizationTokenPrivileges = LogicalUtil.or(accountAuthorizationTokenPrivileges, accountToken.getPrivileges());
 
         for (Map.Entry<Long, Integer> pair : accountToken.getLimits().entrySet()) {
             int value = accountAuthorizationTokenLimits.getOrDefault(pair.getKey(), Integer.MAX_VALUE);
@@ -102,16 +97,14 @@ public class AccountAuthorizationObject extends ACacheableObject<AccountAuthoriz
             ProcessTokenObject processToken = processManager.getFactory().rebuildProcessToken(this.cache.getProcessToken());
 
             if (processToken.isPrivileges(PrivilegeType.CORE_MODIFY_PRIVILEGES)) {
-                accountAuthorizationToken.setPrivileges(LogicalUtil.or(accountAuthorizationToken.getPrivileges(),
-                        this.cache.getAccountAuthorizationToken().getPrivileges()));
+                accountAuthorizationTokenPrivileges = LogicalUtil.or(accountAuthorizationTokenPrivileges, this.cache.getAccountAuthorizationToken().privileges());
             } else {
-                accountAuthorizationToken.setPrivileges(LogicalUtil.and(accountAuthorizationToken.getPrivileges(),
-                        this.cache.getAccountAuthorizationToken().getPrivileges()));
+                accountAuthorizationTokenPrivileges = LogicalUtil.and(accountAuthorizationTokenPrivileges, this.cache.getAccountAuthorizationToken().privileges());
             }
 
             int accountAuthorizationTokenLimitValue;
             if (processToken.isPrivileges(PrivilegeType.PROCESSES_MODIFY_LIMITS)) {
-                for (Map.Entry<Long, Integer> pair : this.cache.getAccountAuthorizationToken().getLimits().entrySet()) {
+                for (Map.Entry<Long, Integer> pair : this.cache.getAccountAuthorizationToken().limits().entrySet()) {
                     accountAuthorizationTokenLimitValue = accountAuthorizationTokenLimits.getOrDefault(pair.getKey(), pair.getValue());
 
                     if (accountAuthorizationTokenLimitValue <= pair.getValue()) {
@@ -119,7 +112,7 @@ public class AccountAuthorizationObject extends ACacheableObject<AccountAuthoriz
                     }
                 }
             } else {
-                for (Map.Entry<Long, Integer> pair : this.cache.getAccountAuthorizationToken().getLimits().entrySet()) {
+                for (Map.Entry<Long, Integer> pair : this.cache.getAccountAuthorizationToken().limits().entrySet()) {
                     accountAuthorizationTokenLimitValue = accountAuthorizationTokenLimits.getOrDefault(pair.getKey(), pair.getValue());
 
                     if (accountAuthorizationTokenLimitValue > pair.getValue()) {
@@ -128,12 +121,15 @@ public class AccountAuthorizationObject extends ACacheableObject<AccountAuthoriz
                 }
             }
 
-            accountAuthorizationToken.getRoles().addAll(this.cache.getAccountAuthorizationToken().getRoles());
+            accountAuthorizationTokenRoles.addAll(this.cache.getAccountAuthorizationToken().roles());
         }
 
+        AccountAuthorizationTokenRecord accountAuthorizationToken = new AccountAuthorizationTokenRecord(accountAuthorizationTokenPrivileges, accountAuthorizationTokenLimits, accountAuthorizationTokenRoles);
+
         AccountSessionsObject accountSessions = account.getSessions();
-        Set<UUID> accountAuthorizationSessions = accountAuthorization.getSessions();
-        accountAuthorizationSessions.addAll(accountSessions.listSessions());
+        Set<UUID> accountAuthorizationSessions = new HashSet<>(accountSessions.listSessions());
+
+        AccountAuthorizationSummaryRecord accountAuthorization = new AccountAuthorizationSummaryRecord(account.getId(), account.getName(), account.getPassword(), accountAuthorizationToken, accountAuthorizationSessions);
 
         return accountAuthorization;
     }

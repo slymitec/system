@@ -281,7 +281,7 @@ public class UserManager extends AManager {
         return this.authorizeByNameWithToken(accountName, accountPassword, null);
     }
 
-    public AccountAuthorizationObject authorizeByNameWithToken(String accountName, String accountPassword, AccountAuthorizationTokenDefinition accountAuthorizationToken) {
+    public AccountAuthorizationObject authorizeByNameWithToken(String accountName, String accountPassword, AccountAuthorizationTokenRecord accountAuthorizationToken) {
         if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }

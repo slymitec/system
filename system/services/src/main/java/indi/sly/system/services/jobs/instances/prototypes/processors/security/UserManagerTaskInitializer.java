@@ -7,7 +7,7 @@ import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.AccountObject;
 import indi.sly.system.kernel.security.prototypes.GroupObject;
-import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
+import indi.sly.system.kernel.security.values.AccountAuthorizationTokenRecord;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
@@ -262,7 +262,7 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
 
         String accountName = ObjectUtil.transferFromString(String.class, parameters.getFirst());
         String accountPassword = ObjectUtil.transferFromString(String.class, parameters.get(1));
-        AccountAuthorizationTokenDefinition accountAuthorizationToken = ObjectUtil.transferFromString(AccountAuthorizationTokenDefinition.class, parameters.get(2));
+        AccountAuthorizationTokenRecord accountAuthorizationToken = ObjectUtil.transferFromString(AccountAuthorizationTokenRecord.class, parameters.get(2));
 
         AccountAuthorizationObject accountAuthorization = userManager.authorizeByNameWithToken(accountName, accountPassword, accountAuthorizationToken);
 

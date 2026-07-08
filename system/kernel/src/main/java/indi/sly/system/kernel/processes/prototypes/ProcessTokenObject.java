@@ -20,8 +20,8 @@ import indi.sly.system.kernel.processes.values.*;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.AccountObject;
-import indi.sly.system.kernel.security.values.AccountAuthorizationSummaryDefinition;
-import indi.sly.system.kernel.security.values.AccountAuthorizationTokenDefinition;
+import indi.sly.system.kernel.security.values.AccountAuthorizationSummaryRecord;
+import indi.sly.system.kernel.security.values.AccountAuthorizationTokenRecord;
 import indi.sly.system.kernel.security.values.PrivilegeType;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -90,7 +90,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
-        AccountAuthorizationSummaryDefinition accountAuthorizationSummary = accountAuthorization.checkAndGetSummary();
+        AccountAuthorizationSummaryRecord accountAuthorizationSummary = accountAuthorization.checkAndGetSummary();
 
         ProcessEntity process = this.getSelf();
 
@@ -99,20 +99,20 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             ProcessTokenEntity processToken = this.init(process);
 
             if (!ValueUtil.isAnyNullOrEmpty(processToken.getAccountId())
-                    && !processToken.getAccountId().equals(accountAuthorizationSummary.getId())) {
+                    && !processToken.getAccountId().equals(accountAuthorizationSummary.id())) {
                 throw new ConditionRefuseException();
             }
 
-            processToken.setAccountId(accountAuthorizationSummary.getId());
-            AccountAuthorizationTokenDefinition accountAuthorizationToken = accountAuthorizationSummary.getToken();
-            processToken.setPrivileges(accountAuthorizationToken.getPrivileges());
+            processToken.setAccountId(accountAuthorizationSummary.id());
+            AccountAuthorizationTokenRecord accountAuthorizationToken = accountAuthorizationSummary.token();
+            processToken.setPrivileges(accountAuthorizationToken.privileges());
             Map<Long, Integer> processTokenLimits = processToken.getLimits();
             processTokenLimits.clear();
-            processTokenLimits.putAll(accountAuthorizationToken.getLimits());
+            processTokenLimits.putAll(accountAuthorizationToken.limits());
             Set<UUID> processTokenRoles = processToken.getRoles();
             processTokenRoles.clear();
-            processTokenRoles.addAll(accountAuthorizationToken.getRoles());
-            if (ValueUtil.isAnyNullOrEmpty(accountAuthorizationSummary.getPassword())) {
+            processTokenRoles.addAll(accountAuthorizationToken.roles());
+            if (ValueUtil.isAnyNullOrEmpty(accountAuthorizationSummary.password())) {
                 processTokenRoles.add(kernelConfiguration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
             }
 

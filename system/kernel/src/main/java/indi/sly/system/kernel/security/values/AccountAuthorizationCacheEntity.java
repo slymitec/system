@@ -16,7 +16,7 @@ public class AccountAuthorizationCacheEntity extends AccountChildCacheEntity {
     private String password;
     private final Map<Long, Long> date;
     private ProcessChildCacheEntity processToken;
-    private AccountAuthorizationTokenDefinition accountAuthorizationToken;
+    private AccountAuthorizationTokenRecord accountAuthorizationToken;
 
     public String getPassword() {
         return this.password;
@@ -38,11 +38,11 @@ public class AccountAuthorizationCacheEntity extends AccountChildCacheEntity {
         this.processToken = processToken;
     }
 
-    public AccountAuthorizationTokenDefinition getAccountAuthorizationToken() {
+    public AccountAuthorizationTokenRecord getAccountAuthorizationToken() {
         return this.accountAuthorizationToken;
     }
 
-    public void setAccountAuthorizationToken(AccountAuthorizationTokenDefinition accountAuthorizationToken) {
+    public void setAccountAuthorizationToken(AccountAuthorizationTokenRecord accountAuthorizationToken) {
         this.accountAuthorizationToken = accountAuthorizationToken;
     }
 

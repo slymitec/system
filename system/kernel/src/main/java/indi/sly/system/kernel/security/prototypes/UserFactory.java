@@ -2,12 +2,10 @@ package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
@@ -285,7 +283,7 @@ public class UserFactory extends AFactory {
         return accountAuthorization;
     }
 
-    public AccountAuthorizationObject buildAccountAuthorization(AccountObject account, String password, ProcessTokenObject processToken, AccountAuthorizationTokenDefinition accountAuthorizationToken) {
+    public AccountAuthorizationObject buildAccountAuthorization(AccountObject account, String password, ProcessTokenObject processToken, AccountAuthorizationTokenRecord accountAuthorizationToken) {
         AccountAuthorizationCacheEntity cache = new AccountAuthorizationCacheEntity();
 
         cache.setDuration(CacheDurationType.NORMAL);

@@ -69,13 +69,13 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierRecord identification) {
+    public InfoSummaryRecord getChildProcedure(InfoEntity info, IdentifierRecord identification) {
         if (identification.type() != UUID.class) {
             throw new StatusNotSupportedException();
         }
 
         UUID childInfoID = UUIDUtil.readFormBytes(identification.value());
-        InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
+        InfoSummaryRecord infoSummary;
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
@@ -84,9 +84,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
         try {
             InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoID);
 
-            infoSummary.setId(infoRelation.getId());
-            infoSummary.setType(infoRelation.getType());
-            infoSummary.setName(infoRelation.getName());
+            infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
         } finally {
             this.unlockProcedure(info, LockType.READ);
         }
@@ -95,12 +93,12 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardRecord wildcard) {
+    public Set<InfoSummaryRecord> queryChildProcedure(InfoEntity info, InfoWildcardRecord wildcard) {
         if (wildcard.type() != UUID.class) {
             throw new StatusNotSupportedException();
         }
 
-        Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
+        Set<InfoSummaryRecord> infoSummaries = new HashSet<>();
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
@@ -109,10 +107,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
         try {
             List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
             for (InfoRelationEntity infoRelation : infoRelations) {
-                InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
-                infoSummary.setId(infoRelation.getId());
-                infoSummary.setType(infoRelation.getType());
-                infoSummary.setName(infoRelation.getName());
+                InfoSummaryRecord infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
 
                 infoSummaries.add(infoSummary);
             }

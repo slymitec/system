@@ -22,7 +22,7 @@ import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeT
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.objects.values.InfoWildcardRecord;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
+import indi.sly.system.kernel.objects.values.InfoSummaryRecord;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
@@ -200,7 +200,7 @@ public class UserManager extends AManager {
         InfoWildcardRecord wildcard = new InfoWildcardRecord(account.getName());
 
         InfoObject parentInfo = objectManager.get(new PathRecord(List.of(new IdentifierRecord("Audits"))));
-        Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(wildcard);
+        Set<InfoSummaryRecord> infoSummaries = parentInfo.queryChild(wildcard);
         if (infoSummaries.isEmpty()) {
             InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierRecord(account.getName()));
 

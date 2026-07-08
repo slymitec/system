@@ -7,7 +7,7 @@ import indi.sly.system.kernel.objects.values.*;
 import java.util.Set;
 
 @FunctionalInterface
-public interface InfoProcessorQueryChildFunction extends Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>,
+public interface InfoProcessorQueryChildFunction extends Function5<Set<InfoSummaryRecord>, Set<InfoSummaryRecord>,
         InfoEntity, TypeObject,
         InfoCacheEntity, InfoWildcardRecord> {
 }

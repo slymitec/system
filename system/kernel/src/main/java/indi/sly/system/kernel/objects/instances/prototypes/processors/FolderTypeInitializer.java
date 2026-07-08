@@ -68,13 +68,13 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierRecord identification) {
+    public InfoSummaryRecord getChildProcedure(InfoEntity info, IdentifierRecord identification) {
         if (identification.type() != String.class) {
             throw new StatusNotSupportedException();
         }
 
         String childInfoName = StringUtil.readFormBytes(identification.value());
-        InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
+        InfoSummaryRecord infoSummary;
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
@@ -83,9 +83,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
         try {
             InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoName);
 
-            infoSummary.setId(infoRelation.getId());
-            infoSummary.setType(infoRelation.getType());
-            infoSummary.setName(infoRelation.getName());
+            infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
         } finally {
             this.unlockProcedure(info, LockType.READ);
         }
@@ -94,8 +92,8 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardRecord wildcard) {
-        Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
+    public Set<InfoSummaryRecord> queryChildProcedure(InfoEntity info, InfoWildcardRecord wildcard) {
+        Set<InfoSummaryRecord> infoSummaries = new HashSet<>();
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
@@ -104,10 +102,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
         try {
             List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
             for (InfoRelationEntity infoRelation : infoRelations) {
-                InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
-                infoSummary.setId(infoRelation.getId());
-                infoSummary.setType(infoRelation.getType());
-                infoSummary.setName(infoRelation.getName());
+                InfoSummaryRecord infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
 
                 infoSummaries.add(infoSummary);
             }

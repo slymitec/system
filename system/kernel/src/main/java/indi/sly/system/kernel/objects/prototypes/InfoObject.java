@@ -276,7 +276,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         }
     }
 
-    public Set<InfoSummaryDefinition> queryChild(InfoWildcardRecord wildcard) {
+    public Set<InfoSummaryRecord> queryChild(InfoWildcardRecord wildcard) {
         if (ObjectUtil.isAnyNull(wildcard)) {
             throw new ConditionParametersException();
         }
@@ -288,7 +288,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
 
         List<InfoProcessorQueryChildFunction> resolvers = this.processorMediator.getQueryChildren();
 
-        Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
+        Set<InfoSummaryRecord> infoSummaries = new HashSet<>();
 
         for (InfoProcessorQueryChildFunction resolver : resolvers) {
             infoSummaries = resolver.apply(infoSummaries, info, type, this.cache, wildcard);

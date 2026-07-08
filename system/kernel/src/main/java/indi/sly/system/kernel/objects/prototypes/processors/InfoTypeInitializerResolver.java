@@ -13,7 +13,7 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeI
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
+import indi.sly.system.kernel.objects.values.InfoSummaryRecord;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
@@ -108,15 +108,15 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
 
         this.getChild = (childInfo, info, type, cache, identification) -> {
             AInfoTypeInitializer typeInitializer = type.getInitializer();
-            InfoSummaryDefinition infoSummary = typeInitializer.getChildProcedure(info, identification);
+            InfoSummaryRecord infoSummary = typeInitializer.getChildProcedure(info, identification);
 
             TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
-            AInfoTypeInitializer childTypeInitializer = typeManager.get(infoSummary.getType()).getInitializer();
+            AInfoTypeInitializer childTypeInitializer = typeManager.get(infoSummary.type()).getInitializer();
 
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-            UUID childRepositoryId = childTypeInitializer.getPoolId(infoSummary.getId(), infoSummary.getType());
+            UUID childRepositoryId = childTypeInitializer.getPoolId(infoSummary.id(), infoSummary.type());
             AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryId);
-            childInfo = infoRepository.get(infoSummary.getId());
+            childInfo = infoRepository.get(infoSummary.id());
 
             childTypeInitializer.getProcedure(childInfo, identification);
 
@@ -146,7 +146,7 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
 
         this.queryChild = (infoSummaries, info, type, cache, wildcard) -> {
             AInfoTypeInitializer typeInitializer = type.getInitializer();
-            Set<InfoSummaryDefinition> infoSummary = typeInitializer.queryChildProcedure(info, wildcard);
+            Set<InfoSummaryRecord> infoSummary = typeInitializer.queryChildProcedure(info, wildcard);
 
             infoSummaries.addAll(infoSummary);
 

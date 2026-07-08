@@ -64,11 +64,11 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         throw new StatusNotSupportedException();
     }
 
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierRecord identification) {
+    public InfoSummaryRecord getChildProcedure(InfoEntity info, IdentifierRecord identification) {
         throw new StatusNotSupportedException();
     }
 
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardRecord wildcard) {
+    public Set<InfoSummaryRecord> queryChildProcedure(InfoEntity info, InfoWildcardRecord wildcard) {
         throw new StatusNotSupportedException();
     }
 

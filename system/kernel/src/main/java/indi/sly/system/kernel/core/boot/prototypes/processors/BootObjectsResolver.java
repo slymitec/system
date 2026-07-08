@@ -15,7 +15,7 @@ import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoWildcardRecord;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
+import indi.sly.system.kernel.objects.values.InfoSummaryRecord;
 import indi.sly.system.kernel.objects.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -82,7 +82,7 @@ public class BootObjectsResolver extends ABootResolver {
                 }
             } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_AFTER_KERNEL)) {
                 InfoObject rootInfo = objectManager.get(new PathRecord(List.of()));
-                Set<InfoSummaryDefinition> infoSummaries;
+                Set<InfoSummaryRecord> infoSummaries;
 
                 String[] childFolderNames = new String[]{"Audits", "Files", "Sessions", "Services"};
                 UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};

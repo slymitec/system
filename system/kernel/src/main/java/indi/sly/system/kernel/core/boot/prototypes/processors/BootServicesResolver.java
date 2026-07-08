@@ -12,7 +12,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.ServiceRepositoryOb
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
+import indi.sly.system.kernel.objects.values.InfoSummaryRecord;
 import indi.sly.system.kernel.objects.values.InfoWildcardRecord;
 import indi.sly.system.kernel.services.ServiceManager;
 import indi.sly.system.kernel.services.instances.prototypes.ServiceContentObject;
@@ -40,13 +40,13 @@ public class BootServicesResolver extends ABootResolver {
 
                 InfoObject services = objectManager.get(path);
 
-                Set<InfoSummaryDefinition> infoSummaries = services.queryChild(new InfoWildcardRecord("*"));
+                Set<InfoSummaryRecord> infoSummaries = services.queryChild(new InfoWildcardRecord("*"));
 
                 Set<UUID> autoServices = new HashSet<>();
                 Set<UUID> autoDelayServices = new HashSet<>();
 
-                for (InfoSummaryDefinition infoSummary : infoSummaries) {
-                    UUID id = infoSummary.getId();
+                for (InfoSummaryRecord infoSummary : infoSummaries) {
+                    UUID id = infoSummary.id();
 
                     InfoObject service = services.getChild(new IdentifierRecord(id));
 

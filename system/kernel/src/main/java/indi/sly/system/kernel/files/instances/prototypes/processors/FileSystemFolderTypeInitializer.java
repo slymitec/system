@@ -16,7 +16,7 @@ import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenRecord;
 import indi.sly.system.kernel.objects.values.InfoRelationEntity;
-import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
+import indi.sly.system.kernel.objects.values.InfoSummaryRecord;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -180,7 +180,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public InfoSummaryDefinition getChildProcedure(InfoEntity info, IdentifierRecord identification) {
+    public InfoSummaryRecord getChildProcedure(InfoEntity info, IdentifierRecord identification) {
         if (identification.type() != String.class) {
             throw new StatusNotSupportedException();
         }
@@ -189,7 +189,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         assert entry != null;
 
         String childInfoName = StringUtil.readFormBytes(identification.value());
-        InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
+        InfoSummaryRecord infoSummary = null;
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
@@ -200,9 +200,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
                 InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoName);
 
-                infoSummary.setId(infoRelation.getId());
-                infoSummary.setType(infoRelation.getType());
-                infoSummary.setName(infoRelation.getName());
+                infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
             } finally {
                 this.unlockProcedure(info, LockType.READ);
             }
@@ -229,16 +227,14 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 throw new StatusUnexpectedException();
             }
 
-            infoSummary.setId(UUIDUtil.readFormBytes(childInfoRelationID));
-            infoSummary.setType(UUIDUtil.readFormBytes(childInfoRelationType));
-            infoSummary.setName(childInfoName);
+            infoSummary = new InfoSummaryRecord(UUIDUtil.readFormBytes(childInfoRelationID), UUIDUtil.readFormBytes(childInfoRelationType), childInfoName);
         }
 
         return infoSummary;
     }
 
     @Override
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardRecord wildcard) {
+    public Set<InfoSummaryRecord> queryChildProcedure(InfoEntity info, InfoWildcardRecord wildcard) {
         if (wildcard.type() != String.class) {
             throw new StatusNotSupportedException();
         }
@@ -246,7 +242,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
         assert entry != null;
 
-        Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
+        Set<InfoSummaryRecord> infoSummaries = new HashSet<>();
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
@@ -257,10 +253,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
                 List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
                 for (InfoRelationEntity infoRelation : infoRelations) {
-                    InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
-                    infoSummary.setId(infoRelation.getId());
-                    infoSummary.setType(infoRelation.getType());
-                    infoSummary.setName(infoRelation.getName());
+                    InfoSummaryRecord infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
 
                     infoSummaries.add(infoSummary);
                 }
@@ -284,25 +277,22 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
             for (String childInfoName : childInfoNames) {
                 File childInfoRelationFile = new File(infoRelationFolder.getAbsolutePath() + "/" + childInfoName);
-                byte[] childInfoRelationID = new byte[16];
+                byte[] childInfoRelationId = new byte[16];
                 byte[] childInfoRelationType = new byte[16];
                 try (FileInputStream fileInputStream = new FileInputStream(childInfoRelationFile)) {
-                    fileInputStream.read(childInfoRelationID);
+                    fileInputStream.read(childInfoRelationId);
                     fileInputStream.read(childInfoRelationType);
                 } catch (IOException e) {
                     throw new StatusUnexpectedException();
                 }
 
-                InfoSummaryDefinition infoSummary = new InfoSummaryDefinition();
-                infoSummary.setId(UUIDUtil.readFormBytes(childInfoRelationID));
-                infoSummary.setType(UUIDUtil.readFormBytes(childInfoRelationType));
-                infoSummary.setName(childInfoName);
+                InfoSummaryRecord infoSummary = new InfoSummaryRecord(UUIDUtil.readFormBytes(childInfoRelationId), UUIDUtil.readFormBytes(childInfoRelationType), childInfoName);
 
                 String wildcardValue = StringUtil.readFormBytes(wildcard.value());
                 if (wildcard.fuzzy()) {
                     infoSummaries.add(infoSummary);
                 } else {
-                    if (wildcardValue.equals(infoSummary.getName())) {
+                    if (wildcardValue.equals(infoSummary.name())) {
                         infoSummaries.add(infoSummary);
                         break;
                     }

@@ -156,7 +156,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         }
     }
 
-    public ApplicationDefinition getApplication() {
+    public ApplicationRecord getApplication() {
         if (LogicalUtil.allNotEqual(this.base.getStatus().get(), ProcessStatusType.INITIALIZATION,
                 ProcessStatusType.RUNNING, ProcessStatusType.DIED)) {
             throw new StatusRelationshipErrorException();
@@ -175,7 +175,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
         }
     }
 
-    public void setApplication(ApplicationDefinition application) {
+    public void setApplication(ApplicationRecord application) {
         if (ObjectUtil.isAnyNull(application)) {
             throw new ConditionParametersException();
         }

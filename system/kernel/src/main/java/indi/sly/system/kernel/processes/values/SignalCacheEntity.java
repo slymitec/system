@@ -2,10 +2,8 @@ package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.kernel.core.values.ACacheEntity;
 import org.redisson.api.annotation.REntity;
-import org.redisson.api.annotation.RIndex;
 
 import java.util.*;
 
@@ -17,7 +15,7 @@ public class SignalCacheEntity extends ACacheEntity {
     }
 
     private final Set<UUID> sourceProcessIds;
-    private final List<SignalEntryDefinition> signalEntries;
+    private final List<SignalEntryRecord> signalEntries;
     private int limit;
 
     public Set<UUID> getSourceProcessIds() {
@@ -36,15 +34,15 @@ public class SignalCacheEntity extends ACacheEntity {
         return this.signalEntries.size();
     }
 
-    public List<SignalEntryDefinition> pollAll() {
-        List<SignalEntryDefinition> resultSignalEntries = new ArrayList<>(this.signalEntries);
+    public List<SignalEntryRecord> pollAll() {
+        List<SignalEntryRecord> resultSignalEntries = new ArrayList<>(this.signalEntries);
 
         this.signalEntries.clear();
 
         return resultSignalEntries;
     }
 
-    public void add(SignalEntryDefinition signalEntry) {
+    public void add(SignalEntryRecord signalEntry) {
         if (ObjectUtil.isAnyNull(signalEntry)) {
             throw new ConditionParametersException();
         }

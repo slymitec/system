@@ -14,7 +14,7 @@ public class ProcessContextEntity extends APersistentEntity {
 
     private long type;
     private PathRecord path;
-    private ApplicationDefinition application;
+    private ApplicationRecord application;
     private final Map<String, String> environmentVariables;
     private String parameters;
     private PathRecord workFolder;
@@ -27,11 +27,11 @@ public class ProcessContextEntity extends APersistentEntity {
         this.type = type;
     }
 
-    public ApplicationDefinition getApplication() {
+    public ApplicationRecord getApplication() {
         return this.application;
     }
 
-    public void setApplication(ApplicationDefinition application) {
+    public void setApplication(ApplicationRecord application) {
         if (ObjectUtil.isAnyNull(application)) {
             throw new ConditionParametersException();
         }

@@ -34,7 +34,7 @@ public class UserContextCreateCheckProcessResolver extends AResolver implements 
 
             if (LogicalUtil.isAnyEqual(processContext.getType(), ProcessContextType.EXECUTABLE_SERVICE)) {
                 ServiceRepositoryObject serviceRepository = memoryManager.getServiceRepository();
-                ServiceStatusEntity serviceStatus = serviceRepository.get(processContext.getApplication().getId());
+                ServiceStatusEntity serviceStatus = serviceRepository.get(processContext.getApplication().id());
                 long mode = serviceStatus.getMode();
 
                 if (LogicalUtil.isAnyEqual(mode, ServiceModeType.ONLY_APPLICATION) && LogicalUtil.allNotEqual(userContextRequestProcessId.getType(), ClientRequestType.APPLICATION)) {

@@ -17,7 +17,7 @@ import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessLifeProcessorMediator;
-import indi.sly.system.kernel.processes.values.ApplicationDefinition;
+import indi.sly.system.kernel.processes.values.ApplicationRecord;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -50,7 +50,7 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
                 infoContent.execute();
                 long infoContentLength = infoContent.length();
                 byte[] applicationSource = infoContent.read(0, (int) infoContentLength);
-                ApplicationDefinition application = ObjectUtil.transferFromStringOrDefaultProvider(ApplicationDefinition.class,
+                ApplicationRecord application = ObjectUtil.transferFromStringOrDefaultProvider(ApplicationRecord.class,
                         StringUtil.readFormBytes(applicationSource), () -> {
                             throw new StatusUnreadableException();
                         });

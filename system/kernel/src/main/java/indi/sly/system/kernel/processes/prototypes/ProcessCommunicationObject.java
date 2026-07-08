@@ -13,7 +13,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObje
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.values.PortCacheEntity;
 import indi.sly.system.kernel.processes.values.SignalCacheEntity;
-import indi.sly.system.kernel.processes.values.SignalEntryDefinition;
+import indi.sly.system.kernel.processes.values.SignalEntryRecord;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
@@ -495,7 +495,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         }
     }
 
-    public List<SignalEntryDefinition> receiveSignals() {
+    public List<SignalEntryRecord> receiveSignals() {
         if (!this.base.isCurrent() || LogicalUtil.allNotEqual(this.base.getStatus().get(),
                 ProcessStatusType.RUNNING)) {
             throw new StatusRelationshipErrorException();
@@ -510,10 +510,10 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         try {
             SignalCacheEntity signal = cacheRepository.get(SignalCacheEntity.class, this.base.getId());
 
-            List<SignalEntryDefinition> signalEntries = signal.pollAll();
+            List<SignalEntryRecord> signalEntries = signal.pollAll();
             long nowDateTime = dateTime.getCurrent();
-            for (SignalEntryDefinition signalEntry : signalEntries) {
-                signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+            for (SignalEntryRecord signalEntry : signalEntries) {
+                signalEntry.date().put(DateTimeType.ACCESS, nowDateTime);
             }
 
             return CollectionUtil.unmodifiable(signalEntries);
@@ -545,13 +545,11 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         if (signal.size() >= signal.getLimit()) {
             throw new StatusInsufficientResourcesException();
         }
-        SignalEntryDefinition signalEntry = new SignalEntryDefinition();
         long nowDateTime = dateTime.getCurrent();
-        signalEntry.setSource(this.base.getId());
-        signalEntry.setKey(key);
-        signalEntry.setValue(value);
-        signalEntry.getDate().put(DateTimeType.CREATE, nowDateTime);
-        signalEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+        HashMap<Long, Long> date = new HashMap<>();
+        date.put(DateTimeType.CREATE, nowDateTime);
+        date.put(DateTimeType.ACCESS, nowDateTime);
+        SignalEntryRecord signalEntry = new SignalEntryRecord(this.base.getId(), key, value, date);
         signal.add(signalEntry);
 
         ProcessStatisticsObject processStatistics = this.base.getStatistics();

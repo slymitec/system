@@ -8,7 +8,7 @@ import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.CoreManager;
 import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
@@ -51,7 +51,7 @@ public class StartUpController extends AController {
             this.coreManager.startup(StartupType.STEP_AFTER_SELF);
 
             KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
-            KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+            KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
             UserSpaceDefinition userSpace = SpringHelper.getInstance(UserSpaceDefinition.class);
             userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
@@ -100,7 +100,7 @@ public class StartUpController extends AController {
             return new ClientResponseRecord(null, null);
         } else {
             KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
-            KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+            KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
 
             List<ClientResponseExceptionTraceRecord> clientResponseExceptionTraces = new ArrayList<>();

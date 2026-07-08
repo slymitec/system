@@ -3,7 +3,7 @@ package indi.sly.system.kernel.files;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.files.instances.prototypes.processors.FileSystemFileTypeInitializer;
 import indi.sly.system.kernel.files.instances.prototypes.processors.FileSystemFolderTypeInitializer;
 import indi.sly.system.kernel.objects.TypeManager;
@@ -24,7 +24,7 @@ public class FileSystemManager extends AManager {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
             TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
 
-            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+            KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
             long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_EXECUTED,
                     TypeInitializerAttributeType.CAN_BE_INHERITED, TypeInitializerAttributeType.CAN_BE_SHARED_WRITTEN,

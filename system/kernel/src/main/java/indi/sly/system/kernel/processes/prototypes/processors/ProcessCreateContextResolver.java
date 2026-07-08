@@ -7,7 +7,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.PathRecord;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFileContentObject;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -30,7 +30,7 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
 
     public ProcessCreateContextResolver() {
         this.create = (process, parentProcess, processCreator) -> {
-            KernelConfigurationDefinition configuration = this.coreManager.getKernelSpace().getConfiguration();
+            KernelConfiguration configuration = this.coreManager.getKernelSpace().getConfiguration();
 
             ProcessContextObject processContext = process.getContext();
             ProcessContextObject parentProcessContext = parentProcess.getContext();

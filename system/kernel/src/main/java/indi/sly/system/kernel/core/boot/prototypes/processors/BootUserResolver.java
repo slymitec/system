@@ -5,7 +5,7 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.core.boot.lang.BootStartConsumer;
 import indi.sly.system.kernel.core.boot.prototypes.mediators.BootProcessorMediator;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.security.values.*;
@@ -23,7 +23,7 @@ import java.util.UUID;
 public class BootUserResolver extends ABootResolver {
     public BootUserResolver() {
         this.start = (startup) -> {
-            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+            KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 

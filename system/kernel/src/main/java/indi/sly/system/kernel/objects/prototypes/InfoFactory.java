@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.core.prototypes.ObjectCollectionObject;
@@ -60,13 +60,13 @@ public class InfoFactory extends AFactory {
     }
 
     public InfoObject getRootInfo() {
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
         return this.coreManager.getObjectCollection().getById(SpaceType.KERNEL, kernelConfiguration.OBJECTS_PROTOTYPE_ROOT_ID);
     }
 
     public void buildRootInfo() {
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository =

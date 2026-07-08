@@ -2,7 +2,7 @@ package indi.sly.system.test;
 
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
@@ -30,6 +30,6 @@ public abstract class ATestController extends AController {
         this.coreManager.setUserSpace(userSpace);
 
         ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
-        ThreadObject thread = threadManager.create(new KernelConfigurationDefinition().PROCESSES_PROTOTYPE_SYSTEM_ID);
+        ThreadObject thread = threadManager.create(new KernelConfiguration().PROCESSES_PROTOTYPE_SYSTEM_ID);
     }
 }

@@ -1,13 +1,13 @@
 package indi.sly.system.kernel.core.enviroment.values;
 
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.common.values.ADefinition;
+import indi.sly.system.common.values.AValue;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 
 import java.util.Map;
 import java.util.UUID;
 
-public class KernelConfigurationDefinition extends ADefinition {
+public class KernelConfiguration extends AValue {
     public final long CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT = 16L;
     public final UUID CORE_PROTOTYPE_DATETIME_SYSTEM_TIME_OFFSET
             = UUIDUtil.getFormLongs(116714210840444914L, -8594443471741472535L);

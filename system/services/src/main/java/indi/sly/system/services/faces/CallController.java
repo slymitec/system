@@ -4,7 +4,7 @@ import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.common.supports.UUIDUtil;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
@@ -42,7 +42,7 @@ public class CallController extends AController {
 
         if (this.coreManager.getObjectCollection().getLimit(SpaceType.USER) <= 0L) {
             KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
-            KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+            KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
             this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
         }
     }

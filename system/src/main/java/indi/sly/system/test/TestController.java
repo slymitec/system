@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.services.faces.AController;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
@@ -37,7 +37,7 @@ public class TestController extends AController {
 
         UserSpaceDefinition userSpace = new UserSpaceDefinition();
         KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
-        KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+        KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
         kernelSpace.setUserSpace(userSpace);
         this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);

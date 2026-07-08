@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.PathRecord;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ServiceRepositoryObject;
@@ -35,7 +35,7 @@ public class ServiceFactory extends AFactory {
             throw new ConditionParametersException();
         }
 
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 

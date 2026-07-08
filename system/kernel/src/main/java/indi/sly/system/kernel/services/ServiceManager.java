@@ -9,7 +9,7 @@ import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ServiceRepositoryObject;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -55,7 +55,7 @@ public class ServiceManager extends AManager {
         } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
             TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
 
-            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+            KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
             long attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_READ,
                     TypeInitializerAttributeType.CAN_BE_INHERITED, TypeInitializerAttributeType.CAN_NOT_CHANGE_OWNER,

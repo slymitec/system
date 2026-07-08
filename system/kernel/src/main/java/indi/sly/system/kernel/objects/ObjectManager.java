@@ -7,7 +7,7 @@ import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.objects.prototypes.InfoFactory;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -39,7 +39,7 @@ public class ObjectManager extends AManager {
     }
 
     public InfoObject get(PathRecord path) {
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
         if (ObjectUtil.isAnyNull(path) || path.identifiers().size() > kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH) {
             throw new ConditionParametersException();

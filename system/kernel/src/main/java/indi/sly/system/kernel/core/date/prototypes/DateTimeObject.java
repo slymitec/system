@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.core.date.prototypes;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.core.values.NoneCacheEntity;
@@ -24,7 +24,7 @@ import java.time.Clock;
 public class DateTimeObject extends ACacheableObject<NoneCacheEntity> {
     public long getCurrent() {
         KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
-        KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+        KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         DistributionRepositoryObject distributionRepository = memoryManager.getDistributionRepository();
@@ -40,7 +40,7 @@ public class DateTimeObject extends ACacheableObject<NoneCacheEntity> {
 
     public void correct(long dateTime) {
         KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
-        KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+        KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject currentProcess = processManager.getCurrent();

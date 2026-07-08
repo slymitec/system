@@ -7,7 +7,7 @@ import indi.sly.system.kernel.core.AManager;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
 import indi.sly.system.kernel.processes.prototypes.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -28,7 +28,7 @@ public class ThreadManager extends AManager {
             this.factory = this.coreManager.create(ThreadFactory.class);
             this.factory.init();
         } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
-            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+            KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
             this.create(kernelConfiguration.PROCESSES_PROTOTYPE_SYSTEM_ID);
         }

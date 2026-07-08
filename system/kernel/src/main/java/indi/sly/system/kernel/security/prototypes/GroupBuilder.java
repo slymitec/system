@@ -6,7 +6,7 @@ import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
@@ -42,7 +42,7 @@ public class GroupBuilder extends ABuilder {
         group.setId(UUID.randomUUID());
         group.setName(groupName);
         UserTokenEntity userToken = new UserTokenEntity();
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
         userToken.getLimits().putAll(kernelConfiguration.PROCESSES_TOKEN_DEFAULT_LIMIT);
         group.setToken(userToken);
 

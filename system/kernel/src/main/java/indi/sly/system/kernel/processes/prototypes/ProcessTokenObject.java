@@ -9,7 +9,7 @@ import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -88,7 +88,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             }
         }
 
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
         AccountAuthorizationSummaryRecord accountAuthorizationSummary = accountAuthorization.checkAndGetSummary();
 
@@ -390,7 +390,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             }
         }
 
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
         ProcessContextObject processContext = this.base.getContext();
 

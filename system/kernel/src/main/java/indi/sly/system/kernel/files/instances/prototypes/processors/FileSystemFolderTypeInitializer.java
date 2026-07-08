@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFolderContentObject;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
@@ -124,7 +124,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 this.unlockProcedure(info, LockType.WRITE);
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
-            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+            KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
             File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "$Relations");

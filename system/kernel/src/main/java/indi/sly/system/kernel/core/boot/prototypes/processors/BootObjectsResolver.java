@@ -8,7 +8,7 @@ import indi.sly.system.kernel.core.boot.prototypes.mediators.BootProcessorMediat
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -30,7 +30,7 @@ import java.util.*;
 public class BootObjectsResolver extends ABootResolver {
     public BootObjectsResolver() {
         this.start = (startup) -> {
-            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+            KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
             ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);

@@ -8,7 +8,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.PathRecord;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.TypeManager;
@@ -102,7 +102,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             SecurityDescriptorObject parentSecurityDescriptor;
             InfoEntity parentInfoSelf;
 
-            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+            KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
             int MAX_DEPTH = kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH;
             while (ObjectUtil.allNotNull(parentInfo)) {
                 if (MAX_DEPTH-- < 0) {
@@ -313,7 +313,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                 SecurityDescriptorObject parentSecurityDescriptor;
                 InfoEntity parentInfoSelf;
 
-                KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+                KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
                 int MAX_DEPTH = kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH;
                 while (ObjectUtil.allNotNull(parentInfo)) {
                     if (MAX_DEPTH-- < 0) {
@@ -506,7 +506,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
     }
 
     private void writeAudit(Set<UserIdRecord> userIds, long value) {
-        KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -559,7 +559,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             SecurityDescriptorObject parentSecurityDescriptor;
             InfoEntity parentInfoSelf;
 
-            KernelConfigurationDefinition kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+            KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
             int MAX_DEPTH = kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH;
             while (ObjectUtil.allNotNull(parentInfo)) {
                 if (MAX_DEPTH-- < 0) {

@@ -12,17 +12,17 @@ import java.util.concurrent.ConcurrentSkipListSet;
 @Singleton
 public class KernelSpaceDefinition extends ASpaceDefinition {
     public KernelSpaceDefinition() {
-        this.configuration = new KernelConfigurationDefinition();
+        this.configuration = new KernelConfiguration();
         this.infoTypeIds = new ConcurrentSkipListSet<>();
         this.userSpace = new ThreadLocal<>();
     }
 
-    private final KernelConfigurationDefinition configuration;
+    private final KernelConfiguration configuration;
     private final Set<UUID> infoTypeIds;
     private final ThreadLocal<UserSpaceDefinition> userSpace;
     private AKernelSpaceExtensionDefinition<?> serviceSpace;
 
-    public KernelConfigurationDefinition getConfiguration() {
+    public KernelConfiguration getConfiguration() {
         return configuration;
     }
 

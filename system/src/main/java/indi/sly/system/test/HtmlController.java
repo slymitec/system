@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentifierRecord;
-import indi.sly.system.kernel.core.enviroment.values.KernelConfigurationDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
 import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
@@ -36,7 +36,7 @@ public class HtmlController extends AController {
         if (ObjectUtil.allNotNull(this.coreManager)) {
             UserSpaceDefinition userSpace = new UserSpaceDefinition();
             KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
-            KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+            KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
             kernelSpace.setUserSpace(userSpace);
             this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);

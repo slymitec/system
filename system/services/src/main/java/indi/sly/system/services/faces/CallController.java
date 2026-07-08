@@ -5,9 +5,9 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
-import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.UserSpace;
 import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensionDefinition;
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.prototypes.UserContentObject;
@@ -35,13 +35,13 @@ public class CallController extends AController {
             }
         }
 
-        UserSpaceDefinition userSpace = SpringHelper.getInstance(UserSpaceDefinition.class);
+        UserSpace userSpace = SpringHelper.getInstance(UserSpace.class);
         userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
 
         this.coreManager.setUserSpace(userSpace);
 
         if (this.coreManager.getObjectCollection().getLimit(SpaceType.USER) <= 0L) {
-            KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+            KernelSpace kernelSpace = this.coreManager.getKernelSpace();
             KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
             this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
         }

@@ -10,8 +10,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 @Named
 @Singleton
-public class KernelSpaceDefinition extends ASpaceDefinition {
-    public KernelSpaceDefinition() {
+public class KernelSpace extends ASpace {
+    public KernelSpace() {
         this.configuration = new KernelConfiguration();
         this.infoTypeIds = new ConcurrentSkipListSet<>();
         this.userSpace = new ThreadLocal<>();
@@ -19,7 +19,7 @@ public class KernelSpaceDefinition extends ASpaceDefinition {
 
     private final KernelConfiguration configuration;
     private final Set<UUID> infoTypeIds;
-    private final ThreadLocal<UserSpaceDefinition> userSpace;
+    private final ThreadLocal<UserSpace> userSpace;
     private AKernelSpaceExtensionDefinition serviceSpace;
 
     public KernelConfiguration getConfiguration() {
@@ -30,11 +30,11 @@ public class KernelSpaceDefinition extends ASpaceDefinition {
         return this.infoTypeIds;
     }
 
-    public UserSpaceDefinition getUserSpace() {
+    public UserSpace getUserSpace() {
         return this.userSpace.get();
     }
 
-    public void setUserSpace(UserSpaceDefinition userSpace) {
+    public void setUserSpace(UserSpace userSpace) {
         if (ObjectUtil.isAnyNull(userSpace)) {
             this.userSpace.remove();
         } else {

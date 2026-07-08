@@ -7,9 +7,9 @@ import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
-import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.UserSpace;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.services.faces.AController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,8 +34,8 @@ public class HtmlController extends AController {
         this.init();
 
         if (ObjectUtil.allNotNull(this.coreManager)) {
-            UserSpaceDefinition userSpace = new UserSpaceDefinition();
-            KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+            UserSpace userSpace = new UserSpace();
+            KernelSpace kernelSpace = this.coreManager.getKernelSpace();
             KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
             kernelSpace.setUserSpace(userSpace);

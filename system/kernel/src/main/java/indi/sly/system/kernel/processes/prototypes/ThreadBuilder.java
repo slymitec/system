@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
-import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.UserSpace;
 import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.kernel.processes.values.ThreadContextType;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -20,7 +20,7 @@ public class ThreadBuilder extends ABuilder {
     protected ThreadFactory factory;
 
     public ThreadObject create(UUID processID) {
-        UserSpaceDefinition userSpace = this.coreManager.getUserSpace();
+        UserSpace userSpace = this.coreManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
         if (ObjectUtil.isAnyNull(threads)) {
             threads = new Stack<>();
@@ -51,7 +51,7 @@ public class ThreadBuilder extends ABuilder {
     }
 
     public void end() {
-        UserSpaceDefinition userSpace = this.coreManager.getUserSpace();
+        UserSpace userSpace = this.coreManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
 
         if (ObjectUtil.isAnyNull(threads) || threads.isEmpty()) {

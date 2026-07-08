@@ -8,9 +8,9 @@ import indi.sly.system.kernel.core.boot.prototypes.BootFactory;
 import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.UserSpace;
 import indi.sly.system.kernel.core.prototypes.*;
 import indi.sly.system.kernel.core.systemversion.prototypes.SystemVersionObject;
 import indi.sly.system.kernel.files.FileSystemManager;
@@ -25,8 +25,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
-
-import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -107,15 +105,15 @@ public class CoreManager extends AManager {
         return service;
     }
 
-    public KernelSpaceDefinition getKernelSpace() {
-        return SpringHelper.getInstance(KernelSpaceDefinition.class);
+    public KernelSpace getKernelSpace() {
+        return SpringHelper.getInstance(KernelSpace.class);
     }
 
-    public UserSpaceDefinition getUserSpace() {
+    public UserSpace getUserSpace() {
         return this.getKernelSpace().getUserSpace();
     }
 
-    public void setUserSpace(UserSpaceDefinition userSpace) {
+    public void setUserSpace(UserSpace userSpace) {
         this.getKernelSpace().setUserSpace(userSpace);
     }
 

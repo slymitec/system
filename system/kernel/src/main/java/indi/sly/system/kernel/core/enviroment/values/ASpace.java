@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.core.enviroment.values;
 
+import indi.sly.system.common.AContainer;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.common.values.LockType;
@@ -14,8 +15,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Named
-public abstract class ASpaceDefinition extends ADefinition {
-    public ASpaceDefinition() {
+public abstract class ASpace extends AContainer {
+    public ASpace() {
         this.objects = new ConcurrentHashMap<>();
         this.classedObjects = new ConcurrentHashMap<>();
 

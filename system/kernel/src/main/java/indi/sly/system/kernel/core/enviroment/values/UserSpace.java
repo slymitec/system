@@ -10,8 +10,8 @@ import java.util.Stack;
 
 @Named
 @RequestScope
-public class UserSpaceDefinition extends ASpaceDefinition {
-    public UserSpaceDefinition() {
+public class UserSpace extends ASpace {
+    public UserSpace() {
         this.threads = new ThreadLocal<>();
     }
 

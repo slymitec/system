@@ -2,7 +2,7 @@ package indi.sly.system.kernel.core.date.prototypes;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
-import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelSpace;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.core.values.NoneCacheEntity;
 import indi.sly.system.kernel.memory.MemoryManager;
@@ -23,7 +23,7 @@ import java.time.Clock;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class DateTimeObject extends ACacheableObject<NoneCacheEntity> {
     public long getCurrent() {
-        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+        KernelSpace kernelSpace = this.coreManager.getKernelSpace();
         KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
@@ -39,7 +39,7 @@ public class DateTimeObject extends ACacheableObject<NoneCacheEntity> {
     }
 
     public void correct(long dateTime) {
-        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+        KernelSpace kernelSpace = this.coreManager.getKernelSpace();
         KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);

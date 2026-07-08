@@ -1,5 +1,6 @@
 package indi.sly.system.boot;
 
+import indi.sly.system.common.AConfiguration;
 import indi.sly.system.common.AContainer;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -24,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 @EnableJpaRepositories(basePackages = SpringConfiguration.BASE_PACKAGES)
 @EntityScan(basePackages = SpringConfiguration.BASE_PACKAGES)
 @ServletComponentScan(basePackages = SpringConfiguration.BASE_PACKAGES)
-public class SpringConfiguration extends AContainer implements WebMvcConfigurer {
+public class SpringConfiguration extends AConfiguration implements WebMvcConfigurer {
     public static final String BASE_PACKAGES = "indi.sly.*";
 
     @Bean

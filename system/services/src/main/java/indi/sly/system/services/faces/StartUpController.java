@@ -9,9 +9,9 @@ import indi.sly.system.kernel.core.CoreManager;
 import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
-import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.UserSpace;
 import indi.sly.system.kernel.files.FileSystemManager;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -50,10 +50,10 @@ public class StartUpController extends AController {
             this.coreManager.startup(StartupType.STEP_INIT_SELF);
             this.coreManager.startup(StartupType.STEP_AFTER_SELF);
 
-            KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+            KernelSpace kernelSpace = this.coreManager.getKernelSpace();
             KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
-            UserSpaceDefinition userSpace = SpringHelper.getInstance(UserSpaceDefinition.class);
+            UserSpace userSpace = SpringHelper.getInstance(UserSpace.class);
             userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
             this.coreManager.setUserSpace(userSpace);
             this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
@@ -99,7 +99,7 @@ public class StartUpController extends AController {
 
             return new ClientResponseRecord(null, null);
         } else {
-            KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+            KernelSpace kernelSpace = this.coreManager.getKernelSpace();
             KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
 

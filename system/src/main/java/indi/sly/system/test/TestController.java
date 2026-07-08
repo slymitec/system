@@ -5,9 +5,9 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.services.faces.AController;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
-import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
-import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.UserSpace;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -35,8 +35,8 @@ public class TestController extends AController {
     public Object Test(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         this.init();
 
-        UserSpaceDefinition userSpace = new UserSpaceDefinition();
-        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+        UserSpace userSpace = new UserSpace();
+        KernelSpace kernelSpace = this.coreManager.getKernelSpace();
         KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
         kernelSpace.setUserSpace(userSpace);

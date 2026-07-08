@@ -7,7 +7,7 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.values.KernelSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.KernelSpace;
 import indi.sly.system.services.core.environment.values.ServiceKernelSpaceExtensionDefinition;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.instances.prototypes.processors.*;
@@ -44,7 +44,7 @@ public class JobService extends AService {
             this.factory = this.coreManager.create(JobFactory.class);
             this.factory.init();
         } else if (startup == StartupType.STEP_INIT_SERVICE) {
-            KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+            KernelSpace kernelSpace = this.coreManager.getKernelSpace();
 
             ServiceKernelSpaceExtensionDefinition serviceSpace = new ServiceKernelSpaceExtensionDefinition();
             TransactionalActionComponent transactionalAction = this.coreManager.create(TransactionalActionComponent.class);

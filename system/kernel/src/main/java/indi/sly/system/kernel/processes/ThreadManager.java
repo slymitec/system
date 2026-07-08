@@ -8,7 +8,7 @@ import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.enviroment.values.KernelConfiguration;
-import indi.sly.system.kernel.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.system.kernel.core.enviroment.values.UserSpace;
 import indi.sly.system.kernel.processes.prototypes.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -39,7 +39,7 @@ public class ThreadManager extends AManager {
     }
 
     public ThreadObject getCurrent() {
-        UserSpaceDefinition userSpace = this.coreManager.getUserSpace();
+        UserSpace userSpace = this.coreManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
@@ -58,7 +58,7 @@ public class ThreadManager extends AManager {
     }
 
     public int size() {
-        UserSpaceDefinition userSpace = this.coreManager.getUserSpace();
+        UserSpace userSpace = this.coreManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
 
         return ObjectUtil.isAnyNull(threads) ? 0 : threads.size();

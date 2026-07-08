@@ -15,7 +15,8 @@ import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.ProcessRepositoryObject;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.kernel.processes.values.ProcessAdditionalCreatorDefinition;
-import indi.sly.system.kernel.processes.values.ProcessCreatorDefinition;
+import indi.sly.system.kernel.processes.values.ProcessContextType;
+import indi.sly.system.kernel.processes.values.ProcessCreatorRecord;
 import indi.sly.system.kernel.processes.values.ThreadStatusType;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.values.PrivilegeType;
@@ -108,27 +109,14 @@ public class ProcessManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        ProcessCreatorDefinition processCreator = new ProcessCreatorDefinition();
-
-        if (ObjectUtil.allNotNull(accountAuthorization)) {
-            processCreator.setAccountAuthorization(accountAuthorization);
-        }
-
-        processCreator.setFileIndex(fileIndex);
-
-        if (!ValueUtil.isAnyNullOrEmpty(parameters)) {
-            processCreator.setParameters(parameters);
-        } else {
-            processCreator.setParameters(StringUtil.EMPTY);
-        }
-        if (ObjectUtil.allNotNull(workFolder) && !workFolder.identifiers().isEmpty()) {
-            processCreator.setWorkFolder(workFolder);
-        }
-
-        if (ObjectUtil.allNotNull(additionalCreator)) {
-            processCreator.setInheritSession(additionalCreator.isInheritSession());
-            processCreator.setContextType(additionalCreator.getContextType());
-        }
+        ProcessCreatorRecord processCreator = new ProcessCreatorRecord(
+                accountAuthorization,
+                !ObjectUtil.allNotNull(additionalCreator) || additionalCreator.isInheritSession(),
+                ObjectUtil.allNotNull(additionalCreator) ? additionalCreator.getContextType() : ProcessContextType.EXECUTABLE,
+                fileIndex,
+                !ValueUtil.isAnyNullOrEmpty(parameters) ? parameters : StringUtil.EMPTY,
+                ObjectUtil.allNotNull(workFolder) && !workFolder.identifiers().isEmpty() ? workFolder : null
+        );
 
         ProcessObject process = this.getCurrent();
         ProcessCreateBuilder processCreateBuilder = this.factory.createProcessCreator(process);

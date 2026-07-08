@@ -35,11 +35,11 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
             ProcessContextObject processContext = process.getContext();
             ProcessContextObject parentProcessContext = parentProcess.getContext();
 
-            processContext.setType(processCreator.getContextType());
+            processContext.setType(processCreator.contextType());
 
-            if (!ValueUtil.isAnyNullOrEmpty(processCreator.getFileIndex())) {
+            if (!ValueUtil.isAnyNullOrEmpty(processCreator.fileIndex())) {
                 ProcessInfoTableObject parentProcessInfoTable = parentProcess.getInfoTable();
-                ProcessInfoEntryObject parentProcessInfoEntry = parentProcessInfoTable.getByIndex(processCreator.getFileIndex());
+                ProcessInfoEntryObject parentProcessInfoEntry = parentProcessInfoTable.getByIndex(processCreator.fileIndex());
 
                 InfoObject info = parentProcessInfoEntry.getInfo();
                 if (!info.getType().equals(configuration.FILES_TYPES_INSTANCE_FILE_ID)) {
@@ -59,13 +59,13 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
                 processContext.setApplication(application);
             }
 
-            if (!ValueUtil.isAnyNullOrEmpty(processCreator.getParameters())) {
-                processContext.setParameters(processCreator.getParameters());
+            if (!ValueUtil.isAnyNullOrEmpty(processCreator.parameters())) {
+                processContext.setParameters(processCreator.parameters());
             } else {
                 processContext.setParameters(StringUtil.EMPTY);
             }
 
-            PathRecord processContextWorkFolder = processCreator.getWorkFolder();
+            PathRecord processContextWorkFolder = processCreator.workFolder();
             if (ObjectUtil.allNotNull(processContextWorkFolder)) {
                 ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 

@@ -19,7 +19,7 @@ public class ProcessCreateTokenResolver extends AResolver implements IProcessCre
     public ProcessCreateTokenResolver() {
         this.create = (process, parentProcess, processCreator) -> {
             ProcessTokenObject processToken = process.getToken();
-            AccountAuthorizationObject accountAuthorization = processCreator.getAccountAuthorization();
+            AccountAuthorizationObject accountAuthorization = processCreator.accountAuthorization();
             if (ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.isLegal()) {
                 processToken.injectAccountAuthorization(accountAuthorization);
             } else {

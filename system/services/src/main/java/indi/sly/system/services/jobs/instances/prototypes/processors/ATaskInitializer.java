@@ -12,7 +12,6 @@ import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import indi.sly.system.services.jobs.values.TaskInitializerRunRecord;
-import indi.sly.system.services.jobs.values.TaskInitializerRunSummaryDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -63,7 +62,7 @@ public abstract class ATaskInitializer extends AInitializer {
         return this.runs.containsKey(name);
     }
 
-    public final TaskInitializerRunSummaryDefinition getRun(String name) {
+    public final TaskInitializerRunRecord getRun(String name) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
@@ -74,10 +73,7 @@ public abstract class ATaskInitializer extends AInitializer {
             throw new StatusNotExistedException();
         }
 
-        TaskInitializerRunSummaryDefinition runSummary = new TaskInitializerRunSummaryDefinition();
-        runSummary.setTaskInitializerRun(run);
-
-        return runSummary;
+        return run;
     }
 
     public final ACacheableObject<?> getCacheableObject(UUID handle) {

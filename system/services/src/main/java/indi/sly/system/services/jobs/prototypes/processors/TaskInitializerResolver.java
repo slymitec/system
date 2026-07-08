@@ -14,7 +14,7 @@ import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
-import indi.sly.system.services.jobs.values.TaskInitializerRunSummaryDefinition;
+import indi.sly.system.services.jobs.values.TaskInitializerRunRecord;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -38,16 +38,16 @@ public class TaskInitializerResolver extends AResolver implements ITaskResolver 
 
         this.run = (task, status, name, run, content) -> {
             ATaskInitializer initializer = task.getInitializer();
-            TaskInitializerRunSummaryDefinition initializerRun = initializer.getRun(name);
+            TaskInitializerRunRecord initializerRun = initializer.getRun(name);
 
             try {
                 long initializerRunTransaction = TransactionType.WHATEVER;
                 if (!LogicalUtil.isAnyExist(task.getAttribute(), TaskAttributeType.HAS_NOT_TRANSACTION)) {
-                    initializerRunTransaction = initializerRun.getTransaction();
+                    initializerRunTransaction = initializerRun.transaction();
                 }
 
                 Provider<Void> provider = () -> {
-                    initializerRun.getMethod().accept(run, content);
+                    initializerRun.method().accept(run, content);
 
                     return null;
                 };

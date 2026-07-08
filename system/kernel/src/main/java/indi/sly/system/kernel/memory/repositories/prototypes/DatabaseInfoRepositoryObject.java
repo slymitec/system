@@ -7,7 +7,7 @@ import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoRelationEntity;
-import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
+import indi.sly.system.kernel.objects.values.InfoWildcardRecord;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
@@ -183,7 +183,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
     }
 
     @Override
-    public List<InfoRelationEntity> listRelation(InfoEntity info, InfoWildcardDefinition wildcard) {
+    public List<InfoRelationEntity> listRelation(InfoEntity info, InfoWildcardRecord wildcard) {
         if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
         }
@@ -194,9 +194,9 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         criteriaQuery.select(root);
         criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), info.getId()));
         if (!ValueUtil.isAnyNullOrEmpty(wildcard)) {
-            if (wildcard.isFuzzy()) {
-                if (wildcard.getType() == String.class) {
-                    String wildcardValue = StringUtil.readFormBytes(wildcard.getValue());
+            if (wildcard.fuzzy()) {
+                if (wildcard.type() == String.class) {
+                    String wildcardValue = StringUtil.readFormBytes(wildcard.value());
                     wildcardValue = wildcardValue.replace("[", "[[]");
                     wildcardValue = wildcardValue.replace("%", "[%]");
                     wildcardValue = wildcardValue.replace("_", "[_]");
@@ -205,10 +205,10 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
                     criteriaQuery.where(criteriaBuilder.like(root.get("name"), wildcardValue));
                 }
             } else {
-                if (wildcard.getType() == String.class) {
-                    criteriaQuery.where(criteriaBuilder.equal(root.get("name"), StringUtil.readFormBytes(wildcard.getValue())));
-                } else if (wildcard.getType() == UUID.class) {
-                    criteriaQuery.where(criteriaBuilder.equal(root.get("id"), UUIDUtil.readFormBytes(wildcard.getValue())));
+                if (wildcard.type() == String.class) {
+                    criteriaQuery.where(criteriaBuilder.equal(root.get("name"), StringUtil.readFormBytes(wildcard.value())));
+                } else if (wildcard.type() == UUID.class) {
+                    criteriaQuery.where(criteriaBuilder.equal(root.get("id"), UUIDUtil.readFormBytes(wildcard.value())));
                 }
             }
         }
@@ -219,7 +219,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
     }
 
     @Override
-    public int countRelation(InfoEntity info, InfoWildcardDefinition wildcard) {
+    public int countRelation(InfoEntity info, InfoWildcardRecord wildcard) {
         if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
         }
@@ -230,9 +230,9 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), info.getId()));
         if (!ValueUtil.isAnyNullOrEmpty(wildcard)) {
-            if (wildcard.isFuzzy()) {
-                if (wildcard.getType() == String.class) {
-                    String wildcardValue = StringUtil.readFormBytes(wildcard.getValue());
+            if (wildcard.fuzzy()) {
+                if (wildcard.type() == String.class) {
+                    String wildcardValue = StringUtil.readFormBytes(wildcard.value());
                     wildcardValue = wildcardValue.replace("[", "[[]");
                     wildcardValue = wildcardValue.replace("%", "[%]");
                     wildcardValue = wildcardValue.replace("_", "[_]");
@@ -241,10 +241,10 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
                     criteriaQuery.where(criteriaBuilder.like(root.get("name"), wildcardValue));
                 }
             } else {
-                if (wildcard.getType() == String.class) {
-                    criteriaQuery.where(criteriaBuilder.equal(root.get("name"), StringUtil.readFormBytes(wildcard.getValue())));
-                } else if (wildcard.getType() == UUID.class) {
-                    criteriaQuery.where(criteriaBuilder.equal(root.get("id"), UUIDUtil.readFormBytes(wildcard.getValue())));
+                if (wildcard.type() == String.class) {
+                    criteriaQuery.where(criteriaBuilder.equal(root.get("name"), StringUtil.readFormBytes(wildcard.value())));
+                } else if (wildcard.type() == UUID.class) {
+                    criteriaQuery.where(criteriaBuilder.equal(root.get("id"), UUIDUtil.readFormBytes(wildcard.value())));
                 }
             }
         }

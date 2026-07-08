@@ -21,7 +21,7 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeI
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.SecurityDescriptorObject;
-import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
+import indi.sly.system.kernel.objects.values.InfoWildcardRecord;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -197,7 +197,7 @@ public class UserManager extends AManager {
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
-        InfoWildcardDefinition wildcard = new InfoWildcardDefinition(account.getName());
+        InfoWildcardRecord wildcard = new InfoWildcardRecord(account.getName());
 
         InfoObject parentInfo = objectManager.get(new PathRecord(List.of(new IdentifierRecord("Audits"))));
         Set<InfoSummaryDefinition> infoSummaries = parentInfo.queryChild(wildcard);

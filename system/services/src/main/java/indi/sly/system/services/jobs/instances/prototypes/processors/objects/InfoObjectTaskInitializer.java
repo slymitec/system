@@ -9,7 +9,7 @@ import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.prototypes.DumpObject;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.SecurityDescriptorObject;
-import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
+import indi.sly.system.kernel.objects.values.InfoWildcardRecord;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.lang.TaskRunConsumer;
@@ -236,7 +236,7 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
             throw new ConditionParametersException();
         }
 
-        InfoWildcardDefinition wildcard = ObjectUtil.transferFromString(InfoWildcardDefinition.class, parameters.getFirst());
+        InfoWildcardRecord wildcard = ObjectUtil.transferFromString(InfoWildcardRecord.class, parameters.getFirst());
 
         content.setResult(info.queryChild(wildcard));
     }

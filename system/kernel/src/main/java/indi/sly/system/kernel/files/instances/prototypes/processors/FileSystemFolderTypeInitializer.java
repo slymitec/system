@@ -11,7 +11,7 @@ import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
-import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
+import indi.sly.system.kernel.objects.values.InfoWildcardRecord;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenDefinition;
@@ -102,7 +102,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             try {
                 this.lockProcedure(info, LockType.WRITE);
 
-                InfoWildcardDefinition wildcard = new InfoWildcardDefinition(childInfo.getName());
+                InfoWildcardRecord wildcard = new InfoWildcardRecord(childInfo.getName());
                 if (infoRepository.countRelation(info, wildcard) > 0) {
                     throw new StatusAlreadyExistedException();
                 }
@@ -238,8 +238,8 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardDefinition wildcard) {
-        if (wildcard.getType() != String.class) {
+    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardRecord wildcard) {
+        if (wildcard.type() != String.class) {
             throw new StatusNotSupportedException();
         }
 
@@ -268,7 +268,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 this.unlockProcedure(info, LockType.READ);
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
-            if (wildcard.getType() == UUID.class) {
+            if (wildcard.type() == UUID.class) {
                 throw new StatusNotSupportedException();
             }
 
@@ -298,8 +298,8 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                 infoSummary.setType(UUIDUtil.readFormBytes(childInfoRelationType));
                 infoSummary.setName(childInfoName);
 
-                String wildcardValue = StringUtil.readFormBytes(wildcard.getValue());
-                if (wildcard.isFuzzy()) {
+                String wildcardValue = StringUtil.readFormBytes(wildcard.value());
+                if (wildcard.fuzzy()) {
                     infoSummaries.add(infoSummary);
                 } else {
                     if (wildcardValue.equals(infoSummary.getName())) {

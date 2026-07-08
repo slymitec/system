@@ -14,7 +14,7 @@ import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObje
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoWildcardDefinition;
+import indi.sly.system.kernel.objects.values.InfoWildcardRecord;
 import indi.sly.system.kernel.objects.values.InfoSummaryDefinition;
 import indi.sly.system.kernel.objects.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.*;
@@ -88,7 +88,7 @@ public class BootObjectsResolver extends ABootResolver {
                 UUID[] childFolderTypes = new UUID[]{kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID};
 
                 for (int i = 0; i < childFolderNames.length; i++) {
-                    infoSummaries = rootInfo.queryChild(new InfoWildcardDefinition(childFolderNames[i]));
+                    infoSummaries = rootInfo.queryChild(new InfoWildcardRecord(childFolderNames[i]));
 
                     if (infoSummaries.isEmpty()) {
                         rootInfo.createChild(childFolderTypes[i], new IdentifierRecord(childFolderNames[i]));
@@ -96,7 +96,7 @@ public class BootObjectsResolver extends ABootResolver {
                 }
 
                 InfoObject parentInfo = rootInfo.getChild(new IdentifierRecord("Sessions"));
-                InfoWildcardDefinition wildcard = new InfoWildcardDefinition(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME);
+                InfoWildcardRecord wildcard = new InfoWildcardRecord(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME);
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
                     InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierRecord(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME));
@@ -133,13 +133,13 @@ public class BootObjectsResolver extends ABootResolver {
                 }
 
                 parentInfo = rootInfo.getChild(new IdentifierRecord("Files"));
-                wildcard = new InfoWildcardDefinition("Main");
+                wildcard = new InfoWildcardRecord("Main");
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
                     parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierRecord("Main"));
                 }
                 parentInfo = parentInfo.getChild(new IdentifierRecord("Main"));
-                wildcard = new InfoWildcardDefinition("Home");
+                wildcard = new InfoWildcardRecord("Home");
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
                     parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierRecord("Home"));

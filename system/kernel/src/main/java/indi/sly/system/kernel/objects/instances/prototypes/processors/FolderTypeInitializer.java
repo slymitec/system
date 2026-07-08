@@ -50,7 +50,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
 
         this.lockProcedure(info, LockType.WRITE);
         try {
-            InfoWildcardDefinition wildcard = new InfoWildcardDefinition(childInfo.getName());
+            InfoWildcardRecord wildcard = new InfoWildcardRecord(childInfo.getName());
             if (infoRepository.countRelation(info, wildcard) > 0) {
                 throw new StatusAlreadyExistedException();
             }
@@ -94,7 +94,7 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardDefinition wildcard) {
+    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardRecord wildcard) {
         Set<InfoSummaryDefinition> infoSummaries = new HashSet<>();
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);

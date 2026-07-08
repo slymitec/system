@@ -9,5 +9,5 @@ import java.util.Set;
 @FunctionalInterface
 public interface InfoProcessorQueryChildFunction extends Function5<Set<InfoSummaryDefinition>, Set<InfoSummaryDefinition>,
         InfoEntity, TypeObject,
-        InfoCacheEntity, InfoWildcardDefinition> {
+        InfoCacheEntity, InfoWildcardRecord> {
 }

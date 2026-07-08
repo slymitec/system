@@ -51,7 +51,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
 
         this.lockProcedure(info, LockType.WRITE);
         try {
-            InfoWildcardDefinition wildcard = new InfoWildcardDefinition(childInfo.getId());
+            InfoWildcardRecord wildcard = new InfoWildcardRecord(childInfo.getId());
             if (infoRepository.countRelation(info, wildcard) > 0) {
                 throw new StatusAlreadyExistedException();
             }
@@ -95,8 +95,8 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardDefinition wildcard) {
-        if (wildcard.getType() != UUID.class) {
+    public Set<InfoSummaryDefinition> queryChildProcedure(InfoEntity info, InfoWildcardRecord wildcard) {
+        if (wildcard.type() != UUID.class) {
             throw new StatusNotSupportedException();
         }
 

@@ -3,7 +3,6 @@ package indi.sly.system.kernel.objects.values;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.*;
-import indi.sly.system.common.values.ADefinition;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonGenerator;
 import tools.jackson.core.JsonParser;
@@ -18,59 +17,37 @@ import tools.jackson.databind.jsontype.TypeSerializer;
 
 import java.util.UUID;
 
-@JsonSerialize(using = InfoWildcardDefinition.InfoWildcardDefinitionSerializer.class)
-@JsonDeserialize(using = InfoWildcardDefinition.InfoWildcardDefinitionDeserializer.class)
-public class InfoWildcardDefinition extends ADefinition {
-    private final byte[] value;
-    private final Class<?> type;
-    private final boolean fuzzy;
-
-    public byte[] getValue() {
-        return value;
+@JsonSerialize(using = InfoWildcardRecord.InfoWildcardDefinitionSerializer.class)
+@JsonDeserialize(using = InfoWildcardRecord.InfoWildcardDefinitionDeserializer.class)
+public record InfoWildcardRecord(byte[] value, Class<?> type, boolean fuzzy) {
+    public InfoWildcardRecord() {
+        this(UUIDUtil.writeToBytes(UUIDUtil.getEmpty()), UUID.class, true);
     }
 
-    public Class<?> getType() {
-        return type;
-    }
-
-    public boolean isFuzzy() {
-        return fuzzy;
-    }
-
-    public InfoWildcardDefinition() {
-        this.value = UUIDUtil.writeToBytes(UUIDUtil.getEmpty());
-        this.type = UUID.class;
-        this.fuzzy = true;
-    }
-
-    public InfoWildcardDefinition(UUID value) {
+    public InfoWildcardRecord(UUID value) {
         if (ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();
         }
 
-        this.value = UUIDUtil.writeToBytes(value);
-        this.type = UUID.class;
-        this.fuzzy = ValueUtil.isAnyNullOrEmpty(value);
+        this(UUIDUtil.writeToBytes(value), UUID.class, ValueUtil.isAnyNullOrEmpty(value));
     }
 
-    public InfoWildcardDefinition(String value) {
+    public InfoWildcardRecord(String value) {
         if (StringUtil.isNameIllegalButWildcard(value)) {
             throw new ConditionParametersException();
         }
 
-        this.value = StringUtil.writeToBytes(value);
-        this.type = String.class;
-        this.fuzzy = StringUtil.isNameIllegal(value);
+        this(StringUtil.writeToBytes(value), String.class, StringUtil.isNameIllegal(value));
     }
 
-    public static class InfoWildcardDefinitionSerializer extends ValueSerializer<InfoWildcardDefinition> {
+    public static class InfoWildcardDefinitionSerializer extends ValueSerializer<InfoWildcardRecord> {
         @Override
-        public void serializeWithType(InfoWildcardDefinition value, JsonGenerator generator, SerializationContext ctxt, TypeSerializer typeSer) throws JacksonException {
+        public void serializeWithType(InfoWildcardRecord value, JsonGenerator generator, SerializationContext ctxt, TypeSerializer typeSer) throws JacksonException {
             this.serialize(value, generator, ctxt);
         }
 
         @Override
-        public void serialize(InfoWildcardDefinition value, JsonGenerator generator, SerializationContext ctxt) throws JacksonException {
+        public void serialize(InfoWildcardRecord value, JsonGenerator generator, SerializationContext ctxt) throws JacksonException {
             if (value.type == String.class) {
                 generator.writeString(StringUtil.readFormBytes(value.value));
             } else if (value.type == UUID.class) {
@@ -79,17 +56,17 @@ public class InfoWildcardDefinition extends ADefinition {
         }
     }
 
-    public static class InfoWildcardDefinitionDeserializer extends ValueDeserializer<InfoWildcardDefinition> {
+    public static class InfoWildcardDefinitionDeserializer extends ValueDeserializer<InfoWildcardRecord> {
         @Override
         public Object deserializeWithType(JsonParser parser, DeserializationContext context, TypeDeserializer typeDeserializer) throws JacksonException {
             return this.deserialize(parser, context);
         }
 
         @Override
-        public InfoWildcardDefinition deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
+        public InfoWildcardRecord deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
             String value = parser.getString();
 
-            InfoWildcardDefinition infoWildcard;
+            InfoWildcardRecord infoWildcard;
 
             if (value.startsWith("<") && value.endsWith(">")) {
                 UUID id;
@@ -102,9 +79,9 @@ public class InfoWildcardDefinition extends ADefinition {
                     throw new StatusUnreadableException();
                 }
 
-                infoWildcard = new InfoWildcardDefinition(id);
+                infoWildcard = new InfoWildcardRecord(id);
             } else if (!StringUtil.isNameIllegalButWildcard(value)) {
-                infoWildcard = new InfoWildcardDefinition(value);
+                infoWildcard = new InfoWildcardRecord(value);
             } else {
                 throw new StatusUnreadableException();
             }

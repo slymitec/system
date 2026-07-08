@@ -276,7 +276,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         }
     }
 
-    public Set<InfoSummaryDefinition> queryChild(InfoWildcardDefinition wildcard) {
+    public Set<InfoSummaryDefinition> queryChild(InfoWildcardRecord wildcard) {
         if (ObjectUtil.isAnyNull(wildcard)) {
             throw new ConditionParametersException();
         }

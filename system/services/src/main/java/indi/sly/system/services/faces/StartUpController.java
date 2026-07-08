@@ -24,7 +24,7 @@ import indi.sly.system.services.core.environment.values.ServiceUserSpaceExtensio
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.values.ClientResponseDefinition;
 import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
-import indi.sly.system.services.jobs.values.ClientResponseExceptionTraceDefinition;
+import indi.sly.system.services.jobs.values.ClientResponseExceptionTraceRecord;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,7 +50,7 @@ public class StartUpController extends AController {
             KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
             KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
 
-            UserSpaceDefinition  userSpace = SpringHelper.getInstance(UserSpaceDefinition.class);
+            UserSpaceDefinition userSpace = SpringHelper.getInstance(UserSpaceDefinition.class);
             userSpace.setServiceSpace(new ServiceUserSpaceExtensionDefinition());
             this.coreManager.setUserSpace(userSpace);
             this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
@@ -105,9 +105,7 @@ public class StartUpController extends AController {
 
             clientResponseException.setId(UUIDUtil.getEmpty());
             clientResponseException.setClazz(ClassUtil.getSimpleName(StatusAlreadyFinishedException.class));
-            ClientResponseExceptionTraceDefinition clientResponseExceptionTrace = new ClientResponseExceptionTraceDefinition();
-            clientResponseExceptionTrace.setClazz(ClassUtil.getSimpleName(StartUpController.class));
-            clientResponseExceptionTrace.setMethod("startup");
+            ClientResponseExceptionTraceRecord clientResponseExceptionTrace = new ClientResponseExceptionTraceRecord(ClassUtil.getSimpleName(StartUpController.class), "startup");
             clientResponseException.getTrace().add(clientResponseExceptionTrace);
 
             clientResponse.setException(clientResponseException);

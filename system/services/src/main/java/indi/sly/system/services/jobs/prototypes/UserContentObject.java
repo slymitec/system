@@ -87,10 +87,7 @@ public class UserContentObject extends ADefinitionObject<UserContextDefinition> 
             clientResponseException.setId(userContentRequest.getId());
             clientResponseException.setClazz(ClassUtil.getSimpleName(systemException.getClass()));
             for (StackTraceElement stackTraceElement : systemException.getStackTrace()) {
-                ClientResponseExceptionTraceDefinition clientResponseExceptionTrace = new ClientResponseExceptionTraceDefinition();
-
-                clientResponseExceptionTrace.setClazz(ClassUtil.getSimpleName(stackTraceElement.getClass()));
-                clientResponseExceptionTrace.setMethod(stackTraceElement.getMethodName());
+                ClientResponseExceptionTraceRecord clientResponseExceptionTrace = new ClientResponseExceptionTraceRecord(ClassUtil.getSimpleName(stackTraceElement.getClass()), stackTraceElement.getMethodName());
 
                 clientResponseException.getTrace().add(clientResponseExceptionTrace);
             }

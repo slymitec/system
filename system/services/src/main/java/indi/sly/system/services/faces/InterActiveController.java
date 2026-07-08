@@ -16,7 +16,7 @@ import indi.sly.system.services.jobs.prototypes.UserContextObject;
 import indi.sly.system.services.jobs.values.ClientResponseDefinition;
 import indi.sly.system.services.jobs.values.ClientResponseExceptionDefinition;
 import indi.sly.system.services.jobs.values.ClientRequestDefinition;
-import indi.sly.system.services.jobs.values.ClientResponseExceptionTraceDefinition;
+import indi.sly.system.services.jobs.values.ClientResponseExceptionTraceRecord;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.websocket.*;
@@ -99,10 +99,7 @@ public class InterActiveController extends AController {
 
             clientResponseException.setClazz(ClassUtil.getSimpleName(exception.getClass()));
             for (StackTraceElement stackTraceElement : exception.getStackTrace()) {
-                ClientResponseExceptionTraceDefinition clientResponseExceptionTrace = new ClientResponseExceptionTraceDefinition();
-
-                clientResponseExceptionTrace.setClazz(ClassUtil.getSimpleName(stackTraceElement.getClass()));
-                clientResponseExceptionTrace.setMethod(stackTraceElement.getMethodName());
+                ClientResponseExceptionTraceRecord clientResponseExceptionTrace = new ClientResponseExceptionTraceRecord(ClassUtil.getSimpleName(stackTraceElement.getClass()), stackTraceElement.getMethodName());
 
                 clientResponseException.getTrace().add(clientResponseExceptionTrace);
             }

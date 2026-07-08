@@ -13,7 +13,7 @@ public class ClientResponseExceptionDefinition extends ADefinition {
 
     private UUID id;
     private String clazz;
-    private final List<ClientResponseExceptionTraceDefinition> trace;
+    private final List<ClientResponseExceptionTraceRecord> trace;
 
     public UUID getId() {
         return this.id;
@@ -31,7 +31,7 @@ public class ClientResponseExceptionDefinition extends ADefinition {
         this.clazz = clazz;
     }
 
-    public List<ClientResponseExceptionTraceDefinition> getTrace() {
+    public List<ClientResponseExceptionTraceRecord> getTrace() {
         return this.trace;
     }
 }

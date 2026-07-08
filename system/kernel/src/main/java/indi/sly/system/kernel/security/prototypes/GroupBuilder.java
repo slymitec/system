@@ -6,7 +6,7 @@ import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.kernel.core.enviroment.configutations.KernelConfiguration;
+import indi.sly.system.kernel.core.enviroment.containers.KernelConfiguration;
 import indi.sly.system.kernel.core.prototypes.ABuilder;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;

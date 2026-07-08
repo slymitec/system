@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.services.faces.AController;
-import indi.sly.system.kernel.core.enviroment.configutations.KernelConfiguration;
+import indi.sly.system.kernel.core.enviroment.containers.KernelConfiguration;
 import indi.sly.system.kernel.core.enviroment.containers.KernelSpace;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.enviroment.containers.UserSpace;

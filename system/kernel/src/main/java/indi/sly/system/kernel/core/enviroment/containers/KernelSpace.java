@@ -1,7 +1,6 @@
 package indi.sly.system.kernel.core.enviroment.containers;
 
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.enviroment.configutations.KernelConfiguration;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
@@ -11,7 +10,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 @Named
 @Singleton
-public class KernelSpace extends ASpace {
+public class KernelSpace extends ASystemSpace {
     public KernelSpace() {
         this.configuration = new KernelConfiguration();
         this.infoTypeIds = new ConcurrentSkipListSet<>();
@@ -21,7 +20,7 @@ public class KernelSpace extends ASpace {
     private final KernelConfiguration configuration;
     private final Set<UUID> infoTypeIds;
     private final ThreadLocal<UserSpace> userSpace;
-    private AKernelExtensionSpaceDefinition serviceSpace;
+    private AKernelExtensionSpace serviceSpace;
 
     public KernelConfiguration getConfiguration() {
         return configuration;
@@ -43,11 +42,11 @@ public class KernelSpace extends ASpace {
         }
     }
 
-    public AKernelExtensionSpaceDefinition getServiceSpace() {
+    public AKernelExtensionSpace getServiceSpace() {
         return this.serviceSpace;
     }
 
-    public void setServiceSpace(AKernelExtensionSpaceDefinition serviceSpace) {
+    public void setServiceSpace(AKernelExtensionSpace serviceSpace) {
         this.serviceSpace = serviceSpace;
     }
 }

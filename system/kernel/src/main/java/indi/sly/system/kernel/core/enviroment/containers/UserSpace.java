@@ -10,13 +10,13 @@ import java.util.Stack;
 
 @Named
 @RequestScope
-public class UserSpace extends ASpace {
+public class UserSpace extends ASystemSpace {
     public UserSpace() {
         this.threads = new ThreadLocal<>();
     }
 
     private final ThreadLocal<Stack<ThreadObject>> threads;
-    private AUserExtensionSpaceDefinition serviceSpace;
+    private AUserExtensionSpace serviceSpace;
 
     public Stack<ThreadObject> getThreads() {
         return this.threads.get();
@@ -30,11 +30,11 @@ public class UserSpace extends ASpace {
         this.threads.set(threads);
     }
 
-    public AUserExtensionSpaceDefinition getServiceSpace() {
+    public AUserExtensionSpace getServiceSpace() {
         return this.serviceSpace;
     }
 
-    public void setServiceSpace(AUserExtensionSpaceDefinition serviceSpace) {
+    public void setServiceSpace(AUserExtensionSpace serviceSpace) {
         this.serviceSpace = serviceSpace;
     }
 }

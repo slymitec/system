@@ -1,6 +1,6 @@
-package indi.sly.system.kernel.core.enviroment.configutations;
+package indi.sly.system.kernel.core.enviroment.containers;
 
-import indi.sly.system.common.configurations.AConfiguration;
+import indi.sly.system.common.containers.AConfiguration;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 

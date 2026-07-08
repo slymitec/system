@@ -7,5 +7,5 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class AUserExtensionSpaceDefinition extends AExtensionSpace {
+public abstract class AUserExtensionSpace extends AExtensionSpace {
 }

@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.core.enviroment.containers;
 
-import indi.sly.system.common.containers.AContainer;
+import indi.sly.system.common.containers.ASpace;
 
-public abstract class AExtensionSpace extends AContainer {
+public abstract class AExtensionSpace extends ASpace {
 }

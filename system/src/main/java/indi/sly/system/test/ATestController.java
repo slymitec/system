@@ -2,7 +2,7 @@ package indi.sly.system.test;
 
 import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.kernel.core.enviroment.configutations.KernelConfiguration;
+import indi.sly.system.kernel.core.enviroment.containers.KernelConfiguration;
 import indi.sly.system.kernel.core.enviroment.containers.UserSpace;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;

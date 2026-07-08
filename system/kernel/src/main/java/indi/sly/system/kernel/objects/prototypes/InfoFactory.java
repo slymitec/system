@@ -6,7 +6,7 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
-import indi.sly.system.kernel.core.enviroment.configutations.KernelConfiguration;
+import indi.sly.system.kernel.core.enviroment.containers.KernelConfiguration;
 import indi.sly.system.kernel.core.enviroment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.core.prototypes.ObjectCollectionObject;

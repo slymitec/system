@@ -1,6 +1,6 @@
 package indi.sly.system.boot;
 
-import indi.sly.system.common.configurations.AConfiguration;
+import indi.sly.system.common.containers.AConfiguration;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.persistence.autoconfigure.EntityScan;

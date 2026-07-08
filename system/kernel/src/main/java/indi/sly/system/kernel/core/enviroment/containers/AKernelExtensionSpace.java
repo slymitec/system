@@ -7,5 +7,5 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract class AKernelExtensionSpaceDefinition extends AExtensionSpace {
+public abstract class AKernelExtensionSpace extends AExtensionSpace {
 }

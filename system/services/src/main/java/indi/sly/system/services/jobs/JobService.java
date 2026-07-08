@@ -8,7 +8,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.enviroment.containers.KernelSpace;
-import indi.sly.system.services.core.environment.values.ServiceKernelExtensionSpaceDefinition;
+import indi.sly.system.services.core.environment.values.ServiceKernelExtensionSpace;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.instances.prototypes.processors.*;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.CoreManagerTaskInitializer;
@@ -46,7 +46,7 @@ public class JobService extends AService {
         } else if (startup == StartupType.STEP_INIT_SERVICE) {
             KernelSpace kernelSpace = this.coreManager.getKernelSpace();
 
-            ServiceKernelExtensionSpaceDefinition serviceSpace = new ServiceKernelExtensionSpaceDefinition();
+            ServiceKernelExtensionSpace serviceSpace = new ServiceKernelExtensionSpace();
             TransactionalActionComponent transactionalAction = this.coreManager.create(TransactionalActionComponent.class);
             serviceSpace.setTransactionalAction(transactionalAction);
             kernelSpace.setServiceSpace(serviceSpace);
@@ -123,7 +123,7 @@ public class JobService extends AService {
             throw new ConditionParametersException();
         }
 
-        ServiceKernelExtensionSpaceDefinition serviceSpace = (ServiceKernelExtensionSpaceDefinition) this.coreManager.getKernelSpace().getServiceSpace();
+        ServiceKernelExtensionSpace serviceSpace = (ServiceKernelExtensionSpace) this.coreManager.getKernelSpace().getServiceSpace();
 
         UUID taskID = serviceSpace.getNamedTaskIds().getOrDefault(name, null);
 

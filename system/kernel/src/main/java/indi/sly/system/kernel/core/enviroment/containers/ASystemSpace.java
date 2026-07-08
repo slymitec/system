@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.core.enviroment.containers;
 
-import indi.sly.system.common.containers.AContainer;
+import indi.sly.system.common.containers.ASpace;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AObject;
@@ -14,8 +14,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Named
-public abstract class ASpace extends AContainer {
-    public ASpace() {
+public abstract class ASystemSpace extends ASpace {
+    public ASystemSpace() {
         this.objects = new ConcurrentHashMap<>();
         this.classedObjects = new ConcurrentHashMap<>();
 

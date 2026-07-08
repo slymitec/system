@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ServiceKernelSpaceExtensionDefinition extends AKernelSpaceExtensionDefinition<ServiceKernelSpaceExtensionDefinition> {
+public class ServiceKernelSpaceExtensionDefinition extends AKernelSpaceExtensionDefinition {
     public ServiceKernelSpaceExtensionDefinition() {
         this.tasks = new ConcurrentHashMap<>();
         this.namedTaskIDs = new ConcurrentHashMap<>();

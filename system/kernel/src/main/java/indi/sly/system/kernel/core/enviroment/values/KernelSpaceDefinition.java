@@ -20,7 +20,7 @@ public class KernelSpaceDefinition extends ASpaceDefinition {
     private final KernelConfiguration configuration;
     private final Set<UUID> infoTypeIds;
     private final ThreadLocal<UserSpaceDefinition> userSpace;
-    private AKernelSpaceExtensionDefinition<?> serviceSpace;
+    private AKernelSpaceExtensionDefinition serviceSpace;
 
     public KernelConfiguration getConfiguration() {
         return configuration;
@@ -42,11 +42,11 @@ public class KernelSpaceDefinition extends ASpaceDefinition {
         }
     }
 
-    public AKernelSpaceExtensionDefinition<?> getServiceSpace() {
+    public AKernelSpaceExtensionDefinition getServiceSpace() {
         return this.serviceSpace;
     }
 
-    public void setServiceSpace(AKernelSpaceExtensionDefinition<?> serviceSpace) {
+    public void setServiceSpace(AKernelSpaceExtensionDefinition serviceSpace) {
         this.serviceSpace = serviceSpace;
     }
 }

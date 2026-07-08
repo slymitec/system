@@ -294,7 +294,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         }
     }
 
-    private boolean denyPermission(long permission, PermissionQueryDefinition permissionQueryFunc) {
+    private boolean denyPermission(long permission, PermissionQueryRecord permissionQueryFunc) {
         if (!LogicalUtil.isAllSingleValue(permission) || LogicalUtil.isAnyExist(permission, PermissionType.FULLCONTROL_ALLOW << 1)) {
             throw new ConditionParametersException();
         }
@@ -313,7 +313,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         ProcessTokenObject processToken = process.getToken();
         ProcessSessionObject processSession = process.getSession();
 
-        if ((ObjectUtil.isAnyNull(permissionQueryFunc) || permissionQueryFunc.isPrivilege())
+        if ((ObjectUtil.isAnyNull(permissionQueryFunc) || permissionQueryFunc.privilege())
                 && processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)) {
             return false;
         }
@@ -424,7 +424,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                 }
             } else if (LogicalUtil.isAnyEqual(pairUserId.getType(), UserType.ROLE) && roles.contains(pairUserId.getId())) {
                 if (LogicalUtil.isAllExist(pair.getValue(), permission)
-                        && (ObjectUtil.isAnyNull(permissionQueryFunc) || permissionQueryFunc.isRole())) {
+                        && (ObjectUtil.isAnyNull(permissionQueryFunc) || permissionQueryFunc.role())) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.getValue(), permission << 1)) {
@@ -454,8 +454,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                     return true;
                 }
             }
-            if (ObjectUtil.allNotNull(permissionQueryFunc) && ObjectUtil.allNotNull(permissionQueryFunc.getCustomDenyFunc()) &&
-                    permissionQueryFunc.getCustomDenyFunc().test(pair, permission)) {
+            if (ObjectUtil.allNotNull(permissionQueryFunc) && ObjectUtil.allNotNull(permissionQueryFunc.customDenyFunc()) &&
+                    permissionQueryFunc.customDenyFunc().test(pair, permission)) {
                 return true;
             }
         }
@@ -463,7 +463,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         return !allow;
     }
 
-    public void checkPermission(long permission, PermissionQueryDefinition permissionQueryFunc) {
+    public void checkPermission(long permission, PermissionQueryRecord permissionQueryFunc) {
         if (this.denyPermission(permission, permissionQueryFunc)) {
             throw new ConditionPermissionException();
         }

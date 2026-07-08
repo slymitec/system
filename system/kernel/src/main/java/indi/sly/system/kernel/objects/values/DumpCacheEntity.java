@@ -2,7 +2,7 @@ package indi.sly.system.kernel.objects.values;
 
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.values.ACacheEntity;
-import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryDefinition;
+import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryRecord;
 import org.redisson.api.annotation.REntity;
 
 import java.util.*;
@@ -19,7 +19,7 @@ public class DumpCacheEntity extends ACacheEntity {
     private UUID accountID;
     private PathRecord path;
     private InfoOpenRecord infoOpen;
-    private final List<SecurityDescriptorSummaryDefinition> securityDescriptorSummary;
+    private final List<SecurityDescriptorSummaryRecord> securityDescriptorSummary;
 
     public Map<Long, Long> getDate() {
         return this.date;
@@ -57,7 +57,7 @@ public class DumpCacheEntity extends ACacheEntity {
         this.infoOpen = infoOpen;
     }
 
-    public List<SecurityDescriptorSummaryDefinition> getSecurityDescriptorSummary() {
+    public List<SecurityDescriptorSummaryRecord> getSecurityDescriptorSummary() {
         return this.securityDescriptorSummary;
     }
 

@@ -57,7 +57,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         return process.getToken();
     }
 
-    public List<SecurityDescriptorSummaryDefinition> getSummary() {
+    public List<SecurityDescriptorSummaryRecord> getSummary() {
         if (!this.cache.isPermission() && !this.cache.isAudit()) {
             throw new StatusDisabilityException();
         }
@@ -69,8 +69,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-       type.getInitializer().lockProcedure(info, LockType.READ); 
-       try {     
+        type.getInitializer().lockProcedure(info, LockType.READ);
+        try {
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (this.cache.isPermission()) {
@@ -85,24 +85,16 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                 this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
             }
 
-            List<SecurityDescriptorSummaryDefinition> securityDescriptorSummaries = new ArrayList<>();
+            List<SecurityDescriptorSummaryRecord> securityDescriptorSummaries = new ArrayList<>();
 
-            SecurityDescriptorSummaryDefinition securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
-            if (this.cache.isPermission()) {
-                securityDescriptorSummary.setPermission(true);
-                securityDescriptorSummary.setInherit(securityDescriptor.isInherit());
-
-                securityDescriptorSummary.getPermissions().addAll(securityDescriptor.getPermissions());
-            } else {
-                securityDescriptorSummary.setPermission(false);
-            }
-            if (this.cache.isAudit()) {
-                securityDescriptorSummary.setAudit(true);
-                securityDescriptorSummary.getAudits().addAll(securityDescriptor.getAudits());
-            } else {
-                securityDescriptorSummary.setAudit(false);
-            }
-            securityDescriptorSummary.setPath(this.cache.getInfo().getPath());
+            SecurityDescriptorSummaryRecord securityDescriptorSummary = new SecurityDescriptorSummaryRecord(
+                    this.cache.getInfo().getPath(),
+                    this.cache.isPermission() && securityDescriptor.isInherit(),
+                    this.cache.isPermission(),
+                    this.cache.isAudit(),
+                    this.cache.isPermission() ? new HashSet<>(securityDescriptor.getPermissions()) : new HashSet<>(),
+                    this.cache.isAudit() ? new HashSet<>(securityDescriptor.getAudits()) : new HashSet<>()
+            );
             securityDescriptorSummaries.add(securityDescriptorSummary);
 
             InfoObject parentInfo = this.base.getParent();
@@ -123,22 +115,14 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                     parentInfoSelf = parentSecurityDescriptor.getSelf();
                     securityDescriptor = parentInfoSelf.getSecurityDescriptor();
 
-                    securityDescriptorSummary = new SecurityDescriptorSummaryDefinition();
-                    if (parentSecurityDescriptor.cache.isPermission()) {
-                        securityDescriptorSummary.setPermission(true);
-                        securityDescriptorSummary.setInherit(securityDescriptor.isInherit());
-
-                        securityDescriptorSummary.getPermissions().addAll(securityDescriptor.getPermissions());
-                    } else {
-                        securityDescriptorSummary.setPermission(false);
-                    }
-                    if (parentSecurityDescriptor.cache.isAudit()) {
-                        securityDescriptorSummary.setAudit(true);
-                        securityDescriptorSummary.getAudits().addAll(securityDescriptor.getAudits());
-                    } else {
-                        securityDescriptorSummary.setAudit(false);
-                    }
-                    securityDescriptorSummary.setPath(parentSecurityDescriptor.cache.getInfo().getPath());
+                    securityDescriptorSummary = new SecurityDescriptorSummaryRecord(
+                            parentSecurityDescriptor.cache.getInfo().getPath(),
+                            securityDescriptor.isInherit(),
+                            parentSecurityDescriptor.cache.isPermission(),
+                            parentSecurityDescriptor.cache.isAudit(),
+                            parentSecurityDescriptor.cache.isPermission() ? new HashSet<>(securityDescriptor.getPermissions()) : new HashSet<>(),
+                            parentSecurityDescriptor.cache.isAudit() ? new HashSet<>(securityDescriptor.getAudits()) : new HashSet<>()
+                    );
                     securityDescriptorSummaries.add(securityDescriptorSummary);
                 }
 
@@ -165,8 +149,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-       type.getInitializer().lockProcedure(info, LockType.READ); 
-       try {     
+        type.getInitializer().lockProcedure(info, LockType.READ);
+        try {
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
@@ -197,8 +181,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-       type.getInitializer().lockProcedure(info, LockType.WRITE); 
-       try {     
+        type.getInitializer().lockProcedure(info, LockType.WRITE);
+        try {
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
@@ -231,8 +215,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-       type.getInitializer().lockProcedure(info, LockType.READ); 
-       try {     
+        type.getInitializer().lockProcedure(info, LockType.READ);
+        try {
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
@@ -266,8 +250,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-       type.getInitializer().lockProcedure(info, LockType.WRITE); 
-       try {     
+        type.getInitializer().lockProcedure(info, LockType.WRITE);
+        try {
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if ((!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
@@ -318,8 +302,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             return false;
         }
 
-       type.getInitializer().lockProcedure(info, LockType.READ); 
-       try {     
+        type.getInitializer().lockProcedure(info, LockType.READ);
+        try {
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
             securityDescriptors.add(securityDescriptor);
 
@@ -488,8 +472,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-       type.getInitializer().lockProcedure(info, LockType.WRITE); 
-       try {     
+        type.getInitializer().lockProcedure(info, LockType.WRITE);
+        try {
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             for (AccessControlRecord permission : permissions) {
@@ -565,8 +549,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         ProcessTokenObject processToken = process.getToken();
         ProcessSessionObject processSession = process.getSession();
 
-       type.getInitializer().lockProcedure(info, LockType.READ); 
-       try {     
+        type.getInitializer().lockProcedure(info, LockType.READ);
+        try {
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
             securityDescriptors.add(securityDescriptor);
 
@@ -697,8 +681,8 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-       type.getInitializer().lockProcedure(info, LockType.WRITE); 
-       try {     
+        type.getInitializer().lockProcedure(info, LockType.WRITE);
+        try {
             SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
             if (this.cache.isPermission() && !processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)

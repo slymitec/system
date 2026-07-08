@@ -14,7 +14,7 @@ import indi.sly.system.kernel.objects.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.security.values.AuditType;
 import indi.sly.system.kernel.security.values.PermissionType;
 import indi.sly.system.kernel.security.values.SecurityDescriptorCacheEntity;
-import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryDefinition;
+import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryRecord;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -52,7 +52,7 @@ public class InfoSecurityDescriptorResolver extends AResolver implements IInfoRe
                 }
 
                 try {
-                    List<SecurityDescriptorSummaryDefinition> securityDescriptorSummary = securityDescriptor.getSummary();
+                    List<SecurityDescriptorSummaryRecord> securityDescriptorSummary = securityDescriptor.getSummary();
                     dump.getSecurityDescriptorSummary().addAll(securityDescriptorSummary);
                 } catch (ASystemException ignored) {
                 }

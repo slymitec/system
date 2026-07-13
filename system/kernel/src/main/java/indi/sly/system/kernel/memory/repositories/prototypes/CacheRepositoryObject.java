@@ -2,11 +2,9 @@ package indi.sly.system.kernel.memory.repositories.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusNotExistedException;
-import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
+import indi.sly.system.kernel.core.environment.values.CacheDurationType;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.core.values.ACacheEntity;
 import jakarta.annotation.PostConstruct;

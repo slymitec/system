@@ -2,7 +2,7 @@ package indi.sly.subsystem.periphery.calls.prototypes;
 
 import indi.sly.subsystem.periphery.calls.instances.prototypes.processors.AConnectionInitializer;
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
-import indi.sly.subsystem.periphery.core.enviroment.values.KernelSpaceDefinition;
+import indi.sly.subsystem.periphery.core.environment.containers.KernelSpace;
 import indi.sly.subsystem.periphery.core.prototypes.ABuilder;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
@@ -27,7 +27,7 @@ public class ConnectionBuilder extends ABuilder {
             throw new ConditionParametersException();
         }
 
-        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+        KernelSpace kernelSpace = this.coreManager.getKernelSpace();
 
         if (kernelSpace.getNamedConnectionIds().containsKey(name)) {
             throw new StatusAlreadyExistedException();
@@ -50,7 +50,7 @@ public class ConnectionBuilder extends ABuilder {
             throw new ConditionParametersException();
         }
 
-        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+        KernelSpace kernelSpace = this.coreManager.getKernelSpace();
 
         UUID connectionId = kernelSpace.getNamedConnectionIds().getOrDefault(name, null);
 

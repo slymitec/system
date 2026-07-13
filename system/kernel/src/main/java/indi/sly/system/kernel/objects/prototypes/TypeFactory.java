@@ -3,7 +3,7 @@ package indi.sly.system.kernel.objects.prototypes;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.environment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.core.prototypes.ObjectCollectionObject;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;

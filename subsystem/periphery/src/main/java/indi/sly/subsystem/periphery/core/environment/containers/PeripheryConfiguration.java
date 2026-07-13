@@ -1,0 +1,13 @@
+package indi.sly.subsystem.periphery.core.environment.containers;
+
+import indi.sly.system.common.containers.AConfiguration;
+
+public class PeripheryConfiguration extends AConfiguration {
+    public final long CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT = 16L;
+
+    public final String CALL_CONNECTION_INSTANCE_SYSTEM_NAME = "System";
+    public final String CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS = "http://localhost:8080/Call.action";
+
+    public final String CALL_CONNECTION_INSTANCE_SYSTEM_NAME_WEBSOCKET = "System_WebSocket";
+    public final String CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS_WEBSOCKET = "ws://localhost:8080/InterActive.action";
+}

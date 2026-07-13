@@ -1,9 +1,9 @@
 package indi.sly.subsystem.periphery.proxies.prototypes;
 
-import indi.sly.subsystem.periphery.calls.values.ClientResponseDefinition;
-import indi.sly.subsystem.periphery.calls.values.ClientResponseExceptionDefinition;
-import indi.sly.subsystem.periphery.calls.values.ClientResponseExceptionTraceDefinition;
-import indi.sly.subsystem.periphery.calls.values.UserContentResponseDefinition;
+import indi.sly.subsystem.periphery.calls.values.ClientResponseRecord;
+import indi.sly.subsystem.periphery.calls.values.ClientResponseExceptionRecord;
+import indi.sly.subsystem.periphery.calls.values.ClientResponseExceptionTraceRecord;
+import indi.sly.subsystem.periphery.calls.values.UserContentResponseRecord;
 import indi.sly.subsystem.periphery.core.prototypes.ACacheableObject;
 import indi.sly.subsystem.periphery.proxies.ProxyManager;
 import indi.sly.subsystem.periphery.proxies.lang.ProxyInvokeFunction;
@@ -34,7 +34,7 @@ public abstract class AProxy extends ACacheableObject<ProxyCacheEntity> {
             throw new ConditionParametersException();
         }
 
-        ClientResponseDefinition clientResponse = null;
+        ClientResponseRecord clientResponse = null;
 
         Set<ProxyInvokeFunction> invokes = this.processorMediator.getInvokes();
 
@@ -46,12 +46,12 @@ public abstract class AProxy extends ACacheableObject<ProxyCacheEntity> {
             throw new StatusUnexpectedException();
         }
 
-        UserContentResponseDefinition clientResponseContent = clientResponse.getContent();
-        ClientResponseExceptionDefinition clientResponseException = clientResponse.getException();
+        UserContentResponseRecord clientResponseContent = clientResponse.getContent();
+        ClientResponseExceptionRecord clientResponseException = clientResponse.getException();
         if (ObjectUtil.allNotNull(clientResponseException)) {
             ASystemException causeSystemException;
             try {
-                Class<?> causeSystemExceptionClass = Class.forName("indi.sly.system.common.lang" + clientResponseException.getClazz());
+                Class<?> causeSystemExceptionClass = Class.forName("indi.sly.system.common.lang" + clientResponseException.clazz());
 
                 causeSystemException = (ASystemException) causeSystemExceptionClass.getDeclaredConstructor().newInstance();
 
@@ -60,10 +60,10 @@ public abstract class AProxy extends ACacheableObject<ProxyCacheEntity> {
                 causeSystemException = new StatusUnexpectedException();
             }
 
-            StackTraceElement[] stackTraceElements = new StackTraceElement[clientResponseException.getTrace().size()];
-            for (int i = 0; i < clientResponseException.getTrace().size(); i++) {
-                ClientResponseExceptionTraceDefinition clientResponseExceptionTrace = clientResponseException.getTrace().get(i);
-                stackTraceElements[i] = new StackTraceElement(clientResponseExceptionTrace.getClazz(), clientResponseExceptionTrace.getMethod(), StringUtil.EMPTY, 1);
+            StackTraceElement[] stackTraceElements = new StackTraceElement[clientResponseException.trace().size()];
+            for (int i = 0; i < clientResponseException.trace().size(); i++) {
+                ClientResponseExceptionTraceRecord clientResponseExceptionTrace = clientResponseException.trace().get(i);
+                stackTraceElements[i] = new StackTraceElement(clientResponseExceptionTrace.clazz(), clientResponseExceptionTrace.method(), StringUtil.EMPTY, 1);
             }
 
             causeSystemException.setStackTrace(stackTraceElements);
@@ -71,13 +71,13 @@ public abstract class AProxy extends ACacheableObject<ProxyCacheEntity> {
             throw new SystemException(causeSystemException);
         } else if (ObjectUtil.allNotNull(clientResponseContent)) {
             if (ClassUtil.isThisOrSuperContain(returnClazz, ACacheableObject.class)) {
-                if (ClassUtil.getSimpleName(HandleContextDefinition.class).equals(clientResponseContent.getClazz())) {
+                if (ClassUtil.getSimpleName(HandleContextDefinition.class).equals(clientResponseContent.clazz())) {
                     throw new StatusRelationshipErrorException();
                 }
 
-                HandleContextDefinition handleContext = ObjectUtil.transferFromString(HandleContextDefinition.class, clientResponseContent.getValue());
+                HandleContextDefinition handleContext = ObjectUtil.transferFromString(HandleContextDefinition.class, clientResponseContent.value());
 
-                if (ClassUtil.getSimpleName(HandleContextDefinition.class).equals(clientResponseContent.getClazz())) {
+                if (ClassUtil.getSimpleName(HandleContextDefinition.class).equals(clientResponseContent.clazz())) {
                     throw new StatusRelationshipErrorException();
                 }
 
@@ -90,12 +90,12 @@ public abstract class AProxy extends ACacheableObject<ProxyCacheEntity> {
                 return (T) proxyManager.getFactory().buildProxy(handleContext.getClazz());
 
             } else {
-                if (!ClassUtil.getSimpleName(returnClazz).equals(clientResponseContent.getClazz())) {
+                if (!ClassUtil.getSimpleName(returnClazz).equals(clientResponseContent.clazz())) {
                     throw new StatusRelationshipErrorException();
                 }
 
                 if (returnClazz != Void.class) {
-                    return ObjectUtil.transferFromString(returnClazz, clientResponseContent.getValue());
+                    return ObjectUtil.transferFromString(returnClazz, clientResponseContent.value());
                 } else {
                     return null;
                 }

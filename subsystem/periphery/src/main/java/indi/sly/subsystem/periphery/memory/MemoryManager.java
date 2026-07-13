@@ -2,7 +2,7 @@ package indi.sly.subsystem.periphery.memory;
 
 import indi.sly.subsystem.periphery.core.AManager;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
-import indi.sly.subsystem.periphery.core.enviroment.values.SpaceType;
+import indi.sly.subsystem.periphery.core.environment.values.SpaceType;
 import indi.sly.subsystem.periphery.memory.repositories.prototypes.CacheRepositoryObject;
 import indi.sly.subsystem.periphery.memory.repositories.prototypes.DistributionRepositoryObject;
 import indi.sly.system.common.supports.LogicalUtil;

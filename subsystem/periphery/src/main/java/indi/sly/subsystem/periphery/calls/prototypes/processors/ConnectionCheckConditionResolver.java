@@ -35,7 +35,7 @@ public class ConnectionCheckConditionResolver extends AResolver implements IConn
             if (LogicalUtil.allNotEqual(status.getRuntime(), ConnectStatusRuntimeType.CONNECTED)) {
                 throw new StatusRelationshipErrorException();
             }
-            if (ValueUtil.isAnyNullOrEmpty(userContextRequest.getContent().getId())) {
+            if (ValueUtil.isAnyNullOrEmpty(userContextRequest.content().id())) {
                 throw new ConditionParametersException();
             }
 

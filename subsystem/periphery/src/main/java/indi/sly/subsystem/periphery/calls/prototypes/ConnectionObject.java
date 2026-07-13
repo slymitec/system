@@ -6,12 +6,11 @@ import indi.sly.subsystem.periphery.calls.lang.ConnectionProcessorCallFunction;
 import indi.sly.subsystem.periphery.calls.prototypes.wrappers.ConnectionProcessorMediator;
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
 import indi.sly.subsystem.periphery.calls.values.ConnectionStatusDefinition;
-import indi.sly.subsystem.periphery.calls.values.ClientResponseDefinition;
-import indi.sly.subsystem.periphery.calls.values.ClientRequestDefinition;
+import indi.sly.subsystem.periphery.calls.values.ClientResponseRecord;
+import indi.sly.subsystem.periphery.calls.values.ClientRequestRecord;
 import indi.sly.subsystem.periphery.core.prototypes.ADefinitionObject;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.values.LockType;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -49,12 +48,12 @@ public class ConnectionObject extends ADefinitionObject<ConnectionDefinition> {
         }
     }
 
-    public ClientResponseDefinition call(ClientRequestDefinition userContextRequest) {
+    public ClientResponseRecord call(ClientRequestRecord userContextRequest) {
         if (ObjectUtil.isAnyNull(userContextRequest)) {
             throw new ConditionParametersException();
         }
 
-        ClientResponseDefinition userContentResponse = null;
+        ClientResponseRecord userContentResponse = null;
 
         List<ConnectionProcessorCallFunction> resolvers = this.processorMediator.getCalls();
 

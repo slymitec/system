@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.LockType;
-import indi.sly.system.kernel.core.enviroment.containers.KernelConfiguration;
+import indi.sly.system.kernel.core.environment.containers.KernelConfiguration;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFolderContentObject;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;

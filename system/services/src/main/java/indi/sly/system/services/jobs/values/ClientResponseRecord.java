@@ -13,9 +13,7 @@ public record ClientResponseRecord(UserContentResponseRecord content, ClientResp
         return content;
     }
 
-
     public ClientResponseExceptionRecord getException() {
         return exception;
     }
-
 }

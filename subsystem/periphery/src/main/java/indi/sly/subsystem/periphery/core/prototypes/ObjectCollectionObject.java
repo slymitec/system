@@ -1,7 +1,7 @@
 package indi.sly.subsystem.periphery.core.prototypes;
 
-import indi.sly.subsystem.periphery.core.enviroment.values.ASpaceDefinition;
-import indi.sly.subsystem.periphery.core.enviroment.values.SpaceType;
+import indi.sly.subsystem.periphery.core.environment.containers.ASystemSpace;
+import indi.sly.subsystem.periphery.core.environment.values.SpaceType;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.LockType;
@@ -16,7 +16,7 @@ import java.util.concurrent.locks.Lock;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ObjectCollectionObject extends AObject {
-    private ASpaceDefinition getSpace(long space) {
+    private ASystemSpace getSpace(long space) {
         if (LogicalUtil.isAnyEqual(space, SpaceType.KERNEL)) {
             return this.coreManager.getKernelSpace();
         } else if (LogicalUtil.isAnyEqual(space, SpaceType.USER)) {

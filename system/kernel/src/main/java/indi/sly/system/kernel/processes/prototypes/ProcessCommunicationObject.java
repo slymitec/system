@@ -5,7 +5,7 @@ import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.date.values.DateTimeType;
-import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
+import indi.sly.system.kernel.core.environment.values.CacheDurationType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.memory.MemoryManager;

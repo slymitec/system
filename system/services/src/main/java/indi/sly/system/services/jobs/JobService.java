@@ -7,7 +7,7 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.enviroment.containers.KernelSpace;
+import indi.sly.system.kernel.core.environment.containers.KernelSpace;
 import indi.sly.system.services.core.environment.values.ServiceKernelExtensionSpace;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.instances.prototypes.processors.*;

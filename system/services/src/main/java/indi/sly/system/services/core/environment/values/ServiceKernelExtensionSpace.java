@@ -1,6 +1,6 @@
 package indi.sly.system.services.core.environment.values;
 
-import indi.sly.system.kernel.core.enviroment.containers.AKernelExtensionSpace;
+import indi.sly.system.kernel.core.environment.containers.AKernelExtensionSpace;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 

@@ -1,6 +1,6 @@
 package indi.sly.subsystem.periphery.core.prototypes;
 
-import indi.sly.subsystem.periphery.core.enviroment.values.CacheDurationType;
+import indi.sly.subsystem.periphery.core.environment.values.CacheDurationType;
 import indi.sly.subsystem.periphery.core.values.ACacheEntity;
 import indi.sly.subsystem.periphery.memory.MemoryManager;
 import indi.sly.subsystem.periphery.memory.repositories.prototypes.CacheRepositoryObject;

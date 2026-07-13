@@ -4,9 +4,9 @@ import indi.sly.subsystem.periphery.calls.CallManager;
 import indi.sly.subsystem.periphery.core.boot.prototypes.BootFactory;
 import indi.sly.subsystem.periphery.core.boot.prototypes.BootObject;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
-import indi.sly.subsystem.periphery.core.enviroment.values.KernelSpaceDefinition;
-import indi.sly.subsystem.periphery.core.enviroment.values.SpaceType;
-import indi.sly.subsystem.periphery.core.enviroment.values.UserSpaceDefinition;
+import indi.sly.subsystem.periphery.core.environment.containers.KernelSpace;
+import indi.sly.subsystem.periphery.core.environment.values.SpaceType;
+import indi.sly.subsystem.periphery.core.environment.containers.UserSpace;
 import indi.sly.subsystem.periphery.core.prototypes.APrototype;
 import indi.sly.subsystem.periphery.core.prototypes.ObjectCollectionObject;
 import indi.sly.subsystem.periphery.core.prototypes.PrototypeBuilder;
@@ -79,11 +79,11 @@ public class CoreManager extends AManager {
         return manager;
     }
 
-    public KernelSpaceDefinition getKernelSpace() {
-        return SpringHelper.getInstance(KernelSpaceDefinition.class);
+    public KernelSpace getKernelSpace() {
+        return SpringHelper.getInstance(KernelSpace.class);
     }
 
-    public UserSpaceDefinition getUserSpace() {
+    public UserSpace getUserSpace() {
         return this.getKernelSpace().getUserSpace();
     }
 }

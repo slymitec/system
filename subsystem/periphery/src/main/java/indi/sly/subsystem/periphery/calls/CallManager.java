@@ -10,8 +10,8 @@ import indi.sly.subsystem.periphery.calls.values.ConnectionAttributeType;
 import indi.sly.subsystem.periphery.calls.values.ConnectionDefinition;
 import indi.sly.subsystem.periphery.core.AManager;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
-import indi.sly.subsystem.periphery.core.enviroment.values.KernelConfigurationDefinition;
-import indi.sly.subsystem.periphery.core.enviroment.values.KernelSpaceDefinition;
+import indi.sly.subsystem.periphery.core.environment.containers.PeripheryConfiguration;
+import indi.sly.subsystem.periphery.core.environment.containers.KernelSpace;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.LogicalUtil;
@@ -33,14 +33,13 @@ public class CallManager extends AManager {
             this.factory = this.coreManager.create(CallFactory.class);
             this.factory.init();
         } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_PERIPHERY)) {
-            KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
-            KernelConfigurationDefinition kernelConfiguration = kernelSpace.getConfiguration();
+            KernelSpace kernelSpace = this.coreManager.getKernelSpace();
+            PeripheryConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
             this.createConnection(kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_NAME, ConnectionAttributeType.NULL,
                     kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS, this.coreManager.create(HttpConnectionInitializer.class));
             this.createConnection(kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_NAME_WEBSOCKET, ConnectionAttributeType.NULL,
                     kernelConfiguration.CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS_WEBSOCKET, this.coreManager.create(WebSocketConnectionInitializer.class));
-
         }
     }
 
@@ -79,7 +78,7 @@ public class CallManager extends AManager {
             throw new ConditionParametersException();
         }
 
-        KernelSpaceDefinition kernelSpace = this.coreManager.getKernelSpace();
+        KernelSpace kernelSpace = this.coreManager.getKernelSpace();
 
         UUID connectId = kernelSpace.getNamedConnectionIds().getOrDefault(name, null);
 

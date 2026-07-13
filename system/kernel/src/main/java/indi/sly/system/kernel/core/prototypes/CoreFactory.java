@@ -1,8 +1,7 @@
 package indi.sly.system.kernel.core.prototypes;
 
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.enviroment.values.CacheDurationType;
-import indi.sly.system.kernel.core.enviroment.values.SpaceType;
+import indi.sly.system.kernel.core.environment.values.CacheDurationType;
 import indi.sly.system.kernel.core.systemversion.prototypes.SystemVersionObject;
 import indi.sly.system.kernel.core.systemversion.values.SystemVersionCacheEntity;
 import indi.sly.system.kernel.core.values.NoneCacheEntity;

@@ -2,7 +2,6 @@ package indi.sly.subsystem.periphery.calls.instances.prototypes.processors;
 
 import indi.sly.subsystem.periphery.calls.instances.prototypes.values.HttpConnectionStatusExtensionDefinition;
 import indi.sly.subsystem.periphery.calls.values.*;
-import indi.sly.subsystem.periphery.core.prototypes.processors.AInitializer;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -49,7 +48,7 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
     }
 
     @Override
-    public ClientResponseDefinition call(ClientRequestDefinition userContextRequest, ConnectionStatusDefinition status) {
+    public ClientResponseRecord call(ClientRequestRecord userContextRequest, ConnectionStatusDefinition status) {
         HttpConnectionStatusExtensionDefinition httpConnectionStatusExtension;
 
         if (ObjectUtil.isAnyNull(status.getExtension()) || !(status.getExtension() instanceof HttpConnectionStatusExtensionDefinition)) {
@@ -60,12 +59,12 @@ public class HttpConnectionInitializer extends AConnectionInitializer {
 
         RestClient systemRestClient = httpConnectionStatusExtension.getRestClient();
 
-        ClientResponseDefinition userContentResponse = systemRestClient
+        ClientResponseRecord userContentResponse = systemRestClient
                 .post()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(userContextRequest)
                 .retrieve()
-                .body(ClientResponseDefinition.class);
+                .body(ClientResponseRecord.class);
 
         if (ObjectUtil.isAnyNull(userContentResponse)) {
             throw new StatusUnexpectedException();

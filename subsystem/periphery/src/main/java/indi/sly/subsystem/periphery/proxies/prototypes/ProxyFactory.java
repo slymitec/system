@@ -15,7 +15,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,7 +58,7 @@ public class ProxyFactory extends AFactory {
         }
     }
 
-    public AProxy buildProxy(String clazzName) {
+    public AProxyObject buildProxy(String clazzName) {
         ProxyProcessorMediator processorMediator = this.coreManager.create(ProxyProcessorMediator.class);
         for (IProxyResolver processCreatorResolver : this.proxyResolvers) {
             processCreatorResolver.resolve(null, processorMediator);

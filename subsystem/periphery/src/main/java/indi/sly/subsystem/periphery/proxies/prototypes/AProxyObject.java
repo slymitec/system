@@ -8,7 +8,7 @@ import indi.sly.subsystem.periphery.core.prototypes.ACacheableObject;
 import indi.sly.subsystem.periphery.proxies.ProxyManager;
 import indi.sly.subsystem.periphery.proxies.lang.ProxyInvokeFunction;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.ProxyProcessorMediator;
-import indi.sly.subsystem.periphery.proxies.values.HandleContextDefinition;
+import indi.sly.subsystem.periphery.proxies.values.HandleContextRecord;
 import indi.sly.subsystem.periphery.proxies.values.ProxyCacheEntity;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ClassUtil;
@@ -20,7 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import java.util.UUID;
 
-public abstract class AProxy extends ACacheableObject<ProxyCacheEntity> {
+public abstract class AProxyObject extends ACacheableObject<ProxyCacheEntity> {
     protected ProxyFactory factory;
     protected ProxyProcessorMediator processorMediator;
 
@@ -71,23 +71,23 @@ public abstract class AProxy extends ACacheableObject<ProxyCacheEntity> {
             throw new SystemException(causeSystemException);
         } else if (ObjectUtil.allNotNull(clientResponseContent)) {
             if (ClassUtil.isThisOrSuperContain(returnClazz, ACacheableObject.class)) {
-                if (ClassUtil.getSimpleName(HandleContextDefinition.class).equals(clientResponseContent.clazz())) {
+                if (ClassUtil.getSimpleName(HandleContextRecord.class).equals(clientResponseContent.clazz())) {
                     throw new StatusRelationshipErrorException();
                 }
 
-                HandleContextDefinition handleContext = ObjectUtil.transferFromString(HandleContextDefinition.class, clientResponseContent.value());
+                HandleContextRecord handleContext = ObjectUtil.transferFromString(HandleContextRecord.class, clientResponseContent.value());
 
-                if (ClassUtil.getSimpleName(HandleContextDefinition.class).equals(clientResponseContent.clazz())) {
+                if (ClassUtil.getSimpleName(HandleContextRecord.class).equals(clientResponseContent.clazz())) {
                     throw new StatusRelationshipErrorException();
                 }
 
-                if (ClassUtil.getSimpleName(HandleContextDefinition.class).equals(handleContext.getClazz())) {
+                if (ClassUtil.getSimpleName(HandleContextRecord.class).equals(handleContext.clazz())) {
                     throw new StatusRelationshipErrorException();
                 }
 
                 ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
 
-                return (T) proxyManager.getFactory().buildProxy(handleContext.getClazz());
+                return (T) proxyManager.getFactory().buildProxy(handleContext.clazz());
 
             } else {
                 if (!ClassUtil.getSimpleName(returnClazz).equals(clientResponseContent.clazz())) {

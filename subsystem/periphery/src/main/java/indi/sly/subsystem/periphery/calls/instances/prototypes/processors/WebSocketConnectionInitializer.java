@@ -84,10 +84,10 @@ public class WebSocketConnectionInitializer extends AConnectionInitializer {
                                         throw new StatusUnreadableException();
                                     });
 
-                            if (ObjectUtil.allNotNull(response.getException())) {
-                                id = response.getException().id();
-                            } else if (ObjectUtil.allNotNull(response.getContent())) {
-                                id = response.getContent().id();
+                            if (ObjectUtil.allNotNull(response.exception())) {
+                                id = response.exception().id();
+                            } else if (ObjectUtil.allNotNull(response.content())) {
+                                id = response.content().id();
                             }
 
                             if (ValueUtil.isAnyNullOrEmpty(id)) {

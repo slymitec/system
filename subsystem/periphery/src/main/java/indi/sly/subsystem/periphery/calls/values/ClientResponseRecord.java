@@ -8,12 +8,4 @@ public record ClientResponseRecord(UserContentResponseRecord content, ClientResp
     public ClientResponseRecord(ClientResponseExceptionRecord exception) {
         this(null, exception);
     }
-
-    public UserContentResponseRecord getContent() {
-        return content;
-    }
-
-    public ClientResponseExceptionRecord getException() {
-        return exception;
-    }
 }

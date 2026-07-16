@@ -46,8 +46,8 @@ public abstract class AProxyObject extends ACacheableObject<ProxyCacheEntity> {
             throw new StatusUnexpectedException();
         }
 
-        UserContentResponseRecord clientResponseContent = clientResponse.getContent();
-        ClientResponseExceptionRecord clientResponseException = clientResponse.getException();
+        UserContentResponseRecord clientResponseContent = clientResponse.content();
+        ClientResponseExceptionRecord clientResponseException = clientResponse.exception();
         if (ObjectUtil.allNotNull(clientResponseException)) {
             ASystemException causeSystemException;
             try {

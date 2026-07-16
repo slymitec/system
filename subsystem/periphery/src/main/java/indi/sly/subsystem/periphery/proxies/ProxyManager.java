@@ -1,5 +1,6 @@
 package indi.sly.subsystem.periphery.proxies;
 
+import indi.sly.subsystem.periphery.calls.values.ClientRequestProcessIdRecord;
 import indi.sly.subsystem.periphery.core.AManager;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
 import indi.sly.subsystem.periphery.proxies.prototypes.ProxyContextObject;
@@ -31,7 +32,7 @@ public class ProxyManager extends AManager {
     public void shutdown() {
     }
 
-    public ProxyContextObject createProxyContext() {
+    public ProxyContextObject createProxyContext(ClientRequestProcessIdRecord clientRequestProcessId) {
         return null;
     }
 }

@@ -41,8 +41,8 @@ public class ProxyCallResolver extends AResolver implements IProxyResolver {
             ConnectionObject connection = callManager.getConnection(proxy.getContext().getCall());
             clientResponse = connection.call(clientRequest);
 
-            UserContentResponseRecord clientResponseContent = clientResponse.getContent();
-            ClientResponseExceptionRecord clientResponseException = clientResponse.getException();
+            UserContentResponseRecord clientResponseContent = clientResponse.content();
+            ClientResponseExceptionRecord clientResponseException = clientResponse.exception();
             if (ObjectUtil.allNotNull(clientResponseException)) {
                 if (!clientResponseException.id().equals(clientRequestContent.id())) {
                     throw new StatusRelationshipErrorException();

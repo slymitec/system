@@ -62,7 +62,7 @@ public class ProcessFactory extends AFactory {
         Collections.sort(this.processEndResolvers);
     }
 
-    public ProcessObject createProcess(ProcessProcessorMediator processorMediator, ProcessCacheEntity cache) {
+    private ProcessObject createProcess(ProcessProcessorMediator processorMediator, ProcessCacheEntity cache) {
         DateTimeObject dateTime = this.coreManager.getDateTime();
 
         ProcessObject process = this.coreManager.create(ProcessObject.class);

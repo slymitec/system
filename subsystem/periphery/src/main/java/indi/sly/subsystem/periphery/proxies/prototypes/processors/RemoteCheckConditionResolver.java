@@ -1,0 +1,64 @@
+package indi.sly.subsystem.periphery.proxies.prototypes.processors;
+
+import indi.sly.subsystem.periphery.core.date.prototypes.DateTimeObject;
+import indi.sly.subsystem.periphery.core.prototypes.processors.AResolver;
+import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorExpireConsumer;
+import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorInvokeFunction;
+import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorIsExpiredFunction;
+import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
+import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
+import indi.sly.subsystem.periphery.proxies.values.RemoteTypes;
+import indi.sly.system.common.lang.Consumer1;
+import indi.sly.system.common.lang.StatusExpiredException;
+import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.values.DateTimeType;
+import jakarta.inject.Named;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class RemoteCheckConditionResolver extends AResolver implements IRemoteResolver {
+    private final RemoteProcessorInvokeFunction invoke;
+    private final RemoteProcessorIsExpiredFunction isExpired;
+    private final RemoteProcessorExpireConsumer expire;
+
+
+    public RemoteCheckConditionResolver() {
+        Consumer1<RemoteDefinition> checkRemoteType = remote -> {
+            if (LogicalUtil.allNotEqual(remote.getType(), RemoteTypes.OBJECT)) {
+                throw new StatusNotSupportedException();
+            }
+        };
+
+        this.invoke = (invokeRemote, remote, procedure, method, parameters) -> {
+            checkRemoteType.accept(remote);
+
+            return invokeRemote;
+        };
+
+        this.isExpired = (isExpired, remote, procedure) -> {
+            checkRemoteType.accept(remote);
+
+
+            return isExpired;
+        };
+
+        this.expire = (remote, procedure, duration) -> {
+            checkRemoteType.accept(remote);
+        };
+    }
+
+    @Override
+    public int order() {
+        return 0;
+    }
+
+    @Override
+    public void resolve(RemoteDefinition remote, RemoteProcessorMediator processorMediator) {
+        processorMediator.getInvokes().add(invoke);
+        processorMediator.getIsExpireds().add(isExpired);
+        processorMediator.getExpires().add(expire);
+    }
+}

@@ -4,10 +4,12 @@ import indi.sly.subsystem.periphery.calls.CallManager;
 import indi.sly.subsystem.periphery.core.boot.prototypes.BootFactory;
 import indi.sly.subsystem.periphery.core.boot.prototypes.BootObject;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
+import indi.sly.subsystem.periphery.core.date.prototypes.DateTimeObject;
 import indi.sly.subsystem.periphery.core.environment.containers.KernelSpace;
 import indi.sly.subsystem.periphery.core.environment.values.SpaceType;
 import indi.sly.subsystem.periphery.core.environment.containers.UserSpace;
 import indi.sly.subsystem.periphery.core.prototypes.APrototype;
+import indi.sly.subsystem.periphery.core.prototypes.CoreFactory;
 import indi.sly.subsystem.periphery.core.prototypes.ObjectCollectionObject;
 import indi.sly.subsystem.periphery.core.prototypes.PrototypeBuilder;
 import indi.sly.subsystem.periphery.memory.MemoryManager;
@@ -23,7 +25,11 @@ import org.springframework.context.annotation.Scope;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CoreManager extends AManager {
-    protected BootFactory bootFactory;
+    private CoreFactory factory;
+
+    public CoreFactory getFactory() {
+        return this.factory;
+    }
 
     @Override
     public void startup(long startup) {
@@ -41,10 +47,13 @@ public class CoreManager extends AManager {
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(MemoryManager.class));
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(ProxyManager.class));
 
-            this.bootFactory = this.coreManager.create(BootFactory.class);
-            this.bootFactory.init();
+            this.factory = this.coreManager.create(CoreFactory.class);
+            this.factory.init();
 
-            BootObject boot = this.bootFactory.buildBoot();
+            BootFactory bootFactory = this.coreManager.create(BootFactory.class);
+            bootFactory.init();
+
+            BootObject boot = bootFactory.buildBoot();
             this.objectCollection.addByClass(SpaceType.KERNEL, boot);
         }
     }
@@ -85,5 +94,9 @@ public class CoreManager extends AManager {
 
     public UserSpace getUserSpace() {
         return this.getKernelSpace().getUserSpace();
+    }
+
+    public DateTimeObject getDateTime() {
+        return this.factory.buildDateTime();
     }
 }

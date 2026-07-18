@@ -3,9 +3,12 @@ package indi.sly.subsystem.periphery.proxies;
 import indi.sly.subsystem.periphery.calls.values.ClientRequestProcessIdRecord;
 import indi.sly.subsystem.periphery.core.AManager;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
-import indi.sly.subsystem.periphery.proxies.prototypes.ProxyContextObject;
+import indi.sly.subsystem.periphery.proxies.prototypes.ProcedureObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.ProxyFactory;
+import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -32,7 +35,11 @@ public class ProxyManager extends AManager {
     public void shutdown() {
     }
 
-    public ProxyContextObject createProxyContext(ClientRequestProcessIdRecord clientRequestProcessId) {
+    public ProcedureObject createProxyContext(String call, long type, ClientRequestProcessIdRecord clientRequestProcessId) {
+        if (ValueUtil.isAnyNullOrEmpty(call) || ObjectUtil.isAnyNull(clientRequestProcessId)) {
+            throw new ConditionParametersException();
+        }
+
         return null;
     }
 }

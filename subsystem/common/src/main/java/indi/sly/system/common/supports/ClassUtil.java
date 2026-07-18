@@ -27,7 +27,7 @@ public abstract class ClassUtil {
         }
 
         do {
-            if (child == parent) {
+            if (child.equals(parent)) {
                 return true;
             } else {
                 child = child.getSuperclass();

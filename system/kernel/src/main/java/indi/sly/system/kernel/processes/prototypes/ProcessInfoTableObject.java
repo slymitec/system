@@ -2,9 +2,9 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
+import indi.sly.system.common.values.DateTimeType;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.objects.TypeManager;
@@ -206,7 +206,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
         try {
             ProcessInfoTableEntity processInfoTable = this.init(process);
 
-            UUID index = processInfoTable.getByID(id).getIndex();
+            UUID index = processInfoTable.getById(id).getIndex();
 
             return this.factory.buildProcessInfoEntry(processorMediator, this, index);
         } finally {

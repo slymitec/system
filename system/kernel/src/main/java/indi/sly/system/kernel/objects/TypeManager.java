@@ -44,7 +44,7 @@ public class TypeManager extends AManager {
             Set<UUID> childTypes = Set.of(UUIDUtil.getEmpty());
             AInfoTypeInitializer typeInitializer = this.coreManager.create(FolderTypeInitializer.class);
 
-            this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
+            this.factory.buildType(kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_ID,
                     kernelConfiguration.OBJECTS_TYPES_INSTANCE_FOLDER_NAME, attribute, childTypes, typeInitializer);
 
             attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_SHARED_READ,
@@ -55,7 +55,7 @@ public class TypeManager extends AManager {
             );
             typeInitializer = this.coreManager.create(NamelessFolderTypeInitializer.class);
 
-            this.create(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
+            this.factory.buildType(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID,
                     kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_NAME, attribute, childTypes, typeInitializer);
         }
     }
@@ -66,25 +66,6 @@ public class TypeManager extends AManager {
         }
 
         return this.coreManager.getObjectCollection().getById(SpaceType.KERNEL, typeId);
-    }
-
-    public TypeObject create(UUID typeId, String typeName, long attribute, Set<UUID> childTypes,
-                                          AInfoTypeInitializer typeInitializer) {
-        if (ObjectUtil.isAnyNull(typeId, childTypes, typeInitializer) || StringUtil.isNameIllegal(typeName)) {
-            throw new ConditionParametersException();
-        }
-
-        return this.factory.buildType(typeId, typeName, attribute, childTypes, typeInitializer);
-    }
-
-    public void delete(UUID typeId) {
-        if (ObjectUtil.isAnyNull(typeId)) {
-            throw new ConditionParametersException();
-        }
-
-        TypeObject type = this.get(typeId);
-
-        this.factory.deleteType(typeId, type);
     }
 
     public Set<UUID> list() {

@@ -35,9 +35,9 @@ public class TypeFactory extends AFactory {
         return type;
     }
 
-    public TypeObject buildType(UUID typeID, String typeName, long attribute, Set<UUID> childTypes,
+    public TypeObject buildType(UUID typeId, String typeName, long attribute, Set<UUID> childTypes,
                                 AInfoTypeInitializer typeInitializer) {
-        if (ObjectUtil.isAnyNull(typeID, childTypes, typeInitializer) || StringUtil.isNameIllegal(typeName)) {
+        if (ObjectUtil.isAnyNull(typeId, childTypes, typeInitializer) || StringUtil.isNameIllegal(typeName)) {
             throw new ConditionParametersException();
         }
 
@@ -49,31 +49,16 @@ public class TypeFactory extends AFactory {
             type.getChildTypes().addAll(childTypes);
         }
 
-        Set<UUID> infoTypeIDs = this.coreManager.getKernelSpace().getInfoTypeIds();
+        Set<UUID> infoTypeIds = this.coreManager.getKernelSpace().getInfoTypeIds();
 
-        if (infoTypeIDs.contains(typeID)) {
+        if (infoTypeIds.contains(typeId)) {
             throw new StatusAlreadyExistedException();
         }
 
-        infoTypeIDs.add(typeID);
+        infoTypeIds.add(typeId);
 
         typeInitializer.install();
 
-        return this.createType(typeID, type);
-    }
-
-    public void deleteType(UUID typeID, TypeObject type) {
-        if (ObjectUtil.isAnyNull(typeID)) {
-            throw new ConditionParametersException();
-        }
-
-        Set<UUID> infoTypeIDs = this.coreManager.getKernelSpace().getInfoTypeIds();
-
-        type.getInitializer().uninstall();
-
-        ObjectCollectionObject objectCollection = this.coreManager.getObjectCollection();
-        objectCollection.deleteById(SpaceType.KERNEL, typeID);
-
-        infoTypeIDs.remove(typeID);
+        return this.createType(typeId, type);
     }
 }

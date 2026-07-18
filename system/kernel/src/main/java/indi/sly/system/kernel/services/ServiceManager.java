@@ -64,7 +64,7 @@ public class ServiceManager extends AManager {
             Set<UUID> childTypes = Set.of();
             AInfoTypeInitializer typeInitializer = this.coreManager.create(ServiceTypeInitializer.class);
 
-            typeManager.create(kernelConfiguration.SERVICE_TYPES_INSTANCE_SERVICE_ID,
+            typeManager.getFactory().buildType(kernelConfiguration.SERVICE_TYPES_INSTANCE_SERVICE_ID,
                     kernelConfiguration.SERVICE_TYPES_INSTANCE_SERVICE_NAME, attribute, childTypes, typeInitializer);
         }
     }

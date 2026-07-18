@@ -1,7 +1,7 @@
 package indi.sly.system.services.jobs.prototypes.processors;
 
+import indi.sly.system.common.values.DateTimeType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;

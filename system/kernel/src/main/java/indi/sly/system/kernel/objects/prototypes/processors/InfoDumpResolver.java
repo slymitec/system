@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.objects.prototypes.processors;
 
+import indi.sly.system.common.values.DateTimeType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.objects.lang.InfoProcessorDumpFunction;
 import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator;

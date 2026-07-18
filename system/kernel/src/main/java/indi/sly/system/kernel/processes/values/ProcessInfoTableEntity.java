@@ -43,7 +43,7 @@ public class ProcessInfoTableEntity extends APersistentEntity {
         return infoEntry;
     }
 
-    public ProcessInfoEntryEntity getByID(UUID id) {
+    public ProcessInfoEntryEntity getById(UUID id) {
         ProcessInfoEntryEntity infoEntry = this.idTable.getOrDefault(id, null);
 
         if (ObjectUtil.isAnyNull(infoEntry)) {

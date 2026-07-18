@@ -2,8 +2,8 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.values.DateTimeType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
-import indi.sly.system.kernel.core.date.values.DateTimeType;
 import indi.sly.system.kernel.core.environment.values.CacheDurationType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;

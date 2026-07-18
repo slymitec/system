@@ -23,9 +23,6 @@ public abstract class AInfoTypeInitializer extends AInitializer {
     public void install() {
     }
 
-    public void uninstall() {
-    }
-
     public abstract UUID getPoolId(UUID id, UUID type);
 
     public void createProcedure(InfoEntity info) {

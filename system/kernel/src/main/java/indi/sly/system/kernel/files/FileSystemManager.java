@@ -33,7 +33,7 @@ public class FileSystemManager extends AManager {
             Set<UUID> childTypes = Set.of();
             AInfoTypeInitializer typeInitializer = this.coreManager.create(FileSystemFileTypeInitializer.class);
 
-            typeManager.create(kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID,
+            typeManager.getFactory().buildType(kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID,
                     kernelConfiguration.FILES_TYPES_INSTANCE_FILE_NAME, attribute, childTypes, typeInitializer);
 
             attribute = LogicalUtil.or(TypeInitializerAttributeType.CAN_BE_INHERITED,
@@ -43,7 +43,7 @@ public class FileSystemManager extends AManager {
             childTypes = Set.of(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, kernelConfiguration.FILES_TYPES_INSTANCE_FILE_ID);
             typeInitializer = this.coreManager.create(FileSystemFolderTypeInitializer.class);
 
-            typeManager.create(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
+            typeManager.getFactory().buildType(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID,
                     kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_NAME, attribute, childTypes, typeInitializer);
         }
     }

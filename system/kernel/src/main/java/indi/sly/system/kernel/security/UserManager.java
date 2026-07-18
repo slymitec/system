@@ -65,7 +65,7 @@ public class UserManager extends AManager {
             Set<UUID> childTypes = Set.of();
             AInfoTypeInitializer typeInitializer = this.coreManager.create(AuditTypeInitializer.class);
 
-            typeManager.create(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID, kernelConfiguration.SECURITY_INSTANCE_AUDIT_NAME, attribute, childTypes, typeInitializer);
+            typeManager.getFactory().buildType(kernelConfiguration.SECURITY_INSTANCE_AUDIT_ID, kernelConfiguration.SECURITY_INSTANCE_AUDIT_NAME, attribute, childTypes, typeInitializer);
         }
     }
 

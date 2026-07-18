@@ -79,7 +79,7 @@ public class UserContentObject extends ADefinitionObject<UserContextDefinition> 
                 clazz = ClassUtil.getSimpleName(Void.class);
             }
 
-            UserContentResponseRecord userContentResponse = new UserContentResponseRecord(userContentRequest.id(), ObjectUtil.transferToString(result), clazz);
+            UserContentResponseRecord userContentResponse = new UserContentResponseRecord(userContentRequest.id(), clazz, ObjectUtil.transferToString(result));
 
             this.definition.getContent().setResponse(userContentResponse);
         } else {

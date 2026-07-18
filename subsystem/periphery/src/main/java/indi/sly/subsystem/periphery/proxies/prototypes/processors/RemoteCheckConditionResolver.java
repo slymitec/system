@@ -2,10 +2,7 @@ package indi.sly.subsystem.periphery.proxies.prototypes.processors;
 
 import indi.sly.subsystem.periphery.core.date.prototypes.DateTimeObject;
 import indi.sly.subsystem.periphery.core.prototypes.processors.AResolver;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorDieConsumer;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorExpireConsumer;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorInvokeFunction;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorIsExpiredFunction;
+import indi.sly.subsystem.periphery.proxies.lang.*;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
 import indi.sly.subsystem.periphery.proxies.values.RemoteTypes;
@@ -30,7 +27,29 @@ public class RemoteCheckConditionResolver extends AResolver implements IRemoteRe
     private final RemoteProcessorDieConsumer die;
 
     public RemoteCheckConditionResolver() {
-        Consumer1<RemoteDefinition> checkRemoteType = remote -> {
+        this.invoke = (invokeRemote, remote, procedure, method, parameters) -> {
+            if (!remote.isAlive()) {
+                throw new StatusRelationshipErrorException();
+            }
+            if (LogicalUtil.allNotEqual(remote.getType(), RemoteTypes.OBJECT, RemoteTypes.MANAGER)) {
+                throw new StatusNotSupportedException();
+            }
+
+            return invokeRemote;
+        };
+
+        this.isExpired = (isExpired, remote, procedure) -> {
+            if (!remote.isAlive()) {
+                throw new StatusRelationshipErrorException();
+            }
+            if (LogicalUtil.allNotEqual(remote.getType(), RemoteTypes.OBJECT)) {
+                throw new StatusNotSupportedException();
+            }
+
+            return isExpired;
+        };
+
+        this.expire = (remote, procedure, duration) -> {
             if (!remote.isAlive()) {
                 throw new StatusRelationshipErrorException();
             }
@@ -39,24 +58,13 @@ public class RemoteCheckConditionResolver extends AResolver implements IRemoteRe
             }
         };
 
-        this.invoke = (invokeRemote, remote, procedure, method, parameters) -> {
-            checkRemoteType.accept(remote);
-
-            return invokeRemote;
-        };
-
-        this.isExpired = (isExpired, remote, procedure) -> {
-            checkRemoteType.accept(remote);
-
-            return isExpired;
-        };
-
-        this.expire = (remote, procedure, duration) -> {
-            checkRemoteType.accept(remote);
-        };
-
         this.die = (remote, procedure) -> {
-            checkRemoteType.accept(remote);
+            if (!remote.isAlive()) {
+                throw new StatusRelationshipErrorException();
+            }
+            if (LogicalUtil.allNotEqual(remote.getType(), RemoteTypes.OBJECT)) {
+                throw new StatusNotSupportedException();
+            }
         };
     }
 

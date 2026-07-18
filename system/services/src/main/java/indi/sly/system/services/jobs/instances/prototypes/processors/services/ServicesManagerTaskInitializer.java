@@ -21,8 +21,6 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ServicesManagerTaskInitializer extends ATaskInitializer {
     public ServicesManagerTaskInitializer() {
-        this.cacheableObjectFunction = (_) -> this.coreManager.getManager(ServiceManager.class);
-
         this.register("createService", this::createService, TransactionType.INDEPENDENCE);
         this.register("deleteService", this::deleteService, TransactionType.INDEPENDENCE);
         this.register("start", this::start, TransactionType.INDEPENDENCE);

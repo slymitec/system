@@ -1,10 +1,10 @@
 package indi.sly.subsystem.periphery.proxies;
 
-import indi.sly.subsystem.periphery.calls.values.ClientRequestProcessIdRecord;
 import indi.sly.subsystem.periphery.core.AManager;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
 import indi.sly.subsystem.periphery.proxies.prototypes.ProcedureObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.ProxyFactory;
+import indi.sly.subsystem.periphery.proxies.values.ProcedureProcessRecord;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -35,11 +35,11 @@ public class ProxyManager extends AManager {
     public void shutdown() {
     }
 
-    public ProcedureObject createProxyContext(String call, long type, ClientRequestProcessIdRecord clientRequestProcessId) {
-        if (ValueUtil.isAnyNullOrEmpty(call) || ObjectUtil.isAnyNull(clientRequestProcessId)) {
+    public ProcedureObject createProcedure(String call, ProcedureProcessRecord process) {
+        if (ValueUtil.isAnyNullOrEmpty(call) || ObjectUtil.isAnyNull(process)) {
             throw new ConditionParametersException();
         }
 
-        return null;
+        return this.factory.buildProcedure(call, process);
     }
 }

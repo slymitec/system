@@ -98,7 +98,7 @@ public class JobService extends AService {
 
     protected JobFactory factory;
 
-    public void createTask(String name, long attribute, UUID processId, ATaskInitializer initializer) {
+    private void createTask(String name, long attribute, UUID processId, ATaskInitializer initializer) {
         if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(initializer)) {
             throw new ConditionParametersException();
         }
@@ -106,16 +106,6 @@ public class JobService extends AService {
         TaskBuilder taskBuilder = this.factory.createTask();
 
         taskBuilder.create(name, attribute, processId, initializer);
-    }
-
-    public void deleteTask(String name) {
-        if (StringUtil.isNameIllegal(name)) {
-            throw new ConditionParametersException();
-        }
-
-        TaskBuilder taskBuilder = this.factory.createTask();
-
-        taskBuilder.delete(name);
     }
 
     public TaskObject getTask(String name) {

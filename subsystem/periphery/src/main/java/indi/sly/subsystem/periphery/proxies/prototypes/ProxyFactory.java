@@ -1,10 +1,12 @@
 package indi.sly.subsystem.periphery.proxies.prototypes;
 
 import indi.sly.subsystem.periphery.core.prototypes.AFactory;
+import indi.sly.subsystem.periphery.proxies.instances.core.CoreManagerProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.core.DateTimeProxyObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.prototypes.processors.*;
-import indi.sly.subsystem.periphery.proxies.values.HandleTableDefinition;
-import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
+import indi.sly.subsystem.periphery.proxies.values.*;
+import indi.sly.system.common.supports.CollectionUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -20,13 +22,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ProxyFactory extends AFactory {
     public ProxyFactory() {
         this.remoteResolvers = new CopyOnWriteArrayList<>();
-        this.namedProxyClasses = new ConcurrentHashMap<>();
-
-        //this.addCacheableObjectName(DateTimeProxyObject.class);
+        this.proxyManagers = new ConcurrentHashMap<>();
+        this.proxyObjects = new ConcurrentHashMap<>();
     }
 
     private final List<IRemoteResolver> remoteResolvers;
-    private final Map<String, Class<? extends AProxyObject>> namedProxyClasses;
+    private final Map<Class<? extends AProxyObject>, RemoteDefinition> proxyManagers;
+    private final Map<String, Class<? extends AProxyObject>> proxyObjects;
 
     @Override
     public void init() {
@@ -36,26 +38,28 @@ public class ProxyFactory extends AFactory {
         this.remoteResolvers.add(this.coreManager.create(RemoteDateResolver.class));
 
         Collections.sort(this.remoteResolvers);
+
+        this.createProxyManager(CoreManagerProxyObject.class, "CoreManager");
+
+        this.proxyObjects.put("DateTime", DateTimeProxyObject.class);
     }
 
-//    private void addCacheableObjectName(Class<? extends AProxyObject> clazz) {
-//        if (ObjectUtil.isAnyNull(clazz)) {
-//            throw new ConditionParametersException();
-//        }
-//
-//        this.namedProxyClasses.put(ClassUtil.getSimpleName(clazz), clazz);
-//    }
-//
-//    public Class<? extends AProxyObject> getProxyClazz(String clazzName) {
-//        Class<? extends ACacheableObject<?>> cacheableObjectClazz = this.namedProxyClasses.getOrDefault(clazzName, null);
-//        if (ObjectUtil.isAnyNull(cacheableObjectClazz)) {
-//            throw new StatusNotExistedException();
-//        } else {
-//            return cacheableObjectClazz;
-//        }
-//    }
+    private void createProxyManager(Class<? extends AProxyObject> clazz, String clazzName) {
+        RemoteDefinition remote = new RemoteDefinition();
+        remote.setType(RemoteTypes.MANAGER);
+        remote.setClazz(clazzName);
+        this.proxyManagers.put(clazz, remote);
+    }
 
-    private RemoteObject create(RemoteProcessorMediator processorMediator, RemoteDefinition definition, ProcedureObject procedure) {
+    public Map<Class<? extends AProxyObject>, RemoteDefinition> getProxyManagers() {
+        return CollectionUtil.unmodifiable(this.proxyManagers);
+    }
+
+    public Map<String, Class<? extends AProxyObject>> getProxyObjects() {
+        return CollectionUtil.unmodifiable(this.proxyObjects);
+    }
+
+    private RemoteObject createRemote(RemoteProcessorMediator processorMediator, RemoteDefinition definition, ProcedureObject procedure) {
         RemoteObject remote = this.coreManager.create(RemoteObject.class);
 
         remote.setBase(procedure);
@@ -66,13 +70,13 @@ public class ProxyFactory extends AFactory {
         return remote;
     }
 
-    public RemoteObject build(RemoteDefinition remote, ProcedureObject procedure) {
+    public RemoteObject buildRemote(RemoteDefinition remote, ProcedureObject procedure) {
         RemoteProcessorMediator processorMediator = this.coreManager.create(RemoteProcessorMediator.class);
         for (IRemoteResolver remoteResolver : this.remoteResolvers) {
             remoteResolver.resolve(remote, processorMediator);
         }
 
-        return this.create(processorMediator, remote, procedure);
+        return this.createRemote(processorMediator, remote, procedure);
     }
 
     private HandleTableObject createHandleTable(HandleTableDefinition definition, ProcedureObject procedure) {
@@ -87,5 +91,32 @@ public class ProxyFactory extends AFactory {
 
     public HandleTableObject buildHandleTable(HandleTableDefinition definition, ProcedureObject procedure) {
         return this.createHandleTable(definition, procedure);
+    }
+
+    private ProcedureObject createProcedure(ProcedureDefinition definition) {
+        ProcedureObject procedure = this.coreManager.create(ProcedureObject.class);
+
+        procedure.setDefinition(definition);
+        procedure.factory = this;
+
+        return procedure;
+    }
+
+    public ProcedureObject buildProcedure(String call, ProcedureProcessRecord process) {
+        ProcedureDefinition procedure = new ProcedureDefinition();
+
+        procedure.setCall(call);
+        procedure.setProcess(process);
+
+        return this.createProcedure(procedure);
+    }
+
+    public AProxyObject buildProxy(Class<? extends AProxyObject> clazz, RemoteObject remote){
+        AProxyObject proxy = this.coreManager.create(clazz);
+
+        proxy.factory = this;
+        proxy.setRemote(remote);
+
+        return proxy;
     }
 }

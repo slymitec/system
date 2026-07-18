@@ -27,8 +27,6 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessManagerTaskInitializer extends ATaskInitializer {
     public ProcessManagerTaskInitializer() {
-        this.cacheableObjectFunction = (_) -> this.coreManager.getManager(ProcessManager.class);
-
         this.register("getCurrent", this::getCurrent, TransactionType.INDEPENDENCE);
         this.register("getWithAuthorization", this::getWithAuthorization, TransactionType.INDEPENDENCE);
         this.register("get", this::get, TransactionType.INDEPENDENCE);

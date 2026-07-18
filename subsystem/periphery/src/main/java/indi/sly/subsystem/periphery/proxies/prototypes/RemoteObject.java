@@ -1,14 +1,8 @@
 package indi.sly.subsystem.periphery.proxies.prototypes;
 
-import indi.sly.subsystem.periphery.core.date.prototypes.DateTimeObject;
-import indi.sly.subsystem.periphery.core.environment.values.CacheDurationType;
 import indi.sly.subsystem.periphery.core.prototypes.AChildDefinitionObject;
-import indi.sly.subsystem.periphery.core.prototypes.ADefinitionObject;
 import indi.sly.subsystem.periphery.proxies.ProxyManager;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorDieConsumer;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorExpireConsumer;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorInvokeFunction;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorIsExpiredFunction;
+import indi.sly.subsystem.periphery.proxies.lang.*;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
 import indi.sly.subsystem.periphery.proxies.values.RemoteTypes;
@@ -17,13 +11,10 @@ import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.common.values.DateTimeType;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 
 @Named
@@ -56,8 +47,8 @@ public class RemoteObject extends AChildDefinitionObject<RemoteDefinition, Proce
         return this.definition.getValue();
     }
 
-    public RemoteObject invoke(String method, String returnClazz, Object... args) {
-        if (ValueUtil.isAnyNullOrEmpty(method) || ObjectUtil.isAnyNull(returnClazz)) {
+    public RemoteObject invoke(String method, Object... args) {
+        if (ValueUtil.isAnyNullOrEmpty(method)) {
             throw new ConditionParametersException();
         }
         if (ObjectUtil.isAnyNull(args)) {
@@ -72,7 +63,7 @@ public class RemoteObject extends AChildDefinitionObject<RemoteDefinition, Proce
             invokeRemote = invoke.apply(invokeRemote, this.definition, this.base, method, args);
         }
 
-        RemoteObject remote = this.factory.build(invokeRemote, this.base);
+        RemoteObject remote = this.factory.buildRemote(invokeRemote, this.base);
 
         if (LogicalUtil.isAnyEqual(remote.getType(), RemoteTypes.OBJECT)) {
             HandleTableObject handleTable = this.base.getHandleTable();
@@ -108,20 +99,5 @@ public class RemoteObject extends AChildDefinitionObject<RemoteDefinition, Proce
         for (RemoteProcessorDieConsumer die : dies) {
             die.accept(this.definition, this.base);
         }
-    }
-
-    public ProcedureObject getProcedure() {
-        return this.base;
-    }
-
-    public AProxyObject getProxy() {
-        if (!this.definition.isAlive()) {
-            throw new StatusRelationshipErrorException();
-        }
-
-        ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
-
-
-        return null;
     }
 }

@@ -7,6 +7,7 @@ import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.CoreManager;
 import indi.sly.system.kernel.core.boot.prototypes.BootObject;
+import indi.sly.system.kernel.core.boot.prototypes.IStartupCapable;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.environment.containers.KernelConfiguration;
 import indi.sly.system.kernel.core.environment.containers.KernelSpace;
@@ -58,19 +59,19 @@ public class StartUpController extends AController {
             this.coreManager.setUserSpace(userSpace);
             this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
-            BootObject boot = this.coreManager.getObjectCollection().getByClass(SpaceType.KERNEL, BootObject.class);
-            FileSystemManager fileSystemManager = this.coreManager.getManager(FileSystemManager.class);
-            MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-            ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
-            ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
-            ServiceManager serviceManager = this.coreManager.getManager(ServiceManager.class);
-            ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
-            TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
-            UserManager userManager = this.coreManager.getManager(UserManager.class);
+            List<IStartupCapable> startupCapableManagers = new ArrayList<>();
+            startupCapableManagers.add(this.coreManager.getManager(MemoryManager.class));
+            startupCapableManagers.add(this.coreManager.getObjectCollection().getByClass(SpaceType.KERNEL, BootObject.class));
+            startupCapableManagers.add(this.coreManager.getManager(ThreadManager.class));
+            startupCapableManagers.add(this.coreManager.getManager(ProcessManager.class));
+            startupCapableManagers.add(this.coreManager.getManager(TypeManager.class));
+            startupCapableManagers.add(this.coreManager.getManager(UserManager.class));
+            startupCapableManagers.add(this.coreManager.getManager(ObjectManager.class));
+            startupCapableManagers.add(this.coreManager.getManager(FileSystemManager.class));
+            startupCapableManagers.add(this.coreManager.getManager(ServiceManager.class));
 
             this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL, this.coreManager.create(JobService.class));
-
-            JobService jobService = this.coreManager.getService(JobService.class);
+            startupCapableManagers.add(this.coreManager.getService(JobService.class));
 
             Long[] startups = new Long[]{
                     StartupType.STEP_INIT_SELF,
@@ -82,17 +83,9 @@ public class StartUpController extends AController {
             };
 
             for (Long startup : startups) {
-                memoryManager.startup(startup);
-                boot.startup(startup);
-                threadManager.startup(startup);
-                processManager.startup(startup);
-                typeManager.startup(startup);
-                userManager.startup(startup);
-                objectManager.startup(startup);
-                fileSystemManager.startup(startup);
-                serviceManager.startup(startup);
-
-                jobService.startup(startup);
+                for (IStartupCapable startupCapableManager : startupCapableManagers) {
+                    startupCapableManager.startup(startup);
+                }
             }
 
             this.coreManager.setUserSpace(null);

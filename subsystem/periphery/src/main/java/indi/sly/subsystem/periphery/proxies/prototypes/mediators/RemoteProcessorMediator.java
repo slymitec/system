@@ -1,10 +1,7 @@
 package indi.sly.subsystem.periphery.proxies.prototypes.mediators;
 
 import indi.sly.subsystem.periphery.core.prototypes.wrappers.AMediator;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorDieConsumer;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorExpireConsumer;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorInvokeFunction;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorIsExpiredFunction;
+import indi.sly.subsystem.periphery.proxies.lang.*;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

@@ -15,6 +15,18 @@ public abstract class AProxyObject extends AObject {
         this.remote = remote;
     }
 
+    public boolean isAlive() {
+        return this.remote.isAlive();
+    }
+
+    public boolean isExpired() {
+        return this.remote.isExpired();
+    }
+
+    public void expire(long duration) {
+        this.remote.expire(duration);
+    }
+
     @SuppressWarnings("unchecked")
     protected <T> T invoke(String method, Class<T> returnClazz, Object... args) {
         RemoteObject invokeRemote = this.remote.invoke(method, args);

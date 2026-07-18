@@ -23,6 +23,10 @@ public class RemoteObject extends AChildDefinitionObject<RemoteDefinition, Proce
     protected ProxyFactory factory;
     protected RemoteProcessorMediator processorMediator;
 
+    public boolean isAlive() {
+        return this.definition.isAlive();
+    }
+
     public long getType() {
         if (!this.definition.isAlive()) {
             throw new StatusRelationshipErrorException();

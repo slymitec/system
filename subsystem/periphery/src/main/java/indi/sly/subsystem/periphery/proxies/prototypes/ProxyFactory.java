@@ -117,12 +117,16 @@ public class ProxyFactory extends AFactory {
         return this.createProcedure(procedure);
     }
 
-    public AProxyObject buildProxy(Class<? extends AProxyObject> clazz, RemoteObject remote) {
+    private AProxyObject createProxy(Class<? extends AProxyObject> clazz, RemoteObject remote) {
         AProxyObject proxy = this.coreManager.create(clazz);
 
         proxy.factory = this;
         proxy.setRemote(remote);
 
         return proxy;
+    }
+
+    public AProxyObject buildProxy(Class<? extends AProxyObject> clazz, RemoteObject remote) {
+        return this.createProxy(clazz, remote);
     }
 }

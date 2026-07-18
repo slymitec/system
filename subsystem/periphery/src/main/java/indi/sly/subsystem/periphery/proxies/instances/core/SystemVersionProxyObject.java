@@ -7,5 +7,8 @@ import org.springframework.context.annotation.Scope;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CoreManagerProxyObject extends AProxyObject {
+public class SystemVersionProxyObject extends AProxyObject {
+    public String getSystemVersion() {
+        return this.invoke("getSystemVersion", String.class);
+    }
 }

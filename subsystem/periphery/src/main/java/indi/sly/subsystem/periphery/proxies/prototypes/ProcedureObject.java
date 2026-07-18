@@ -36,9 +36,8 @@ public class ProcedureObject extends ADefinitionObject<ProcedureDefinition> {
             throw new ConditionParametersException();
         }
 
-        Map<Class<? extends AProxyObject>, RemoteDefinition> proxyManagers = this.factory.getProxyManagers();
-        RemoteDefinition remote = proxyManagers.getOrDefault(clazz, null);
-
+        RemoteDefinition remote = this.factory.getCachedProxyManagers().getOrDefault(clazz, null);
+        
         if (ObjectUtil.isAnyNull(remote)) {
             throw new StatusNotExistedException();
         }

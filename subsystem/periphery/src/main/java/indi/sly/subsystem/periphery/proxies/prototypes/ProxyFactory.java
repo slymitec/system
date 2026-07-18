@@ -1,11 +1,13 @@
 package indi.sly.subsystem.periphery.proxies.prototypes;
 
 import indi.sly.subsystem.periphery.core.prototypes.AFactory;
-import indi.sly.subsystem.periphery.proxies.instances.core.CoreManagerProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.core.CoreProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.core.DateTimeProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.core.SystemVersionProxyObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.prototypes.processors.*;
 import indi.sly.subsystem.periphery.proxies.values.*;
+import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.CollectionUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -22,13 +24,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ProxyFactory extends AFactory {
     public ProxyFactory() {
         this.remoteResolvers = new CopyOnWriteArrayList<>();
-        this.proxyManagers = new ConcurrentHashMap<>();
+        this.cachedProxyManagers = new ConcurrentHashMap<>();
         this.proxyObjects = new ConcurrentHashMap<>();
     }
 
     private final List<IRemoteResolver> remoteResolvers;
-    private final Map<Class<? extends AProxyObject>, RemoteDefinition> proxyManagers;
     private final Map<String, Class<? extends AProxyObject>> proxyObjects;
+    private final Map<Class<? extends AProxyObject>, RemoteDefinition> cachedProxyManagers;
 
     @Override
     public void init() {
@@ -39,24 +41,28 @@ public class ProxyFactory extends AFactory {
 
         Collections.sort(this.remoteResolvers);
 
-        this.createProxyManager(CoreManagerProxyObject.class, "CoreManager");
-
-        this.proxyObjects.put("DateTime", DateTimeProxyObject.class);
+        this.registerProxy("CoreManager", CoreProxyManager.class);
+        this.registerProxy("SystemVersionObject", SystemVersionProxyObject.class);
+        this.registerProxy("DateTimeObject", DateTimeProxyObject.class);
     }
 
-    private void createProxyManager(Class<? extends AProxyObject> clazz, String clazzName) {
-        RemoteDefinition remote = new RemoteDefinition();
-        remote.setType(RemoteTypes.MANAGER);
-        remote.setClazz(clazzName);
-        this.proxyManagers.put(clazz, remote);
-    }
+    private void registerProxy(String name, Class<? extends AProxyObject> clazz) {
+        this.proxyObjects.put(name, clazz);
 
-    public Map<Class<? extends AProxyObject>, RemoteDefinition> getProxyManagers() {
-        return CollectionUtil.unmodifiable(this.proxyManagers);
+        if (ClassUtil.isThisOrSuperContain(clazz, AProxyManager.class)) {
+            RemoteDefinition remote = new RemoteDefinition();
+            remote.setType(RemoteTypes.MANAGER);
+            remote.setClazz(name);
+            this.cachedProxyManagers.put(clazz, remote);
+        }
     }
 
     public Map<String, Class<? extends AProxyObject>> getProxyObjects() {
         return CollectionUtil.unmodifiable(this.proxyObjects);
+    }
+
+    public Map<Class<? extends AProxyObject>, RemoteDefinition> getCachedProxyManagers() {
+        return CollectionUtil.unmodifiable(this.cachedProxyManagers);
     }
 
     private RemoteObject createRemote(RemoteProcessorMediator processorMediator, RemoteDefinition definition, ProcedureObject procedure) {
@@ -111,7 +117,7 @@ public class ProxyFactory extends AFactory {
         return this.createProcedure(procedure);
     }
 
-    public AProxyObject buildProxy(Class<? extends AProxyObject> clazz, RemoteObject remote){
+    public AProxyObject buildProxy(Class<? extends AProxyObject> clazz, RemoteObject remote) {
         AProxyObject proxy = this.coreManager.create(clazz);
 
         proxy.factory = this;

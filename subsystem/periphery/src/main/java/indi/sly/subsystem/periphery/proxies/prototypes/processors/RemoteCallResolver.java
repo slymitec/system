@@ -12,10 +12,7 @@ import indi.sly.system.common.lang.ASystemException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.lang.SystemException;
-import indi.sly.system.common.supports.ClassUtil;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.supports.*;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -23,6 +20,7 @@ import org.springframework.context.annotation.Scope;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -38,6 +36,12 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
             ClientRequestProcessIdRecord clientRequestProcessId = new ClientRequestProcessIdRecord(proxyContextProcess.id(), proxyContextProcess.type(), proxyContextProcess.secret(), proxyContextProcess.verification());
 
             List<String> clientRequestContentParameters = new ArrayList<>();
+
+            if (LogicalUtil.isAnyEqual(remote.getType(), RemoteTypes.OBJECT)) {
+                HandleContextRecord handleContext = new HandleContextRecord(remote.getClazz(), ObjectUtil.transferFromString(UUID.class, remote.getValue()));
+
+                clientRequestContentParameters.add(ObjectUtil.transferToString(handleContext));
+            }
             if (ObjectUtil.allNotNull(parameters)) {
                 for (Object parameter : parameters) {
                     clientRequestContentParameters.add(ObjectUtil.transferToString(parameter));
@@ -111,12 +115,12 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
 
     @Override
     public int order() {
-        return 1;
+        return 2;
     }
 
     @Override
     public void resolve(RemoteDefinition remote, RemoteProcessorMediator processorMediator) {
-        processorMediator.getInvokes().add(invoke);
-        processorMediator.getExpires().add(expire);
+        processorMediator.getInvokes().add(this.invoke);
+        processorMediator.getExpires().add(this.expire);
     }
 }

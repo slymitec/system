@@ -1,6 +1,7 @@
 package indi.sly.subsystem.periphery.proxies.prototypes.mediators;
 
 import indi.sly.subsystem.periphery.core.prototypes.wrappers.AMediator;
+import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorDieConsumer;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorExpireConsumer;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorInvokeFunction;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorIsExpiredFunction;
@@ -18,11 +19,13 @@ public class RemoteProcessorMediator extends AMediator {
         this.invokes = new CopyOnWriteArrayList<>();
         this.isExpireds = new CopyOnWriteArrayList<>();
         this.expires = new CopyOnWriteArrayList<>();
+        this.dies = new CopyOnWriteArrayList<>();
     }
 
     private final List<RemoteProcessorInvokeFunction> invokes;
     private final List<RemoteProcessorIsExpiredFunction> isExpireds;
     private final List<RemoteProcessorExpireConsumer> expires;
+    private final List<RemoteProcessorDieConsumer> dies;
 
     public List<RemoteProcessorInvokeFunction> getInvokes() {
         return this.invokes;
@@ -34,5 +37,9 @@ public class RemoteProcessorMediator extends AMediator {
 
     public List<RemoteProcessorIsExpiredFunction> getIsExpireds() {
         return this.isExpireds;
+    }
+
+    public List<RemoteProcessorDieConsumer> getDies() {
+        return this.dies;
     }
 }

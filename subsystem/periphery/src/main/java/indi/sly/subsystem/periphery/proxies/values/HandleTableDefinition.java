@@ -1,5 +1,6 @@
 package indi.sly.subsystem.periphery.proxies.values;
 
+import indi.sly.subsystem.periphery.proxies.prototypes.RemoteObject;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.ADefinition;
@@ -11,34 +12,36 @@ public class HandleTableDefinition extends ADefinition {
         this.handles = new HashMap<>();
     }
 
-    private final Map<UUID, HandleEntryDefinition> handles;
+    private final Map<UUID, RemoteObject> handles;
 
     public Set<UUID> list() {
         return this.handles.keySet();
     }
 
-    public HandleEntryDefinition get(UUID handle) {
-        HandleEntryDefinition handleEntry = this.handles.getOrDefault(handle, null);
+    public RemoteObject get(UUID handle) {
+        RemoteObject remote = this.handles.getOrDefault(handle, null);
 
-        if (ObjectUtil.isAnyNull(handleEntry)) {
+        if (ObjectUtil.isAnyNull(remote)) {
             throw new StatusNotExistedException();
         }
 
-        return handleEntry;
+        return remote;
     }
 
-    public void add(HandleEntryDefinition handleEntry) {
-        if (this.handles.containsKey(handleEntry.getHandle())) {
+    public void add(RemoteObject remote) {
+        UUID handle = ObjectUtil.transferFromString(UUID.class, remote.getRemoteValue());
+
+        if (this.handles.containsKey(handle)) {
             throw new StatusNotExistedException();
         }
 
-        this.handles.put(handleEntry.getHandle(), handleEntry);
+        this.handles.put(handle, remote);
     }
 
     public void delete(UUID handle) {
-        HandleEntryDefinition handleEntry = this.handles.remove(handle);
+        RemoteObject remote = this.handles.remove(handle);
 
-        if (ObjectUtil.isAnyNull(handleEntry)) {
+        if (ObjectUtil.isAnyNull(remote)) {
             throw new StatusNotExistedException();
         }
     }

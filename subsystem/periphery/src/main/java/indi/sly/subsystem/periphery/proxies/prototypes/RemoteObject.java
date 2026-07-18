@@ -5,12 +5,16 @@ import indi.sly.subsystem.periphery.core.environment.values.CacheDurationType;
 import indi.sly.subsystem.periphery.core.prototypes.AChildDefinitionObject;
 import indi.sly.subsystem.periphery.core.prototypes.ADefinitionObject;
 import indi.sly.subsystem.periphery.proxies.ProxyManager;
+import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorDieConsumer;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorExpireConsumer;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorInvokeFunction;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorIsExpiredFunction;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
+import indi.sly.subsystem.periphery.proxies.values.RemoteTypes;
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.DateTimeType;
@@ -29,14 +33,26 @@ public class RemoteObject extends AChildDefinitionObject<RemoteDefinition, Proce
     protected RemoteProcessorMediator processorMediator;
 
     public long getType() {
+        if (!this.definition.isAlive()) {
+            throw new StatusRelationshipErrorException();
+        }
+
         return this.definition.getType();
     }
 
     public String getRemoteClazz() {
+        if (!this.definition.isAlive()) {
+            throw new StatusRelationshipErrorException();
+        }
+
         return this.definition.getClazz();
     }
 
     public String getRemoteValue() {
+        if (!this.definition.isAlive()) {
+            throw new StatusRelationshipErrorException();
+        }
+
         return this.definition.getValue();
     }
 
@@ -56,7 +72,14 @@ public class RemoteObject extends AChildDefinitionObject<RemoteDefinition, Proce
             invokeRemote = invoke.apply(invokeRemote, this.definition, this.base, method, args);
         }
 
-        return this.factory.build(invokeRemote, this.base);
+        RemoteObject remote = this.factory.build(invokeRemote, this.base);
+
+        if (LogicalUtil.isAnyEqual(remote.getType(), RemoteTypes.OBJECT)) {
+            HandleTableObject handleTable = this.base.getHandleTable();
+            handleTable.add(remote);
+        }
+
+        return remote;
     }
 
     public boolean isExpired() {
@@ -79,11 +102,23 @@ public class RemoteObject extends AChildDefinitionObject<RemoteDefinition, Proce
         }
     }
 
+    public void die() {
+        List<RemoteProcessorDieConsumer> dies = this.processorMediator.getDies();
+
+        for (RemoteProcessorDieConsumer die : dies) {
+            die.accept(this.definition, this.base);
+        }
+    }
+
     public ProcedureObject getProcedure() {
         return this.base;
     }
 
     public AProxyObject getProxy() {
+        if (!this.definition.isAlive()) {
+            throw new StatusRelationshipErrorException();
+        }
+
         ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
 
 

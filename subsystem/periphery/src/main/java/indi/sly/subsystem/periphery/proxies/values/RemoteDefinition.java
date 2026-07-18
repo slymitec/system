@@ -9,13 +9,23 @@ import java.util.Objects;
 
 public class RemoteDefinition extends ADefinition {
     public RemoteDefinition() {
+        this.alive = true;
         this.date = new HashMap<>();
     }
 
+    public boolean alive;
     private long type;
     private String clazz;
     private String value;
     private final Map<Long, Long> date;
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 
     public long getType() {
         return this.type;

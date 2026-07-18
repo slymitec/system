@@ -2,18 +2,14 @@ package indi.sly.subsystem.periphery.proxies.prototypes.processors;
 
 import indi.sly.subsystem.periphery.core.date.prototypes.DateTimeObject;
 import indi.sly.subsystem.periphery.core.prototypes.processors.AResolver;
-import indi.sly.subsystem.periphery.proxies.ProxyManager;
+import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorDieConsumer;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorExpireConsumer;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorInvokeFunction;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorIsExpiredFunction;
-import indi.sly.subsystem.periphery.proxies.prototypes.HandleEntryObject;
-import indi.sly.subsystem.periphery.proxies.prototypes.ProcedureObject;
+import indi.sly.subsystem.periphery.proxies.prototypes.HandleTableObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
-import indi.sly.subsystem.periphery.proxies.values.RemoteTypes;
-import indi.sly.system.common.lang.Consumer1;
 import indi.sly.system.common.lang.StatusExpiredException;
-import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.DateTimeType;
 import jakarta.inject.Named;
@@ -28,25 +24,9 @@ public class RemoteCheckExpiredResolver extends AResolver implements IRemoteReso
     private final RemoteProcessorInvokeFunction invoke;
     private final RemoteProcessorIsExpiredFunction isExpired;
     private final RemoteProcessorExpireConsumer expire;
+    private final RemoteProcessorDieConsumer die;
 
     public RemoteCheckExpiredResolver() {
-        Consumer1<RemoteDefinition> checkRemoteExpired = remote -> {
-            if (LogicalUtil.isAnyEqual(remote.getType(), RemoteTypes.OBJECT)) {
-                DateTimeObject dateTime = this.coreManager.getDateTime();
-                long expiredDate = remote.getDate().getOrDefault(DateTimeType.EXPIRED, 0L);
-
-                if (dateTime.getCurrent() > expiredDate) {
-                    throw new StatusExpiredException();
-                }
-            }
-        };
-
-        this.invoke = (invokeRemote, remote, procedure, method, parameters) -> {
-            checkRemoteExpired.accept(remote);
-
-            return invokeRemote;
-        };
-
         this.isExpired = (isExpired, remote, procedure) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
 
@@ -55,20 +35,48 @@ public class RemoteCheckExpiredResolver extends AResolver implements IRemoteReso
             return dateTime.getCurrent() > expiredDate;
         };
 
+        this.die = (remote, procedure) -> {
+            remote.setAlive(false);
+
+            UUID handle = ObjectUtil.transferFromString(UUID.class, remote.getValue());
+
+            HandleTableObject handleTable = procedure.getHandleTable();
+
+            if (handleTable.isExistHandle(handle)) {
+                handleTable.delete(handle);
+            }
+        };
+
+        this.invoke = (invokeRemote, remote, procedure, method, parameters) -> {
+            if (this.isExpired.apply(false, remote, procedure)) {
+                this.die.accept(remote, procedure);
+
+                throw new StatusExpiredException();
+            }
+
+            return invokeRemote;
+        };
+
+
         this.expire = (remote, procedure, duration) -> {
-            checkRemoteExpired.accept(remote);
+            if (this.isExpired.apply(false, remote, procedure)) {
+                this.die.accept(remote, procedure);
+
+                throw new StatusExpiredException();
+            }
         };
     }
 
     @Override
     public int order() {
-        return 0;
+        return 1;
     }
 
     @Override
     public void resolve(RemoteDefinition remote, RemoteProcessorMediator processorMediator) {
-        processorMediator.getInvokes().add(invoke);
-        processorMediator.getIsExpireds().add(isExpired);
-        processorMediator.getExpires().add(expire);
+        processorMediator.getInvokes().add(this.invoke);
+        processorMediator.getIsExpireds().add(this.isExpired);
+        processorMediator.getExpires().add(this.expire);
+        processorMediator.getDies().add(this.die);
     }
 }

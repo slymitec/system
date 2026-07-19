@@ -30,8 +30,8 @@ public class InfoDumpResolver extends AResolver implements IInfoResolver {
             dump.getDate().put(DateTimeType.CREATE, nowDateTime);
             dump.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
-            dump.setProcessID(process.getId());
-            dump.setAccountID(processToken.getAccountId());
+            dump.setProcessId(process.getId());
+            dump.setAccountId(processToken.getAccountId());
             dump.setPath(cache.getPath());
 
             ProcessInfoTableObject processInfoTable = process.getInfoTable();

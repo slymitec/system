@@ -22,12 +22,12 @@ public class DumpObject extends ACacheableObject<DumpCacheEntity> {
         return CollectionUtil.unmodifiable(this.cache.getDate());
     }
 
-    public UUID getProcessID() {
-        return this.cache.getProcessID();
+    public UUID getProcessId() {
+        return this.cache.getProcessId();
     }
 
-    public UUID getAccountID() {
-        return this.cache.getAccountID();
+    public UUID getAccountId() {
+        return this.cache.getAccountId();
     }
 
     public PathRecord getPath() {

@@ -18,7 +18,8 @@ public class DumpObjectTaskInitializer extends ATaskInitializer {
         this.cacheableObjectFunction = (handle) -> this.coreManager.getManager(ObjectManager.class).getFactory().rebuildInfo(handle);
 
         this.register("getDate", this::getDate, TransactionType.INDEPENDENCE);
-        this.register("getAccountID", this::getAccountID, TransactionType.INDEPENDENCE);
+        this.register("getProcessId", this::getProcessId, TransactionType.INDEPENDENCE);
+        this.register("getAccountId", this::getAccountId, TransactionType.INDEPENDENCE);
         this.register("getPath", this::getPath, TransactionType.INDEPENDENCE);
         this.register("getInfoOpen", this::getInfoOpen, TransactionType.INDEPENDENCE);
         this.register("getSecurityDescriptorSummary", this::getSecurityDescriptorSummary, TransactionType.INDEPENDENCE);
@@ -38,10 +39,16 @@ public class DumpObjectTaskInitializer extends ATaskInitializer {
         content.setResult(dump.getDate());
     }
 
-    private void getAccountID(TaskRunConsumer run, TaskContentObject content) {
+    private void getProcessId(TaskRunConsumer run, TaskContentObject content) {
         DumpObject dump = content.getCacheableObject();
 
-        content.setResult(dump.getAccountID());
+        content.setResult(dump.getProcessId());
+    }
+
+    private void getAccountId(TaskRunConsumer run, TaskContentObject content) {
+        DumpObject dump = content.getCacheableObject();
+
+        content.setResult(dump.getAccountId());
     }
 
     private void getPath(TaskRunConsumer run, TaskContentObject content) {

@@ -15,8 +15,8 @@ public class DumpCacheEntity extends ACacheEntity {
     }
 
     private final Map<Long, Long> date;
-    private UUID processID;
-    private UUID accountID;
+    private UUID processId;
+    private UUID accountId;
     private PathRecord path;
     private InfoOpenRecord infoOpen;
     private final List<SecurityDescriptorSummaryRecord> securityDescriptorSummary;
@@ -25,20 +25,20 @@ public class DumpCacheEntity extends ACacheEntity {
         return this.date;
     }
 
-    public UUID getProcessID() {
-        return this.processID;
+    public UUID getProcessId() {
+        return this.processId;
     }
 
-    public void setProcessID(UUID processID) {
-        this.processID = processID;
+    public void setProcessId(UUID processId) {
+        this.processId = processId;
     }
 
-    public UUID getAccountID() {
-        return this.accountID;
+    public UUID getAccountId() {
+        return this.accountId;
     }
 
-    public void setAccountID(UUID accountID) {
-        this.accountID = accountID;
+    public void setAccountId(UUID accountId) {
+        this.accountId = accountId;
     }
 
     public PathRecord getPath() {

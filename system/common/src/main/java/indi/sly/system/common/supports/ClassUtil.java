@@ -26,13 +26,6 @@ public abstract class ClassUtil {
             throw new ConditionParametersException();
         }
 
-        do {
-            if (child.equals(parent)) {
-                return true;
-            } else {
-                child = child.getSuperclass();
-            }
-        } while (child != null);
-        return false;
+        return parent.isAssignableFrom(child);
     }
 }

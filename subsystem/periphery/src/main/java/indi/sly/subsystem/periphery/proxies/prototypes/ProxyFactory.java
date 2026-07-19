@@ -7,8 +7,8 @@ import indi.sly.subsystem.periphery.proxies.instances.core.SystemVersionProxyObj
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.prototypes.processors.*;
 import indi.sly.subsystem.periphery.proxies.values.*;
-import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.CollectionUtil;
+import indi.sly.system.common.supports.LogicalUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -41,15 +41,19 @@ public class ProxyFactory extends AFactory {
 
         Collections.sort(this.remoteResolvers);
 
-        this.registerProxy("CoreManager", CoreProxyManager.class);
+        this.registerProxy("CoreManager", CoreProxyManager.class, RemoteTypes.MANAGER);
         this.registerProxy("SystemVersionObject", SystemVersionProxyObject.class);
         this.registerProxy("DateTimeObject", DateTimeProxyObject.class);
     }
 
     private void registerProxy(String name, Class<? extends AProxyObject> clazz) {
+        this.registerProxy(name, clazz, RemoteTypes.OBJECT);
+    }
+
+    private void registerProxy(String name, Class<? extends AProxyObject> clazz, long type) {
         this.proxyObjects.put(name, clazz);
 
-        if (ClassUtil.isThisOrSuperContain(clazz, AProxyManager.class)) {
+        if (LogicalUtil.isAnyEqual(type, RemoteTypes.MANAGER)) {
             RemoteDefinition remote = new RemoteDefinition();
             remote.setType(RemoteTypes.MANAGER);
             remote.setClazz(name);

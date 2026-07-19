@@ -11,19 +11,19 @@ public abstract class AProxyObject extends AObject {
     protected ProxyFactory factory;
     private RemoteObject remote;
 
-    public void setRemote(RemoteObject remote) {
+    public final void setRemote(RemoteObject remote) {
         this.remote = remote;
     }
 
-    public boolean isAlive() {
+    public final boolean isAlive() {
         return this.remote.isAlive();
     }
 
-    public boolean isExpired() {
+    public final boolean isExpired() {
         return this.remote.isExpired();
     }
 
-    public void expire(long duration) {
+    public final void expire(long duration) {
         this.remote.expire(duration);
     }
 

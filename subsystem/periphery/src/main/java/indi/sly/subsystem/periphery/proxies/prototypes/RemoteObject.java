@@ -1,7 +1,6 @@
 package indi.sly.subsystem.periphery.proxies.prototypes;
 
 import indi.sly.subsystem.periphery.core.prototypes.AChildDefinitionObject;
-import indi.sly.subsystem.periphery.proxies.ProxyManager;
 import indi.sly.subsystem.periphery.proxies.lang.*;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
@@ -78,11 +77,11 @@ public class RemoteObject extends AChildDefinitionObject<RemoteDefinition, Proce
     }
 
     public boolean isExpired() {
-        List<RemoteProcessorIsExpiredFunction> isExpireds = this.processorMediator.getIsExpireds();
+        List<RemoteProcessorIsExpiredFunction> isExpires = this.processorMediator.getIsExpires();
 
         boolean result = false;
 
-        for (RemoteProcessorIsExpiredFunction isExpired : isExpireds) {
+        for (RemoteProcessorIsExpiredFunction isExpired : isExpires) {
             result = isExpired.apply(result, this.definition, this.base);
         }
 

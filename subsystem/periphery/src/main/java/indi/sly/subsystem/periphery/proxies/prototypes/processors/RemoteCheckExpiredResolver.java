@@ -75,7 +75,7 @@ public class RemoteCheckExpiredResolver extends AResolver implements IRemoteReso
     @Override
     public void resolve(RemoteDefinition remote, RemoteProcessorMediator processorMediator) {
         processorMediator.getInvokes().add(this.invoke);
-        processorMediator.getIsExpireds().add(this.isExpired);
+        processorMediator.getIsExpires().add(this.isExpired);
         processorMediator.getExpires().add(this.expire);
         processorMediator.getDies().add(this.die);
     }

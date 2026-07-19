@@ -29,8 +29,8 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         this.register("createPort", this::createPort, TransactionType.INDEPENDENCE);
         this.register("deleteAllPort", this::deleteAllPort, TransactionType.INDEPENDENCE);
         this.register("deletePort", this::deletePort, TransactionType.INDEPENDENCE);
-        this.register("getPortSourceProcessIDs", this::getPortSourceProcessIDs, TransactionType.INDEPENDENCE);
-        this.register("setPortSourceProcessIDs", this::setPortSourceProcessIDs, TransactionType.INDEPENDENCE);
+        this.register("getPortSourceProcessIds", this::getPortSourceProcessIds, TransactionType.INDEPENDENCE);
+        this.register("setPortSourceProcessIds", this::setPortSourceProcessIds, TransactionType.INDEPENDENCE);
         this.register("receivePort", this::receivePort, TransactionType.INDEPENDENCE);
         this.register("sendPort", this::sendPort, TransactionType.INDEPENDENCE);
         this.register("isSignalExist", this::isSignalExist, TransactionType.INDEPENDENCE);
@@ -110,7 +110,7 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         processCommunication.deletePort(portId);
     }
 
-    private void getPortSourceProcessIDs(TaskRunConsumer run, TaskContentObject content) {
+    private void getPortSourceProcessIds(TaskRunConsumer run, TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -124,7 +124,7 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         content.setResult(processCommunication.getPortSourceProcessIds(portId));
     }
 
-    private void setPortSourceProcessIDs(TaskRunConsumer run, TaskContentObject content) {
+    private void setPortSourceProcessIds(TaskRunConsumer run, TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();

@@ -42,7 +42,7 @@ public class RemoteCheckExpiredResolver extends AResolver implements IRemoteReso
 
             HandleTableObject handleTable = procedure.getHandleTable();
 
-            if (handleTable.isExistHandle(handle)) {
+            if (handleTable.isHandleExist(handle)) {
                 handleTable.delete(handle);
             }
         };

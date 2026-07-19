@@ -22,7 +22,7 @@ public class HandleTableObject extends AChildDefinitionObject<HandleTableDefinit
         return this.definition.list();
     }
 
-    public boolean isExistHandle(UUID handle) {
+    public boolean isHandleExist(UUID handle) {
         return this.listHandles().contains(handle);
     }
 

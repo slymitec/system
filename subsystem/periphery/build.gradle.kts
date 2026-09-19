@@ -1,6 +1,7 @@
 dependencies {
     implementation(project(":common"))
 
+    api("io.dapr.spring:dapr-spring-boot-starter:1.18.1")
     api("org.springframework.boot:spring-boot-starter-data-jpa")
     api("org.springframework.boot:spring-boot-starter-data-redis")
     api("org.springframework.boot:spring-boot-starter-restclient")

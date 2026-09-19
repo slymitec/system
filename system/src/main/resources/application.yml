@@ -52,3 +52,8 @@ spring:
 #          max-wait: -1
 #          max-idle: 8
 #          min-idle: 0
+
+dapr:
+  client:
+    http-endpoint: http://10.28.0.16:3500
+    grpc-endpoint: 10.28.0.16:50001

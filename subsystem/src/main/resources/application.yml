@@ -40,3 +40,8 @@ spring:
       ddl-auto: update
     open-in-view: false
     show-sql: true
+
+dapr:
+  client:
+    http-endpoint: http://10.28.0.16:3501
+    grpc-endpoint: 10.28.0.16:50002

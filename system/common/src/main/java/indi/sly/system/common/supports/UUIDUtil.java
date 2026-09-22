@@ -20,6 +20,18 @@ public abstract class UUIDUtil {
         return new UUID(mostSigBits, leastSigBits);
     }
 
+    public static UUID getFromString(String uuid) {
+        if (ValueUtil.isAnyNullOrEmpty(uuid)) {
+            throw new ConditionParametersException();
+        }
+
+        try {
+            return UUID.fromString(uuid);
+        } catch (IllegalArgumentException e) {
+            throw new ConditionParametersException();
+        }
+    }
+
     public static String toString(UUID uuid) {
         return uuid.toString();
     }

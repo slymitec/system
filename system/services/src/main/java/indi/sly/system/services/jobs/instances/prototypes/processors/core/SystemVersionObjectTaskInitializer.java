@@ -29,7 +29,7 @@ public class SystemVersionObjectTaskInitializer extends ATaskInitializer {
 
     }
 
-    private void getSystemVersion(TaskRunConsumer run, TaskContentObject content) {
+    private void getSystemVersion(TaskContentObject content) {
         SystemVersionObject systemVersion = content.getCacheableObject();
 
         content.setResult(systemVersion.getSystemVersion());

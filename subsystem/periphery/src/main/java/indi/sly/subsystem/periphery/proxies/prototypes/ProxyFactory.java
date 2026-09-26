@@ -24,13 +24,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ProxyFactory extends AFactory {
     public ProxyFactory() {
         this.remoteResolvers = new CopyOnWriteArrayList<>();
-        this.cachedProxyManagers = new ConcurrentHashMap<>();
-        this.proxyObjects = new ConcurrentHashMap<>();
+        this.proxyObjectTasks = new ConcurrentHashMap<>();
     }
 
     private final List<IRemoteResolver> remoteResolvers;
-    private final Map<String, Class<? extends AProxyObject>> proxyObjects;
-    private final Map<Class<? extends AProxyObject>, RemoteDefinition> cachedProxyManagers;
+    private final Map<Class<? extends AProxyObject>, String> proxyObjectTasks;
 
     @Override
     public void init() {
@@ -41,32 +39,18 @@ public class ProxyFactory extends AFactory {
 
         Collections.sort(this.remoteResolvers);
 
-        this.registerProxy("CoreManager", CoreProxyManager.class, RemoteTypes.MANAGER);
-        this.registerProxy("SystemVersionObject", SystemVersionProxyObject.class);
-        this.registerProxy("DateTimeObject", DateTimeProxyObject.class);
+        this.registerProxy(CoreProxyManager.class, "CoreManager");
+        this.registerProxy(SystemVersionProxyObject.class, "SystemVersionObject");
+        this.registerProxy(DateTimeProxyObject.class, "DateTimeObject");
     }
 
-    private void registerProxy(String name, Class<? extends AProxyObject> clazz) {
-        this.registerProxy(name, clazz, RemoteTypes.OBJECT);
+
+    private void registerProxy(Class<? extends AProxyObject> clazz, String taskName) {
+        this.proxyObjectTasks.put(clazz, taskName);
     }
 
-    private void registerProxy(String name, Class<? extends AProxyObject> clazz, long type) {
-        this.proxyObjects.put(name, clazz);
-
-        if (LogicalUtil.isAnyEqual(type, RemoteTypes.MANAGER)) {
-            RemoteDefinition remote = new RemoteDefinition();
-            remote.setType(RemoteTypes.MANAGER);
-            remote.setClazz(name);
-            this.cachedProxyManagers.put(clazz, remote);
-        }
-    }
-
-    public Map<String, Class<? extends AProxyObject>> getProxyObjects() {
-        return CollectionUtil.unmodifiable(this.proxyObjects);
-    }
-
-    public Map<Class<? extends AProxyObject>, RemoteDefinition> getCachedProxyManagers() {
-        return CollectionUtil.unmodifiable(this.cachedProxyManagers);
+    public Map<Class<? extends AProxyObject>, String> getProxyObjectTasks() {
+        return CollectionUtil.unmodifiable(this.proxyObjectTasks);
     }
 
     private RemoteObject createRemote(RemoteProcessorMediator processorMediator, RemoteDefinition definition, ProcedureObject procedure) {
@@ -80,7 +64,7 @@ public class ProxyFactory extends AFactory {
         return remote;
     }
 
-    public RemoteObject buildRemote(RemoteDefinition remote, ProcedureObject procedure) {
+    public RemoteObject buildRemote(RemoteDefinition remote) {
         RemoteProcessorMediator processorMediator = this.coreManager.create(RemoteProcessorMediator.class);
         for (IRemoteResolver remoteResolver : this.remoteResolvers) {
             remoteResolver.resolve(remote, processorMediator);

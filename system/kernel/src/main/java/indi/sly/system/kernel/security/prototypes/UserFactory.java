@@ -59,7 +59,7 @@ public class UserFactory extends AFactory {
         AccountCacheEntity cache = new AccountCacheEntity();
 
         cache.setAccountId(accountId);
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createAccount(cache);
     }
@@ -113,7 +113,7 @@ public class UserFactory extends AFactory {
         GroupCacheEntity cache = new GroupCacheEntity();
 
         cache.setGroupId(groupId);
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createGroup(cache);
     }
@@ -172,7 +172,7 @@ public class UserFactory extends AFactory {
         AccountChildCacheEntity cache = new AccountChildCacheEntity();
 
         cache.setAccount(account.getCache());
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createAccountToken(account, cache);
     }
@@ -211,7 +211,7 @@ public class UserFactory extends AFactory {
         AccountChildCacheEntity cache = new AccountChildCacheEntity();
 
         cache.setAccount(account.getCache());
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createAccountSessions(account, cache);
     }
@@ -249,7 +249,7 @@ public class UserFactory extends AFactory {
     public GroupTokenObject buildGroupToken(GroupObject group) {
         GroupChildCacheEntity cache = new GroupChildCacheEntity();
 
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createGroupToken(group, cache);
     }
@@ -286,7 +286,7 @@ public class UserFactory extends AFactory {
     public AccountAuthorizationObject buildAccountAuthorization(AccountObject account, String password, ProcessTokenObject processToken, AccountAuthorizationTokenRecord accountAuthorizationToken) {
         AccountAuthorizationCacheEntity cache = new AccountAuthorizationCacheEntity();
 
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         cache.setAccount(account.getCache());
         cache.setPassword(password);

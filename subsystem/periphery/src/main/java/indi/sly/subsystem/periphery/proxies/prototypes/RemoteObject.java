@@ -1,13 +1,11 @@
 package indi.sly.subsystem.periphery.proxies.prototypes;
 
 import indi.sly.subsystem.periphery.core.prototypes.AChildDefinitionObject;
+import indi.sly.subsystem.periphery.core.prototypes.ADefinitionObject;
 import indi.sly.subsystem.periphery.proxies.lang.*;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
-import indi.sly.subsystem.periphery.proxies.values.RemoteTypes;
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
-import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import jakarta.inject.Named;
@@ -18,37 +16,9 @@ import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class RemoteObject extends AChildDefinitionObject<RemoteDefinition, ProcedureObject> {
+public class RemoteObject extends ADefinitionObject<RemoteDefinition> {
     protected ProxyFactory factory;
     protected RemoteProcessorMediator processorMediator;
-
-    public boolean isAlive() {
-        return this.definition.isAlive();
-    }
-
-    public long getType() {
-        if (!this.definition.isAlive()) {
-            throw new StatusRelationshipErrorException();
-        }
-
-        return this.definition.getType();
-    }
-
-    public String getRemoteClazz() {
-        if (!this.definition.isAlive()) {
-            throw new StatusRelationshipErrorException();
-        }
-
-        return this.definition.getClazz();
-    }
-
-    public String getRemoteValue() {
-        if (!this.definition.isAlive()) {
-            throw new StatusRelationshipErrorException();
-        }
-
-        return this.definition.getValue();
-    }
 
     public RemoteObject invoke(String method, Object... args) {
         if (ValueUtil.isAnyNullOrEmpty(method)) {
@@ -63,36 +33,19 @@ public class RemoteObject extends AChildDefinitionObject<RemoteDefinition, Proce
         RemoteDefinition invokeRemote = null;
 
         for (RemoteProcessorInvokeFunction invoke : invokes) {
-            invokeRemote = invoke.apply(invokeRemote, this.definition, this.base, method, args);
+            invokeRemote = invoke.apply(invokeRemote, this.definition, method, args);
         }
 
-        RemoteObject remote = this.factory.buildRemote(invokeRemote, this.base);
-
-        if (LogicalUtil.isAnyEqual(remote.getType(), RemoteTypes.OBJECT)) {
-            HandleTableObject handleTable = this.base.getHandleTable();
-            handleTable.add(remote);
-        }
+        RemoteObject remote = this.factory.buildRemote(invokeRemote);
 
         return remote;
-    }
-
-    public boolean isExpired() {
-        List<RemoteProcessorIsExpiredFunction> isExpires = this.processorMediator.getIsExpires();
-
-        boolean result = false;
-
-        for (RemoteProcessorIsExpiredFunction isExpired : isExpires) {
-            result = isExpired.apply(result, this.definition, this.base);
-        }
-
-        return result;
     }
 
     public void expire(long duration) {
         List<RemoteProcessorExpireConsumer> expires = this.processorMediator.getExpires();
 
         for (RemoteProcessorExpireConsumer expire : expires) {
-            expire.accept(this.definition, this.base, duration);
+            expire.accept(this.definition, duration);
         }
     }
 
@@ -100,7 +53,11 @@ public class RemoteObject extends AChildDefinitionObject<RemoteDefinition, Proce
         List<RemoteProcessorDieConsumer> dies = this.processorMediator.getDies();
 
         for (RemoteProcessorDieConsumer die : dies) {
-            die.accept(this.definition, this.base);
+            die.accept(this.definition);
         }
+    }
+
+    public String getValue() {
+        return this.definition.getValue();
     }
 }

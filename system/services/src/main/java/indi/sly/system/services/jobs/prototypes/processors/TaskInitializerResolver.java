@@ -8,7 +8,7 @@ import indi.sly.system.services.core.environment.values.ServiceKernelExtensionSp
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
+import indi.sly.system.services.jobs.lang.TaskProcessorEndConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
@@ -36,7 +36,7 @@ public class TaskInitializerResolver extends AResolver implements ITaskResolver 
             initializer.finish(task);
         };
 
-        this.run = (task, status, name, run, content) -> {
+        this.run = (task, status, name, content) -> {
             ATaskInitializer initializer = task.getInitializer();
             TaskInitializerRunRecord initializerRun = initializer.getRun(name);
 
@@ -47,7 +47,7 @@ public class TaskInitializerResolver extends AResolver implements ITaskResolver 
                 }
 
                 Provider<Void> provider = () -> {
-                    initializerRun.method().accept(run, content);
+                    initializerRun.method().accept(content);
 
                     return null;
                 };
@@ -76,13 +76,13 @@ public class TaskInitializerResolver extends AResolver implements ITaskResolver 
     }
 
     private final TaskProcessorStartConsumer start;
-    private final TaskProcessorFinishConsumer finish;
+    private final TaskProcessorEndConsumer finish;
     private final TaskProcessorRunConsumer run;
 
     @Override
     public void resolve(TaskDefinition task, TaskProcessorMediator processorMediator) {
         processorMediator.getStarts().add(this.start);
-        processorMediator.getFinishes().add(this.finish);
+        processorMediator.getEnds().add(this.finish);
         processorMediator.getRuns().add(this.run);
     }
 }

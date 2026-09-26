@@ -30,7 +30,6 @@ public abstract class ATaskInitializer extends AInitializer {
 
         this.register("cache", this::cache, TransactionType.WHATEVER);
         this.register("unCache", this::unCache, TransactionType.WHATEVER);
-        this.register("expire", this::expire, TransactionType.WHATEVER);
     }
 
     private final Map<String, TaskInitializerRunRecord> runs;
@@ -87,13 +86,17 @@ public abstract class ATaskInitializer extends AInitializer {
         return this.cacheableObjectFunction.apply(handle);
     }
 
-    private void cache(TaskRunConsumer run, TaskContentObject content) {
+    private void cache(TaskContentObject content) {
         ACacheableObject<?> cacheableObject = content.getCacheableObject();
 
-        content.setResult(cacheableObject.getHandle());
+        if (ObjectUtil.isAnyNull(cacheableObject)) {
+            throw new StatusNotSupportedException();
+        } else {
+            content.setResult(cacheableObject.getHandle());
+        }
     }
 
-    private void unCache(TaskRunConsumer run, TaskContentObject content) {
+    private void unCache(TaskContentObject content) {
         ACacheableObject<?> cacheableObject = content.getCacheableObject();
 
         if (ObjectUtil.isAnyNull(cacheableObject)) {
@@ -103,20 +106,4 @@ public abstract class ATaskInitializer extends AInitializer {
         }
     }
 
-    private void expire(TaskRunConsumer run, TaskContentObject content) {
-        ACacheableObject<?> cacheableObject = content.getCacheableObject();
-        if (ObjectUtil.isAnyNull(cacheableObject)) {
-            throw new StatusNotSupportedException();
-        }
-
-        List<String> parameters = content.getParameters();
-
-        if (parameters.isEmpty()) {
-            throw new ConditionParametersException();
-        }
-
-        long duration = ObjectUtil.transferFromString(Long.class, parameters.getFirst());
-
-        cacheableObject.expire(duration);
-    }
 }

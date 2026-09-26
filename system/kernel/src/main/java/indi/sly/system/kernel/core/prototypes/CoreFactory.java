@@ -70,7 +70,7 @@ public class CoreFactory extends AFactory {
         }
 
         cache.setSystemVersion(version);
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createSystemVersion(cache);
     }
@@ -104,7 +104,7 @@ public class CoreFactory extends AFactory {
     public DateTimeObject buildDateTime() {
         NoneCacheEntity cache = new NoneCacheEntity();
 
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createDateTime(cache);
     }

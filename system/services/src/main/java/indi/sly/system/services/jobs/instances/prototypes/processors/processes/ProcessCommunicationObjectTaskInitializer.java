@@ -50,13 +50,13 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
     public void finish(TaskDefinition task) {
     }
 
-    private void getShared(TaskRunConsumer run, TaskContentObject content) {
+    private void getShared(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         content.setResult(processCommunication.getShared());
     }
 
-    private void setShared(TaskRunConsumer run, TaskContentObject content) {
+    private void setShared(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -70,13 +70,13 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         processCommunication.setShared(shared);
     }
 
-    private void getPortIds(TaskRunConsumer run, TaskContentObject content) {
+    private void getPortIds(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         content.setResult(processCommunication.getPortIds());
     }
 
-    private void createPort(TaskRunConsumer run, TaskContentObject content) {
+    private void createPort(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -90,13 +90,13 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         content.setResult(processCommunication.createPort(sourceProcessIDs));
     }
 
-    private void deleteAllPort(TaskRunConsumer run, TaskContentObject content) {
+    private void deleteAllPort(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         processCommunication.deleteAllPort();
     }
 
-    private void deletePort(TaskRunConsumer run, TaskContentObject content) {
+    private void deletePort(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -110,7 +110,7 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         processCommunication.deletePort(portId);
     }
 
-    private void getPortSourceProcessIds(TaskRunConsumer run, TaskContentObject content) {
+    private void getPortSourceProcessIds(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -124,7 +124,7 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         content.setResult(processCommunication.getPortSourceProcessIds(portId));
     }
 
-    private void setPortSourceProcessIds(TaskRunConsumer run, TaskContentObject content) {
+    private void setPortSourceProcessIds(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -139,7 +139,7 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         processCommunication.setPortSourceProcessIds(portId, sourceProcessIDs);
     }
 
-    private void receivePort(TaskRunConsumer run, TaskContentObject content) {
+    private void receivePort(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -153,7 +153,7 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         content.setResult(processCommunication.receivePort(portId));
     }
 
-    private void sendPort(TaskRunConsumer run, TaskContentObject content) {
+    private void sendPort(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -168,13 +168,13 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         processCommunication.sendPort(portId, value);
     }
 
-    private void isSignalExist(TaskRunConsumer run, TaskContentObject content) {
+    private void isSignalExist(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         content.setResult(processCommunication.isSignalExist());
     }
 
-    private void createSignal(TaskRunConsumer run, TaskContentObject content) {
+    private void createSignal(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -188,19 +188,19 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         processCommunication.createSignal(sourceProcessIDs);
     }
 
-    private void deleteSignal(TaskRunConsumer run, TaskContentObject content) {
+    private void deleteSignal(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         processCommunication.deleteSignal();
     }
 
-    private void getSignalSourceProcessIds(TaskRunConsumer run, TaskContentObject content) {
+    private void getSignalSourceProcessIds(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         content.setResult(processCommunication.getSignalSourceProcessIds());
     }
 
-    private void setSignalSourceProcessIds(TaskRunConsumer run, TaskContentObject content) {
+    private void setSignalSourceProcessIds(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -214,13 +214,13 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         processCommunication.setSignalSourceProcessIds(sourceProcessIDs);
     }
 
-    private void receiveSignals(TaskRunConsumer run, TaskContentObject content) {
+    private void receiveSignals(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         content.setResult(processCommunication.receiveSignals());
     }
 
-    private void sendSignal(TaskRunConsumer run, TaskContentObject content) {
+    private void sendSignal(TaskContentObject content) {
         ProcessCommunicationObject processCommunication = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();

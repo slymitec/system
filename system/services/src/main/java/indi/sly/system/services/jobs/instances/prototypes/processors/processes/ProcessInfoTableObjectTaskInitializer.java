@@ -8,9 +8,7 @@ import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -40,13 +38,13 @@ public class ProcessInfoTableObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void list(TaskRunConsumer run, TaskContentObject content) {
+    private void list(TaskContentObject content) {
         ProcessInfoTableObject processInfoTable = content.getCacheableObject();
 
         content.setResult(processInfoTable.list());
     }
 
-    private void containByIndex(TaskRunConsumer run, TaskContentObject content) {
+    private void containByIndex(TaskContentObject content) {
         ProcessInfoTableObject processInfoTable = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -60,7 +58,7 @@ public class ProcessInfoTableObjectTaskInitializer extends ATaskInitializer {
         content.setResult(processInfoTable.containByIndex(index));
     }
 
-    private void containById(TaskRunConsumer run, TaskContentObject content) {
+    private void containById(TaskContentObject content) {
         ProcessInfoTableObject processInfoTable = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -74,7 +72,7 @@ public class ProcessInfoTableObjectTaskInitializer extends ATaskInitializer {
         content.setResult(processInfoTable.containById(id));
     }
 
-    private void getByIndex(TaskRunConsumer run, TaskContentObject content) {
+    private void getByIndex(TaskContentObject content) {
         ProcessInfoTableObject processInfoTable = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -89,12 +87,10 @@ public class ProcessInfoTableObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = ProcessInfoEntry.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(ProcessInfoEntry.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getById(TaskRunConsumer run, TaskContentObject content) {
+    private void getById(TaskContentObject content) {
         ProcessInfoTableObject processInfoTable = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -109,8 +105,6 @@ public class ProcessInfoTableObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = ProcessInfoEntry.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(ProcessInfoEntry.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 }

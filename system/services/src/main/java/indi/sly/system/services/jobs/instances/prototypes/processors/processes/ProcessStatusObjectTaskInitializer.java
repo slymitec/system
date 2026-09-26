@@ -30,19 +30,19 @@ public class ProcessStatusObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void get(TaskRunConsumer run, TaskContentObject content) {
+    private void get(TaskContentObject content) {
         ProcessStatusObject ProcessStatus = content.getCacheableObject();
 
         content.setResult(ProcessStatus.get());
     }
 
-    private void run(TaskRunConsumer run, TaskContentObject content) {
+    private void run(TaskContentObject content) {
         ProcessStatusObject ProcessStatus = content.getCacheableObject();
 
         ProcessStatus.run();
     }
 
-    private void interrupt(TaskRunConsumer run, TaskContentObject content) {
+    private void interrupt(TaskContentObject content) {
         ProcessStatusObject ProcessStatus = content.getCacheableObject();
 
         ProcessStatus.interrupt();

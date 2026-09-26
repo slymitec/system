@@ -41,31 +41,31 @@ public class ProcessContextObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getType(TaskRunConsumer run, TaskContentObject content) {
+    private void getType(TaskContentObject content) {
         ProcessContextObject processContext = content.getCacheableObject();
 
         content.setResult(processContext.getType());
     }
 
-    private void getPath(TaskRunConsumer run, TaskContentObject content) {
+    private void getPath(TaskContentObject content) {
         ProcessContextObject processContext = content.getCacheableObject();
 
         content.setResult(processContext.getPath());
     }
 
-    private void getApplication(TaskRunConsumer run, TaskContentObject content) {
+    private void getApplication(TaskContentObject content) {
         ProcessContextObject processContext = content.getCacheableObject();
 
         content.setResult(processContext.getApplication());
     }
 
-    private void getEnvironmentVariables(TaskRunConsumer run, TaskContentObject content) {
+    private void getEnvironmentVariables(TaskContentObject content) {
         ProcessContextObject processContext = content.getCacheableObject();
 
         content.setResult(processContext.getEnvironmentVariables());
     }
 
-    private void setEnvironmentVariables(TaskRunConsumer run, TaskContentObject content) {
+    private void setEnvironmentVariables(TaskContentObject content) {
         ProcessContextObject processContext = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -79,13 +79,13 @@ public class ProcessContextObjectTaskInitializer extends ATaskInitializer {
         processContext.setEnvironmentVariables(environmentVariable);
     }
 
-    private void getParameters(TaskRunConsumer run, TaskContentObject content) {
+    private void getParameters(TaskContentObject content) {
         ProcessContextObject processContext = content.getCacheableObject();
 
         content.setResult(processContext.getParameters());
     }
 
-    private void setParameters(TaskRunConsumer run, TaskContentObject content) {
+    private void setParameters(TaskContentObject content) {
         ProcessContextObject processContext = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -99,13 +99,13 @@ public class ProcessContextObjectTaskInitializer extends ATaskInitializer {
         processContext.setParameters(processParameters);
     }
 
-    private void getWorkFolder(TaskRunConsumer run, TaskContentObject content) {
+    private void getWorkFolder(TaskContentObject content) {
         ProcessContextObject processContext = content.getCacheableObject();
 
         content.setResult(processContext.getWorkFolder());
     }
 
-    private void setWorkFolder(TaskRunConsumer run, TaskContentObject content) {
+    private void setWorkFolder(TaskContentObject content) {
         ProcessContextObject processContext = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();

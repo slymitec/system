@@ -37,13 +37,13 @@ public class GroupTokenObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getPrivileges(TaskRunConsumer run, TaskContentObject content) {
+    private void getPrivileges(TaskContentObject content) {
         GroupTokenObject groupToken = content.getCacheableObject();
 
         content.setResult(groupToken.getPrivileges());
     }
 
-    private void setPrivileges(TaskRunConsumer run, TaskContentObject content) {
+    private void setPrivileges(TaskContentObject content) {
         GroupTokenObject groupToken = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -57,13 +57,13 @@ public class GroupTokenObjectTaskInitializer extends ATaskInitializer {
         groupToken.setPrivileges(privileges);
     }
 
-    private void getLimits(TaskRunConsumer run, TaskContentObject content) {
+    private void getLimits(TaskContentObject content) {
         GroupTokenObject groupToken = content.getCacheableObject();
 
         content.setResult(groupToken.getLimits());
     }
 
-    private void setLimits(TaskRunConsumer run, TaskContentObject content) {
+    private void setLimits(TaskContentObject content) {
         GroupTokenObject groupToken = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();

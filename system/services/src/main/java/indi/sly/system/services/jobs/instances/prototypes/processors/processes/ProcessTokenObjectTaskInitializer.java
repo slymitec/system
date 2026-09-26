@@ -42,19 +42,19 @@ public class ProcessTokenObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getAccountId(TaskRunConsumer run, TaskContentObject content) {
+    private void getAccountId(TaskContentObject content) {
         ProcessTokenObject processToken = content.getCacheableObject();
 
         content.setResult(processToken.getAccountId());
     }
 
-    private void getPrivileges(TaskRunConsumer run, TaskContentObject content) {
+    private void getPrivileges(TaskContentObject content) {
         ProcessTokenObject processToken = content.getCacheableObject();
 
         content.setResult(processToken.getPrivileges());
     }
 
-    private void setPrivileges(TaskRunConsumer run, TaskContentObject content) {
+    private void setPrivileges(TaskContentObject content) {
         ProcessTokenObject processToken = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -68,13 +68,13 @@ public class ProcessTokenObjectTaskInitializer extends ATaskInitializer {
         processToken.setPrivileges(privileges);
     }
 
-    private void getLimits(TaskRunConsumer run, TaskContentObject content) {
+    private void getLimits(TaskContentObject content) {
         ProcessTokenObject processToken = content.getCacheableObject();
 
         content.setResult(processToken.getLimits());
     }
 
-    private void setLimits(TaskRunConsumer run, TaskContentObject content) {
+    private void setLimits(TaskContentObject content) {
         ProcessTokenObject processToken = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -88,19 +88,19 @@ public class ProcessTokenObjectTaskInitializer extends ATaskInitializer {
         processToken.setLimits(limits);
     }
 
-    private void getRoles(TaskRunConsumer run, TaskContentObject content) {
+    private void getRoles(TaskContentObject content) {
         ProcessTokenObject processToken = content.getCacheableObject();
 
         content.setResult(processToken.getRoles());
     }
 
-    private void initDefaultRoles(TaskRunConsumer run, TaskContentObject content) {
+    private void initDefaultRoles(TaskContentObject content) {
         ProcessTokenObject processToken = content.getCacheableObject();
 
         processToken.initDefaultRoles();
     }
 
-    private void addRoles(TaskRunConsumer run, TaskContentObject content) {
+    private void addRoles(TaskContentObject content) {
         ProcessTokenObject processToken = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();

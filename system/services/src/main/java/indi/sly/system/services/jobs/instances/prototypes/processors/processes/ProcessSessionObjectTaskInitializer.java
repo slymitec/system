@@ -36,13 +36,13 @@ public class ProcessSessionObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getId(TaskRunConsumer run, TaskContentObject content) {
+    private void getId(TaskContentObject content) {
         ProcessSessionObject processSession = content.getCacheableObject();
 
         content.setResult(processSession.getId());
     }
 
-    private void setId(TaskRunConsumer run, TaskContentObject content) {
+    private void setId(TaskContentObject content) {
         ProcessSessionObject processSession = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -56,13 +56,13 @@ public class ProcessSessionObjectTaskInitializer extends ATaskInitializer {
         processSession.setId(id);
     }
 
-    private void getType(TaskRunConsumer run, TaskContentObject content) {
+    private void getType(TaskContentObject content) {
         ProcessSessionObject processSession = content.getCacheableObject();
 
         content.setResult(processSession.getType());
     }
 
-    private void setType(TaskRunConsumer run, TaskContentObject content) {
+    private void setType(TaskContentObject content) {
         ProcessSessionObject processSession = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();

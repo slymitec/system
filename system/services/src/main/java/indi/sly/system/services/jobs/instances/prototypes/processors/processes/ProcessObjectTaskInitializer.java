@@ -1,13 +1,10 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors.processes;
 
-import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.*;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -41,105 +38,91 @@ public class ProcessObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getId(TaskRunConsumer run, TaskContentObject content) {
+    private void getId(TaskContentObject content) {
         ProcessObject process = content.getCacheableObject();
 
         content.setResult(process.getId());
     }
 
-    private void getParentId(TaskRunConsumer run, TaskContentObject content) {
+    private void getParentId(TaskContentObject content) {
         ProcessObject process = content.getCacheableObject();
 
         content.setResult(process.getParentId());
     }
 
-    private void isCurrent(TaskRunConsumer run, TaskContentObject content) {
+    private void isCurrent(TaskContentObject content) {
         ProcessObject process = content.getCacheableObject();
 
         content.setResult(process.isCurrent());
     }
 
-    private void getStatus(TaskRunConsumer run, TaskContentObject content) {
+    private void getStatus(TaskContentObject content) {
         ProcessObject process = content.getCacheableObject();
 
         ProcessStatusObject processStatus = process.getStatus();
 
         UUID handle = processStatus.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processStatus.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getCommunication(TaskRunConsumer run, TaskContentObject content) {
+    private void getCommunication(TaskContentObject content) {
         ProcessObject process = content.getCacheableObject();
 
         ProcessCommunicationObject processCommunication = process.getCommunication();
 
         UUID handle = processCommunication.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processCommunication.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getContext(TaskRunConsumer run, TaskContentObject content) {
+    private void getContext(TaskContentObject content) {
         ProcessObject process = content.getCacheableObject();
 
         ProcessContextObject processContext = process.getContext();
 
         UUID handle = processContext.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processContext.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getInfoTable(TaskRunConsumer run, TaskContentObject content) {
+    private void getInfoTable(TaskContentObject content) {
         ProcessObject process = content.getCacheableObject();
 
         ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
         UUID handle = processInfoTable.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processInfoTable.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getSession(TaskRunConsumer run, TaskContentObject content) {
+    private void getSession(TaskContentObject content) {
         ProcessObject process = content.getCacheableObject();
 
         ProcessSessionObject processSession = process.getSession();
 
         UUID handle = processSession.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processSession.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getStatistics(TaskRunConsumer run, TaskContentObject content) {
+    private void getStatistics(TaskContentObject content) {
         ProcessObject process = content.getCacheableObject();
 
         ProcessStatisticsObject processStatistics = process.getStatistics();
 
         UUID handle = processStatistics.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processStatistics.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getToken(TaskRunConsumer run, TaskContentObject content) {
+    private void getToken(TaskContentObject content) {
         ProcessObject process = content.getCacheableObject();
 
         ProcessTokenObject processToken = process.getToken();
 
         UUID handle = processToken.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(processToken.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 }

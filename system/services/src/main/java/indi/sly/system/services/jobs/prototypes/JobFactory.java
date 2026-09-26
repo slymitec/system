@@ -2,13 +2,14 @@ package indi.sly.system.services.jobs.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.services.jobs.prototypes.processors.*;
 import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
-import indi.sly.system.services.jobs.prototypes.mediators.UserContextProcessorMediator;
+import indi.sly.system.services.jobs.prototypes.mediators.CallContextProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import indi.sly.system.services.jobs.values.TaskStatusDefinition;
-import indi.sly.system.services.jobs.values.UserContextDefinition;
+import indi.sly.system.services.jobs.values.CallContextDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -16,6 +17,7 @@ import jakarta.inject.Named;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Named
@@ -29,8 +31,8 @@ public class JobFactory extends AFactory {
     }
 
     protected final List<ITaskResolver> taskResolvers;
-    protected final List<IUserContextCreateResolver> userContextCreateResolvers;
-    protected final List<IUserContextFinishResolver> userContextFinishResolvers;
+    protected final List<ICallContextCreateResolver> userContextCreateResolvers;
+    protected final List<ICallContextEndResolver> userContextFinishResolvers;
 
     @Override
     public void init() {
@@ -41,30 +43,32 @@ public class JobFactory extends AFactory {
         this.taskResolvers.add(this.coreManager.create(TaskInitializerResolver.class));
         this.taskResolvers.add(this.coreManager.create(TaskProcessAndThreadResolver.class));
         this.taskResolvers.add(this.coreManager.create(TaskStatusRuntimeResolver.class));
-        
-        this.userContextCreateResolvers.add(this.coreManager.create(UserContextCreateContentResolver.class));
-        this.userContextCreateResolvers.add(this.coreManager.create(UserContextCreateThreadResolver.class));
-        this.userContextCreateResolvers.add(this.coreManager.create(UserContextCreateCheckClientProcessIdResolver.class));
-        this.userContextCreateResolvers.add(this.coreManager.create(UserContextCreateCheckProcessResolver.class));
 
-        this.userContextFinishResolvers.add(this.coreManager.create(UserContextFinishThreadResolver.class));
+        this.userContextCreateResolvers.add(this.coreManager.create(CallContextCreateThreadResolver.class));
+        this.userContextCreateResolvers.add(this.coreManager.create(CallContextCreateCheckClientProcessIdResolver.class));
+        this.userContextCreateResolvers.add(this.coreManager.create(CallContextCreateCheckProcessResolver.class));
+
+        this.userContextFinishResolvers.add(this.coreManager.create(CallContextEndThreadResolver.class));
 
         Collections.sort(this.taskResolvers);
         Collections.sort(this.userContextCreateResolvers);
         Collections.sort(this.userContextFinishResolvers);
     }
 
-    private TaskObject createTask(TaskProcessorMediator processorMediator, TaskDefinition definition) {
+    private TaskObject createTask(TaskProcessorMediator processorMediator, TaskDefinition definition, UUID handle) {
         TaskObject task = this.coreManager.create(TaskObject.class);
 
         task.setDefinition(definition);
         task.processorMediator = processorMediator;
         task.status = new TaskStatusDefinition();
+        if (!ValueUtil.isAnyNullOrEmpty(handle)) {
+            task.status.setHandle(handle);
+        }
 
         return task;
     }
 
-    public TaskObject buildTask(TaskDefinition task) {
+    public TaskObject buildTask(TaskDefinition task, UUID handle) {
         if (ObjectUtil.isAnyNull(task)) {
             throw new ConditionParametersException();
         }
@@ -74,7 +78,7 @@ public class JobFactory extends AFactory {
             resolver.resolve(task, processorMediator);
         }
 
-        return this.createTask(processorMediator, task);
+        return this.createTask(processorMediator, task, handle);
     }
 
     public TaskBuilder createTask() {
@@ -85,15 +89,15 @@ public class JobFactory extends AFactory {
         return taskBuilder;
     }
 
-    private UserContextObject createUserContext(UserContextDefinition definition) {
-        UserContextObject userContext = this.coreManager.create(UserContextObject.class);
+    private CallContextObject createUserContext(CallContextDefinition definition) {
+        CallContextObject userContext = this.coreManager.create(CallContextObject.class);
 
         userContext.setDefinition(definition);
 
         return userContext;
     }
 
-    public UserContextObject buildUserContext(UserContextDefinition userContext) {
+    public CallContextObject buildUserContext(CallContextDefinition userContext) {
         if (ObjectUtil.isAnyNull(userContext)) {
             throw new ConditionParametersException();
         }
@@ -101,14 +105,14 @@ public class JobFactory extends AFactory {
         return this.createUserContext(userContext);
     }
 
-    public UserContextCreateBuilder createUserContextCreator() {
-        UserContextProcessorMediator processorMediator = this.coreManager.create(UserContextProcessorMediator.class);
+    public CallContextCreateBuilder createUserContextCreator() {
+        CallContextProcessorMediator processorMediator = this.coreManager.create(CallContextProcessorMediator.class);
 
-        for (IUserContextCreateResolver userContextCreateResolver : this.userContextCreateResolvers) {
+        for (ICallContextCreateResolver userContextCreateResolver : this.userContextCreateResolvers) {
             userContextCreateResolver.resolve(processorMediator);
         }
 
-        UserContextCreateBuilder userContextCreateBuilder = this.coreManager.create(UserContextCreateBuilder.class);
+        CallContextCreateBuilder userContextCreateBuilder = this.coreManager.create(CallContextCreateBuilder.class);
 
         userContextCreateBuilder.processorMediator = processorMediator;
         userContextCreateBuilder.factory = this;
@@ -116,18 +120,18 @@ public class JobFactory extends AFactory {
         return userContextCreateBuilder;
     }
 
-    public UserContextFinishBuilder createUserContextFinish() {
-        UserContextProcessorMediator processorMediator = this.coreManager.create(UserContextProcessorMediator.class);
+    public CallContextFinishBuilder createUserContextFinish() {
+        CallContextProcessorMediator processorMediator = this.coreManager.create(CallContextProcessorMediator.class);
 
-        for (IUserContextFinishResolver userContextFinishResolver : this.userContextFinishResolvers) {
+        for (ICallContextEndResolver userContextFinishResolver : this.userContextFinishResolvers) {
             userContextFinishResolver.resolve(processorMediator);
         }
 
-        UserContextFinishBuilder userContextFinishBuilder = this.coreManager.create(UserContextFinishBuilder.class);
+        CallContextFinishBuilder callContextFinishBuilder = this.coreManager.create(CallContextFinishBuilder.class);
 
-        userContextFinishBuilder.processorMediator = processorMediator;
-        userContextFinishBuilder.factory = this;
+        callContextFinishBuilder.processorMediator = processorMediator;
+        callContextFinishBuilder.factory = this;
 
-        return userContextFinishBuilder;
+        return callContextFinishBuilder;
     }
 }

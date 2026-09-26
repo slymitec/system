@@ -22,15 +22,12 @@ public abstract class ASystemSpace extends ASpace {
         ReentrantReadWriteLock objectLock = new ReentrantReadWriteLock();
         this.objectReadLock = objectLock.readLock();
         this.objectWriteLock = objectLock.writeLock();
-
-        this.objectLimit = 0L;
     }
 
     private final Map<UUID, AObject> objects;
     private final Map<Class<? extends AObject>, AObject> classedObjects;
     private final Lock objectReadLock;
     private final Lock objectWriteLock;
-    private long objectLimit;
 
     public Map<UUID, AObject> getObjects() {
         return this.objects;
@@ -48,13 +45,5 @@ public abstract class ASystemSpace extends ASpace {
         } else {
             return null;
         }
-    }
-
-    public long getObjectLimit() {
-        return this.objectLimit;
-    }
-
-    public void setObjectLimit(long coreObjectLimit) {
-        this.objectLimit = coreObjectLimit;
     }
 }

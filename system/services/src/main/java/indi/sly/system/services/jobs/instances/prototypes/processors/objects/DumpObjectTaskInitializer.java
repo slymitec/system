@@ -33,37 +33,37 @@ public class DumpObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getDate(TaskRunConsumer run, TaskContentObject content) {
+    private void getDate(TaskContentObject content) {
         DumpObject dump = content.getCacheableObject();
 
         content.setResult(dump.getDate());
     }
 
-    private void getProcessId(TaskRunConsumer run, TaskContentObject content) {
+    private void getProcessId(TaskContentObject content) {
         DumpObject dump = content.getCacheableObject();
 
         content.setResult(dump.getProcessId());
     }
 
-    private void getAccountId(TaskRunConsumer run, TaskContentObject content) {
+    private void getAccountId(TaskContentObject content) {
         DumpObject dump = content.getCacheableObject();
 
         content.setResult(dump.getAccountId());
     }
 
-    private void getPath(TaskRunConsumer run, TaskContentObject content) {
+    private void getPath(TaskContentObject content) {
         DumpObject dump = content.getCacheableObject();
 
         content.setResult(dump.getPath());
     }
 
-    private void getInfoOpen(TaskRunConsumer run, TaskContentObject content) {
+    private void getInfoOpen(TaskContentObject content) {
         DumpObject dump = content.getCacheableObject();
 
         content.setResult(dump.getInfoOpen());
     }
 
-    private void getSecurityDescriptorSummary(TaskRunConsumer run, TaskContentObject content) {
+    private void getSecurityDescriptorSummary(TaskContentObject content) {
         DumpObject dump = content.getCacheableObject();
 
         content.setResult(dump.getSecurityDescriptorSummary());

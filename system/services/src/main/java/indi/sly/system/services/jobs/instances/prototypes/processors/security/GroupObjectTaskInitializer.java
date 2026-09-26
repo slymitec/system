@@ -6,9 +6,7 @@ import indi.sly.system.kernel.security.prototypes.GroupObject;
 import indi.sly.system.kernel.security.prototypes.GroupTokenObject;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -35,28 +33,26 @@ public class GroupObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getId(TaskRunConsumer run, TaskContentObject content) {
+    private void getId(TaskContentObject content) {
         GroupObject group = content.getCacheableObject();
 
         content.setResult(group.getId());
     }
 
-    private void getName(TaskRunConsumer run, TaskContentObject content) {
+    private void getName(TaskContentObject content) {
         GroupObject group = content.getCacheableObject();
 
         content.setResult(group.getName());
     }
 
-    private void getToken(TaskRunConsumer run, TaskContentObject content) {
+    private void getToken(TaskContentObject content) {
         GroupObject group = content.getCacheableObject();
 
         GroupTokenObject groupToken = group.getToken();
 
         UUID handle = groupToken.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(groupToken.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
 }

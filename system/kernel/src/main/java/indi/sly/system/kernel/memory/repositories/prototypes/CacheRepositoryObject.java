@@ -75,20 +75,14 @@ public class CacheRepositoryObject extends AObject {
         RLiveObject liveObject = this.liveObjectService.asLiveObject(cache);
 
         long duration = cache.getDuration();
-        if (duration == CacheDurationType.INSTANT) {
-            liveObject.expire(Duration.ofSeconds(4L));
-        } else if (duration == CacheDurationType.SHORT) {
-            liveObject.expire(Duration.ofSeconds(8L));
-        } else if (duration == CacheDurationType.NORMAL) {
-            liveObject.expire(Duration.ofSeconds(16L));
-        } else if (duration == CacheDurationType.LONG) {
-            liveObject.expire(Duration.ofSeconds(32L));
-        } else if (duration == CacheDurationType.AGES) {
+        if (duration == CacheDurationType.PREPARE) {
             liveObject.expire(Duration.ofSeconds(64L));
+        } else if (duration == CacheDurationType.RUNNING) {
+            liveObject.expire(Duration.ofSeconds(4096L));
         } else if (duration == CacheDurationType.PERMANENT) {
             liveObject.clearExpire();
         } else {
-            liveObject.expire(Duration.ofSeconds(2L));
+            liveObject.expire(Duration.ofSeconds(16L));
         }
 
         return cache;
@@ -112,20 +106,14 @@ public class CacheRepositoryObject extends AObject {
         RLiveObject liveObject = this.liveObjectService.asLiveObject(cache);
 
         long duration = cache.getDuration();
-        if (duration == CacheDurationType.INSTANT) {
-            liveObject.expire(Duration.ofSeconds(4L));
-        } else if (duration == CacheDurationType.SHORT) {
-            liveObject.expire(Duration.ofSeconds(8L));
-        } else if (duration == CacheDurationType.NORMAL) {
-            liveObject.expire(Duration.ofSeconds(16L));
-        } else if (duration == CacheDurationType.LONG) {
-            liveObject.expire(Duration.ofSeconds(32L));
-        } else if (duration == CacheDurationType.AGES) {
+        if (duration == CacheDurationType.PREPARE) {
             liveObject.expire(Duration.ofSeconds(64L));
+        } else if (duration == CacheDurationType.RUNNING) {
+            liveObject.expire(Duration.ofSeconds(4096L));
         } else if (duration == CacheDurationType.PERMANENT) {
             liveObject.clearExpire();
         } else {
-            liveObject.expire(Duration.ofSeconds(2L));
+            liveObject.expire(Duration.ofSeconds(16L));
         }
     }
 
@@ -143,18 +131,14 @@ public class CacheRepositoryObject extends AObject {
         RLiveObject liveObject = this.liveObjectService.asLiveObject(cache);
 
         long duration = cache.getDuration();
-        if (duration == CacheDurationType.INSTANT) {
-            liveObject.expire(Duration.ofSeconds(4L));
-        } else if (duration == CacheDurationType.SHORT) {
-            liveObject.expire(Duration.ofSeconds(8L));
-        } else if (duration == CacheDurationType.NORMAL) {
-            liveObject.expire(Duration.ofSeconds(16L));
-        } else if (duration == CacheDurationType.LONG) {
-            liveObject.expire(Duration.ofSeconds(32L));
-        } else if (duration == CacheDurationType.AGES) {
+        if (duration == CacheDurationType.PREPARE) {
             liveObject.expire(Duration.ofSeconds(64L));
+        } else if (duration == CacheDurationType.RUNNING) {
+            liveObject.expire(Duration.ofSeconds(4096L));
+        } else if (duration == CacheDurationType.PERMANENT) {
+            liveObject.clearExpire();
         } else {
-            liveObject.expire(Duration.ofSeconds(128L));
+            liveObject.expire(Duration.ofSeconds(16L));
         }
     }
 

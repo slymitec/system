@@ -7,9 +7,7 @@ import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.*;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -45,25 +43,25 @@ public class AccountObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getId(TaskRunConsumer run, TaskContentObject content) {
+    private void getId(TaskContentObject content) {
         AccountObject account = content.getCacheableObject();
 
         content.setResult(account.getId());
     }
 
-    private void getName(TaskRunConsumer run, TaskContentObject content) {
+    private void getName(TaskContentObject content) {
         AccountObject account = content.getCacheableObject();
 
         content.setResult(account.getName());
     }
 
-    private void getPassword(TaskRunConsumer run, TaskContentObject content) {
+    private void getPassword(TaskContentObject content) {
         AccountObject account = content.getCacheableObject();
 
         content.setResult(account.getPassword());
     }
 
-    private void setPassword(TaskRunConsumer run, TaskContentObject content) {
+    private void setPassword(TaskContentObject content) {
         AccountObject account = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -77,25 +75,23 @@ public class AccountObjectTaskInitializer extends ATaskInitializer {
         account.setPassword(password);
     }
 
-    private void getGroups(TaskRunConsumer run, TaskContentObject content) {
+    private void getGroups(TaskContentObject content) {
         AccountObject account = content.getCacheableObject();
 
         Set<GroupObject> groups = account.getGroups();
 
-        Set<HandleContextRecord> handleContexts = new HashSet<>();
+        Set<UUID> handles = new HashSet<>();
 
         for (GroupObject group : groups) {
             UUID handle = group.cache();
 
-            HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(group.getClass()), handle);
-
-            handleContexts.add(handleContext);
+            handles.add(handle);
         }
 
-        content.setResult(handleContexts);
+        content.setResult(handles);
     }
 
-    private void setGroups(TaskRunConsumer run, TaskContentObject content) {
+    private void setGroups(TaskContentObject content) {
         AccountObject account = content.getCacheableObject();
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -119,27 +115,23 @@ public class AccountObjectTaskInitializer extends ATaskInitializer {
         account.setGroups(groups);
     }
 
-    private void getToken(TaskRunConsumer run, TaskContentObject content) {
+    private void getToken(TaskContentObject content) {
         AccountObject account = content.getCacheableObject();
 
         AccountTokenObject accountToken = account.getToken();
 
         UUID handle = accountToken.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(accountToken.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getSessions(TaskRunConsumer run, TaskContentObject content) {
+    private void getSessions(TaskContentObject content) {
         AccountObject account = content.getCacheableObject();
 
         AccountSessionsObject accountSession = account.getSessions();
 
         UUID handle = accountSession.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(accountSession.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 }

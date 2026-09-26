@@ -29,13 +29,13 @@ public class AccountAuthorizationObjectTaskInitializer extends ATaskInitializer 
     public void finish(TaskDefinition task) {
     }
 
-    private void getDate(TaskRunConsumer run, TaskContentObject content) {
+    private void getDate(TaskContentObject content) {
         AccountAuthorizationObject accountAuthorization = content.getCacheableObject();
 
         content.setResult(accountAuthorization.getDate());
     }
 
-    private void isLegal(TaskRunConsumer run, TaskContentObject content) {
+    private void isLegal(TaskContentObject content) {
         AccountAuthorizationObject accountAuthorization = content.getCacheableObject();
 
         content.setResult(accountAuthorization.isLegal());

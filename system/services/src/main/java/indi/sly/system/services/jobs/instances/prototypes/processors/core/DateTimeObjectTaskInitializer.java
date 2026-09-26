@@ -4,7 +4,6 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
@@ -33,13 +32,13 @@ public class DateTimeObjectTaskInitializer extends ATaskInitializer {
 
     }
 
-    private void getCurrent(TaskRunConsumer run, TaskContentObject content) {
+    private void getCurrent(TaskContentObject content) {
         DateTimeObject dateTime = content.getCacheableObject();
 
         content.setResult(dateTime.getCurrent());
     }
 
-    private void correct(TaskRunConsumer run, TaskContentObject content) {
+    private void correct(TaskContentObject content) {
         DateTimeObject dateTimeObject = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();

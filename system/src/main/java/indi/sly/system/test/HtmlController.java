@@ -39,7 +39,6 @@ public class HtmlController extends AController {
             KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
             kernelSpace.setUserSpace(userSpace);
-            this.coreManager.getObjectCollection().setLimit(SpaceType.USER, kernelConfiguration.CORE_ENVIRONMENT_USER_SPACE_CORE_OBJECT_LIMIT);
 
             UUID processID = null;
 

@@ -4,7 +4,7 @@ import indi.sly.system.common.values.DateTimeType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
-import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
+import indi.sly.system.services.jobs.lang.TaskProcessorEndConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
@@ -28,7 +28,7 @@ public class TaskDateResolver extends AResolver implements ITaskResolver {
             date.put(DateTimeType.CREATE, nowDateTime);
         };
 
-        this.finish = (task, status) -> {
+        this.end = (task, status) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrent();
 
@@ -37,7 +37,7 @@ public class TaskDateResolver extends AResolver implements ITaskResolver {
             date.put(DateTimeType.ACCESS, nowDateTime);
         };
 
-        this.run = (task, status, name, run, content) -> {
+        this.run = (task, status, name, content) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrent();
 
@@ -64,14 +64,14 @@ public class TaskDateResolver extends AResolver implements ITaskResolver {
     }
 
     private final TaskProcessorStartConsumer start;
-    private final TaskProcessorFinishConsumer finish;
+    private final TaskProcessorEndConsumer end;
     private final TaskProcessorRunConsumer run;
     private final TaskProcessorContentFunction content;
 
     @Override
     public void resolve(TaskDefinition task, TaskProcessorMediator processorMediator) {
         processorMediator.getStarts().add(this.start);
-        processorMediator.getFinishes().add(this.finish);
+        processorMediator.getEnds().add(this.end);
         processorMediator.getRuns().add(this.run);
         processorMediator.getContents().add(this.content);
     }

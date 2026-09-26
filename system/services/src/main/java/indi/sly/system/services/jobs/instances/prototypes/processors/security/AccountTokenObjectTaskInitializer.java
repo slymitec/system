@@ -36,13 +36,13 @@ public class AccountTokenObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getPrivileges(TaskRunConsumer run, TaskContentObject content) {
+    private void getPrivileges(TaskContentObject content) {
         AccountTokenObject accountToken = content.getCacheableObject();
 
         content.setResult(accountToken.getPrivileges());
     }
 
-    private void setPrivileges(TaskRunConsumer run, TaskContentObject content) {
+    private void setPrivileges(TaskContentObject content) {
         AccountTokenObject accountToken = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -56,13 +56,13 @@ public class AccountTokenObjectTaskInitializer extends ATaskInitializer {
         accountToken.setPrivileges(privileges);
     }
 
-    private void getLimits(TaskRunConsumer run, TaskContentObject content) {
+    private void getLimits(TaskContentObject content) {
         AccountTokenObject accountToken = content.getCacheableObject();
 
         content.setResult(accountToken.getLimits());
     }
 
-    private void setLimits(TaskRunConsumer run, TaskContentObject content) {
+    private void setLimits(TaskContentObject content) {
         AccountTokenObject accountToken = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();

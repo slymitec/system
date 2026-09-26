@@ -2,10 +2,9 @@ package indi.sly.system.services.jobs.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
-import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
-import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
-import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
-import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
+import indi.sly.system.kernel.processes.ThreadManager;
+import indi.sly.system.kernel.processes.prototypes.ThreadObject;
+import indi.sly.system.services.jobs.lang.*;
 import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import indi.sly.system.services.jobs.values.TaskStatusRuntimeType;
@@ -24,13 +23,19 @@ public class TaskCheckConditionResolver extends AResolver implements ITaskResolv
             }
         };
 
-        this.finish = (task, status) -> {
+        this.end = (task, status) -> {
             if (status.getRuntime() != TaskStatusRuntimeType.RUNNING) {
                 throw new StatusRelationshipErrorException();
             }
         };
 
-        this.run = (task, status, name, run, content) -> {
+        this.run = (task, status, name, content) -> {
+            if (status.getRuntime() != TaskStatusRuntimeType.RUNNING) {
+                throw new StatusRelationshipErrorException();
+            }
+        };
+
+        this.finish = (task, status, name, content) -> {
             if (status.getRuntime() != TaskStatusRuntimeType.RUNNING) {
                 throw new StatusRelationshipErrorException();
             }
@@ -51,15 +56,17 @@ public class TaskCheckConditionResolver extends AResolver implements ITaskResolv
     }
 
     private final TaskProcessorStartConsumer start;
-    private final TaskProcessorFinishConsumer finish;
+    private final TaskProcessorEndConsumer end;
     private final TaskProcessorRunConsumer run;
+    private final TaskProcessorFinishConsumer finish;
     private final TaskProcessorContentFunction content;
 
     @Override
     public void resolve(TaskDefinition task, TaskProcessorMediator processorMediator) {
         processorMediator.getStarts().add(this.start);
-        processorMediator.getFinishes().add(this.finish);
+        processorMediator.getEnds().add(this.end);
         processorMediator.getRuns().add(this.run);
+        processorMediator.getFinishes().add(this.finish);
         processorMediator.getContents().add(this.content);
     }
 }

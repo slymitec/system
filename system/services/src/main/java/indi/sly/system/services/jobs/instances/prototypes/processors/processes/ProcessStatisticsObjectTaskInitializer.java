@@ -29,13 +29,13 @@ public class ProcessStatisticsObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getDate(TaskRunConsumer run, TaskContentObject content) {
+    private void getDate(TaskContentObject content) {
         ProcessStatisticsObject processStatistics = content.getCacheableObject();
 
         content.setResult(processStatistics.getDate());
     }
 
-    private void getStatistics(TaskRunConsumer run, TaskContentObject content) {
+    private void getStatistics(TaskContentObject content) {
         ProcessStatisticsObject processStatistics = content.getCacheableObject();
 
         content.setResult(processStatistics.getStatistics());

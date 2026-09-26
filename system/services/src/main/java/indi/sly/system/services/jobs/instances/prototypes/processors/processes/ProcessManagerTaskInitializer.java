@@ -12,9 +12,7 @@ import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.prototypes.UserFactory;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -43,19 +41,17 @@ public class ProcessManagerTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getCurrent(TaskRunConsumer run, TaskContentObject content) {
+    private void getCurrent(TaskContentObject content) {
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         ProcessObject process = processManager.getCurrent();
 
         UUID handle = process.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(process.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getWithAuthorization(TaskRunConsumer run, TaskContentObject content) {
+    private void getWithAuthorization(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
@@ -74,12 +70,10 @@ public class ProcessManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = process.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(process.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void get(TaskRunConsumer run, TaskContentObject content) {
+    private void get(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
@@ -95,12 +89,10 @@ public class ProcessManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = process.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(process.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void create(TaskRunConsumer run, TaskContentObject content) {
+    private void create(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
@@ -122,18 +114,16 @@ public class ProcessManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = process.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(process.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void endCurrent(TaskRunConsumer run, TaskContentObject content) {
+    private void endCurrent(TaskContentObject content) {
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
         processManager.endCurrent();
     }
 
-    private void end(TaskRunConsumer run, TaskContentObject content) {
+    private void end(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);

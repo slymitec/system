@@ -49,19 +49,19 @@ public class ServiceContentObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getDependencies(TaskRunConsumer run, TaskContentObject content) {
+    private void getDependencies(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         content.setResult(serviceContent.getDependencies());
     }
 
-    private void getSecret(TaskRunConsumer run, TaskContentObject content) {
+    private void getSecret(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         content.setResult(serviceContent.getSecret());
     }
 
-    private void setSecret(TaskRunConsumer run, TaskContentObject content) {
+    private void setSecret(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -75,13 +75,13 @@ public class ServiceContentObjectTaskInitializer extends ATaskInitializer {
         serviceContent.setSecret(secret);
     }
 
-    private void getPath(TaskRunConsumer run, TaskContentObject content) {
+    private void getPath(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         content.setResult(serviceContent.getPath());
     }
 
-    private void setPath(TaskRunConsumer run, TaskContentObject content) {
+    private void setPath(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -95,13 +95,13 @@ public class ServiceContentObjectTaskInitializer extends ATaskInitializer {
         serviceContent.setPath(path);
     }
 
-    private void getAccountId(TaskRunConsumer run, TaskContentObject content) {
+    private void getAccountId(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         content.setResult(serviceContent.getAccountId());
     }
 
-    private void setAccountId(TaskRunConsumer run, TaskContentObject content) {
+    private void setAccountId(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -115,13 +115,13 @@ public class ServiceContentObjectTaskInitializer extends ATaskInitializer {
         serviceContent.setAccountId(accountId);
     }
 
-    private void getMode(TaskRunConsumer run, TaskContentObject content) {
+    private void getMode(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         content.setResult(serviceContent.getMode());
     }
 
-    private void setMode(TaskRunConsumer run, TaskContentObject content) {
+    private void setMode(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -135,13 +135,13 @@ public class ServiceContentObjectTaskInitializer extends ATaskInitializer {
         serviceContent.setMode(mode);
     }
 
-    private void getStart(TaskRunConsumer run, TaskContentObject content) {
+    private void getStart(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         content.setResult(serviceContent.getStart());
     }
 
-    private void setStart(TaskRunConsumer run, TaskContentObject content) {
+    private void setStart(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -155,13 +155,13 @@ public class ServiceContentObjectTaskInitializer extends ATaskInitializer {
         serviceContent.setStart(start);
     }
 
-    private void getEnvironmentVariables(TaskRunConsumer run, TaskContentObject content) {
+    private void getEnvironmentVariables(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         content.setResult(serviceContent.getEnvironmentVariables());
     }
 
-    private void setEnvironmentVariables(TaskRunConsumer run, TaskContentObject content) {
+    private void setEnvironmentVariables(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -175,13 +175,13 @@ public class ServiceContentObjectTaskInitializer extends ATaskInitializer {
         serviceContent.setEnvironmentVariables(environmentVariable);
     }
 
-    private void getParameters(TaskRunConsumer run, TaskContentObject content) {
+    private void getParameters(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         content.setResult(serviceContent.getParameters());
     }
 
-    private void setParameters(TaskRunConsumer run, TaskContentObject content) {
+    private void setParameters(TaskContentObject content) {
         ServiceContentObject serviceContent = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();

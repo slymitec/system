@@ -107,7 +107,7 @@ public class InfoFactory extends AFactory {
 
         cache.setInfoId(info.getId());
         cache.setPoolId(poolId);
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         if (ObjectUtil.allNotNull(parentInfoCache)) {
             IdentifierRecord identifier;
@@ -162,7 +162,7 @@ public class InfoFactory extends AFactory {
 
     public SecurityDescriptorObject buildSecurityDescriptor(InfoProcessorMediator processorMediator, InfoObject info, SecurityDescriptorCacheEntity cache) {
         cache.setInfo(info.getCache());
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createSecurityDescriptor(processorMediator, info, cache);
     }
@@ -201,7 +201,7 @@ public class InfoFactory extends AFactory {
         InfoContentCacheEntity cache = new InfoContentCacheEntity();
 
         cache.setInfo(info.getCache());
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createInfoContent(processorMediator, info, cache, infoContentType);
     }
@@ -239,7 +239,7 @@ public class InfoFactory extends AFactory {
             throw new ConditionParametersException();
         }
 
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createDump(cache);
     }

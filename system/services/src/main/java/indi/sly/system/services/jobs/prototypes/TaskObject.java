@@ -5,7 +5,7 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.core.prototypes.ADefinitionObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
-import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
+import indi.sly.system.services.jobs.lang.TaskProcessorEndConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
@@ -29,6 +29,14 @@ public class TaskObject extends ADefinitionObject<TaskDefinition> {
         return this.definition.getId();
     }
 
+    public String getName() {
+        return this.definition.getName();
+    }
+
+    public long getAttribute() {
+        return this.definition.getAttribute();
+    }
+
     public long getRuntime() {
         return this.status.getRuntime();
     }
@@ -41,25 +49,11 @@ public class TaskObject extends ADefinitionObject<TaskDefinition> {
         }
     }
 
-    public void finish() {
-        List<TaskProcessorFinishConsumer> resolvers = this.processorMediator.getFinishes();
+    public void end() {
+        List<TaskProcessorEndConsumer> resolvers = this.processorMediator.getEnds();
 
-        for (TaskProcessorFinishConsumer resolver : resolvers) {
+        for (TaskProcessorEndConsumer resolver : resolvers) {
             resolver.accept(this.definition, this.status);
-        }
-    }
-
-    public synchronized void run(String name) {
-        if (StringUtil.isNameIllegal(name)) {
-            throw new ConditionParametersException();
-        }
-
-        TaskContentObject content = this.getContent();
-
-        List<TaskProcessorRunConsumer> resolvers = this.processorMediator.getRuns();
-
-        for (TaskProcessorRunConsumer resolver : resolvers) {
-            resolver.accept(this.definition, this.status, name, this::run, content);
         }
     }
 
@@ -73,6 +67,9 @@ public class TaskObject extends ADefinitionObject<TaskDefinition> {
         }
 
         TaskContentObject taskContent = this.coreManager.create(TaskContentObject.class);
+        taskContent.setBase(this);
+        taskContent.processorMediator = this.processorMediator;
+        taskContent.status = status;
         taskContent.threadContext = threadContext;
 
         return taskContent;

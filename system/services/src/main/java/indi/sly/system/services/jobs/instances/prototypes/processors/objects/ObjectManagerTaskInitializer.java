@@ -1,16 +1,13 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors.objects;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.objects.ObjectManager;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -34,7 +31,7 @@ public class ObjectManagerTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void get(TaskRunConsumer run, TaskContentObject content) {
+    private void get(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
@@ -53,8 +50,6 @@ public class ObjectManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = info.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(info.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 }

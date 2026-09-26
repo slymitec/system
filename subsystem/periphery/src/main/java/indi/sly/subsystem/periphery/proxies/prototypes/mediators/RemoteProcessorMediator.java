@@ -14,13 +14,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class RemoteProcessorMediator extends AMediator {
     public RemoteProcessorMediator() {
         this.invokes = new CopyOnWriteArrayList<>();
-        this.isExpires = new CopyOnWriteArrayList<>();
         this.expires = new CopyOnWriteArrayList<>();
         this.dies = new CopyOnWriteArrayList<>();
     }
 
     private final List<RemoteProcessorInvokeFunction> invokes;
-    private final List<RemoteProcessorIsExpiredFunction> isExpires;
     private final List<RemoteProcessorExpireConsumer> expires;
     private final List<RemoteProcessorDieConsumer> dies;
 
@@ -30,10 +28,6 @@ public class RemoteProcessorMediator extends AMediator {
 
     public List<RemoteProcessorExpireConsumer> getExpires() {
         return this.expires;
-    }
-
-    public List<RemoteProcessorIsExpiredFunction> getIsExpires() {
-        return this.isExpires;
     }
 
     public List<RemoteProcessorDieConsumer> getDies() {

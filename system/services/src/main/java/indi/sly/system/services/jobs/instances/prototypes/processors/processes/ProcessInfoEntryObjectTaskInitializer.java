@@ -6,9 +6,7 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -37,39 +35,37 @@ public class ProcessInfoEntryObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getIndex(TaskRunConsumer run, TaskContentObject content) {
+    private void getIndex(TaskContentObject content) {
         ProcessInfoEntryObject processInfoEntry = content.getCacheableObject();
 
         content.setResult(processInfoEntry.getIndex());
     }
 
-    private void getDate(TaskRunConsumer run, TaskContentObject content) {
+    private void getDate(TaskContentObject content) {
         ProcessInfoEntryObject processInfoEntry = content.getCacheableObject();
 
         content.setResult(processInfoEntry.getDate());
     }
 
-    private void getPath(TaskRunConsumer run, TaskContentObject content) {
+    private void getPath(TaskContentObject content) {
         ProcessInfoEntryObject processInfoEntry = content.getCacheableObject();
 
         content.setResult(processInfoEntry.getPath());
     }
 
-    private void getOpen(TaskRunConsumer run, TaskContentObject content) {
+    private void getOpen(TaskContentObject content) {
         ProcessInfoEntryObject processInfoEntry = content.getCacheableObject();
 
         content.setResult(processInfoEntry.getOpen());
     }
 
-    private void getInfo(TaskRunConsumer run, TaskContentObject content) {
+    private void getInfo(TaskContentObject content) {
         ProcessInfoEntryObject processInfoEntry = content.getCacheableObject();
 
         InfoObject info = processInfoEntry.getInfo();
 
         UUID handle = info.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(info.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 }

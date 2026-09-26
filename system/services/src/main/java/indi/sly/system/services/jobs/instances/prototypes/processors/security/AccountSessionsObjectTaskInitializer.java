@@ -37,13 +37,13 @@ public class AccountSessionsObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void listSessions(TaskRunConsumer run, TaskContentObject content) {
+    private void listSessions(TaskContentObject content) {
         AccountSessionsObject accountSessions = content.getCacheableObject();
 
         content.setResult(accountSessions.listSessions());
     }
 
-    private void addSession(TaskRunConsumer run, TaskContentObject content) {
+    private void addSession(TaskContentObject content) {
         AccountSessionsObject accountSessions = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -57,7 +57,7 @@ public class AccountSessionsObjectTaskInitializer extends ATaskInitializer {
         accountSessions.addSession(sessionId);
     }
 
-    private void deleteSession(TaskRunConsumer run, TaskContentObject content) {
+    private void deleteSession(TaskContentObject content) {
         AccountSessionsObject accountSessions = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();

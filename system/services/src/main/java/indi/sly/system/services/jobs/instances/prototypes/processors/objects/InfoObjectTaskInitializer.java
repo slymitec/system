@@ -1,7 +1,6 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors.objects;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -12,9 +11,7 @@ import indi.sly.system.kernel.objects.prototypes.SecurityDescriptorObject;
 import indi.sly.system.kernel.objects.values.InfoWildcardRecord;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -61,85 +58,79 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getId(TaskRunConsumer run, TaskContentObject content) {
+    private void getId(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         content.setResult(info.getId());
     }
 
-    private void getType(TaskRunConsumer run, TaskContentObject content) {
+    private void getType(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         content.setResult(info.getType());
     }
 
-    private void getOpened(TaskRunConsumer run, TaskContentObject content) {
+    private void getOpened(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         content.setResult(info.getOpened());
     }
 
-    private void getName(TaskRunConsumer run, TaskContentObject content) {
+    private void getName(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         content.setResult(info.getName());
     }
 
-    private void getPath(TaskRunConsumer run, TaskContentObject content) {
+    private void getPath(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         content.setResult(info.getPath());
     }
 
-    private void getIndex(TaskRunConsumer run, TaskContentObject content) {
+    private void getIndex(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         content.setResult(info.getIndex());
     }
 
-    private void getParent(TaskRunConsumer run, TaskContentObject content) {
+    private void getParent(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         InfoObject parentInfo = info.getParent();
 
         UUID handle = parentInfo.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(info.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getDate(TaskRunConsumer run, TaskContentObject content) {
+    private void getDate(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         content.setResult(info.getDate());
     }
 
-    private void getSecurityDescriptor(TaskRunConsumer run, TaskContentObject content) {
+    private void getSecurityDescriptor(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         SecurityDescriptorObject securityDescriptor = info.getSecurityDescriptor();
 
         UUID handle = securityDescriptor.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(securityDescriptor.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void dump(TaskRunConsumer run, TaskContentObject content) {
+    private void dump(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         DumpObject dump = info.dump();
 
         UUID handle = dump.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(dump.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void open(TaskRunConsumer run, TaskContentObject content) {
+    private void open(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -160,19 +151,19 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
         content.setResult(index);
     }
 
-    private void close(TaskRunConsumer run, TaskContentObject content) {
+    private void close(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         info.close();
     }
 
-    private void getOpenAttribute(TaskRunConsumer run, TaskContentObject content) {
+    private void getOpenAttribute(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         content.setResult(info.getOpenAttribute());
     }
 
-    private void createChild(TaskRunConsumer run, TaskContentObject content) {
+    private void createChild(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -188,12 +179,10 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = childInfo.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(childInfo.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getChild(TaskRunConsumer run, TaskContentObject content) {
+    private void getChild(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -208,12 +197,10 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
 
         UUID handle = childInfo.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(childInfo.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void deleteChild(TaskRunConsumer run, TaskContentObject content) {
+    private void deleteChild(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -227,7 +214,7 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
         info.deleteChild(identifier);
     }
 
-    private void queryChild(TaskRunConsumer run, TaskContentObject content) {
+    private void queryChild(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -241,7 +228,7 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
         content.setResult(info.queryChild(wildcard));
     }
 
-    private void renameChild(TaskRunConsumer run, TaskContentObject content) {
+    private void renameChild(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -256,13 +243,13 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
         info.renameChild(oldIdentifier, newIdentifier);
     }
 
-    private void readProperties(TaskRunConsumer run, TaskContentObject content) {
+    private void readProperties(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         content.setResult(info.readProperties());
     }
 
-    private void writeProperties(TaskRunConsumer run, TaskContentObject content) {
+    private void writeProperties(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -276,15 +263,13 @@ public class InfoObjectTaskInitializer extends ATaskInitializer {
         info.writeProperties(properties);
     }
 
-    private void getContent(TaskRunConsumer run, TaskContentObject content) {
+    private void getContent(TaskContentObject content) {
         InfoObject info = content.getCacheableObject();
 
         AInfoContentObject infoContent = info.getContent();
 
         UUID handle = infoContent.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(infoContent.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 }

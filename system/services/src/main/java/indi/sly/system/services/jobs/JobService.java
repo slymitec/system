@@ -10,6 +10,7 @@ import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.environment.containers.KernelSpace;
 import indi.sly.system.services.core.environment.values.ServiceKernelExtensionSpace;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
+import indi.sly.system.services.faces.actors.KernelObjectActorFactory;
 import indi.sly.system.services.jobs.instances.prototypes.processors.*;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.CoreManagerTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.DateTimeObjectTaskInitializer;
@@ -25,9 +26,9 @@ import indi.sly.system.services.jobs.instances.prototypes.processors.security.in
 import indi.sly.system.services.jobs.instances.prototypes.processors.services.ServicesManagerTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.services.instances.ServiceContentObjectTaskInitializer;
 import indi.sly.system.services.jobs.prototypes.*;
+import indi.sly.system.services.jobs.values.CallContextRecord;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
-import indi.sly.system.services.jobs.values.ClientRequestRecord;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -43,6 +44,9 @@ public class JobService extends AService {
         if (startup == StartupType.STEP_INIT_SELF) {
             this.factory = this.coreManager.create(JobFactory.class);
             this.factory.init();
+
+            KernelObjectActorFactory kernelObjectActorFactory = this.coreManager.create(KernelObjectActorFactory.class);
+            kernelObjectActorFactory.init();
         } else if (startup == StartupType.STEP_INIT_SERVICE) {
             KernelSpace kernelSpace = this.coreManager.getKernelSpace();
 
@@ -108,45 +112,45 @@ public class JobService extends AService {
         taskBuilder.create(name, attribute, processId, initializer);
     }
 
-    public TaskObject getTask(String name) {
+    public TaskObject getTask(String name, UUID handle) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
 
         ServiceKernelExtensionSpace serviceSpace = (ServiceKernelExtensionSpace) this.coreManager.getKernelSpace().getServiceSpace();
 
-        UUID taskID = serviceSpace.getNamedTaskIds().getOrDefault(name, null);
+        UUID taskId = serviceSpace.getNamedTaskIds().getOrDefault(name, null);
 
-        if (ValueUtil.isAnyNullOrEmpty(taskID)) {
+        if (ValueUtil.isAnyNullOrEmpty(taskId)) {
             throw new StatusNotExistedException();
         }
 
-        TaskDefinition task = serviceSpace.getTasks().getOrDefault(taskID, null);
+        TaskDefinition task = serviceSpace.getTasks().getOrDefault(taskId, null);
 
         if (ObjectUtil.isAnyNull(task)) {
             throw new StatusNotExistedException();
         }
 
-        return this.factory.buildTask(task);
+        return this.factory.buildTask(task, handle);
     }
 
-    public UserContextObject createUserContext(ClientRequestRecord clientRequest) {
-        if (ObjectUtil.isAnyNull(clientRequest)) {
+    public CallContextObject createCallContext(CallContextRecord callContext) {
+        if (ObjectUtil.isAnyNull(callContext)) {
             throw new ConditionParametersException();
         }
 
-        UserContextCreateBuilder userContextCreateBuilder = this.factory.createUserContextCreator();
+        CallContextCreateBuilder callContextCreateBuilder = this.factory.createUserContextCreator();
 
-        return userContextCreateBuilder.create(clientRequest);
+        return callContextCreateBuilder.create(callContext);
     }
 
-    public void finishUserContext(UserContextObject userContext) {
-        if (ObjectUtil.isAnyNull(userContext)) {
+    public void endCallContext(CallContextObject callContext) {
+        if (ObjectUtil.isAnyNull(callContext)) {
             throw new ConditionParametersException();
         }
 
-        UserContextFinishBuilder userContextFinishBuilder = this.factory.createUserContextFinish();
+        CallContextFinishBuilder callContextFinishBuilder = this.factory.createUserContextFinish();
 
-        userContextFinishBuilder.finish(userContext);
+        callContextFinishBuilder.finish(callContext);
     }
 }

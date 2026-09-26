@@ -36,28 +36,6 @@ public class ObjectCollectionObject extends AObject {
         return readWriteLock;
     }
 
-    public long getLimit(long space) {
-        Lock lock = this.getLock(space, LockType.READ);
-
-        lock.lock();
-        try {
-            return this.getSpace(space).getObjectLimit();
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public void setLimit(long space, long limit) {
-        Lock lock = this.getLock(space, LockType.WRITE);
-
-        lock.lock();
-        try {
-            this.getSpace(space).setObjectLimit(limit);
-        } finally {
-            lock.unlock();
-        }
-    }
-
     @SuppressWarnings("unchecked")
     public <T extends AObject> T getById(long space, UUID id) {
         if (ValueUtil.isAnyNullOrEmpty(id)) {

@@ -19,7 +19,7 @@ import java.util.UUID;
 public class ThreadBuilder extends ABuilder {
     protected ThreadFactory factory;
 
-    public ThreadObject create(UUID processID) {
+    public ThreadObject create(UUID processId) {
         UserSpace userSpace = this.coreManager.getUserSpace();
         Stack<ThreadObject> threads = userSpace.getThreads();
         if (ObjectUtil.isAnyNull(threads)) {
@@ -30,7 +30,7 @@ public class ThreadBuilder extends ABuilder {
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();
 
-        ThreadObject thread = this.factory.buildThread(processID);
+        ThreadObject thread = this.factory.buildThread(processId);
 
         ThreadStatusObject threadStatus = thread.getStatus();
         threadStatus.initialize();

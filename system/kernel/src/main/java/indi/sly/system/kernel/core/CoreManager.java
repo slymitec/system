@@ -45,7 +45,6 @@ public class CoreManager extends AManager {
             this.prototypeBuilder.setFactoryManager(this);
 
             this.objectCollection = this.coreManager.create(ObjectCollectionObject.class);
-            this.objectCollection.setLimit(SpaceType.KERNEL, Long.MAX_VALUE);
             this.objectCollection.addByClass(SpaceType.KERNEL, this);
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(FileSystemManager.class));
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(MemoryManager.class));

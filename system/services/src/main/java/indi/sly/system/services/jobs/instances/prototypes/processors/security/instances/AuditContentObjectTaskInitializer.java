@@ -33,31 +33,31 @@ public class AuditContentObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getProcessId(TaskRunConsumer run, TaskContentObject content) {
+    private void getProcessId(TaskContentObject content) {
         AuditContentObject AuditContent = content.getCacheableObject();
 
         content.setResult(AuditContent.getProcessId());
     }
 
-    private void getAccountId(TaskRunConsumer run, TaskContentObject content) {
+    private void getAccountId(TaskContentObject content) {
         AuditContentObject AuditContent = content.getCacheableObject();
 
         content.setResult(AuditContent.getAccountId());
     }
 
-    private void getPath(TaskRunConsumer run, TaskContentObject content) {
+    private void getPath(TaskContentObject content) {
         AuditContentObject AuditContent = content.getCacheableObject();
 
         content.setResult(AuditContent.getPath());
     }
 
-    private void getUserIds(TaskRunConsumer run, TaskContentObject content) {
+    private void getUserIds(TaskContentObject content) {
         AuditContentObject AuditContent = content.getCacheableObject();
 
         content.setResult(AuditContent.getUserIds());
     }
 
-    private void getAudit(TaskRunConsumer run, TaskContentObject content) {
+    private void getAudit(TaskContentObject content) {
         AuditContentObject AuditContent = content.getCacheableObject();
 
         content.setResult(AuditContent.getAudit());

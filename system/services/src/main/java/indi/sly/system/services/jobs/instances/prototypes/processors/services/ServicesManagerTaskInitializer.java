@@ -35,7 +35,7 @@ public class ServicesManagerTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void createService(TaskRunConsumer run, TaskContentObject content) {
+    private void createService(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         ServiceManager serviceManager = this.coreManager.getManager(ServiceManager.class);
@@ -57,7 +57,7 @@ public class ServicesManagerTaskInitializer extends ATaskInitializer {
         serviceManager.createService(serviceId, dependencies, secret, path, accountId, mode, start, environmentVariables, serviceParameters);
     }
 
-    private void deleteService(TaskRunConsumer run, TaskContentObject content) {
+    private void deleteService(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         ServiceManager serviceManager = this.coreManager.getManager(ServiceManager.class);
@@ -71,7 +71,7 @@ public class ServicesManagerTaskInitializer extends ATaskInitializer {
         serviceManager.deleteService(serviceId);
     }
 
-    private void start(TaskRunConsumer run, TaskContentObject content) {
+    private void start(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         ServiceManager serviceManager = this.coreManager.getManager(ServiceManager.class);
@@ -85,7 +85,7 @@ public class ServicesManagerTaskInitializer extends ATaskInitializer {
         serviceManager.start(serviceId);
     }
 
-    private void stop(TaskRunConsumer run, TaskContentObject content) {
+    private void stop(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         ServiceManager serviceManager = this.coreManager.getManager(ServiceManager.class);

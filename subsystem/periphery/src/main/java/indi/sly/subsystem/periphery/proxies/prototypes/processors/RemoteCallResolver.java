@@ -4,6 +4,7 @@ import indi.sly.subsystem.periphery.calls.CallManager;
 import indi.sly.subsystem.periphery.calls.prototypes.ConnectionObject;
 import indi.sly.subsystem.periphery.calls.values.*;
 import indi.sly.subsystem.periphery.core.prototypes.processors.AResolver;
+import indi.sly.subsystem.periphery.proxies.ProxyManager;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorExpireConsumer;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorInvokeFunction;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
@@ -29,8 +30,8 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
     private final RemoteProcessorExpireConsumer expire;
 
     public RemoteCallResolver() {
-        this.invoke = (invokeRemote, remote, procedure, method, parameters) -> {
-            CallManager callManager = this.coreManager.getManager(CallManager.class);
+        this.invoke = (invokeRemote, remote, method, parameters) -> {
+            ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
 
             ProcedureProcessRecord proxyContextProcess = procedure.getProcess();
             ClientRequestProcessIdRecord clientRequestProcessId = new ClientRequestProcessIdRecord(proxyContextProcess.id(), proxyContextProcess.type(), proxyContextProcess.secret(), proxyContextProcess.verification());

@@ -16,7 +16,6 @@ public class UserSpace extends ASystemSpace {
     }
 
     private final ThreadLocal<Stack<ThreadObject>> threads;
-    private AUserExtensionSpace serviceSpace;
 
     public Stack<ThreadObject> getThreads() {
         return this.threads.get();
@@ -28,13 +27,5 @@ public class UserSpace extends ASystemSpace {
         }
 
         this.threads.set(threads);
-    }
-
-    public AUserExtensionSpace getServiceSpace() {
-        return this.serviceSpace;
-    }
-
-    public void setServiceSpace(AUserExtensionSpace serviceSpace) {
-        this.serviceSpace = serviceSpace;
     }
 }

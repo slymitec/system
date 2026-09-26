@@ -99,7 +99,7 @@ public class ProcessFactory extends AFactory {
 
         ProcessCacheEntity cache = new ProcessCacheEntity();
         cache.setProcessId(process.getId());
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createProcess(processorMediator, cache);
     }
@@ -180,7 +180,7 @@ public class ProcessFactory extends AFactory {
         ProcessChildCacheEntity cache = new ProcessChildCacheEntity();
 
         cache.setProcess(process.getCache());
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createProcessStatus(processorMediator, process, cache);
     }
@@ -220,7 +220,7 @@ public class ProcessFactory extends AFactory {
         ProcessChildCacheEntity cache = new ProcessChildCacheEntity();
 
         cache.setProcess(process.getCache());
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createProcessCommunication(processorMediator, process, cache);
     }
@@ -260,7 +260,7 @@ public class ProcessFactory extends AFactory {
         ProcessChildCacheEntity cache = new ProcessChildCacheEntity();
 
         cache.setProcess(process.getCache());
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createProcessInfoTable(processorMediator, process, cache);
     }
@@ -301,7 +301,7 @@ public class ProcessFactory extends AFactory {
 
         cache.setProcessInfoTable(processInfoTable.getCache());
         cache.setIndex(index);
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createProcessInfoEntry(processorMediator, processInfoTable, cache);
     }
@@ -341,7 +341,7 @@ public class ProcessFactory extends AFactory {
         ProcessChildCacheEntity cache = new ProcessChildCacheEntity();
 
         cache.setProcess(process.getCache());
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createProcessContext(processorMediator, process, cache);
     }
@@ -381,7 +381,7 @@ public class ProcessFactory extends AFactory {
         ProcessChildCacheEntity cache = new ProcessChildCacheEntity();
 
         cache.setProcess(process.getCache());
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createProcessSession(processorMediator, process, cache);
     }
@@ -421,7 +421,7 @@ public class ProcessFactory extends AFactory {
         ProcessChildCacheEntity cache = new ProcessChildCacheEntity();
 
         cache.setProcess(process.getCache());
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createProcessStatistics(processorMediator, process, cache);
     }
@@ -461,7 +461,7 @@ public class ProcessFactory extends AFactory {
         ProcessChildCacheEntity cache = new ProcessChildCacheEntity();
 
         cache.setProcess(process.getCache());
-        cache.setDuration(CacheDurationType.NORMAL);
+        cache.setDuration(CacheDurationType.PREPARE);
 
         return this.createProcessToken(processorMediator, process, cache);
     }

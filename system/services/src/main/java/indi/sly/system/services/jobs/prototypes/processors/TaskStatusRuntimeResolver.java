@@ -1,7 +1,7 @@
 package indi.sly.system.services.jobs.prototypes.processors;
 
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
-import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
+import indi.sly.system.services.jobs.lang.TaskProcessorEndConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskDefinition;
@@ -17,7 +17,7 @@ public class TaskStatusRuntimeResolver extends AResolver implements ITaskResolve
     public TaskStatusRuntimeResolver() {
         this.start = (task, status) -> status.setRuntime(TaskStatusRuntimeType.RUNNING);
 
-        this.finish = (task, status) -> status.setRuntime(TaskStatusRuntimeType.FINISHED);
+        this.end = (task, status) -> status.setRuntime(TaskStatusRuntimeType.FINISHED);
     }
 
     @Override
@@ -26,11 +26,11 @@ public class TaskStatusRuntimeResolver extends AResolver implements ITaskResolve
     }
 
     private final TaskProcessorStartConsumer start;
-    private final TaskProcessorFinishConsumer finish;
+    private final TaskProcessorEndConsumer end;
 
     @Override
     public void resolve(TaskDefinition task, TaskProcessorMediator processorMediator) {
         processorMediator.getStarts().add(this.start);
-        processorMediator.getFinishes().add(this.finish);
+        processorMediator.getEnds().add(this.end);
     }
 }

@@ -6,7 +6,7 @@ import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadStatusObject;
-import indi.sly.system.services.jobs.lang.TaskProcessorFinishConsumer;
+import indi.sly.system.services.jobs.lang.TaskProcessorEndConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
@@ -31,7 +31,7 @@ public class TaskProcessAndThreadResolver extends AResolver implements ITaskReso
             }
         };
 
-        this.finish = (task, status) -> {
+        this.end = (task, status) -> {
             if (LogicalUtil.isAllExist(task.getAttribute(), TaskAttributeType.HAS_PROCESS)
                     && !ValueUtil.isAnyNullOrEmpty(task.getProcessId())) {
                 ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
@@ -50,13 +50,13 @@ public class TaskProcessAndThreadResolver extends AResolver implements ITaskReso
     }
 
     private final TaskProcessorStartConsumer start;
-    private final TaskProcessorFinishConsumer finish;
+    private final TaskProcessorEndConsumer end;
 
     @Override
     public void resolve(TaskDefinition task, TaskProcessorMediator processorMediator) {
         if (!ValueUtil.isAnyNullOrEmpty(task.getProcessId())) {
             processorMediator.getStarts().add(this.start);
-            processorMediator.getFinishes().add(this.finish);
+            processorMediator.getEnds().add(this.end);
         }
     }
 }

@@ -7,7 +7,6 @@ import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorExpireConsumer;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorInvokeFunction;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
-import indi.sly.subsystem.periphery.proxies.values.RemoteTypes;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.DateTimeType;
 import jakarta.inject.Named;
@@ -24,7 +23,7 @@ public class RemoteDateResolver extends AResolver implements IRemoteResolver {
     private final RemoteProcessorExpireConsumer expire;
 
     public RemoteDateResolver() {
-        this.expire = (remote, procedure, duration) -> {
+        this.expire = (remote, duration) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
             Instant instant = Instant.ofEpochMilli(dateTime.getCurrent());
 
@@ -45,11 +44,7 @@ public class RemoteDateResolver extends AResolver implements IRemoteResolver {
             remote.getDate().put(DateTimeType.EXPIRED, instant.toEpochMilli());
         };
 
-        this.invoke = (invokeRemote, remote, procedure, method, parameters) -> {
-            if (LogicalUtil.isAnyEqual(remote.getType(), RemoteTypes.OBJECT)) {
-                this.expire.accept(remote, procedure, CacheDurationType.NORMAL);
-            }
-
+        this.invoke = (invokeRemote, remote, method, parameters) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
             invokeRemote.getDate().put(DateTimeType.CREATE, dateTime.getCurrent());
 

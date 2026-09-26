@@ -6,33 +6,23 @@ import org.redisson.api.annotation.RObjectField;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class RemoteDefinition extends ADefinition {
     public RemoteDefinition() {
-        this.alive = true;
         this.date = new HashMap<>();
     }
 
-    public boolean alive;
-    private long type;
-    private String clazz;
+    private String task;
     private String value;
     private final Map<Long, Long> date;
 
-    public boolean isAlive() {
-        return alive;
+    public String getTask() {
+        return this.task;
     }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
-
-    public long getType() {
-        return this.type;
-    }
-
-    public void setType(long type) {
-        this.type = type;
+    public void setTask(String task) {
+        this.task = task;
     }
 
     public String getValue() {
@@ -41,14 +31,6 @@ public class RemoteDefinition extends ADefinition {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public String getClazz() {
-        return this.clazz;
-    }
-
-    public void setClazz(String clazz) {
-        this.clazz = clazz;
     }
 
     public Map<Long, Long> getDate() {

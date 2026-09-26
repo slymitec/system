@@ -41,19 +41,19 @@ public class SecurityDescriptorObjectTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getSummary(TaskRunConsumer run, TaskContentObject content) {
+    private void getSummary(TaskContentObject content) {
         SecurityDescriptorObject securityDescriptor = content.getCacheableObject();
 
         content.setResult(securityDescriptor.getSummary());
     }
 
-    private void isInherit(TaskRunConsumer run, TaskContentObject content) {
+    private void isInherit(TaskContentObject content) {
         SecurityDescriptorObject securityDescriptor = content.getCacheableObject();
 
         content.setResult(securityDescriptor.isInherit());
     }
 
-    private void setInherit(TaskRunConsumer run, TaskContentObject content) {
+    private void setInherit(TaskContentObject content) {
         SecurityDescriptorObject securityDescriptor = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -67,13 +67,13 @@ public class SecurityDescriptorObjectTaskInitializer extends ATaskInitializer {
         securityDescriptor.setInherit(inherit);
     }
 
-    private void getOwners(TaskRunConsumer run, TaskContentObject content) {
+    private void getOwners(TaskContentObject content) {
         SecurityDescriptorObject securityDescriptor = content.getCacheableObject();
 
         content.setResult(securityDescriptor.getOwners());
     }
 
-    private void setOwners(TaskRunConsumer run, TaskContentObject content) {
+    private void setOwners(TaskContentObject content) {
         SecurityDescriptorObject securityDescriptor = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -87,7 +87,7 @@ public class SecurityDescriptorObjectTaskInitializer extends ATaskInitializer {
         securityDescriptor.setOwners(owners);
     }
 
-    private void setPermissions(TaskRunConsumer run, TaskContentObject content) {
+    private void setPermissions(TaskContentObject content) {
         SecurityDescriptorObject securityDescriptor = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();
@@ -101,7 +101,7 @@ public class SecurityDescriptorObjectTaskInitializer extends ATaskInitializer {
         securityDescriptor.setPermissions(permissions);
     }
 
-    private void setAudits(TaskRunConsumer run, TaskContentObject content) {
+    private void setAudits(TaskContentObject content) {
         SecurityDescriptorObject securityDescriptor = content.getCacheableObject();
 
         List<String> parameters = content.getParameters();

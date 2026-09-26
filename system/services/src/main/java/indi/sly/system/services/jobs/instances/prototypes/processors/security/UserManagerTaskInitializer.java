@@ -1,7 +1,6 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors.security;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
@@ -10,9 +9,7 @@ import indi.sly.system.kernel.security.prototypes.GroupObject;
 import indi.sly.system.kernel.security.values.AccountAuthorizationTokenRecord;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
-import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
-import indi.sly.system.services.jobs.values.HandleContextRecord;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -47,19 +44,17 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
     public void finish(TaskDefinition task) {
     }
 
-    private void getCurrentAccount(TaskRunConsumer run, TaskContentObject content) {
+    private void getCurrentAccount(TaskContentObject content) {
         UserManager userManager = this.coreManager.getManager(UserManager.class);
 
         AccountObject account = userManager.getCurrentAccount();
 
         UUID handle = account.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(account.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getAccountById(TaskRunConsumer run, TaskContentObject content) {
+    private void getAccountById(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -74,12 +69,10 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = account.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(account.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getAccountByName(TaskRunConsumer run, TaskContentObject content) {
+    private void getAccountByName(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -94,12 +87,10 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = account.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(account.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getGroupById(TaskRunConsumer run, TaskContentObject content) {
+    private void getGroupById(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -114,12 +105,10 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = group.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(group.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void getGroupByName(TaskRunConsumer run, TaskContentObject content) {
+    private void getGroupByName(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -134,12 +123,10 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = group.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(group.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void createAccount(TaskRunConsumer run, TaskContentObject content) {
+    private void createAccount(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -155,12 +142,10 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = account.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(account.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void createGroup(TaskRunConsumer run, TaskContentObject content) {
+    private void createGroup(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -175,12 +160,10 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = group.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(group.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void deleteAccount(TaskRunConsumer run, TaskContentObject content) {
+    private void deleteAccount(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -194,7 +177,7 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
         userManager.deleteAccount(accountId);
     }
 
-    private void deleteGroup(TaskRunConsumer run, TaskContentObject content) {
+    private void deleteGroup(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -208,7 +191,7 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
         userManager.deleteGroup(groupId);
     }
 
-    private void authorizeById(TaskRunConsumer run, TaskContentObject content) {
+    private void authorizeById(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -223,12 +206,10 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = accountAuthorization.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(accountAuthorization.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void authorizeByName(TaskRunConsumer run, TaskContentObject content) {
+    private void authorizeByName(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -244,12 +225,10 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = accountAuthorization.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(accountAuthorization.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 
-    private void authorizeByNameWithToken(TaskRunConsumer run, TaskContentObject content) {
+    private void authorizeByNameWithToken(TaskContentObject content) {
         List<String> parameters = content.getParameters();
 
         UserManager userManager = this.coreManager.getManager(UserManager.class);
@@ -266,8 +245,6 @@ public class UserManagerTaskInitializer extends ATaskInitializer {
 
         UUID handle = accountAuthorization.cache();
 
-        HandleContextRecord handleContext = new HandleContextRecord(ClassUtil.getSimpleName(accountAuthorization.getClass()), handle);
-
-        content.setResult(handleContext);
+        content.setResult(handle);
     }
 }

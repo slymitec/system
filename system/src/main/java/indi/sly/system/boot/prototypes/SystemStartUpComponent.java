@@ -20,7 +20,6 @@ import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.services.ServiceManager;
 import indi.sly.system.services.jobs.JobService;
-import indi.sly.system.services.jobs.values.ClientResponseRecord;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.ApplicationArguments;
@@ -89,7 +88,6 @@ public class SystemStartUpComponent extends AComponent implements ApplicationRun
             }
 
             this.coreManager.setUserSpace(null);
-
         }
     }
 }

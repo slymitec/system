@@ -21,6 +21,7 @@ import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.services.ServiceManager;
 import indi.sly.system.services.jobs.JobService;
 import jakarta.inject.Named;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -43,6 +44,7 @@ public class SystemStartUpComponent extends AComponent implements ApplicationRun
     }
 
     @Override
+    @Transactional
     public void run(ApplicationArguments args) throws Exception {
         this.init();
 

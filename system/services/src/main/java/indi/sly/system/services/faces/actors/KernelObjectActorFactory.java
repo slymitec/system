@@ -19,6 +19,7 @@ public class KernelObjectActorFactory extends AFactory {
         };
 
         ActorRuntime.getInstance().registerActor(actorClass, actorFactory);
+        ActorRuntime.getInstance().registerActor(TestActor.class);
     }
 
     @Override

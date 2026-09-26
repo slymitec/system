@@ -1,78 +1,78 @@
-package indi.sly.system.test;
-
-import indi.sly.system.common.lang.StatusUnreadableException;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.ValueUtil;
-import indi.sly.system.services.faces.AController;
-import indi.sly.system.kernel.core.environment.containers.KernelConfiguration;
-import indi.sly.system.kernel.core.environment.containers.KernelSpace;
-import indi.sly.system.kernel.core.environment.values.SpaceType;
-import indi.sly.system.kernel.core.environment.containers.UserSpace;
-import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.ThreadManager;
-import indi.sly.system.kernel.processes.prototypes.ProcessObject;
-import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
-import indi.sly.system.kernel.security.UserManager;
-import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
-import indi.sly.system.kernel.security.values.AccountAuthorizationSummaryRecord;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-@RestController
-public class TestController extends AController {
-    @RequestMapping(value = {"/Test.action"}, method = {RequestMethod.GET})
-    @Transactional
-    public Object Test(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        this.init();
-
-        UserSpace userSpace = new UserSpace();
-        KernelSpace kernelSpace = this.coreManager.getKernelSpace();
-        KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
-
-        kernelSpace.setUserSpace(userSpace);
-
-        UUID processID = null;
-
-        String processIDText = request.getParameter("ProcessID");
-        if (!ValueUtil.isAnyNullOrEmpty(processIDText)) {
-            processID = ObjectUtil.transferFromStringOrDefaultProvider(UUID.class, processIDText, () -> {
-                throw new StatusUnreadableException();
-            });
-        }
-
-        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
-        threadManager.create(processID);
-
-        Map<String, Object> result = new HashMap<>();
-
-        //--Start--
-
-        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
-
-        ProcessObject process = processManager.getCurrent();
-        ProcessSessionObject processSession = process.getSession();
-
-        if (ValueUtil.isAnyNullOrEmpty(processSession.getId())) {
-            //processSession.create("Main", SessionType.CLI);
-        }
-        result.put("ProcessSessionID", processSession.getId());
-
-        UserManager userManager = this.coreManager.getManager(UserManager.class);
-        AccountAuthorizationObject authorize = userManager.authorizeById(process.getToken().getAccountId());
-        AccountAuthorizationSummaryRecord accountAuthorizationSummary = authorize.checkAndGetSummary();
-
-        result.put("accountAuthorizationSummary", accountAuthorizationSummary);
-
-        return result;
-    }
-}
+//package indi.sly.system.test;
+//
+//import indi.sly.system.common.lang.StatusUnreadableException;
+//import indi.sly.system.common.supports.ObjectUtil;
+//import indi.sly.system.common.supports.ValueUtil;
+//import indi.sly.system.services.faces.AController;
+//import indi.sly.system.kernel.core.environment.containers.KernelConfiguration;
+//import indi.sly.system.kernel.core.environment.containers.KernelSpace;
+//import indi.sly.system.kernel.core.environment.values.SpaceType;
+//import indi.sly.system.kernel.core.environment.containers.UserSpace;
+//import indi.sly.system.kernel.processes.ProcessManager;
+//import indi.sly.system.kernel.processes.ThreadManager;
+//import indi.sly.system.kernel.processes.prototypes.ProcessObject;
+//import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
+//import indi.sly.system.kernel.security.UserManager;
+//import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
+//import indi.sly.system.kernel.security.values.AccountAuthorizationSummaryRecord;
+//import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RequestMethod;
+//import org.springframework.web.bind.annotation.RestController;
+//
+//import jakarta.servlet.http.HttpServletRequest;
+//import jakarta.servlet.http.HttpServletResponse;
+//import jakarta.servlet.http.HttpSession;
+//import jakarta.transaction.Transactional;
+//
+//import java.util.HashMap;
+//import java.util.Map;
+//import java.util.UUID;
+//
+//@RestController
+//public class TestController extends AController {
+//    @RequestMapping(value = {"/Test.action"}, method = {RequestMethod.GET})
+//    @Transactional
+//    public Object Test(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+//        this.init();
+//
+//        UserSpace userSpace = new UserSpace();
+//        KernelSpace kernelSpace = this.coreManager.getKernelSpace();
+//        KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
+//
+//        kernelSpace.setUserSpace(userSpace);
+//
+//        UUID processID = null;
+//
+//        String processIDText = request.getParameter("ProcessID");
+//        if (!ValueUtil.isAnyNullOrEmpty(processIDText)) {
+//            processID = ObjectUtil.transferFromStringOrDefaultProvider(UUID.class, processIDText, () -> {
+//                throw new StatusUnreadableException();
+//            });
+//        }
+//
+//        ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
+//        threadManager.create(processID);
+//
+//        Map<String, Object> result = new HashMap<>();
+//
+//        //--Start--
+//
+//        ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
+//
+//        ProcessObject process = processManager.getCurrent();
+//        ProcessSessionObject processSession = process.getSession();
+//
+//        if (ValueUtil.isAnyNullOrEmpty(processSession.getId())) {
+//            //processSession.create("Main", SessionType.CLI);
+//        }
+//        result.put("ProcessSessionID", processSession.getId());
+//
+//        UserManager userManager = this.coreManager.getManager(UserManager.class);
+//        AccountAuthorizationObject authorize = userManager.authorizeById(process.getToken().getAccountId());
+//        AccountAuthorizationSummaryRecord accountAuthorizationSummary = authorize.checkAndGetSummary();
+//
+//        result.put("accountAuthorizationSummary", accountAuthorizationSummary);
+//
+//        return result;
+//    }
+//}

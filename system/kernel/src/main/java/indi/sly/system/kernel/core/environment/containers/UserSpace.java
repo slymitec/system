@@ -4,12 +4,13 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import jakarta.inject.Named;
-import org.springframework.web.context.annotation.RequestScope;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 import java.util.Stack;
 
 @Named
-@RequestScope
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserSpace extends ASystemSpace {
     public UserSpace() {
         this.threads = new ThreadLocal<>();

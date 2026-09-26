@@ -1,4 +1,4 @@
-package indi.sly.system.services.faces.actors;
+package indi.sly.system.services.actors.tests;
 
 import io.dapr.actors.ActorMethod;
 import io.dapr.actors.ActorType;

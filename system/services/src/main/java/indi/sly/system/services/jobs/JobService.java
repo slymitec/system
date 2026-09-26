@@ -10,7 +10,7 @@ import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.environment.containers.KernelSpace;
 import indi.sly.system.services.core.environment.values.ServiceKernelExtensionSpace;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
-import indi.sly.system.services.faces.actors.KernelObjectActorFactory;
+import indi.sly.system.services.actors.prototypes.KernelObjectActorFactory;
 import indi.sly.system.services.jobs.instances.prototypes.processors.*;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.CoreManagerTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.DateTimeObjectTaskInitializer;

@@ -1,8 +1,9 @@
-package indi.sly.system.services.faces.actors;
+package indi.sly.system.services.actors.prototypes;
 
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.CoreManager;
 import indi.sly.system.kernel.core.prototypes.AFactory;
+import indi.sly.system.services.actors.tests.TestActor;
 import io.dapr.actors.runtime.ActorFactory;
 import io.dapr.actors.runtime.ActorRuntime;
 import jakarta.inject.Named;

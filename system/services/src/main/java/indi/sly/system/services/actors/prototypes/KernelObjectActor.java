@@ -1,4 +1,4 @@
-package indi.sly.system.services.faces.actors;
+package indi.sly.system.services.actors.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusUnexpectedException;

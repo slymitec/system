@@ -1,4 +1,4 @@
-package indi.sly.system.services.faces;
+package indi.sly.system.boot.prototypes;
 
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
@@ -8,8 +8,9 @@ import indi.sly.system.kernel.core.boot.prototypes.IStartupCapable;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.environment.containers.KernelConfiguration;
 import indi.sly.system.kernel.core.environment.containers.KernelSpace;
-import indi.sly.system.kernel.core.environment.values.SpaceType;
 import indi.sly.system.kernel.core.environment.containers.UserSpace;
+import indi.sly.system.kernel.core.environment.values.SpaceType;
+import indi.sly.system.kernel.core.prototypes.AComponent;
 import indi.sly.system.kernel.files.FileSystemManager;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.objects.ObjectManager;
@@ -20,23 +21,30 @@ import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.services.ServiceManager;
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.values.ClientResponseRecord;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
+import jakarta.inject.Named;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
-public class StartUpController extends AController {
-    @RequestMapping(value = {"/StartUp.action"}, method = {RequestMethod.GET})
-    @Transactional
-    public ClientResponseRecord startup(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class SystemStartUpComponent extends AComponent implements ApplicationRunner {
+    private void init() {
+        KernelSpace kernelSpace = SpringHelper.getInstance(KernelSpace.class);
+
+        this.coreManager = (CoreManager) kernelSpace.getClassedObjects().getOrDefault(CoreManager.class, null);
+
+        if (ObjectUtil.allNotNull(this.coreManager)) {
+            this.coreManager.check();
+        }
+    }
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
         this.init();
 
         if (ObjectUtil.isAnyNull(this.coreManager)) {
@@ -83,7 +91,5 @@ public class StartUpController extends AController {
             this.coreManager.setUserSpace(null);
 
         }
-
-        return new ClientResponseRecord(null);
     }
 }

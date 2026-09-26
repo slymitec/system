@@ -1,6 +1,6 @@
 plugins {
     java
-    id("org.springframework.boot") version ("4.1.0")
+    id("org.springframework.boot") version ("4.1.1")
     id("io.spring.dependency-management") version ("1.1.7")
 }
 
@@ -42,7 +42,7 @@ dependencies {
     implementation(project(":kernel"))
     implementation(project(":services"))
 
-    runtimeOnly("com.microsoft.sqlserver:mssql-jdbc:13.4.0.jre11")
+    runtimeOnly("com.microsoft.sqlserver:mssql-jdbc:13.6.0.jre11")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

@@ -1,6 +1,5 @@
 package indi.sly.subsystem.periphery.core;
 
-import indi.sly.subsystem.periphery.calls.CallManager;
 import indi.sly.subsystem.periphery.core.boot.prototypes.BootFactory;
 import indi.sly.subsystem.periphery.core.boot.prototypes.BootObject;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
@@ -43,7 +42,6 @@ public class CoreManager extends AManager {
             this.objectCollection = this.coreManager.create(ObjectCollectionObject.class);
             this.objectCollection.setLimit(SpaceType.KERNEL, Long.MAX_VALUE);
             this.objectCollection.addByClass(SpaceType.KERNEL, this);
-            this.objectCollection.addByClass(SpaceType.KERNEL, this.create(CallManager.class));
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(MemoryManager.class));
             this.objectCollection.addByClass(SpaceType.KERNEL, this.create(ProxyManager.class));
 

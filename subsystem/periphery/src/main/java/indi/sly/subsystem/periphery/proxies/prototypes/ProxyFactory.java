@@ -56,7 +56,7 @@ public class ProxyFactory extends AFactory {
     private RemoteObject createRemote(RemoteProcessorMediator processorMediator, RemoteDefinition definition, ProcedureObject procedure) {
         RemoteObject remote = this.coreManager.create(RemoteObject.class);
 
-        remote.setBase(procedure);
+        //remote.setBase(procedure);
         remote.setDefinition(definition);
         remote.factory = this;
         remote.processorMediator = processorMediator;
@@ -73,19 +73,19 @@ public class ProxyFactory extends AFactory {
         return this.createRemote(processorMediator, remote, procedure);
     }
 
-    private HandleTableObject createHandleTable(HandleTableDefinition definition, ProcedureObject procedure) {
-        HandleTableObject handleTable = this.coreManager.create(HandleTableObject.class);
-
-        handleTable.setBase(procedure);
-        handleTable.setDefinition(definition);
-        handleTable.factory = this;
-
-        return handleTable;
-    }
-
-    public HandleTableObject buildHandleTable(HandleTableDefinition definition, ProcedureObject procedure) {
-        return this.createHandleTable(definition, procedure);
-    }
+//    private HandleTableObject createHandleTable(HandleTableDefinition definition, ProcedureObject procedure) {
+//        HandleTableObject handleTable = this.coreManager.create(HandleTableObject.class);
+//
+//        handleTable.setBase(procedure);
+//        handleTable.setDefinition(definition);
+//        handleTable.factory = this;
+//
+//        return handleTable;
+//    }
+//
+//    public HandleTableObject buildHandleTable(HandleTableDefinition definition, ProcedureObject procedure) {
+//        return this.createHandleTable(definition, procedure);
+//    }
 
     private ProcedureObject createProcedure(ProcedureDefinition definition) {
         ProcedureObject procedure = this.coreManager.create(ProcedureObject.class);

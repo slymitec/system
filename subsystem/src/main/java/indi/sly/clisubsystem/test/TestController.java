@@ -2,6 +2,9 @@ package indi.sly.clisubsystem.test;
 
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
+import io.dapr.actors.ActorId;
+import io.dapr.actors.client.ActorClient;
+import io.dapr.actors.client.ActorProxyBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -15,8 +18,8 @@ import java.util.UUID;
 @RestController
 @Transactional
 public class TestController {
-    @RequestMapping(value = {"/Test.action"}, method = {RequestMethod.GET})
-    public Object test(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    @RequestMapping(value = {"/UUID.action"}, method = {RequestMethod.GET})
+    public Object uuid(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         StringBuilder result = new StringBuilder();
 
         UUID random;
@@ -27,5 +30,18 @@ public class TestController {
         }
 
         return result.toString();
+    }
+
+    @RequestMapping(value = {"/Actor.action"}, method = {RequestMethod.GET})
+    public Object actor(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        try (ActorClient actorClient = new ActorClient()) {
+            ActorProxyBuilder<ITestActor> builder = new ActorProxyBuilder<>(ITestActor.class, actorClient);
+
+            ActorId actorId = new ActorId("ActorInstance1");
+
+            ITestActor actor = builder.build(actorId);
+
+            return actor.test("YZZSB2");
+        }
     }
 }

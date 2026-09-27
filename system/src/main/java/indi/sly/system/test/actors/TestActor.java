@@ -1,4 +1,4 @@
-package indi.sly.system.services.actors.tests;
+package indi.sly.system.test.actors;
 
 import io.dapr.actors.ActorId;
 import io.dapr.actors.runtime.AbstractActor;

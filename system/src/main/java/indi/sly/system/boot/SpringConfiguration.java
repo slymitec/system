@@ -12,6 +12,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.ser.std.ToStringSerializer;
 
 @Configuration
 @ComponentScan(basePackages = SpringConfiguration.BASE_PACKAGES)
@@ -24,7 +26,10 @@ public class SpringConfiguration extends AConfiguration implements WebMvcConfigu
     public static final String BASE_PACKAGES = "indi.sly.*";
 
     @Bean
-    public ServerEndpointExporter serverEndpointExporter() {
-        return new ServerEndpointExporter();
+    public SimpleModule longToStringModule() {
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(Long.class, ToStringSerializer.instance);
+        module.addSerializer(Long.TYPE, ToStringSerializer.instance);
+        return module;
     }
 }

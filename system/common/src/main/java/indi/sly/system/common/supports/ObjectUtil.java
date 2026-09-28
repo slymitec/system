@@ -15,7 +15,7 @@ import java.util.Set;
 
 public abstract class ObjectUtil {
     private static final String TO_STRING_NULL_OBJECT = "null";
-    private static final JsonMapper SERIALIZATION_JSON =  JsonMapper.builder().build();
+    private static final JsonMapper SERIALIZATION_JSON = JsonMapper.builder().findAndAddModules().build();
     private static final ThreadSafeFory SERIALIZATION_BINARY = Fory.builder().withLanguage(Language.JAVA).withAsyncCompilation(true).requireClassRegistration(false).buildThreadSafeFory();
 
     public static boolean isNull(final Object value) {

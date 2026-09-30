@@ -19,19 +19,19 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AuditContentObject extends AInfoContentObject implements IByteValueSupporter<AuditDefinition> {
     public UUID getProcessId() {
-        AuditDefinition audit = this.init(this.read());
+        AuditDefinition audit = this.init(AuditDefinition.class, this.read());
 
         return audit.getProcessId();
     }
 
     public UUID getAccountId() {
-        AuditDefinition audit = this.init(this.read());
+        AuditDefinition audit = this.init(AuditDefinition.class, this.read());
 
         return audit.getAccountId();
     }
 
     public PathRecord getPath() {
-        AuditDefinition audit = this.init(this.read());
+        AuditDefinition audit = this.init(AuditDefinition.class, this.read());
 
         return audit.getPath();
     }
@@ -41,7 +41,7 @@ public class AuditContentObject extends AInfoContentObject implements IByteValue
             throw new ConditionParametersException();
         }
 
-        AuditDefinition audit = this.init(this.read());
+        AuditDefinition audit = this.init(AuditDefinition.class, this.read());
 
         audit.setPath(path);
 
@@ -49,7 +49,7 @@ public class AuditContentObject extends AInfoContentObject implements IByteValue
     }
 
     public Set<UserIdRecord> getUserIds() {
-        AuditDefinition audit = this.init(this.read());
+        AuditDefinition audit = this.init(AuditDefinition.class, this.read());
 
         return CollectionUtil.unmodifiable(audit.getUserIds());
     }
@@ -59,7 +59,7 @@ public class AuditContentObject extends AInfoContentObject implements IByteValue
             throw new ConditionParametersException();
         }
 
-        AuditDefinition audit = this.init(this.read());
+        AuditDefinition audit = this.init(AuditDefinition.class, this.read());
 
         audit.getUserIds().clear();
         audit.getUserIds().addAll(userIds);
@@ -68,13 +68,13 @@ public class AuditContentObject extends AInfoContentObject implements IByteValue
     }
 
     public long getAudit() {
-        AuditDefinition audit = this.init(this.read());
+        AuditDefinition audit = this.init(AuditDefinition.class, this.read());
 
         return audit.getAudit();
     }
 
     public void setAudit(long value) {
-        AuditDefinition audit = this.init(this.read());
+        AuditDefinition audit = this.init(AuditDefinition.class, this.read());
 
         audit.setAudit(value);
 

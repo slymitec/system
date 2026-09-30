@@ -25,7 +25,7 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ServiceContentObject extends AInfoContentObject implements IByteValueSupporter<ServiceDefinition> {
     public List<UUID> getDependencies() {
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         return CollectionUtil.unmodifiable(service.getDependencies());
     }
@@ -42,7 +42,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         service.getDependencies().clear();
         service.getDependencies().addAll(dependencies);
@@ -58,7 +58,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         return service.getSecret();
     }
@@ -75,7 +75,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         service.setSecret(secret);
 
@@ -83,7 +83,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
     }
 
     public PathRecord getPath() {
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         return service.getPath();
     }
@@ -100,7 +100,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         service.setPath(path);
 
@@ -108,7 +108,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
     }
 
     public UUID getAccountId() {
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         return service.getAccountId();
     }
@@ -125,7 +125,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         service.setAccountId(accountId);
 
@@ -133,7 +133,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
     }
 
     public long getMode() {
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         return service.getMode();
     }
@@ -146,7 +146,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         service.setMode(mode);
 
@@ -154,7 +154,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
     }
 
     public long getStart() {
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         return service.getStart();
     }
@@ -167,7 +167,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         service.setStart(start);
 
@@ -182,7 +182,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         return CollectionUtil.unmodifiable(service.getEnvironmentVariables());
     }
@@ -199,7 +199,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         service.getEnvironmentVariables().clear();
         service.getEnvironmentVariables().putAll(environmentVariables);
@@ -215,7 +215,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         return service.getParameters();
     }
@@ -232,7 +232,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         service.setParameters(parameters);
 
@@ -251,7 +251,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(this.read());
+        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
 
         service.getDependencies().clear();
         service.getDependencies().addAll(definition.getDependencies());

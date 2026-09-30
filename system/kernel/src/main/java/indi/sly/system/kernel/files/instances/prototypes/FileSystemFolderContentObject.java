@@ -26,7 +26,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject implements
             throw new ConditionRefuseException();
         }
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
+        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
 
         return fileSystemEntry.getType();
     }
@@ -41,7 +41,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject implements
             throw new ConditionRefuseException();
         }
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
+        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
 
         fileSystemEntry.setType(type);
 
@@ -58,7 +58,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject implements
             throw new ConditionRefuseException();
         }
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
+        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
 
         return fileSystemEntry.getValue();
     }
@@ -73,7 +73,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject implements
             throw new ConditionRefuseException();
         }
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
+        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
 
         fileSystemEntry.setValue(configuration);
 

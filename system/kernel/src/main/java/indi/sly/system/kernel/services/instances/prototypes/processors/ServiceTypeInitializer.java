@@ -37,7 +37,7 @@ public class ServiceTypeInitializer extends AInfoTypeInitializer {
 
         ServiceDefinition service = new ServiceDefinition();
 
-        info.setContent(ObjectUtil.transferToByteArray(service));
+        info.setContent(ObjectUtil.transferToJsonByteArray(service));
     }
 
     @Override

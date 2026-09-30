@@ -35,7 +35,7 @@ public class AuditTypeInitializer extends AInfoTypeInitializer {
         audit.setProcessId(process.getId());
         audit.setAccountId(processToken.getAccountId());
 
-        info.setContent(ObjectUtil.transferToByteArray(audit));
+        info.setContent(ObjectUtil.transferToJsonByteArray(audit));
     }
 
     @Override

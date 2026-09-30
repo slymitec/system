@@ -36,7 +36,7 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
         entry.setType(FileSystemLocationType.REPOSITORY);
         entry.setValue(ArrayUtil.EMPTY_BYTES);
         
-        info.setContent(ObjectUtil.transferToByteArray(entry));
+        info.setContent(ObjectUtil.transferToJsonByteArray(entry));
     }
 
     @Override

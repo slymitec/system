@@ -46,12 +46,12 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         entry.setType(FileSystemLocationType.REPOSITORY);
         entry.setValue(ArrayUtil.EMPTY_BYTES);
 
-        info.setContent(ObjectUtil.transferToByteArray(entry));
+        info.setContent(ObjectUtil.transferToJsonByteArray(entry));
     }
 
     @Override
     public void deleteProcedure(InfoEntity info) {
-        FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
+        FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
         assert entry != null;
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
@@ -93,7 +93,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
-        FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
+        FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
         assert entry != null;
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
@@ -107,11 +107,11 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
                     throw new StatusAlreadyExistedException();
                 }
 
-                FileSystemEntryDefinition childEntry = ObjectUtil.transferFromByteArray(childInfo.getContent());
+                FileSystemEntryDefinition childEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, childInfo.getContent());
                 assert childEntry != null;
                 childEntry.setType(entry.getType());
                 childEntry.setValue(ArrayUtil.EMPTY_BYTES);
-                childInfo.setContent(ObjectUtil.transferToByteArray(childEntry));
+                childInfo.setContent(ObjectUtil.transferToJsonByteArray(childEntry));
 
                 InfoRelationEntity infoRelation = new InfoRelationEntity();
                 infoRelation.setId(childInfo.getId());
@@ -143,11 +143,11 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             File childInfoFileFolder = new File(infoFolder.getAbsolutePath() + "/" + childInfo.getName());
             File childInfoRelationFile = new File(infoRelationFolder.getAbsolutePath() + "/" + childInfo.getName());
 
-            FileSystemEntryDefinition childEntry = ObjectUtil.transferFromByteArray(childInfo.getContent());
+            FileSystemEntryDefinition childEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, childInfo.getContent());
             assert childEntry != null;
             childEntry.setType(entry.getType());
             childEntry.setValue(StringUtil.writeToBytes(childInfoFileFolder.getAbsolutePath().replace("\\", "/")));
-            childInfo.setContent(ObjectUtil.transferToByteArray(childEntry));
+            childInfo.setContent(ObjectUtil.transferToJsonByteArray(childEntry));
 
             UUID childInfoType = childInfo.getType();
 
@@ -185,7 +185,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
-        FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
+        FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
         assert entry != null;
 
         String childInfoName = StringUtil.readFormBytes(identification.value());
@@ -239,7 +239,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
-        FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
+        FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
         assert entry != null;
 
         Set<InfoSummaryRecord> infoSummaries = new HashSet<>();
@@ -312,7 +312,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         String oldChildInfoName = StringUtil.readFormBytes(oldIdentification.value());
         String newChildInfoName = StringUtil.readFormBytes(oldIdentification.value());
 
-        FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
+        FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
         assert entry != null;
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
@@ -370,7 +370,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
-        FileSystemEntryDefinition entry = ObjectUtil.transferFromByteArray(info.getContent());
+        FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
         assert entry != null;
 
         String childInfoName = StringUtil.readFormBytes(identification.value());

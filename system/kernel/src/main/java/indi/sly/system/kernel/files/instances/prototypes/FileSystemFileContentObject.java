@@ -25,7 +25,7 @@ import java.io.IOException;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FileSystemFileContentObject extends AInfoContentObject implements IByteValueSupporter<FileSystemEntryDefinition> {
     public long length() {
-        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
+        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
 
         long length = -1;
 
@@ -51,7 +51,7 @@ public class FileSystemFileContentObject extends AInfoContentObject implements I
 
         byte[] value = null;
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
+        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
 
         if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
             if (offset + length > Integer.MAX_VALUE) {
@@ -86,7 +86,7 @@ public class FileSystemFileContentObject extends AInfoContentObject implements I
             throw new ConditionParametersException();
         }
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
+        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
 
         if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
             fileSystemEntry.setValue(value);
@@ -112,7 +112,7 @@ public class FileSystemFileContentObject extends AInfoContentObject implements I
             throw new ConditionParametersException();
         }
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(this.read());
+        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
 
         if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
             if (this.length() + value.length > Integer.MAX_VALUE) {

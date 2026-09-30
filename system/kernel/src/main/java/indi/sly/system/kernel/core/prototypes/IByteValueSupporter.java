@@ -3,11 +3,11 @@ package indi.sly.system.kernel.core.prototypes;
 import indi.sly.system.common.supports.ObjectUtil;
 
 public interface IByteValueSupporter<T> {
-    default T init(byte[] source) {
-        if (ObjectUtil.isAnyNull(source)) {
+    default T init(Class<T> clazz, byte[] source) {
+        if (ObjectUtil.isAnyNull(clazz, source)) {
             return null;
         } else {
-            return ObjectUtil.transferFromByteArray(source);
+            return ObjectUtil.transferFromJsonByteArray(clazz, source);
         }
     }
 
@@ -15,7 +15,7 @@ public interface IByteValueSupporter<T> {
         if (ObjectUtil.isAnyNull(value)) {
             return null;
         } else {
-            return ObjectUtil.transferToByteArray(value);
+            return ObjectUtil.transferToJsonByteArray(value);
         }
     }
 }

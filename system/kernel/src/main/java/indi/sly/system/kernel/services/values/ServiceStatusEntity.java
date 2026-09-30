@@ -19,10 +19,10 @@ public class ServiceStatusEntity extends APersistentEntity {
     }
 
     @Id
-    @Column(columnDefinition = "uniqueidentifier", name = "Id", nullable = false, updatable = false)
+    @Column(name = "Id", nullable = false, updatable = false)
     protected UUID id;
 
-    @Column(columnDefinition = "uniqueidentifier", name = "ProcessId", nullable = false)
+    @Column(name = "ProcessId", nullable = false)
     protected UUID processId;
 
     @ManyToMany

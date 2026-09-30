@@ -14,9 +14,9 @@ import java.util.UUID;
 @Table(name = "Kernel_Infos")
 public class InfoEntity extends APersistentEntity {
     @Id
-    @Column(columnDefinition = "uniqueidentifier", name = "Id", nullable = false, updatable = false)
+    @Column(name = "Id", nullable = false, updatable = false)
     protected UUID id;
-    @Column(columnDefinition = "uniqueidentifier", name = "Type", nullable = false)
+    @Column(name = "Type", nullable = false)
     protected UUID type;
     @Column(name = "Opened", nullable = false)
     protected long opened;
@@ -33,7 +33,7 @@ public class InfoEntity extends APersistentEntity {
     protected Map<String, String> properties;
     @Basic(fetch = FetchType.LAZY)
     @Column(length = 4096, name = "Content_Stream", nullable = true)
-    @Lob
+    @JdbcTypeCode(SqlTypes.VARBINARY)
     protected byte[] content;
 
     public UUID getId() {

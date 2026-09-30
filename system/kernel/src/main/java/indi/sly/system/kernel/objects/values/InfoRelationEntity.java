@@ -11,11 +11,11 @@ import java.util.UUID;
 @Table(name = "Kernel_Info_Relations")
 public class InfoRelationEntity extends APersistentEntity {
     @Id
-    @Column(columnDefinition = "uniqueidentifier", name = "Id", nullable = false, updatable = false)
+    @Column(name = "Id", nullable = false, updatable = false)
     protected UUID id;
-    @Column(columnDefinition = "uniqueidentifier", name = "ParentId", nullable = false, updatable = false)
+    @Column(name = "ParentId", nullable = false, updatable = false)
     protected UUID parentId;
-    @Column(columnDefinition = "uniqueidentifier", name = "Type", nullable = false)
+    @Column(name = "Type", nullable = false)
     protected UUID type;
     @Column(length = 256, name = "Name", nullable = true)
     protected String name;

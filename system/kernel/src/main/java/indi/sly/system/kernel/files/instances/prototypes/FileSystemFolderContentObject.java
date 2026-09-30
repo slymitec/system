@@ -1,7 +1,7 @@
 package indi.sly.system.kernel.files.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
@@ -15,7 +15,7 @@ import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FileSystemFolderContentObject extends AInfoContentObject implements IByteValueSupporter<FileSystemEntryDefinition> {
+public class FileSystemFolderContentObject extends AInfoContentObject {
     public long getType() {
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
 
@@ -26,7 +26,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject implements
             throw new ConditionRefuseException();
         }
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
+        FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
         return fileSystemEntry.getType();
     }
@@ -41,11 +41,11 @@ public class FileSystemFolderContentObject extends AInfoContentObject implements
             throw new ConditionRefuseException();
         }
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
+        FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
         fileSystemEntry.setType(type);
 
-        this.write(this.flush(fileSystemEntry));
+        this.write(ObjectUtil.transferToJsonByteArray(fileSystemEntry));
     }
 
     public byte[] getValue() {
@@ -58,7 +58,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject implements
             throw new ConditionRefuseException();
         }
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
+        FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
         return fileSystemEntry.getValue();
     }
@@ -73,10 +73,10 @@ public class FileSystemFolderContentObject extends AInfoContentObject implements
             throw new ConditionRefuseException();
         }
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
+        FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
         fileSystemEntry.setValue(configuration);
 
-        this.write(this.flush(fileSystemEntry));
+        this.write(ObjectUtil.transferToJsonByteArray(fileSystemEntry));
     }
 }

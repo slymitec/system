@@ -7,7 +7,6 @@ import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
-import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
@@ -23,9 +22,9 @@ import java.io.IOException;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FileSystemFileContentObject extends AInfoContentObject implements IByteValueSupporter<FileSystemEntryDefinition> {
+public class FileSystemFileContentObject extends AInfoContentObject {
     public long length() {
-        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
+        FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
         long length = -1;
 
@@ -51,7 +50,7 @@ public class FileSystemFileContentObject extends AInfoContentObject implements I
 
         byte[] value = null;
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
+        FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
         if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
             if (offset + length > Integer.MAX_VALUE) {
@@ -76,7 +75,7 @@ public class FileSystemFileContentObject extends AInfoContentObject implements I
             }
         }
 
-        this.write(this.flush(fileSystemEntry));
+        this.write(ObjectUtil.transferToJsonByteArray(fileSystemEntry));
 
         return value;
     }
@@ -86,7 +85,7 @@ public class FileSystemFileContentObject extends AInfoContentObject implements I
             throw new ConditionParametersException();
         }
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
+        FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
         if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
             fileSystemEntry.setValue(value);
@@ -104,7 +103,7 @@ public class FileSystemFileContentObject extends AInfoContentObject implements I
             }
         }
 
-        this.write(this.flush(fileSystemEntry));
+        this.write(ObjectUtil.transferToJsonByteArray(fileSystemEntry));
     }
 
     public void append(byte[] value) {
@@ -112,7 +111,7 @@ public class FileSystemFileContentObject extends AInfoContentObject implements I
             throw new ConditionParametersException();
         }
 
-        FileSystemEntryDefinition fileSystemEntry = this.init(FileSystemEntryDefinition.class, this.read());
+        FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
         if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
             if (this.length() + value.length > Integer.MAX_VALUE) {
@@ -134,7 +133,7 @@ public class FileSystemFileContentObject extends AInfoContentObject implements I
             }
         }
 
-        this.write(this.flush(fileSystemEntry));
+        this.write(ObjectUtil.transferToJsonByteArray(fileSystemEntry));
     }
 
     public void clear() {

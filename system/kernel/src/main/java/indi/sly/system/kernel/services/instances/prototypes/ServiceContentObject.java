@@ -6,7 +6,6 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.PathRecord;
-import indi.sly.system.kernel.core.prototypes.IByteValueSupporter;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
@@ -23,9 +22,9 @@ import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ServiceContentObject extends AInfoContentObject implements IByteValueSupporter<ServiceDefinition> {
+public class ServiceContentObject extends AInfoContentObject {
     public List<UUID> getDependencies() {
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         return CollectionUtil.unmodifiable(service.getDependencies());
     }
@@ -42,12 +41,12 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         service.getDependencies().clear();
         service.getDependencies().addAll(dependencies);
 
-        this.write(this.flush(service));
+        this.write(ObjectUtil.transferToJsonByteArray(service));
     }
 
     public String getSecret() {
@@ -58,7 +57,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         return service.getSecret();
     }
@@ -75,15 +74,15 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         service.setSecret(secret);
 
-        this.write(this.flush(service));
+        this.write(ObjectUtil.transferToJsonByteArray(service));
     }
 
     public PathRecord getPath() {
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         return service.getPath();
     }
@@ -100,15 +99,15 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         service.setPath(path);
 
-        this.write(this.flush(service));
+        this.write(ObjectUtil.transferToJsonByteArray(service));
     }
 
     public UUID getAccountId() {
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         return service.getAccountId();
     }
@@ -125,15 +124,15 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         service.setAccountId(accountId);
 
-        this.write(this.flush(service));
+        this.write(ObjectUtil.transferToJsonByteArray(service));
     }
 
     public long getMode() {
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         return service.getMode();
     }
@@ -146,15 +145,15 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         service.setMode(mode);
 
-        this.write(this.flush(service));
+        this.write(ObjectUtil.transferToJsonByteArray(service));
     }
 
     public long getStart() {
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         return service.getStart();
     }
@@ -167,11 +166,11 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         service.setStart(start);
 
-        this.write(this.flush(service));
+        this.write(ObjectUtil.transferToJsonByteArray(service));
     }
 
     public Map<String, String> getEnvironmentVariables() {
@@ -182,7 +181,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         return CollectionUtil.unmodifiable(service.getEnvironmentVariables());
     }
@@ -199,12 +198,12 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         service.getEnvironmentVariables().clear();
         service.getEnvironmentVariables().putAll(environmentVariables);
 
-        this.write(this.flush(service));
+        this.write(ObjectUtil.transferToJsonByteArray(service));
     }
 
     public String getParameters() {
@@ -215,7 +214,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         return service.getParameters();
     }
@@ -232,11 +231,11 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         service.setParameters(parameters);
 
-        this.write(this.flush(service));
+        this.write(ObjectUtil.transferToJsonByteArray(service));
     }
 
     public void set(ServiceDefinition definition) {
@@ -251,7 +250,7 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
             throw new ConditionRefuseException();
         }
 
-        ServiceDefinition service = this.init(ServiceDefinition.class, this.read());
+        ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
         service.getDependencies().clear();
         service.getDependencies().addAll(definition.getDependencies());
@@ -264,6 +263,6 @@ public class ServiceContentObject extends AInfoContentObject implements IByteVal
         service.getEnvironmentVariables().putAll(definition.getEnvironmentVariables());
         service.setParameters(definition.getParameters());
 
-        this.write(this.flush(service));
+        this.write(ObjectUtil.transferToJsonByteArray(service));
     }
 }

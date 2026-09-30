@@ -6,7 +6,6 @@ import indi.sly.system.kernel.core.CoreManager;
 import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.prototypes.IStartupCapable;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.environment.containers.KernelConfiguration;
 import indi.sly.system.kernel.core.environment.containers.KernelSpace;
 import indi.sly.system.kernel.core.environment.containers.UserSpace;
 import indi.sly.system.kernel.core.environment.values.SpaceType;
@@ -22,6 +21,7 @@ import indi.sly.system.kernel.services.ServiceManager;
 import indi.sly.system.services.jobs.JobService;
 import jakarta.inject.Named;
 import jakarta.transaction.Transactional;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -33,29 +33,14 @@ import java.util.List;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SystemStartUpComponent extends AComponent implements ApplicationRunner {
-    private void init() {
-        KernelSpace kernelSpace = SpringHelper.getInstance(KernelSpace.class);
-
-        this.coreManager = (CoreManager) kernelSpace.getClassedObjects().getOrDefault(CoreManager.class, null);
-
-        if (ObjectUtil.allNotNull(this.coreManager)) {
-            this.coreManager.check();
-        }
-    }
-
     @Override
     @Transactional
-    public void run(ApplicationArguments args) throws Exception {
-        this.init();
-
+    public void run(@NonNull ApplicationArguments args) {
         if (ObjectUtil.isAnyNull(this.coreManager)) {
             this.coreManager = SpringHelper.getInstance(CoreManager.class);
 
             this.coreManager.startup(StartupType.STEP_INIT_SELF);
             this.coreManager.startup(StartupType.STEP_AFTER_SELF);
-
-            KernelSpace kernelSpace = this.coreManager.getKernelSpace();
-            KernelConfiguration kernelConfiguration = kernelSpace.getConfiguration();
 
             UserSpace userSpace = SpringHelper.getInstance(UserSpace.class);
             this.coreManager.setUserSpace(userSpace);

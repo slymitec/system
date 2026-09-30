@@ -21,6 +21,7 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.services.ServiceManager;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -84,8 +85,8 @@ public class CoreManager extends AManager {
         return this.objectCollection;
     }
 
-    public <T extends APrototype> T create(Class<T> clazz) {
-        return this.prototypeBuilder.createPrototype(clazz);
+    public <T extends APrototype> T create(Class<T> clazz, @Nullable Object... args) {
+        return this.prototypeBuilder.createPrototype(clazz, args);
     }
 
     public <T extends AManager> T getManager(Class<T> clazz) {

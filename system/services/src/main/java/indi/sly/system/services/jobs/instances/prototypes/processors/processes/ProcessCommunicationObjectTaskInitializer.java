@@ -85,9 +85,9 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
             throw new ConditionParametersException();
         }
 
-        Set<UUID> sourceProcessIDs = ObjectUtil.transferSetFromString(UUID.class, parameters.getFirst());
+        Set<UUID> sourceProcessIds = ObjectUtil.transferSetFromString(UUID.class, parameters.getFirst());
 
-        content.setResult(processCommunication.createPort(sourceProcessIDs));
+        content.setResult(processCommunication.createPort(sourceProcessIds));
     }
 
     private void deleteAllPort(TaskContentObject content) {
@@ -134,9 +134,9 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         }
 
         UUID portId = ObjectUtil.transferFromString(UUID.class, parameters.getFirst());
-        Set<UUID> sourceProcessIDs = ObjectUtil.transferSetFromString(UUID.class, parameters.get(1));
+        Set<UUID> sourceProcessIds = ObjectUtil.transferSetFromString(UUID.class, parameters.get(1));
 
-        processCommunication.setPortSourceProcessIds(portId, sourceProcessIDs);
+        processCommunication.setPortSourceProcessIds(portId, sourceProcessIds);
     }
 
     private void receivePort(TaskContentObject content) {
@@ -183,9 +183,9 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
             throw new ConditionParametersException();
         }
 
-        Set<UUID> sourceProcessIDs = ObjectUtil.transferSetFromString(UUID.class, parameters.getFirst());
+        Set<UUID> sourceProcessIds = ObjectUtil.transferSetFromString(UUID.class, parameters.getFirst());
 
-        processCommunication.createSignal(sourceProcessIDs);
+        processCommunication.createSignal(sourceProcessIds);
     }
 
     private void deleteSignal(TaskContentObject content) {
@@ -209,9 +209,9 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
             throw new ConditionParametersException();
         }
 
-        Set<UUID> sourceProcessIDs = ObjectUtil.transferSetFromString(UUID.class, parameters.get(1));
+        Set<UUID> sourceProcessIds = ObjectUtil.transferSetFromString(UUID.class, parameters.get(1));
 
-        processCommunication.setSignalSourceProcessIds(sourceProcessIDs);
+        processCommunication.setSignalSourceProcessIds(sourceProcessIds);
     }
 
     private void receiveSignals(TaskContentObject content) {

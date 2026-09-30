@@ -16,7 +16,7 @@ import java.util.Set;
 public abstract class ObjectUtil {
     private static final String TO_STRING_NULL_OBJECT = "null";
     private static final JsonMapper SERIALIZATION_JSON = SpringHelper.getInstance(JsonMapper.class);
-    private static final ThreadSafeFory SERIALIZATION_BINARY = null;// Fory.builder().withLanguage(Language.JAVA).withAsyncCompilation(true).requireClassRegistration(false).buildThreadSafeFory();
+    private static final ThreadSafeFory SERIALIZATION_BINARY = Fory.builder().withLanguage(Language.JAVA).withAsyncCompilation(true).requireClassRegistration(false).buildThreadSafeFory();
 
     public static boolean isNull(final Object value) {
         return ObjectUtil.isAnyNull(value);

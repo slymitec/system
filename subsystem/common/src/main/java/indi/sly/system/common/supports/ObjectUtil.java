@@ -15,7 +15,7 @@ import java.util.Set;
 
 public abstract class ObjectUtil {
     private static final String TO_STRING_NULL_OBJECT = "null";
-    private static final JsonMapper SERIALIZATION_JSON =  JsonMapper.builder().build();
+    private static final JsonMapper SERIALIZATION_JSON = SpringHelper.getInstance(JsonMapper.class);
     private static final ThreadSafeFory SERIALIZATION_BINARY = Fory.builder().withLanguage(Language.JAVA).withAsyncCompilation(true).requireClassRegistration(false).buildThreadSafeFory();
 
     public static boolean isNull(final Object value) {
@@ -196,6 +196,14 @@ public abstract class ObjectUtil {
         }
     }
 
+    public static byte[] transferToJsonByteArray(Object value) {
+        try {
+            return ObjectUtil.SERIALIZATION_JSON.writeValueAsBytes(value);
+        } catch (JacksonException _) {
+            throw new StatusUnexpectedException();
+        }
+    }
+
     public static <T> T transferFromString(Class<T> clazz, String value) {
         return ObjectUtil.transferFromStringOrDefaultProvider(clazz, value, () -> null);
     }
@@ -211,6 +219,26 @@ public abstract class ObjectUtil {
 
         try {
             return ObjectUtil.SERIALIZATION_JSON.readValue(value, clazz);
+        } catch (Exception ignored) {
+            return defaultProvider.acquire();
+        }
+    }
+
+    public static <T> T transferFromJsonByteArray(Class<T> clazz, byte[] stream) {
+        return ObjectUtil.transferFromJsonByteArrayOrDefaultProvider(clazz, stream, () -> null);
+    }
+
+    public static <T> T transferFromJsonByteArrayOrDefault(Class<T> clazz, byte[] stream, T defaultValue) {
+        return ObjectUtil.transferFromJsonByteArrayOrDefaultProvider(clazz, stream, () -> defaultValue);
+    }
+
+    public static <T> T transferFromJsonByteArrayOrDefaultProvider(Class<T> clazz, byte[] stream, Provider<T> defaultProvider) {
+        if (ObjectUtil.isAnyNull(clazz, defaultProvider)) {
+            throw new ConditionParametersException();
+        }
+
+        try {
+            return ObjectUtil.SERIALIZATION_JSON.readValue(stream, clazz);
         } catch (Exception ignored) {
             return defaultProvider.acquire();
         }

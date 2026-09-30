@@ -1,12 +1,11 @@
 package indi.sly.system.kernel.objects.values;
 
 import indi.sly.system.kernel.core.values.APersistentEntity;
-import indi.sly.system.kernel.memory.repositories.prototypes.BinarySerializationAttributeConverterComponent;
 import indi.sly.system.kernel.security.values.SecurityDescriptorEntity;
-import indi.sly.system.kernel.services.values.ServiceStatusEntity;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -23,17 +22,14 @@ public class InfoEntity extends APersistentEntity {
     protected long opened;
     @Column(length = 256, name = "Name", nullable = true)
     protected String name;
-    @Column(length = 256, name = "Date", nullable = false)
-    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
-    @Lob
+    @Column(columnDefinition = "json", name = "Date", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
     protected Map<Long, Long> date;
-    @Column(length = 4096, name = "Security_Descriptor", nullable = true)
-    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
-    @Lob
+    @Column(columnDefinition = "json", name = "Security_Descriptor", nullable = true)
+    @JdbcTypeCode(SqlTypes.JSON)
     protected SecurityDescriptorEntity securityDescriptor;
-    @Column(length = 1024, name = "Properties", nullable = false)
-    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
-    @Lob
+    @Column(columnDefinition = "json", name = "Properties", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
     protected Map<String, String> properties;
     @Basic(fetch = FetchType.LAZY)
     @Column(length = 4096, name = "Content_Stream", nullable = true)

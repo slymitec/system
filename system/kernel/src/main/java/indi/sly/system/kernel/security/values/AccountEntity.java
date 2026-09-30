@@ -2,8 +2,9 @@ package indi.sly.system.kernel.security.values;
 
 import indi.sly.system.kernel.core.values.APersistentEntity;
 
-import indi.sly.system.kernel.memory.repositories.prototypes.BinarySerializationAttributeConverterComponent;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.*;
 
@@ -25,14 +26,12 @@ public class AccountEntity extends APersistentEntity {
     @JoinTable(name = "Kernel_Accounts_Groups", joinColumns = {@JoinColumn(name = "AccountId")}, inverseJoinColumns = {@JoinColumn(name = "GroupId")})
     protected List<GroupEntity> groups;
     @Basic(fetch = FetchType.LAZY)
-    @Column(length = 4096, name = "Token", nullable = false)
-    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
-    @Lob
+    @Column(columnDefinition = "json", name = "Token", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
     protected UserTokenEntity token;
     @Basic(fetch = FetchType.LAZY)
-    @Column(length = 4096, name = "Sessions", nullable = false)
-    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
-    @Lob
+    @Column(columnDefinition = "json", name = "Sessions", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
     protected AccountSessionsEntity sessions;
 
     public UUID getId() {

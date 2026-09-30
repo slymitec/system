@@ -32,10 +32,6 @@ public class ProcessContextEntity extends APersistentEntity {
     }
 
     public void setApplication(ApplicationRecord application) {
-        if (ObjectUtil.isAnyNull(application)) {
-            throw new ConditionParametersException();
-        }
-
         this.application = application;
     }
 

@@ -1,10 +1,10 @@
 package indi.sly.system.kernel.processes.values;
 
 import indi.sly.system.kernel.core.values.APersistentEntity;
-import indi.sly.system.kernel.memory.repositories.prototypes.BinarySerializationAttributeConverterComponent;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -19,31 +19,25 @@ public class ProcessEntity extends APersistentEntity {
     @Column(columnDefinition = "uniqueidentifier", name = "Parent_ProcessId", nullable = true)
     protected UUID parentProcessID;
     @Basic(fetch = FetchType.LAZY)
-    @Column(length = 4096, name = "Communication", nullable = false)
-    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
-    @Lob
+    @Column(columnDefinition = "json", name = "Communication", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
     protected ProcessCommunicationEntity communication;
     @Basic(fetch = FetchType.LAZY)
-    @Column(length = 4096, name = "Context", nullable = false)
-    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
-    @Lob
+    @Column(columnDefinition = "json", name = "Context", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
     protected ProcessContextEntity context;
-    @Column(length = 4096, name = "Info_Table", nullable = false)
-    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
-    @Lob
+    @Column(columnDefinition = "json", name = "Info_Table", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
     protected ProcessInfoTableEntity infoTable;
-    @Column(length = 4096, name = "Session_Info", nullable = false)
-    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
-    @Lob
+    @Column(columnDefinition = "json", name = "Session_Info", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
     protected ProcessSessionEntity session;
     @Basic(fetch = FetchType.LAZY)
-    @Column(length = 4096, name = "Statistics_Info", nullable = false)
-    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
-    @Lob
+    @Column(columnDefinition = "json", name = "Statistics_Info", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
     protected ProcessStatisticsEntity statistics;
-    @Column(length = 4096, name = "Token", nullable = false)
-    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
-    @Lob
+    @Column(columnDefinition = "json", name = "Token", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
     protected ProcessTokenEntity token;
 
     public UUID getId() {

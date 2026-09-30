@@ -2,8 +2,9 @@ package indi.sly.system.kernel.security.values;
 
 import indi.sly.system.kernel.core.values.APersistentEntity;
 
-import indi.sly.system.kernel.memory.repositories.prototypes.BinarySerializationAttributeConverterComponent;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -17,9 +18,8 @@ public class GroupEntity extends APersistentEntity {
     @Column(length = 256, name = "Name", nullable = false)
     protected String name;
     @Basic(fetch = FetchType.LAZY)
-    @Column(length = 4096, name = "Token", nullable = false)
-    @Convert(converter = BinarySerializationAttributeConverterComponent.class)
-    @Lob
+    @Column(columnDefinition = "json", name = "Token", nullable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
     protected UserTokenEntity token;
 
     public UUID getId() {

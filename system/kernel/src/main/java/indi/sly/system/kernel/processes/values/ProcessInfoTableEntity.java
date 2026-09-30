@@ -1,5 +1,7 @@
 package indi.sly.system.kernel.processes.values;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import indi.sly.system.common.lang.StatusAlreadyExistedException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.CollectionUtil;
@@ -14,13 +16,16 @@ public class ProcessInfoTableEntity extends APersistentEntity {
         this.idTable = new HashMap<>();
     }
 
-    private final Map<UUID, ProcessInfoEntryEntity> indexTable;
-    private final Map<UUID, ProcessInfoEntryEntity> idTable;
+    @JsonProperty("indexTable")
+    private Map<UUID, ProcessInfoEntryEntity> indexTable;
+    @JsonProperty("idTable")
+    private Map<UUID, ProcessInfoEntryEntity> idTable;
 
     public int size() {
         return this.indexTable.size();
     }
 
+    @JsonIgnore
     public boolean isEmpty() {
         return this.indexTable.isEmpty() && this.idTable.isEmpty();
     }

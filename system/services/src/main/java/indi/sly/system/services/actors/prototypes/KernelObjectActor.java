@@ -1,9 +1,11 @@
 package indi.sly.system.services.actors.prototypes;
 
+import indi.sly.system.common.lang.ASystemException;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.CoreManager;
+import indi.sly.system.kernel.core.environment.containers.AKernelExtensionSpace;
 import indi.sly.system.kernel.core.environment.containers.KernelSpace;
 import indi.sly.system.kernel.core.environment.containers.UserSpace;
 import indi.sly.system.services.jobs.JobService;
@@ -89,7 +91,7 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
     @Override
     public Mono<Void> onPreActorMethod(ActorMethodContext actorMethodContext) {
         if (ObjectUtil.isAnyNull(this.coreManager, this.task)) {
-            return Mono.error(new StatusUnexpectedException());
+            return Mono.error(new RuntimeException());
         }
 
         if (ObjectUtil.isAnyNull(this.coreManager.getUserSpace())) {
@@ -118,14 +120,16 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
             if (ObjectUtil.isAnyNull(taskContent.getException())) {
                 Object result = taskContent.getResult();
 
-                clientResponse = new ClientResponseRecord(ObjectUtil.transferToString(result));
+                clientResponse = new ClientResponseRecord(ClientResponseTypes.NORMAL, ObjectUtil.transferToString(result));
             } else {
-                return Mono.error(taskContent.getException());
+                clientResponse = new ClientResponseRecord(ClientResponseTypes.KERNEL_EXCEPTION, taskContent.getException().getMessage());
             }
 
             jobService.endCallContext(userContext);
+        } catch (ASystemException exception) {
+            clientResponse = new ClientResponseRecord(ClientResponseTypes.KERNEL_EXCEPTION, exception.getMessage());
         } catch (Exception exception) {
-            return Mono.error(exception);
+            clientResponse = new ClientResponseRecord(ClientResponseTypes.OTHER_EXCEPTION, exception.getMessage());
         }
 
         return Mono.just(clientResponse);

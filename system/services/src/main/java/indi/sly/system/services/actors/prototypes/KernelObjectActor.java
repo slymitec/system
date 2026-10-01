@@ -58,10 +58,7 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
             }
 
             String taskName = actorIds[0];
-            UUID handle = null;
-            if (!LogicalUtil.isAnyExist(task.getAttribute(), TaskAttributeType.OBJECT_IS_NOT_CACHEABLE)) {
-                handle = ValueUtil.isAnyNullOrEmpty(actorIds[1]) ? null : UUIDUtil.getFromString(actorIds[1]);
-            }
+            UUID handle = ValueUtil.isAnyNullOrEmpty(actorIds[1]) ? null : UUIDUtil.getFromString(actorIds[1]);
 
             JobService jobService = this.coreManager.getService(JobService.class);
 

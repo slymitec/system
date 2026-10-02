@@ -6,9 +6,6 @@ import indi.sly.system.common.supports.UUIDUtil;
 import java.util.UUID;
 
 public class PeripheryConfiguration extends AConfiguration {
-    public final UUID CORE_PROTOTYPE_DATETIME_SYSTEM_TIME_OFFSET
-            = UUIDUtil.getFormLongs(116714210840444914L, -8594443471741472535L);
-
     public final String CALL_CONNECTION_INSTANCE_SYSTEM_NAME = "System";
     public final String CALL_CONNECTION_INSTANCE_SYSTEM_ADDRESS = "http://localhost:8080/Call.action";
 

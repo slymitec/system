@@ -86,8 +86,8 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
             return invokeRemote;
         };
 
-        this.expire = (remote, duration) -> {
-            this.invoke.apply(null, remote, "expire", Void.class, new Object[]{duration});
+        this.expire = (remote) -> {
+            this.invoke.apply(null, remote, "cache", UUID.class, new Object[0]);
         };
 
         this.die = (remote) -> {

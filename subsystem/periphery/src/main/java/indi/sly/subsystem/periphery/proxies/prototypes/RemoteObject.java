@@ -41,11 +41,11 @@ public class RemoteObject extends ADefinitionObject<RemoteDefinition> {
         return remote;
     }
 
-    public void expire(long duration) {
+    public void expire() {
         List<RemoteProcessorExpireConsumer> expires = this.processorMediator.getExpires();
 
         for (RemoteProcessorExpireConsumer expire : expires) {
-            expire.accept(this.definition, duration);
+            expire.accept(this.definition);
         }
     }
 

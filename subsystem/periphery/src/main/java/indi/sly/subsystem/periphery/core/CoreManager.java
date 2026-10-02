@@ -3,7 +3,6 @@ package indi.sly.subsystem.periphery.core;
 import indi.sly.subsystem.periphery.core.boot.prototypes.BootFactory;
 import indi.sly.subsystem.periphery.core.boot.prototypes.BootObject;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
-import indi.sly.subsystem.periphery.core.date.prototypes.DateTimeObject;
 import indi.sly.subsystem.periphery.core.environment.containers.KernelSpace;
 import indi.sly.subsystem.periphery.core.environment.values.SpaceType;
 import indi.sly.subsystem.periphery.core.environment.containers.UserSpace;
@@ -92,9 +91,5 @@ public class CoreManager extends AManager {
 
     public UserSpace getUserSpace() {
         return this.getKernelSpace().getUserSpace();
-    }
-
-    public DateTimeObject getDateTime() {
-        return this.factory.buildDateTime();
     }
 }

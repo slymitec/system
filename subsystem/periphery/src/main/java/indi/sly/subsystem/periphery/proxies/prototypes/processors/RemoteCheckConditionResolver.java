@@ -24,7 +24,7 @@ public class RemoteCheckConditionResolver extends AResolver implements IRemoteRe
             throw new StatusNotSupportedException();
         };
 
-        this.expire = (remote, duration) -> {
+        this.expire = (remote) -> {
             throw new StatusNotSupportedException();
         };
 

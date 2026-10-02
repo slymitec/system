@@ -43,7 +43,6 @@ public class ProxyFactory extends AFactory {
     public void init() {
         this.remoteResolvers.add(this.coreManager.create(RemoteCallResolver.class));
         this.remoteResolvers.add(this.coreManager.create(RemoteCheckConditionResolver.class));
-        this.remoteResolvers.add(this.coreManager.create(RemoteDateResolver.class));
         Collections.sort(this.remoteResolvers);
 
         this.systemExceptions.put("StatusRelationshipErrorException", new StatusRelationshipErrorException());

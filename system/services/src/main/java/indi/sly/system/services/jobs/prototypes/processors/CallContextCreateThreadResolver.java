@@ -20,7 +20,7 @@ import java.util.UUID;
 public class CallContextCreateThreadResolver extends AResolver implements ICallContextCreateResolver {
     public CallContextCreateThreadResolver() {
         this.create = (callContext, callContextRequest) -> {
-            UUID processId = callContextRequest.processId();
+            UUID processId = callContextRequest.process().processId();
 
             ServiceKernelExtensionSpace serviceSpace = (ServiceKernelExtensionSpace) this.coreManager.getKernelSpace().getServiceSpace();
             TransactionalActionComponent transactionalAction = serviceSpace.getTransactionalAction();
@@ -43,6 +43,6 @@ public class CallContextCreateThreadResolver extends AResolver implements ICallC
 
     @Override
     public int order() {
-        return 2;
+        return 1;
     }
 }

@@ -1,13 +1,9 @@
 package indi.sly.subsystem.periphery.proxies.values;
 
-import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
-import org.redisson.api.annotation.RObjectField;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
 
 public class RemoteDefinition extends ADefinition {
     public RemoteDefinition() {

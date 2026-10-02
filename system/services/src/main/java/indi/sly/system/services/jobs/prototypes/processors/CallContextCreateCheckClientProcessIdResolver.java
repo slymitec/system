@@ -7,6 +7,7 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.lang.CallContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.mediators.CallContextProcessorMediator;
+import indi.sly.system.services.jobs.values.CallContextProcessRecord;
 import indi.sly.system.services.jobs.values.CallContextRecord;
 import indi.sly.system.services.jobs.values.CallContextProcessType;
 import jakarta.inject.Named;
@@ -24,13 +25,16 @@ public class CallContextCreateCheckClientProcessIdResolver extends AResolver imp
                 throw new ConditionRefuseException();
             }
 
-            UUID processId = callContextRequest.processId();
-
+            CallContextProcessRecord callContextProcess = callContextRequest.process();
+            if (ObjectUtil.isAnyNull(callContextProcess)) {
+                throw new ConditionRefuseException();
+            }
+            UUID processId = callContextProcess.processId();
             if (ValueUtil.isAnyNullOrEmpty(processId)) {
                 throw new ConditionRefuseException();
             }
 
-            long clientType = callContextRequest.processType();
+            long clientType = callContextProcess.processType();
             if (LogicalUtil.isAnyEqual(clientType, CallContextProcessType.CLIENT)) {
                 // Check
             } else if (LogicalUtil.isAnyEqual(clientType, CallContextProcessType.APPLICATION)) {

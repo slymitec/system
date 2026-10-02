@@ -122,4 +122,21 @@ public class ProxyFactory extends AFactory {
     public <T extends AProxyObject> T buildProxy(Class<T> clazz, RemoteObject remote) {
         return this.createProxy(clazz, remote);
     }
+
+    private SessionObject createSession(SessionDefinition definition) {
+        SessionObject session = this.coreManager.create(SessionObject.class);
+
+        session.factory = this;
+        session.setDefinition(definition);
+
+        return session;
+    }
+
+    public SessionObject buildSession(UUID sessionId) {
+        SessionDefinition session = new SessionDefinition();
+
+        session.setSessionId(sessionId);
+
+        return this.createSession(session);
+    }
 }

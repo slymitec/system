@@ -1,7 +1,7 @@
 package indi.sly.subsystem.periphery.core.boot.prototypes;
 
 import indi.sly.subsystem.periphery.core.boot.lang.BootStartConsumer;
-import indi.sly.subsystem.periphery.core.boot.prototypes.wrappers.BootProcessorMediator;
+import indi.sly.subsystem.periphery.core.boot.prototypes.mediators.BootProcessorMediator;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
 import indi.sly.subsystem.periphery.core.prototypes.AObject;
 import jakarta.inject.Named;

@@ -15,7 +15,7 @@ public class MemoryManager extends AManager {
     @Override
     public void startup(long startup) {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_AFTER_SELF)) {
-            this.coreManager.getObjectCollection().addByClass(SpaceType.KERNEL,
+            this.coreManager.getObjectCollection().addByClass(SpaceType.PERIPHERY,
                     this.coreManager.create(DistributionRepositoryObject.class));
         }
     }
@@ -25,6 +25,6 @@ public class MemoryManager extends AManager {
     }
 
     public DistributionRepositoryObject getDistributionRepository() {
-        return this.coreManager.getObjectCollection().getByClass(SpaceType.KERNEL, DistributionRepositoryObject.class);
+        return this.coreManager.getObjectCollection().getByClass(SpaceType.PERIPHERY, DistributionRepositoryObject.class);
     }
 }

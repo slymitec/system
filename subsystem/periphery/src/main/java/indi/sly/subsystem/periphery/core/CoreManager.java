@@ -39,10 +39,10 @@ public class CoreManager extends AManager {
             this.prototypeBuilder.setFactoryManager(this);
 
             this.objectCollection = this.coreManager.create(ObjectCollectionObject.class);
-            this.objectCollection.setLimit(SpaceType.KERNEL, Long.MAX_VALUE);
-            this.objectCollection.addByClass(SpaceType.KERNEL, this);
-            this.objectCollection.addByClass(SpaceType.KERNEL, this.create(MemoryManager.class));
-            this.objectCollection.addByClass(SpaceType.KERNEL, this.create(ProxyManager.class));
+            this.objectCollection.setLimit(SpaceType.PERIPHERY, Long.MAX_VALUE);
+            this.objectCollection.addByClass(SpaceType.PERIPHERY, this);
+            this.objectCollection.addByClass(SpaceType.PERIPHERY, this.create(MemoryManager.class));
+            this.objectCollection.addByClass(SpaceType.PERIPHERY, this.create(ProxyManager.class));
 
             this.factory = this.coreManager.create(CoreFactory.class);
             this.factory.init();
@@ -51,7 +51,7 @@ public class CoreManager extends AManager {
             bootFactory.init();
 
             BootObject boot = bootFactory.buildBoot();
-            this.objectCollection.addByClass(SpaceType.KERNEL, boot);
+            this.objectCollection.addByClass(SpaceType.PERIPHERY, boot);
         }
     }
 
@@ -78,7 +78,7 @@ public class CoreManager extends AManager {
     }
 
     public <T extends AManager> T getManager(Class<T> clazz) {
-        T manager = this.objectCollection.getByClass(SpaceType.KERNEL, clazz);
+        T manager = this.objectCollection.getByClass(SpaceType.PERIPHERY, clazz);
 
         manager.check();
 
@@ -87,9 +87,5 @@ public class CoreManager extends AManager {
 
     public KernelSpace getKernelSpace() {
         return SpringHelper.getInstance(KernelSpace.class);
-    }
-
-    public UserSpace getUserSpace() {
-        return this.getKernelSpace().getUserSpace();
     }
 }

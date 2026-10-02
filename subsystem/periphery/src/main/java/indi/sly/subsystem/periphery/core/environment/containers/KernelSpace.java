@@ -14,7 +14,6 @@ public class KernelSpace extends ASystemSpace {
     private final PeripheryConfiguration configuration;
     private final UserSpace userSpace;
 
-
     public PeripheryConfiguration getConfiguration() {
         return configuration;
     }

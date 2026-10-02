@@ -1,6 +1,6 @@
 package indi.sly.subsystem.periphery.core.boot.prototypes.processors;
 
-import indi.sly.subsystem.periphery.core.boot.prototypes.wrappers.BootProcessorMediator;
+import indi.sly.subsystem.periphery.core.boot.prototypes.mediators.BootProcessorMediator;
 import indi.sly.subsystem.periphery.core.prototypes.processors.AResolver;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

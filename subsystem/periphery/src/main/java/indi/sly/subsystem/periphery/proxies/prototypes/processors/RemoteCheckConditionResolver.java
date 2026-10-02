@@ -7,6 +7,7 @@ import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -19,17 +20,16 @@ public class RemoteCheckConditionResolver extends AResolver implements IRemoteRe
     private final RemoteProcessorDieConsumer die;
 
     public RemoteCheckConditionResolver() {
-        this.invoke = (invokeRemote, remote, method, parameters) -> {
-
-            return invokeRemote;
+        this.invoke = (invokeRemote, remote, returnClazz, method, parameters) -> {
+            throw new StatusNotSupportedException();
         };
 
         this.expire = (remote, duration) -> {
-
+            throw new StatusNotSupportedException();
         };
 
         this.die = (remote) -> {
-
+            throw new StatusNotSupportedException();
         };
     }
 
@@ -40,8 +40,10 @@ public class RemoteCheckConditionResolver extends AResolver implements IRemoteRe
 
     @Override
     public void resolve(RemoteDefinition remote, RemoteProcessorMediator processorMediator) {
-        processorMediator.getInvokes().add(this.invoke);
-        processorMediator.getExpires().add(this.expire);
-        processorMediator.getDies().add(this.die);
+        if (ValueUtil.isAnyNullOrEmpty(remote.getTask(), remote.getValue())) {
+            processorMediator.getInvokes().add(this.invoke);
+            processorMediator.getExpires().add(this.expire);
+            processorMediator.getDies().add(this.die);
+        }
     }
 }

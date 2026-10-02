@@ -1,4 +1,4 @@
-package indi.sly.system.services.jobs.values;
+package indi.sly.subsystem.periphery.proxies.values;
 
 public interface ClientResponseTypes {
     String NORMAL = "Normal";

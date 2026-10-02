@@ -20,7 +20,7 @@ public class RemoteObject extends ADefinitionObject<RemoteDefinition> {
     protected ProxyFactory factory;
     protected RemoteProcessorMediator processorMediator;
 
-    public RemoteObject invoke(String method, Object... args) {
+    public RemoteObject invoke(String method, Class<?> returnClazz, Object... args) {
         if (ValueUtil.isAnyNullOrEmpty(method)) {
             throw new ConditionParametersException();
         }
@@ -33,7 +33,7 @@ public class RemoteObject extends ADefinitionObject<RemoteDefinition> {
         RemoteDefinition invokeRemote = null;
 
         for (RemoteProcessorInvokeFunction invoke : invokes) {
-            invokeRemote = invoke.apply(invokeRemote, this.definition, method, args);
+            invokeRemote = invoke.apply(invokeRemote, this.definition, method, returnClazz, args);
         }
 
         RemoteObject remote = this.factory.buildRemote(invokeRemote);

@@ -44,8 +44,9 @@ public class RemoteDateResolver extends AResolver implements IRemoteResolver {
             remote.getDate().put(DateTimeType.EXPIRED, instant.toEpochMilli());
         };
 
-        this.invoke = (invokeRemote, remote, method, parameters) -> {
+        this.invoke = (invokeRemote, remote, returnClazz, method, parameters) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
+
             invokeRemote.getDate().put(DateTimeType.CREATE, dateTime.getCurrent());
 
             return invokeRemote;
@@ -55,7 +56,7 @@ public class RemoteDateResolver extends AResolver implements IRemoteResolver {
 
     @Override
     public int order() {
-        return 3;
+        return 2;
     }
 
     @Override

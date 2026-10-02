@@ -1,6 +1,8 @@
 package indi.sly.clisubsystem.boot;
 
 import indi.sly.system.common.containers.AConfiguration;
+import io.dapr.actors.client.ActorClient;
+import io.dapr.config.Properties;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -25,5 +27,10 @@ public class SpringConfiguration extends AConfiguration {
             module.addSerializer(Long.TYPE, ToStringSerializer.instance);
             builder.addModule(module);
         };
+    }
+
+    @Bean(destroyMethod = "close")
+    public ActorClient actorClient() {
+        return new ActorClient(new Properties());
     }
 }

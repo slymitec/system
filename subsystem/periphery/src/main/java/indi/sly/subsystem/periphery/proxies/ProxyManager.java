@@ -2,19 +2,11 @@ package indi.sly.subsystem.periphery.proxies;
 
 import indi.sly.subsystem.periphery.core.AManager;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
-import indi.sly.subsystem.periphery.proxies.prototypes.AProxyObject;
-import indi.sly.subsystem.periphery.proxies.prototypes.ProcedureObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.ProxyFactory;
-import indi.sly.subsystem.periphery.proxies.values.ProcedureProcessRecord;
-import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.ValueUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -38,7 +30,5 @@ public class ProxyManager extends AManager {
     public void shutdown() {
     }
 
-    public <T extends AProxyObject> T getProxy(Class<T> clazz, UUID handle) {
-        return null;
-    }
+
 }

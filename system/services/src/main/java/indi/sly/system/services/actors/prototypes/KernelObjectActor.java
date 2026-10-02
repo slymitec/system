@@ -2,10 +2,8 @@ package indi.sly.system.services.actors.prototypes;
 
 import indi.sly.system.common.lang.ASystemException;
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.CoreManager;
-import indi.sly.system.kernel.core.environment.containers.AKernelExtensionSpace;
 import indi.sly.system.kernel.core.environment.containers.KernelSpace;
 import indi.sly.system.kernel.core.environment.containers.UserSpace;
 import indi.sly.system.services.jobs.JobService;
@@ -119,14 +117,14 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
 
                 clientResponse = new ClientResponseRecord(ClientResponseTypes.NORMAL, ObjectUtil.transferToString(result));
             } else {
-                clientResponse = new ClientResponseRecord(ClientResponseTypes.KERNEL_EXCEPTION, taskContent.getException().getMessage());
+                clientResponse = new ClientResponseRecord(ClientResponseTypes.SYSTEM_EXCEPTION, ObjectUtil.transferToString(taskContent.getException().getMessage()));
             }
 
             jobService.endCallContext(userContext);
         } catch (ASystemException exception) {
-            clientResponse = new ClientResponseRecord(ClientResponseTypes.KERNEL_EXCEPTION, exception.getMessage());
+            clientResponse = new ClientResponseRecord(ClientResponseTypes.SYSTEM_EXCEPTION, ObjectUtil.transferToString(exception.getMessage()));
         } catch (Exception exception) {
-            clientResponse = new ClientResponseRecord(ClientResponseTypes.OTHER_EXCEPTION, exception.getMessage());
+            clientResponse = new ClientResponseRecord(ClientResponseTypes.OTHER_EXCEPTION, ObjectUtil.transferToString(exception.getMessage()));
         }
 
         return Mono.just(clientResponse);

@@ -1,24 +1,21 @@
 package indi.sly.subsystem.periphery.proxies.prototypes.processors;
 
-import indi.sly.subsystem.periphery.calls.CallManager;
-import indi.sly.subsystem.periphery.calls.prototypes.ConnectionObject;
-import indi.sly.subsystem.periphery.calls.values.*;
 import indi.sly.subsystem.periphery.core.prototypes.processors.AResolver;
 import indi.sly.subsystem.periphery.proxies.ProxyManager;
+import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorDieConsumer;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorExpireConsumer;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorInvokeFunction;
+import indi.sly.subsystem.periphery.proxies.prototypes.AProxyObject;
+import indi.sly.subsystem.periphery.proxies.prototypes.IKernelObjectActor;
+import indi.sly.subsystem.periphery.proxies.prototypes.ProxyFactory;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.values.*;
-import indi.sly.system.common.lang.ASystemException;
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
-import indi.sly.system.common.lang.SystemException;
 import indi.sly.system.common.supports.*;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -28,100 +25,87 @@ import java.util.UUID;
 public class RemoteCallResolver extends AResolver implements IRemoteResolver {
     private final RemoteProcessorInvokeFunction invoke;
     private final RemoteProcessorExpireConsumer expire;
+    private final RemoteProcessorDieConsumer die;
 
+    @SuppressWarnings("unchecked")
     public RemoteCallResolver() {
-        this.invoke = (invokeRemote, remote, method, parameters) -> {
+        this.invoke = (invokeRemote, remote, method, returnClazz, parameters) -> {
             ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
+            ProxyFactory proxyFactory = proxyManager.getFactory();
 
-            ProcedureProcessRecord proxyContextProcess = procedure.getProcess();
-            ClientRequestProcessIdRecord clientRequestProcessId = new ClientRequestProcessIdRecord(proxyContextProcess.id(), proxyContextProcess.type(), proxyContextProcess.secret(), proxyContextProcess.verification());
+            CallContextRecord callContext = remote.getCallContext();
 
             List<String> clientRequestContentParameters = new ArrayList<>();
-
-            if (LogicalUtil.isAnyEqual(remote.getType(), RemoteTypes.OBJECT)) {
-                HandleContextRecord handleContext = new HandleContextRecord(remote.getClazz(), ObjectUtil.transferFromString(UUID.class, remote.getValue()));
-
-                clientRequestContentParameters.add(ObjectUtil.transferToString(handleContext));
-            }
             if (ObjectUtil.allNotNull(parameters)) {
                 for (Object parameter : parameters) {
                     clientRequestContentParameters.add(ObjectUtil.transferToString(parameter));
                 }
             }
 
-            ConnectionObject connection = callManager.getConnection(procedure.getCall());
+            ClientRequestRecord clientRequest = new ClientRequestRecord(method, clientRequestContentParameters);
+            CallRequestRecord callRequest = new CallRequestRecord(callContext, clientRequest);
 
-            UserContentRequestRecord clientRequestContent = new UserContentRequestRecord(UUIDUtil.createRandom(), remote.getClazz(), method, clientRequestContentParameters);
-            ClientRequestRecord clientRequest = new ClientRequestRecord(clientRequestProcessId, clientRequestContent);
+            IKernelObjectActor kernelObjectActor = proxyFactory.getKernelObjectActor(remote.getTask(), ObjectUtil.transferFromString(UUID.class, remote.getValue()));
 
-            ClientResponseRecord clientResponse = connection.call(clientRequest);
+            ClientResponseRecord clientResponse = kernelObjectActor.call(callRequest).block();
 
-            UserContentResponseRecord clientResponseContent = clientResponse.content();
-            ClientResponseExceptionRecord clientResponseException = clientResponse.exception();
-
-            if (ObjectUtil.allNotNull(clientResponseException)) {
-                if (!clientResponseException.id().equals(clientRequestContent.id())) {
-                    throw new StatusRelationshipErrorException();
-                }
-
-                ASystemException causeSystemException;
-                try {
-                    Class<?> causeSystemExceptionClass = Class.forName("indi.sly.system.common.lang" + clientResponseException.clazz());
-
-                    causeSystemException = (ASystemException) causeSystemExceptionClass.getDeclaredConstructor().newInstance();
-
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                         InvocationTargetException | NoSuchMethodException _) {
-                    causeSystemException = new StatusUnexpectedException();
-                }
-
-                StackTraceElement[] stackTraceElements = new StackTraceElement[clientResponseException.trace().size()];
-                for (int i = 0; i < clientResponseException.trace().size(); i++) {
-                    ClientResponseExceptionTraceRecord clientResponseExceptionTrace = clientResponseException.trace().get(i);
-                    stackTraceElements[i] = new StackTraceElement(clientResponseExceptionTrace.clazz(), clientResponseExceptionTrace.method(), StringUtil.EMPTY, 1);
-                }
-
-                causeSystemException.setStackTrace(stackTraceElements);
-
-                throw new SystemException(causeSystemException);
-            } else if (ObjectUtil.allNotNull(clientResponseContent)) {
-                if (!clientResponseContent.id().equals(clientRequestContent.id())) {
-                    throw new StatusRelationshipErrorException();
-                }
-
-                invokeRemote = new RemoteDefinition();
-
-                if (ClassUtil.getSimpleName(HandleContextRecord.class).equals(clientResponseContent.clazz())) {
-                    HandleContextRecord handleContext = ObjectUtil.transferFromString(HandleContextRecord.class, clientResponseContent.value());
-
-                    invokeRemote.setType(RemoteTypes.OBJECT);
-                    invokeRemote.setClazz(handleContext.clazz());
-                    invokeRemote.setValue(ObjectUtil.transferToString(handleContext.handle()));
-                } else {
-                    invokeRemote.setType(RemoteTypes.VALUE);
-                    invokeRemote.setClazz(clientResponseContent.clazz());
-                    invokeRemote.setValue(clientResponseContent.value());
-                }
-
-                return invokeRemote;
-            } else {
+            if (ObjectUtil.isAnyNull(clientResponse)) {
                 throw new StatusUnexpectedException();
             }
+
+            switch (clientResponse.type()) {
+                case ClientResponseTypes.NORMAL -> {
+                    invokeRemote = new RemoteDefinition();
+
+                    invokeRemote.setCallContext(callContext);
+                    if (ClassUtil.isThisOrSuperContain(returnClazz, AProxyObject.class)) {
+                        invokeRemote.setTask(proxyFactory.acquireTaskName((Class<? extends AProxyObject>) returnClazz));
+                    }
+                    invokeRemote.setValue(clientResponse.value());
+                }
+                case ClientResponseTypes.SYSTEM_EXCEPTION -> {
+                    String clientResponseValue = ObjectUtil.transferFromString(String.class, clientResponse.value());
+
+                    if (ValueUtil.isAnyNullOrEmpty(clientResponseValue)) {
+                        throw new StatusUnexpectedException();
+                    }
+
+                    throw proxyFactory.getSystemException(ObjectUtil.transferFromString(String.class, clientResponseValue));
+                }
+                case ClientResponseTypes.OTHER_EXCEPTION -> {
+                    String clientResponseValue = ObjectUtil.transferFromString(String.class, clientResponse.value());
+
+                    if (ValueUtil.isAnyNullOrEmpty(clientResponseValue)) {
+                        throw new StatusUnexpectedException();
+                    }
+
+                    throw new RuntimeException(ObjectUtil.transferFromString(String.class, clientResponseValue));
+                }
+            }
+
+            return invokeRemote;
         };
 
-        this.expire = (remote, procedure, duration) -> {
-            this.invoke.apply(null, remote, procedure, "expire", new Object[]{duration});
+        this.expire = (remote, duration) -> {
+            this.invoke.apply(null, remote, "expire", Void.class, new Object[]{duration});
+        };
+
+        this.die = (remote) -> {
+            this.invoke.apply(null, remote, "uncache", Void.class, new Object[0]);
         };
     }
 
     @Override
     public int order() {
-        return 2;
+        return 1;
     }
 
     @Override
     public void resolve(RemoteDefinition remote, RemoteProcessorMediator processorMediator) {
-        processorMediator.getInvokes().add(this.invoke);
-        processorMediator.getExpires().add(this.expire);
+        if (!ValueUtil.isAnyNullOrEmpty(remote.getTask(), remote.getValue())) {
+            processorMediator.getInvokes().add(this.invoke);
+            processorMediator.getExpires().add(this.expire);
+            processorMediator.getDies().add(this.die);
+        }
     }
 }

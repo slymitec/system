@@ -1,5 +1,6 @@
 package indi.sly.subsystem.periphery.proxies.values;
 
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.values.ADefinition;
 import org.redisson.api.annotation.RObjectField;
 
@@ -13,9 +14,18 @@ public class RemoteDefinition extends ADefinition {
         this.date = new HashMap<>();
     }
 
+    private CallContextRecord callContext;
     private String task;
     private String value;
     private final Map<Long, Long> date;
+
+    public CallContextRecord getCallContext() {
+        return this.callContext;
+    }
+
+    public void setCallContext(CallContextRecord callContext) {
+        this.callContext = callContext;
+    }
 
     public String getTask() {
         return this.task;

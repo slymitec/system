@@ -152,4 +152,12 @@ public class CacheRepositoryObject extends AObject {
 
         this.liveObjectService.delete(clazz, id);
     }
+
+    public <T extends ACacheEntity> void delete(ACacheEntity cache) {
+        if (ObjectUtil.isAnyNull(cache)) {
+            throw new ConditionParametersException();
+        }
+
+        this.liveObjectService.delete(cache);
+    }
 }

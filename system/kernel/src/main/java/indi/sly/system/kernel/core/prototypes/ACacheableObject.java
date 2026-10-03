@@ -64,11 +64,9 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        UUID id = this.cache.getId();
+        cacheRepository.delete(this.cache);
 
-        cacheRepository.delete(cache.getClass(), id);
-
-        this.cache.setId(null);
+        this.cache = null;
     }
 
     public final void expire(long duration) {

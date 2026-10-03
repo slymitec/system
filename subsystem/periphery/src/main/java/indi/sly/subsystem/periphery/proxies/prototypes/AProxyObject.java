@@ -12,4 +12,8 @@ public abstract class AProxyObject extends AObject {
     public UUID getHandle() {
         return ObjectUtil.transferFromString(UUID.class, this.remote.getValue());
     }
+
+    public void die() {
+        this.remote.invoke("unCache", Void.class);
+    }
 }

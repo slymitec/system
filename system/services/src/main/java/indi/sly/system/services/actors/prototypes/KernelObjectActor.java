@@ -119,8 +119,10 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
 
             jobService.endCallContext(userContext);
         } catch (ASystemException exception) {
+            exception.printStackTrace();
             clientResponse = new ClientResponseRecord(ClientResponseTypes.SYSTEM_EXCEPTION, ObjectUtil.transferToString(exception.getMessage()));
         } catch (Exception exception) {
+            exception.printStackTrace();
             clientResponse = new ClientResponseRecord(ClientResponseTypes.OTHER_EXCEPTION, ObjectUtil.transferToString(exception.getMessage()));
         }
 

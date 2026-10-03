@@ -1,4 +1,4 @@
-package indi.sly.clisubsystem.test;
+package indi.sly.subsystem.test;
 
 import io.dapr.actors.ActorMethod;
 import io.dapr.actors.ActorType;

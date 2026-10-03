@@ -1,4 +1,4 @@
-package indi.sly.clisubsystem.boot;
+package indi.sly.subsystem.boot;
 
 import indi.sly.system.common.containers.AConfiguration;
 import io.dapr.actors.client.ActorClient;

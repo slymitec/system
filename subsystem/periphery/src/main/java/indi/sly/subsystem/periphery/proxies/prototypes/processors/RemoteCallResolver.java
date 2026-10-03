@@ -70,7 +70,7 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
                         throw new StatusUnexpectedException();
                     }
 
-                    throw proxyFactory.getSystemException(ObjectUtil.transferFromString(String.class, clientResponseValue));
+                    throw proxyFactory.getSystemException(clientResponseValue);
                 }
                 case ClientResponseTypes.OTHER_EXCEPTION -> {
                     String clientResponseValue = ObjectUtil.transferFromString(String.class, clientResponse.value());
@@ -79,7 +79,7 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
                         throw new StatusUnexpectedException();
                     }
 
-                    throw new RuntimeException(ObjectUtil.transferFromString(String.class, clientResponseValue));
+                    throw new RuntimeException(clientResponseValue);
                 }
             }
 

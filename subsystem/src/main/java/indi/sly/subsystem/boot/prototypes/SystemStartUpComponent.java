@@ -1,4 +1,4 @@
-package indi.sly.clisubsystem.boot.prototypes;
+package indi.sly.subsystem.boot.prototypes;
 
 import indi.sly.subsystem.periphery.core.CoreManager;
 import indi.sly.subsystem.periphery.core.boot.prototypes.BootObject;

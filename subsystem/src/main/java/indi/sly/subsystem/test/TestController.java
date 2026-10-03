@@ -1,4 +1,4 @@
-package indi.sly.clisubsystem.test;
+package indi.sly.subsystem.test;
 
 import indi.sly.subsystem.periphery.core.CoreManager;
 import indi.sly.subsystem.periphery.core.environment.containers.KernelSpace;
@@ -55,7 +55,7 @@ public class TestController {
 
         long current = dateTime.getCurrent();
 
-        return dateTime.getHandle().toString() + "：" + current;
+        return dateTime.getHandle().toString() + ": " + current;
     }
 
     @RequestMapping(value = {"/test2"}, method = {RequestMethod.GET, RequestMethod.POST})
@@ -64,22 +64,26 @@ public class TestController {
             this.init();
         }
 
-        ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
+        try {
+            ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
 
-        UUID sessionId = UUIDUtil.getFormLongs(-1, -1);
+            UUID sessionId = UUIDUtil.getFormLongs(-1, -1);
 
-        SessionObject session = proxyManager.getSession(sessionId);
+            SessionObject session = proxyManager.getSession(sessionId);
 
-        UUID PROCESSES_PROTOTYPE_SYSTEM_ID = UUIDUtil.getFormLongs(116714210840444914L, -8591569799439283374L);
+            UUID PROCESSES_PROTOTYPE_SYSTEM_ID = UUIDUtil.getFormLongs(116714210840444914L, -8591569799439283374L);
 
-        CallContextProcessRecord callContextProcess = new CallContextProcessRecord(PROCESSES_PROTOTYPE_SYSTEM_ID, CallContextProcessType.CLIENT, null, null);
+            CallContextProcessRecord callContextProcess = new CallContextProcessRecord(PROCESSES_PROTOTYPE_SYSTEM_ID, CallContextProcessType.CLIENT, null, null);
 
-        UUID handle = UUID.fromString("01a101df-b167-7f68-b0a8-a896e39e7710");
+            UUID handle = UUID.fromString("01a101df-b167-7f68-b0a8-a896e39e7711");
 
-        DateTimeProxyObject dateTime = session.getProxy(DateTimeProxyObject.class, handle, callContextProcess);
+            DateTimeProxyObject dateTime = session.getProxy(DateTimeProxyObject.class, handle, callContextProcess);
 
-        long current = dateTime.getCurrent();
+            long current = dateTime.getCurrent();
 
-        return dateTime.getHandle().toString() + "：" + current;
+            return dateTime.getHandle().toString() + ": " + current;
+        } catch (Exception exception) {
+            return exception.getMessage();
+        }
     }
 }

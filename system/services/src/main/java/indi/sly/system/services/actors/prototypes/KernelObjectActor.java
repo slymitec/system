@@ -4,7 +4,6 @@ import indi.sly.system.common.lang.ASystemException;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.kernel.core.CoreManager;
-import indi.sly.system.kernel.core.environment.containers.KernelSpace;
 import indi.sly.system.kernel.core.environment.containers.UserSpace;
 import indi.sly.system.services.jobs.JobService;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
@@ -114,15 +113,16 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
 
                 clientResponse = new ClientResponseRecord(ClientResponseTypes.NORMAL, ObjectUtil.transferToString(result));
             } else {
+                taskContent.getException().printStackTrace(); //Temporary
                 clientResponse = new ClientResponseRecord(ClientResponseTypes.SYSTEM_EXCEPTION, ObjectUtil.transferToString(taskContent.getException().getMessage()));
             }
 
             jobService.endCallContext(userContext);
         } catch (ASystemException exception) {
-            exception.printStackTrace();
+            exception.printStackTrace(); //Temporary
             clientResponse = new ClientResponseRecord(ClientResponseTypes.SYSTEM_EXCEPTION, ObjectUtil.transferToString(exception.getMessage()));
         } catch (Exception exception) {
-            exception.printStackTrace();
+            exception.printStackTrace(); //Temporary
             clientResponse = new ClientResponseRecord(ClientResponseTypes.OTHER_EXCEPTION, ObjectUtil.transferToString(exception.getMessage()));
         }
 

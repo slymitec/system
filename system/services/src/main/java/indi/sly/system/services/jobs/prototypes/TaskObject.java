@@ -67,6 +67,7 @@ public class TaskObject extends ADefinitionObject<TaskDefinition> {
         }
 
         TaskContentObject taskContent = this.coreManager.create(TaskContentObject.class);
+        taskContent.setDefinition(this.definition);
         taskContent.setBase(this);
         taskContent.processorMediator = this.processorMediator;
         taskContent.status = status;

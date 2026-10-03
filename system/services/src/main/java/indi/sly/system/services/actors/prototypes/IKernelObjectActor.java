@@ -8,6 +8,9 @@ import reactor.core.publisher.Mono;
 
 @ActorType(name = "KernelObjectActor")
 public interface IKernelObjectActor {
-    @ActorMethod(name = "call", returns = CallRequestRecord.class)
+    @ActorMethod(name = "call", returns = ClientResponseRecord.class)
     Mono<ClientResponseRecord> call(CallRequestRecord callRequest);
+
+    @ActorMethod(name = "toString")
+    String toString();
 }

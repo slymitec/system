@@ -38,7 +38,7 @@ public class TaskContentObject extends AChildDefinitionObject<TaskDefinition, Ta
     }
 
     public void setParameter(List<String> parameters) {
-        if (ValueUtil.isAnyNullOrEmpty(parameters)) {
+        if (ObjectUtil.isAnyNull(parameters)) {
             throw new ConditionParametersException();
         }
 

@@ -15,12 +15,18 @@ import io.dapr.actors.ActorId;
 import io.dapr.actors.runtime.AbstractActor;
 import io.dapr.actors.runtime.ActorMethodContext;
 import io.dapr.actors.runtime.ActorRuntimeContext;
+import jakarta.inject.Named;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
+import java.util.regex.Pattern;
 
+@Named
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class KernelObjectActor extends AbstractActor implements IKernelObjectActor {
-    protected KernelObjectActor(ActorRuntimeContext runtimeContext, ActorId id) {
+    public KernelObjectActor(ActorRuntimeContext runtimeContext, ActorId id) {
         super(runtimeContext, id);
     }
 
@@ -31,16 +37,6 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
     public Mono<Void> onActivate() {
         super.onActivate();
 
-        if (ObjectUtil.isAnyNull(this.coreManager)) {
-            KernelSpace kernelSpace = SpringHelper.getInstance(KernelSpace.class);
-
-            this.coreManager = (CoreManager) kernelSpace.getClassedObjects().getOrDefault(CoreManager.class, null);
-
-            if (ObjectUtil.allNotNull(this.coreManager)) {
-                this.coreManager.check();
-            }
-        }
-
         if (ObjectUtil.isAnyNull(this.coreManager.getUserSpace())) {
             UserSpace userSpace = SpringHelper.getInstance(UserSpace.class);
 
@@ -49,7 +45,7 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
 
         if (ObjectUtil.isAnyNull(this.task)) {
             String actorId = this.getId().toString();
-            String[] actorIds = actorId.split("[/\\\\]");
+            String[] actorIds = actorId.split(Pattern.quote("|"));
 
             if (actorIds.length != 2) {
                 throw new ConditionParametersException();
@@ -98,6 +94,7 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
         return super.onPreActorMethod(actorMethodContext);
     }
 
+    @Override
     public Mono<ClientResponseRecord> call(CallRequestRecord callRequest) {
         CallContextRecord callContext = callRequest.callContext();
         ClientRequestRecord clientRequest = callRequest.clientRequest();
@@ -122,8 +119,10 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
 
             jobService.endCallContext(userContext);
         } catch (ASystemException exception) {
+            exception.printStackTrace();
             clientResponse = new ClientResponseRecord(ClientResponseTypes.SYSTEM_EXCEPTION, ObjectUtil.transferToString(exception.getMessage()));
         } catch (Exception exception) {
+            exception.printStackTrace();
             clientResponse = new ClientResponseRecord(ClientResponseTypes.OTHER_EXCEPTION, ObjectUtil.transferToString(exception.getMessage()));
         }
 

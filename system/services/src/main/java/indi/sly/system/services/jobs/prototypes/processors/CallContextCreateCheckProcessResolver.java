@@ -13,9 +13,10 @@ import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
 import indi.sly.system.kernel.processes.values.ProcessContextType;
 import indi.sly.system.kernel.services.instances.values.ServiceModeType;
 import indi.sly.system.kernel.services.values.ServiceStatusEntity;
+import indi.sly.system.services.core.environment.values.ServiceKernelExtensionSpace;
+import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.lang.CallContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.mediators.CallContextProcessorMediator;
-import indi.sly.system.services.jobs.values.CallContextRecord;
 import indi.sly.system.services.jobs.values.CallContextProcessType;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -31,25 +32,32 @@ public class CallContextCreateCheckProcessResolver extends AResolver implements 
             ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
-            ProcessObject process = processManager.getCurrent();
-            ProcessContextObject processContext = process.getContext();
+            ServiceKernelExtensionSpace serviceSpace = (ServiceKernelExtensionSpace) this.coreManager.getKernelSpace().getServiceSpace();
+            TransactionalActionComponent transactionalAction = serviceSpace.getTransactionalAction();
 
-            if (LogicalUtil.isAnyEqual(processContext.getType(), ProcessContextType.EXECUTABLE_SERVICE)) {
-                ServiceRepositoryObject serviceRepository = memoryManager.getServiceRepository();
-                ServiceStatusEntity serviceStatus = serviceRepository.get(processContext.getApplication().id());
-                long mode = serviceStatus.getMode();
+            transactionalAction.runWithTransactional(() -> {
+                ProcessObject process = processManager.getCurrent();
+                ProcessContextObject processContext = process.getContext();
 
-                if (LogicalUtil.isAnyEqual(mode, ServiceModeType.ONLY_APPLICATION) && LogicalUtil.allNotEqual(callContextRequest.process().processType(), CallContextProcessType.APPLICATION)) {
+                if (LogicalUtil.isAnyEqual(processContext.getType(), ProcessContextType.EXECUTABLE_SERVICE)) {
+                    ServiceRepositoryObject serviceRepository = memoryManager.getServiceRepository();
+                    ServiceStatusEntity serviceStatus = serviceRepository.get(processContext.getApplication().id());
+                    long mode = serviceStatus.getMode();
+
+                    if (LogicalUtil.isAnyEqual(mode, ServiceModeType.ONLY_APPLICATION) && LogicalUtil.allNotEqual(callContextRequest.process().processType(), CallContextProcessType.APPLICATION)) {
+                        throw new ConditionRefuseException();
+                    }
+                }
+
+                ProcessSessionObject processSession = process.getSession();
+
+                UUID processSessionId = processSession.getId();
+                if (!ValueUtil.isAnyNullOrEmpty(processSessionId) && !processSessionId.equals(callContextRequest.sessionId())) {
                     throw new ConditionRefuseException();
                 }
-            }
 
-            ProcessSessionObject processSession = process.getSession();
-
-            UUID processSessionId = processSession.getId();
-            if (!ValueUtil.isAnyNullOrEmpty(processSessionId) && !processSessionId.equals(callContextRequest.sessionId())) {
-                throw new ConditionRefuseException();
-            }
+                return null;
+            });
 
             return callContext;
         };

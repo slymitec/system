@@ -13,7 +13,7 @@ public class KernelObjectActorFactory extends AFactory {
         ActorFactory<T> actorFactory = (actorRuntimeContext, actorId) -> {
             T actor = SpringHelper.getInstance(actorClass, actorRuntimeContext, actorId);
 
-            actor.coreManager = SpringHelper.getInstance(CoreManager.class);
+            actor.coreManager = this.coreManager;
 
             return actor;
         };

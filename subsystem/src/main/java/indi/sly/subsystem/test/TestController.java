@@ -75,7 +75,7 @@ public class TestController {
 
             CallContextProcessRecord callContextProcess = new CallContextProcessRecord(PROCESSES_PROTOTYPE_SYSTEM_ID, CallContextProcessType.CLIENT, null, null);
 
-            UUID handle = UUID.fromString("01a101df-b167-7f68-b0a8-a896e39e7711");
+            UUID handle = UUID.fromString("01a101df-b167-7f68-b0a8-a896e39e7710");
 
             DateTimeProxyObject dateTime = session.getProxy(DateTimeProxyObject.class, handle, callContextProcess);
 

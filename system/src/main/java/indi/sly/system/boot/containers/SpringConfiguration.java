@@ -1,14 +1,17 @@
-package indi.sly.subsystem.boot;
+package indi.sly.system.boot.containers;
 
 import indi.sly.system.common.containers.AConfiguration;
-import io.dapr.actors.client.ActorClient;
-import io.dapr.config.Properties;
+
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
+import org.springframework.boot.web.server.servlet.context.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tools.jackson.databind.module.SimpleModule;
 import tools.jackson.databind.ser.std.ToStringSerializer;
 
@@ -16,7 +19,10 @@ import tools.jackson.databind.ser.std.ToStringSerializer;
 @ComponentScan(basePackages = SpringConfiguration.BASE_PACKAGES)
 @EnableAsync
 @EnableAutoConfiguration()
-public class SpringConfiguration extends AConfiguration {
+@EnableJpaRepositories(basePackages = SpringConfiguration.BASE_PACKAGES)
+@EntityScan(basePackages = SpringConfiguration.BASE_PACKAGES)
+@ServletComponentScan(basePackages = SpringConfiguration.BASE_PACKAGES)
+public class SpringConfiguration extends AConfiguration implements WebMvcConfigurer {
     public static final String BASE_PACKAGES = "indi.sly";
 
     @Bean
@@ -27,10 +33,5 @@ public class SpringConfiguration extends AConfiguration {
             module.addSerializer(Long.TYPE, ToStringSerializer.instance);
             builder.addModule(module);
         };
-    }
-
-    @Bean(destroyMethod = "close")
-    public ActorClient actorClient() {
-        return new ActorClient(new Properties());
     }
 }

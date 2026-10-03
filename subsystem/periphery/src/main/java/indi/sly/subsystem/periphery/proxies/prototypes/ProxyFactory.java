@@ -77,7 +77,7 @@ public class ProxyFactory extends AFactory {
     public IKernelObjectActor getKernelObjectActor(String taskName, UUID handle) {
         ActorClient actorClient = SpringHelper.getInstance(ActorClient.class);
 
-        IKernelObjectActor kernelObjectActor = new ActorProxyBuilder<>(IKernelObjectActor.class, actorClient).build(new ActorId(taskName + "\\" + UUIDUtil.toString(handle)));
+        IKernelObjectActor kernelObjectActor = new ActorProxyBuilder<>(IKernelObjectActor.class, actorClient).build(new ActorId(taskName + "|" + UUIDUtil.toString(handle)));
 
         return kernelObjectActor;
     }

@@ -28,7 +28,7 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
         RemoteDefinition remote = new RemoteDefinition();
         remote.setCallContext(callContext);
         remote.setTask(taskName);
-        remote.setValue(UUIDUtil.toString(handle));
+        remote.setValue(ObjectUtil.transferToString(handle));
 
         return this.factory.buildProxy(clazz, this.factory.buildRemote(remote));
     }
@@ -44,7 +44,7 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
         RemoteDefinition remote = new RemoteDefinition();
         remote.setCallContext(callContext);
         remote.setTask(taskName);
-        remote.setValue(UUIDUtil.toString(handle));
+        remote.setValue(ObjectUtil.transferToString(handle));
 
 
         return this.factory.buildProxy(clazz, this.factory.buildRemote(remote));

@@ -118,7 +118,10 @@ public class CacheRepositoryObject extends AObject {
     }
 
     public <T extends ACacheEntity> void update(T cache) {
-        if (ValueUtil.isAnyNullOrEmpty(cache, cache.getId())) {
+        if (ObjectUtil.isAnyNull(cache)) {
+            throw new ConditionParametersException();
+        }
+        if (ValueUtil.isAnyNullOrEmpty(cache.getId())) {
             throw new ConditionParametersException();
         }
 

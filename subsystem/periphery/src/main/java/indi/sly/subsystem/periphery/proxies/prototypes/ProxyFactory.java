@@ -8,10 +8,7 @@ import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessor
 import indi.sly.subsystem.periphery.proxies.prototypes.processors.*;
 import indi.sly.subsystem.periphery.proxies.values.*;
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.supports.SpringHelper;
-import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.supports.*;
 import io.dapr.actors.ActorId;
 import io.dapr.actors.client.ActorClient;
 import io.dapr.actors.client.ActorProxyBuilder;
@@ -119,6 +116,10 @@ public class ProxyFactory extends AFactory {
     }
 
     public <T extends AProxyObject> T buildProxy(Class<T> clazz, RemoteObject remote) {
+        if (ValueUtil.isAnyNullOrEmpty(remote.getTask(), remote.getValue())) {
+            throw new StatusRelationshipErrorException();
+        }
+
         return this.createProxy(clazz, remote);
     }
 

@@ -21,7 +21,7 @@ public class RemoteObject extends ADefinitionObject<RemoteDefinition> {
     protected RemoteProcessorMediator processorMediator;
 
     public RemoteObject invoke(String method, Class<?> returnClazz, Object... args) {
-        if (ValueUtil.isAnyNullOrEmpty(method)) {
+        if (ObjectUtil.isAnyNull(returnClazz) || ValueUtil.isAnyNullOrEmpty(method)) {
             throw new ConditionParametersException();
         }
         if (ObjectUtil.isAnyNull(args)) {
@@ -55,6 +55,10 @@ public class RemoteObject extends ADefinitionObject<RemoteDefinition> {
         for (RemoteProcessorDieConsumer die : dies) {
             die.accept(this.definition);
         }
+    }
+
+    public String getTask() {
+        return this.definition.getTask();
     }
 
     public String getValue() {

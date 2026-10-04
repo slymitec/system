@@ -42,7 +42,7 @@ public record PathRecord(List<IdentifierRecord> identifiers) {
 
     @Override
     public List<IdentifierRecord> identifiers() {
-        return CollectionUtil.unmodifiable(this.identifiers);
+        return this.identifiers;
     }
 
     public static class PathSerializer extends ValueSerializer<PathRecord> {

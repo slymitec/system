@@ -1,6 +1,5 @@
 package indi.sly.subsystem.periphery.proxies.instances.objects;
 
-import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.SystemVersionProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.InfoProxyObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.AManagerProxyObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.RemoteObject;
@@ -13,7 +12,7 @@ import org.springframework.context.annotation.Scope;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ObjectProxyManager extends AManagerProxyObject {
     public InfoProxyObject get(PathRecord path) {
-        RemoteObject remote = this.remote.invoke("get", PathRecord.class, path);
+        RemoteObject remote = this.remote.invoke("get", InfoProxyObject.class, path);
 
         return this.factory.buildProxy(InfoProxyObject.class, remote);
     }

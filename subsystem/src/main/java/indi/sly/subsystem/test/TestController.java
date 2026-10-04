@@ -83,13 +83,11 @@ public class TestController {
 
         ObjectProxyManager objectManager = session.getManagerProxy(ObjectProxyManager.class, callContextProcess);
 
-//        InfoProxyObject info = objectManager.get(new PathRecord(List.of(new IdentifierRecord("Files"))));
-//
-//        Map<Long, Long> infoDate = info.getDate();
-//
-//        return info.getHandle().toString() + ": " + infoDate.getOrDefault(DateTimeType.CREATE, null);
+        InfoProxyObject info = objectManager.get(new PathRecord(List.of(new IdentifierRecord("Files"))));
 
-        return "";
+        Map<Long, Long> infoDate = info.getDate();
+
+        return info.getHandle().toString() + ": " + infoDate.getOrDefault(DateTimeType.CREATE, null);
     }
 
     @RequestMapping(value = {"/test2"}, method = {RequestMethod.GET, RequestMethod.POST})

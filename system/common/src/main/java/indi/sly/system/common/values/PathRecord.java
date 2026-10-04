@@ -40,11 +40,6 @@ public record PathRecord(List<IdentifierRecord> identifiers) {
         }
     }
 
-    @Override
-    public List<IdentifierRecord> identifiers() {
-        return this.identifiers;
-    }
-
     public static class PathSerializer extends ValueSerializer<PathRecord> {
         @Override
         public void serializeWithType(PathRecord value, JsonGenerator generator, SerializationContext ctxt, TypeSerializer typeSer) throws JacksonException {

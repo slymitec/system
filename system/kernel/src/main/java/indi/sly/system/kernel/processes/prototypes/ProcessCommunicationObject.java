@@ -401,8 +401,8 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         }
     }
 
-    public void createSignal(Set<UUID> sourceProcessIDs) {
-        if (ObjectUtil.isAnyNull(sourceProcessIDs)) {
+    public void createSignal(Set<UUID> sourceProcessIds) {
+        if (ObjectUtil.isAnyNull(sourceProcessIds)) {
             throw new ConditionParametersException();
         }
 
@@ -426,7 +426,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
             signal.setId(this.base.getId());
             signal.setDuration(CacheDurationType.PERMANENT);
-            signal.getSourceProcessIds().addAll(sourceProcessIDs);
+            signal.getSourceProcessIds().addAll(sourceProcessIds);
             signal.setLimit(processToken.getLimits().get(ProcessTokenLimitType.SIGNAL_LENGTH_MAX));
 
             cacheRepository.add(signal);

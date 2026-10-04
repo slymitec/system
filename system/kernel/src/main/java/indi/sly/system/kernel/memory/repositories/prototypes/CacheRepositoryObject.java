@@ -3,7 +3,6 @@ package indi.sly.system.kernel.memory.repositories.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.ObjectUtil;
-import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.environment.values.CacheDurationType;
 import indi.sly.system.kernel.core.prototypes.AObject;
@@ -15,10 +14,8 @@ import org.redisson.api.RLiveObject;
 import org.redisson.api.RLiveObjectService;
 import org.redisson.api.RedissonClient;
 import org.redisson.api.condition.Condition;
-import org.redisson.codec.JsonJackson3Codec;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import tools.jackson.databind.json.JsonMapper;
 
 import java.time.Duration;
 import java.util.Collection;

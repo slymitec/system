@@ -4,7 +4,7 @@ import indi.sly.system.common.lang.StatusNotSupportedException;
 
 import java.util.UUID;
 
-public class AServiceProxyObject extends AProxyObject {
+public class AManagerProxyObject extends AProxyObject {
     @Override
     public UUID getHandle() {
         throw new StatusNotSupportedException();

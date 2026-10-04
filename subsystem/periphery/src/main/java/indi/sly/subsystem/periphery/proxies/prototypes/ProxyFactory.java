@@ -2,8 +2,12 @@ package indi.sly.subsystem.periphery.proxies.prototypes;
 
 import indi.sly.subsystem.periphery.core.prototypes.AFactory;
 import indi.sly.subsystem.periphery.proxies.instances.core.CoreProxyManager;
-import indi.sly.subsystem.periphery.proxies.instances.core.DateTimeProxyObject;
-import indi.sly.subsystem.periphery.proxies.instances.core.SystemVersionProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.DateTimeProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.SystemVersionProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.objects.ObjectProxyManager;
+import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.DumpProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.InfoProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.SecurityDescriptorProxyObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.prototypes.processors.*;
 import indi.sly.subsystem.periphery.proxies.values.*;
@@ -16,10 +20,7 @@ import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -65,6 +66,11 @@ public class ProxyFactory extends AFactory {
         this.registerProxy(CoreProxyManager.class, "CoreManager");
         this.registerProxy(SystemVersionProxyObject.class, "SystemVersionObject");
         this.registerProxy(DateTimeProxyObject.class, "DateTimeObject");
+
+        this.registerProxy(ObjectProxyManager.class, "ObjectManager");
+        this.registerProxy(DumpProxyObject.class, "DumpObject");
+        this.registerProxy(InfoProxyObject.class, "InfoObject");
+        this.registerProxy(SecurityDescriptorProxyObject.class, "SecurityDescriptorObject");
     }
 
     private void registerProxy(Class<? extends AProxyObject> clazz, String taskName) {
@@ -138,5 +144,21 @@ public class ProxyFactory extends AFactory {
         session.setSessionId(sessionId);
 
         return this.createSession(session);
+    }
+
+    public <T> T getValue(Class<T> returnClass, RemoteObject remote) {
+        return ObjectUtil.transferFromString(returnClass, remote.getValue());
+    }
+
+    public <T> Set<T> getSetValue(Class<T> returnClass, RemoteObject remote) {
+        return ObjectUtil.transferSetFromString(returnClass, remote.getValue());
+    }
+
+    public <T> List<T> getListValue(Class<T> returnClass, RemoteObject remote) {
+        return ObjectUtil.transferListFromString(returnClass, remote.getValue());
+    }
+
+    public <TK, TV> Map<TK, TV> getMapValue(Class<TK> returnKeyClass, Class<TV> returnValueClass, RemoteObject remote) {
+        return ObjectUtil.transferMapFromString(returnKeyClass, returnValueClass, remote.getValue());
     }
 }

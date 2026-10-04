@@ -1,6 +1,5 @@
 package indi.sly.subsystem.periphery.proxies.prototypes;
 
-import indi.sly.subsystem.periphery.core.prototypes.AChildDefinitionObject;
 import indi.sly.subsystem.periphery.core.prototypes.ADefinitionObject;
 import indi.sly.subsystem.periphery.proxies.lang.*;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;

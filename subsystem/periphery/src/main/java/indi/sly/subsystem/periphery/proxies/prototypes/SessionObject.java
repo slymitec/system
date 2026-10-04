@@ -16,7 +16,7 @@ import java.util.UUID;
 public class SessionObject extends ADefinitionObject<SessionDefinition> {
     protected ProxyFactory factory;
 
-    public <T extends AServiceProxyObject> T getServiceProxy(Class<T> clazz, CallContextProcessRecord callContextProcess) {
+    public <T extends AManagerProxyObject> T getManagerProxy(Class<T> clazz, CallContextProcessRecord callContextProcess) {
         if (ObjectUtil.isAnyNull(clazz, callContextProcess)) {
             throw new ConditionParametersException();
         }

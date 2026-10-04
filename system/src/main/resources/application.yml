@@ -36,7 +36,7 @@ spring:
   redis:
     redisson:
       config: |
-        codec: !<org.redisson.codec.Kryo5Codec> {}
+        codec: !<org.redisson.codec.JsonJackson3Codec> {}
         singleServerConfig:
           address: "redis://10.28.0.16:6379"
 

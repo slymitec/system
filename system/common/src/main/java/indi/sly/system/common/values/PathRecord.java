@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@JsonSerialize(using = PathRecord.PathDefinitionSerializer.class)
-@JsonDeserialize(using = PathRecord.PathDefinitionDeserializer.class)
+@JsonSerialize(using = PathRecord.PathSerializer.class)
+@JsonDeserialize(using = PathRecord.PathDeserializer.class)
 public record PathRecord(List<IdentifierRecord> identifiers) {
     public PathRecord(List<IdentifierRecord> identifiers) {
         this.identifiers = new ArrayList<>();
@@ -45,7 +45,7 @@ public record PathRecord(List<IdentifierRecord> identifiers) {
         return CollectionUtil.unmodifiable(this.identifiers);
     }
 
-    public static class PathDefinitionSerializer extends ValueSerializer<PathRecord> {
+    public static class PathSerializer extends ValueSerializer<PathRecord> {
         @Override
         public void serializeWithType(PathRecord value, JsonGenerator generator, SerializationContext ctxt, TypeSerializer typeSer) throws JacksonException {
             this.serialize(value, generator, ctxt);
@@ -69,7 +69,7 @@ public record PathRecord(List<IdentifierRecord> identifiers) {
         }
     }
 
-    public static class PathDefinitionDeserializer extends ValueDeserializer<PathRecord> {
+    public static class PathDeserializer extends ValueDeserializer<PathRecord> {
         @Override
         public Object deserializeWithType(JsonParser parser, DeserializationContext context, TypeDeserializer typeDeserializer) throws JacksonException {
             return this.deserialize(parser, context);

@@ -90,6 +90,53 @@ public class TestController {
         return info.getHandle().toString() + ": " + infoDate.getOrDefault(DateTimeType.CREATE, null);
     }
 
+    @RequestMapping(value = {"/test1r"}, method = {RequestMethod.GET, RequestMethod.POST})
+    public Object test1r() {
+        if (ObjectUtil.isAnyNull(this.coreManager)) {
+            this.init();
+        }
+
+        try {
+            ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
+
+            UUID sessionId = UUIDUtil.getFormLongs(-1, -1);
+
+            SessionObject session = proxyManager.getSession(sessionId);
+
+            UUID PROCESSES_PROTOTYPE_SYSTEM_ID = UUIDUtil.getFormLongs(116714210840444914L, -8591569799439283374L);
+
+            CallContextProcessRecord callContextProcess = new CallContextProcessRecord(PROCESSES_PROTOTYPE_SYSTEM_ID, CallContextProcessType.CLIENT, null, null);
+
+            UUID handle = UUID.fromString("01a10613-1c5f-7570-a16d-990ad2cc5b18");
+
+            InfoProxyObject info = session.getProxy(InfoProxyObject.class, handle, callContextProcess);
+
+            System.out.println(info.getName());
+
+            Map<Long, Long> infoDate = info.getDate();
+
+            String r = "";
+
+            for (Map.Entry<Long, Long> infoDatePair : infoDate.entrySet()) {
+                String k = "";
+                if (infoDatePair.getKey() == DateTimeType.CREATE) {
+                    k = "CREATE";
+                } else if (infoDatePair.getKey() == DateTimeType.ACCESS) {
+                    k = "ACCESS";
+                } else if (infoDatePair.getKey() == DateTimeType.MODIFIED) {
+                    k = "MODIFIED";
+                } else if (infoDatePair.getKey() == DateTimeType.EXPIRED) {
+                    k = "EXPIRED";
+                }
+                r += k + ": " + infoDatePair.getValue().toString() + "; ";
+            }
+
+            return info.getHandle().toString() + ": " + r;
+        } catch (Exception exception) {
+            return exception.getMessage();
+        }
+    }
+
     @RequestMapping(value = {"/test2"}, method = {RequestMethod.GET, RequestMethod.POST})
     public Object test2() {
         if (ObjectUtil.isAnyNull(this.coreManager)) {

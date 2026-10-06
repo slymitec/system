@@ -26,7 +26,6 @@ public class AccountObjectTaskInitializer extends ATaskInitializer {
 
         this.register("getId", this::getId, TransactionType.INDEPENDENCE);
         this.register("getName", this::getName, TransactionType.INDEPENDENCE);
-        this.register("getToken", this::getToken, TransactionType.INDEPENDENCE);
         this.register("getPassword", this::getPassword, TransactionType.INDEPENDENCE);
         this.register("setPassword", this::setPassword, TransactionType.INDEPENDENCE);
         this.register("getGroups", this::getGroups, TransactionType.INDEPENDENCE);

@@ -33,12 +33,12 @@ public class ProcessInfoTableProxyObject extends AProxyObject {
     public ProcessInfoEntryProxyObject getByIndex(UUID index) {
         RemoteObject remote = this.remote.invoke("getByIndex", index);
 
-        return this.factory.getValue(ProcessInfoEntryProxyObject.class, remote);
+        return this.factory.buildProxy(ProcessInfoEntryProxyObject.class, remote);
     }
 
     public ProcessInfoEntryProxyObject getById(UUID id) {
         RemoteObject remote = this.remote.invoke("getById", id);
 
-        return this.factory.getValue(ProcessInfoEntryProxyObject.class, remote);
+        return this.factory.buildProxy(ProcessInfoEntryProxyObject.class, remote);
     }
 }

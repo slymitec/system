@@ -18,25 +18,25 @@ public class ProcessProxyManager extends AManagerProxyObject {
     public ProcessProxyObject getCurrent() {
         RemoteObject remote = this.remote.invoke("getCurrent");
 
-        return this.factory.getValue(ProcessProxyObject.class, remote);
+        return this.factory.buildProxy(ProcessProxyObject.class, remote);
     }
 
     public ProcessProxyObject getWithAuthorization(UUID processId, AccountAuthorizationProxyObject accountAuthorization) {
         RemoteObject remote = this.remote.invoke("getWithAuthorization", processId, accountAuthorization.getHandle());
 
-        return this.factory.getValue(ProcessProxyObject.class, remote);
+        return this.factory.buildProxy(ProcessProxyObject.class, remote);
     }
 
     public ProcessProxyObject get(UUID processId) {
         RemoteObject remote = this.remote.invoke("get");
 
-        return this.factory.getValue(ProcessProxyObject.class, remote);
+        return this.factory.buildProxy(ProcessProxyObject.class, remote);
     }
 
     public ProcessProxyObject create(AccountAuthorizationProxyObject accountAuthorization, UUID fileIndex, String parameters, PathRecord workFolder, ProcessAdditionalCreatorRecord additionalCreator) {
         RemoteObject remote = this.remote.invoke("create", accountAuthorization.getHandle(), fileIndex, parameters, workFolder, additionalCreator);
 
-        return this.factory.getValue(ProcessProxyObject.class, remote);
+        return this.factory.buildProxy(ProcessProxyObject.class, remote);
     }
 
     public void endCurrent() {

@@ -7,6 +7,9 @@ import indi.sly.subsystem.periphery.proxies.instances.core.CoreProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.DateTimeProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.objects.ObjectProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.InfoProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.security.UserProxyManager;
+import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.AccountProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.GroupProxyObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.SessionObject;
 import indi.sly.subsystem.periphery.proxies.values.CallContextProcessRecord;
 import indi.sly.subsystem.periphery.proxies.values.CallContextProcessType;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -166,5 +170,35 @@ public class TestController {
         } catch (Exception exception) {
             return exception.getMessage();
         }
+    }
+
+    @RequestMapping(value = {"/test3"}, method = {RequestMethod.GET, RequestMethod.POST})
+    public Object test3() {
+        if (ObjectUtil.isAnyNull(this.coreManager)) {
+            this.init();
+        }
+
+        ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
+
+        UUID sessionId = UUIDUtil.getFormLongs(-1, -1);
+
+        SessionObject session = proxyManager.getSession(sessionId);
+
+        UUID PROCESSES_PROTOTYPE_SYSTEM_ID = UUIDUtil.getFormLongs(116714210840444914L, -8591569799439283374L);
+
+        CallContextProcessRecord callContextProcess = new CallContextProcessRecord(PROCESSES_PROTOTYPE_SYSTEM_ID, CallContextProcessType.CLIENT, null, null);
+
+        UserProxyManager userManager = session.getManagerProxy(UserProxyManager.class, callContextProcess);
+
+        AccountProxyObject currentAccount = userManager.getCurrentAccount();
+
+        Set<GroupProxyObject> groups = currentAccount.getGroups();
+
+        String result = "";
+        for (GroupProxyObject group : groups) {
+            result += group.getName() + ",";
+        }
+
+        return currentAccount.getHandle().toString() + ": " + result;
     }
 }

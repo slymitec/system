@@ -63,7 +63,6 @@ public class JobService extends AService {
             this.createTask("DumpObject", TaskAttributeType.NULL, null, this.coreManager.create(DumpObjectTaskInitializer.class));
             this.createTask("InfoObject", TaskAttributeType.NULL, null, this.coreManager.create(InfoObjectTaskInitializer.class));
             this.createTask("SecurityDescriptorObject", TaskAttributeType.NULL, null, this.coreManager.create(SecurityDescriptorObjectTaskInitializer.class));
-            this.createTask("InfoContentObject", TaskAttributeType.NULL, null, this.coreManager.create(NoneInfoContentObjectTaskInitializer.class));
             this.createTask("FolderContentObject", TaskAttributeType.NULL, null, this.coreManager.create(NoneInfoContentObjectTaskInitializer.class));
             this.createTask("NamelessFolderContentObject", TaskAttributeType.NULL, null, this.coreManager.create(NoneInfoContentObjectTaskInitializer.class));
 
@@ -79,7 +78,7 @@ public class JobService extends AService {
             this.createTask("ProcessTokenObject", TaskAttributeType.NULL, null, this.coreManager.create(ProcessTokenObjectTaskInitializer.class));
 
             this.createTask("UserManager", TaskAttributeType.OBJECT_IS_NOT_CACHEABLE, null, this.coreManager.create(UserManagerTaskInitializer.class));
-            this.createTask("AccountAuthorization", TaskAttributeType.NULL, null, this.coreManager.create(AccountAuthorizationObjectTaskInitializer.class));
+            this.createTask("AccountAuthorizationObject", TaskAttributeType.NULL, null, this.coreManager.create(AccountAuthorizationObjectTaskInitializer.class));
             this.createTask("AccountObject", TaskAttributeType.NULL, null, this.coreManager.create(AccountObjectTaskInitializer.class));
             this.createTask("AccountSessionsObject", TaskAttributeType.NULL, null, this.coreManager.create(AccountSessionsObjectTaskInitializer.class));
             this.createTask("AccountTokenObject", TaskAttributeType.NULL, null, this.coreManager.create(AccountTokenObjectTaskInitializer.class));

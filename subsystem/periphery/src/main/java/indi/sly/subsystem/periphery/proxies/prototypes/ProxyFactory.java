@@ -5,9 +5,16 @@ import indi.sly.subsystem.periphery.proxies.instances.core.CoreProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.DateTimeProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.SystemVersionProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.objects.ObjectProxyManager;
-import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.DumpProxyObject;
-import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.InfoProxyObject;
-import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.SecurityDescriptorProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.*;
+import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.instances.FolderContentProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.instances.NamelessFolderContentProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.processes.ProcessProxyManager;
+import indi.sly.subsystem.periphery.proxies.instances.processes.prototypes.*;
+import indi.sly.subsystem.periphery.proxies.instances.security.UserProxyManager;
+import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.*;
+import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.instances.AuditContentProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.services.ServicesProxyManager;
+import indi.sly.subsystem.periphery.proxies.instances.services.prototypes.ServiceContentProxyObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.prototypes.processors.*;
 import indi.sly.subsystem.periphery.proxies.values.*;
@@ -71,6 +78,31 @@ public class ProxyFactory extends AFactory {
         this.registerProxy(DumpProxyObject.class, "DumpObject");
         this.registerProxy(InfoProxyObject.class, "InfoObject");
         this.registerProxy(SecurityDescriptorProxyObject.class, "SecurityDescriptorObject");
+        this.registerProxy(FolderContentProxyObject.class, "FolderContentObject");
+        this.registerProxy(NamelessFolderContentProxyObject.class, "NamelessFolderContentObject");
+
+        this.registerProxy(ProcessProxyManager.class, "ProcessManager");
+        this.registerProxy(ProcessProxyObject.class, "ProcessObject");
+        this.registerProxy(ProcessCommunicationProxyObject.class, "ProcessCommunicationObject");
+        this.registerProxy(ProcessContextProxyObject.class, "ProcessContextObject");
+        this.registerProxy(ProcessInfoEntryProxyObject.class, "ProcessInfoEntryObject");
+        this.registerProxy(ProcessInfoTableProxyObject.class, "ProcessInfoTableObject");
+        this.registerProxy(ProcessSessionProxyObject.class, "ProcessSessionObject");
+        this.registerProxy(ProcessStatisticsProxyObject.class, "ProcessStatisticsObject");
+        this.registerProxy(ProcessStatusProxyObject.class, "ProcessStatusObject");
+        this.registerProxy(ProcessTokenProxyObject.class, "ProcessTokenObject");
+
+        this.registerProxy(UserProxyManager.class, "UserManager");
+        this.registerProxy(AccountAuthorizationProxyObject.class, "AccountAuthorizationObject");
+        this.registerProxy(AccountProxyObject.class, "AccountObject");
+        this.registerProxy(AccountSessionsProxyObject.class, "AccountSessionsObject");
+        this.registerProxy(AccountTokenProxyObject.class, "AccountTokenObject");
+        this.registerProxy(GroupProxyObject.class, "GroupObject");
+        this.registerProxy(GroupTokenProxyObject.class, "GroupTokenObject");
+        this.registerProxy(AuditContentProxyObject.class, "AuditContentObject");
+
+        this.registerProxy(ServicesProxyManager.class, "ServicesManager");
+        this.registerProxy(ServiceContentProxyObject.class, "ServiceContentObject");
     }
 
     private void registerProxy(Class<? extends AProxyObject> clazz, String taskName) {

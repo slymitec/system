@@ -151,8 +151,8 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         }
     }
 
-    public UUID createPort(Set<UUID> sourceProcessIDs) {
-        if (ObjectUtil.isAnyNull(sourceProcessIDs)) {
+    public UUID createPort(Set<UUID> sourceProcessIds) {
+        if (ObjectUtil.isAnyNull(sourceProcessIds)) {
             throw new ConditionParametersException();
         }
 
@@ -181,7 +181,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             port.setId(UUIDUtil.createRandom());
             port.setDuration(CacheDurationType.PERMANENT);
             port.setProcessId(this.base.getId());
-            port.getSourceProcessIds().addAll(sourceProcessIDs);
+            port.getSourceProcessIds().addAll(sourceProcessIds);
             port.setLimit(processToken.getLimits().get(ProcessTokenLimitType.PORT_LENGTH_MAX));
 
             port = cacheRepository.add(port);
@@ -283,8 +283,8 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         }
     }
 
-    public void setPortSourceProcessIds(UUID portId, Set<UUID> sourceProcessIDs) {
-        if (ValueUtil.isAnyNullOrEmpty(portId) || ObjectUtil.isAnyNull(sourceProcessIDs)) {
+    public void setPortSourceProcessIds(UUID portId, Set<UUID> sourceProcessIds) {
+        if (ValueUtil.isAnyNullOrEmpty(portId) || ObjectUtil.isAnyNull(sourceProcessIds)) {
             throw new ConditionParametersException();
         }
 
@@ -305,7 +305,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             }
 
             port.getSourceProcessIds().clear();
-            port.getSourceProcessIds().addAll(sourceProcessIDs);
+            port.getSourceProcessIds().addAll(sourceProcessIds);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
@@ -471,8 +471,8 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         }
     }
 
-    public void setSignalSourceProcessIds(Set<UUID> sourceProcessIDs) {
-        if (ObjectUtil.isAnyNull(sourceProcessIDs)) {
+    public void setSignalSourceProcessIds(Set<UUID> sourceProcessIds) {
+        if (ObjectUtil.isAnyNull(sourceProcessIds)) {
             throw new ConditionParametersException();
         }
 
@@ -489,7 +489,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             SignalCacheEntity signal = cacheRepository.get(SignalCacheEntity.class, this.base.getId());
 
             signal.getSourceProcessIds().clear();
-            signal.getSourceProcessIds().addAll(sourceProcessIDs);
+            signal.getSourceProcessIds().addAll(sourceProcessIds);
         } finally {
             this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }

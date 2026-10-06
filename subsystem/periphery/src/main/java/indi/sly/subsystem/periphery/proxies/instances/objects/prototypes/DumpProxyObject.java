@@ -18,37 +18,37 @@ import java.util.UUID;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class DumpProxyObject extends AProxyObject {
     public Map<Long, Long> getDate() {
-        RemoteObject remote = this.remote.invoke("getDate", Map.class);
+        RemoteObject remote = this.remote.invoke("getDate");
 
         return this.factory.getMapValue(Long.class, Long.class, remote);
     }
 
     public UUID getProcessId() {
-        RemoteObject remote = this.remote.invoke("getProcessId", UUID.class);
+        RemoteObject remote = this.remote.invoke("getProcessId");
 
         return this.factory.getValue(UUID.class, remote);
     }
 
     public UUID getAccountId() {
-        RemoteObject remote = this.remote.invoke("getAccountId", UUID.class);
+        RemoteObject remote = this.remote.invoke("getAccountId");
 
         return this.factory.getValue(UUID.class, remote);
     }
 
     public PathRecord getPath() {
-        RemoteObject remote = this.remote.invoke("getPath", PathRecord.class);
+        RemoteObject remote = this.remote.invoke("getPath");
 
         return this.factory.getValue(PathRecord.class, remote);
     }
 
     public InfoOpenRecord getInfoOpen() {
-        RemoteObject remote = this.remote.invoke("getInfoOpen", InfoOpenRecord.class);
+        RemoteObject remote = this.remote.invoke("getInfoOpen");
 
         return this.factory.getValue(InfoOpenRecord.class, remote);
     }
 
     public List<SecurityDescriptorSummaryRecord> getSecurityDescriptorSummary() {
-        RemoteObject remote = this.remote.invoke("getSecurityDescriptorSummary", List.class);
+        RemoteObject remote = this.remote.invoke("getSecurityDescriptorSummary");
 
         return this.factory.getListValue(SecurityDescriptorSummaryRecord.class, remote);
     }

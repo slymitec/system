@@ -29,7 +29,7 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
 
     @SuppressWarnings("unchecked")
     public RemoteCallResolver() {
-        this.invoke = (invokeRemote, remote, method, returnClazz, parameters) -> {
+        this.invoke = (invokeRemote, remote, clazz, method, parameters) -> {
             ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
             ProxyFactory proxyFactory = proxyManager.getFactory();
 
@@ -45,7 +45,9 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
             ClientRequestRecord clientRequest = new ClientRequestRecord(method, clientRequestContentParameters);
             CallRequestRecord callRequest = new CallRequestRecord(callContext, clientRequest);
 
-            IKernelObjectActor kernelObjectActor = proxyFactory.getKernelObjectActor(remote.getTask(), ObjectUtil.transferFromString(UUID.class, remote.getValue()));
+            String taskName = proxyFactory.acquireTaskName(clazz);
+
+            IKernelObjectActor kernelObjectActor = proxyFactory.getKernelObjectActor(taskName, ObjectUtil.transferFromString(UUID.class, remote.getValue()));
 
             ClientResponseRecord clientResponse = kernelObjectActor.call(callRequest).block();
 
@@ -58,9 +60,6 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
                     invokeRemote = new RemoteDefinition();
 
                     invokeRemote.setCallContext(callContext);
-                    if (ClassUtil.isThisOrSuperContain(returnClazz, AProxyObject.class)) {
-                        invokeRemote.setTask(proxyFactory.acquireTaskName((Class<? extends AProxyObject>) returnClazz));
-                    }
                     invokeRemote.setValue(clientResponse.value());
                 }
                 case ClientResponseTypes.SYSTEM_EXCEPTION -> {
@@ -86,12 +85,12 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
             return invokeRemote;
         };
 
-        this.expire = (remote) -> {
-            this.invoke.apply(null, remote, "cache", UUID.class, new Object[0]);
+        this.expire = (clazz, remote) -> {
+            this.invoke.apply(null, remote, clazz, "cache", new Object[0]);
         };
 
-        this.die = (remote) -> {
-            this.invoke.apply(null, remote, "uncache", Void.class, new Object[0]);
+        this.die = (clazz, remote) -> {
+            this.invoke.apply(null, remote, clazz, "uncache", new Object[0]);
         };
     }
 
@@ -102,7 +101,7 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
 
     @Override
     public void resolve(RemoteDefinition remote, RemoteProcessorMediator processorMediator) {
-        if (!ValueUtil.isAnyNullOrEmpty(remote.getTask(), remote.getValue())) {
+        if (!ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
             processorMediator.getInvokes().add(this.invoke);
             processorMediator.getExpires().add(this.expire);
             processorMediator.getDies().add(this.die);

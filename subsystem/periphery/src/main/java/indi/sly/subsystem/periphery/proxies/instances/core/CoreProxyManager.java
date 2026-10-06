@@ -12,13 +12,13 @@ import org.springframework.context.annotation.Scope;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CoreProxyManager extends AManagerProxyObject {
     public SystemVersionProxyObject getSystemVersion() {
-        RemoteObject remote = this.remote.invoke("getSystemVersion", SystemVersionProxyObject.class);
+        RemoteObject remote = this.remote.invoke("getSystemVersion");
 
         return this.factory.buildProxy(SystemVersionProxyObject.class, remote);
     }
 
     public DateTimeProxyObject getDateTime() {
-        RemoteObject remote = this.remote.invoke("getDateTime", DateTimeProxyObject.class);
+        RemoteObject remote = this.remote.invoke("getDateTime");
 
         return this.factory.buildProxy(DateTimeProxyObject.class, remote);
     }

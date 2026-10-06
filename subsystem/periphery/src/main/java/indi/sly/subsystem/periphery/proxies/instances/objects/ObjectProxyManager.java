@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Scope;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ObjectProxyManager extends AManagerProxyObject {
     public InfoProxyObject get(PathRecord path) {
-        RemoteObject remote = this.remote.invoke("get", InfoProxyObject.class, path);
+        RemoteObject remote = this.remote.invoke("get", path);
 
         return this.factory.buildProxy(InfoProxyObject.class, remote);
     }

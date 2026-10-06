@@ -112,21 +112,72 @@ public class ProxyFactory extends AFactory {
         return this.createRemote(processorMediator, remote);
     }
 
+    private RemoteObject[] splitRemote(RemoteObject remote) {
+        RemoteDefinition definition = remote.getDefinition();
+
+        String[] definitionValues = ObjectUtil.transferFromString(String[].class, definition.getValue());
+        int definitionValuesLength = definitionValues.length;
+        RemoteObject[] remotes = new RemoteObject[definitionValuesLength];
+
+        for (int i = 0; i < definitionValues.length; i++) {
+            RemoteDefinition newDefinition = new RemoteDefinition();
+            newDefinition.setCallContext(definition.getCallContext());
+            newDefinition.setValue(definitionValues[i]);
+
+            remotes[i] = this.buildRemote(newDefinition);
+        }
+
+        return remotes;
+    }
+
     private <T extends AProxyObject> T createProxy(Class<T> clazz, RemoteObject remote) {
         T proxy = this.coreManager.create(clazz);
 
         proxy.factory = this;
         proxy.remote = remote;
+        remote.setProxyClass(clazz);
 
         return proxy;
     }
 
     public <T extends AProxyObject> T buildProxy(Class<T> clazz, RemoteObject remote) {
-        if (ValueUtil.isAnyNullOrEmpty(remote.getTask(), remote.getValue())) {
+        if (ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
             throw new StatusRelationshipErrorException();
         }
 
         return this.createProxy(clazz, remote);
+    }
+
+    public <T extends AProxyObject> Set<T> buildProxySet(Class<T> clazz, RemoteObject remote) {
+        if (ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        RemoteObject[] remotes = this.splitRemote(remote);
+
+        Set<T> proxySet = new HashSet<>();
+
+        for (RemoteObject remotePair : remotes) {
+            proxySet.add(this.buildProxy(clazz, remotePair));
+        }
+
+        return proxySet;
+    }
+
+    public <T extends AProxyObject> List<T> buildProxyList(Class<T> clazz, RemoteObject remote) {
+        if (ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        RemoteObject[] remotes = this.splitRemote(remote);
+
+        List<T> proxySet = new ArrayList<>();
+
+        for (RemoteObject remotePair : remotes) {
+            proxySet.add(this.buildProxy(clazz, remotePair));
+        }
+
+        return proxySet;
     }
 
     private SessionObject createSession(SessionDefinition definition) {

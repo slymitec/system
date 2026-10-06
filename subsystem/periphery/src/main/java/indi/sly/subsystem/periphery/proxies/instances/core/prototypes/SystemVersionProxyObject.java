@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SystemVersionProxyObject extends AProxyObject {
     public String getSystemVersion() {
-        RemoteObject remote = this.remote.invoke("getSystemVersion", String.class);
+        RemoteObject remote = this.remote.invoke("getSystemVersion");
 
         return this.factory.getValue(String.class, remote);
     }

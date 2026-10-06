@@ -7,6 +7,7 @@ import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
 import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -20,16 +21,24 @@ public class RemoteCheckConditionResolver extends AResolver implements IRemoteRe
     private final RemoteProcessorDieConsumer die;
 
     public RemoteCheckConditionResolver() {
-        this.invoke = (invokeRemote, remote, returnClazz, method, parameters) -> {
-            throw new StatusNotSupportedException();
+        this.invoke = (invokeRemote, remote, clazz, method, parameters) -> {
+            if (ObjectUtil.isAnyNull(clazz)) {
+                throw new StatusNotSupportedException();
+            }
+
+            return invokeRemote;
         };
 
-        this.expire = (remote) -> {
-            throw new StatusNotSupportedException();
+        this.expire = (clazz, remote) -> {
+            if (ObjectUtil.isAnyNull(clazz)) {
+                throw new StatusNotSupportedException();
+            }
         };
 
-        this.die = (remote) -> {
-            throw new StatusNotSupportedException();
+        this.die = (clazz, remote) -> {
+            if (ObjectUtil.isAnyNull(clazz)) {
+                throw new StatusNotSupportedException();
+            }
         };
     }
 
@@ -40,7 +49,7 @@ public class RemoteCheckConditionResolver extends AResolver implements IRemoteRe
 
     @Override
     public void resolve(RemoteDefinition remote, RemoteProcessorMediator processorMediator) {
-        if (ValueUtil.isAnyNullOrEmpty(remote.getTask(), remote.getValue())) {
+        if (ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
             processorMediator.getInvokes().add(this.invoke);
             processorMediator.getExpires().add(this.expire);
             processorMediator.getDies().add(this.die);

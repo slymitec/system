@@ -14,36 +14,36 @@ import java.util.*;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SecurityDescriptorProxyObject extends AProxyObject {
     public List<SecurityDescriptorSummaryRecord> getSummary() {
-        RemoteObject remote = this.remote.invoke("getSummary", List.class);
+        RemoteObject remote = this.remote.invoke("getSummary");
 
         return this.factory.getListValue(SecurityDescriptorSummaryRecord.class, remote);
     }
 
     public boolean isInherit() {
-        RemoteObject remote = this.remote.invoke("isInherit", Boolean.class);
+        RemoteObject remote = this.remote.invoke("isInherit");
 
         return this.factory.getValue(Boolean.class, remote);
     }
 
     public void setInherit(boolean inherit) {
-        RemoteObject remote = this.remote.invoke("setInherit", Boolean.class, inherit);
+        RemoteObject remote = this.remote.invoke("setInherit", inherit);
     }
 
     public Set<UUID> getOwners() {
-        RemoteObject remote = this.remote.invoke("getOwners", Set.class);
+        RemoteObject remote = this.remote.invoke("getOwners");
 
         return this.factory.getSetValue(UUID.class, remote);
     }
 
     public void setOwners(Set<UUID> owners) {
-        this.remote.invoke("setOwners", Void.class, owners);
+        this.remote.invoke("setOwners", owners);
     }
 
     public void setPermissions(Set<AccessControlRecord> permissions) {
-        this.remote.invoke("setPermissions", Void.class, permissions);
+        this.remote.invoke("setPermissions", permissions);
     }
 
     public void setAudits(Set<AccessControlRecord> audits) {
-        this.remote.invoke("setAudits", Void.class, audits);
+        this.remote.invoke("setAudits", audits);
     }
 }

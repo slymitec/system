@@ -18,8 +18,7 @@ public class RemoteDieResolver extends AResolver implements IRemoteResolver {
     private final RemoteProcessorDieConsumer die;
 
     public RemoteDieResolver() {
-        this.die = (remote) -> {
-            remote.setTask(null);
+        this.die = (clazz, remote) -> {
             remote.setValue(null);
         };
     }
@@ -31,7 +30,7 @@ public class RemoteDieResolver extends AResolver implements IRemoteResolver {
 
     @Override
     public void resolve(RemoteDefinition remote, RemoteProcessorMediator processorMediator) {
-        if (ValueUtil.isAnyNullOrEmpty(remote.getTask(), remote.getValue())) {
+        if (ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
             processorMediator.getDies().add(this.die);
         }
     }

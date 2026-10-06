@@ -160,19 +160,19 @@ public class UserManager extends AManager {
         }
     }
 
-    public GroupObject getGroupById(UUID groupID) {
-        if (ValueUtil.isAnyNullOrEmpty(groupID)) {
+    public GroupObject getGroupById(UUID groupId) {
+        if (ValueUtil.isAnyNullOrEmpty(groupId)) {
             throw new ConditionParametersException();
         }
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
-        if (!userRepository.containGroup(groupID)) {
+        if (!userRepository.containGroup(groupId)) {
             throw new StatusNotExistedException();
         }
 
-        return this.factory.buildGroup(groupID);
+        return this.factory.buildGroup(groupId);
     }
 
     public GroupObject getGroupByName(String groupName) {
@@ -240,23 +240,23 @@ public class UserManager extends AManager {
         return groupBuilder.create(groupName);
     }
 
-    public void deleteAccount(UUID accountID) {
+    public void deleteAccount(UUID accountId) {
         AccountBuilder accountBuilder = this.factory.createAccount();
 
-        AccountObject account = this.getAccountById(accountID);
+        AccountObject account = this.getAccountById(accountId);
         AccountSessionsObject accountSessions = account.getSessions();
 
         if (!accountSessions.listSessions().isEmpty()) {
             throw new StatusRelationshipErrorException();
         }
 
-        accountBuilder.delete(accountID);
+        accountBuilder.delete(accountId);
     }
 
-    public void deleteGroup(UUID groupID) {
+    public void deleteGroup(UUID groupId) {
         GroupBuilder groupBuilder = this.factory.createGroup();
 
-        groupBuilder.delete(groupID);
+        groupBuilder.delete(groupId);
     }
 
     public AccountAuthorizationObject authorizeById(UUID accountId) {

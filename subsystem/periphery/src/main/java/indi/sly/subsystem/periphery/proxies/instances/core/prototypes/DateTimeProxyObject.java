@@ -10,12 +10,12 @@ import org.springframework.context.annotation.Scope;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class DateTimeProxyObject extends AProxyObject {
     public long getCurrent() {
-        RemoteObject remote = this.remote.invoke("getCurrent", Long.class);
+        RemoteObject remote = this.remote.invoke("getCurrent");
 
         return this.factory.getValue(Long.class, remote);
     }
 
     public void correct(long dateTime) {
-        this.remote.invoke("correct", Void.class, dateTime);
+        this.remote.invoke("correct", dateTime);
     }
 }

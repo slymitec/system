@@ -1,4 +1,5 @@
 dependencies {
+    api("org.jspecify:jspecify:1.0.1")
     api("jakarta.inject:jakarta.inject-api:2.0.1")
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("org.apache.commons:commons-lang3")

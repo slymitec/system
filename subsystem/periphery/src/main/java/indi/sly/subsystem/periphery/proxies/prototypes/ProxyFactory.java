@@ -144,17 +144,17 @@ public class ProxyFactory extends AFactory {
         return this.createRemote(processorMediator, remote);
     }
 
-    private RemoteObject[] splitRemote(RemoteObject remote) {
+    private RemoteObject[] splitProxyRemote(RemoteObject remote) {
         RemoteDefinition definition = remote.getDefinition();
 
-        String[] definitionValues = ObjectUtil.transferFromString(String[].class, definition.getValue());
-        int definitionValuesLength = definitionValues.length;
-        RemoteObject[] remotes = new RemoteObject[definitionValuesLength];
+        UUID[] handles = ObjectUtil.transferFromString(UUID[].class, definition.getValue());
+        int handleLength = handles.length;
+        RemoteObject[] remotes = new RemoteObject[handleLength];
 
-        for (int i = 0; i < definitionValues.length; i++) {
+        for (int i = 0; i < handleLength; i++) {
             RemoteDefinition newDefinition = new RemoteDefinition();
             newDefinition.setCallContext(definition.getCallContext());
-            newDefinition.setValue(definitionValues[i]);
+            newDefinition.setValue(ObjectUtil.transferToString(handles[i]));
 
             remotes[i] = this.buildRemote(newDefinition);
         }
@@ -185,7 +185,7 @@ public class ProxyFactory extends AFactory {
             throw new StatusRelationshipErrorException();
         }
 
-        RemoteObject[] remotes = this.splitRemote(remote);
+        RemoteObject[] remotes = this.splitProxyRemote(remote);
 
         Set<T> proxySet = new HashSet<>();
 
@@ -201,7 +201,7 @@ public class ProxyFactory extends AFactory {
             throw new StatusRelationshipErrorException();
         }
 
-        RemoteObject[] remotes = this.splitRemote(remote);
+        RemoteObject[] remotes = this.splitProxyRemote(remote);
 
         List<T> proxySet = new ArrayList<>();
 

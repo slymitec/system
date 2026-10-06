@@ -14,7 +14,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
-import java.util.Stack;
+
+import java.util.Deque;
 import java.util.UUID;
 
 @Named
@@ -40,7 +41,7 @@ public class ThreadManager extends AManager {
 
     public ThreadObject getCurrent() {
         UserSpace userSpace = this.coreManager.getUserSpace();
-        Stack<ThreadObject> threads = userSpace.getThreads();
+        Deque<ThreadObject> threads = userSpace.getThreads();
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();
@@ -59,7 +60,7 @@ public class ThreadManager extends AManager {
 
     public int size() {
         UserSpace userSpace = this.coreManager.getUserSpace();
-        Stack<ThreadObject> threads = userSpace.getThreads();
+        Deque<ThreadObject> threads = userSpace.getThreads();
 
         return ObjectUtil.isAnyNull(threads) ? 0 : threads.size();
     }

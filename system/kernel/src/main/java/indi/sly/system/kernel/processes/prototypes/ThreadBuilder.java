@@ -11,7 +11,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
-import java.util.Stack;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.UUID;
 
 @Named
@@ -21,9 +23,9 @@ public class ThreadBuilder extends ABuilder {
 
     public ThreadObject create(UUID processId) {
         UserSpace userSpace = this.coreManager.getUserSpace();
-        Stack<ThreadObject> threads = userSpace.getThreads();
+        Deque<ThreadObject> threads = userSpace.getThreads();
         if (ObjectUtil.isAnyNull(threads)) {
-            threads = new Stack<>();
+            threads = new ArrayDeque<>();
             userSpace.setThreads(threads);
         }
 
@@ -52,7 +54,7 @@ public class ThreadBuilder extends ABuilder {
 
     public void end() {
         UserSpace userSpace = this.coreManager.getUserSpace();
-        Stack<ThreadObject> threads = userSpace.getThreads();
+        Deque<ThreadObject> threads = userSpace.getThreads();
 
         if (ObjectUtil.isAnyNull(threads) || threads.isEmpty()) {
             throw new StatusAlreadyFinishedException();

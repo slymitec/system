@@ -7,6 +7,7 @@ import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.util.Deque;
 import java.util.Stack;
 
 @Named
@@ -16,13 +17,13 @@ public class UserSpace extends ASystemSpace {
         this.threads = new ThreadLocal<>();
     }
 
-    private final ThreadLocal<Stack<ThreadObject>> threads;
+    private final ThreadLocal<Deque<ThreadObject>> threads;
 
-    public Stack<ThreadObject> getThreads() {
+    public Deque<ThreadObject> getThreads() {
         return this.threads.get();
     }
 
-    public void setThreads(Stack<ThreadObject> threads) {
+    public void setThreads(Deque<ThreadObject> threads) {
         if (ObjectUtil.isAnyNull(threads)) {
             throw new ConditionParametersException();
         }

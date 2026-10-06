@@ -21,7 +21,6 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
             throw new ConditionParametersException();
         }
 
-        String taskName = this.factory.acquireTaskName(clazz);
         UUID handle = UUIDUtil.createRandom();
         CallContextRecord callContext = new CallContextRecord(this.definition.getSessionId(), callContextProcess);
 
@@ -37,7 +36,6 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
             throw new ConditionParametersException();
         }
 
-        String taskName = this.factory.acquireTaskName(clazz);
         CallContextRecord callContext = new CallContextRecord(this.definition.getSessionId(), callContextProcess);
 
         RemoteDefinition remote = new RemoteDefinition();

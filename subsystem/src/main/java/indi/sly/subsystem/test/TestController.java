@@ -196,9 +196,9 @@ public class TestController {
 
         String result = "";
         for (GroupProxyObject group : groups) {
-            result += group.getName() + ",";
+            result += group.getHandle() + ":" + group.getName() + "<br />";
         }
 
-        return currentAccount.getHandle().toString() + ": " + result;
+        return currentAccount.getHandle() + ": <br />" + result;
     }
 }

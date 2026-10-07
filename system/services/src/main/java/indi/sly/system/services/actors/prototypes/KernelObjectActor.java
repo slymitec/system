@@ -95,18 +95,19 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
 
     @Override
     public Mono<ClientResponseRecord> call(CallRequestRecord callRequest) {
-        CallContextRecord callContext = callRequest.callContext();
-        ClientRequestRecord clientRequest = callRequest.clientRequest();
-
         ClientResponseRecord clientResponse;
         try {
+            if (ObjectUtil.isAnyNull(callRequest, callRequest.callContext(), callRequest.clientRequest())) {
+                throw new ConditionParametersException();
+            }
+
             JobService jobService = this.coreManager.getService(JobService.class);
 
-            CallContextObject userContext = jobService.createCallContext(callContext);
+            CallContextObject callContext = jobService.createCallContext(callRequest.callContext());
 
             TaskContentObject taskContent = this.task.getContent();
-            taskContent.setParameter(clientRequest.parameters());
-            taskContent.run(clientRequest.method());
+            taskContent.setParameter(callRequest.clientRequest().parameters());
+            taskContent.run(callRequest.clientRequest().method());
 
             if (ObjectUtil.isAnyNull(taskContent.getException())) {
                 Object result = taskContent.getResult();
@@ -117,7 +118,7 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
                 clientResponse = new ClientResponseRecord(ClientResponseTypes.SYSTEM_EXCEPTION, ObjectUtil.transferToString(taskContent.getException().getMessage()));
             }
 
-            jobService.endCallContext(userContext);
+            jobService.endCallContext(callContext);
         } catch (ASystemException exception) {
             exception.printStackTrace(); //Temporary
             clientResponse = new ClientResponseRecord(ClientResponseTypes.SYSTEM_EXCEPTION, ObjectUtil.transferToString(exception.getMessage()));

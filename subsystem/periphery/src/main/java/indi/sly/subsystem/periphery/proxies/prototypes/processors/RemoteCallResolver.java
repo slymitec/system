@@ -29,7 +29,7 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
 
     @SuppressWarnings("unchecked")
     public RemoteCallResolver() {
-        this.invoke = (invokeRemote, remote, clazz, method, parameters) -> {
+        this.invoke = (invokeRemote, remote, method, parameters) -> {
             ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
             ProxyFactory proxyFactory = proxyManager.getFactory();
 
@@ -45,9 +45,7 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
             ClientRequestRecord clientRequest = new ClientRequestRecord(method, clientRequestContentParameters);
             CallRequestRecord callRequest = new CallRequestRecord(callContext, clientRequest);
 
-            String taskName = proxyFactory.acquireTaskName(clazz);
-
-            IKernelObjectActor kernelObjectActor = proxyFactory.getKernelObjectActor(taskName, ObjectUtil.transferFromString(UUID.class, remote.getValue()));
+            IKernelObjectActor kernelObjectActor = proxyFactory.getKernelObjectActor(remote.getTaskName(), ObjectUtil.transferFromString(UUID.class, remote.getValue()));
 
             ClientResponseRecord clientResponse = kernelObjectActor.call(callRequest).block();
 
@@ -85,12 +83,12 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
             return invokeRemote;
         };
 
-        this.expire = (clazz, remote) -> {
-            this.invoke.apply(null, remote, clazz, "cache", new Object[0]);
+        this.expire = (remote) -> {
+            this.invoke.apply(null, remote, "cache", new Object[0]);
         };
 
-        this.die = (clazz, remote) -> {
-            this.invoke.apply(null, remote, clazz, "uncache", new Object[0]);
+        this.die = (remote) -> {
+            this.invoke.apply(null, remote, "uncache", new Object[0]);
         };
     }
 

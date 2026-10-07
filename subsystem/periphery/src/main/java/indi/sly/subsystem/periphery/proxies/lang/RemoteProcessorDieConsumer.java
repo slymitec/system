@@ -1,9 +1,8 @@
 package indi.sly.subsystem.periphery.proxies.lang;
 
-import indi.sly.subsystem.periphery.proxies.prototypes.AProxyObject;
 import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
-import indi.sly.system.common.lang.Consumer2;
+import indi.sly.system.common.lang.Consumer1;
 
 @FunctionalInterface
-public interface RemoteProcessorDieConsumer extends Consumer2<Class<? extends AProxyObject>, RemoteDefinition> {
+public interface RemoteProcessorDieConsumer extends Consumer1<RemoteDefinition> {
 }

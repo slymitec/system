@@ -7,6 +7,7 @@ public class RemoteDefinition extends ADefinition {
     }
 
     private CallContextRecord callContext;
+    private String taskName;
     private String value;
 
     public CallContextRecord getCallContext() {
@@ -15,6 +16,14 @@ public class RemoteDefinition extends ADefinition {
 
     public void setCallContext(CallContextRecord callContext) {
         this.callContext = callContext;
+    }
+
+    public String getTaskName() {
+        return this.taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 
     public String getValue() {

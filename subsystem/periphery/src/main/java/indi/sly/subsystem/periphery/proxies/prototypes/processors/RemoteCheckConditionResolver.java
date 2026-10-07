@@ -21,22 +21,22 @@ public class RemoteCheckConditionResolver extends AResolver implements IRemoteRe
     private final RemoteProcessorDieConsumer die;
 
     public RemoteCheckConditionResolver() {
-        this.invoke = (invokeRemote, remote, clazz, method, parameters) -> {
-            if (ObjectUtil.isAnyNull(clazz)) {
+        this.invoke = (invokeRemote, remote, method, parameters) -> {
+            if (ValueUtil.isAnyNullOrEmpty(remote.getTaskName())) {
                 throw new StatusNotSupportedException();
             }
 
             return invokeRemote;
         };
 
-        this.expire = (clazz, remote) -> {
-            if (ObjectUtil.isAnyNull(clazz)) {
+        this.expire = (remote) -> {
+            if (ValueUtil.isAnyNullOrEmpty(remote.getTaskName())) {
                 throw new StatusNotSupportedException();
             }
         };
 
-        this.die = (clazz, remote) -> {
-            if (ObjectUtil.isAnyNull(clazz)) {
+        this.die = (remote) -> {
+            if (ValueUtil.isAnyNullOrEmpty(remote.getTaskName())) {
                 throw new StatusNotSupportedException();
             }
         };

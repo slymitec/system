@@ -37,11 +37,13 @@ public class ProxyFactory extends AFactory {
     public ProxyFactory() {
         this.remoteResolvers = new CopyOnWriteArrayList<>();
         this.proxyObjectTasks = new ConcurrentHashMap<>();
+        this.taskProxyObjects = new ConcurrentHashMap<>();
         this.systemExceptions = new ConcurrentHashMap<>();
     }
 
     private final List<IRemoteResolver> remoteResolvers;
     private final Map<Class<? extends AProxyObject>, String> proxyObjectTasks;
+    private final Map<String, Class<? extends AProxyObject>> taskProxyObjects;
     private final Map<String, ASystemException> systemExceptions;
 
     @Override
@@ -125,6 +127,10 @@ public class ProxyFactory extends AFactory {
         return this.proxyObjectTasks.getOrDefault(clazz, null);
     }
 
+    public Class<? extends AProxyObject> acquireTaskClass(String taskName) {
+        return this.taskProxyObjects.getOrDefault(taskName, null);
+    }
+
     private RemoteObject createRemote(RemoteProcessorMediator processorMediator, RemoteDefinition definition) {
         RemoteObject remote = this.coreManager.create(RemoteObject.class);
 
@@ -167,7 +173,6 @@ public class ProxyFactory extends AFactory {
 
         proxy.factory = this;
         proxy.remote = remote;
-        remote.setProxyClass(clazz);
 
         return proxy;
     }
@@ -176,6 +181,9 @@ public class ProxyFactory extends AFactory {
         if (ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
             throw new StatusRelationshipErrorException();
         }
+
+        String taskName = this.acquireTaskName(clazz);
+        remote.getDefinition().setTaskName(taskName);
 
         return this.createProxy(clazz, remote);
     }

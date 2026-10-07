@@ -20,14 +20,9 @@ import java.util.Set;
 public class RemoteObject extends ADefinitionObject<RemoteDefinition> {
     protected ProxyFactory factory;
     protected RemoteProcessorMediator processorMediator;
-    private Class<? extends AProxyObject> proxyClass;
-
-    public void setProxyClass(Class<? extends AProxyObject> proxyClass) {
-        this.proxyClass = proxyClass;
-    }
 
     public RemoteObject invoke(String method, Object... args) {
-        if (ObjectUtil.isAnyNull(this.proxyClass) || ValueUtil.isAnyNullOrEmpty(method)) {
+        if (ValueUtil.isAnyNullOrEmpty(method)) {
             throw new ConditionParametersException();
         }
         if (ObjectUtil.isAnyNull(args)) {
@@ -39,7 +34,7 @@ public class RemoteObject extends ADefinitionObject<RemoteDefinition> {
         RemoteDefinition invokeRemote = null;
 
         for (RemoteProcessorInvokeFunction invoke : invokes) {
-            invokeRemote = invoke.apply(invokeRemote, this.definition, this.proxyClass, method, args);
+            invokeRemote = invoke.apply(invokeRemote, this.definition, method, args);
         }
 
         RemoteObject remote = this.factory.buildRemote(invokeRemote);
@@ -51,7 +46,7 @@ public class RemoteObject extends ADefinitionObject<RemoteDefinition> {
         List<RemoteProcessorExpireConsumer> expires = this.processorMediator.getExpires();
 
         for (RemoteProcessorExpireConsumer expire : expires) {
-            expire.accept(this.proxyClass, this.definition);
+            expire.accept(this.definition);
         }
     }
 
@@ -59,7 +54,7 @@ public class RemoteObject extends ADefinitionObject<RemoteDefinition> {
         List<RemoteProcessorDieConsumer> dies = this.processorMediator.getDies();
 
         for (RemoteProcessorDieConsumer die : dies) {
-            die.accept(this.proxyClass, this.definition);
+            die.accept(this.definition);
         }
     }
 

@@ -18,8 +18,8 @@ public class RemoteDieResolver extends AResolver implements IRemoteResolver {
     private final RemoteProcessorDieConsumer die;
 
     public RemoteDieResolver() {
-        this.die = (clazz, remote) -> {
-            remote.setValue(null);
+        this.die = (remote) -> {
+            remote.setTaskName(null);
         };
     }
 

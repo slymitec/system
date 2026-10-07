@@ -1,9 +1,8 @@
 package indi.sly.subsystem.periphery.proxies.lang;
 
-import indi.sly.subsystem.periphery.proxies.prototypes.AProxyObject;
 import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
-import indi.sly.system.common.lang.Function5;
+import indi.sly.system.common.lang.Function4;
 
 @FunctionalInterface
-public interface RemoteProcessorInvokeFunction extends Function5<RemoteDefinition, RemoteDefinition, RemoteDefinition, Class<? extends AProxyObject>, String, Object[]> {
+public interface RemoteProcessorInvokeFunction extends Function4<RemoteDefinition, RemoteDefinition, RemoteDefinition, String, Object[]> {
 }

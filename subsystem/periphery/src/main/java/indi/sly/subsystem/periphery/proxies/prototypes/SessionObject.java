@@ -66,7 +66,6 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
         return this.doGetProxyAndInvoke(taskName, handle, callContextProcess, clientRequest);
     }
 
-
     public String getProxyAndInvoke(Class<? extends AProxyObject> clazz, UUID handle, CallContextProcessRecord callContextProcess, ClientRequestRecord clientRequest) {
         if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();

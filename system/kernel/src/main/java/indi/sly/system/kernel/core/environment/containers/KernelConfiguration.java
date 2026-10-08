@@ -4,6 +4,7 @@ import indi.sly.system.common.containers.AConfiguration;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.processes.values.ProcessTokenLimitType;
 
+import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,6 +21,9 @@ public class KernelConfiguration extends AConfiguration {
 
     public final UUID MEMORY_REPOSITORIES_DATABASEENTITYREPOSITORY_ID
             = UUIDUtil.getFormLongs(116714210840444914L, -8593455617736547150L);
+    public final Duration MEMORY_REPOSITORIES_CACHEREPOSITORY_DURATION_PREPARE = Duration.ofSeconds(64L);
+    public final Duration MEMORY_REPOSITORIES_CACHEREPOSITORY_DURATION_RUNNING = Duration.ofSeconds(4096L);
+    public final Duration MEMORY_REPOSITORIES_CACHEREPOSITORY_DURATION_OTHER = Duration.ofSeconds(16L);
 
     public final int OBJECTS_INFO_PATH_MAX_DEPTH = 256;
     public final UUID OBJECTS_PROTOTYPE_ROOT_ID

@@ -4,6 +4,7 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.kernel.core.environment.containers.KernelConfiguration;
 import indi.sly.system.kernel.core.environment.values.CacheDurationType;
 import indi.sly.system.kernel.core.prototypes.AObject;
 import indi.sly.system.kernel.core.values.ACacheEntity;
@@ -17,7 +18,6 @@ import org.redisson.api.condition.Condition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.time.Duration;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -74,15 +74,17 @@ public class CacheRepositoryObject extends AObject {
 
         RLiveObject liveObject = this.liveObjectService.asLiveObject(cache);
 
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+
         long duration = cache.getDuration();
         if (duration == CacheDurationType.PREPARE) {
-            liveObject.expire(Duration.ofSeconds(64L));
+            liveObject.expire(kernelConfiguration.MEMORY_REPOSITORIES_CACHEREPOSITORY_DURATION_PREPARE);
         } else if (duration == CacheDurationType.RUNNING) {
-            liveObject.expire(Duration.ofSeconds(4096L));
+            liveObject.expire(kernelConfiguration.MEMORY_REPOSITORIES_CACHEREPOSITORY_DURATION_RUNNING);
         } else if (duration == CacheDurationType.PERMANENT) {
             liveObject.clearExpire();
         } else {
-            liveObject.expire(Duration.ofSeconds(16L));
+            liveObject.expire(kernelConfiguration.MEMORY_REPOSITORIES_CACHEREPOSITORY_DURATION_OTHER);
         }
 
         return cache;
@@ -105,15 +107,17 @@ public class CacheRepositoryObject extends AObject {
 
         RLiveObject liveObject = this.liveObjectService.asLiveObject(cache);
 
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+
         long duration = cache.getDuration();
         if (duration == CacheDurationType.PREPARE) {
-            liveObject.expire(Duration.ofSeconds(64L));
+            liveObject.expire(kernelConfiguration.MEMORY_REPOSITORIES_CACHEREPOSITORY_DURATION_PREPARE);
         } else if (duration == CacheDurationType.RUNNING) {
-            liveObject.expire(Duration.ofSeconds(4096L));
+            liveObject.expire(kernelConfiguration.MEMORY_REPOSITORIES_CACHEREPOSITORY_DURATION_RUNNING);
         } else if (duration == CacheDurationType.PERMANENT) {
             liveObject.clearExpire();
         } else {
-            liveObject.expire(Duration.ofSeconds(16L));
+            liveObject.expire(kernelConfiguration.MEMORY_REPOSITORIES_CACHEREPOSITORY_DURATION_OTHER);
         }
     }
 
@@ -133,15 +137,17 @@ public class CacheRepositoryObject extends AObject {
 
         RLiveObject liveObject = this.liveObjectService.asLiveObject(cache);
 
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+
         long duration = cache.getDuration();
         if (duration == CacheDurationType.PREPARE) {
-            liveObject.expire(Duration.ofSeconds(64L));
+            liveObject.expire(kernelConfiguration.MEMORY_REPOSITORIES_CACHEREPOSITORY_DURATION_PREPARE);
         } else if (duration == CacheDurationType.RUNNING) {
-            liveObject.expire(Duration.ofSeconds(4096L));
+            liveObject.expire(kernelConfiguration.MEMORY_REPOSITORIES_CACHEREPOSITORY_DURATION_RUNNING);
         } else if (duration == CacheDurationType.PERMANENT) {
             liveObject.clearExpire();
         } else {
-            liveObject.expire(Duration.ofSeconds(16L));
+            liveObject.expire(kernelConfiguration.MEMORY_REPOSITORIES_CACHEREPOSITORY_DURATION_OTHER);
         }
     }
 
@@ -153,7 +159,7 @@ public class CacheRepositoryObject extends AObject {
         this.liveObjectService.delete(clazz, id);
     }
 
-    public <T extends ACacheEntity> void delete(ACacheEntity cache) {
+    public void delete(ACacheEntity cache) {
         if (ObjectUtil.isAnyNull(cache)) {
             throw new ConditionParametersException();
         }

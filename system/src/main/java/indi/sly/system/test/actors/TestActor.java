@@ -2,6 +2,7 @@ package indi.sly.system.test.actors;
 
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
+import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.kernel.core.CoreManager;
 import indi.sly.system.kernel.core.environment.containers.KernelSpace;
@@ -20,7 +21,7 @@ public class TestActor extends AbstractActor implements ITestActor {
     CoreManager coreManager;
 
     @Override
-    public String test(String text) {
-        return this.getId().toString() + ":" + text;
+    public String test(TestDTO text) {
+        return this.getId().toString() + ":" + (ObjectUtil.isAnyNull(text) ? StringUtil.EMPTY : text.getText());
     }
 }

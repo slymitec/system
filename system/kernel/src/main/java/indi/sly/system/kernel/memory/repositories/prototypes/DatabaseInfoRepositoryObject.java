@@ -55,6 +55,30 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
     }
 
     @Override
+    public InfoEntity get(UUID id, long lock) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
+            throw new ConditionParametersException();
+        }
+
+        LockModeType lockMode;
+        if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
+            lockMode = LockModeType.PESSIMISTIC_READ;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
+            lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else {
+            throw new ConditionParametersException();
+        }
+
+        InfoEntity info = this.entityManager.find(InfoEntity.class, id, lockMode);
+
+        if (ObjectUtil.isAnyNull(info)) {
+            throw new StatusNotExistedException();
+        }
+
+        return info;
+    }
+
+    @Override
     public InfoEntity add(InfoEntity info) {
         if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
@@ -78,64 +102,6 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         }
 
         this.entityManager.remove(info);
-    }
-
-    @Override
-    public void lock(InfoEntity info, long lock) {
-        if (ObjectUtil.isAnyNull(info)) {
-            throw new ConditionParametersException();
-        }
-
-        LockModeType lockMode = this.entityManager.getLockMode(info);
-
-        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
-            return;
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.PESSIMISTIC_READ;
-            }
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-            if (lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.PESSIMISTIC_WRITE;
-            }
-        }
-
-        this.entityManager.lock(info, lockMode);
-
-        List<InfoRelationEntity> relations = this.listRelation(info, null);
-        for (InfoRelationEntity relation : relations) {
-            this.entityManager.lock(relation, lockMode);
-        }
-    }
-
-    @Override
-    public void unlock(InfoEntity info, long lock) {
-        if (ObjectUtil.isAnyNull(info)) {
-            throw new ConditionParametersException();
-        }
-
-        LockModeType lockMode = this.entityManager.getLockMode(info);
-
-        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
-            return;
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ, LockType.WRITE)) {
-            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.NONE;
-            }
-        }
-
-        this.entityManager.lock(info, lockMode);
-
-        List<InfoRelationEntity> relations = this.listRelation(info, null);
-        for (InfoRelationEntity relation : relations) {
-            this.entityManager.lock(relation, lockMode);
-        }
     }
 
     @Override

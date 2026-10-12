@@ -77,20 +77,6 @@ public class ProcessFactory extends AFactory {
         return process;
     }
 
-    public void lockProcess(ProcessCacheEntity cache, long lock) {
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-        ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
-
-        processRepository.lock(processRepository.get(cache.getProcessId()), lock);
-    }
-
-    public void unlockProcess(ProcessCacheEntity cache, long lock) {
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-        ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
-
-        processRepository.unlock(processRepository.get(cache.getProcessId()), lock);
-    }
-
     public ProcessObject buildProcess(ProcessEntity process) {
         ProcessProcessorMediator processorMediator = this.coreManager.create(ProcessProcessorMediator.class);
         for (IProcessResolver processResolver : this.processResolvers) {

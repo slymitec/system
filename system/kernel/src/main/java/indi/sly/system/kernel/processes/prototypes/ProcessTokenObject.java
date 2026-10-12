@@ -38,12 +38,16 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
-    private ProcessEntity getSelf() {
+    private ProcessEntity getSelf(long lock) {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
+        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId(), lock);
+    }
+
+    public void initSelf(long lock) {
+        this.getSelf(lock);
     }
 
     private ProcessTokenEntity init(ProcessEntity process) {
@@ -92,34 +96,29 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         AccountAuthorizationSummaryRecord accountAuthorizationSummary = accountAuthorization.checkAndGetSummary();
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessTokenEntity processToken = this.init(process);
+        ProcessTokenEntity processToken = this.init(process);
 
-            if (!ValueUtil.isAnyNullOrEmpty(processToken.getAccountId())
-                    && !processToken.getAccountId().equals(accountAuthorizationSummary.id())) {
-                throw new ConditionRefuseException();
-            }
-
-            processToken.setAccountId(accountAuthorizationSummary.id());
-            AccountAuthorizationTokenRecord accountAuthorizationToken = accountAuthorizationSummary.token();
-            processToken.setPrivileges(accountAuthorizationToken.privileges());
-            Map<Long, Integer> processTokenLimits = processToken.getLimits();
-            processTokenLimits.clear();
-            processTokenLimits.putAll(accountAuthorizationToken.limits());
-            Set<UUID> processTokenRoles = processToken.getRoles();
-            processTokenRoles.clear();
-            processTokenRoles.addAll(accountAuthorizationToken.roles());
-            if (ValueUtil.isAnyNullOrEmpty(accountAuthorizationSummary.password())) {
-                processTokenRoles.add(kernelConfiguration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
-            }
-
-            this.flush(process, processToken);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        if (!ValueUtil.isAnyNullOrEmpty(processToken.getAccountId())
+                && !processToken.getAccountId().equals(accountAuthorizationSummary.id())) {
+            throw new ConditionRefuseException();
         }
+
+        processToken.setAccountId(accountAuthorizationSummary.id());
+        AccountAuthorizationTokenRecord accountAuthorizationToken = accountAuthorizationSummary.token();
+        processToken.setPrivileges(accountAuthorizationToken.privileges());
+        Map<Long, Integer> processTokenLimits = processToken.getLimits();
+        processTokenLimits.clear();
+        processTokenLimits.putAll(accountAuthorizationToken.limits());
+        Set<UUID> processTokenRoles = processToken.getRoles();
+        processTokenRoles.clear();
+        processTokenRoles.addAll(accountAuthorizationToken.roles());
+        if (ValueUtil.isAnyNullOrEmpty(accountAuthorizationSummary.password())) {
+            processTokenRoles.add(kernelConfiguration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
+        }
+
+        this.flush(process, processToken);
     }
 
     public UUID getAccountId() {
@@ -128,16 +127,11 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            ProcessTokenEntity processToken = this.init(process);
+        ProcessTokenEntity processToken = this.init(process);
 
-            return processToken.getAccountId();
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return processToken.getAccountId();
     }
 
     public void inheritAccountId() {
@@ -154,18 +148,13 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             throw new ConditionRefuseException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessTokenEntity processToken = this.init(process);
+        ProcessTokenEntity processToken = this.init(process);
 
-            processToken.setAccountId(currentProcessToken.getAccountId());
+        processToken.setAccountId(currentProcessToken.getAccountId());
 
-            this.flush(process, processToken);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processToken);
     }
 
     public long getPrivileges() {
@@ -174,16 +163,11 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            ProcessTokenEntity processToken = this.init(process);
+        ProcessTokenEntity processToken = this.init(process);
 
-            return processToken.getPrivileges();
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return processToken.getPrivileges();
     }
 
     public void inheritPrivileges() {
@@ -200,18 +184,14 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             throw new ConditionRefuseException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessTokenEntity processToken = this.init(process);
 
-            processToken.setPrivileges(currentProcessToken.getPrivileges());
+        ProcessTokenEntity processToken = this.init(process);
 
-            this.flush(process, processToken);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        processToken.setPrivileges(currentProcessToken.getPrivileges());
+
+        this.flush(process, processToken);
     }
 
     public void setPrivileges(long privileges) {
@@ -240,18 +220,13 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             }
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessTokenEntity processToken = this.init(process);
+        ProcessTokenEntity processToken = this.init(process);
 
-            processToken.setPrivileges(privileges);
+        processToken.setPrivileges(privileges);
 
-            this.flush(process, processToken);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processToken);
     }
 
     public boolean isPrivileges(long privileges) {
@@ -264,16 +239,11 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            ProcessTokenEntity processToken = this.init(process);
+        ProcessTokenEntity processToken = this.init(process);
 
-            return CollectionUtil.unmodifiable(processToken.getLimits());
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return CollectionUtil.unmodifiable(processToken.getLimits());
     }
 
     public void inheritLimits() {
@@ -281,8 +251,6 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
                 ProcessStatusType.INITIALIZATION)) {
             throw new StatusRelationshipErrorException();
         }
-
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
 
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject currentProcess = processManager.getCurrent();
@@ -292,20 +260,15 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             throw new ConditionRefuseException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessTokenEntity processToken = this.init(process);
+        ProcessTokenEntity processToken = this.init(process);
 
-            Map<Long, Integer> processTokenLimits = processToken.getLimits();
-            processTokenLimits.clear();
-            processTokenLimits.putAll(currentProcessToken.getLimits());
+        Map<Long, Integer> processTokenLimits = processToken.getLimits();
+        processTokenLimits.clear();
+        processTokenLimits.putAll(currentProcessToken.getLimits());
 
-            this.flush(process, processToken);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processToken);
     }
 
     public void setLimits(Map<Long, Integer> limits) {
@@ -338,20 +301,15 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             }
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessTokenEntity processToken = this.init(process);
+        ProcessTokenEntity processToken = this.init(process);
 
-            Map<Long, Integer> processTokenLimits = processToken.getLimits();
-            processTokenLimits.clear();
-            processTokenLimits.putAll(limits);
+        Map<Long, Integer> processTokenLimits = processToken.getLimits();
+        processTokenLimits.clear();
+        processTokenLimits.putAll(limits);
 
-            this.flush(process, processToken);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processToken);
     }
 
     public Set<UUID> getRoles() {
@@ -360,16 +318,11 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            ProcessTokenEntity processToken = this.init(process);
+        ProcessTokenEntity processToken = this.init(process);
 
-            return CollectionUtil.unmodifiable(processToken.getRoles());
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return CollectionUtil.unmodifiable(processToken.getRoles());
     }
 
     public void initDefaultRoles() {
@@ -411,29 +364,24 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         ProcessObject currentProcess = processManager.getCurrent();
         ProcessTokenObject currentProcessToken = currentProcess.getToken();
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessTokenEntity processToken = this.init(process);
+        ProcessTokenEntity processToken = this.init(process);
 
-            if (currentProcessToken.getAccountId().equals(processToken.getAccountId())) {
-                UserManager userManager = this.coreManager.getManager(UserManager.class);
+        if (currentProcessToken.getAccountId().equals(processToken.getAccountId())) {
+            UserManager userManager = this.coreManager.getManager(UserManager.class);
 
-                AccountObject account = userManager.getCurrentAccount();
-                if (ValueUtil.isAnyNullOrEmpty(account.getPassword())) {
-                    roles.add(kernelConfiguration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
-                }
+            AccountObject account = userManager.getCurrentAccount();
+            if (ValueUtil.isAnyNullOrEmpty(account.getPassword())) {
+                roles.add(kernelConfiguration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
             }
-
-            Set<UUID> processTokenRoles = processToken.getRoles();
-            processTokenRoles.clear();
-            processTokenRoles.addAll(roles);
-
-            this.flush(process, processToken);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
         }
+
+        Set<UUID> processTokenRoles = processToken.getRoles();
+        processTokenRoles.clear();
+        processTokenRoles.addAll(roles);
+
+        this.flush(process, processToken);
     }
 
     public void addRoles(Set<UUID> roles) {
@@ -466,17 +414,12 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             }
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessTokenEntity processToken = this.init(process);
+        ProcessTokenEntity processToken = this.init(process);
 
-            processToken.getRoles().addAll(roles);
+        processToken.getRoles().addAll(roles);
 
-            this.flush(process, processToken);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processToken);
     }
 }

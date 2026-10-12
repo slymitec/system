@@ -23,21 +23,16 @@ import java.util.Map;
 public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntity, GroupObject> {
     protected UserFactory factory;
 
-    private GroupEntity getSelf() {
+    private GroupEntity getSelf(long lock) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
-        return accountGroupRepository.getGroup(this.cache.getGroup().getGroupId());
+        return accountGroupRepository.getGroup(this.cache.getGroup().getGroupId(), lock);
     }
 
     public final long getPrivileges() {
-        this.factory.lockGroup(this.cache.getGroup(), LockType.READ);
-        try {
-            UserTokenEntity userToken = this.getSelf().getToken();
-            return userToken.getPrivileges();
-        } finally {
-            this.factory.unlockGroup(this.cache.getGroup(), LockType.READ);
-        }
+        UserTokenEntity userToken = this.getSelf(LockType.READ).getToken();
+        return userToken.getPrivileges();
     }
 
     public final void setPrivileges(long privileges) {
@@ -50,25 +45,17 @@ public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntit
             throw new ConditionRefuseException();
         }
 
-        this.factory.lockGroup(this.cache.getGroup(), LockType.WRITE);
-        try {
-            UserTokenEntity userToken = this.getSelf().getToken();
-            userToken.setPrivileges(privileges);
+        GroupEntity group = this.getSelf(LockType.WRITE);
 
-            this.getSelf().setToken(userToken);
-        } finally {
-            this.factory.unlockGroup(this.cache.getGroup(), LockType.WRITE);
-        }
+        UserTokenEntity userToken = group.getToken();
+        userToken.setPrivileges(privileges);
+
+        group.setToken(userToken);
     }
 
     public final Map<Long, Integer> getLimits() {
-        this.factory.lockGroup(this.cache.getGroup(), LockType.READ);
-        try {
-            UserTokenEntity userToken = this.getSelf().getToken();
-            return CollectionUtil.unmodifiable(userToken.getLimits());
-        } finally {
-            this.factory.unlockGroup(this.cache.getGroup(), LockType.READ);
-        }
+        UserTokenEntity userToken = this.getSelf(LockType.READ).getToken();
+        return CollectionUtil.unmodifiable(userToken.getLimits());
     }
 
     public final void setLimits(Map<Long, Integer> limits) {
@@ -85,15 +72,12 @@ public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntit
             throw new ConditionRefuseException();
         }
 
-        this.factory.lockGroup(this.cache.getGroup(), LockType.WRITE);
-        try {
-            UserTokenEntity userToken = this.getSelf().getToken();
-            userToken.getLimits().clear();
-            userToken.getLimits().putAll(limits);
+        GroupEntity group = this.getSelf(LockType.WRITE);
 
-            this.getSelf().setToken(userToken);
-        } finally {
-            this.factory.unlockGroup(this.cache.getGroup(), LockType.WRITE);
-        }
+        UserTokenEntity userToken = group.getToken();
+        userToken.getLimits().clear();
+        userToken.getLimits().putAll(limits);
+
+        group.setToken(userToken);
     }
 }

@@ -34,20 +34,6 @@ public abstract class AInfoTypeInitializer extends AInitializer {
     public void getProcedure(InfoEntity info, IdentifierRecord identification) {
     }
 
-    public final void lockProcedure(InfoEntity info, long lock) {
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
-
-        infoRepository.lock(info, lock);
-    }
-
-    public final void unlockProcedure(InfoEntity info, long lock) {
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-        AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
-
-        infoRepository.unlock(info, lock);
-    }
-
     public void dumpProcedure(InfoEntity info, DumpCacheEntity dump) {
     }
 
@@ -79,35 +65,17 @@ public abstract class AInfoTypeInitializer extends AInitializer {
     }
 
     public Map<String, String> readPropertiesProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
-        try {
-            this.lockProcedure(info, LockType.READ);
-
-            return info.getProperties();
-        } finally {
-            this.unlockProcedure(info, LockType.READ);
-        }
+        return info.getProperties();
     }
 
     public void writePropertiesProcedure(InfoEntity info, Map<String, String> properties, InfoOpenRecord infoOpen) {
-        try {
-            this.lockProcedure(info, LockType.WRITE);
-
-            info.setProperties(properties);
-        } finally {
-            this.unlockProcedure(info, LockType.WRITE);
-        }
+        info.setProperties(properties);
     }
 
     public abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenRecord infoOpen);
 
     public byte[] readContentProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
-        try {
-            this.lockProcedure(info, LockType.READ);
-
-            return info.getContent();
-        } finally {
-            this.unlockProcedure(info, LockType.READ);
-        }
+        return info.getContent();
     }
 
     public void writeContentProcedure(InfoEntity info, InfoOpenRecord infoOpen, byte[] source) {
@@ -115,13 +83,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
             throw new StatusOverflowException();
         }
 
-        try {
-            this.lockProcedure(info, LockType.WRITE);
-
-            info.setContent(source);
-        } finally {
-            this.unlockProcedure(info, LockType.WRITE);
-        }
+        info.setContent(source);
     }
 
     public void executeContentProcedure(InfoEntity info, InfoOpenRecord infoOpen) {

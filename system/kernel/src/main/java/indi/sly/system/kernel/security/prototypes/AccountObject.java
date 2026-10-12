@@ -28,11 +28,11 @@ import java.util.*;
 public class AccountObject extends ACacheableObject<AccountCacheEntity> {
     protected UserFactory factory;
 
-    private AccountEntity getSelf() {
+    private AccountEntity getSelf(long lock) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
-        return accountGroupRepository.getAccount(this.cache.getAccountId());
+        return accountGroupRepository.getAccount(this.cache.getAccountId(), lock);
     }
 
     public UUID getId() {
@@ -40,21 +40,11 @@ public class AccountObject extends ACacheableObject<AccountCacheEntity> {
     }
 
     public String getName() {
-        this.factory.lockAccount(this.cache, LockType.READ);
-        try {
-            return this.getSelf().getName();
-        } finally {
-            this.factory.unlockAccount(this.cache, LockType.READ);
-        }
+        return this.getSelf(LockType.READ).getName();
     }
 
     public String getPassword() {
-        this.factory.lockAccount(this.cache, LockType.READ);
-        try {
-            return this.getSelf().getPassword();
-        } finally {
-            this.factory.unlockAccount(this.cache, LockType.READ);
-        }
+        return this.getSelf(LockType.READ).getPassword();
     }
 
     public void setPassword(String password) {
@@ -67,29 +57,19 @@ public class AccountObject extends ACacheableObject<AccountCacheEntity> {
             throw new ConditionRefuseException();
         }
 
-        this.factory.lockAccount(this.cache, LockType.WRITE);
-        try {
-            this.getSelf().setPassword(password);
-        } finally {
-            this.factory.unlockAccount(this.cache, LockType.WRITE);
-        }
+        this.getSelf(LockType.WRITE).setPassword(password);
     }
 
     public Set<GroupObject> getGroups() {
         UserManager userManager = this.coreManager.getManager(UserManager.class);
 
-        this.factory.lockAccount(this.cache, LockType.READ);
-        try {
-            Set<GroupObject> groups = new HashSet<>();
+        Set<GroupObject> groups = new HashSet<>();
 
-            for (GroupEntity group : this.getSelf().getGroups()) {
-                groups.add(userManager.getGroupById(group.getId()));
-            }
-
-            return CollectionUtil.unmodifiable(groups);
-        } finally {
-            this.factory.unlockAccount(this.cache, LockType.READ);
+        for (GroupEntity group : this.getSelf(LockType.READ).getGroups()) {
+            groups.add(userManager.getGroupById(group.getId()));
         }
+
+        return CollectionUtil.unmodifiable(groups);
     }
 
     public void setGroups(Set<GroupObject> groups) {
@@ -109,21 +89,16 @@ public class AccountObject extends ACacheableObject<AccountCacheEntity> {
 
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
-        this.factory.lockAccount(this.cache, LockType.WRITE);
-        try {
-            AccountEntity account = this.getSelf();
+        AccountEntity account = this.getSelf(LockType.WRITE);
 
-            if (ObjectUtil.isAnyNull(account.getGroups())) {
-                account.setGroups(new ArrayList<>());
-            } else {
-                account.getGroups().clear();
-            }
+        if (ObjectUtil.isAnyNull(account.getGroups())) {
+            account.setGroups(new ArrayList<>());
+        } else {
+            account.getGroups().clear();
+        }
 
-            for (GroupObject group : groups) {
-                account.getGroups().add(userRepository.getGroup(group.getId()));
-            }
-        } finally {
-            this.factory.unlockAccount(this.cache, LockType.WRITE);
+        for (GroupObject group : groups) {
+            account.getGroups().add(userRepository.getGroup(group.getId()));
         }
     }
 

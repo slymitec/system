@@ -66,6 +66,29 @@ public class UserRepositoryObject extends AObject {
         return account;
     }
 
+    public AccountEntity getAccount(UUID id, long lock) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
+            throw new ConditionParametersException();
+        }
+
+        LockModeType lockMode;
+        if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
+            lockMode = LockModeType.PESSIMISTIC_READ;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
+            lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else {
+            throw new ConditionParametersException();
+        }
+
+        AccountEntity account = this.entityManager.find(AccountEntity.class, id, lockMode);
+
+        if (ObjectUtil.isAnyNull(account)) {
+            throw new StatusNotExistedException();
+        }
+
+        return account;
+    }
+
     public AccountEntity getAccount(String name) {
         if (StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
@@ -88,12 +111,65 @@ public class UserRepositoryObject extends AObject {
         return account;
     }
 
+    public AccountEntity getAccount(String name, long lock) {
+        if (StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        LockModeType lockMode;
+        if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
+            lockMode = LockModeType.PESSIMISTIC_READ;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
+            lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else {
+            throw new ConditionParametersException();
+        }
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<AccountEntity> criteriaQuery = criteriaBuilder.createQuery(AccountEntity.class);
+        Root<AccountEntity> root = criteriaQuery.from(AccountEntity.class);
+        criteriaQuery.select(root);
+        criteriaQuery.where(criteriaBuilder.equal(root.get("name"), name));
+        TypedQuery<AccountEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
+        typedQuery.setLockMode(lockMode);
+        List<AccountEntity> accounts = typedQuery.getResultList();
+
+        if (accounts.isEmpty()) {
+            throw new StatusNotExistedException();
+        }
+
+        return accounts.getFirst();
+    }
+
     public GroupEntity getGroup(UUID id) {
         if (ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
         GroupEntity group = this.entityManager.find(GroupEntity.class, id);
+
+        if (ObjectUtil.isAnyNull(group)) {
+            throw new StatusNotExistedException();
+        }
+
+        return group;
+    }
+
+    public GroupEntity getGroup(UUID id, long lock) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
+            throw new ConditionParametersException();
+        }
+
+        LockModeType lockMode;
+        if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
+            lockMode = LockModeType.PESSIMISTIC_READ;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
+            lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else {
+            throw new ConditionParametersException();
+        }
+
+        GroupEntity group = this.entityManager.find(GroupEntity.class, id, lockMode);
 
         if (ObjectUtil.isAnyNull(group)) {
             throw new StatusNotExistedException();
@@ -113,6 +189,38 @@ public class UserRepositoryObject extends AObject {
         criteriaQuery.select(root);
         criteriaQuery.where(criteriaBuilder.equal(root.get("name"), name));
         TypedQuery<GroupEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
+        List<GroupEntity> groups = typedQuery.getResultList();
+
+        if (groups.isEmpty()) {
+            throw new StatusNotExistedException();
+        }
+
+        GroupEntity group = groups.getFirst();
+
+        return group;
+    }
+
+    public GroupEntity getGroup(String name, long lock) {
+        if (StringUtil.isNameIllegal(name)) {
+            throw new ConditionParametersException();
+        }
+
+        LockModeType lockMode;
+        if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
+            lockMode = LockModeType.PESSIMISTIC_READ;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
+            lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else {
+            throw new ConditionParametersException();
+        }
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<GroupEntity> criteriaQuery = criteriaBuilder.createQuery(GroupEntity.class);
+        Root<GroupEntity> root = criteriaQuery.from(GroupEntity.class);
+        criteriaQuery.select(root);
+        criteriaQuery.where(criteriaBuilder.equal(root.get("name"), name));
+        TypedQuery<GroupEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
+        typedQuery.setLockMode(lockMode);
         List<GroupEntity> groups = typedQuery.getResultList();
 
         if (groups.isEmpty()) {
@@ -170,97 +278,5 @@ public class UserRepositoryObject extends AObject {
         }
 
         this.entityManager.remove(group);
-    }
-
-    public void lock(AccountEntity account, long lock) {
-        if (ObjectUtil.isAnyNull(account)) {
-            throw new ConditionParametersException();
-        }
-
-        LockModeType lockMode = this.entityManager.getLockMode(account);
-
-        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
-            return;
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.PESSIMISTIC_READ;
-            }
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-            if (lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.PESSIMISTIC_WRITE;
-            }
-        }
-
-        this.entityManager.lock(account, lockMode);
-    }
-
-    public void lock(GroupEntity group, long lock) {
-        if (ObjectUtil.isAnyNull(group)) {
-            throw new ConditionParametersException();
-        }
-
-        LockModeType lockMode = this.entityManager.getLockMode(group);
-
-        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
-            return;
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.PESSIMISTIC_READ;
-            }
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-            if (lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.PESSIMISTIC_WRITE;
-            }
-        }
-
-        this.entityManager.lock(group, lockMode);
-    }
-
-    public void unlock(AccountEntity account, long lock) {
-        if (ObjectUtil.isAnyNull(account)) {
-            throw new ConditionParametersException();
-        }
-
-        LockModeType lockMode = this.entityManager.getLockMode(account);
-
-        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
-            return;
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ, LockType.WRITE)) {
-            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.NONE;
-            }
-        }
-
-        this.entityManager.lock(account, lockMode);
-    }
-
-    public void unlock(GroupEntity group, long lock) {
-        if (ObjectUtil.isAnyNull(group)) {
-            throw new ConditionParametersException();
-        }
-
-        LockModeType lockMode = this.entityManager.getLockMode(group);
-
-        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
-            return;
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ, LockType.WRITE)) {
-            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.NONE;
-            }
-        }
-
-        this.entityManager.lock(group, lockMode);
     }
 }

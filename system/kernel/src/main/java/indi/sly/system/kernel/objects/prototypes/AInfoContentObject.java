@@ -2,6 +2,7 @@ package indi.sly.system.kernel.objects.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
@@ -27,7 +28,7 @@ public abstract class AInfoContentObject extends AChildCacheableObject<InfoConte
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache.getInfo());
+        return this.processorMediator.getSelf().apply(this.cache.getInfo(), LockType.NONE);
     }
 
     public byte[] read() {

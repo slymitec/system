@@ -25,10 +25,9 @@ import indi.sly.system.kernel.security.instances.prototypes.AuditContentObject;
 import indi.sly.system.kernel.security.prototypes.AccountObject;
 import indi.sly.system.kernel.security.prototypes.GroupObject;
 import indi.sly.system.kernel.security.values.*;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.*;
 
@@ -37,12 +36,16 @@ import java.util.*;
 public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDescriptorCacheEntity, InfoObject> {
     protected InfoProcessorMediator processorMediator;
 
-    private InfoEntity getSelf() {
+    private InfoEntity getSelf(long lock) {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfo().getInfoId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache.getInfo());
+        return this.processorMediator.getSelf().apply(this.cache.getInfo(), lock);
+    }
+
+    public void initSelf(long lock) {
+        this.getSelf(lock);
     }
 
     private ProcessObject getCurrentProcess() {
@@ -62,79 +65,71 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             throw new StatusDisabilityException();
         }
 
-        InfoEntity info = this.getSelf();
-
-        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
-        TypeObject type = typeManager.get(this.base.getType());
+        InfoEntity info = this.getSelf(LockType.READ);
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        type.getInitializer().lockProcedure(info, LockType.READ);
-        try {
-            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
+        SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-            if (this.cache.isPermission()) {
-                if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                        && !securityDescriptor.getOwners().contains(processToken.getAccountId())
-                        && this.denyPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, null)) {
-                    throw new ConditionPermissionException();
-                }
+        if (this.cache.isPermission()) {
+            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                    && !securityDescriptor.getOwners().contains(processToken.getAccountId())
+                    && this.denyPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, null)) {
+                throw new ConditionPermissionException();
             }
-
-            if (this.cache.isAudit()) {
-                this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
-            }
-
-            List<SecurityDescriptorSummaryRecord> securityDescriptorSummaries = new ArrayList<>();
-
-            SecurityDescriptorSummaryRecord securityDescriptorSummary = new SecurityDescriptorSummaryRecord(
-                    this.cache.getInfo().getPath(),
-                    this.cache.isPermission() && securityDescriptor.isInherit(),
-                    this.cache.isPermission(),
-                    this.cache.isAudit(),
-                    this.cache.isPermission() ? new HashSet<>(securityDescriptor.getPermissions()) : new HashSet<>(),
-                    this.cache.isAudit() ? new HashSet<>(securityDescriptor.getAudits()) : new HashSet<>()
-            );
-            securityDescriptorSummaries.add(securityDescriptorSummary);
-
-            InfoObject parentInfo = this.base.getParent();
-
-            SecurityDescriptorObject parentSecurityDescriptor;
-            InfoEntity parentInfoSelf;
-
-            KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
-            int MAX_DEPTH = kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH;
-            while (ObjectUtil.allNotNull(parentInfo)) {
-                if (MAX_DEPTH-- < 0) {
-                    throw new StatusOverflowException();
-                }
-
-                parentSecurityDescriptor = parentInfo.getSecurityDescriptor();
-
-                if (parentSecurityDescriptor.cache.isPermission() || parentSecurityDescriptor.cache.isAudit()) {
-                    parentInfoSelf = parentSecurityDescriptor.getSelf();
-                    securityDescriptor = parentInfoSelf.getSecurityDescriptor();
-
-                    securityDescriptorSummary = new SecurityDescriptorSummaryRecord(
-                            parentSecurityDescriptor.cache.getInfo().getPath(),
-                            securityDescriptor.isInherit(),
-                            parentSecurityDescriptor.cache.isPermission(),
-                            parentSecurityDescriptor.cache.isAudit(),
-                            parentSecurityDescriptor.cache.isPermission() ? new HashSet<>(securityDescriptor.getPermissions()) : new HashSet<>(),
-                            parentSecurityDescriptor.cache.isAudit() ? new HashSet<>(securityDescriptor.getAudits()) : new HashSet<>()
-                    );
-                    securityDescriptorSummaries.add(securityDescriptorSummary);
-                }
-
-                parentInfo = parentInfo.getParent();
-            }
-
-            Collections.reverse(securityDescriptorSummaries);
-
-            return securityDescriptorSummaries;
-        } finally {
-            type.getInitializer().unlockProcedure(info, LockType.READ);
         }
+
+        if (this.cache.isAudit()) {
+            this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
+        }
+
+        List<SecurityDescriptorSummaryRecord> securityDescriptorSummaries = new ArrayList<>();
+
+        SecurityDescriptorSummaryRecord securityDescriptorSummary = new SecurityDescriptorSummaryRecord(
+                this.cache.getInfo().getPath(),
+                this.cache.isPermission() && securityDescriptor.isInherit(),
+                this.cache.isPermission(),
+                this.cache.isAudit(),
+                this.cache.isPermission() ? new HashSet<>(securityDescriptor.getPermissions()) : new HashSet<>(),
+                this.cache.isAudit() ? new HashSet<>(securityDescriptor.getAudits()) : new HashSet<>()
+        );
+        securityDescriptorSummaries.add(securityDescriptorSummary);
+
+        InfoObject parentInfo = this.base.getParent();
+
+        SecurityDescriptorObject parentSecurityDescriptor;
+        InfoEntity parentInfoSelf;
+
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+        int MAX_DEPTH = kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH;
+        while (ObjectUtil.allNotNull(parentInfo)) {
+            if (MAX_DEPTH-- < 0) {
+                throw new StatusOverflowException();
+            }
+
+            parentSecurityDescriptor = parentInfo.getSecurityDescriptor();
+
+            if (parentSecurityDescriptor.cache.isPermission() || parentSecurityDescriptor.cache.isAudit()) {
+                parentInfoSelf = parentSecurityDescriptor.getSelf(LockType.READ);
+                securityDescriptor = parentInfoSelf.getSecurityDescriptor();
+
+                securityDescriptorSummary = new SecurityDescriptorSummaryRecord(
+                        parentSecurityDescriptor.cache.getInfo().getPath(),
+                        securityDescriptor.isInherit(),
+                        parentSecurityDescriptor.cache.isPermission(),
+                        parentSecurityDescriptor.cache.isAudit(),
+                        parentSecurityDescriptor.cache.isPermission() ? new HashSet<>(securityDescriptor.getPermissions()) : new HashSet<>(),
+                        parentSecurityDescriptor.cache.isAudit() ? new HashSet<>(securityDescriptor.getAudits()) : new HashSet<>()
+                );
+                securityDescriptorSummaries.add(securityDescriptorSummary);
+            }
+
+            parentInfo = parentInfo.getParent();
+        }
+
+        Collections.reverse(securityDescriptorSummaries);
+
+        return securityDescriptorSummaries;
     }
 
     public boolean isInherit() {
@@ -142,31 +137,23 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             throw new StatusDisabilityException();
         }
 
-        InfoEntity info = this.getSelf();
-
-        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
-        TypeObject type = typeManager.get(this.base.getType());
+        InfoEntity info = this.getSelf(LockType.READ);
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        type.getInitializer().lockProcedure(info, LockType.READ);
-        try {
-            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
+        SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                    && !securityDescriptor.getOwners().contains(processToken.getAccountId())
-                    && this.denyPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, null)) {
-                throw new ConditionPermissionException();
-            }
-
-            if (this.cache.isAudit()) {
-                this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
-            }
-
-            return securityDescriptor.isInherit();
-        } finally {
-            type.getInitializer().unlockProcedure(info, LockType.READ);
+        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                && !securityDescriptor.getOwners().contains(processToken.getAccountId())
+                && this.denyPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, null)) {
+            throw new ConditionPermissionException();
         }
+
+        if (this.cache.isAudit()) {
+            this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
+        }
+
+        return securityDescriptor.isInherit();
     }
 
     public void setInherit(boolean inherit) {
@@ -174,33 +161,25 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             throw new StatusDisabilityException();
         }
 
-        InfoEntity info = this.getSelf();
-
-        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
-        TypeObject type = typeManager.get(this.base.getType());
+        InfoEntity info = this.getSelf(LockType.WRITE);
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        type.getInitializer().lockProcedure(info, LockType.WRITE);
-        try {
-            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
+        SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                    && !securityDescriptor.getOwners().contains(processToken.getAccountId())
-                    && this.denyPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW, null)) {
-                throw new ConditionPermissionException();
-            }
-
-            if (this.cache.isAudit()) {
-                this.checkAudit(AuditType.CHANGEPERMISSIONDESCRIPTOR);
-            }
-
-            securityDescriptor.setInherit(inherit);
-
-            info.setSecurityDescriptor(securityDescriptor);
-        } finally {
-            type.getInitializer().unlockProcedure(info, LockType.WRITE);
+        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                && !securityDescriptor.getOwners().contains(processToken.getAccountId())
+                && this.denyPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW, null)) {
+            throw new ConditionPermissionException();
         }
+
+        if (this.cache.isAudit()) {
+            this.checkAudit(AuditType.CHANGEPERMISSIONDESCRIPTOR);
+        }
+
+        securityDescriptor.setInherit(inherit);
+
+        info.setSecurityDescriptor(securityDescriptor);
     }
 
     public Set<UUID> getOwners() {
@@ -208,31 +187,23 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             throw new StatusDisabilityException();
         }
 
-        InfoEntity info = this.getSelf();
-
-        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
-        TypeObject type = typeManager.get(this.base.getType());
+        InfoEntity info = this.getSelf(LockType.READ);
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        type.getInitializer().lockProcedure(info, LockType.READ);
-        try {
-            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
+        SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                    && !securityDescriptor.getOwners().contains(processToken.getAccountId())
-                    && this.denyPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, null)) {
-                throw new ConditionPermissionException();
-            }
-
-            if (this.cache.isAudit()) {
-                this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
-            }
-
-            return CollectionUtil.unmodifiable(securityDescriptor.getOwners());
-        } finally {
-            type.getInitializer().unlockProcedure(info, LockType.READ);
+        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                && !securityDescriptor.getOwners().contains(processToken.getAccountId())
+                && this.denyPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, null)) {
+            throw new ConditionPermissionException();
         }
+
+        if (this.cache.isAudit()) {
+            this.checkAudit(AuditType.READPERMISSIONDESCRIPTOR);
+        }
+
+        return CollectionUtil.unmodifiable(securityDescriptor.getOwners());
     }
 
     public void setOwners(Set<UUID> owners) {
@@ -243,39 +214,31 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             throw new StatusDisabilityException();
         }
 
-        InfoEntity info = this.getSelf();
-
-        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
-        TypeObject type = typeManager.get(this.base.getType());
+        InfoEntity info = this.getSelf(LockType.WRITE);
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        type.getInitializer().lockProcedure(info, LockType.WRITE);
-        try {
-            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
+        SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-            if ((!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                    && !securityDescriptor.getOwners().contains(processToken.getAccountId())
-                    && this.denyPermission(PermissionType.TAKEONWERSHIP_ALLOW, null))
-                    || (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                    && !owners.contains(processToken.getAccountId()))) {
-                throw new ConditionPermissionException();
-            }
-            if (!securityDescriptor.isCanChangeOwner()) {
-                throw new ConditionRefuseException();
-            }
-
-            if (this.cache.isAudit()) {
-                this.checkAudit(AuditType.TAKEONWERSHIP);
-            }
-
-            securityDescriptor.getOwners().clear();
-            securityDescriptor.getOwners().addAll(owners);
-
-            info.setSecurityDescriptor(securityDescriptor);
-        } finally {
-            type.getInitializer().unlockProcedure(info, LockType.WRITE);
+        if ((!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                && !securityDescriptor.getOwners().contains(processToken.getAccountId())
+                && this.denyPermission(PermissionType.TAKEONWERSHIP_ALLOW, null))
+                || (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                && !owners.contains(processToken.getAccountId()))) {
+            throw new ConditionPermissionException();
         }
+        if (!securityDescriptor.isCanChangeOwner()) {
+            throw new ConditionRefuseException();
+        }
+
+        if (this.cache.isAudit()) {
+            this.checkAudit(AuditType.TAKEONWERSHIP);
+        }
+
+        securityDescriptor.getOwners().clear();
+        securityDescriptor.getOwners().addAll(owners);
+
+        info.setSecurityDescriptor(securityDescriptor);
     }
 
     private boolean denyPermission(long permission, PermissionQueryRecord permissionQueryFunc) {
@@ -288,10 +251,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         List<SecurityDescriptorEntity> securityDescriptors = new ArrayList<>();
 
-        InfoEntity info = this.getSelf();
-
-        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
-        TypeObject type = typeManager.get(this.base.getType());
+        InfoEntity info = this.getSelf(LockType.READ);
 
         ProcessObject process = this.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
@@ -302,47 +262,42 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             return false;
         }
 
-        type.getInitializer().lockProcedure(info, LockType.READ);
-        try {
-            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
-            securityDescriptors.add(securityDescriptor);
+        SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
+        securityDescriptors.add(securityDescriptor);
 
-            InfoObject parentInfo = this.base.getParent();
+        InfoObject parentInfo = this.base.getParent();
 
-            if (securityDescriptor.isInherit()) {
-                SecurityDescriptorObject parentSecurityDescriptor;
-                InfoEntity parentInfoSelf;
+        if (securityDescriptor.isInherit()) {
+            SecurityDescriptorObject parentSecurityDescriptor;
+            InfoEntity parentInfoSelf;
 
-                KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
-                int MAX_DEPTH = kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH;
-                while (ObjectUtil.allNotNull(parentInfo)) {
-                    if (MAX_DEPTH-- < 0) {
-                        throw new StatusOverflowException();
-                    }
+            KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+            int MAX_DEPTH = kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH;
+            while (ObjectUtil.allNotNull(parentInfo)) {
+                if (MAX_DEPTH-- < 0) {
+                    throw new StatusOverflowException();
+                }
 
-                    parentSecurityDescriptor = parentInfo.getSecurityDescriptor();
+                parentSecurityDescriptor = parentInfo.getSecurityDescriptor();
 
-                    if (parentSecurityDescriptor.cache.isPermission()) {
-                        parentInfoSelf = parentSecurityDescriptor.getSelf();
+                if (parentSecurityDescriptor.cache.isPermission()) {
+                    parentInfoSelf = parentSecurityDescriptor.getSelf(LockType.READ);
 
-                        securityDescriptor = parentInfoSelf.getSecurityDescriptor();
-                        securityDescriptors.add(securityDescriptor);
+                    securityDescriptor = parentInfoSelf.getSecurityDescriptor();
+                    securityDescriptors.add(securityDescriptor);
 
-                        if (!securityDescriptor.isInherit()) {
-                            break;
-                        }
-                    } else {
+                    if (!securityDescriptor.isInherit()) {
                         break;
                     }
-
-                    parentInfo = parentInfo.getParent();
+                } else {
+                    break;
                 }
-            }
 
-            Collections.reverse(securityDescriptors);
-        } finally {
-            type.getInitializer().unlockProcedure(info, LockType.READ);
+                parentInfo = parentInfo.getParent();
+            }
         }
+
+        Collections.reverse(securityDescriptors);
 
         Set<AccessControlRecord> effectivePermissions = new HashSet<>();
         boolean securityDescriptorHasChild;
@@ -465,44 +420,36 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             throw new StatusDisabilityException();
         }
 
-        InfoEntity info = this.getSelf();
-
-        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
-        TypeObject type = typeManager.get(this.base.getType());
+        InfoEntity info = this.getSelf(LockType.WRITE);
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        type.getInitializer().lockProcedure(info, LockType.WRITE);
-        try {
-            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
+        SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-            for (AccessControlRecord permission : permissions) {
-                if (!securityDescriptor.isHasChild() && LogicalUtil.isAnyExist(permission.scope(),
-                        LogicalUtil.or(AccessControlScopeType.CHILD_HAS_CHILD,
-                                AccessControlScopeType.CHILD_HAS_NOT_CHILD,
-                                AccessControlScopeType.HIERARCHICAL_HAS_CHILD,
-                                AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD))) {
-                    throw new ConditionParametersException();
-                }
+        for (AccessControlRecord permission : permissions) {
+            if (!securityDescriptor.isHasChild() && LogicalUtil.isAnyExist(permission.scope(),
+                    LogicalUtil.or(AccessControlScopeType.CHILD_HAS_CHILD,
+                            AccessControlScopeType.CHILD_HAS_NOT_CHILD,
+                            AccessControlScopeType.HIERARCHICAL_HAS_CHILD,
+                            AccessControlScopeType.HIERARCHICAL_HAS_NOT_CHILD))) {
+                throw new ConditionParametersException();
             }
-
-            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                    && !securityDescriptor.getOwners().contains(processToken.getAccountId())
-                    && this.denyPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW, null)) {
-                throw new ConditionPermissionException();
-            }
-
-            if (this.cache.isAudit()) {
-                this.checkAudit(AuditType.CHANGEPERMISSIONDESCRIPTOR);
-            }
-
-            securityDescriptor.getPermissions().clear();
-            securityDescriptor.getPermissions().addAll(permissions);
-
-            info.setSecurityDescriptor(securityDescriptor);
-        } finally {
-            type.getInitializer().unlockProcedure(info, LockType.WRITE);
         }
+
+        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                && !securityDescriptor.getOwners().contains(processToken.getAccountId())
+                && this.denyPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW, null)) {
+            throw new ConditionPermissionException();
+        }
+
+        if (this.cache.isAudit()) {
+            this.checkAudit(AuditType.CHANGEPERMISSIONDESCRIPTOR);
+        }
+
+        securityDescriptor.getPermissions().clear();
+        securityDescriptor.getPermissions().addAll(permissions);
+
+        info.setSecurityDescriptor(securityDescriptor);
     }
 
     private void writeAudit(Set<UserIdRecord> userIds, long value) {
@@ -540,50 +487,42 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         List<SecurityDescriptorEntity> securityDescriptors = new ArrayList<>();
 
-        InfoEntity info = this.getSelf();
-
-        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
-        TypeObject type = typeManager.get(this.base.getType());
+        InfoEntity info = this.getSelf(LockType.READ);
 
         ProcessObject process = this.getCurrentProcess();
         ProcessTokenObject processToken = process.getToken();
         ProcessSessionObject processSession = process.getSession();
 
-        type.getInitializer().lockProcedure(info, LockType.READ);
-        try {
-            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
-            securityDescriptors.add(securityDescriptor);
+        SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
+        securityDescriptors.add(securityDescriptor);
 
-            InfoObject parentInfo = this.base.getParent();
+        InfoObject parentInfo = this.base.getParent();
 
-            SecurityDescriptorObject parentSecurityDescriptor;
-            InfoEntity parentInfoSelf;
+        SecurityDescriptorObject parentSecurityDescriptor;
+        InfoEntity parentInfoSelf;
 
-            KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
-            int MAX_DEPTH = kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH;
-            while (ObjectUtil.allNotNull(parentInfo)) {
-                if (MAX_DEPTH-- < 0) {
-                    throw new StatusOverflowException();
-                }
-
-                parentSecurityDescriptor = parentInfo.getSecurityDescriptor();
-
-                if (parentSecurityDescriptor.cache.isAudit()) {
-                    parentInfoSelf = parentSecurityDescriptor.getSelf();
-
-                    securityDescriptor = parentInfoSelf.getSecurityDescriptor();
-                    securityDescriptors.add(securityDescriptor);
-                } else {
-                    break;
-                }
-
-                parentInfo = parentInfo.getParent();
+        KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
+        int MAX_DEPTH = kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH;
+        while (ObjectUtil.allNotNull(parentInfo)) {
+            if (MAX_DEPTH-- < 0) {
+                throw new StatusOverflowException();
             }
 
-            Collections.reverse(securityDescriptors);
-        } finally {
-            type.getInitializer().unlockProcedure(info, LockType.READ);
+            parentSecurityDescriptor = parentInfo.getSecurityDescriptor();
+
+            if (parentSecurityDescriptor.cache.isAudit()) {
+                parentInfoSelf = parentSecurityDescriptor.getSelf(LockType.READ);
+
+                securityDescriptor = parentInfoSelf.getSecurityDescriptor();
+                securityDescriptors.add(securityDescriptor);
+            } else {
+                break;
+            }
+
+            parentInfo = parentInfo.getParent();
         }
+
+        Collections.reverse(securityDescriptors);
 
         Set<AccessControlRecord> effectiveAudits = new HashSet<>();
         boolean securityDescriptorHasChild;
@@ -674,29 +613,21 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             throw new StatusDisabilityException();
         }
 
-        InfoEntity info = this.getSelf();
-
-        TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
-        TypeObject type = typeManager.get(this.base.getType());
+        InfoEntity info = this.getSelf(LockType.WRITE);
 
         ProcessTokenObject processToken = this.getCurrentProcessToken();
 
-        type.getInitializer().lockProcedure(info, LockType.WRITE);
-        try {
-            SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
+        SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-            if (this.cache.isPermission() && !processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
-                    && !securityDescriptor.getOwners().contains(processToken.getAccountId())
-                    && this.denyPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW, null)) {
-                throw new ConditionAuditException();
-            }
-
-            securityDescriptor.getAudits().clear();
-            securityDescriptor.getAudits().addAll(audits);
-
-            info.setSecurityDescriptor(securityDescriptor);
-        } finally {
-            type.getInitializer().unlockProcedure(info, LockType.WRITE);
+        if (this.cache.isPermission() && !processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                && !securityDescriptor.getOwners().contains(processToken.getAccountId())
+                && this.denyPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW, null)) {
+            throw new ConditionAuditException();
         }
+
+        securityDescriptor.getAudits().clear();
+        securityDescriptor.getAudits().addAll(audits);
+
+        info.setSecurityDescriptor(securityDescriptor);
     }
 }

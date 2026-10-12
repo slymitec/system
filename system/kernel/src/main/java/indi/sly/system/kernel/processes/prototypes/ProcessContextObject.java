@@ -30,12 +30,16 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
-    private ProcessEntity getSelf() {
+    private ProcessEntity getSelf(long lock) {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
+        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId(), lock);
+    }
+
+    public void initSelf(long lock) {
+        this.getSelf(lock);
     }
 
     private ProcessContextEntity init(ProcessEntity process) {
@@ -64,17 +68,11 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+        ProcessContextEntity processContext = this.init(process);
 
-            ProcessContextEntity processContext = this.init(process);
-
-            return processContext.getType();
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return processContext.getType();
     }
 
     public void setType(long type) {
@@ -90,19 +88,13 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             throw new ConditionRefuseException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+        ProcessContextEntity processContext = this.init(process);
 
-            ProcessContextEntity processContext = this.init(process);
+        processContext.setType(type);
 
-            processContext.setType(type);
-
-            this.flush(process, processContext);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processContext);
     }
 
     public PathRecord getPath() {
@@ -111,17 +103,11 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+        ProcessContextEntity processContext = this.init(process);
 
-            ProcessContextEntity processContext = this.init(process);
-
-            return processContext.getPath();
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return processContext.getPath();
     }
 
     public void setPath(PathRecord path) {
@@ -141,19 +127,13 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             throw new ConditionRefuseException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+        ProcessContextEntity processContext = this.init(process);
 
-            ProcessContextEntity processContext = this.init(process);
+        processContext.setPath(path);
 
-            processContext.setPath(path);
-
-            this.flush(process, processContext);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processContext);
     }
 
     public ApplicationRecord getApplication() {
@@ -162,17 +142,11 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+        ProcessContextEntity processContext = this.init(process);
 
-            ProcessContextEntity processContext = this.init(process);
-
-            return processContext.getApplication();
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return processContext.getApplication();
     }
 
     public void setApplication(ApplicationRecord application) {
@@ -192,19 +166,13 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             throw new ConditionRefuseException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+        ProcessContextEntity processContext = this.init(process);
 
-            ProcessContextEntity processContext = this.init(process);
+        processContext.setApplication(application);
 
-            processContext.setApplication(application);
-
-            this.flush(process, processContext);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processContext);
     }
 
     public Map<String, String> getEnvironmentVariables() {
@@ -213,17 +181,11 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+        ProcessContextEntity processContext = this.init(process);
 
-            ProcessContextEntity processContext = this.init(process);
-
-            return CollectionUtil.unmodifiable(processContext.getEnvironmentVariables());
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return CollectionUtil.unmodifiable(processContext.getEnvironmentVariables());
     }
 
     public void setEnvironmentVariables(Map<String, String> environmentVariable) {
@@ -248,21 +210,15 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             }
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+        ProcessContextEntity processContext = this.init(process);
 
-            ProcessContextEntity processContext = this.init(process);
+        Map<String, String> processContextEnvironmentVariable = processContext.getEnvironmentVariables();
+        processContextEnvironmentVariable.clear();
+        processContextEnvironmentVariable.putAll(environmentVariable);
 
-            Map<String, String> processContextEnvironmentVariable = processContext.getEnvironmentVariables();
-            processContextEnvironmentVariable.clear();
-            processContextEnvironmentVariable.putAll(environmentVariable);
-
-            this.flush(process, processContext);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processContext);
     }
 
     public String getParameters() {
@@ -271,17 +227,11 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+        ProcessContextEntity processContext = this.init(process);
 
-            ProcessContextEntity processContext = this.init(process);
-
-            return processContext.getParameters();
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return processContext.getParameters();
     }
 
     public void setParameters(String parameters) {
@@ -301,19 +251,13 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             throw new ConditionRefuseException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+        ProcessContextEntity processContext = this.init(process);
 
-            ProcessContextEntity processContext = this.init(process);
+        processContext.setParameters(parameters);
 
-            processContext.setParameters(parameters);
-
-            this.flush(process, processContext);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processContext);
     }
 
     public PathRecord getWorkFolder() {
@@ -322,17 +266,11 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+        ProcessContextEntity processContext = this.init(process);
 
-            ProcessContextEntity processContext = this.init(process);
-
-            return processContext.getWorkFolder();
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return processContext.getWorkFolder();
     }
 
     public void setWorkFolder(PathRecord workFolder) {
@@ -357,18 +295,12 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
             }
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
+        ProcessContextEntity processContext = this.init(process);
 
-            ProcessContextEntity processContext = this.init(process);
+        processContext.setWorkFolder(workFolder);
 
-            processContext.setWorkFolder(workFolder);
-
-            this.flush(process, processContext);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processContext);
     }
 }

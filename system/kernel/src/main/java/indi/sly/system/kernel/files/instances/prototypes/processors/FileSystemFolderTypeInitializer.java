@@ -99,30 +99,25 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
             AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
-            try {
-                this.lockProcedure(info, LockType.WRITE);
 
-                InfoWildcardRecord wildcard = new InfoWildcardRecord(childInfo.getName());
-                if (infoRepository.countRelation(info, wildcard) > 0) {
-                    throw new StatusAlreadyExistedException();
-                }
-
-                FileSystemEntryDefinition childEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, childInfo.getContent());
-                assert childEntry != null;
-                childEntry.setType(entry.getType());
-                childEntry.setValue(ArrayUtil.EMPTY_BYTES);
-                childInfo.setContent(ObjectUtil.transferToJsonByteArray(childEntry));
-
-                InfoRelationEntity infoRelation = new InfoRelationEntity();
-                infoRelation.setId(childInfo.getId());
-                infoRelation.setParentId(info.getId());
-                infoRelation.setType(childInfo.getType());
-                infoRelation.setName(childInfo.getName());
-
-                infoRepository.addRelation(infoRelation);
-            } finally {
-                this.unlockProcedure(info, LockType.WRITE);
+            InfoWildcardRecord wildcard = new InfoWildcardRecord(childInfo.getName());
+            if (infoRepository.countRelation(info, wildcard) > 0) {
+                throw new StatusAlreadyExistedException();
             }
+
+            FileSystemEntryDefinition childEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, childInfo.getContent());
+            assert childEntry != null;
+            childEntry.setType(entry.getType());
+            childEntry.setValue(ArrayUtil.EMPTY_BYTES);
+            childInfo.setContent(ObjectUtil.transferToJsonByteArray(childEntry));
+
+            InfoRelationEntity infoRelation = new InfoRelationEntity();
+            infoRelation.setId(childInfo.getId());
+            infoRelation.setParentId(info.getId());
+            infoRelation.setType(childInfo.getType());
+            infoRelation.setName(childInfo.getName());
+
+            infoRepository.addRelation(infoRelation);
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
@@ -195,15 +190,9 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
             AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
-            try {
-                this.lockProcedure(info, LockType.READ);
+            InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoName);
 
-                InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoName);
-
-                infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
-            } finally {
-                this.unlockProcedure(info, LockType.READ);
-            }
+            infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
             File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "$Relations");
@@ -248,17 +237,11 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
             AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
-            try {
-                this.lockProcedure(info, LockType.READ);
+            List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
+            for (InfoRelationEntity infoRelation : infoRelations) {
+                InfoSummaryRecord infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
 
-                List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
-                for (InfoRelationEntity infoRelation : infoRelations) {
-                    InfoSummaryRecord infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
-
-                    infoSummaries.add(infoSummary);
-                }
-            } finally {
-                this.unlockProcedure(info, LockType.READ);
+                infoSummaries.add(infoSummary);
             }
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             if (wildcard.type() == UUID.class) {
@@ -319,15 +302,9 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
             AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
-            try {
-                this.lockProcedure(info, LockType.WRITE);
+            InfoRelationEntity infoRelation = infoRepository.getRelation(info, oldChildInfoName);
 
-                InfoRelationEntity infoRelation = infoRepository.getRelation(info, oldChildInfoName);
-
-                infoRelation.setName(newChildInfoName);
-            } finally {
-                this.unlockProcedure(info, LockType.WRITE);
-            }
+            infoRelation.setName(newChildInfoName);
 
             return;
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
@@ -379,15 +356,9 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
             AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
-            try {
-                this.lockProcedure(info, LockType.WRITE);
+            InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoName);
 
-                InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoName);
-
-                infoRepository.deleteRelation(infoRelation);
-            } finally {
-                this.unlockProcedure(info, LockType.WRITE);
-            }
+            infoRepository.deleteRelation(infoRelation);
         } else if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.MAPPING)) {
             File infoFolder = new File(StringUtil.readFormBytes(entry.getValue()));
             File infoRelationFolder = new File(infoFolder.getAbsolutePath() + "$Relations");

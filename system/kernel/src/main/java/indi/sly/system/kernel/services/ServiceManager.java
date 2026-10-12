@@ -128,15 +128,9 @@ public class ServiceManager extends AManager {
                     this.start(dependencyServerId, false, serviceIdJobs);
                 }
 
-                ServiceStatusEntity dependencyService = serviceRepository.get(dependencyServerId);
+                ServiceStatusEntity dependencyService = serviceRepository.get(dependencyServerId, LockType.WRITE);
 
-                serviceRepository.lock(dependencyService, LockType.WRITE);
-
-                try {
-                    serviceStatus.addDependency(dependencyService);
-                } finally {
-                    serviceRepository.unlock(dependencyService, LockType.WRITE);
-                }
+                serviceStatus.addDependency(dependencyService);
             }
 
             AccountAuthorizationObject authorize = userManager.authorizeById(serviceContent.getAccountId());
@@ -191,33 +185,24 @@ public class ServiceManager extends AManager {
 
         ServiceRepositoryObject serviceRepository = memoryManager.getServiceRepository();
 
-        ServiceStatusEntity serviceStatus = serviceRepository.get(serviceId);
+        ServiceStatusEntity serviceStatus = serviceRepository.get(serviceId, LockType.WRITE);
 
-        serviceRepository.lock(serviceStatus, LockType.WRITE);
-        try {
+        if (!serviceStatus.getDependents().isEmpty()) {
+            throw new StatusRelationshipErrorException();
+        }
 
-            if (!serviceStatus.getDependents().isEmpty()) {
-                throw new StatusRelationshipErrorException();
+        UUID processId = serviceStatus.getProcessId();
+        processManager.end(processId);
+
+        Set<ServiceStatusEntity> serverDependencies = serviceStatus.getDependencies();
+        for (ServiceStatusEntity dependencyService : serverDependencies) {
+            dependencyService = serviceRepository.get(dependencyService.getId(), LockType.WRITE);
+
+            serviceStatus.removeDependency(dependencyService);
+
+            if (dependencyService.getDependents().isEmpty() && !dependencyService.isIndependence()) {
+                this.stop(dependencyService.getId());
             }
-
-            UUID processId = serviceStatus.getProcessId();
-            processManager.end(processId);
-
-            Set<ServiceStatusEntity> serverDependencies = serviceStatus.getDependencies();
-            for (ServiceStatusEntity dependencyService : serverDependencies) {
-                serviceRepository.lock(dependencyService, LockType.WRITE);
-                try {
-                    serviceStatus.removeDependency(dependencyService);
-                } finally {
-                    serviceRepository.unlock(dependencyService, LockType.WRITE);
-                }
-
-                if (dependencyService.getDependents().isEmpty() && !dependencyService.isIndependence()) {
-                    this.stop(dependencyService.getId());
-                }
-            }
-        } finally {
-            serviceRepository.unlock(serviceStatus, LockType.WRITE);
         }
 
         serviceRepository.delete(serviceStatus);

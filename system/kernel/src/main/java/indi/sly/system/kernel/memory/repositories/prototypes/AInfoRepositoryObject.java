@@ -13,13 +13,11 @@ public abstract class AInfoRepositoryObject extends AObject {
 
     public abstract InfoEntity get(UUID id);
 
+    public abstract InfoEntity get(UUID id, long lock);
+
     public abstract InfoEntity add(InfoEntity info);
 
     public abstract void delete(InfoEntity info);
-
-    public abstract void lock(InfoEntity info, long lock);
-
-    public abstract void unlock(InfoEntity info, long lock);
 
     public abstract InfoRelationEntity getRelation(InfoEntity info, UUID id);
 

@@ -30,12 +30,16 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
-    private ProcessEntity getSelf() {
+    private ProcessEntity getSelf(long lock) {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
+        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId(), lock);
+    }
+
+    public void initSelf(long lock) {
+        this.getSelf(lock);
     }
 
     private ProcessStatisticsEntity init(ProcessEntity process) {
@@ -59,77 +63,60 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
     }
 
     public Map<Long, Long> getDate() {
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-            ProcessStatisticsEntity processStatistics = this.init(process);
-
-            return CollectionUtil.unmodifiable(processStatistics.getDate());
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return CollectionUtil.unmodifiable(processStatistics.getDate());
     }
 
     public void setDate(long dataTime, long value) {
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.getDate().put(dataTime, value);
 
-            processStatistics.getDate().put(dataTime, value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public Map<String, Long> getStatistics() {
         Map<String, Long> statistics = new HashMap<>();
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-            statistics.put("StatusCumulation", processStatistics.getStatusCumulation());
-            statistics.put("ThreadCumulation", processStatistics.getThreadCumulation());
-            statistics.put("InfoCreate", processStatistics.getInfoCreate());
-            statistics.put("InfoGet", processStatistics.getInfoGet());
-            statistics.put("InfoQuery", processStatistics.getInfoQuery());
-            statistics.put("InfoDelete", processStatistics.getInfoDelete());
-            statistics.put("InfoDump", processStatistics.getInfoDump());
-            statistics.put("InfoOpen", processStatistics.getInfoOpen());
-            statistics.put("InfoClose", processStatistics.getInfoClose());
-            statistics.put("InfoRead", processStatistics.getInfoRead());
-            statistics.put("InfoWrite", processStatistics.getInfoWrite());
-            statistics.put("SharedReadCount", processStatistics.getSharedReadCount());
-            statistics.put("SharedReadBytes", processStatistics.getSharedReadBytes());
-            statistics.put("SharedWriteCount", processStatistics.getSharedWriteCount());
-            statistics.put("SharedWriteBytes", processStatistics.getSharedWriteBytes());
-            statistics.put("PortCount", processStatistics.getPortCount());
-            statistics.put("PortReadCount", processStatistics.getPortReadCount());
-            statistics.put("PortReadBytes", processStatistics.getPortReadBytes());
-            statistics.put("PortWriteCount", processStatistics.getPortWriteCount());
-            statistics.put("PortWriteBytes", processStatistics.getPortWriteBytes());
-            statistics.put("SignalReadCount", processStatistics.getSignalReadCount());
-            statistics.put("SignalWriteCount", processStatistics.getSignalWriteCount());
-            statistics.put("IoCreate", processStatistics.getIoCreate());
-            statistics.put("IoStatus", processStatistics.getIoStatus());
-            statistics.put("IoReadCount", processStatistics.getIoReadCount());
-            statistics.put("IoReadBytes", processStatistics.getIoReadBytes());
-            statistics.put("IoWriteCount", processStatistics.getIoWriteCount());
-            statistics.put("IoWriteBytes", processStatistics.getIoWriteBytes());
+        statistics.put("StatusCumulation", processStatistics.getStatusCumulation());
+        statistics.put("ThreadCumulation", processStatistics.getThreadCumulation());
+        statistics.put("InfoCreate", processStatistics.getInfoCreate());
+        statistics.put("InfoGet", processStatistics.getInfoGet());
+        statistics.put("InfoQuery", processStatistics.getInfoQuery());
+        statistics.put("InfoDelete", processStatistics.getInfoDelete());
+        statistics.put("InfoDump", processStatistics.getInfoDump());
+        statistics.put("InfoOpen", processStatistics.getInfoOpen());
+        statistics.put("InfoClose", processStatistics.getInfoClose());
+        statistics.put("InfoRead", processStatistics.getInfoRead());
+        statistics.put("InfoWrite", processStatistics.getInfoWrite());
+        statistics.put("SharedReadCount", processStatistics.getSharedReadCount());
+        statistics.put("SharedReadBytes", processStatistics.getSharedReadBytes());
+        statistics.put("SharedWriteCount", processStatistics.getSharedWriteCount());
+        statistics.put("SharedWriteBytes", processStatistics.getSharedWriteBytes());
+        statistics.put("PortCount", processStatistics.getPortCount());
+        statistics.put("PortReadCount", processStatistics.getPortReadCount());
+        statistics.put("PortReadBytes", processStatistics.getPortReadBytes());
+        statistics.put("PortWriteCount", processStatistics.getPortWriteCount());
+        statistics.put("PortWriteBytes", processStatistics.getPortWriteBytes());
+        statistics.put("SignalReadCount", processStatistics.getSignalReadCount());
+        statistics.put("SignalWriteCount", processStatistics.getSignalWriteCount());
+        statistics.put("IoCreate", processStatistics.getIoCreate());
+        statistics.put("IoStatus", processStatistics.getIoStatus());
+        statistics.put("IoReadCount", processStatistics.getIoReadCount());
+        statistics.put("IoReadBytes", processStatistics.getIoReadBytes());
+        statistics.put("IoWriteCount", processStatistics.getIoWriteCount());
+        statistics.put("IoWriteBytes", processStatistics.getIoWriteBytes());
 
-            return CollectionUtil.unmodifiable(statistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return CollectionUtil.unmodifiable(statistics);
     }
 
     public void addStatusCumulation(long value) {
@@ -137,18 +124,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new ConditionParametersException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetStatusCumulation(value);
 
-            processStatistics.offsetStatusCumulation(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addThreadCumulation(long value) {
@@ -160,18 +141,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetThreadCumulation(value);
 
-            processStatistics.offsetThreadCumulation(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addInfoCreate(long value) {
@@ -183,18 +158,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetInfoCreate(value);
 
-            processStatistics.offsetInfoCreate(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addInfoGet(long value) {
@@ -206,18 +175,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetInfoGet(value);
 
-            processStatistics.offsetInfoGet(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addInfoQuery(long value) {
@@ -229,18 +192,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetInfoQuery(value);
 
-            processStatistics.offsetInfoQuery(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addInfoDelete(long value) {
@@ -252,19 +209,13 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetInfoDelete(value);
 
-            processStatistics.offsetInfoDelete(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addInfoDump(long value) {
@@ -276,18 +227,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetInfoDump(value);
 
-            processStatistics.offsetInfoDump(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addInfoOpen(long value) {
@@ -299,18 +244,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetInfoOpen(value);
 
-            processStatistics.offsetInfoOpen(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addInfoClose(long value) {
@@ -322,18 +261,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetInfoClose(value);
 
-            processStatistics.offsetInfoClose(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addInfoRead(long value) {
@@ -345,18 +278,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetInfoRead(value);
 
-            processStatistics.offsetInfoRead(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addInfoWrite(long value) {
@@ -368,18 +295,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetInfoWrite(value);
 
-            processStatistics.offsetInfoWrite(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addSharedReadCount(long value) {
@@ -391,18 +312,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetSharedReadCount(value);
 
-            processStatistics.offsetSharedReadCount(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addSharedReadBytes(long value) {
@@ -414,18 +329,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetSharedReadBytes(value);
 
-            processStatistics.offsetSharedReadBytes(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addSharedWriteCount(long value) {
@@ -437,18 +346,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetSharedWriteCount(value);
 
-            processStatistics.offsetSharedWriteCount(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addSharedWriteBytes(long value) {
@@ -460,18 +363,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetSharedWriteBytes(value);
 
-            processStatistics.offsetSharedWriteBytes(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addPortCount(long value) {
@@ -483,18 +380,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetPortCount(value);
 
-            processStatistics.offsetPortCount(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addPortReadCount(long value) {
@@ -506,18 +397,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetPortReadCount(value);
 
-            processStatistics.offsetPortReadCount(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addPortReadBytes(long value) {
@@ -529,18 +414,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetPortReadBytes(value);
 
-            processStatistics.offsetPortReadBytes(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addPortWriteCount(long value) {
@@ -552,18 +431,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetPortWriteCount(value);
 
-            processStatistics.offsetPortWriteCount(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addPortWriteBytes(long value) {
@@ -575,18 +448,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetPortWriteBytes(value);
 
-            processStatistics.offsetPortWriteBytes(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addSignalReadCount(long value) {
@@ -598,19 +465,13 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetSignalReadCount(value);
 
-            processStatistics.offsetSignalReadCount(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addSignalWriteCount(long value) {
@@ -622,18 +483,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetSignalWriteCount(value);
 
-            processStatistics.offsetSignalWriteCount(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addIoCreate(long value) {
@@ -645,18 +500,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetIoCreate(value);
 
-            processStatistics.offsetIoCreate(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addIoStatus(long value) {
@@ -668,18 +517,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetIoStatus(value);
 
-            processStatistics.offsetIoStatus(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addIoReadCount(long value) {
@@ -691,18 +534,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetIoReadCount(value);
 
-            processStatistics.offsetIoReadCount(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addIoReadBytes(long value) {
@@ -714,18 +551,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetIoReadBytes(value);
 
-            processStatistics.offsetIoReadBytes(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addIoWriteCount(long value) {
@@ -737,18 +568,12 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetIoWriteCount(value);
 
-            processStatistics.offsetIoWriteCount(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 
     public void addIoWriteBytes(long value) {
@@ -760,17 +585,11 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
+        ProcessStatisticsEntity processStatistics = this.init(process);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessStatisticsEntity processStatistics = this.init(process);
+        processStatistics.offsetIoWriteBytes(value);
 
-            processStatistics.offsetIoWriteBytes(value);
-
-            this.flush(process, processStatistics);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processStatistics);
     }
 }

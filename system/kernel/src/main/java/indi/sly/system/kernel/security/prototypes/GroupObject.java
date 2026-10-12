@@ -18,11 +18,11 @@ import java.util.UUID;
 public class GroupObject extends ACacheableObject<GroupCacheEntity> {
     protected UserFactory factory;
 
-    private GroupEntity getSelf() {
+    private GroupEntity getSelf(long lock) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
-        return accountGroupRepository.getGroup(this.cache.getGroupId());
+        return accountGroupRepository.getGroup(this.cache.getGroupId(), lock);
     }
 
     public UUID getId() {
@@ -30,12 +30,7 @@ public class GroupObject extends ACacheableObject<GroupCacheEntity> {
     }
 
     public String getName() {
-        this.factory.lockGroup(this.cache, LockType.READ);
-        try {
-            return this.getSelf().getName();
-        } finally {
-            this.factory.unlockGroup(this.cache, LockType.READ);
-        }
+        return this.getSelf(LockType.READ).getName();
     }
 
     public GroupTokenObject getToken() {

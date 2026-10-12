@@ -48,6 +48,29 @@ public class ServiceRepositoryObject extends AObject {
         return service;
     }
 
+    public ServiceStatusEntity get(UUID id, long lock) {
+        if (ValueUtil.isAnyNullOrEmpty(id)) {
+            throw new ConditionParametersException();
+        }
+
+        LockModeType lockMode;
+        if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
+            lockMode = LockModeType.PESSIMISTIC_READ;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
+            lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else {
+            throw new ConditionParametersException();
+        }
+
+        ServiceStatusEntity service = this.entityManager.find(ServiceStatusEntity.class, id, lockMode);
+
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusNotExistedException();
+        }
+
+        return service;
+    }
+
     public ServiceStatusEntity add(ServiceStatusEntity service) {
         if (ObjectUtil.isAnyNull(service)) {
             throw new ConditionParametersException();
@@ -70,51 +93,5 @@ public class ServiceRepositoryObject extends AObject {
         }
 
         this.entityManager.remove(service);
-    }
-
-    public void lock(ServiceStatusEntity service, long lock) {
-        if (ObjectUtil.isAnyNull(service)) {
-            throw new ConditionParametersException();
-        }
-
-        LockModeType lockMode = this.entityManager.getLockMode(service);
-
-        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
-            return;
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ)) {
-            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.PESSIMISTIC_READ;
-            }
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
-            if (lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.PESSIMISTIC_WRITE;
-            }
-        }
-
-        this.entityManager.lock(service, lockMode);
-    }
-
-    public void unlock(ServiceStatusEntity service, long lock) {
-        if (ObjectUtil.isAnyNull(service)) {
-            throw new ConditionParametersException();
-        }
-
-        LockModeType lockMode = this.entityManager.getLockMode(service);
-
-        if (lockMode == LockModeType.OPTIMISTIC_FORCE_INCREMENT) {
-            return;
-        } else if (LogicalUtil.isAnyEqual(lock, LockType.READ, LockType.WRITE)) {
-            if (lockMode == LockModeType.PESSIMISTIC_READ || lockMode == LockModeType.PESSIMISTIC_WRITE) {
-                return;
-            } else {
-                lockMode = LockModeType.NONE;
-            }
-        }
-
-        this.entityManager.lock(service, lockMode);
     }
 }

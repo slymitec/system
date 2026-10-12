@@ -27,22 +27,16 @@ import java.util.Map;
 public class AccountTokenObject extends AChildCacheableObject<AccountChildCacheEntity, AccountObject> {
     protected UserFactory factory;
 
-    private AccountEntity getSelf() {
+    private AccountEntity getSelf(long lock) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
-        return accountGroupRepository.getAccount(this.cache.getAccount().getAccountId());
+        return accountGroupRepository.getAccount(this.cache.getAccount().getAccountId(), lock);
     }
 
     public final long getPrivileges() {
-        try {
-            this.factory.lockAccount(this.cache.getAccount(), LockType.READ);
-
-            UserTokenEntity userToken = this.getSelf().getToken();
-            return userToken.getPrivileges();
-        } finally {
-            this.factory.unlockAccount(this.cache.getAccount(), LockType.READ);
-        }
+        UserTokenEntity userToken = this.getSelf(LockType.READ).getToken();
+        return userToken.getPrivileges();
     }
 
     public final void setPrivileges(long privileges) {
@@ -55,27 +49,17 @@ public class AccountTokenObject extends AChildCacheableObject<AccountChildCacheE
             throw new ConditionRefuseException();
         }
 
-        try {
-            this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
+        AccountEntity account = this.getSelf(LockType.WRITE);
 
-            UserTokenEntity userToken = this.getSelf().getToken();
-            userToken.setPrivileges(privileges);
+        UserTokenEntity userToken = account.getToken();
+        userToken.setPrivileges(privileges);
 
-            this.getSelf().setToken(userToken);
-        } finally {
-            this.factory.unlockAccount(this.cache.getAccount(), LockType.WRITE);
-        }
+        account.setToken(userToken);
     }
 
     public final Map<Long, Integer> getLimits() {
-        try {
-            this.factory.lockAccount(this.cache.getAccount(), LockType.READ);
-
-            UserTokenEntity userToken = this.getSelf().getToken();
-            return CollectionUtil.unmodifiable(userToken.getLimits());
-        } finally {
-            this.factory.unlockAccount(this.cache.getAccount(), LockType.READ);
-        }
+        UserTokenEntity userToken = this.getSelf(LockType.READ).getToken();
+        return CollectionUtil.unmodifiable(userToken.getLimits());
     }
 
     public final void setLimits(Map<Long, Integer> limits) {
@@ -92,16 +76,12 @@ public class AccountTokenObject extends AChildCacheableObject<AccountChildCacheE
             throw new ConditionRefuseException();
         }
 
-        try {
-            this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
+        AccountEntity account = this.getSelf(LockType.WRITE);
 
-            UserTokenEntity userToken = this.getSelf().getToken();
-            userToken.getLimits().clear();
-            userToken.getLimits().putAll(limits);
+        UserTokenEntity userToken = account.getToken();
+        userToken.getLimits().clear();
+        userToken.getLimits().putAll(limits);
 
-            this.getSelf().setToken(userToken);
-        } finally {
-            this.factory.unlockAccount(this.cache.getAccount(), LockType.WRITE);
-        }
+        account.setToken(userToken);
     }
 }

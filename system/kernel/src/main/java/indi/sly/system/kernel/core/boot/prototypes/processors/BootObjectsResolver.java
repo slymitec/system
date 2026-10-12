@@ -3,6 +3,7 @@ package indi.sly.system.kernel.core.boot.prototypes.processors;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.DateTimeType;
 import indi.sly.system.common.values.IdentifierRecord;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.boot.lang.BootStartConsumer;
 import indi.sly.system.kernel.core.boot.prototypes.mediators.BootProcessorMediator;
@@ -73,6 +74,8 @@ public class BootObjectsResolver extends ABootResolver {
                 }
             } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_AFTER_KERNEL)) {
                 InfoObject rootInfo = objectManager.get(new PathRecord(List.of()));
+                rootInfo.initSelf(LockType.WRITE);
+
                 Set<InfoSummaryRecord> infoSummaries;
 
                 String[] childFolderNames = new String[]{"Audits", "Files", "Sessions", "Services"};
@@ -87,6 +90,7 @@ public class BootObjectsResolver extends ABootResolver {
                 }
 
                 InfoObject parentInfo = rootInfo.getChild(new IdentifierRecord("Sessions"));
+                parentInfo.initSelf(LockType.WRITE);
                 InfoWildcardRecord wildcard = new InfoWildcardRecord(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME);
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
@@ -106,6 +110,7 @@ public class BootObjectsResolver extends ABootResolver {
                 }
 
                 parentInfo = rootInfo.getChild(new IdentifierRecord("Audits"));
+                parentInfo.initSelf(LockType.WRITE);
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
                     InfoObject childInfo = parentInfo.createChild(kernelConfiguration.OBJECTS_TYPES_INSTANCE_NAMELESSFOLDER_ID, new IdentifierRecord(kernelConfiguration.SECURITY_ACCOUNT_SYSTEM_NAME));
@@ -122,12 +127,14 @@ public class BootObjectsResolver extends ABootResolver {
                 }
 
                 parentInfo = rootInfo.getChild(new IdentifierRecord("Files"));
+                parentInfo.initSelf(LockType.WRITE);
                 wildcard = new InfoWildcardRecord("Main");
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {
                     parentInfo.createChild(kernelConfiguration.FILES_TYPES_INSTANCE_FOLDER_ID, new IdentifierRecord("Main"));
                 }
                 parentInfo = parentInfo.getChild(new IdentifierRecord("Main"));
+                parentInfo.initSelf(LockType.WRITE);
                 wildcard = new InfoWildcardRecord("Home");
                 infoSummaries = parentInfo.queryChild(wildcard);
                 if (infoSummaries.isEmpty()) {

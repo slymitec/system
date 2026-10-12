@@ -27,31 +27,30 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
-    private ProcessEntity getSelf() {
+    private ProcessEntity getSelf(long lock) {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
+        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId(), lock);
+    }
+
+    public void initSelf(long lock) {
+        this.getSelf(lock);
     }
 
     public long get() {
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            Long status = ProcessStatusType.NULL;
+        Long status = ProcessStatusType.NULL;
 
-            Set<ProcessProcessorReadStatusFunction> resolvers = this.processorMediator.getReadProcessStatuses();
+        Set<ProcessProcessorReadStatusFunction> resolvers = this.processorMediator.getReadProcessStatuses();
 
-            for (ProcessProcessorReadStatusFunction resolver : resolvers) {
-                status = resolver.apply(status, process);
-            }
-
-            return status;
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
+        for (ProcessProcessorReadStatusFunction resolver : resolvers) {
+            status = resolver.apply(status, process);
         }
+
+        return status;
     }
 
     public void initialize() {
@@ -60,7 +59,7 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
         ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
         ProcessObject currentProcess = processManager.getCurrent();
@@ -69,15 +68,10 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             throw new ConditionRefuseException();
         }
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+        Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-            for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-                resolver.accept(process, ProcessStatusType.INITIALIZATION);
-            }
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
+            resolver.accept(process, ProcessStatusType.INITIALIZATION);
         }
 
         ProcessStatisticsObject processStatus = this.base.getStatistics();
@@ -90,7 +84,7 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
         if (!this.base.isCurrent()) {
             ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
@@ -116,15 +110,10 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             }
         }
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+        Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-            for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-                resolver.accept(process, ProcessStatusType.RUNNING);
-            }
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
+            resolver.accept(process, ProcessStatusType.RUNNING);
         }
     }
 
@@ -134,7 +123,7 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
         if (!this.base.isCurrent()) {
             ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
@@ -160,15 +149,10 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             }
         }
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+        Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-            for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-                resolver.accept(process, ProcessStatusType.INTERRUPTED);
-            }
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
+            resolver.accept(process, ProcessStatusType.INTERRUPTED);
         }
     }
 
@@ -178,17 +162,12 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             throw new StatusRelationshipErrorException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+        Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-            for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-                resolver.accept(process, ProcessStatusType.DIED);
-            }
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
+            resolver.accept(process, ProcessStatusType.DIED);
         }
     }
 
@@ -201,7 +180,7 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
         ProcessCommunicationObject processCommunication = this.base.getCommunication();
         ProcessInfoTableObject processInfoTable = this.base.getInfoTable();
@@ -212,15 +191,10 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             throw new StatusIsUsedException();
         }
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
+        Set<ProcessProcessorWriteStatusConsumer> resolvers = this.processorMediator.getWriteProcessStatuses();
 
-            for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
-                resolver.accept(process, ProcessStatusType.ZOMBIE);
-            }
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        for (ProcessProcessorWriteStatusConsumer resolver : resolvers) {
+            resolver.accept(process, ProcessStatusType.ZOMBIE);
         }
 
         processRepository.delete(processRepository.get(this.base.getId()));

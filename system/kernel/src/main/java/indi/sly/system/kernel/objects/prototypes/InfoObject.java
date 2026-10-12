@@ -33,12 +33,16 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     protected InfoFactory factory;
     protected InfoProcessorMediator processorMediator;
 
-    private InfoEntity getSelf() {
+    private InfoEntity getSelf(long lock) {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache);
+        return this.processorMediator.getSelf().apply(this.cache, lock);
+    }
+
+    public void initSelf(long lock) {
+        this.getSelf(lock);
     }
 
     public UUID getId() {
@@ -54,7 +58,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             throw new ConditionContextException();
         }
 
-        return this.getSelf().getType();
+        return this.getSelf(LockType.READ).getType();
     }
 
     public long getOpened() {
@@ -62,7 +66,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             throw new ConditionContextException();
         }
 
-        return this.getSelf().getOpened();
+        return this.getSelf(LockType.READ).getOpened();
     }
 
     public String getName() {
@@ -70,7 +74,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             throw new ConditionContextException();
         }
 
-        return this.getSelf().getName();
+        return this.getSelf(LockType.READ).getName();
     }
 
     public PathRecord getPath() {
@@ -104,7 +108,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public Map<Long, Long> getDate() {
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.READ);
 
         Map<Long, Long> date = info.getDate();
 
@@ -112,7 +116,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public SecurityDescriptorObject getSecurityDescriptor() {
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.READ);
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -125,7 +129,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public DumpObject dump() {
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.READ);
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -142,7 +146,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public UUID open(long openAttribute, Object... arguments) {
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.WRITE);
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -152,24 +156,18 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
 
         UUID index = UUIDUtil.getEmpty();
 
-        try {
-            infoTypeInitializer.lockProcedure(info, LockType.WRITE);
-
-            for (InfoProcessorOpenFunction resolver : resolvers) {
-                index = resolver.apply(index, info, type, this.cache, openAttribute, arguments);
-                if (ObjectUtil.isAnyNull(index)) {
-                    throw new StatusUnexpectedException();
-                }
+        for (InfoProcessorOpenFunction resolver : resolvers) {
+            index = resolver.apply(index, info, type, this.cache, openAttribute, arguments);
+            if (ObjectUtil.isAnyNull(index)) {
+                throw new StatusUnexpectedException();
             }
-        } finally {
-            infoTypeInitializer.unlockProcedure(info, LockType.WRITE);
         }
 
         return index;
     }
 
     public void close() {
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.WRITE);
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -177,16 +175,8 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
 
         List<InfoProcessorCloseFunction> resolvers = this.processorMediator.getCloses();
 
-        try {
-            infoTypeInitializer.lockProcedure(info, LockType.WRITE);
-
-            for (InfoProcessorCloseFunction resolver : resolvers) {
-                info = resolver.apply(info, type, this.cache);
-            }
-        } finally {
-            if (ObjectUtil.allNotNull(info)) {
-                infoTypeInitializer.unlockProcedure(info, LockType.WRITE);
-            }
+        for (InfoProcessorCloseFunction resolver : resolvers) {
+            info = resolver.apply(info, type, this.cache);
         }
     }
 
@@ -214,7 +204,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             throw new ConditionParametersException();
         }
 
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.WRITE);
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -239,7 +229,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             throw new ConditionParametersException();
         }
 
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.READ);
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -264,7 +254,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             throw new ConditionParametersException();
         }
 
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.WRITE);
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -281,7 +271,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             throw new ConditionParametersException();
         }
 
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.READ);
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -302,7 +292,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             throw new ConditionParametersException();
         }
 
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.WRITE);
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -315,7 +305,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public Map<String, String> readProperties() {
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.READ);
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -336,7 +326,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             throw new ConditionParametersException();
         }
 
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.WRITE);
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
@@ -362,7 +352,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             infoOpen = processInfoEntry.getOpen();
         }
 
-        Class<? extends AInfoContentObject> contentType = type.getInitializer().getContentTypeProcedure(this.getSelf(), infoOpen);
+        Class<? extends AInfoContentObject> contentType = type.getInitializer().getContentTypeProcedure(this.getSelf(LockType.READ), infoOpen);
 
         return this.factory.buildInfoContent(this.processorMediator, this, contentType);
     }

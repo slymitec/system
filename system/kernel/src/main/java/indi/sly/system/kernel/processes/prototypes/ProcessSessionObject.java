@@ -25,12 +25,16 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
-    private ProcessEntity getSelf() {
+    private ProcessEntity getSelf(long lock) {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
+        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId(), lock);
+    }
+
+    public void initSelf(long lock) {
+        this.getSelf(lock);
     }
 
     private ProcessSessionEntity init(ProcessEntity process) {
@@ -54,16 +58,11 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
     }
 
     public UUID getId() {
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            ProcessSessionEntity processSession = this.init(process);
+        ProcessSessionEntity processSession = this.init(process);
 
-            return processSession.getSessionId();
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return processSession.getSessionId();
     }
 
     public void setId(UUID id) {
@@ -75,31 +74,21 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
             throw new ConditionRefuseException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessSessionEntity processSession = this.init(process);
+        ProcessSessionEntity processSession = this.init(process);
 
-            processSession.setSessionId(id);
+        processSession.setSessionId(id);
 
-            this.flush(process, processSession);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processSession);
     }
 
     public long getType() {
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            ProcessSessionEntity processSession = this.init(process);
+        ProcessSessionEntity processSession = this.init(process);
 
-            return processSession.getType();
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return processSession.getType();
     }
 
     public void setType(long type) {
@@ -111,22 +100,17 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
             throw new ConditionRefuseException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessSessionEntity processSession = this.init(process);
+        ProcessSessionEntity processSession = this.init(process);
 
-            if (ValueUtil.isAnyNullOrEmpty(processSession.getSessionId())) {
-                throw new StatusAlreadyExistedException();
-            } else {
-                processSession.setType(type);
-            }
-
-            this.flush(process, processSession);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        if (ValueUtil.isAnyNullOrEmpty(processSession.getSessionId())) {
+            throw new StatusAlreadyExistedException();
+        } else {
+            processSession.setType(type);
         }
+
+        this.flush(process, processSession);
     }
 
     public void inherit() {
@@ -142,22 +126,17 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
 
         ProcessSessionObject currentProcessSession = currentProcess.getSession();
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessSessionEntity processSession = this.init(process);
+        ProcessSessionEntity processSession = this.init(process);
 
-            if (ValueUtil.isAnyNullOrEmpty(processSession.getSessionId())) {
-                throw new StatusRelationshipErrorException();
-            }
-
-            processSession.setSessionId(currentProcessSession.getId());
-            processSession.setType(currentProcessSession.getType());
-
-            this.flush(process, processSession);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        if (ValueUtil.isAnyNullOrEmpty(processSession.getSessionId())) {
+            throw new StatusRelationshipErrorException();
         }
+
+        processSession.setSessionId(currentProcessSession.getId());
+        processSession.setType(currentProcessSession.getType());
+
+        this.flush(process, processSession);
     }
 }

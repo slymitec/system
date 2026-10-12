@@ -37,20 +37,6 @@ public class UserFactory extends AFactory {
         return account;
     }
 
-    public void lockAccount(AccountCacheEntity cache, long lock) {
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getUserRepository();
-
-        userRepository.lock(userRepository.getAccount(cache.getAccountId()), lock);
-    }
-
-    public void unlockAccount(AccountCacheEntity cache, long lock) {
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getUserRepository();
-
-        userRepository.unlock(userRepository.getAccount(cache.getAccountId()), lock);
-    }
-
     public AccountObject buildAccount(UUID accountId) {
         if (ValueUtil.isAnyNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
@@ -89,20 +75,6 @@ public class UserFactory extends AFactory {
         group.setCache(cache);
 
         return group;
-    }
-
-    public void lockGroup(GroupCacheEntity cache, long lock) {
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getUserRepository();
-
-        userRepository.lock(userRepository.getGroup(cache.getGroupId()), lock);
-    }
-
-    public void unlockGroup(GroupCacheEntity cache, long lock) {
-        MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
-        UserRepositoryObject userRepository = memoryManager.getUserRepository();
-
-        userRepository.unlock(userRepository.getGroup(cache.getGroupId()), lock);
     }
 
     public GroupObject buildGroup(UUID groupId) {

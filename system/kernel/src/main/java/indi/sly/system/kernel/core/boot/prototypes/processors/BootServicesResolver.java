@@ -3,6 +3,7 @@ package indi.sly.system.kernel.core.boot.prototypes.processors;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.IdentifierRecord;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.boot.lang.BootStartConsumer;
 import indi.sly.system.kernel.core.boot.prototypes.mediators.BootProcessorMediator;
@@ -39,6 +40,7 @@ public class BootServicesResolver extends ABootResolver {
                 PathRecord path = new PathRecord(List.of(new IdentifierRecord("Services")));
 
                 InfoObject services = objectManager.get(path);
+                services.initSelf(LockType.READ);
 
                 Set<InfoSummaryRecord> infoSummaries = services.queryChild(new InfoWildcardRecord("*"));
 

@@ -34,12 +34,16 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
     protected Provider<Boolean> isProcessCurrent;
 
-    private ProcessEntity getSelf() {
+    private ProcessEntity getSelf(long lock) {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcessInfoTable().getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache.getProcessInfoTable().getProcess().getProcessId());
+        return this.processorMediator.getSelf().apply(this.cache.getProcessInfoTable().getProcess().getProcessId(), lock);
+    }
+
+    public void initSelf(long lock) {
+        this.getSelf(lock);
     }
 
     private ProcessInfoTableEntity init(ProcessEntity process) {
@@ -74,47 +78,35 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
-
-            if (!this.isExist()) {
-                throw new StatusNotExistedException();
-            }
-
-            ProcessInfoTableEntity processInfoTable = this.init(process);
-
-            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
-            processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
-
-            this.flush(process, processInfoTable);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
+        if (!this.isExist()) {
+            throw new StatusNotExistedException();
         }
+
+        ProcessInfoTableEntity processInfoTable = this.init(process);
+
+        ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+        processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
+        this.flush(process, processInfoTable);
 
         return this.cache.getIndex();
     }
 
     public Map<Long, Long> getDate() {
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.READ);
-
-            if (!this.isExist()) {
-                throw new StatusNotExistedException();
-            }
-
-            ProcessInfoTableEntity processInfoTable = this.init(process);
-
-            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
-            Map<Long, Long> processInfoEntryDate = processInfoEntry.getDate();
-
-            return CollectionUtil.unmodifiable(processInfoEntryDate);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.READ);
+        if (!this.isExist()) {
+            throw new StatusNotExistedException();
         }
+
+        ProcessInfoTableEntity processInfoTable = this.init(process);
+
+        ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+        Map<Long, Long> processInfoEntryDate = processInfoEntry.getDate();
+
+        return CollectionUtil.unmodifiable(processInfoEntryDate);
     }
 
     public PathRecord getPath() {
@@ -123,26 +115,20 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
         PathRecord path;
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
-
-            if (!this.isExist()) {
-                throw new StatusNotExistedException();
-            }
-
-            ProcessInfoTableEntity processInfoTable = this.init(process);
-
-            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
-            processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
-
-            path = processInfoEntry.getPath();
-
-            this.flush(process, processInfoTable);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
+        if (!this.isExist()) {
+            throw new StatusNotExistedException();
         }
+
+        ProcessInfoTableEntity processInfoTable = this.init(process);
+
+        ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+        processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
+        path = processInfoEntry.getPath();
+
+        this.flush(process, processInfoTable);
 
         return path;
     }
@@ -153,26 +139,20 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
         InfoOpenRecord infoOpen;
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
-
-            if (!this.isExist()) {
-                throw new StatusNotExistedException();
-            }
-
-            ProcessInfoTableEntity processInfoTable = this.init(process);
-
-            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
-            processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
-
-            infoOpen = processInfoEntry.getInfoOpen();
-
-            this.flush(process, processInfoTable);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
+        if (!this.isExist()) {
+            throw new StatusNotExistedException();
         }
+
+        ProcessInfoTableEntity processInfoTable = this.init(process);
+
+        ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+        processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
+        infoOpen = processInfoEntry.getInfoOpen();
+
+        this.flush(process, processInfoTable);
 
         return infoOpen;
     }
@@ -183,26 +163,20 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
         boolean unsupportedDelete;
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
-
-            if (!this.isExist()) {
-                throw new StatusNotExistedException();
-            }
-
-            ProcessInfoTableEntity processInfoTable = this.init(process);
-
-            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
-            processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
-
-            unsupportedDelete = processInfoEntry.isUnsupportedDelete();
-
-            this.flush(process, processInfoTable);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
+        if (!this.isExist()) {
+            throw new StatusNotExistedException();
         }
+
+        ProcessInfoTableEntity processInfoTable = this.init(process);
+
+        ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+        processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
+        unsupportedDelete = processInfoEntry.isUnsupportedDelete();
+
+        this.flush(process, processInfoTable);
 
         return unsupportedDelete;
     }
@@ -211,26 +185,20 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
-
-            if (!this.isExist()) {
-                throw new StatusNotExistedException();
-            }
-
-            ProcessInfoTableEntity processInfoTable = this.init(process);
-
-            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
-            processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
-
-            processInfoEntry.setUnsupportedDelete(unsupportedDelete);
-
-            this.flush(process, processInfoTable);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
+        if (!this.isExist()) {
+            throw new StatusNotExistedException();
         }
+
+        ProcessInfoTableEntity processInfoTable = this.init(process);
+
+        ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+        processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
+        processInfoEntry.setUnsupportedDelete(unsupportedDelete);
+
+        this.flush(process, processInfoTable);
     }
 
     public synchronized InfoObject getInfo() {
@@ -243,26 +211,20 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
         PathRecord path;
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
-
-            if (!this.isExist()) {
-                throw new StatusNotExistedException();
-            }
-
-            ProcessInfoTableEntity processInfoTable = this.init(process);
-
-            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
-            processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
-
-            path = processInfoEntry.getPath();
-
-            this.flush(process, processInfoTable);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
+        if (!this.isExist()) {
+            throw new StatusNotExistedException();
         }
+
+        ProcessInfoTableEntity processInfoTable = this.init(process);
+
+        ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+        processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
+
+        path = processInfoEntry.getPath();
+
+        this.flush(process, processInfoTable);
 
         ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
@@ -272,31 +234,25 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
     }
 
     public void delete() {
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        try {
-            this.factory.lockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
-
-            if (!this.isExist()) {
-                throw new StatusNotExistedException();
-            }
-
-            ProcessInfoTableEntity processInfoTable = this.init(process);
-
-            ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
-
-            if (processInfoEntry.isUnsupportedDelete()) {
-                throw new StatusDisabilityException();
-            }
-
-            processInfoEntry.setInfoOpen(processInfoEntry.getInfoOpen().withAttribute(InfoOpenAttributeType.CLOSE));
-
-            processInfoTable.delete(processInfoEntry.getIndex());
-
-            this.flush(process, processInfoTable);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcessInfoTable().getProcess(), LockType.WRITE);
+        if (!this.isExist()) {
+            throw new StatusNotExistedException();
         }
+
+        ProcessInfoTableEntity processInfoTable = this.init(process);
+
+        ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
+
+        if (processInfoEntry.isUnsupportedDelete()) {
+            throw new StatusDisabilityException();
+        }
+
+        processInfoEntry.setInfoOpen(processInfoEntry.getInfoOpen().withAttribute(InfoOpenAttributeType.CLOSE));
+
+        processInfoTable.delete(processInfoEntry.getIndex());
+
+        this.flush(process, processInfoTable);
 
         this.cache.setIndex(null);
     }

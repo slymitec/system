@@ -23,21 +23,16 @@ import java.util.UUID;
 public class AccountSessionsObject extends AChildCacheableObject<AccountChildCacheEntity, AccountObject> {
     protected UserFactory factory;
 
-    private AccountEntity getSelf() {
+    private AccountEntity getSelf(long lock) {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject accountGroupRepository = memoryManager.getUserRepository();
 
-        return accountGroupRepository.getAccount(this.cache.getAccount().getAccountId());
+        return accountGroupRepository.getAccount(this.cache.getAccount().getAccountId(), lock);
     }
 
     public Set<UUID> listSessions() {
-        this.factory.lockAccount(this.cache.getAccount(), LockType.READ);
-        try {
-            AccountSessionsEntity accountSessions = this.getSelf().getSessions();
-            return CollectionUtil.unmodifiable(accountSessions.getSessions());
-        } finally {
-            this.factory.unlockAccount(this.cache.getAccount(), LockType.READ);
-        }
+        AccountSessionsEntity accountSessions = this.getSelf(LockType.READ).getSessions();
+        return CollectionUtil.unmodifiable(accountSessions.getSessions());
     }
 
     public void addSession(UUID sessionId) {
@@ -45,15 +40,12 @@ public class AccountSessionsObject extends AChildCacheableObject<AccountChildCac
             throw new ConditionParametersException();
         }
 
-        this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
-        try {
-            AccountSessionsEntity accountSessions = this.getSelf().getSessions();
-            accountSessions.getSessions().add(sessionId);
+        AccountEntity account = this.getSelf(LockType.WRITE);
 
-            this.getSelf().setSessions(accountSessions);
-        } finally {
-            this.factory.unlockAccount(this.cache.getAccount(), LockType.WRITE);
-        }
+        AccountSessionsEntity accountSessions = account.getSessions();
+        accountSessions.getSessions().add(sessionId);
+
+        account.setSessions(accountSessions);
     }
 
     public void deleteSession(UUID sessionId) {
@@ -61,14 +53,11 @@ public class AccountSessionsObject extends AChildCacheableObject<AccountChildCac
             throw new ConditionParametersException();
         }
 
-        this.factory.lockAccount(this.cache.getAccount(), LockType.WRITE);
-        try {
-            AccountSessionsEntity accountSessions = this.getSelf().getSessions();
-            accountSessions.getSessions().remove(sessionId);
+        AccountEntity account = this.getSelf(LockType.WRITE);
 
-            this.getSelf().setSessions(accountSessions);
-        } finally {
-            this.factory.unlockAccount(this.cache.getAccount(), LockType.WRITE);
-        }
+        AccountSessionsEntity accountSessions = account.getSessions();
+        accountSessions.getSessions().remove(sessionId);
+
+        account.setSessions(accountSessions);
     }
 }

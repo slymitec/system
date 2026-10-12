@@ -15,12 +15,12 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoSelfResolver extends AResolver implements IInfoResolver {
     public InfoSelfResolver() {
-        this.info = (cache) -> {
+        this.info = (cache, lock) -> {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
             AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(cache.getPoolId());
 
-            return infoRepository.get(cache.getInfoId());
+            return infoRepository.get(cache.getInfoId(), lock);
         };
     }
 

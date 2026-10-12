@@ -17,12 +17,12 @@ public class ProcessSelfResolver extends AResolver implements IProcessResolver {
     private final ProcessProcessorSelfFunction self;
 
     public ProcessSelfResolver() {
-        this.self = id -> {
+        this.self = (id, lock) -> {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
 
             ProcessRepositoryObject processRepository = memoryManager.getProcessRepository();
 
-            return processRepository.get(id);
+            return processRepository.get(id, lock);
         };
     }
 

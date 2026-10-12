@@ -32,12 +32,16 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
-    private ProcessEntity getSelf() {
+    private ProcessEntity getSelf(long lock) {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId());
+        return this.processorMediator.getSelf().apply(this.cache.getProcess().getProcessId(), lock);
+    }
+
+    public void initSelf(long lock) {
+        this.getSelf(lock);
     }
 
     private ProcessCommunicationEntity init(ProcessEntity process) {
@@ -69,25 +73,20 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
         ThreadObject thread = threadManager.getCurrent();
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.READ);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            ProcessCommunicationEntity processCommunication = this.init(process);
+        ProcessCommunicationEntity processCommunication = this.init(process);
 
-            byte[] processCommunicationShared = processCommunication.getShared();
+        byte[] processCommunicationShared = processCommunication.getShared();
 
-            ProcessStatisticsObject processStatistics = this.base.getStatistics();
-            processStatistics.addSharedReadCount(1);
-            processStatistics.addSharedReadBytes(processCommunicationShared.length);
-            ThreadStatisticsObject threadStatistics = thread.getStatistics();
-            threadStatistics.addSharedReadCount(1);
-            threadStatistics.addSharedReadBytes(processCommunicationShared.length);
+        ProcessStatisticsObject processStatistics = this.base.getStatistics();
+        processStatistics.addSharedReadCount(1);
+        processStatistics.addSharedReadBytes(processCommunicationShared.length);
+        ThreadStatisticsObject threadStatistics = thread.getStatistics();
+        threadStatistics.addSharedReadCount(1);
+        threadStatistics.addSharedReadBytes(processCommunicationShared.length);
 
-            return processCommunicationShared;
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        return processCommunicationShared;
     }
 
     public void setShared(byte[] shared) {
@@ -105,18 +104,13 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
             throw new ConditionRefuseException();
         }
 
-        ProcessEntity process = this.getSelf();
+        ProcessEntity process = this.getSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            ProcessCommunicationEntity processCommunication = this.init(process);
+        ProcessCommunicationEntity processCommunication = this.init(process);
 
-            processCommunication.setShared(shared);
+        processCommunication.setShared(shared);
 
-            this.flush(process, processCommunication);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.flush(process, processCommunication);
 
         ProcessStatisticsObject processStatistics = this.base.getStatistics();
         processStatistics.addSharedWriteCount(1);
@@ -136,19 +130,16 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            Collection<PortCacheEntity> processCommunicationPorts = cacheRepository.gets(PortCacheEntity.class, Conditions.eq("processId", this.base.getId()));
+        this.initSelf(LockType.READ);
 
-            Set<UUID> processCommunicationPortIds = new HashSet<>();
-            for (PortCacheEntity processCommunicationPort : processCommunicationPorts) {
-                processCommunicationPortIds.add(processCommunicationPort.getId());
-            }
+        Collection<PortCacheEntity> processCommunicationPorts = cacheRepository.gets(PortCacheEntity.class, Conditions.eq("processId", this.base.getId()));
 
-            return CollectionUtil.unmodifiable(processCommunicationPortIds);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
+        Set<UUID> processCommunicationPortIds = new HashSet<>();
+        for (PortCacheEntity processCommunicationPort : processCommunicationPorts) {
+            processCommunicationPortIds.add(processCommunicationPort.getId());
         }
+
+        return CollectionUtil.unmodifiable(processCommunicationPortIds);
     }
 
     public UUID createPort(Set<UUID> sourceProcessIds) {
@@ -168,28 +159,25 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
         UUID portId;
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            Collection<PortCacheEntity> processCommunicationPorts = cacheRepository.gets(PortCacheEntity.class, Conditions.eq("processId", this.base.getId()));
+        this.initSelf(LockType.WRITE);
 
-            if (processCommunicationPorts.size() > processToken.getLimits().get(ProcessTokenLimitType.PORT_COUNT_MAX)) {
-                throw new ConditionRefuseException();
-            }
+        Collection<PortCacheEntity> processCommunicationPorts = cacheRepository.gets(PortCacheEntity.class, Conditions.eq("processId", this.base.getId()));
 
-            PortCacheEntity port = new PortCacheEntity();
-
-            port.setId(UUIDUtil.createRandom());
-            port.setDuration(CacheDurationType.PERMANENT);
-            port.setProcessId(this.base.getId());
-            port.getSourceProcessIds().addAll(sourceProcessIds);
-            port.setLimit(processToken.getLimits().get(ProcessTokenLimitType.PORT_LENGTH_MAX));
-
-            port = cacheRepository.add(port);
-
-            portId = port.getId();
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        if (processCommunicationPorts.size() > processToken.getLimits().get(ProcessTokenLimitType.PORT_COUNT_MAX)) {
+            throw new ConditionRefuseException();
         }
+
+        PortCacheEntity port = new PortCacheEntity();
+
+        port.setId(UUIDUtil.createRandom());
+        port.setDuration(CacheDurationType.PERMANENT);
+        port.setProcessId(this.base.getId());
+        port.getSourceProcessIds().addAll(sourceProcessIds);
+        port.setLimit(processToken.getLimits().get(ProcessTokenLimitType.PORT_LENGTH_MAX));
+
+        port = cacheRepository.add(port);
+
+        portId = port.getId();
 
         ProcessStatisticsObject processStatistics = this.base.getStatistics();
         processStatistics.addPortCount(1);
@@ -210,15 +198,12 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            Set<UUID> processCommunicationPortIds = this.getPortIds();
+        this.initSelf(LockType.WRITE);
 
-            for (UUID processCommunicationPortId : processCommunicationPortIds) {
-                cacheRepository.delete(PortCacheEntity.class, processCommunicationPortId);
-            }
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        Set<UUID> processCommunicationPortIds = this.getPortIds();
+
+        for (UUID processCommunicationPortId : processCommunicationPortIds) {
+            cacheRepository.delete(PortCacheEntity.class, processCommunicationPortId);
         }
     }
 
@@ -235,25 +220,22 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            Collection<PortCacheEntity> processCommunicationPorts = cacheRepository.gets(PortCacheEntity.class, Conditions.eq("processId", this.base.getId()));
+        this.initSelf(LockType.WRITE);
 
-            boolean exists = false;
-            for (PortCacheEntity processCommunicationPort : processCommunicationPorts) {
-                if (processCommunicationPort.getId().equals(portId)) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (!exists) {
-                throw new StatusNotExistedException();
-            }
+        Collection<PortCacheEntity> processCommunicationPorts = cacheRepository.gets(PortCacheEntity.class, Conditions.eq("processId", this.base.getId()));
 
-            cacheRepository.delete(PortCacheEntity.class, portId);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        boolean exists = false;
+        for (PortCacheEntity processCommunicationPort : processCommunicationPorts) {
+            if (processCommunicationPort.getId().equals(portId)) {
+                exists = true;
+                break;
+            }
         }
+        if (!exists) {
+            throw new StatusNotExistedException();
+        }
+
+        cacheRepository.delete(PortCacheEntity.class, portId);
     }
 
     public Set<UUID> getPortSourceProcessIds(UUID portId) {
@@ -269,18 +251,15 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            PortCacheEntity port = cacheRepository.get(PortCacheEntity.class, portId);
+        this.initSelf(LockType.READ);
 
-            if (!this.base.getId().equals(port.getProcessId())) {
-                throw new ConditionRefuseException();
-            }
+        PortCacheEntity port = cacheRepository.get(PortCacheEntity.class, portId);
 
-            return CollectionUtil.unmodifiable(port.getSourceProcessIds());
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
+        if (!this.base.getId().equals(port.getProcessId())) {
+            throw new ConditionRefuseException();
         }
+
+        return CollectionUtil.unmodifiable(port.getSourceProcessIds());
     }
 
     public void setPortSourceProcessIds(UUID portId, Set<UUID> sourceProcessIds) {
@@ -296,19 +275,16 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            PortCacheEntity port = cacheRepository.get(PortCacheEntity.class, portId);
+        this.initSelf(LockType.WRITE);
 
-            if (!this.base.getId().equals(port.getProcessId())) {
-                throw new ConditionRefuseException();
-            }
+        PortCacheEntity port = cacheRepository.get(PortCacheEntity.class, portId);
 
-            port.getSourceProcessIds().clear();
-            port.getSourceProcessIds().addAll(sourceProcessIds);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        if (!this.base.getId().equals(port.getProcessId())) {
+            throw new ConditionRefuseException();
         }
+
+        port.getSourceProcessIds().clear();
+        port.getSourceProcessIds().addAll(sourceProcessIds);
     }
 
     public byte[] receivePort(UUID portId) {
@@ -324,21 +300,16 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        byte[] value;
+        this.initSelf(LockType.WRITE);
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            PortCacheEntity port = cacheRepository.get(PortCacheEntity.class, portId);
+        PortCacheEntity port = cacheRepository.get(PortCacheEntity.class, portId);
 
-            if (!this.base.getId().equals(port.getProcessId())) {
-                throw new ConditionRefuseException();
-            }
-
-            value = port.getValue();
-            port.setValue(ArrayUtil.EMPTY_BYTES);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        if (!this.base.getId().equals(port.getProcessId())) {
+            throw new ConditionRefuseException();
         }
+
+        byte[] value = port.getValue();
+        port.setValue(ArrayUtil.EMPTY_BYTES);
 
         ProcessStatisticsObject processStatistics = this.base.getStatistics();
         processStatistics.addPortReadCount(1);
@@ -393,12 +364,9 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            return cacheRepository.contain(SignalCacheEntity.class, this.base.getId());
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        this.initSelf(LockType.READ);
+
+        return cacheRepository.contain(SignalCacheEntity.class, this.base.getId());
     }
 
     public void createSignal(Set<UUID> sourceProcessIds) {
@@ -416,23 +384,20 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
         ProcessTokenObject processToken = this.base.getToken();
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            if (cacheRepository.contain(SignalCacheEntity.class, this.base.getId())) {
-                throw new StatusAlreadyExistedException();
-            }
+        this.initSelf(LockType.WRITE);
 
-            SignalCacheEntity signal = new SignalCacheEntity();
-
-            signal.setId(this.base.getId());
-            signal.setDuration(CacheDurationType.PERMANENT);
-            signal.getSourceProcessIds().addAll(sourceProcessIds);
-            signal.setLimit(processToken.getLimits().get(ProcessTokenLimitType.SIGNAL_LENGTH_MAX));
-
-            cacheRepository.add(signal);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        if (cacheRepository.contain(SignalCacheEntity.class, this.base.getId())) {
+            throw new StatusAlreadyExistedException();
         }
+
+        SignalCacheEntity signal = new SignalCacheEntity();
+
+        signal.setId(this.base.getId());
+        signal.setDuration(CacheDurationType.PERMANENT);
+        signal.getSourceProcessIds().addAll(sourceProcessIds);
+        signal.setLimit(processToken.getLimits().get(ProcessTokenLimitType.SIGNAL_LENGTH_MAX));
+
+        cacheRepository.add(signal);
     }
 
     public void deleteSignal() {
@@ -444,12 +409,9 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            cacheRepository.delete(SignalCacheEntity.class, this.base.getId());
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        this.initSelf(LockType.WRITE);
+
+        cacheRepository.delete(SignalCacheEntity.class, this.base.getId());
     }
 
     public Set<UUID> getSignalSourceProcessIds() {
@@ -461,14 +423,11 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.READ);
-        try {
-            SignalCacheEntity signal = cacheRepository.get(SignalCacheEntity.class, this.base.getId());
+        this.initSelf(LockType.READ);
 
-            return CollectionUtil.unmodifiable(signal.getSourceProcessIds());
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.READ);
-        }
+        SignalCacheEntity signal = cacheRepository.get(SignalCacheEntity.class, this.base.getId());
+
+        return CollectionUtil.unmodifiable(signal.getSourceProcessIds());
     }
 
     public void setSignalSourceProcessIds(Set<UUID> sourceProcessIds) {
@@ -484,15 +443,12 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         CacheRepositoryObject cacheRepository = memoryManager.getCacheRepository();
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            SignalCacheEntity signal = cacheRepository.get(SignalCacheEntity.class, this.base.getId());
+        this.initSelf(LockType.WRITE);
 
-            signal.getSourceProcessIds().clear();
-            signal.getSourceProcessIds().addAll(sourceProcessIds);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
-        }
+        SignalCacheEntity signal = cacheRepository.get(SignalCacheEntity.class, this.base.getId());
+
+        signal.getSourceProcessIds().clear();
+        signal.getSourceProcessIds().addAll(sourceProcessIds);
     }
 
     public List<SignalEntryRecord> receiveSignals() {
@@ -506,20 +462,17 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
 
-        this.factory.lockProcess(this.cache.getProcess(), LockType.WRITE);
-        try {
-            SignalCacheEntity signal = cacheRepository.get(SignalCacheEntity.class, this.base.getId());
+        this.initSelf(LockType.WRITE);
 
-            List<SignalEntryRecord> signalEntries = signal.pollAll();
-            long nowDateTime = dateTime.getCurrent();
-            for (SignalEntryRecord signalEntry : signalEntries) {
-                signalEntry.date().put(DateTimeType.ACCESS, nowDateTime);
-            }
+        SignalCacheEntity signal = cacheRepository.get(SignalCacheEntity.class, this.base.getId());
 
-            return CollectionUtil.unmodifiable(signalEntries);
-        } finally {
-            this.factory.unlockProcess(this.cache.getProcess(), LockType.WRITE);
+        List<SignalEntryRecord> signalEntries = signal.pollAll();
+        long nowDateTime = dateTime.getCurrent();
+        for (SignalEntryRecord signalEntry : signalEntries) {
+            signalEntry.date().put(DateTimeType.ACCESS, nowDateTime);
         }
+
+        return CollectionUtil.unmodifiable(signalEntries);
     }
 
     public void sendSignal(UUID signalId, long key, long value) {

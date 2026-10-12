@@ -49,23 +49,18 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
-        this.lockProcedure(info, LockType.WRITE);
-        try {
-            InfoWildcardRecord wildcard = new InfoWildcardRecord(childInfo.getId());
-            if (infoRepository.countRelation(info, wildcard) > 0) {
-                throw new StatusAlreadyExistedException();
-            }
-
-            InfoRelationEntity infoRelation = new InfoRelationEntity();
-            infoRelation.setId(childInfo.getId());
-            infoRelation.setParentId(info.getId());
-            infoRelation.setType(childInfo.getType());
-            infoRelation.setName(childInfo.getName());
-
-            infoRepository.addRelation(infoRelation);
-        } finally {
-            this.unlockProcedure(info, LockType.WRITE);
+        InfoWildcardRecord wildcard = new InfoWildcardRecord(childInfo.getId());
+        if (infoRepository.countRelation(info, wildcard) > 0) {
+            throw new StatusAlreadyExistedException();
         }
+
+        InfoRelationEntity infoRelation = new InfoRelationEntity();
+        infoRelation.setId(childInfo.getId());
+        infoRelation.setParentId(info.getId());
+        infoRelation.setType(childInfo.getType());
+        infoRelation.setName(childInfo.getName());
+
+        infoRepository.addRelation(infoRelation);
     }
 
     @Override
@@ -80,14 +75,9 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
-        this.lockProcedure(info, LockType.READ);
-        try {
-            InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoID);
+        InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoID);
 
-            infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
-        } finally {
-            this.unlockProcedure(info, LockType.READ);
-        }
+        infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
 
         return infoSummary;
     }
@@ -103,16 +93,11 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
-        this.lockProcedure(info, LockType.READ);
-        try {
-            List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
-            for (InfoRelationEntity infoRelation : infoRelations) {
-                InfoSummaryRecord infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
+        List<InfoRelationEntity> infoRelations = infoRepository.listRelation(info, wildcard);
+        for (InfoRelationEntity infoRelation : infoRelations) {
+            InfoSummaryRecord infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
 
-                infoSummaries.add(infoSummary);
-            }
-        } finally {
-            this.unlockProcedure(info, LockType.READ);
+            infoSummaries.add(infoSummary);
         }
 
         return CollectionUtil.unmodifiable(infoSummaries);
@@ -129,14 +114,9 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
-        this.lockProcedure(info, LockType.WRITE);
-        try {
-            InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoID);
+        InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoID);
 
-            infoRepository.deleteRelation(infoRelation);
-        } finally {
-            this.unlockProcedure(info, LockType.WRITE);
-        }
+        infoRepository.deleteRelation(infoRelation);
     }
 
     @Override

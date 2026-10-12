@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.supports.ValueUtil;
+import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
@@ -20,12 +21,16 @@ public class ProcessObject extends ACacheableObject<ProcessCacheEntity> {
     protected ProcessFactory factory;
     protected ProcessProcessorMediator processorMediator;
 
-    private ProcessEntity getSelf() {
+    private ProcessEntity getSelf(long lock) {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcessId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache.getProcessId());
+        return this.processorMediator.getSelf().apply(this.cache.getProcessId(), lock);
+    }
+
+    public void initSelf(long lock) {
+        this.getSelf(lock);
     }
 
     public UUID getId() {
@@ -41,7 +46,7 @@ public class ProcessObject extends ACacheableObject<ProcessCacheEntity> {
             throw new ConditionContextException();
         }
 
-        return this.getSelf().getParentProcessID();
+        return this.getSelf(LockType.READ).getParentProcessID();
     }
 
     public boolean isCurrent() {

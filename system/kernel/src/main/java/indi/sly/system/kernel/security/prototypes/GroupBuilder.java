@@ -57,8 +57,8 @@ public class GroupBuilder extends ABuilder {
         return this.factory.buildGroup(group.getId());
     }
 
-    public void delete(UUID groupID) {
-        if (ValueUtil.isAnyNullOrEmpty(groupID)) {
+    public void delete(UUID groupId) {
+        if (ValueUtil.isAnyNullOrEmpty(groupId)) {
             throw new ConditionParametersException();
         }
 
@@ -69,7 +69,7 @@ public class GroupBuilder extends ABuilder {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
-        GroupEntity group = userRepository.getGroup(groupID);
+        GroupEntity group = userRepository.getGroup(groupId);
         userRepository.delete(group);
     }
 }

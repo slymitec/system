@@ -61,8 +61,8 @@ public class AccountBuilder extends ABuilder {
         return this.factory.buildAccount(account.getId());
     }
 
-    public void delete(UUID accountID) {
-        if (ValueUtil.isAnyNullOrEmpty(accountID)) {
+    public void delete(UUID accountId) {
+        if (ValueUtil.isAnyNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
 
@@ -73,7 +73,7 @@ public class AccountBuilder extends ABuilder {
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         UserRepositoryObject userRepository = memoryManager.getUserRepository();
 
-        AccountEntity account = userRepository.getAccount(accountID);
+        AccountEntity account = userRepository.getAccount(accountId);
         userRepository.delete(account);
     }
 }

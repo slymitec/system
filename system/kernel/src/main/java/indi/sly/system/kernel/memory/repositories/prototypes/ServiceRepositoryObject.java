@@ -58,11 +58,18 @@ public class ServiceRepositoryObject extends AObject {
             lockMode = LockModeType.PESSIMISTIC_READ;
         } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
             lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.NONE)) {
+            lockMode = null;
         } else {
             throw new ConditionParametersException();
         }
 
-        ServiceStatusEntity service = this.entityManager.find(ServiceStatusEntity.class, id, lockMode);
+        ServiceStatusEntity service;
+        if (ObjectUtil.allNotNull(lockMode)) {
+            service = this.entityManager.find(ServiceStatusEntity.class, id, lockMode);
+        } else {
+            service = this.entityManager.find(ServiceStatusEntity.class, id);
+        }
 
         if (ObjectUtil.isAnyNull(service)) {
             throw new StatusNotExistedException();

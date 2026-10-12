@@ -65,11 +65,18 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
             lockMode = LockModeType.PESSIMISTIC_READ;
         } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
             lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.NONE)) {
+            lockMode = null;
         } else {
             throw new ConditionParametersException();
         }
 
-        InfoEntity info = this.entityManager.find(InfoEntity.class, id, lockMode);
+        InfoEntity info;
+        if (ObjectUtil.allNotNull(lockMode)) {
+            info = this.entityManager.find(InfoEntity.class, id, lockMode);
+        } else {
+            info = this.entityManager.find(InfoEntity.class, id);
+        }
 
         if (ObjectUtil.isAnyNull(info)) {
             throw new StatusNotExistedException();

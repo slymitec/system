@@ -59,11 +59,18 @@ public class ProcessRepositoryObject extends AObject {
             lockMode = LockModeType.PESSIMISTIC_READ;
         } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
             lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.NONE)) {
+            lockMode = null;
         } else {
             throw new ConditionParametersException();
         }
 
-        ProcessEntity process = this.entityManager.find(ProcessEntity.class, id, lockMode);
+        ProcessEntity process;
+        if (ObjectUtil.allNotNull(lockMode)) {
+            process = this.entityManager.find(ProcessEntity.class, id, lockMode);
+        } else {
+            process = this.entityManager.find(ProcessEntity.class, id);
+        }
 
         if (ObjectUtil.isAnyNull(process)) {
             throw new StatusNotExistedException();

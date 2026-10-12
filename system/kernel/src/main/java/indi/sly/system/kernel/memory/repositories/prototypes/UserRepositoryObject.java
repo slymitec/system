@@ -76,11 +76,18 @@ public class UserRepositoryObject extends AObject {
             lockMode = LockModeType.PESSIMISTIC_READ;
         } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
             lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.NONE)) {
+            lockMode = null;
         } else {
             throw new ConditionParametersException();
         }
 
-        AccountEntity account = this.entityManager.find(AccountEntity.class, id, lockMode);
+        AccountEntity account;
+        if (ObjectUtil.allNotNull(lockMode)) {
+            account = this.entityManager.find(AccountEntity.class, id, lockMode);
+        } else {
+            account = this.entityManager.find(AccountEntity.class, id);
+        }
 
         if (ObjectUtil.isAnyNull(account)) {
             throw new StatusNotExistedException();
@@ -121,6 +128,8 @@ public class UserRepositoryObject extends AObject {
             lockMode = LockModeType.PESSIMISTIC_READ;
         } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
             lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.NONE)) {
+            lockMode = null;
         } else {
             throw new ConditionParametersException();
         }
@@ -131,7 +140,9 @@ public class UserRepositoryObject extends AObject {
         criteriaQuery.select(root);
         criteriaQuery.where(criteriaBuilder.equal(root.get("name"), name));
         TypedQuery<AccountEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
-        typedQuery.setLockMode(lockMode);
+        if (ObjectUtil.allNotNull(lockMode)) {
+            typedQuery.setLockMode(lockMode);
+        }
         List<AccountEntity> accounts = typedQuery.getResultList();
 
         if (accounts.isEmpty()) {
@@ -165,11 +176,18 @@ public class UserRepositoryObject extends AObject {
             lockMode = LockModeType.PESSIMISTIC_READ;
         } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
             lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.NONE)) {
+            lockMode = null;
         } else {
             throw new ConditionParametersException();
         }
 
-        GroupEntity group = this.entityManager.find(GroupEntity.class, id, lockMode);
+        GroupEntity group;
+        if (ObjectUtil.allNotNull(lockMode)) {
+            group = this.entityManager.find(GroupEntity.class, id, lockMode);
+        } else {
+            group = this.entityManager.find(GroupEntity.class, id);
+        }
 
         if (ObjectUtil.isAnyNull(group)) {
             throw new StatusNotExistedException();
@@ -210,6 +228,8 @@ public class UserRepositoryObject extends AObject {
             lockMode = LockModeType.PESSIMISTIC_READ;
         } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
             lockMode = LockModeType.PESSIMISTIC_WRITE;
+        } else if (LogicalUtil.isAnyEqual(lock, LockType.NONE)) {
+            lockMode = null;
         } else {
             throw new ConditionParametersException();
         }
@@ -220,7 +240,9 @@ public class UserRepositoryObject extends AObject {
         criteriaQuery.select(root);
         criteriaQuery.where(criteriaBuilder.equal(root.get("name"), name));
         TypedQuery<GroupEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
-        typedQuery.setLockMode(lockMode);
+        if (ObjectUtil.allNotNull(lockMode)) {
+            typedQuery.setLockMode(lockMode);
+        }
         List<GroupEntity> groups = typedQuery.getResultList();
 
         if (groups.isEmpty()) {

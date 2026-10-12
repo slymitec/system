@@ -33,7 +33,7 @@ public class ProcessCreateBuilder extends ABuilder {
         process.setId(UUIDUtil.createRandom());
         process.setStatus(ProcessStatusType.NULL);
         if (ObjectUtil.allNotNull(this.parentProcess)) {
-            process.setParentProcessID(parentProcess.getId());
+            process.setParentProcessId(parentProcess.getId());
         }
         process.setCommunication(new ProcessCommunicationEntity());
         process.setContext(new ProcessContextEntity());

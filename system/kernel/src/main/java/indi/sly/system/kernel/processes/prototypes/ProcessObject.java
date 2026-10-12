@@ -46,7 +46,7 @@ public class ProcessObject extends ACacheableObject<ProcessCacheEntity> {
             throw new ConditionContextException();
         }
 
-        return this.getSelf(LockType.READ).getParentProcessID();
+        return this.getSelf(LockType.READ).getParentProcessId();
     }
 
     public boolean isCurrent() {

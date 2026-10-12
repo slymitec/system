@@ -17,7 +17,7 @@ public class ProcessEntity extends APersistentEntity {
     @Column(name = "Status", nullable = false)
     protected long status;
     @Column(name = "Parent_ProcessId", nullable = true)
-    protected UUID parentProcessID;
+    protected UUID parentProcessId;
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "json", name = "Communication", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
@@ -56,12 +56,12 @@ public class ProcessEntity extends APersistentEntity {
         this.status = status;
     }
 
-    public UUID getParentProcessID() {
-        return this.parentProcessID;
+    public UUID getParentProcessId() {
+        return this.parentProcessId;
     }
 
-    public void setParentProcessID(UUID parentProcessID) {
-        this.parentProcessID = parentProcessID;
+    public void setParentProcessId(UUID parentProcessId) {
+        this.parentProcessId = parentProcessId;
     }
 
     public ProcessCommunicationEntity getCommunication() {

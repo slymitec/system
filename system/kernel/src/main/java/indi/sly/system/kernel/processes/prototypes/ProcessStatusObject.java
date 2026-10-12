@@ -197,6 +197,6 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
             resolver.accept(process, ProcessStatusType.ZOMBIE);
         }
 
-        processRepository.delete(processRepository.get(this.base.getId()));
+        processRepository.delete(process);
     }
 }

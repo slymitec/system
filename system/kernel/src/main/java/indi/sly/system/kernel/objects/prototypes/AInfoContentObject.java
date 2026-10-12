@@ -23,19 +23,19 @@ import java.util.List;
 public abstract class AInfoContentObject extends AChildCacheableObject<InfoContentCacheEntity, InfoObject> {
     protected InfoProcessorMediator processorMediator;
 
-    private InfoEntity getSelf() {
+    private InfoEntity getSelf(long lock) {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfo().getInfoId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache.getInfo(), LockType.NONE);
+        return this.processorMediator.getSelf().apply(this.cache.getInfo(), lock);
     }
 
     public byte[] read() {
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.base.getType());
 
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.READ);
 
         List<InfoProcessorReadContentFunction> resolvers = this.base.processorMediator.getReadContents();
 
@@ -52,7 +52,7 @@ public abstract class AInfoContentObject extends AChildCacheableObject<InfoConte
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.base.getType());
 
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.WRITE);
 
         List<InfoProcessorWriteContentConsumer> resolvers = this.base.processorMediator.getWriteContents();
 
@@ -65,7 +65,7 @@ public abstract class AInfoContentObject extends AChildCacheableObject<InfoConte
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.base.getType());
 
-        InfoEntity info = this.getSelf();
+        InfoEntity info = this.getSelf(LockType.READ);
 
         List<InfoProcessorExecuteContentConsumer> resolvers = this.base.processorMediator.getExecuteContents();
 

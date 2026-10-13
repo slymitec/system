@@ -31,7 +31,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
     public void deleteProcedure(InfoEntity info) {
     }
 
-    public void getProcedure(InfoEntity info, IdentifierRecord identification) {
+    public void getProcedure(InfoEntity info, IdentifierRecord identifier) {
     }
 
     public void dumpProcedure(InfoEntity info, DumpCacheEntity dump) {
@@ -47,7 +47,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         throw new StatusNotSupportedException();
     }
 
-    public InfoSummaryRecord getChildProcedure(InfoEntity info, IdentifierRecord identification) {
+    public InfoSummaryRecord getChildProcedure(InfoEntity info, IdentifierRecord identifier) {
         throw new StatusNotSupportedException();
     }
 
@@ -55,12 +55,12 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         throw new StatusNotSupportedException();
     }
 
-    public void renameChildProcedure(InfoEntity info, IdentifierRecord oldIdentification,
-                                     IdentifierRecord newIdentification) {
+    public void renameChildProcedure(InfoEntity info, IdentifierRecord oldIdentifier,
+                                     IdentifierRecord newIdentifier) {
         throw new StatusNotSupportedException();
     }
 
-    public void deleteChildProcedure(InfoEntity info, IdentifierRecord identification) {
+    public void deleteChildProcedure(InfoEntity info, IdentifierRecord identifier) {
         throw new StatusNotSupportedException();
     }
 

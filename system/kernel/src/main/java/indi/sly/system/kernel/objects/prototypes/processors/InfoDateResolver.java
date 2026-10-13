@@ -33,7 +33,7 @@ public class InfoDateResolver extends AResolver implements IInfoResolver {
             return index;
         };
 
-        this.createChild = (childInfo, info, type, cache, childType, identification) -> {
+        this.createChild = (childInfo, info, type, cache, childType, identifier) -> {
             DateTimeObject dateTime = this.coreManager.getDateTime();
             long nowDateTime = dateTime.getCurrent();
 

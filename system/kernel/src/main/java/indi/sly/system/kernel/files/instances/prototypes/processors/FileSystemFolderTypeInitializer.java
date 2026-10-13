@@ -78,9 +78,9 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void getProcedure(InfoEntity info, IdentifierRecord identification) {
-        if (identification.type() == String.class) {
-            String childInfoName = StringUtil.readFormBytes(identification.value());
+    public void getProcedure(InfoEntity info, IdentifierRecord identifier) {
+        if (identifier.type() == String.class) {
+            String childInfoName = StringUtil.readFormBytes(identifier.value());
             if (!childInfoName.equals(info.getName())) {
                 info.setName(childInfoName);
             }
@@ -175,15 +175,15 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public InfoSummaryRecord getChildProcedure(InfoEntity info, IdentifierRecord identification) {
-        if (identification.type() != String.class) {
+    public InfoSummaryRecord getChildProcedure(InfoEntity info, IdentifierRecord identifier) {
+        if (identifier.type() != String.class) {
             throw new StatusNotSupportedException();
         }
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
         assert entry != null;
 
-        String childInfoName = StringUtil.readFormBytes(identification.value());
+        String childInfoName = StringUtil.readFormBytes(identifier.value());
         InfoSummaryRecord infoSummary = null;
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
@@ -287,13 +287,13 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void renameChildProcedure(InfoEntity info, IdentifierRecord oldIdentification, IdentifierRecord newIdentification) {
-        if (oldIdentification.type() != String.class || newIdentification.type() != String.class) {
+    public void renameChildProcedure(InfoEntity info, IdentifierRecord oldIdentifier, IdentifierRecord newIdentifier) {
+        if (oldIdentifier.type() != String.class || newIdentifier.type() != String.class) {
             throw new StatusNotSupportedException();
         }
 
-        String oldChildInfoName = StringUtil.readFormBytes(oldIdentification.value());
-        String newChildInfoName = StringUtil.readFormBytes(oldIdentification.value());
+        String oldChildInfoName = StringUtil.readFormBytes(oldIdentifier.value());
+        String newChildInfoName = StringUtil.readFormBytes(oldIdentifier.value());
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
         assert entry != null;
@@ -342,15 +342,15 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, IdentifierRecord identification) {
-        if (identification.type() != String.class) {
+    public void deleteChildProcedure(InfoEntity info, IdentifierRecord identifier) {
+        if (identifier.type() != String.class) {
             throw new StatusNotSupportedException();
         }
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
         assert entry != null;
 
-        String childInfoName = StringUtil.readFormBytes(identification.value());
+        String childInfoName = StringUtil.readFormBytes(identifier.value());
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);

@@ -80,7 +80,7 @@ public class InfoSecurityDescriptorResolver extends AResolver implements IInfoRe
             return index;
         };
 
-        this.createChild = (childInfo, info, type, cache, childTypeID, identification) -> {
+        this.createChild = (childInfo, info, type, cache, childTypeID, identifier) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
@@ -99,7 +99,7 @@ public class InfoSecurityDescriptorResolver extends AResolver implements IInfoRe
             return childInfo;
         };
 
-        this.getChild = (childInfo, info, type, cache, identification) -> {
+        this.getChild = (childInfo, info, type, cache, identifier) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
@@ -118,7 +118,7 @@ public class InfoSecurityDescriptorResolver extends AResolver implements IInfoRe
             return childInfo;
         };
 
-        this.deleteChild = (info, type, cache, identification) -> {
+        this.deleteChild = (info, type, cache, identifier) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);
@@ -154,7 +154,7 @@ public class InfoSecurityDescriptorResolver extends AResolver implements IInfoRe
             return summaryDefinitions;
         };
 
-        this.renameChild = (info, type, cache, oldIdentification, newIdentification) -> {
+        this.renameChild = (info, type, cache, oldIdentifier, newIdentifier) -> {
             if (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_AUDIT)
                     || type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_PERMISSION)) {
                 SecurityDescriptorCacheEntity securityDescriptorCache = this.securityDescriptor.apply(info, type, cache);

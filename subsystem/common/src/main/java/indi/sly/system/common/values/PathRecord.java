@@ -51,12 +51,12 @@ public record PathRecord(List<IdentifierRecord> identifiers) {
             String[] texts = new String[value.identifiers.size()];
 
             for (int i = 0; i < value.identifiers.size(); i++) {
-                IdentifierRecord identification = value.identifiers.get(i);
+                IdentifierRecord identifier = value.identifiers.get(i);
 
-                if (identification.type() == String.class) {
-                    texts[i] = StringUtil.readFormBytes(identification.value());
-                } else if (identification.type() == UUID.class) {
-                    texts[i] = "<" + UUIDUtil.toString(UUIDUtil.readFormBytes(identification.value())) + ">";
+                if (identifier.type() == String.class) {
+                    texts[i] = StringUtil.readFormBytes(identifier.value());
+                } else if (identifier.type() == UUID.class) {
+                    texts[i] = "<" + UUIDUtil.toString(UUIDUtil.readFormBytes(identifier.value())) + ">";
                 }
             }
 
@@ -74,10 +74,10 @@ public record PathRecord(List<IdentifierRecord> identifiers) {
         public PathRecord deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
             String[] values = parser.getString().split("\\\\");
 
-            List<IdentifierRecord> identifications = new ArrayList<>();
+            List<IdentifierRecord> identifiers = new ArrayList<>();
 
             for (String value : values) {
-                IdentifierRecord identification;
+                IdentifierRecord identifier;
                 if (value.isEmpty()) {
                     continue;
                 } else if (value.startsWith("<") && value.endsWith(">")) {
@@ -91,17 +91,17 @@ public record PathRecord(List<IdentifierRecord> identifiers) {
                         throw new StatusUnreadableException();
                     }
 
-                    identification = new IdentifierRecord(id);
+                    identifier = new IdentifierRecord(id);
                 } else if (!StringUtil.isNameIllegal(value)) {
-                    identification = new IdentifierRecord(value);
+                    identifier = new IdentifierRecord(value);
                 } else {
                     throw new StatusUnreadableException();
                 }
 
-                identifications.add(identification);
+                identifiers.add(identifier);
             }
 
-            return new PathRecord(identifications);
+            return new PathRecord(identifiers);
         }
     }
 }

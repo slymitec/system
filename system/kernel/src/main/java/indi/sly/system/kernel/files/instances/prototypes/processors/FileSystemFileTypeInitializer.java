@@ -40,9 +40,9 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void getProcedure(InfoEntity info, IdentifierRecord identification) {
-        if (identification.type() == String.class) {
-            String childInfoName = StringUtil.readFormBytes(identification.value());
+    public void getProcedure(InfoEntity info, IdentifierRecord identifier) {
+        if (identifier.type() == String.class) {
+            String childInfoName = StringUtil.readFormBytes(identifier.value());
             if (!childInfoName.equals(info.getName())) {
                 info.setName(childInfoName);
             }

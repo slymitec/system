@@ -63,12 +63,12 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public InfoSummaryRecord getChildProcedure(InfoEntity info, IdentifierRecord identification) {
-        if (identification.type() != String.class) {
+    public InfoSummaryRecord getChildProcedure(InfoEntity info, IdentifierRecord identifier) {
+        if (identifier.type() != String.class) {
             throw new StatusNotSupportedException();
         }
 
-        String childInfoName = StringUtil.readFormBytes(identification.value());
+        String childInfoName = StringUtil.readFormBytes(identifier.value());
         InfoSummaryRecord infoSummary;
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
@@ -99,12 +99,12 @@ public class FolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, IdentifierRecord identification) {
-        if (identification.type() != String.class) {
+    public void deleteChildProcedure(InfoEntity info, IdentifierRecord identifier) {
+        if (identifier.type() != String.class) {
             throw new StatusNotSupportedException();
         }
 
-        String childInfoName = StringUtil.readFormBytes(identification.value());
+        String childInfoName = StringUtil.readFormBytes(identifier.value());
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));

@@ -61,15 +61,15 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
             return info;
         };
 
-        this.createChild = (childInfo, info, type, cache, childType, identification) -> {
+        this.createChild = (childInfo, info, type, cache, childType, identifier) -> {
             if (ObjectUtil.isAnyNull(childInfo)) {
                 childInfo = new InfoEntity();
             }
 
             if (ValueUtil.isAnyNullOrEmpty(childInfo.getId())) {
-                if (identification.type().equals(UUID.class)) {
-                    childInfo.setId(UUIDUtil.readFormBytes(identification.value()));
-                } else if (identification.type().equals(String.class)) {
+                if (identifier.type().equals(UUID.class)) {
+                    childInfo.setId(UUIDUtil.readFormBytes(identifier.value()));
+                } else if (identifier.type().equals(String.class)) {
                     childInfo.setId(UUIDUtil.createRandom());
                 }
             }
@@ -78,10 +78,10 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
             }
             childInfo.setOpened(0);
             if (ValueUtil.isAnyNullOrEmpty(childInfo.getName())) {
-                if (identification.type().equals(UUID.class)) {
+                if (identifier.type().equals(UUID.class)) {
                     childInfo.setName(null);
-                } else if (identification.type().equals(String.class)) {
-                    childInfo.setName(StringUtil.readFormBytes(identification.value()));
+                } else if (identifier.type().equals(String.class)) {
+                    childInfo.setName(StringUtil.readFormBytes(identifier.value()));
                 }
             }
             Map<Long, Long> date = new HashMap<>();
@@ -106,9 +106,9 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
             return childInfo;
         };
 
-        this.getChild = (childInfo, info, type, cache, identification) -> {
+        this.getChild = (childInfo, info, type, cache, identifier) -> {
             AInfoTypeInitializer typeInitializer = type.getInitializer();
-            InfoSummaryRecord infoSummary = typeInitializer.getChildProcedure(info, identification);
+            InfoSummaryRecord infoSummary = typeInitializer.getChildProcedure(info, identifier);
 
             TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
             AInfoTypeInitializer childTypeInitializer = typeManager.get(infoSummary.type()).getInitializer();
@@ -118,13 +118,13 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
             AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(childRepositoryId);
             childInfo = infoRepository.get(infoSummary.id());
 
-            childTypeInitializer.getProcedure(childInfo, identification);
+            childTypeInitializer.getProcedure(childInfo, identifier);
 
             return childInfo;
         };
 
-        this.deleteChild = (info, type, cache, identification) -> {
-            InfoEntity childInfo = this.getChild.apply(null, info, type, cache, identification);
+        this.deleteChild = (info, type, cache, identifier) -> {
+            InfoEntity childInfo = this.getChild.apply(null, info, type, cache, identifier);
 
             if (childInfo.getOpened() > 0) {
                 throw new StatusIsUsedException();
@@ -141,7 +141,7 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
             infoRepository.delete(childInfo);
 
             AInfoTypeInitializer typeInitializer = type.getInitializer();
-            typeInitializer.deleteChildProcedure(info, identification);
+            typeInitializer.deleteChildProcedure(info, identifier);
         };
 
         this.queryChild = (infoSummaries, info, type, cache, wildcard) -> {
@@ -153,18 +153,18 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
             return infoSummaries;
         };
 
-        this.renameChild = (info, type, cache, oldIdentification, newIdentification) -> {
-            InfoEntity childInfo = this.getChild.apply(null, info, type, cache, oldIdentification);
+        this.renameChild = (info, type, cache, oldIdentifier, newIdentifier) -> {
+            InfoEntity childInfo = this.getChild.apply(null, info, type, cache, oldIdentifier);
 
             if (childInfo.getOpened() > 0) {
                 throw new StatusIsUsedException();
             }
 
             AInfoTypeInitializer typeInitializer = type.getInitializer();
-            typeInitializer.renameChildProcedure(info, oldIdentification, newIdentification);
+            typeInitializer.renameChildProcedure(info, oldIdentifier, newIdentifier);
 
-            if (newIdentification.type().equals(String.class)) {
-                childInfo.setName(StringUtil.readFormBytes(newIdentification.value()));
+            if (newIdentifier.type().equals(String.class)) {
+                childInfo.setName(StringUtil.readFormBytes(newIdentifier.value()));
             }
         };
 

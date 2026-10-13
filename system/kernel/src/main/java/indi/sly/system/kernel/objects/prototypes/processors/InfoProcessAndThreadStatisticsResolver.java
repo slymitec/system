@@ -64,7 +64,7 @@ public class InfoProcessAndThreadStatisticsResolver extends AResolver implements
             return info;
         };
 
-        this.createChild = (childInfo, info, type, cache, childType, identification) -> {
+        this.createChild = (childInfo, info, type, cache, childType, identifier) -> {
             ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
@@ -79,7 +79,7 @@ public class InfoProcessAndThreadStatisticsResolver extends AResolver implements
             return childInfo;
         };
 
-        this.getChild = (childInfo, info, type, cache, identification) -> {
+        this.getChild = (childInfo, info, type, cache, identifier) -> {
             ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 
@@ -94,7 +94,7 @@ public class InfoProcessAndThreadStatisticsResolver extends AResolver implements
             return childInfo;
         };
 
-        this.deleteChild = (info, type, cache, identification) -> {
+        this.deleteChild = (info, type, cache, identifier) -> {
             ProcessManager processManager = this.coreManager.getManager(ProcessManager.class);
             ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
 

@@ -1,7 +1,5 @@
 package indi.sly.system.common.supports;
 
-import indi.sly.system.common.supports.ObjectUtil;
-
 public abstract class LogicalUtil {
     public static long and(long... values) {
         if (ObjectUtil.isAnyNull(values)) {

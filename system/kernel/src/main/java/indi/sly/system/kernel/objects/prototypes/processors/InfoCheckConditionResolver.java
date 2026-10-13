@@ -38,9 +38,9 @@ public class InfoCheckConditionResolver extends AResolver implements IInfoResolv
             return index;
         };
 
-        this.createChild = (childInfo, info, type, cache, childType, identification) -> {
+        this.createChild = (childInfo, info, type, cache, childType, identifier) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
-                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.type() == UUID.class)) {
+                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identifier.type() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
             Set<UUID> childTypes = type.getChildTypes();
@@ -51,18 +51,18 @@ public class InfoCheckConditionResolver extends AResolver implements IInfoResolv
             return childInfo;
         };
 
-        this.getChild = (childInfo, info, type, cache, identification) -> {
+        this.getChild = (childInfo, info, type, cache, identifier) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
-                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.type() == UUID.class)) {
+                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identifier.type() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
 
             return childInfo;
         };
 
-        this.deleteChild = (info, type, cache, identification) -> {
+        this.deleteChild = (info, type, cache, identifier) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD)
-                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identification.type() == UUID.class)) {
+                    || (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS) && identifier.type() == UUID.class)) {
                 throw new StatusNotSupportedException();
             }
         };
@@ -75,11 +75,11 @@ public class InfoCheckConditionResolver extends AResolver implements IInfoResolv
             return summaryDefinitions;
         };
 
-        this.renameChild = (info, type, cache, oldIdentification, newIdentification) -> {
+        this.renameChild = (info, type, cache, oldIdentifier, newIdentifier) -> {
             if (!type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.HAS_CHILD) || (type.isTypeInitializerAttributesExist(TypeInitializerAttributeType.CHILD_IS_NAMELESS))) {
                 throw new StatusNotSupportedException();
             }
-            if (oldIdentification.type() == UUID.class || newIdentification.type() == UUID.class) {
+            if (oldIdentifier.type() == UUID.class || newIdentifier.type() == UUID.class) {
                 throw new StatusNotSupportedException();
             }
         };

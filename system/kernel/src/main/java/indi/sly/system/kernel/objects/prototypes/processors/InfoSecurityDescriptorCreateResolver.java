@@ -20,7 +20,7 @@ import jakarta.inject.Named;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoSecurityDescriptorCreateResolver extends AResolver implements IInfoResolver {
     public InfoSecurityDescriptorCreateResolver() {
-        this.createChild = (childInfo, info, type, cache, childTypeID, identification) -> {
+        this.createChild = (childInfo, info, type, cache, childTypeID, identifier) -> {
             TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
             TypeObject childType = typeManager.get(childTypeID);
 

@@ -64,12 +64,12 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public InfoSummaryRecord getChildProcedure(InfoEntity info, IdentifierRecord identification) {
-        if (identification.type() != UUID.class) {
+    public InfoSummaryRecord getChildProcedure(InfoEntity info, IdentifierRecord identifier) {
+        if (identifier.type() != UUID.class) {
             throw new StatusNotSupportedException();
         }
 
-        UUID childInfoID = UUIDUtil.readFormBytes(identification.value());
+        UUID childInfoID = UUIDUtil.readFormBytes(identifier.value());
         InfoSummaryRecord infoSummary;
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
@@ -104,12 +104,12 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public void deleteChildProcedure(InfoEntity info, IdentifierRecord identification) {
-        if (identification.type() != UUID.class) {
+    public void deleteChildProcedure(InfoEntity info, IdentifierRecord identifier) {
+        if (identifier.type() != UUID.class) {
             throw new StatusNotSupportedException();
         }
 
-        UUID childInfoID = UUIDUtil.readFormBytes(identification.value());
+        UUID childInfoID = UUIDUtil.readFormBytes(identifier.value());
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));

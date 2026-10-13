@@ -11,7 +11,6 @@ import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
-import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.lang.*;
 import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.*;
@@ -150,7 +149,6 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
-        AInfoTypeInitializer infoTypeInitializer = type.getInitializer();
 
         List<InfoProcessorOpenFunction> resolvers = this.processorMediator.getOpens();
 
@@ -171,7 +169,6 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
 
         TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
         TypeObject type = typeManager.get(this.getType());
-        AInfoTypeInitializer infoTypeInitializer = type.getInitializer();
 
         List<InfoProcessorCloseFunction> resolvers = this.processorMediator.getCloses();
 

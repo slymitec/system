@@ -11,8 +11,6 @@ import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.environment.containers.KernelConfiguration;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
 import indi.sly.system.kernel.objects.ObjectManager;
-import indi.sly.system.kernel.objects.TypeManager;
-import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
 import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenAttributeType;

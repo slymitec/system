@@ -4,7 +4,6 @@ import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.*;
-import jakarta.annotation.Nonnull;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonGenerator;
 import tools.jackson.core.JsonParser;
@@ -17,8 +16,6 @@ import tools.jackson.databind.annotation.JsonSerialize;
 import tools.jackson.databind.jsontype.TypeDeserializer;
 import tools.jackson.databind.jsontype.TypeSerializer;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @JsonSerialize(using = IdentifierRecord.IdentifierSerializer.class)
@@ -45,7 +42,6 @@ public record IdentifierRecord(byte[] value, Class<?> type) {
     }
 
     @Override
-    @Nonnull
     public String toString() {
         if (this.type == UUID.class) {
             return "<" + UUIDUtil.toString(UUIDUtil.readFormBytes(this.value())) + ">";
@@ -58,12 +54,12 @@ public record IdentifierRecord(byte[] value, Class<?> type) {
 
     public static class IdentifierSerializer extends ValueSerializer<IdentifierRecord> {
         @Override
-        public void serializeWithType(IdentifierRecord value, JsonGenerator generator, SerializationContext ctxt, TypeSerializer typeSer) throws JacksonException {
-            this.serialize(value, generator, ctxt);
+        public void serializeWithType(IdentifierRecord value, JsonGenerator generator, SerializationContext serializationContext, TypeSerializer typeSer) throws JacksonException {
+            this.serialize(value, generator, serializationContext);
         }
 
         @Override
-        public void serialize(IdentifierRecord value, JsonGenerator generator, SerializationContext ctxt) throws JacksonException {
+        public void serialize(IdentifierRecord value, JsonGenerator generator, SerializationContext serializationContext) throws JacksonException {
             if (value.type() == String.class) {
                 generator.writeString(StringUtil.readFormBytes(value.value()));
             } else if (value.type() == UUID.class) {

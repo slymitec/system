@@ -3,6 +3,7 @@ package indi.sly.system.kernel.core.environment.containers;
 import indi.sly.system.common.supports.ObjectUtil;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 import java.util.UUID;
@@ -19,7 +20,8 @@ public class KernelSpace extends ASystemSpace {
 
     private final KernelConfiguration configuration;
     private final Set<UUID> infoTypeIds;
-    private final ThreadLocal<UserSpace> userSpace;
+    private final ThreadLocal<@Nullable UserSpace> userSpace;
+    @Nullable
     private AKernelExtensionSpace serviceSpace;
 
     public KernelConfiguration getConfiguration() {
@@ -30,11 +32,11 @@ public class KernelSpace extends ASystemSpace {
         return this.infoTypeIds;
     }
 
-    public UserSpace getUserSpace() {
+    public @Nullable UserSpace getUserSpace() {
         return this.userSpace.get();
     }
 
-    public void setUserSpace(UserSpace userSpace) {
+    public void setUserSpace(@Nullable UserSpace userSpace) {
         if (ObjectUtil.isAnyNull(userSpace)) {
             this.userSpace.remove();
         } else {
@@ -42,11 +44,11 @@ public class KernelSpace extends ASystemSpace {
         }
     }
 
-    public AKernelExtensionSpace getServiceSpace() {
+    public @Nullable AKernelExtensionSpace getServiceSpace() {
         return this.serviceSpace;
     }
 
-    public void setServiceSpace(AKernelExtensionSpace serviceSpace) {
+    public void setServiceSpace(@Nullable AKernelExtensionSpace serviceSpace) {
         this.serviceSpace = serviceSpace;
     }
 }

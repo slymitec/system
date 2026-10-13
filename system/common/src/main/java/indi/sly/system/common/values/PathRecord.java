@@ -42,12 +42,12 @@ public record PathRecord(List<IdentifierRecord> identifiers) {
 
     public static class PathSerializer extends ValueSerializer<PathRecord> {
         @Override
-        public void serializeWithType(PathRecord value, JsonGenerator generator, SerializationContext ctxt, TypeSerializer typeSer) throws JacksonException {
-            this.serialize(value, generator, ctxt);
+        public void serializeWithType(PathRecord value, JsonGenerator generator, SerializationContext serializationContext, TypeSerializer typeSer) throws JacksonException {
+            this.serialize(value, generator, serializationContext);
         }
 
         @Override
-        public void serialize(PathRecord value, JsonGenerator generator, SerializationContext ctxt) throws JacksonException {
+        public void serialize(PathRecord value, JsonGenerator generator, SerializationContext serializationContext) throws JacksonException {
             String[] texts = new String[value.identifiers.size()];
 
             for (int i = 0; i < value.identifiers.size(); i++) {

@@ -1,6 +1,5 @@
 package indi.sly.system.common.supports;
 
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -17,10 +16,11 @@ public class SpringHelper implements ApplicationContextAware {
         SpringHelper.objenesis = new SpringObjenesis();
     }
 
+    @SuppressWarnings("NullAway.Init")
     private static ApplicationContext applicationContext;
 
     @Override
-    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         SpringHelper.applicationContext = applicationContext;
     }
 
@@ -32,6 +32,7 @@ public class SpringHelper implements ApplicationContextAware {
         return SpringHelper.applicationContext.getBean(clazz, args);
     }
 
+    @SuppressWarnings("NullAway.Init")
     private static SpringObjenesis objenesis;
 
     public static <T> T createInstance(Class<T> clazz) {

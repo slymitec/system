@@ -11,22 +11,24 @@ import indi.sly.system.kernel.core.environment.values.CacheDurationType;
 import indi.sly.system.kernel.core.values.ACacheEntity;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
 public class ACacheableObject<T extends ACacheEntity> extends AObject {
+    @Nullable
     protected T cache;
 
-    public final T getCache() {
+    public final @Nullable T getCache() {
         return this.cache;
     }
 
-    public final void setCache(T cache) {
+    public final void setCache(@Nullable T cache) {
         this.cache = cache;
     }
 
     public final UUID getHandle() {
-        if (ObjectUtil.isAnyNull(this.cache, this.cache.getId())) {
+        if (ObjectUtil.isAnyNull(this.cache) || ValueUtil.isAnyNullOrEmpty(this.cache.getId())) {
             throw new StatusNotSupportedException();
         }
 

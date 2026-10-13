@@ -69,6 +69,7 @@ public class CoreManager extends AManager {
 
     @Override
     public void shutdown() {
+        super.shutdown();
     }
 
     @Override

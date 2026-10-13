@@ -1,6 +1,7 @@
 package indi.sly.system.common.lang;
 
 public class Member1<T> {
+    @SuppressWarnings("NullAway.Init")
     T member;
 
     public T getMember() {

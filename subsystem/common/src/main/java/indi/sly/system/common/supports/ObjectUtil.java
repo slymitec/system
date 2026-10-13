@@ -1,9 +1,12 @@
 package indi.sly.system.common.supports;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.Provider;
+import indi.sly.system.common.lang.StatusUnexpectedException;
 import org.apache.fory.Fory;
 import org.apache.fory.ThreadSafeFory;
 import org.apache.fory.config.Language;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.JavaType;
 import tools.jackson.databind.json.JsonMapper;
@@ -18,11 +21,11 @@ public abstract class ObjectUtil {
     private static final JsonMapper SERIALIZATION_JSON = SpringHelper.getInstance(JsonMapper.class);
     private static final ThreadSafeFory SERIALIZATION_BINARY = Fory.builder().withLanguage(Language.JAVA).withAsyncCompilation(true).requireClassRegistration(false).buildThreadSafeFory();
 
-    public static boolean isNull(final Object value) {
+    public static boolean isNull(@Nullable final Object value) {
         return ObjectUtil.isAnyNull(value);
     }
 
-    public static boolean isAnyNull(final Object value) {
+    public static boolean isAnyNull(@Nullable final Object value) {
         if (value == null) {
             return true;
         } else {
@@ -30,7 +33,7 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static boolean isAnyNull(final Object... values) {
+    public static boolean isAnyNull(@Nullable final Object... values) {
         if (values == null || values.length == 0) {
             return true;
         } else {
@@ -43,7 +46,7 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static boolean notNull(final Object value) {
+    public static boolean notNull(@Nullable final Object value) {
         if (value == null) {
             return false;
         } else {
@@ -51,7 +54,7 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static boolean allNotNull(final Object value) {
+    public static boolean allNotNull(@Nullable final Object value) {
         if (value == null) {
             return false;
         } else {
@@ -59,7 +62,7 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static boolean allNotNull(final Object... values) {
+    public static boolean allNotNull(@Nullable final Object... values) {
         if (values == null || values.length == 0) {
             return false;
         } else {
@@ -72,7 +75,7 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static Object unwrapOptional(Object value) {
+    public static @Nullable Object unwrapOptional(@Nullable Object value) {
         if (value instanceof Optional<?> optional) {
             if (optional.isEmpty()) {
                 return null;
@@ -83,7 +86,7 @@ public abstract class ObjectUtil {
         return value;
     }
 
-    public static boolean equals(Object value1, Object value2) {
+    public static boolean equals(@Nullable Object value1, @Nullable Object value2) {
         if (value1 == value2) {
             return true;
         }
@@ -130,7 +133,7 @@ public abstract class ObjectUtil {
         return false;
     }
 
-    public static int hashCode(Object value) {
+    public static int hashCode(@Nullable Object value) {
         if (ObjectUtil.isAnyNull(value)) {
             return 0;
         }
@@ -172,23 +175,23 @@ public abstract class ObjectUtil {
         return value.hashCode();
     }
 
-    public static String toString(Object value) {
+    public static String toString(@Nullable Object value) {
         if (ObjectUtil.isAnyNull(value)) {
             return ObjectUtil.TO_STRING_NULL_OBJECT;
         }
         return value.toString();
     }
 
-    public static byte[] transferToByteArray(Object value) {
+    public static byte[] transferToByteArray(@Nullable Object value) {
         return ObjectUtil.SERIALIZATION_BINARY.serialize(value);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T transferFromByteArray(byte[] stream) {
+    public static <T> T transferFromByteArray(byte @Nullable [] stream) {
         return (T) ObjectUtil.SERIALIZATION_BINARY.deserialize(stream);
     }
 
-    public static String transferToString(Object value) {
+    public static String transferToString(@Nullable Object value) {
         try {
             return ObjectUtil.SERIALIZATION_JSON.writeValueAsString(value);
         } catch (JacksonException _) {
@@ -196,7 +199,7 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static byte[] transferToJsonByteArray(Object value) {
+    public static byte[] transferToJsonByteArray(@Nullable Object value) {
         try {
             return ObjectUtil.SERIALIZATION_JSON.writeValueAsBytes(value);
         } catch (JacksonException _) {
@@ -204,15 +207,15 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static <T> T transferFromString(Class<T> clazz, String value) {
+    public static <T> @Nullable T transferFromString(Class<T> clazz, @Nullable String value) {
         return ObjectUtil.transferFromStringOrDefaultProvider(clazz, value, () -> null);
     }
 
-    public static <T> T transferFromStringOrDefault(Class<T> clazz, String value, T defaultValue) {
+    public static <T> @Nullable T transferFromStringOrDefault(Class<T> clazz, @Nullable String value, @Nullable T defaultValue) {
         return ObjectUtil.transferFromStringOrDefaultProvider(clazz, value, () -> defaultValue);
     }
 
-    public static <T> T transferFromStringOrDefaultProvider(Class<T> clazz, String value, Provider<T> defaultProvider) {
+    public static <T> @Nullable T transferFromStringOrDefaultProvider(Class<T> clazz, @Nullable String value, Provider<T> defaultProvider) {
         if (ObjectUtil.isAnyNull(clazz, defaultProvider)) {
             throw new ConditionParametersException();
         }
@@ -224,15 +227,15 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static <T> T transferFromJsonByteArray(Class<T> clazz, byte[] stream) {
+    public static <T> @Nullable T transferFromJsonByteArray(Class<T> clazz, byte @Nullable [] stream) {
         return ObjectUtil.transferFromJsonByteArrayOrDefaultProvider(clazz, stream, () -> null);
     }
 
-    public static <T> T transferFromJsonByteArrayOrDefault(Class<T> clazz, byte[] stream, T defaultValue) {
+    public static <T> @Nullable T transferFromJsonByteArrayOrDefault(Class<T> clazz, byte @Nullable [] stream, @Nullable T defaultValue) {
         return ObjectUtil.transferFromJsonByteArrayOrDefaultProvider(clazz, stream, () -> defaultValue);
     }
 
-    public static <T> T transferFromJsonByteArrayOrDefaultProvider(Class<T> clazz, byte[] stream, Provider<T> defaultProvider) {
+    public static <T> @Nullable T transferFromJsonByteArrayOrDefaultProvider(Class<T> clazz, byte @Nullable [] stream, Provider<T> defaultProvider) {
         if (ObjectUtil.isAnyNull(clazz, defaultProvider)) {
             throw new ConditionParametersException();
         }
@@ -244,15 +247,15 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static <T> Set<T> transferSetFromString(Class<T> clazz, String value) {
+    public static <T> @Nullable Set<T> transferSetFromString(Class<T> clazz, @Nullable String value) {
         return ObjectUtil.transferSetFromStringOrDefaultProvider(clazz, value, () -> null);
     }
 
-    public static <T> Set<T> transferSetFromStringOrDefault(Class<T> clazz, String value, Set<T> defaultValue) {
+    public static <T> @Nullable Set<T> transferSetFromStringOrDefault(Class<T> clazz, @Nullable String value, Set<T> defaultValue) {
         return ObjectUtil.transferSetFromStringOrDefaultProvider(clazz, value, () -> defaultValue);
     }
 
-    public static <T> Set<T> transferSetFromStringOrDefaultProvider(Class<T> clazz, String value, Provider<Set<T>> defaultProvider) {
+    public static <T> @Nullable Set<T> transferSetFromStringOrDefaultProvider(Class<T> clazz, @Nullable String value, Provider<Set<T>> defaultProvider) {
         if (ObjectUtil.isAnyNull(clazz, defaultProvider)) {
             throw new ConditionParametersException();
         }
@@ -266,15 +269,15 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static <T> List<T> transferListFromString(Class<T> clazz, String value) {
+    public static <T> @Nullable List<T> transferListFromString(Class<T> clazz, @Nullable String value) {
         return ObjectUtil.transferListFromStringOrDefaultProvider(clazz, value, () -> null);
     }
 
-    public static <T> List<T> transferListFromStringOrDefault(Class<T> clazz, String value, List<T> defaultValue) {
+    public static <T> @Nullable List<T> transferListFromStringOrDefault(Class<T> clazz, @Nullable String value, List<T> defaultValue) {
         return ObjectUtil.transferListFromStringOrDefaultProvider(clazz, value, () -> defaultValue);
     }
 
-    public static <T> List<T> transferListFromStringOrDefaultProvider(Class<T> clazz, String value, Provider<List<T>> defaultProvider) {
+    public static <T> @Nullable List<T> transferListFromStringOrDefaultProvider(Class<T> clazz, @Nullable String value, Provider<List<T>> defaultProvider) {
         if (ObjectUtil.isAnyNull(clazz, defaultProvider)) {
             throw new ConditionParametersException();
         }
@@ -288,15 +291,15 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static <TK, TV> Map<TK, TV> transferMapFromString(Class<TK> keyClass, Class<TV> valueClass, String value) {
+    public static <TK, TV> @Nullable Map<TK, TV> transferMapFromString(Class<TK> keyClass, Class<TV> valueClass, @Nullable String value) {
         return ObjectUtil.transferMapFromStringOrDefaultProvider(keyClass, valueClass, value, () -> null);
     }
 
-    public static <TK, TV> Map<TK, TV> transferMapFromStringOrDefault(Class<TK> keyClass, Class<TV> valueClass, String value, Map<TK, TV> defaultValue) {
+    public static <TK, TV> @Nullable Map<TK, TV> transferMapFromStringOrDefault(Class<TK> keyClass, Class<TV> valueClass, @Nullable String value, Map<TK, TV> defaultValue) {
         return ObjectUtil.transferMapFromStringOrDefaultProvider(keyClass, valueClass, value, () -> defaultValue);
     }
 
-    public static <TK, TV> Map<TK, TV> transferMapFromStringOrDefaultProvider(Class<TK> keyClass, Class<TV> valueClass, String value, Provider<Map<TK, TV>> defaultProvider) {
+    public static <TK, TV> @Nullable Map<TK, TV> transferMapFromStringOrDefaultProvider(Class<TK> keyClass, Class<TV> valueClass, @Nullable String value, Provider<Map<TK, TV>> defaultProvider) {
         if (ObjectUtil.isAnyNull(keyClass, valueClass, defaultProvider)) {
             throw new ConditionParametersException();
         }

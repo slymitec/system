@@ -1,8 +1,11 @@
 package indi.sly.system.common.lang;
 
 public class Member3<T1, T2, T3> {
+    @SuppressWarnings("NullAway.Init")
     T1 member1;
+    @SuppressWarnings("NullAway.Init")
     T2 member2;
+    @SuppressWarnings("NullAway.Init")
     T3 member3;
 
     public T1 getMember1() {

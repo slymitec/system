@@ -24,10 +24,6 @@ public class ThreadBuilder extends ABuilder {
     public ThreadObject create(UUID processId) {
         UserSpace userSpace = this.coreManager.getUserSpace();
         Deque<ThreadObject> threads = userSpace.getThreads();
-        if (ObjectUtil.isAnyNull(threads)) {
-            threads = new ArrayDeque<>();
-            userSpace.setThreads(threads);
-        }
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();

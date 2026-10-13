@@ -1,5 +1,7 @@
 package indi.sly.system.common.supports;
 
+import org.jspecify.annotations.Nullable;
+
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
@@ -7,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public abstract class ValueUtil {
-    public static boolean isAnyNullOrEmpty(Object value) {
+    public static boolean isAnyNullOrEmpty(@Nullable Object value) {
         if (ObjectUtil.isAnyNull(value)) {
             return true;
         }
@@ -29,7 +31,7 @@ public abstract class ValueUtil {
         return false;
     }
 
-    public static boolean isAnyNullOrEmpty(Object... values) {
+    public static boolean isAnyNullOrEmpty(@Nullable Object... values) {
         if (ObjectUtil.isAnyNull(values) || values.length == 0) {
             return true;
         }

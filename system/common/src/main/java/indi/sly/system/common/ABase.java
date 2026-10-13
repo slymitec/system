@@ -11,6 +11,7 @@ public abstract class ABase {
         super();
     }
 
+    @SuppressWarnings("NullAway.Init")
     private Log _logger;
 
     protected synchronized final Log logger() {

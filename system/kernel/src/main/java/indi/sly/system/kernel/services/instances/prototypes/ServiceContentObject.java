@@ -63,7 +63,7 @@ public class ServiceContentObject extends AInfoContentObject {
     }
 
     public void setSecret(String secret) {
-        if (ValueUtil.isAnyNullOrEmpty()) {
+        if (ValueUtil.isAnyNullOrEmpty(secret)) {
             throw new ConditionParametersException();
         }
 
@@ -113,7 +113,7 @@ public class ServiceContentObject extends AInfoContentObject {
     }
 
     public void setAccountId(UUID accountId) {
-        if (ValueUtil.isAnyNullOrEmpty()) {
+        if (ValueUtil.isAnyNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
 

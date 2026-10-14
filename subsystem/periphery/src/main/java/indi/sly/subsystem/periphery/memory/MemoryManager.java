@@ -22,6 +22,7 @@ public class MemoryManager extends AManager {
 
     @Override
     public void shutdown() {
+        super.shutdown();
     }
 
     public DistributionRepositoryObject getDistributionRepository() {

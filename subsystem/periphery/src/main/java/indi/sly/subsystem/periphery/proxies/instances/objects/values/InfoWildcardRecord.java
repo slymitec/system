@@ -45,12 +45,12 @@ public record InfoWildcardRecord(byte[] value, Class<?> type, boolean fuzzy) {
 
     public static class InfoWildcardDefinitionSerializer extends ValueSerializer<InfoWildcardRecord> {
         @Override
-        public void serializeWithType(InfoWildcardRecord value, JsonGenerator generator, SerializationContext ctxt, TypeSerializer typeSer) throws JacksonException {
-            this.serialize(value, generator, ctxt);
+        public void serializeWithType(InfoWildcardRecord value, JsonGenerator generator, SerializationContext serializationContext, TypeSerializer typeSer) throws JacksonException {
+            this.serialize(value, generator, serializationContext);
         }
 
         @Override
-        public void serialize(InfoWildcardRecord value, JsonGenerator generator, SerializationContext ctxt) throws JacksonException {
+        public void serialize(InfoWildcardRecord value, JsonGenerator generator, SerializationContext serializationContext) throws JacksonException {
             if (value.type == String.class) {
                 generator.writeString(StringUtil.readFormBytes(value.value));
             } else if (value.type == UUID.class) {

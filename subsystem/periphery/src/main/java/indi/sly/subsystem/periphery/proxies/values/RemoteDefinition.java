@@ -6,8 +6,11 @@ public class RemoteDefinition extends ADefinition {
     public RemoteDefinition() {
     }
 
+    @SuppressWarnings("NullAway.Init")
     private CallContextRecord callContext;
+    @SuppressWarnings("NullAway.Init")
     private String taskName;
+    @SuppressWarnings("NullAway.Init")
     private String value;
 
     public CallContextRecord getCallContext() {

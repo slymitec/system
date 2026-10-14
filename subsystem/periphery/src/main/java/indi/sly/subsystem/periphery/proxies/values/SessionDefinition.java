@@ -7,6 +7,7 @@ import java.util.UUID;
 public class SessionDefinition extends ADefinition {
     public SessionDefinition() {}
 
+    @SuppressWarnings("NullAway.Init")
     private UUID sessionId;
 
     public UUID getSessionId() {

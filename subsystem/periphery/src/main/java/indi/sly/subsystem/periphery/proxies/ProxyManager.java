@@ -16,6 +16,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProxyManager extends AManager {
+    @SuppressWarnings("NullAway.Init")
     private ProxyFactory factory;
 
     public ProxyFactory getFactory() {
@@ -27,7 +28,6 @@ public class ProxyManager extends AManager {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
             this.factory = this.coreManager.create(ProxyFactory.class);
             this.factory.init();
-        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_PERIPHERY)) {
         }
     }
 

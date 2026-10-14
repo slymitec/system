@@ -2,11 +2,8 @@ package indi.sly.subsystem.periphery.proxies.prototypes.processors;
 
 import indi.sly.subsystem.periphery.core.prototypes.processors.AResolver;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorDieConsumer;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorExpireConsumer;
-import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorInvokeFunction;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
-import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ValueUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -18,9 +15,7 @@ public class RemoteDieResolver extends AResolver implements IRemoteResolver {
     private final RemoteProcessorDieConsumer die;
 
     public RemoteDieResolver() {
-        this.die = (remote) -> {
-            remote.setTaskName(null);
-        };
+        this.die = (remote) -> remote.setTaskName(null);
     }
 
     @Override

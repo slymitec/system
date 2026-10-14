@@ -5,13 +5,14 @@ import indi.sly.subsystem.periphery.proxies.ProxyManager;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorDieConsumer;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorExpireConsumer;
 import indi.sly.subsystem.periphery.proxies.lang.RemoteProcessorInvokeFunction;
-import indi.sly.subsystem.periphery.proxies.prototypes.AProxyObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.IKernelObjectActor;
 import indi.sly.subsystem.periphery.proxies.prototypes.ProxyFactory;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.values.*;
 import indi.sly.system.common.lang.StatusUnexpectedException;
-import indi.sly.system.common.supports.*;
+import indi.sly.system.common.lang.StatusUnreadableException;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -27,7 +28,6 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
     private final RemoteProcessorExpireConsumer expire;
     private final RemoteProcessorDieConsumer die;
 
-    @SuppressWarnings("unchecked")
     public RemoteCallResolver() {
         this.invoke = (invokeRemote, remote, method, parameters) -> {
             ProxyManager proxyManager = this.coreManager.getManager(ProxyManager.class);
@@ -45,7 +45,13 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
             ClientRequestRecord clientRequest = new ClientRequestRecord(method, clientRequestContentParameters);
             CallRequestRecord callRequest = new CallRequestRecord(callContext, clientRequest);
 
-            IKernelObjectActor kernelObjectActor = proxyFactory.getKernelObjectActor(remote.getTaskName(), ObjectUtil.transferFromString(UUID.class, remote.getValue()));
+            UUID handle = ObjectUtil.transferFromString(UUID.class, remote.getValue());
+
+            if (ValueUtil.isAnyNullOrEmpty(handle)) {
+                throw new StatusUnreadableException();
+            }
+
+            IKernelObjectActor kernelObjectActor = proxyFactory.getKernelObjectActor(remote.getTaskName(), handle);
 
             ClientResponseRecord clientResponse = kernelObjectActor.call(callRequest).block();
 
@@ -83,13 +89,9 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
             return invokeRemote;
         };
 
-        this.expire = (remote) -> {
-            this.invoke.apply(null, remote, "cache", new Object[0]);
-        };
+        this.expire = (remote) -> this.invoke.apply(null, remote, "cache", new Object[0]);
 
-        this.die = (remote) -> {
-            this.invoke.apply(null, remote, "uncache", new Object[0]);
-        };
+        this.die = (remote) -> this.invoke.apply(null, remote, "uncache", new Object[0]);
     }
 
     @Override

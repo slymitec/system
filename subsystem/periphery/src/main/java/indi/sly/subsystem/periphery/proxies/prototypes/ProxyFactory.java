@@ -5,7 +5,9 @@ import indi.sly.subsystem.periphery.proxies.instances.core.CoreProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.DateTimeProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.SystemVersionProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.objects.ObjectProxyManager;
-import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.*;
+import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.DumpProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.InfoProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.SecurityDescriptorProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.instances.FolderContentProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.instances.NamelessFolderContentProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.processes.ProcessProxyManager;
@@ -16,14 +18,22 @@ import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.instan
 import indi.sly.subsystem.periphery.proxies.instances.services.ServicesProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.services.prototypes.ServiceContentProxyObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
-import indi.sly.subsystem.periphery.proxies.prototypes.processors.*;
-import indi.sly.subsystem.periphery.proxies.values.*;
+import indi.sly.subsystem.periphery.proxies.prototypes.processors.IRemoteResolver;
+import indi.sly.subsystem.periphery.proxies.prototypes.processors.RemoteCallResolver;
+import indi.sly.subsystem.periphery.proxies.prototypes.processors.RemoteCheckConditionResolver;
+import indi.sly.subsystem.periphery.proxies.prototypes.processors.RemoteDieResolver;
+import indi.sly.subsystem.periphery.proxies.values.RemoteDefinition;
+import indi.sly.subsystem.periphery.proxies.values.SessionDefinition;
 import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.*;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.SpringHelper;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import io.dapr.actors.ActorId;
 import io.dapr.actors.client.ActorClient;
 import io.dapr.actors.client.ActorProxyBuilder;
 import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -48,6 +58,7 @@ public class ProxyFactory extends AFactory {
     public void init() {
         this.remoteResolvers.add(this.coreManager.create(RemoteCallResolver.class));
         this.remoteResolvers.add(this.coreManager.create(RemoteCheckConditionResolver.class));
+        this.remoteResolvers.add(this.coreManager.create(RemoteDieResolver.class));
         Collections.sort(this.remoteResolvers);
 
         this.systemExceptions.put("StatusRelationshipErrorException", new StatusRelationshipErrorException());
@@ -118,11 +129,11 @@ public class ProxyFactory extends AFactory {
     }
 
     public ASystemException getSystemException(String systemExceptionName) {
-        return this.systemExceptions.getOrDefault(systemExceptionName, null);
+        return this.systemExceptions.get(systemExceptionName);
     }
 
     public String acquireTaskName(Class<? extends AProxyObject> clazz) {
-        return this.proxyObjectTasks.getOrDefault(clazz, null);
+        return this.proxyObjectTasks.get(clazz);
     }
 
     public boolean isTaskExist(String taskName) {
@@ -152,6 +163,11 @@ public class ProxyFactory extends AFactory {
         RemoteDefinition definition = remote.getDefinition();
 
         UUID[] handles = ObjectUtil.transferFromString(UUID[].class, definition.getValue());
+
+        if (ObjectUtil.isAnyNull(handles)) {
+            throw new StatusRelationshipErrorException();
+        }
+
         int handleLength = handles.length;
         RemoteObject[] remotes = new RemoteObject[handleLength];
 
@@ -235,19 +251,19 @@ public class ProxyFactory extends AFactory {
         return this.createSession(session);
     }
 
-    public <T> T getValue(Class<T> returnClass, RemoteObject remote) {
+    public <T> @Nullable T getValue(Class<T> returnClass, RemoteObject remote) {
         return ObjectUtil.transferFromString(returnClass, remote.getValue());
     }
 
-    public <T> Set<T> getSetValue(Class<T> returnClass, RemoteObject remote) {
+    public <T> @Nullable Set<T> getSetValue(Class<T> returnClass, RemoteObject remote) {
         return ObjectUtil.transferSetFromString(returnClass, remote.getValue());
     }
 
-    public <T> List<T> getListValue(Class<T> returnClass, RemoteObject remote) {
+    public <T> @Nullable List<T> getListValue(Class<T> returnClass, RemoteObject remote) {
         return ObjectUtil.transferListFromString(returnClass, remote.getValue());
     }
 
-    public <TK, TV> Map<TK, TV> getMapValue(Class<TK> returnKeyClass, Class<TV> returnValueClass, RemoteObject remote) {
+    public @Nullable <TK, TV> Map<TK, TV> getMapValue(Class<TK> returnKeyClass, Class<TV> returnValueClass, RemoteObject remote) {
         return ObjectUtil.transferMapFromString(returnKeyClass, returnValueClass, remote.getValue());
     }
 }

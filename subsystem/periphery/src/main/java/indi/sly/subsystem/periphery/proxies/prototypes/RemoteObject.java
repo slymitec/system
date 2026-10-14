@@ -11,14 +11,14 @@ import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RemoteObject extends ADefinitionObject<RemoteDefinition> {
+    @SuppressWarnings("NullAway.Init")
     protected ProxyFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected RemoteProcessorMediator processorMediator;
 
     public RemoteObject invoke(String method, Object... args) {

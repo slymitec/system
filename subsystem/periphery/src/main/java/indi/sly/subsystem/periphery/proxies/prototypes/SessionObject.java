@@ -16,6 +16,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SessionObject extends ADefinitionObject<SessionDefinition> {
+    @SuppressWarnings("NullAway.Init")
     protected ProxyFactory factory;
 
     public <T extends AManagerProxyObject> T getManagerProxy(Class<T> clazz, CallContextProcessRecord callContextProcess) {

@@ -13,6 +13,7 @@ import indi.sly.system.kernel.security.values.PrivilegeType;
 import indi.sly.system.kernel.services.instances.prototypes.ServiceContentObject;
 import indi.sly.system.kernel.services.instances.values.ServiceDefinition;
 import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -41,7 +42,7 @@ public class ServiceTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
+    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, @Nullable InfoOpenRecord infoOpen) {
         return ServiceContentObject.class;
     }
 }

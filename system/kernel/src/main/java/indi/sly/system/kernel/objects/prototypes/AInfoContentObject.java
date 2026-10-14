@@ -1,6 +1,6 @@
 package indi.sly.system.kernel.objects.prototypes;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
@@ -10,17 +10,18 @@ import indi.sly.system.kernel.objects.lang.InfoProcessorExecuteContentConsumer;
 import indi.sly.system.kernel.objects.lang.InfoProcessorReadContentFunction;
 import indi.sly.system.kernel.objects.lang.InfoProcessorWriteContentConsumer;
 import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator;
-import indi.sly.system.kernel.objects.values.*;
+import indi.sly.system.kernel.objects.values.InfoContentCacheEntity;
+import indi.sly.system.kernel.objects.values.InfoEntity;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.List;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class AInfoContentObject extends AChildCacheableObject<InfoContentCacheEntity, InfoObject> {
+    @SuppressWarnings("NullAway.Init")
     protected InfoProcessorMediator processorMediator;
 
     private InfoEntity getSelf(long lock) {
@@ -39,7 +40,7 @@ public abstract class AInfoContentObject extends AChildCacheableObject<InfoConte
 
         List<InfoProcessorReadContentFunction> resolvers = this.base.processorMediator.getReadContents();
 
-        byte[] source = null;
+        byte[] source = new byte[0];
 
         for (InfoProcessorReadContentFunction resolver : resolvers) {
             source = resolver.apply(source, info, type, this.getCache().getInfo());

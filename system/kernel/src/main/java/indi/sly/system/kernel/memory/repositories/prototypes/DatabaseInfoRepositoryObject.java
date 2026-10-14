@@ -16,6 +16,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -156,7 +157,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
     }
 
     @Override
-    public List<InfoRelationEntity> listRelation(InfoEntity info, InfoWildcardRecord wildcard) {
+    public List<InfoRelationEntity> listRelation(InfoEntity info, @Nullable InfoWildcardRecord wildcard) {
         if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
         }
@@ -166,7 +167,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
         criteriaQuery.select(root);
         criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), info.getId()));
-        if (!ValueUtil.isAnyNullOrEmpty(wildcard)) {
+        if (!ObjectUtil.isAnyNull(wildcard)) {
             if (wildcard.fuzzy()) {
                 if (wildcard.type() == String.class) {
                     String wildcardValue = StringUtil.readFormBytes(wildcard.value());
@@ -192,7 +193,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
     }
 
     @Override
-    public int countRelation(InfoEntity info, InfoWildcardRecord wildcard) {
+    public int countRelation(InfoEntity info, @Nullable InfoWildcardRecord wildcard) {
         if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
         }
@@ -202,7 +203,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), info.getId()));
-        if (!ValueUtil.isAnyNullOrEmpty(wildcard)) {
+        if (!ObjectUtil.isAnyNull(wildcard)) {
             if (wildcard.fuzzy()) {
                 if (wildcard.type() == String.class) {
                     String wildcardValue = StringUtil.readFormBytes(wildcard.value());

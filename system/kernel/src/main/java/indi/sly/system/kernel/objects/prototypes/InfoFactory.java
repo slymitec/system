@@ -5,8 +5,8 @@ import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.common.values.IdentifierRecord;
 import indi.sly.system.common.values.PathRecord;
-import indi.sly.system.kernel.core.environment.values.CacheDurationType;
 import indi.sly.system.kernel.core.environment.containers.KernelConfiguration;
+import indi.sly.system.kernel.core.environment.values.CacheDurationType;
 import indi.sly.system.kernel.core.environment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.core.prototypes.ObjectCollectionObject;
@@ -15,17 +15,17 @@ import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObje
 import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
 import indi.sly.system.kernel.objects.TypeManager;
 import indi.sly.system.kernel.objects.infotypes.prototypes.TypeObject;
-import indi.sly.system.kernel.objects.prototypes.processors.*;
 import indi.sly.system.kernel.objects.prototypes.mediators.InfoProcessorMediator;
+import indi.sly.system.kernel.objects.prototypes.processors.*;
 import indi.sly.system.kernel.objects.values.DumpCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoContentCacheEntity;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.security.values.SecurityDescriptorCacheEntity;
+import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.Collections;
 import java.util.List;
@@ -89,7 +89,7 @@ public class InfoFactory extends AFactory {
         return info;
     }
 
-    public InfoObject buildInfo(InfoEntity info, InfoCacheEntity parentInfoCache) {
+    public InfoObject buildInfo(InfoEntity info, @Nullable InfoCacheEntity parentInfoCache) {
         if (ObjectUtil.isAnyNull(info)) {
             throw new ConditionParametersException();
         }

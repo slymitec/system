@@ -8,6 +8,7 @@ import java.util.Objects;
 
 @REntity
 public class InfoContentCacheEntity extends ACacheEntity {
+    @SuppressWarnings("NullAway.Init")
     @RObjectField
     private InfoCacheEntity info;
 

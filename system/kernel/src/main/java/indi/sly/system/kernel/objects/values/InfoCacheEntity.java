@@ -10,8 +10,11 @@ import java.util.UUID;
 
 @REntity
 public class InfoCacheEntity extends ACacheEntity {
+    @SuppressWarnings("NullAway.Init")
     private UUID infoId;
+    @SuppressWarnings("NullAway.Init")
     private UUID poolId;
+    @SuppressWarnings("NullAway.Init")
     private PathRecord path;
 
     public UUID getInfoId() {

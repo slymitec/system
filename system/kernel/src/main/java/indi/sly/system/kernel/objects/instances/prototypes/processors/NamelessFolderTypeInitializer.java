@@ -1,21 +1,22 @@
 package indi.sly.system.kernel.objects.instances.prototypes.processors;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
+import indi.sly.system.common.lang.StatusIsUsedException;
+import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.IdentifierRecord;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
 import indi.sly.system.kernel.objects.instances.prototypes.NamelessFolderContentObject;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.*;
+import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.HashSet;
 import java.util.List;
@@ -120,7 +121,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
+    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, @Nullable InfoOpenRecord infoOpen) {
         return NamelessFolderContentObject.class;
     }
 }

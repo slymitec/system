@@ -1,6 +1,8 @@
 package indi.sly.system.kernel.objects.prototypes;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.ConditionContextException;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.UUIDUtil;
@@ -19,17 +21,19 @@ import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoTableObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.security.values.SecurityDescriptorCacheEntity;
+import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.*;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoObject extends ACacheableObject<InfoCacheEntity> {
+    @SuppressWarnings("NullAway.Init")
     protected InfoFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected InfoProcessorMediator processorMediator;
 
     private InfoEntity getSelf(long lock) {
@@ -98,7 +102,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         return processInfoEntry.getIndex();
     }
 
-    public InfoObject getParent() {
+    public @Nullable InfoObject getParent() {
         if (this.cache.getPath().identifiers().isEmpty()) {
             return null;
         } else {

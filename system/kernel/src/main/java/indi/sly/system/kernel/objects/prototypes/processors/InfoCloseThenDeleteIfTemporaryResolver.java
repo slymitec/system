@@ -36,7 +36,6 @@ public class InfoCloseThenDeleteIfTemporaryResolver extends AResolver implements
             }
 
             return info;
-
         };
     }
 

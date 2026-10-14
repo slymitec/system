@@ -8,9 +8,11 @@ import java.util.Set;
 import java.util.UUID;
 
 public class TypeDefinition extends ADefinition {
+    @SuppressWarnings("NullAway.Init")
     private String name;
     private long attribute;
     private final Set<UUID> childTypes;
+    @SuppressWarnings("NullAway.Init")
     private AInfoTypeInitializer initializer;
 
     public TypeDefinition() {

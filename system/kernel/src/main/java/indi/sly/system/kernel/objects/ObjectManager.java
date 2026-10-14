@@ -18,6 +18,7 @@ import jakarta.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ObjectManager extends AManager {
+    @SuppressWarnings("NullAway.Init")
     private InfoFactory factory;
 
     public InfoFactory getFactory() {

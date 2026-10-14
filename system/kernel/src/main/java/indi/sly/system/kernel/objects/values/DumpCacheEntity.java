@@ -15,9 +15,13 @@ public class DumpCacheEntity extends ACacheEntity {
     }
 
     private final Map<Long, Long> date;
+    @SuppressWarnings("NullAway.Init")
     private UUID processId;
+    @SuppressWarnings("NullAway.Init")
     private UUID accountId;
+    @SuppressWarnings("NullAway.Init")
     private PathRecord path;
+    @SuppressWarnings("NullAway.Init")
     private InfoOpenRecord infoOpen;
     private final List<SecurityDescriptorSummaryRecord> securityDescriptorSummary;
 

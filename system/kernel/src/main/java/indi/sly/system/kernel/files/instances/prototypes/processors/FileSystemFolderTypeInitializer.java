@@ -17,6 +17,7 @@ import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenRecord;
 import indi.sly.system.kernel.objects.values.InfoRelationEntity;
 import indi.sly.system.kernel.objects.values.InfoSummaryRecord;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -389,7 +390,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
+    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, @Nullable InfoOpenRecord infoOpen) {
         return FileSystemFolderContentObject.class;
     }
 }

@@ -23,6 +23,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TypeManager extends AManager {
+    @SuppressWarnings("NullAway.Init")
     protected TypeFactory factory;
 
     public TypeFactory getFactory() {

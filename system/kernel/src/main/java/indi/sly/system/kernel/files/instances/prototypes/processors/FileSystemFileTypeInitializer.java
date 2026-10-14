@@ -14,10 +14,11 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeI
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
 import indi.sly.system.kernel.objects.values.InfoEntity;
 import indi.sly.system.kernel.objects.values.InfoOpenRecord;
+import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import jakarta.inject.Named;
 import java.util.Map;
 import java.util.UUID;
 
@@ -35,7 +36,7 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
 
         entry.setType(FileSystemLocationType.REPOSITORY);
         entry.setValue(ArrayUtil.EMPTY_BYTES);
-        
+
         info.setContent(ObjectUtil.transferToJsonByteArray(entry));
     }
 
@@ -50,7 +51,7 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
     }
 
     @Override
-    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
+    public Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, @Nullable InfoOpenRecord infoOpen) {
         return FileSystemFileContentObject.class;
     }
 

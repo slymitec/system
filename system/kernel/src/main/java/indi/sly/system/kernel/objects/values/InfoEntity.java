@@ -13,24 +13,32 @@ import java.util.UUID;
 @Entity
 @Table(name = "Kernel_Infos")
 public class InfoEntity extends APersistentEntity {
+    @SuppressWarnings("NullAway.Init")
     @Id
     @Column(name = "Id", nullable = false, updatable = false)
     protected UUID id;
+    @SuppressWarnings("NullAway.Init")
     @Column(name = "Type", nullable = false)
     protected UUID type;
+    @SuppressWarnings("NullAway.Init")
     @Column(name = "Opened", nullable = false)
     protected long opened;
+    @SuppressWarnings("NullAway.Init")
     @Column(length = 256, name = "Name", nullable = true)
     protected String name;
+    @SuppressWarnings("NullAway.Init")
     @Column(columnDefinition = "json", name = "Date", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     protected Map<Long, Long> date;
+    @SuppressWarnings("NullAway.Init")
     @Column(columnDefinition = "json", name = "Security_Descriptor", nullable = true)
     @JdbcTypeCode(SqlTypes.JSON)
     protected SecurityDescriptorEntity securityDescriptor;
+    @SuppressWarnings("NullAway.Init")
     @Column(columnDefinition = "json", name = "Properties", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     protected Map<String, String> properties;
+    @SuppressWarnings("NullAway.Init")
     @Basic(fetch = FetchType.LAZY)
     @Column(length = 4096, name = "Content_Stream", nullable = true)
     @JdbcTypeCode(SqlTypes.VARBINARY)

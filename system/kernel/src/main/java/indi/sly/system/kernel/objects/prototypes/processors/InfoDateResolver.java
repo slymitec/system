@@ -25,7 +25,7 @@ public class InfoDateResolver extends AResolver implements IInfoResolver {
             long nowDateTime = dateTime.getCurrent();
 
             Map<Long, Long> date = info.getDate();
-            assert date != null;
+
             date.put(DateTimeType.ACCESS, nowDateTime);
 
             info.setDate(date);
@@ -38,7 +38,7 @@ public class InfoDateResolver extends AResolver implements IInfoResolver {
             long nowDateTime = dateTime.getCurrent();
 
             Map<Long, Long> date = childInfo.getDate();
-            assert date != null;
+
             date.put(DateTimeType.CREATE, nowDateTime);
             date.put(DateTimeType.MODIFIED, nowDateTime);
             date.put(DateTimeType.ACCESS, nowDateTime);
@@ -53,7 +53,7 @@ public class InfoDateResolver extends AResolver implements IInfoResolver {
             long nowDateTime = dateTime.getCurrent();
 
             Map<Long, Long> date = info.getDate();
-            assert date != null;
+
             date.put(DateTimeType.ACCESS, nowDateTime);
 
             info.setDate(date);
@@ -66,7 +66,7 @@ public class InfoDateResolver extends AResolver implements IInfoResolver {
             long nowDateTime = dateTime.getCurrent();
 
             Map<Long, Long> date = info.getDate();
-            assert date != null;
+
             date.put(DateTimeType.MODIFIED, nowDateTime);
 
             info.setDate(date);

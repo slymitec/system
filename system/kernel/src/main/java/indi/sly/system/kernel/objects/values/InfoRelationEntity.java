@@ -10,13 +10,17 @@ import java.util.UUID;
 @Entity
 @Table(name = "Kernel_Info_Relations")
 public class InfoRelationEntity extends APersistentEntity {
+    @SuppressWarnings("NullAway.Init")
     @Id
     @Column(name = "Id", nullable = false, updatable = false)
     protected UUID id;
+    @SuppressWarnings("NullAway.Init")
     @Column(name = "ParentId", nullable = false, updatable = false)
     protected UUID parentId;
+    @SuppressWarnings("NullAway.Init")
     @Column(name = "Type", nullable = false)
     protected UUID type;
+    @SuppressWarnings("NullAway.Init")
     @Column(length = 256, name = "Name", nullable = true)
     protected String name;
 

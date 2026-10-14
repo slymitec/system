@@ -24,6 +24,7 @@ import indi.sly.system.kernel.security.prototypes.AccountObject;
 import indi.sly.system.kernel.security.prototypes.GroupObject;
 import indi.sly.system.kernel.security.values.*;
 import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -32,6 +33,7 @@ import java.util.*;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDescriptorCacheEntity, InfoObject> {
+    @SuppressWarnings("NullAway.Init")
     protected InfoProcessorMediator processorMediator;
 
     private InfoEntity getSelf(long lock) {
@@ -239,7 +241,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         info.setSecurityDescriptor(securityDescriptor);
     }
 
-    private boolean denyPermission(long permission, PermissionQueryRecord permissionQueryFunc) {
+    private boolean denyPermission(long permission, @Nullable PermissionQueryRecord permissionQueryFunc) {
         if (!LogicalUtil.isAllSingleValue(permission) || LogicalUtil.isAnyExist(permission, PermissionType.FULLCONTROL_ALLOW << 1)) {
             throw new ConditionParametersException();
         }
@@ -400,7 +402,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         return !allow;
     }
 
-    public void checkPermission(long permission, PermissionQueryRecord permissionQueryFunc) {
+    public void checkPermission(long permission, @Nullable  PermissionQueryRecord permissionQueryFunc) {
         if (this.denyPermission(permission, permissionQueryFunc)) {
             throw new ConditionPermissionException();
         }

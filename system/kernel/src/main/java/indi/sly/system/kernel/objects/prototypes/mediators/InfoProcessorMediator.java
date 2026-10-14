@@ -28,8 +28,11 @@ public class InfoProcessorMediator extends AMediator {
         this.executeContents = new ArrayList<>();
     }
 
+    @SuppressWarnings("NullAway.Init")
     private InfoProcessorSelfFunction self;
+    @SuppressWarnings("NullAway.Init")
     private InfoProcessorParentFunction parent;
+    @SuppressWarnings("NullAway.Init")
     private InfoProcessorSecurityDescriptorFunction securityDescriptor;
     private final List<InfoProcessorDumpFunction> dumps;
     private final List<InfoProcessorOpenFunction> opens;

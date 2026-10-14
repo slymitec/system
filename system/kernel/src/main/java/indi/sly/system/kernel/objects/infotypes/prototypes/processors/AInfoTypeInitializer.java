@@ -1,17 +1,15 @@
 package indi.sly.system.kernel.objects.infotypes.prototypes.processors;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.StatusNotSupportedException;
+import indi.sly.system.common.lang.StatusOverflowException;
 import indi.sly.system.common.values.IdentifierRecord;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.processors.AInitializer;
-import indi.sly.system.kernel.memory.MemoryManager;
-import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
-import indi.sly.system.kernel.objects.values.*;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
+import indi.sly.system.kernel.objects.values.*;
+import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.Map;
 import java.util.Set;
@@ -72,7 +70,7 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         info.setProperties(properties);
     }
 
-    public abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, InfoOpenRecord infoOpen);
+    public abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, @Nullable InfoOpenRecord infoOpen);
 
     public byte[] readContentProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
         return info.getContent();

@@ -2,7 +2,10 @@ package indi.sly.system.kernel.objects.values;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusUnreadableException;
-import indi.sly.system.common.supports.*;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.supports.UUIDUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonGenerator;
 import tools.jackson.core.JsonParser;
@@ -42,12 +45,12 @@ public record InfoWildcardRecord(byte[] value, Class<?> type, boolean fuzzy) {
 
     public static class InfoWildcardDefinitionSerializer extends ValueSerializer<InfoWildcardRecord> {
         @Override
-        public void serializeWithType(InfoWildcardRecord value, JsonGenerator generator, SerializationContext ctxt, TypeSerializer typeSer) throws JacksonException {
-            this.serialize(value, generator, ctxt);
+        public void serializeWithType(InfoWildcardRecord value, JsonGenerator generator, SerializationContext serializationContext, TypeSerializer typeSer) throws JacksonException {
+            this.serialize(value, generator, serializationContext);
         }
 
         @Override
-        public void serialize(InfoWildcardRecord value, JsonGenerator generator, SerializationContext ctxt) throws JacksonException {
+        public void serialize(InfoWildcardRecord value, JsonGenerator generator, SerializationContext serializationContext) throws JacksonException {
             if (value.type == String.class) {
                 generator.writeString(StringUtil.readFormBytes(value.value));
             } else if (value.type == UUID.class) {

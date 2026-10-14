@@ -9,9 +9,12 @@ import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.environment.containers.KernelSpace;
-import indi.sly.system.kernel.core.environment.values.SpaceType;
 import indi.sly.system.kernel.core.environment.containers.UserSpace;
-import indi.sly.system.kernel.core.prototypes.*;
+import indi.sly.system.kernel.core.environment.values.SpaceType;
+import indi.sly.system.kernel.core.prototypes.APrototype;
+import indi.sly.system.kernel.core.prototypes.CoreFactory;
+import indi.sly.system.kernel.core.prototypes.ObjectCollectionObject;
+import indi.sly.system.kernel.core.prototypes.PrototypeBuilder;
 import indi.sly.system.kernel.core.systemversion.prototypes.SystemVersionObject;
 import indi.sly.system.kernel.files.FileSystemManager;
 import indi.sly.system.kernel.memory.MemoryManager;
@@ -21,15 +24,15 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.ThreadManager;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.services.ServiceManager;
+import jakarta.inject.Named;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import jakarta.inject.Named;
-
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CoreManager extends AManager {
+    @SuppressWarnings("NullAway.Init")
     private CoreFactory factory;
 
     public CoreFactory getFactory() {
@@ -79,7 +82,9 @@ public class CoreManager extends AManager {
         }
     }
 
+    @SuppressWarnings("NullAway.Init")
     private PrototypeBuilder prototypeBuilder;
+    @SuppressWarnings("NullAway.Init")
     private ObjectCollectionObject objectCollection;
 
     public ObjectCollectionObject getObjectCollection() {
@@ -110,11 +115,11 @@ public class CoreManager extends AManager {
         return SpringHelper.getInstance(KernelSpace.class);
     }
 
-    public UserSpace getUserSpace() {
+    public @Nullable UserSpace getUserSpace() {
         return this.getKernelSpace().getUserSpace();
     }
 
-    public void setUserSpace(UserSpace userSpace) {
+    public void setUserSpace(@Nullable UserSpace userSpace) {
         this.getKernelSpace().setUserSpace(userSpace);
     }
 

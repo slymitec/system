@@ -7,6 +7,7 @@ import java.util.Objects;
 
 @REntity
 public class SystemVersionCacheEntity extends ACacheEntity {
+    @SuppressWarnings("NullAway.Init")
     private String systemVersion;
 
     public String getSystemVersion() {

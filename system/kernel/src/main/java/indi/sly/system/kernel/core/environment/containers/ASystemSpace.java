@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.core.environment.containers;
 
 import indi.sly.system.common.containers.ASpace;
+import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AObject;
@@ -43,7 +44,7 @@ public abstract class ASystemSpace extends ASpace {
         } else if (LogicalUtil.isAnyEqual(lock, LockType.WRITE)) {
             return this.objectWriteLock;
         } else {
-            return null;
+            throw new StatusNotSupportedException();
         }
     }
 }

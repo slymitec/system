@@ -1,5 +1,6 @@
 package indi.sly.system.kernel.core.prototypes;
 
+import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
 import indi.sly.system.common.lang.StatusNotSupportedException;
@@ -19,11 +20,19 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
     @Nullable
     protected T cache;
 
-    public final @Nullable T getCache() {
+    public final T getCache() {
+        if (ObjectUtil.isNull(this.cache)) {
+            throw new StatusNotSupportedException();
+        }
+
         return this.cache;
     }
 
-    public final void setCache(@Nullable T cache) {
+    public final void setCache(T cache) {
+        if (ObjectUtil.isAnyNull(cache)) {
+            throw new ConditionParametersException();
+        }
+
         this.cache = cache;
     }
 

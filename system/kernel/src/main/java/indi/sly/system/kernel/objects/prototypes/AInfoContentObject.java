@@ -24,11 +24,11 @@ public abstract class AInfoContentObject extends AChildCacheableObject<InfoConte
     protected InfoProcessorMediator processorMediator;
 
     private InfoEntity getSelf(long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfo().getInfoId())) {
+        if (ValueUtil.isAnyNullOrEmpty(this.getCache().getInfo().getInfoId())) {
             throw new ConditionContextException();
         }
 
-        return this.processorMediator.getSelf().apply(this.cache.getInfo(), lock);
+        return this.processorMediator.getSelf().apply(this.getCache().getInfo(), lock);
     }
 
     public byte[] read() {
@@ -42,7 +42,7 @@ public abstract class AInfoContentObject extends AChildCacheableObject<InfoConte
         byte[] source = null;
 
         for (InfoProcessorReadContentFunction resolver : resolvers) {
-            source = resolver.apply(source, info, type, this.cache.getInfo());
+            source = resolver.apply(source, info, type, this.getCache().getInfo());
         }
 
         return source;
@@ -57,7 +57,7 @@ public abstract class AInfoContentObject extends AChildCacheableObject<InfoConte
         List<InfoProcessorWriteContentConsumer> resolvers = this.base.processorMediator.getWriteContents();
 
         for (InfoProcessorWriteContentConsumer resolver : resolvers) {
-            resolver.accept(info, type, this.cache.getInfo(), source);
+            resolver.accept(info, type, this.getCache().getInfo(), source);
         }
     }
 
@@ -70,7 +70,7 @@ public abstract class AInfoContentObject extends AChildCacheableObject<InfoConte
         List<InfoProcessorExecuteContentConsumer> resolvers = this.base.processorMediator.getExecuteContents();
 
         for (InfoProcessorExecuteContentConsumer resolver : resolvers) {
-            resolver.accept(info, type, this.cache.getInfo());
+            resolver.accept(info, type, this.getCache().getInfo());
         }
     }
 }

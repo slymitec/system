@@ -3,6 +3,7 @@ package indi.sly.system.kernel.core.prototypes;
 import indi.sly.system.common.values.ADefinition;
 
 public class ADefinitionObject<T extends ADefinition> extends AObject {
+    @SuppressWarnings("NullAway.Init")
     protected T definition;
 
     public T getDefinition() {

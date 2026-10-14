@@ -5,8 +5,10 @@ import org.redisson.api.annotation.RId;
 import java.util.UUID;
 
 public abstract class ACacheEntity extends AEntity {
+    @SuppressWarnings("NullAway.Init")
     @RId
     protected UUID id;
+    @SuppressWarnings("NullAway.Init")
     protected Long duration;
 
     public UUID getId() {

@@ -12,6 +12,7 @@ import jakarta.inject.Named;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class BootObject extends ADefinitionObject<BootDefinition> implements IStartupCapable {
+    @SuppressWarnings("NullAway.Init")
     protected BootProcessorMediator processorMediator;
 
     @Override

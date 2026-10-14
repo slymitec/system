@@ -1,9 +1,15 @@
 package indi.sly.system.kernel.core.prototypes;
 
-import indi.sly.system.common.lang.*;
-import indi.sly.system.common.supports.*;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusAlreadyExistedException;
+import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.lang.StatusNotReadyException;
+import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.environment.containers.ASystemSpace;
+import indi.sly.system.kernel.core.environment.containers.UserSpace;
 import indi.sly.system.kernel.core.environment.values.SpaceType;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -20,20 +26,20 @@ public class ObjectCollectionObject extends AObject {
         if (LogicalUtil.isAnyEqual(space, SpaceType.KERNEL)) {
             return this.coreManager.getKernelSpace();
         } else if (LogicalUtil.isAnyEqual(space, SpaceType.USER)) {
-            return this.coreManager.getUserSpace();
+            UserSpace userSpace = this.coreManager.getUserSpace();
+
+            if (ObjectUtil.isAnyNull(userSpace)) {
+                throw new StatusNotReadyException();
+            }
+
+            return userSpace;
         } else {
             throw new ConditionParametersException();
         }
     }
 
     public Lock getLock(long space, long lock) {
-        Lock readWriteLock = this.getSpace(space).getObjectLock(lock);
-
-        if (ObjectUtil.isAnyNull(readWriteLock)) {
-            throw new StatusNotSupportedException();
-        }
-
-        return readWriteLock;
+        return this.getSpace(space).getObjectLock(lock);
     }
 
     @SuppressWarnings("unchecked")
@@ -48,7 +54,7 @@ public class ObjectCollectionObject extends AObject {
         try {
             Map<UUID, AObject> objects = this.getSpace(space).getObjects();
 
-            AObject object = objects.getOrDefault(id, null);
+            AObject object = objects.get(id);
             if (ObjectUtil.isAnyNull(object)) {
                 throw new StatusNotExistedException();
             }
@@ -71,7 +77,7 @@ public class ObjectCollectionObject extends AObject {
         try {
             Map<Class<? extends AObject>, AObject> classedObjects = this.getSpace(space).getClassedObjects();
 
-            AObject object = classedObjects.getOrDefault(clazz, null);
+            AObject object = classedObjects.get(clazz);
             if (ObjectUtil.isAnyNull(object)) {
                 throw new StatusNotExistedException();
             }
@@ -180,7 +186,7 @@ public class ObjectCollectionObject extends AObject {
         try {
             Map<UUID, AObject> objects = this.getSpace(space).getObjects();
 
-            AObject object = objects.getOrDefault(id, null);
+            AObject object = objects.get(id);
             if (ObjectUtil.isAnyNull(object)) {
                 throw new StatusNotExistedException();
             }
@@ -202,7 +208,7 @@ public class ObjectCollectionObject extends AObject {
         try {
             Map<Class<? extends AObject>, AObject> classedObjects = this.getSpace(space).getClassedObjects();
 
-            AObject object = classedObjects.getOrDefault(clazz, null);
+            AObject object = classedObjects.get(clazz);
             if (ObjectUtil.isAnyNull(object)) {
                 throw new StatusNotExistedException();
             }

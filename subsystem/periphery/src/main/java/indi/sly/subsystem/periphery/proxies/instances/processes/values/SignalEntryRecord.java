@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public record SignalEntryRecord(UUID source, long key, long value, Map<Long, Long> date) {
     public SignalEntryRecord {
-        if (ObjectUtil.isAnyNull(date)) {
+        if (ObjectUtil.isNull(date)) {
             throw new ConditionParametersException();
         }
     }

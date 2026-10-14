@@ -28,7 +28,7 @@ public class ObjectCollectionObject extends AObject {
         } else if (LogicalUtil.isAnyEqual(space, SpaceType.USER)) {
             UserSpace userSpace = this.coreManager.getUserSpace();
 
-            if (ObjectUtil.isAnyNull(userSpace)) {
+            if (ObjectUtil.isNull(userSpace)) {
                 throw new StatusNotReadyException();
             }
 
@@ -55,7 +55,7 @@ public class ObjectCollectionObject extends AObject {
             Map<UUID, AObject> objects = this.getSpace(space).getObjects();
 
             AObject object = objects.get(id);
-            if (ObjectUtil.isAnyNull(object)) {
+            if (ObjectUtil.isNull(object)) {
                 throw new StatusNotExistedException();
             }
 
@@ -67,7 +67,7 @@ public class ObjectCollectionObject extends AObject {
 
     @SuppressWarnings("unchecked")
     public <T extends AObject> T getByClass(long space, Class<T> clazz) {
-        if (ObjectUtil.isAnyNull(clazz)) {
+        if (ObjectUtil.isNull(clazz)) {
             throw new ConditionParametersException();
         }
 
@@ -78,7 +78,7 @@ public class ObjectCollectionObject extends AObject {
             Map<Class<? extends AObject>, AObject> classedObjects = this.getSpace(space).getClassedObjects();
 
             AObject object = classedObjects.get(clazz);
-            if (ObjectUtil.isAnyNull(object)) {
+            if (ObjectUtil.isNull(object)) {
                 throw new StatusNotExistedException();
             }
 
@@ -89,11 +89,11 @@ public class ObjectCollectionObject extends AObject {
     }
 
     public <T extends AObject> void addById(long space, UUID id, T object) {
-        if (ValueUtil.isAnyNullOrEmpty(id) || ObjectUtil.isAnyNull(object)) {
+        if (ValueUtil.isAnyNullOrEmpty(id) || ObjectUtil.isNull(object)) {
             throw new ConditionParametersException();
         }
 
-        if (ObjectUtil.isAnyNull(object.coreManager)) {
+        if (ObjectUtil.isNull(object.coreManager)) {
             object.coreManager = this.coreManager;
         }
 
@@ -114,10 +114,10 @@ public class ObjectCollectionObject extends AObject {
     }
 
     public <T extends AObject> void addByClass(long space, T object) {
-        if (ObjectUtil.isAnyNull(object)) {
+        if (ObjectUtil.isNull(object)) {
             throw new ConditionParametersException();
         }
-        if (ObjectUtil.isAnyNull(object.coreManager)) {
+        if (ObjectUtil.isNull(object.coreManager)) {
             object.coreManager = this.coreManager;
         }
 
@@ -157,7 +157,7 @@ public class ObjectCollectionObject extends AObject {
     }
 
     public <T extends AObject> boolean containByClass(long space, Class<T> clazz) {
-        if (ObjectUtil.isAnyNull(clazz)) {
+        if (ObjectUtil.isNull(clazz)) {
             throw new ConditionParametersException();
         }
 
@@ -185,7 +185,7 @@ public class ObjectCollectionObject extends AObject {
             Map<UUID, AObject> objects = this.getSpace(space).getObjects();
 
             AObject object = objects.get(id);
-            if (ObjectUtil.isAnyNull(object)) {
+            if (ObjectUtil.isNull(object)) {
                 throw new StatusNotExistedException();
             }
 
@@ -196,7 +196,7 @@ public class ObjectCollectionObject extends AObject {
     }
 
     public <T extends AObject> void deleteByClass(long space, Class<T> clazz) {
-        if (ObjectUtil.isAnyNull(clazz)) {
+        if (ObjectUtil.isNull(clazz)) {
             throw new ConditionParametersException();
         }
 
@@ -207,7 +207,7 @@ public class ObjectCollectionObject extends AObject {
             Map<Class<? extends AObject>, AObject> classedObjects = this.getSpace(space).getClassedObjects();
 
             AObject object = classedObjects.get(clazz);
-            if (ObjectUtil.isAnyNull(object)) {
+            if (ObjectUtil.isNull(object)) {
                 throw new StatusNotExistedException();
             }
 

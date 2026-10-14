@@ -9,7 +9,7 @@ import java.util.*;
 public record AccountAuthorizationSummaryRecord(UUID id, String name, String password,
                                                 AccountAuthorizationTokenRecord token, Set<UUID> sessions) {
     public AccountAuthorizationSummaryRecord {
-        if (ObjectUtil.isAnyNull(sessions)) {
+        if (ObjectUtil.isNull(sessions)) {
             throw new ConditionParametersException();
         }
     }

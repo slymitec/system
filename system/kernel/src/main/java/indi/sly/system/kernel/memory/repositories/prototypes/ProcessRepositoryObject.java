@@ -32,7 +32,7 @@ public class ProcessRepositoryObject extends AObject {
 
         ProcessEntity process = this.entityManager.find(ProcessEntity.class, id);
 
-        return ObjectUtil.allNotNull(process);
+        return ObjectUtil.notNull(process);
     }
 
     public ProcessEntity get(UUID id) {
@@ -42,7 +42,7 @@ public class ProcessRepositoryObject extends AObject {
 
         ProcessEntity process = this.entityManager.find(ProcessEntity.class, id);
 
-        if (ObjectUtil.isAnyNull(process)) {
+        if (ObjectUtil.isNull(process)) {
             throw new StatusNotExistedException();
         }
 
@@ -66,13 +66,13 @@ public class ProcessRepositoryObject extends AObject {
         }
 
         ProcessEntity process;
-        if (ObjectUtil.allNotNull(lockMode)) {
+        if (ObjectUtil.notNull(lockMode)) {
             process = this.entityManager.find(ProcessEntity.class, id, lockMode);
         } else {
             process = this.entityManager.find(ProcessEntity.class, id);
         }
 
-        if (ObjectUtil.isAnyNull(process)) {
+        if (ObjectUtil.isNull(process)) {
             throw new StatusNotExistedException();
         }
 
@@ -80,7 +80,7 @@ public class ProcessRepositoryObject extends AObject {
     }
 
     public ProcessEntity add(ProcessEntity process) {
-        if (ObjectUtil.isAnyNull(process)) {
+        if (ObjectUtil.isNull(process)) {
             throw new ConditionParametersException();
         }
 
@@ -92,7 +92,7 @@ public class ProcessRepositoryObject extends AObject {
     }
 
     public void delete(ProcessEntity process) {
-        if (ObjectUtil.isAnyNull(process)) {
+        if (ObjectUtil.isNull(process)) {
             throw new ConditionParametersException();
         }
 

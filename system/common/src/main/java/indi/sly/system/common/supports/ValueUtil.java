@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public abstract class ValueUtil {
     public static boolean isAnyNullOrEmpty(@Nullable Object value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             return true;
         }
 

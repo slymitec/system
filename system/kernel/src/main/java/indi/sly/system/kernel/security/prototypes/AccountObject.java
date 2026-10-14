@@ -74,7 +74,7 @@ public class AccountObject extends ACacheableObject<AccountCacheEntity> {
     }
 
     public void setGroups(Set<GroupObject> groups) {
-        if (ObjectUtil.isAnyNull(groups)) {
+        if (ObjectUtil.isNull(groups)) {
             throw new ConditionParametersException();
         }
 
@@ -92,7 +92,7 @@ public class AccountObject extends ACacheableObject<AccountCacheEntity> {
 
         AccountEntity account = this.getSelf(LockType.WRITE);
 
-        if (ObjectUtil.isAnyNull(account.getGroups())) {
+        if (ObjectUtil.isNull(account.getGroups())) {
             account.setGroups(new ArrayList<>());
         } else {
             account.getGroups().clear();

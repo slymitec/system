@@ -31,7 +31,7 @@ public class AccountBuilder extends ABuilder {
         if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }
-        if (ObjectUtil.isAnyNull(accountPassword)) {
+        if (ObjectUtil.isNull(accountPassword)) {
             accountPassword = StringUtil.EMPTY;
         }
 

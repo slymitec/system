@@ -8,7 +8,7 @@ import java.util.List;
 
 public record ClientRequestRecord(String method, List<String> parameters) {
     public ClientRequestRecord {
-        if (ObjectUtil.isAnyNull(parameters)) {
+        if (ObjectUtil.isNull(parameters)) {
             parameters = new ArrayList<>();
         }
     }

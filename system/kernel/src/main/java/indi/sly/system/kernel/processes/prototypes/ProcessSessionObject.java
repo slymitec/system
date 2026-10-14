@@ -49,7 +49,7 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
             source = resolver.apply(source, process);
         }
 
-        if (ObjectUtil.isAnyNull(source)) {
+        if (ObjectUtil.isNull(source)) {
             throw new StatusNotReadyException();
         }
 

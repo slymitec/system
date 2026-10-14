@@ -69,7 +69,7 @@ public class JobFactory extends AFactory {
     }
 
     public TaskObject buildTask(TaskDefinition task, UUID handle) {
-        if (ObjectUtil.isAnyNull(task)) {
+        if (ObjectUtil.isNull(task)) {
             throw new ConditionParametersException();
         }
 
@@ -98,7 +98,7 @@ public class JobFactory extends AFactory {
     }
 
     public CallContextObject buildUserContext(CallContextDefinition userContext) {
-        if (ObjectUtil.isAnyNull(userContext)) {
+        if (ObjectUtil.isNull(userContext)) {
             throw new ConditionParametersException();
         }
 

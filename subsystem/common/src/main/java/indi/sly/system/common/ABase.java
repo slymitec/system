@@ -11,11 +11,10 @@ public abstract class ABase {
         super();
     }
 
-    @SuppressWarnings("NullAway.Init")
     private Log _logger;
 
     protected synchronized final Log logger() {
-        if (ObjectUtil.isAnyNull(this._logger)) {
+        if (ObjectUtil.isNull(this._logger)) {
             this._logger = LogFactory.getLog(this.getClass());
         }
 

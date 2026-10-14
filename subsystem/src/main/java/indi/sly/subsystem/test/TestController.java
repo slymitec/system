@@ -37,14 +37,14 @@ public class TestController {
 
         this.coreManager = (CoreManager) kernelSpace.getClassedObjects().getOrDefault(CoreManager.class, null);
 
-        if (ObjectUtil.allNotNull(this.coreManager)) {
+        if (ObjectUtil.notNull(this.coreManager)) {
             this.coreManager.check();
         }
     }
 
     @RequestMapping(value = {"/test"}, method = {RequestMethod.GET, RequestMethod.POST})
     public Object test() {
-        if (ObjectUtil.isAnyNull(this.coreManager)) {
+        if (ObjectUtil.isNull(this.coreManager)) {
             this.init();
         }
 
@@ -69,7 +69,7 @@ public class TestController {
 
     @RequestMapping(value = {"/test1"}, method = {RequestMethod.GET, RequestMethod.POST})
     public Object test1() {
-        if (ObjectUtil.isAnyNull(this.coreManager)) {
+        if (ObjectUtil.isNull(this.coreManager)) {
             this.init();
         }
 
@@ -94,7 +94,7 @@ public class TestController {
 
     @RequestMapping(value = {"/test1r"}, method = {RequestMethod.GET, RequestMethod.POST})
     public Object test1r() {
-        if (ObjectUtil.isAnyNull(this.coreManager)) {
+        if (ObjectUtil.isNull(this.coreManager)) {
             this.init();
         }
 
@@ -141,7 +141,7 @@ public class TestController {
 
     @RequestMapping(value = {"/test2"}, method = {RequestMethod.GET, RequestMethod.POST})
     public Object test2() {
-        if (ObjectUtil.isAnyNull(this.coreManager)) {
+        if (ObjectUtil.isNull(this.coreManager)) {
             this.init();
         }
 
@@ -172,7 +172,7 @@ public class TestController {
 
     @RequestMapping(value = {"/test3"}, method = {RequestMethod.GET, RequestMethod.POST})
     public Object test3() {
-        if (ObjectUtil.isAnyNull(this.coreManager)) {
+        if (ObjectUtil.isNull(this.coreManager)) {
             this.init();
         }
 
@@ -202,7 +202,7 @@ public class TestController {
 
     @RequestMapping(value = {"/test4"}, method = {RequestMethod.GET, RequestMethod.POST})
     public Object test4() {
-        if (ObjectUtil.isAnyNull(this.coreManager)) {
+        if (ObjectUtil.isNull(this.coreManager)) {
             this.init();
         }
 

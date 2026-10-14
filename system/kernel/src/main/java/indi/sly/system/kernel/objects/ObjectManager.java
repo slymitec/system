@@ -42,7 +42,7 @@ public class ObjectManager extends AManager {
     public InfoObject get(PathRecord path) {
         KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
 
-        if (ObjectUtil.isAnyNull(path) || path.identifiers().size() > kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH) {
+        if (ObjectUtil.isNull(path) || path.identifiers().size() > kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH) {
             throw new ConditionParametersException();
         }
 

@@ -37,7 +37,7 @@ public class KernelSpace extends ASystemSpace {
     }
 
     public void setUserSpace(@Nullable UserSpace userSpace) {
-        if (ObjectUtil.isAnyNull(userSpace)) {
+        if (ObjectUtil.isNull(userSpace)) {
             this.userSpace.remove();
         } else {
             this.userSpace.set(userSpace);

@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Scope;
 public class TaskCacheableObjectResolver extends AResolver implements ITaskResolver {
     public TaskCacheableObjectResolver() {
         this.content = (task, status, threadContext) -> {
-            if (!LogicalUtil.isAnyExist(task.getAttribute(), TaskAttributeType.OBJECT_IS_NOT_CACHEABLE) && ObjectUtil.isAnyNull(threadContext.getCacheableObject())) {
+            if (!LogicalUtil.isAnyExist(task.getAttribute(), TaskAttributeType.OBJECT_IS_NOT_CACHEABLE) && ObjectUtil.isNull(threadContext.getCacheableObject())) {
                 ATaskInitializer initializer = task.getInitializer();
 
                 ACacheableObject<?> cacheableObject = initializer.getCacheableObject(status.getHandle());

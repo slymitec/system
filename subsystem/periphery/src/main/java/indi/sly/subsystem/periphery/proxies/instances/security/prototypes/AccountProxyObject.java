@@ -45,7 +45,7 @@ public class AccountProxyObject extends AProxyObject {
     public void setGroups(Set<GroupProxyObject> groups) {
         Set<UUID> handles = new HashSet<>();
 
-        if (ObjectUtil.allNotNull(groups)) {
+        if (ObjectUtil.notNull(groups)) {
             for (GroupProxyObject group : groups) {
                 handles.add(group.getHandle());
             }

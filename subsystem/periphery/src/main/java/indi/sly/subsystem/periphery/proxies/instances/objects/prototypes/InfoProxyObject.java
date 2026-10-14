@@ -130,7 +130,7 @@ public class InfoProxyObject extends AProxyObject {
     }
 
     public <T extends AInfoContentProxyObject> T getContent(Class<T> contentClazz) {
-        if (ObjectUtil.isAnyNull(contentClazz)) {
+        if (ObjectUtil.isNull(contentClazz)) {
             throw new ConditionParametersException();
         }
 

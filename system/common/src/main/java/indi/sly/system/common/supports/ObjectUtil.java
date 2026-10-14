@@ -1,6 +1,8 @@
 package indi.sly.system.common.supports;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.Provider;
+import indi.sly.system.common.lang.StatusUnexpectedException;
 import org.apache.fory.Fory;
 import org.apache.fory.ThreadSafeFory;
 import org.apache.fory.config.Language;
@@ -20,10 +22,6 @@ public abstract class ObjectUtil {
     private static final ThreadSafeFory SERIALIZATION_BINARY = Fory.builder().withLanguage(Language.JAVA).withAsyncCompilation(true).requireClassRegistration(false).buildThreadSafeFory();
 
     public static boolean isNull(@Nullable final Object value) {
-        return ObjectUtil.isAnyNull(value);
-    }
-
-    public static boolean isAnyNull(@Nullable final Object value) {
         if (value == null) {
             return true;
         } else {
@@ -32,7 +30,7 @@ public abstract class ObjectUtil {
     }
 
     public static boolean isAnyNull(@Nullable final Object... values) {
-        if (values == null || values.length == 0) {
+        if (values.length == 0) {
             return true;
         } else {
             for (Object value : values) {
@@ -44,6 +42,7 @@ public abstract class ObjectUtil {
         }
     }
 
+
     public static boolean notNull(@Nullable final Object value) {
         if (value == null) {
             return false;
@@ -52,16 +51,8 @@ public abstract class ObjectUtil {
         }
     }
 
-    public static boolean allNotNull(@Nullable final Object value) {
-        if (value == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public static boolean allNotNull(@Nullable final Object... values) {
-        if (values == null || values.length == 0) {
+        if (values.length == 0) {
             return false;
         } else {
             for (Object value : values) {
@@ -132,7 +123,7 @@ public abstract class ObjectUtil {
     }
 
     public static int hashCode(@Nullable Object value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             return 0;
         }
 
@@ -174,7 +165,7 @@ public abstract class ObjectUtil {
     }
 
     public static String toString(@Nullable Object value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             return ObjectUtil.TO_STRING_NULL_OBJECT;
         }
         return value.toString();

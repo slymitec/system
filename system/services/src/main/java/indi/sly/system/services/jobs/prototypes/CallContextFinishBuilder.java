@@ -20,7 +20,7 @@ public class CallContextFinishBuilder extends ABuilder {
     protected CallContextProcessorMediator processorMediator;
 
     public void finish(CallContextObject userContext) {
-        if (ObjectUtil.isAnyNull(userContext)) {
+        if (ObjectUtil.isNull(userContext)) {
             throw new ConditionParametersException();
         }
 

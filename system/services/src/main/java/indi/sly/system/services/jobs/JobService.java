@@ -105,7 +105,7 @@ public class JobService extends AService {
     protected JobFactory factory;
 
     private void createTask(String name, long attribute, @Nullable UUID processId, ATaskInitializer initializer) {
-        if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(initializer)) {
+        if (StringUtil.isNameIllegal(name) || ObjectUtil.isNull(initializer)) {
             throw new ConditionParametersException();
         }
 
@@ -129,7 +129,7 @@ public class JobService extends AService {
 
         TaskDefinition task = serviceSpace.getTasks().get(taskId);
 
-        if (ObjectUtil.isAnyNull(task)) {
+        if (ObjectUtil.isNull(task)) {
             throw new StatusNotExistedException();
         }
 
@@ -137,7 +137,7 @@ public class JobService extends AService {
     }
 
     public CallContextObject createCallContext(CallContextRecord callContext) {
-        if (ObjectUtil.isAnyNull(callContext)) {
+        if (ObjectUtil.isNull(callContext)) {
             throw new ConditionParametersException();
         }
 
@@ -147,7 +147,7 @@ public class JobService extends AService {
     }
 
     public void endCallContext(CallContextObject callContext) {
-        if (ObjectUtil.isAnyNull(callContext)) {
+        if (ObjectUtil.isNull(callContext)) {
             throw new ConditionParametersException();
         }
 

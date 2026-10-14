@@ -93,7 +93,7 @@ public class ProcessManager extends AManager {
 
         if (!currentProcessToken.getAccountId().equals(processToken.getAccountId())
                 && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
-                && !(ObjectUtil.allNotNull(accountAuthorization) && accountAuthorization.checkAndGetSummary().id().equals(processToken.getAccountId())))
+                && !(ObjectUtil.notNull(accountAuthorization) && accountAuthorization.checkAndGetSummary().id().equals(processToken.getAccountId())))
                 && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
             throw new ConditionRefuseException();
         }
@@ -112,11 +112,11 @@ public class ProcessManager extends AManager {
 
         ProcessCreatorRecord processCreator = new ProcessCreatorRecord(
                 accountAuthorization,
-                !ObjectUtil.allNotNull(additionalCreator) || additionalCreator.inheritSession(),
-                ObjectUtil.allNotNull(additionalCreator) ? additionalCreator.contextType() : ProcessContextType.EXECUTABLE,
+                !ObjectUtil.notNull(additionalCreator) || additionalCreator.inheritSession(),
+                ObjectUtil.notNull(additionalCreator) ? additionalCreator.contextType() : ProcessContextType.EXECUTABLE,
                 fileIndex,
                 !ValueUtil.isAnyNullOrEmpty(parameters) ? parameters : StringUtil.EMPTY,
-                ObjectUtil.allNotNull(workFolder) && !workFolder.identifiers().isEmpty() ? workFolder : null
+                ObjectUtil.notNull(workFolder) && !workFolder.identifiers().isEmpty() ? workFolder : null
         );
 
         ProcessObject process = this.getCurrent();

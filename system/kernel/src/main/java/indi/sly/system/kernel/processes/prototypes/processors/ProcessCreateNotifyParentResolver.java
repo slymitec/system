@@ -19,7 +19,7 @@ public class ProcessCreateNotifyParentResolver extends AResolver implements IPro
 
     public ProcessCreateNotifyParentResolver() {
         this.create = (process, parentProcess, processCreator) -> {
-            if (ObjectUtil.allNotNull(parentProcess)) {
+            if (ObjectUtil.notNull(parentProcess)) {
                 ProcessCommunicationObject parentProcessCommunication = parentProcess.getCommunication();
 
                 if (parentProcessCommunication.isSignalExist()) {

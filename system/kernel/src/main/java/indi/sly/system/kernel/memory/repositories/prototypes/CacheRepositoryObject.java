@@ -45,7 +45,7 @@ public class CacheRepositoryObject extends AObject {
     }
 
     public <T extends ACacheEntity> T get(Class<T> clazz, UUID id) {
-        if (ObjectUtil.isAnyNull(clazz) || ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(clazz) || ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -59,7 +59,7 @@ public class CacheRepositoryObject extends AObject {
     }
 
     public <T extends ACacheEntity> Collection<T> gets(Class<T> clazz, Condition condition) {
-        if (ObjectUtil.isAnyNull(condition)) {
+        if (ObjectUtil.isNull(condition)) {
             throw new ConditionParametersException();
         }
 
@@ -67,7 +67,7 @@ public class CacheRepositoryObject extends AObject {
     }
 
     public <T extends ACacheEntity> T add(T cache) {
-        if (ObjectUtil.isAnyNull(cache)) {
+        if (ObjectUtil.isNull(cache)) {
             throw new ConditionParametersException();
         }
 
@@ -123,7 +123,7 @@ public class CacheRepositoryObject extends AObject {
     }
 
     public <T extends ACacheEntity> void update(T cache) {
-        if (ObjectUtil.isAnyNull(cache)) {
+        if (ObjectUtil.isNull(cache)) {
             throw new ConditionParametersException();
         }
         if (ValueUtil.isAnyNullOrEmpty(cache.getId())) {
@@ -153,7 +153,7 @@ public class CacheRepositoryObject extends AObject {
     }
 
     public <T extends ACacheEntity> void delete(Class<T> clazz, UUID id) {
-        if (ObjectUtil.isAnyNull(clazz) || ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(clazz) || ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -161,7 +161,7 @@ public class CacheRepositoryObject extends AObject {
     }
 
     public void delete(ACacheEntity cache) {
-        if (ObjectUtil.isAnyNull(cache)) {
+        if (ObjectUtil.isNull(cache)) {
             throw new ConditionParametersException();
         }
 

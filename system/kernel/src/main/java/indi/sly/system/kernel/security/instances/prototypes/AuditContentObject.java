@@ -21,7 +21,7 @@ public class AuditContentObject extends AInfoContentObject {
     public UUID getProcessId() {
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(audit)) {
+        if (ObjectUtil.isNull(audit)) {
             throw new StatusUnreadableException();
         }
 
@@ -31,7 +31,7 @@ public class AuditContentObject extends AInfoContentObject {
     public UUID getAccountId() {
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(audit)) {
+        if (ObjectUtil.isNull(audit)) {
             throw new StatusUnreadableException();
         }
 
@@ -41,7 +41,7 @@ public class AuditContentObject extends AInfoContentObject {
     public PathRecord getPath() {
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(audit)) {
+        if (ObjectUtil.isNull(audit)) {
             throw new StatusUnreadableException();
         }
 
@@ -49,13 +49,13 @@ public class AuditContentObject extends AInfoContentObject {
     }
 
     public void setPath(PathRecord path) {
-        if (ObjectUtil.isAnyNull(path)) {
+        if (ObjectUtil.isNull(path)) {
             throw new ConditionParametersException();
         }
 
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(audit)) {
+        if (ObjectUtil.isNull(audit)) {
             throw new StatusUnreadableException();
         }
 
@@ -67,7 +67,7 @@ public class AuditContentObject extends AInfoContentObject {
     public Set<UserIdRecord> getUserIds() {
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(audit)) {
+        if (ObjectUtil.isNull(audit)) {
             throw new StatusUnreadableException();
         }
 
@@ -75,13 +75,13 @@ public class AuditContentObject extends AInfoContentObject {
     }
 
     public void setUserIds(Set<UserIdRecord> userIds) {
-        if (ObjectUtil.isAnyNull(userIds)) {
+        if (ObjectUtil.isNull(userIds)) {
             throw new ConditionParametersException();
         }
 
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(audit)) {
+        if (ObjectUtil.isNull(audit)) {
             throw new StatusUnreadableException();
         }
 
@@ -94,7 +94,7 @@ public class AuditContentObject extends AInfoContentObject {
     public long getAudit() {
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(audit)) {
+        if (ObjectUtil.isNull(audit)) {
             throw new StatusUnreadableException();
         }
 
@@ -104,7 +104,7 @@ public class AuditContentObject extends AInfoContentObject {
     public void setAudit(long value) {
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(audit)) {
+        if (ObjectUtil.isNull(audit)) {
             throw new StatusUnreadableException();
         }
 

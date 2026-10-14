@@ -28,7 +28,7 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
     }
 
     public final void setCache(T cache) {
-        if (ObjectUtil.isAnyNull(cache)) {
+        if (ObjectUtil.isNull(cache)) {
             throw new ConditionParametersException();
         }
 
@@ -36,7 +36,7 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
     }
 
     public final UUID getHandle() {
-        if (ObjectUtil.isAnyNull(this.cache) || ValueUtil.isAnyNullOrEmpty(this.cache.getId())) {
+        if (ObjectUtil.isNull(this.cache) || ValueUtil.isAnyNullOrEmpty(this.cache.getId())) {
             throw new StatusNotSupportedException();
         }
 
@@ -44,7 +44,7 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
     }
 
     public final UUID cache() {
-        if (ObjectUtil.isAnyNull(this.cache)) {
+        if (ObjectUtil.isNull(this.cache)) {
             throw new StatusNotSupportedException();
         }
         if (!ValueUtil.isAnyNullOrEmpty(this.cache.getId())) {
@@ -64,7 +64,7 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
     }
 
     public final void uncache() {
-        if (ObjectUtil.isAnyNull(this.cache)) {
+        if (ObjectUtil.isNull(this.cache)) {
             throw new StatusNotSupportedException();
         }
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getId())) {
@@ -80,7 +80,7 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
     }
 
     public final void expire(long duration) {
-        if (ObjectUtil.isAnyNull(this.cache)) {
+        if (ObjectUtil.isNull(this.cache)) {
             throw new StatusNotSupportedException();
         }
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getId())) {

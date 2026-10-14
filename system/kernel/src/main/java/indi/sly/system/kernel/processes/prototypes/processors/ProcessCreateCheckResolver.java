@@ -23,7 +23,7 @@ public class ProcessCreateCheckResolver extends AResolver implements IProcessCre
     public ProcessCreateCheckResolver() {
         this.create = (process, parentProcess, processCreator) -> {
             AccountAuthorizationObject accountAuthorization = processCreator.accountAuthorization();
-            if (ObjectUtil.allNotNull(accountAuthorization)) {
+            if (ObjectUtil.notNull(accountAuthorization)) {
                 accountAuthorization.checkAndGetSummary();
             }
 

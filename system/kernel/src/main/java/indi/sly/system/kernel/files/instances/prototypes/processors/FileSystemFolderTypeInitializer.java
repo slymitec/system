@@ -48,7 +48,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     public void deleteProcedure(InfoEntity info) {
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
 
-        if (ObjectUtil.isAnyNull(entry)) {
+        if (ObjectUtil.isNull(entry)) {
             throw new StatusUnreadableException();
         }
 
@@ -93,7 +93,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
 
-        if (ObjectUtil.isAnyNull(entry)) {
+        if (ObjectUtil.isNull(entry)) {
             throw new StatusUnreadableException();
         }
 
@@ -183,7 +183,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
 
-        if (ObjectUtil.isAnyNull(entry)) {
+        if (ObjectUtil.isNull(entry)) {
             throw new StatusUnreadableException();
         }
 
@@ -236,7 +236,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
 
-        if (ObjectUtil.isAnyNull(entry)) {
+        if (ObjectUtil.isNull(entry)) {
             throw new StatusUnreadableException();
         }
 
@@ -306,7 +306,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
 
-        if (ObjectUtil.isAnyNull(entry)) {
+        if (ObjectUtil.isNull(entry)) {
             throw new StatusUnreadableException();
         }
 
@@ -361,7 +361,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
 
-        if (ObjectUtil.isAnyNull(entry)) {
+        if (ObjectUtil.isNull(entry)) {
             throw new StatusUnreadableException();
         }
 

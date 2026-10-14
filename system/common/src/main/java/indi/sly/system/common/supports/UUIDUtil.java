@@ -37,7 +37,7 @@ public abstract class UUIDUtil {
     }
 
     public static UUID readFormBytes(byte[] value) {
-        if (ObjectUtil.isAnyNull(value) || value.length != 16) {
+        if (ObjectUtil.isNull(value) || value.length != 16) {
             throw new ConditionParametersException();
         }
 
@@ -49,7 +49,7 @@ public abstract class UUIDUtil {
     }
 
     public static byte[] writeToBytes(UUID value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             throw new ConditionParametersException();
         }
 

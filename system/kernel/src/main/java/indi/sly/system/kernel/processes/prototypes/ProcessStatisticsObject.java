@@ -54,7 +54,7 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
             source = resolver.apply(source, process);
         }
 
-        if (ObjectUtil.isAnyNull(source)) {
+        if (ObjectUtil.isNull(source)) {
             throw new StatusNotReadyException();
         }
 

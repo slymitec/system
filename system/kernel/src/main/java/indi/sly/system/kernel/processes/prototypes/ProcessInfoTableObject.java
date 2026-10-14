@@ -56,7 +56,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
             source = resolver.apply(source, process);
         }
 
-        if (ObjectUtil.isAnyNull(source)) {
+        if (ObjectUtil.isNull(source)) {
             throw new StatusNotReadyException();
         }
 
@@ -191,7 +191,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
     }
 
     public ProcessInfoEntryObject create(UUID id, InfoCacheEntity cache, long openAttribute) {
-        if (ValueUtil.isAnyNullOrEmpty(id) || ObjectUtil.isAnyNull(cache) || LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.CLOSE)) {
+        if (ValueUtil.isAnyNullOrEmpty(id) || ObjectUtil.isNull(cache) || LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.CLOSE)) {
             throw new ConditionParametersException();
         }
 

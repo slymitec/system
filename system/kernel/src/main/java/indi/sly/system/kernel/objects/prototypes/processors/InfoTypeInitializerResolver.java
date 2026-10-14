@@ -62,7 +62,7 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
         };
 
         this.createChild = (childInfo, info, type, cache, childType, identifier) -> {
-            if (ObjectUtil.isAnyNull(childInfo)) {
+            if (ObjectUtil.isNull(childInfo)) {
                 childInfo = new InfoEntity();
             }
 
@@ -86,7 +86,7 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
             }
             Map<Long, Long> date = new HashMap<>();
             childInfo.setDate(date);
-            if (ObjectUtil.isAnyNull(childInfo.getProperties())) {
+            if (ObjectUtil.isNull(childInfo.getProperties())) {
                 childInfo.setProperties(new HashMap<>());
             }
 

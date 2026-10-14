@@ -36,7 +36,7 @@ public class ProcessCreateBuilder extends ABuilder {
 
         process.setId(UUIDUtil.createRandom());
         process.setStatus(ProcessStatusType.NULL);
-        if (ObjectUtil.allNotNull(this.parentProcess)) {
+        if (ObjectUtil.notNull(this.parentProcess)) {
             process.setParentProcessId(parentProcess.getId());
         }
         process.setCommunication(new ProcessCommunicationEntity());
@@ -52,11 +52,11 @@ public class ProcessCreateBuilder extends ABuilder {
     }
 
     public synchronized ProcessObject build(ProcessCreatorRecord processCreator) {
-        if (ObjectUtil.isAnyNull(processCreator)) {
+        if (ObjectUtil.isNull(processCreator)) {
             throw new ConditionParametersException();
         }
 
-        if (ObjectUtil.allNotNull(this.process)) {
+        if (ObjectUtil.notNull(this.process)) {
             return this.process;
         }
 

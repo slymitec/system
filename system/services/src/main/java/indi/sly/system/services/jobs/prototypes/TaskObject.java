@@ -66,7 +66,7 @@ public class TaskObject extends ADefinitionObject<TaskDefinition> {
             threadContext = resolver.apply(this.definition, this.status, threadContext);
         }
 
-        if (ObjectUtil.isAnyNull(threadContext)) {
+        if (ObjectUtil.isNull(threadContext)) {
             throw new StatusUnexpectedException();
         }
 

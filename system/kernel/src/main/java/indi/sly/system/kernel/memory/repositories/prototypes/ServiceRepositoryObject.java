@@ -31,7 +31,7 @@ public class ServiceRepositoryObject extends AObject {
 
         ServiceStatusEntity service = this.entityManager.find(ServiceStatusEntity.class, id);
 
-        return ObjectUtil.allNotNull(service);
+        return ObjectUtil.notNull(service);
     }
 
     public ServiceStatusEntity get(UUID id) {
@@ -41,7 +41,7 @@ public class ServiceRepositoryObject extends AObject {
 
         ServiceStatusEntity service = this.entityManager.find(ServiceStatusEntity.class, id);
 
-        if (ObjectUtil.isAnyNull(service)) {
+        if (ObjectUtil.isNull(service)) {
             throw new StatusNotExistedException();
         }
 
@@ -65,13 +65,13 @@ public class ServiceRepositoryObject extends AObject {
         }
 
         ServiceStatusEntity service;
-        if (ObjectUtil.allNotNull(lockMode)) {
+        if (ObjectUtil.notNull(lockMode)) {
             service = this.entityManager.find(ServiceStatusEntity.class, id, lockMode);
         } else {
             service = this.entityManager.find(ServiceStatusEntity.class, id);
         }
 
-        if (ObjectUtil.isAnyNull(service)) {
+        if (ObjectUtil.isNull(service)) {
             throw new StatusNotExistedException();
         }
 
@@ -79,7 +79,7 @@ public class ServiceRepositoryObject extends AObject {
     }
 
     public ServiceStatusEntity add(ServiceStatusEntity service) {
-        if (ObjectUtil.isAnyNull(service)) {
+        if (ObjectUtil.isNull(service)) {
             throw new ConditionParametersException();
         }
 
@@ -91,7 +91,7 @@ public class ServiceRepositoryObject extends AObject {
     }
 
     public void delete(ServiceStatusEntity service) {
-        if (ObjectUtil.isAnyNull(service)) {
+        if (ObjectUtil.isNull(service)) {
             throw new ConditionParametersException();
         }
 

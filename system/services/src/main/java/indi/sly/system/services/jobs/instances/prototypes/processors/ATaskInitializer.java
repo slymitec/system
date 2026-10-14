@@ -40,7 +40,7 @@ public abstract class ATaskInitializer extends AInitializer {
     }
 
     protected final void register(String name, TaskInitializerRunMethodConsumer runMethod, long runTransaction) {
-        if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(runMethod)) {
+        if (StringUtil.isNameIllegal(name) || ObjectUtil.isNull(runMethod)) {
             throw new ConditionParametersException();
         }
 
@@ -68,7 +68,7 @@ public abstract class ATaskInitializer extends AInitializer {
 
         TaskInitializerRunRecord run = this.runs.getOrDefault(name, null);
 
-        if (ObjectUtil.isAnyNull(run)) {
+        if (ObjectUtil.isNull(run)) {
             throw new StatusNotExistedException();
         }
 
@@ -79,7 +79,7 @@ public abstract class ATaskInitializer extends AInitializer {
         if (ValueUtil.isAnyNullOrEmpty(handle)) {
             throw new ConditionParametersException();
         }
-        if (ObjectUtil.isAnyNull(this.cacheableObjectFunction)) {
+        if (ObjectUtil.isNull(this.cacheableObjectFunction)) {
             throw new ConditionContextException();
         }
 
@@ -89,7 +89,7 @@ public abstract class ATaskInitializer extends AInitializer {
     private void cache(TaskContentObject content) {
         ACacheableObject<?> cacheableObject = content.getCacheableObject();
 
-        if (ObjectUtil.isAnyNull(cacheableObject)) {
+        if (ObjectUtil.isNull(cacheableObject)) {
             throw new StatusNotSupportedException();
         } else {
             content.setResult(cacheableObject.getHandle());
@@ -99,7 +99,7 @@ public abstract class ATaskInitializer extends AInitializer {
     private void unCache(TaskContentObject content) {
         ACacheableObject<?> cacheableObject = content.getCacheableObject();
 
-        if (ObjectUtil.isAnyNull(cacheableObject)) {
+        if (ObjectUtil.isNull(cacheableObject)) {
             throw new StatusNotSupportedException();
         } else {
             cacheableObject.uncache();

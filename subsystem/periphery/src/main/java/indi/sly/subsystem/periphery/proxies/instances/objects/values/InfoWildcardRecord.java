@@ -28,7 +28,7 @@ public record InfoWildcardRecord(byte[] value, Class<?> type, boolean fuzzy) {
     }
 
     public InfoWildcardRecord(UUID value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             throw new ConditionParametersException();
         }
 

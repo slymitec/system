@@ -44,7 +44,7 @@ public class ThreadManager extends AManager {
     public ThreadObject getCurrent() {
         UserSpace userSpace = this.coreManager.getUserSpace();
 
-        if (ObjectUtil.isAnyNull(userSpace)) {
+        if (ObjectUtil.isNull(userSpace)) {
             throw new StatusNotReadyException();
         }
 
@@ -53,7 +53,7 @@ public class ThreadManager extends AManager {
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();
 
-        if (ObjectUtil.isAnyNull(threads) || threads.isEmpty()) {
+        if (ObjectUtil.isNull(threads) || threads.isEmpty()) {
             throw new StatusNotExistedException();
         }
 
@@ -68,7 +68,7 @@ public class ThreadManager extends AManager {
     public int size() {
         UserSpace userSpace = this.coreManager.getUserSpace();
 
-        if (ObjectUtil.isAnyNull(userSpace)) {
+        if (ObjectUtil.isNull(userSpace)) {
             throw new StatusNotReadyException();
         }
 

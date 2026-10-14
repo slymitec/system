@@ -24,7 +24,7 @@ public record PathRecord(List<IdentifierRecord> identifiers) {
     public PathRecord(List<IdentifierRecord> identifiers) {
         this.identifiers = new ArrayList<>();
 
-        if (ObjectUtil.allNotNull(identifiers)) {
+        if (ObjectUtil.notNull(identifiers)) {
             this.identifiers.addAll(identifiers);
         }
     }
@@ -32,10 +32,10 @@ public record PathRecord(List<IdentifierRecord> identifiers) {
     public PathRecord(PathRecord path, IdentifierRecord identifier) {
         this(new ArrayList<>());
 
-        if (ObjectUtil.allNotNull(path)) {
+        if (ObjectUtil.notNull(path)) {
             this.identifiers.addAll(path.identifiers);
         }
-        if (ObjectUtil.allNotNull(identifier)) {
+        if (ObjectUtil.notNull(identifier)) {
             this.identifiers.add(identifier);
         }
     }

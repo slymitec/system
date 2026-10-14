@@ -38,13 +38,13 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
     public Mono<Void> onActivate() {
         super.onActivate();
 
-        if (ObjectUtil.isAnyNull(this.coreManager.getUserSpace())) {
+        if (ObjectUtil.isNull(this.coreManager.getUserSpace())) {
             UserSpace userSpace = SpringHelper.getInstance(UserSpace.class);
 
             this.coreManager.setUserSpace(userSpace);
         }
 
-        if (ObjectUtil.isAnyNull(this.task)) {
+        if (ObjectUtil.isNull(this.task)) {
             String actorId = this.getId().toString();
             String[] actorIds = actorId.split(Pattern.quote("|"));
 
@@ -69,11 +69,11 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
     public Mono<Void> onDeactivate() {
         super.onDeactivate();
 
-        if (ObjectUtil.allNotNull(this.task)) {
+        if (ObjectUtil.notNull(this.task)) {
             this.task.end();
         }
 
-        if (ObjectUtil.allNotNull(this.coreManager)) {
+        if (ObjectUtil.notNull(this.coreManager)) {
             this.coreManager = null;
         }
 
@@ -86,7 +86,7 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
             return Mono.error(new RuntimeException());
         }
 
-        if (ObjectUtil.isAnyNull(this.coreManager.getUserSpace())) {
+        if (ObjectUtil.isNull(this.coreManager.getUserSpace())) {
             UserSpace userSpace = SpringHelper.getInstance(UserSpace.class);
 
             this.coreManager.setUserSpace(userSpace);
@@ -111,7 +111,7 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
             taskContent.setParameter(callRequest.clientRequest().parameters());
             taskContent.run(callRequest.clientRequest().method());
 
-            if (ObjectUtil.isAnyNull(taskContent.getException())) {
+            if (ObjectUtil.isNull(taskContent.getException())) {
                 Object result = taskContent.getResult();
 
                 clientResponse = new ClientResponseRecord(ClientResponseTypes.NORMAL, ObjectUtil.transferToString(result));

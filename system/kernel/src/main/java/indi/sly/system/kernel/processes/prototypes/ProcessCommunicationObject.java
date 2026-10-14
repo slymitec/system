@@ -89,7 +89,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     }
 
     public void setShared(byte[] shared) {
-        if (ObjectUtil.isAnyNull(shared)) {
+        if (ObjectUtil.isNull(shared)) {
             throw new ConditionParametersException();
         }
 
@@ -142,7 +142,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     }
 
     public UUID createPort(Set<UUID> sourceProcessIds) {
-        if (ObjectUtil.isAnyNull(sourceProcessIds)) {
+        if (ObjectUtil.isNull(sourceProcessIds)) {
             throw new ConditionParametersException();
         }
 
@@ -207,7 +207,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     }
 
     public void deletePort(UUID portId) {
-        if (ObjectUtil.isAnyNull(portId)) {
+        if (ObjectUtil.isNull(portId)) {
             throw new ConditionParametersException();
         }
 
@@ -238,7 +238,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     }
 
     public Set<UUID> getPortSourceProcessIds(UUID portId) {
-        if (ObjectUtil.isAnyNull(portId)) {
+        if (ObjectUtil.isNull(portId)) {
             throw new ConditionParametersException();
         }
 
@@ -262,7 +262,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     }
 
     public void setPortSourceProcessIds(UUID portId, Set<UUID> sourceProcessIds) {
-        if (ValueUtil.isAnyNullOrEmpty(portId) || ObjectUtil.isAnyNull(sourceProcessIds)) {
+        if (ValueUtil.isAnyNullOrEmpty(portId) || ObjectUtil.isNull(sourceProcessIds)) {
             throw new ConditionParametersException();
         }
 
@@ -287,7 +287,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     }
 
     public byte[] receivePort(UUID portId) {
-        if (ObjectUtil.isAnyNull(portId)) {
+        if (ObjectUtil.isNull(portId)) {
             throw new ConditionParametersException();
         }
 
@@ -323,7 +323,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     }
 
     public void sendPort(UUID portId, byte[] value) {
-        if (ValueUtil.isAnyNullOrEmpty(portId) || ObjectUtil.isAnyNull(value)) {
+        if (ValueUtil.isAnyNullOrEmpty(portId) || ObjectUtil.isNull(value)) {
             throw new ConditionParametersException();
         }
 
@@ -369,7 +369,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     }
 
     public void createSignal(Set<UUID> sourceProcessIds) {
-        if (ObjectUtil.isAnyNull(sourceProcessIds)) {
+        if (ObjectUtil.isNull(sourceProcessIds)) {
             throw new ConditionParametersException();
         }
 
@@ -430,7 +430,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     }
 
     public void setSignalSourceProcessIds(Set<UUID> sourceProcessIds) {
-        if (ObjectUtil.isAnyNull(sourceProcessIds)) {
+        if (ObjectUtil.isNull(sourceProcessIds)) {
             throw new ConditionParametersException();
         }
 

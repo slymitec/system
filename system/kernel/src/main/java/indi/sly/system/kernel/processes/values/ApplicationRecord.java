@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public record ApplicationRecord(UUID id, String name, String serverURL, Map<String, String> configurations) {
     public ApplicationRecord {
-        if (ObjectUtil.isAnyNull(configurations)) {
+        if (ObjectUtil.isNull(configurations)) {
             throw new ConditionParametersException();
         }
     }

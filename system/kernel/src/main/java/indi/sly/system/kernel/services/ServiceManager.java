@@ -89,7 +89,7 @@ public class ServiceManager extends AManager {
     }
 
     private void start(UUID serviceId, boolean independence, Set<UUID> serviceIdJobs) {
-        if (ValueUtil.isAnyNullOrEmpty(serviceId) || ObjectUtil.isAnyNull(serviceIdJobs)) {
+        if (ValueUtil.isAnyNullOrEmpty(serviceId) || ObjectUtil.isNull(serviceIdJobs)) {
             throw new ConditionParametersException();
         }
         if (!serviceIdJobs.add(serviceId)) {
@@ -163,7 +163,7 @@ public class ServiceManager extends AManager {
 
             serviceRepository.add(serviceStatus);
         } catch (Exception e) {
-            if (ObjectUtil.allNotNull(executeInfo) && !ValueUtil.isAnyNullOrEmpty(executeInfoIndex)) {
+            if (ObjectUtil.notNull(executeInfo) && !ValueUtil.isAnyNullOrEmpty(executeInfoIndex)) {
                 executeInfo.close();
             }
 

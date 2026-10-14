@@ -19,7 +19,7 @@ public class ThreadStatisticsObject extends AChildDefinitionObject<ThreadStatist
     public long getDate(long dataTime) {
         Long value = this.definition.getDate().get(dataTime);
 
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             throw new ConditionParametersException();
         }
 

@@ -28,7 +28,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+        if (ObjectUtil.isNull(fileSystemEntry)) {
             throw new StatusUnreadableException();
         }
 
@@ -47,7 +47,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+        if (ObjectUtil.isNull(fileSystemEntry)) {
             throw new StatusUnreadableException();
         }
 
@@ -68,7 +68,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+        if (ObjectUtil.isNull(fileSystemEntry)) {
             throw new StatusUnreadableException();
         }
 
@@ -87,7 +87,7 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+        if (ObjectUtil.isNull(fileSystemEntry)) {
             throw new StatusUnreadableException();
         }
 

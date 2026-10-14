@@ -62,7 +62,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
             source = resolver.apply(source, process);
         }
 
-        if (ObjectUtil.isAnyNull(source)) {
+        if (ObjectUtil.isNull(source)) {
             throw new StatusNotReadyException();
         }
 

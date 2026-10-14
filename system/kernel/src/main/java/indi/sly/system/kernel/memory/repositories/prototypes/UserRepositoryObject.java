@@ -39,7 +39,7 @@ public class UserRepositoryObject extends AObject {
 
         AccountEntity account = this.entityManager.find(AccountEntity.class, id);
 
-        return ObjectUtil.allNotNull(account);
+        return ObjectUtil.notNull(account);
     }
 
     public boolean containGroup(UUID id) {
@@ -49,7 +49,7 @@ public class UserRepositoryObject extends AObject {
 
         GroupEntity group = this.entityManager.find(GroupEntity.class, id);
 
-        return ObjectUtil.allNotNull(group);
+        return ObjectUtil.notNull(group);
     }
 
     public AccountEntity getAccount(UUID id) {
@@ -59,7 +59,7 @@ public class UserRepositoryObject extends AObject {
 
         AccountEntity account = this.entityManager.find(AccountEntity.class, id);
 
-        if (ObjectUtil.isAnyNull(account)) {
+        if (ObjectUtil.isNull(account)) {
             throw new StatusNotExistedException();
         }
 
@@ -83,13 +83,13 @@ public class UserRepositoryObject extends AObject {
         }
 
         AccountEntity account;
-        if (ObjectUtil.allNotNull(lockMode)) {
+        if (ObjectUtil.notNull(lockMode)) {
             account = this.entityManager.find(AccountEntity.class, id, lockMode);
         } else {
             account = this.entityManager.find(AccountEntity.class, id);
         }
 
-        if (ObjectUtil.isAnyNull(account)) {
+        if (ObjectUtil.isNull(account)) {
             throw new StatusNotExistedException();
         }
 
@@ -140,7 +140,7 @@ public class UserRepositoryObject extends AObject {
         criteriaQuery.select(root);
         criteriaQuery.where(criteriaBuilder.equal(root.get("name"), name));
         TypedQuery<AccountEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
-        if (ObjectUtil.allNotNull(lockMode)) {
+        if (ObjectUtil.notNull(lockMode)) {
             typedQuery.setLockMode(lockMode);
         }
         List<AccountEntity> accounts = typedQuery.getResultList();
@@ -159,7 +159,7 @@ public class UserRepositoryObject extends AObject {
 
         GroupEntity group = this.entityManager.find(GroupEntity.class, id);
 
-        if (ObjectUtil.isAnyNull(group)) {
+        if (ObjectUtil.isNull(group)) {
             throw new StatusNotExistedException();
         }
 
@@ -183,13 +183,13 @@ public class UserRepositoryObject extends AObject {
         }
 
         GroupEntity group;
-        if (ObjectUtil.allNotNull(lockMode)) {
+        if (ObjectUtil.notNull(lockMode)) {
             group = this.entityManager.find(GroupEntity.class, id, lockMode);
         } else {
             group = this.entityManager.find(GroupEntity.class, id);
         }
 
-        if (ObjectUtil.isAnyNull(group)) {
+        if (ObjectUtil.isNull(group)) {
             throw new StatusNotExistedException();
         }
 
@@ -240,7 +240,7 @@ public class UserRepositoryObject extends AObject {
         criteriaQuery.select(root);
         criteriaQuery.where(criteriaBuilder.equal(root.get("name"), name));
         TypedQuery<GroupEntity> typedQuery = this.entityManager.createQuery(criteriaQuery);
-        if (ObjectUtil.allNotNull(lockMode)) {
+        if (ObjectUtil.notNull(lockMode)) {
             typedQuery.setLockMode(lockMode);
         }
         List<GroupEntity> groups = typedQuery.getResultList();
@@ -255,7 +255,7 @@ public class UserRepositoryObject extends AObject {
     }
 
     public AccountEntity add(AccountEntity account) {
-        if (ObjectUtil.isAnyNull(account)) {
+        if (ObjectUtil.isNull(account)) {
             throw new ConditionParametersException();
         }
 
@@ -267,7 +267,7 @@ public class UserRepositoryObject extends AObject {
     }
 
     public GroupEntity add(GroupEntity group) {
-        if (ObjectUtil.isAnyNull(group)) {
+        if (ObjectUtil.isNull(group)) {
             throw new ConditionParametersException();
         }
 
@@ -279,7 +279,7 @@ public class UserRepositoryObject extends AObject {
     }
 
     public void delete(AccountEntity account) {
-        if (ObjectUtil.isAnyNull(account)) {
+        if (ObjectUtil.isNull(account)) {
             throw new ConditionParametersException();
         }
 
@@ -291,7 +291,7 @@ public class UserRepositoryObject extends AObject {
     }
 
     public void delete(GroupEntity group) {
-        if (ObjectUtil.isAnyNull(group)) {
+        if (ObjectUtil.isNull(group)) {
             throw new ConditionParametersException();
         }
 

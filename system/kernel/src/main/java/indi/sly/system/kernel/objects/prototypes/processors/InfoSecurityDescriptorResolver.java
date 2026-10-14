@@ -279,7 +279,7 @@ public class InfoSecurityDescriptorResolver extends AResolver implements IInfoRe
 
     @Override
     public void resolve(InfoEntity info, InfoProcessorMediator processorMediator) {
-        if (ObjectUtil.allNotNull(info)) {
+        if (ObjectUtil.notNull(info)) {
             TypeManager typeManager = this.coreManager.getManager(TypeManager.class);
             TypeObject type = typeManager.get(info.getType());
 

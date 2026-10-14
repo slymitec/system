@@ -62,7 +62,7 @@ public class CoreManager extends AManager {
 
     @Override
     public void check() {
-        if (ObjectUtil.isAnyNull(this.coreManager)) {
+        if (ObjectUtil.isNull(this.coreManager)) {
             throw new ConditionContextException();
         }
     }

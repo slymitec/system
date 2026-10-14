@@ -27,7 +27,7 @@ public class SystemStartUpComponent extends AComponent implements ApplicationRun
     @Override
     @Transactional
     public void run(@NonNull ApplicationArguments args) {
-        if (ObjectUtil.isAnyNull(this.coreManager)) {
+        if (ObjectUtil.isNull(this.coreManager)) {
             this.coreManager = SpringHelper.getInstance(CoreManager.class);
 
             this.coreManager.startup(StartupType.STEP_INIT_SELF);

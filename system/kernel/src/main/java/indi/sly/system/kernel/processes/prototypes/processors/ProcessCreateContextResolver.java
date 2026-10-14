@@ -54,7 +54,7 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
                             throw new StatusUnreadableException();
                         });
 
-                if (ObjectUtil.isAnyNull(application)) {
+                if (ObjectUtil.isNull(application)) {
                     throw new StatusUnreadableException();
                 }
 
@@ -69,7 +69,7 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
             }
 
             PathRecord processContextWorkFolder = processCreator.workFolder();
-            if (ObjectUtil.allNotNull(processContextWorkFolder)) {
+            if (ObjectUtil.notNull(processContextWorkFolder)) {
                 ObjectManager objectManager = this.coreManager.getManager(ObjectManager.class);
 
                 try {
@@ -82,7 +82,7 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
                     processContextWorkFolder = null;
                 }
             }
-            if (ObjectUtil.allNotNull(processContextWorkFolder)) {
+            if (ObjectUtil.notNull(processContextWorkFolder)) {
                 processContext.setWorkFolder(processContextWorkFolder);
             } else {
                 processContext.setWorkFolder(parentProcessContext.getWorkFolder());

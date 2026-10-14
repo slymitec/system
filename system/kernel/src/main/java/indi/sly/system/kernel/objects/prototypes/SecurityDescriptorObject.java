@@ -102,7 +102,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
         int MAX_DEPTH = kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH;
-        while (ObjectUtil.allNotNull(parentInfo)) {
+        while (ObjectUtil.notNull(parentInfo)) {
             if (MAX_DEPTH-- < 0) {
                 throw new StatusOverflowException();
             }
@@ -207,7 +207,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
     }
 
     public void setOwners(Set<UUID> owners) {
-        if (ObjectUtil.isAnyNull(owners) || owners.isEmpty()) {
+        if (ObjectUtil.isNull(owners) || owners.isEmpty()) {
             throw new ConditionParametersException();
         }
         if (!this.cache.isPermission()) {
@@ -257,7 +257,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         ProcessTokenObject processToken = process.getToken();
         ProcessSessionObject processSession = process.getSession();
 
-        if ((ObjectUtil.isAnyNull(permissionQueryFunc) || permissionQueryFunc.privilege())
+        if ((ObjectUtil.isNull(permissionQueryFunc) || permissionQueryFunc.privilege())
                 && processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)) {
             return false;
         }
@@ -273,7 +273,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
             KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
             int MAX_DEPTH = kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH;
-            while (ObjectUtil.allNotNull(parentInfo)) {
+            while (ObjectUtil.notNull(parentInfo)) {
                 if (MAX_DEPTH-- < 0) {
                     throw new StatusOverflowException();
                 }
@@ -363,7 +363,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                 }
             } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.ROLE) && roles.contains(pairUserId.id())) {
                 if (LogicalUtil.isAllExist(pair.value(), permission)
-                        && (ObjectUtil.isAnyNull(permissionQueryFunc) || permissionQueryFunc.role())) {
+                        && (ObjectUtil.isNull(permissionQueryFunc) || permissionQueryFunc.role())) {
                     allow = true;
                 }
                 if (LogicalUtil.isAnyExist(pair.value(), permission << 1)) {
@@ -393,7 +393,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                     return true;
                 }
             }
-            if (ObjectUtil.allNotNull(permissionQueryFunc) && ObjectUtil.allNotNull(permissionQueryFunc.customDenyFunc()) &&
+            if (ObjectUtil.notNull(permissionQueryFunc) && ObjectUtil.notNull(permissionQueryFunc.customDenyFunc()) &&
                     permissionQueryFunc.customDenyFunc().test(pair, permission)) {
                 return true;
             }
@@ -413,7 +413,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
     }
 
     public void setPermissions(Set<AccessControlRecord> permissions) {
-        if (ObjectUtil.isAnyNull(permissions)) {
+        if (ObjectUtil.isNull(permissions)) {
             throw new ConditionParametersException();
         }
         if (!this.cache.isPermission()) {
@@ -503,7 +503,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         KernelConfiguration kernelConfiguration = this.coreManager.getKernelSpace().getConfiguration();
         int MAX_DEPTH = kernelConfiguration.OBJECTS_INFO_PATH_MAX_DEPTH;
-        while (ObjectUtil.allNotNull(parentInfo)) {
+        while (ObjectUtil.notNull(parentInfo)) {
             if (MAX_DEPTH-- < 0) {
                 throw new StatusOverflowException();
             }
@@ -606,7 +606,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
     }
 
     public void setAudits(Set<AccessControlRecord> audits) {
-        if (ObjectUtil.isAnyNull(audits)) {
+        if (ObjectUtil.isNull(audits)) {
             throw new ConditionParametersException();
         }
         if (!this.cache.isAudit()) {

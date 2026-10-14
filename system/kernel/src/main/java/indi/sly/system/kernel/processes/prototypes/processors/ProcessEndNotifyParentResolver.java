@@ -20,7 +20,7 @@ public class ProcessEndNotifyParentResolver extends AResolver implements IProces
 
     public ProcessEndNotifyParentResolver() {
         this.end = (process, parentProcess) -> {
-            if (ObjectUtil.allNotNull(parentProcess)) {
+            if (ObjectUtil.notNull(parentProcess)) {
                 ProcessCommunicationObject parentProcessCommunication = parentProcess.getCommunication();
                 ProcessCommunicationObject processCommunication = process.getCommunication();
 

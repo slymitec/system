@@ -2,7 +2,7 @@ package indi.sly.system.common.supports;
 
 public abstract class LogicalUtil {
     public static long and(long... values) {
-        if (ObjectUtil.isAnyNull(values)) {
+        if (ObjectUtil.isNull(values)) {
             throw new NullPointerException();
         }
 
@@ -16,7 +16,7 @@ public abstract class LogicalUtil {
     }
 
     public static long or(long... values) {
-        if (ObjectUtil.isAnyNull(values)) {
+        if (ObjectUtil.isNull(values)) {
             throw new NullPointerException();
         }
 
@@ -54,7 +54,7 @@ public abstract class LogicalUtil {
     }
 
     public static boolean isAnyEqual(long source, long... values) {
-        if (ObjectUtil.isAnyNull(values)) {
+        if (ObjectUtil.isNull(values)) {
             return false;
         }
 
@@ -72,7 +72,7 @@ public abstract class LogicalUtil {
     }
 
     public static boolean allNotEqual(long source, long... values) {
-        if (ObjectUtil.isAnyNull(values)) {
+        if (ObjectUtil.isNull(values)) {
             return true;
         }
 
@@ -94,7 +94,7 @@ public abstract class LogicalUtil {
     }
 
     public static boolean isAllSingleValue(long... values) {
-        if (ObjectUtil.isAnyNull(values) || values.length == 0) {
+        if (ObjectUtil.isNull(values) || values.length == 0) {
             return false;
         }
 

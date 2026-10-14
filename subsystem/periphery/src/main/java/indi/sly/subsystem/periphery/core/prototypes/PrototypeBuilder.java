@@ -16,13 +16,13 @@ import java.lang.reflect.Constructor;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PrototypeBuilder extends ABuilder {
     public final void setFactoryManager(CoreManager coreManager) {
-        if (ObjectUtil.allNotNull(coreManager)) {
+        if (ObjectUtil.notNull(coreManager)) {
             this.coreManager = coreManager;
         }
     }
 
     public <T extends APrototype> T createPrototype(Class<T> clazz, @Nullable Object... args) {
-        if (ObjectUtil.isAnyNull(clazz)) {
+        if (ObjectUtil.isNull(clazz)) {
             throw new ConditionParametersException();
         }
 
@@ -40,7 +40,7 @@ public class PrototypeBuilder extends ABuilder {
                 corePrototype = constructor.newInstance();
             } catch (ReflectiveOperationException e2) {
                 try {
-                    if (ObjectUtil.allNotNull(constructor) && constructor.trySetAccessible()) {
+                    if (ObjectUtil.notNull(constructor) && constructor.trySetAccessible()) {
                         constructor.setAccessible(true);
                         corePrototype = constructor.newInstance();
                     }
@@ -50,7 +50,7 @@ public class PrototypeBuilder extends ABuilder {
             }
         }
 
-        if (ObjectUtil.isAnyNull(corePrototype)) {
+        if (ObjectUtil.isNull(corePrototype)) {
             throw new StatusNotSupportedException();
         }
 

@@ -113,7 +113,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
     }
 
     public void setPath(PathRecord path) {
-        if (ObjectUtil.isAnyNull(path)) {
+        if (ObjectUtil.isNull(path)) {
             throw new ConditionParametersException();
         }
 
@@ -152,7 +152,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
     }
 
     public void setApplication(ApplicationRecord application) {
-        if (ObjectUtil.isAnyNull(application)) {
+        if (ObjectUtil.isNull(application)) {
             throw new ConditionParametersException();
         }
 
@@ -191,7 +191,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
     }
 
     public void setEnvironmentVariables(Map<String, String> environmentVariable) {
-        if (ObjectUtil.isAnyNull(environmentVariable)) {
+        if (ObjectUtil.isNull(environmentVariable)) {
             throw new ConditionParametersException();
         }
 
@@ -276,7 +276,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
     }
 
     public void setWorkFolder(PathRecord workFolder) {
-        if (ObjectUtil.isAnyNull(workFolder)) {
+        if (ObjectUtil.isNull(workFolder)) {
             throw new ConditionParametersException();
         }
 

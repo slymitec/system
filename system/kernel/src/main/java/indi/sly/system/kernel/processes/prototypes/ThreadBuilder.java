@@ -25,7 +25,7 @@ public class ThreadBuilder extends ABuilder {
     public ThreadObject create(UUID processId) {
         UserSpace userSpace = this.coreManager.getUserSpace();
 
-        if(ObjectUtil.isAnyNull(userSpace)){
+        if(ObjectUtil.isNull(userSpace)){
             throw new StatusNotReadyException();
         }
 
@@ -57,13 +57,13 @@ public class ThreadBuilder extends ABuilder {
     public void end() {
         UserSpace userSpace = this.coreManager.getUserSpace();
 
-        if(ObjectUtil.isAnyNull(userSpace)){
+        if(ObjectUtil.isNull(userSpace)){
             throw new StatusNotReadyException();
         }
 
         Deque<ThreadObject> threads = userSpace.getThreads();
 
-        if (ObjectUtil.isAnyNull(threads) || threads.isEmpty()) {
+        if (ObjectUtil.isNull(threads) || threads.isEmpty()) {
             throw new StatusAlreadyFinishedException();
         }
 

@@ -43,7 +43,7 @@ public class PortCacheEntity extends ACacheEntity {
     }
 
     public void setValue(byte[] value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             this.value = ArrayUtil.EMPTY_BYTES;
         } else {
             this.value = value;

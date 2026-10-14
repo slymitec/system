@@ -42,7 +42,7 @@ public class ObjectManagerTaskInitializer extends ATaskInitializer {
 
         PathRecord path = ObjectUtil.transferFromString(PathRecord.class, parameters.getFirst());
 
-        if (ObjectUtil.isAnyNull(path)) {
+        if (ObjectUtil.isNull(path)) {
             throw new ConditionParametersException();
         }
 

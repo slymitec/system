@@ -58,7 +58,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             source = resolver.apply(source, process);
         }
 
-        if (ObjectUtil.isAnyNull(source)) {
+        if (ObjectUtil.isNull(source)) {
             throw new StatusNotReadyException();
         }
 
@@ -74,7 +74,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
     }
 
     public void injectAccountAuthorization(AccountAuthorizationObject accountAuthorization) {
-        if (ObjectUtil.isAnyNull(accountAuthorization)) {
+        if (ObjectUtil.isNull(accountAuthorization)) {
             throw new ConditionParametersException();
         }
 
@@ -275,7 +275,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
     }
 
     public void setLimits(Map<Long, Integer> limits) {
-        if (ObjectUtil.isAnyNull(limits)) {
+        if (ObjectUtil.isNull(limits)) {
             throw new ConditionParametersException();
         }
 
@@ -354,7 +354,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         long processContextType = processContext.getType();
         if (LogicalUtil.isAllExist(processContextType, ProcessContextType.EXECUTABLE_SERVICE)) {
             ApplicationRecord processContextApplication = processContext.getApplication();
-            if (ObjectUtil.allNotNull(processContextApplication)) {
+            if (ObjectUtil.notNull(processContextApplication)) {
                 roles.add(processContextApplication.id());
             }
         } else if (LogicalUtil.isAllExist(processContextType, ProcessContextType.BATCH)) {
@@ -388,7 +388,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
     }
 
     public void addRoles(Set<UUID> roles) {
-        if (ObjectUtil.isAnyNull(roles)) {
+        if (ObjectUtil.isNull(roles)) {
             throw new ConditionParametersException();
         }
 

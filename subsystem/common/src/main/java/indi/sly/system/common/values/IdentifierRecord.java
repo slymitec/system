@@ -17,8 +17,6 @@ import tools.jackson.databind.annotation.JsonSerialize;
 import tools.jackson.databind.jsontype.TypeDeserializer;
 import tools.jackson.databind.jsontype.TypeSerializer;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @JsonSerialize(using = IdentifierRecord.IdentifierSerializer.class)
@@ -29,7 +27,7 @@ public record IdentifierRecord(byte[] value, Class<?> type) {
     }
 
     public IdentifierRecord(UUID value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             throw new ConditionParametersException();
         }
 

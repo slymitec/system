@@ -26,7 +26,7 @@ public record IdentifierRecord(byte[] value, Class<?> type) {
     }
 
     public IdentifierRecord(UUID value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             throw new ConditionParametersException();
         }
 

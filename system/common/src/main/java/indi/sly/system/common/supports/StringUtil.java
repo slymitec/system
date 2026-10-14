@@ -54,7 +54,7 @@ public abstract class StringUtil {
     }
 
     public static String readFormBytes(byte @Nullable [] value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             throw new NullPointerException();
         }
 
@@ -62,7 +62,7 @@ public abstract class StringUtil {
     }
 
     public static byte[] writeToBytes(@Nullable String value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             throw new NullPointerException();
         }
 

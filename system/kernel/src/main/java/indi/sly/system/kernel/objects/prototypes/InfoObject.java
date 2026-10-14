@@ -160,7 +160,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
 
         for (InfoProcessorOpenFunction resolver : resolvers) {
             index = resolver.apply(index, info, type, this.cache, openAttribute, arguments);
-            if (ObjectUtil.isAnyNull(index)) {
+            if (ObjectUtil.isNull(index)) {
                 throw new StatusUnexpectedException();
             }
         }
@@ -201,7 +201,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public InfoObject createChild(UUID childType, IdentifierRecord identifier) {
-        if (ObjectUtil.isAnyNull(identifier)) {
+        if (ObjectUtil.isNull(identifier)) {
             throw new ConditionParametersException();
         }
 
@@ -218,7 +218,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             childInfo = resolver.apply(childInfo, info, type, this.cache, childType, identifier);
         }
 
-        if (ObjectUtil.isAnyNull(childInfo)) {
+        if (ObjectUtil.isNull(childInfo)) {
             throw new StatusUnexpectedException();
         }
 
@@ -226,7 +226,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public InfoObject getChild(IdentifierRecord identifier) {
-        if (ObjectUtil.isAnyNull(identifier)) {
+        if (ObjectUtil.isNull(identifier)) {
             throw new ConditionParametersException();
         }
 
@@ -243,7 +243,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             childInfo = resolver.apply(childInfo, info, type, this.cache, identifier);
         }
 
-        if (ObjectUtil.isAnyNull(childInfo)) {
+        if (ObjectUtil.isNull(childInfo)) {
             throw new StatusUnexpectedException();
         }
 
@@ -251,7 +251,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public void deleteChild(IdentifierRecord identifier) {
-        if (ObjectUtil.isAnyNull(identifier)) {
+        if (ObjectUtil.isNull(identifier)) {
             throw new ConditionParametersException();
         }
 
@@ -268,7 +268,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public Set<InfoSummaryRecord> queryChild(InfoWildcardRecord wildcard) {
-        if (ObjectUtil.isAnyNull(wildcard)) {
+        if (ObjectUtil.isNull(wildcard)) {
             throw new ConditionParametersException();
         }
 
@@ -323,7 +323,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public void writeProperties(Map<String, String> properties) {
-        if (ObjectUtil.isAnyNull(properties)) {
+        if (ObjectUtil.isNull(properties)) {
             throw new ConditionParametersException();
         }
 

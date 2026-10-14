@@ -40,7 +40,7 @@ public class TaskContentObject extends AChildDefinitionObject<TaskDefinition, Ta
     }
 
     public void setParameter(List<String> parameters) {
-        if (ObjectUtil.isAnyNull(parameters)) {
+        if (ObjectUtil.isNull(parameters)) {
             throw new ConditionParametersException();
         }
 
@@ -60,7 +60,7 @@ public class TaskContentObject extends AChildDefinitionObject<TaskDefinition, Ta
     }
 
     public void setException(ASystemException exception) {
-        if (ObjectUtil.isAnyNull(exception)) {
+        if (ObjectUtil.isNull(exception)) {
             throw new ConditionParametersException();
         }
 

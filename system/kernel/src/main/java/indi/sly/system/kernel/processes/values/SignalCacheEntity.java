@@ -43,7 +43,7 @@ public class SignalCacheEntity extends ACacheEntity {
     }
 
     public void add(SignalEntryRecord signalEntry) {
-        if (ObjectUtil.isAnyNull(signalEntry)) {
+        if (ObjectUtil.isNull(signalEntry)) {
             throw new ConditionParametersException();
         }
 

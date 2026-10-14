@@ -25,7 +25,7 @@ public class CallContextCreateCheckClientProcessIdResolver extends AResolver imp
             }
 
             CallContextProcessRecord callContextProcess = callContextRequest.process();
-            if (ObjectUtil.isAnyNull(callContextProcess)) {
+            if (ObjectUtil.isNull(callContextProcess)) {
                 throw new ConditionRefuseException();
             }
             UUID processId = callContextProcess.processId();

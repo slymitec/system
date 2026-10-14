@@ -26,7 +26,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
     public long length() {
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+        if (ObjectUtil.isNull(fileSystemEntry)) {
             throw new StatusUnreadableException();
         }
 
@@ -56,7 +56,7 @@ public class FileSystemFileContentObject extends AInfoContentObject {
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+        if (ObjectUtil.isNull(fileSystemEntry)) {
             throw new StatusUnreadableException();
         }
 
@@ -91,13 +91,13 @@ public class FileSystemFileContentObject extends AInfoContentObject {
     }
 
     public void writeFile(byte[] value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             throw new ConditionParametersException();
         }
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+        if (ObjectUtil.isNull(fileSystemEntry)) {
             throw new StatusUnreadableException();
         }
 
@@ -121,13 +121,13 @@ public class FileSystemFileContentObject extends AInfoContentObject {
     }
 
     public void append(byte[] value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             throw new ConditionParametersException();
         }
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
-        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+        if (ObjectUtil.isNull(fileSystemEntry)) {
             throw new StatusUnreadableException();
         }
 

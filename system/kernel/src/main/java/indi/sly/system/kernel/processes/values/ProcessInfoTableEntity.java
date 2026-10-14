@@ -41,7 +41,7 @@ public class ProcessInfoTableEntity extends APersistentEntity {
     public ProcessInfoEntryEntity getByIndex(UUID index) {
         ProcessInfoEntryEntity infoEntry = this.indexTable.get(index);
 
-        if (ObjectUtil.isAnyNull(infoEntry)) {
+        if (ObjectUtil.isNull(infoEntry)) {
             throw new StatusNotExistedException();
         }
 
@@ -51,7 +51,7 @@ public class ProcessInfoTableEntity extends APersistentEntity {
     public ProcessInfoEntryEntity getById(UUID id) {
         ProcessInfoEntryEntity infoEntry = this.idTable.get(id);
 
-        if (ObjectUtil.isAnyNull(infoEntry)) {
+        if (ObjectUtil.isNull(infoEntry)) {
             throw new StatusNotExistedException();
         }
 
@@ -73,13 +73,13 @@ public class ProcessInfoTableEntity extends APersistentEntity {
     public void delete(UUID index) {
         ProcessInfoEntryEntity infoEntry = this.indexTable.remove(index);
 
-        if (ObjectUtil.isAnyNull(infoEntry)) {
+        if (ObjectUtil.isNull(infoEntry)) {
             throw new StatusNotExistedException();
         }
 
         infoEntry = this.idTable.remove(infoEntry.getId());
 
-        if (ObjectUtil.isAnyNull(infoEntry)) {
+        if (ObjectUtil.isNull(infoEntry)) {
             throw new StatusNotExistedException();
         }
     }

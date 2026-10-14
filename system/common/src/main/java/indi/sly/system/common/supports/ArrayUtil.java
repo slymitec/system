@@ -25,11 +25,11 @@ public abstract class ArrayUtil {
     private static final String TO_STRING_ARRAY_ELEMENT_SEPARATOR = ", ";
 
     public static boolean isArray(Object object) {
-        return (ObjectUtil.allNotNull(object) && object.getClass().isArray());
+        return (ObjectUtil.isNull(object) && object.getClass().isArray());
     }
 
     public static boolean isNullOrEmpty(final Object[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return true;
         } else {
             return Array.getLength(array) == 0;
@@ -37,7 +37,7 @@ public abstract class ArrayUtil {
     }
 
     public static boolean isNullOrEmpty(final boolean[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return true;
         } else {
             return Array.getLength(array) == 0;
@@ -45,7 +45,7 @@ public abstract class ArrayUtil {
     }
 
     public static boolean isNullOrEmpty(final byte[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return true;
         } else {
             return Array.getLength(array) == 0;
@@ -53,7 +53,7 @@ public abstract class ArrayUtil {
     }
 
     public static boolean isNullOrEmpty(final char[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return true;
         } else {
             return Array.getLength(array) == 0;
@@ -61,7 +61,7 @@ public abstract class ArrayUtil {
     }
 
     public static boolean isNullOrEmpty(final double[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return true;
         } else {
             return Array.getLength(array) == 0;
@@ -69,7 +69,7 @@ public abstract class ArrayUtil {
     }
 
     public static boolean isNullOrEmpty(final float[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return true;
         } else {
             return Array.getLength(array) == 0;
@@ -77,7 +77,7 @@ public abstract class ArrayUtil {
     }
 
     public static boolean isNullOrEmpty(final int[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return true;
         } else {
             return Array.getLength(array) == 0;
@@ -85,7 +85,7 @@ public abstract class ArrayUtil {
     }
 
     public static boolean isNullOrEmpty(final long[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return true;
         } else {
             return Array.getLength(array) == 0;
@@ -93,7 +93,7 @@ public abstract class ArrayUtil {
     }
 
     public static boolean isNullOrEmpty(final short[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return true;
         } else {
             return Array.getLength(array) == 0;
@@ -191,7 +191,7 @@ public abstract class ArrayUtil {
     }
 
     public static int hashCode(Object[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return 0;
         }
         int hash = ArrayUtil.HASHCODE_INITIAL_VALUE;
@@ -203,7 +203,7 @@ public abstract class ArrayUtil {
     }
 
     public static int hashCode(boolean[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return 0;
         }
         int hash = ArrayUtil.HASHCODE_INITIAL_VALUE;
@@ -215,7 +215,7 @@ public abstract class ArrayUtil {
     }
 
     public static int hashCode(byte[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return 0;
         }
         int hash = ArrayUtil.HASHCODE_INITIAL_VALUE;
@@ -227,7 +227,7 @@ public abstract class ArrayUtil {
     }
 
     public static int hashCode(char[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return 0;
         }
         int hash = ArrayUtil.HASHCODE_INITIAL_VALUE;
@@ -239,7 +239,7 @@ public abstract class ArrayUtil {
     }
 
     public static int hashCode(double[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return 0;
         }
         int hash = ArrayUtil.HASHCODE_INITIAL_VALUE;
@@ -251,7 +251,7 @@ public abstract class ArrayUtil {
     }
 
     public static int hashCode(float[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return 0;
         }
         int hash = ArrayUtil.HASHCODE_INITIAL_VALUE;
@@ -263,7 +263,7 @@ public abstract class ArrayUtil {
     }
 
     public static int hashCode(int[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return 0;
         }
         int hash = ArrayUtil.HASHCODE_INITIAL_VALUE;
@@ -275,7 +275,7 @@ public abstract class ArrayUtil {
     }
 
     public static int hashCode(long[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return 0;
         }
         int hash = ArrayUtil.HASHCODE_INITIAL_VALUE;
@@ -287,7 +287,7 @@ public abstract class ArrayUtil {
     }
 
     public static int hashCode(short[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return 0;
         }
         int hash = ArrayUtil.HASHCODE_INITIAL_VALUE;
@@ -299,7 +299,7 @@ public abstract class ArrayUtil {
     }
 
     public static String toString(Object[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return ArrayUtil.TO_STRING_NULL_OBJECT;
         }
 
@@ -316,7 +316,7 @@ public abstract class ArrayUtil {
     }
 
     public static String toString(boolean[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return ArrayUtil.TO_STRING_NULL_OBJECT;
         }
 
@@ -333,7 +333,7 @@ public abstract class ArrayUtil {
     }
 
     public static String toString(byte[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return ArrayUtil.TO_STRING_NULL_OBJECT;
         }
 
@@ -350,7 +350,7 @@ public abstract class ArrayUtil {
     }
 
     public static String toString(char[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return ArrayUtil.TO_STRING_NULL_OBJECT;
         }
 
@@ -367,7 +367,7 @@ public abstract class ArrayUtil {
     }
 
     public static String toString(double[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return ArrayUtil.TO_STRING_NULL_OBJECT;
         }
 
@@ -384,7 +384,7 @@ public abstract class ArrayUtil {
     }
 
     public static String toString(float[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return ArrayUtil.TO_STRING_NULL_OBJECT;
         }
 
@@ -401,7 +401,7 @@ public abstract class ArrayUtil {
     }
 
     public static String toString(int[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return ArrayUtil.TO_STRING_NULL_OBJECT;
         }
 
@@ -418,7 +418,7 @@ public abstract class ArrayUtil {
     }
 
     public static String toString(long[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return ArrayUtil.TO_STRING_NULL_OBJECT;
         }
 
@@ -435,7 +435,7 @@ public abstract class ArrayUtil {
     }
 
     public static String toString(short[] array) {
-        if (ObjectUtil.isAnyNull(array)) {
+        if (ObjectUtil.isNull(array)) {
             return ArrayUtil.TO_STRING_NULL_OBJECT;
         }
 
@@ -466,7 +466,7 @@ public abstract class ArrayUtil {
     }
 
     public static byte[] copyBytes(byte[] original) {
-        if (ObjectUtil.isAnyNull(original)) {
+        if (ObjectUtil.isNull(original)) {
             return null;
         }
 
@@ -477,11 +477,11 @@ public abstract class ArrayUtil {
     }
 
     public static byte[] insertBytes(byte[] original, byte[] target, int targetOffset) {
-        if (ObjectUtil.isAnyNull(target) || targetOffset < 0 || targetOffset >= target.length
-                || (target.length - targetOffset) < (ObjectUtil.isAnyNull(original) ? 0 : original.length)) {
+        if (ObjectUtil.isNull(target) || targetOffset < 0 || targetOffset >= target.length
+                || (target.length - targetOffset) < (ObjectUtil.isNull(original) ? 0 : original.length)) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        if (ObjectUtil.isAnyNull(original)) {
+        if (ObjectUtil.isNull(original)) {
             return target;
         }
 
@@ -495,7 +495,7 @@ public abstract class ArrayUtil {
             throw new NullPointerException();
         }
         for (byte[] value : values) {
-            if (ObjectUtil.isAnyNull(value)) {
+            if (ObjectUtil.isNull(value)) {
                 throw new NullPointerException();
             }
         }

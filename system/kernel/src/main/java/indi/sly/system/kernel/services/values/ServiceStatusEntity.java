@@ -53,14 +53,14 @@ public class ServiceStatusEntity extends APersistentEntity {
     }
 
     public void addDependency(ServiceStatusEntity dependency) {
-        if (ObjectUtil.allNotNull(dependency) && !this.dependencies.contains(dependency)) {
+        if (ObjectUtil.notNull(dependency) && !this.dependencies.contains(dependency)) {
             this.dependencies.add(dependency);
             dependency.dependents.add(this);
         }
     }
 
     public void removeDependency(ServiceStatusEntity dependency) {
-        if (ObjectUtil.allNotNull(dependency) && this.dependencies.contains(dependency)) {
+        if (ObjectUtil.notNull(dependency) && this.dependencies.contains(dependency)) {
             this.dependencies.remove(dependency);
             dependency.dependents.remove(this);
         }

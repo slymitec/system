@@ -90,7 +90,7 @@ public class InfoFactory extends AFactory {
     }
 
     public InfoObject buildInfo(InfoEntity info, @Nullable InfoCacheEntity parentInfoCache) {
-        if (ObjectUtil.isAnyNull(info)) {
+        if (ObjectUtil.isNull(info)) {
             throw new ConditionParametersException();
         }
 
@@ -109,7 +109,7 @@ public class InfoFactory extends AFactory {
         cache.setPoolId(poolId);
         cache.setDuration(CacheDurationType.PREPARE);
 
-        if (ObjectUtil.allNotNull(parentInfoCache)) {
+        if (ObjectUtil.notNull(parentInfoCache)) {
             IdentifierRecord identifier;
             if (StringUtil.isNameIllegal(info.getName())) {
                 identifier = new IdentifierRecord(info.getId());
@@ -235,7 +235,7 @@ public class InfoFactory extends AFactory {
     }
 
     public DumpObject buildDump(DumpCacheEntity cache) {
-        if (ObjectUtil.isAnyNull(cache)) {
+        if (ObjectUtil.isNull(cache)) {
             throw new ConditionParametersException();
         }
 

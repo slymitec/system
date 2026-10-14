@@ -45,7 +45,7 @@ public class TypeFactory extends AFactory {
         type.setName(typeName);
         type.setAttribute(attribute);
         type.setInitializer(typeInitializer);
-        if (ObjectUtil.allNotNull(childTypes)) {
+        if (ObjectUtil.notNull(childTypes)) {
             type.getChildTypes().addAll(childTypes);
         }
 

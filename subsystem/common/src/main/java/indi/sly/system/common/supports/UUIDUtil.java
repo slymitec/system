@@ -3,9 +3,6 @@ package indi.sly.system.common.supports;
 import com.github.f4b6a3.uuid.UuidCreator;
 import indi.sly.system.common.lang.ConditionParametersException;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.UUID;
 
 public abstract class UUIDUtil {
@@ -28,7 +25,7 @@ public abstract class UUIDUtil {
     }
 
     public static UUID readFormBytes(byte[] value) {
-        if (ObjectUtil.isAnyNull(value) || value.length != 16) {
+        if (ObjectUtil.isNull(value) || value.length != 16) {
             throw new ConditionParametersException();
         }
 
@@ -40,7 +37,7 @@ public abstract class UUIDUtil {
     }
 
     public static byte[] writeToBytes(UUID value) {
-        if (ObjectUtil.isAnyNull(value)) {
+        if (ObjectUtil.isNull(value)) {
             throw new ConditionParametersException();
         }
 

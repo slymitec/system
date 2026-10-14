@@ -37,7 +37,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
         InfoEntity info = this.entityManager.find(InfoEntity.class, id);
 
-        return ObjectUtil.allNotNull(info);
+        return ObjectUtil.notNull(info);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
         InfoEntity info = this.entityManager.find(InfoEntity.class, id);
 
-        if (ObjectUtil.isAnyNull(info)) {
+        if (ObjectUtil.isNull(info)) {
             throw new StatusNotExistedException();
         }
 
@@ -73,13 +73,13 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         }
 
         InfoEntity info;
-        if (ObjectUtil.allNotNull(lockMode)) {
+        if (ObjectUtil.notNull(lockMode)) {
             info = this.entityManager.find(InfoEntity.class, id, lockMode);
         } else {
             info = this.entityManager.find(InfoEntity.class, id);
         }
 
-        if (ObjectUtil.isAnyNull(info)) {
+        if (ObjectUtil.isNull(info)) {
             throw new StatusNotExistedException();
         }
 
@@ -88,7 +88,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public InfoEntity add(InfoEntity info) {
-        if (ObjectUtil.isAnyNull(info)) {
+        if (ObjectUtil.isNull(info)) {
             throw new ConditionParametersException();
         }
 
@@ -101,7 +101,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public void delete(InfoEntity info) {
-        if (ObjectUtil.isAnyNull(info)) {
+        if (ObjectUtil.isNull(info)) {
             throw new ConditionParametersException();
         }
 
@@ -114,7 +114,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public InfoRelationEntity getRelation(InfoEntity info, UUID id) {
-        if (ObjectUtil.isAnyNull(info) || ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(info) || ValueUtil.isAnyNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -136,7 +136,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public InfoRelationEntity getRelation(InfoEntity info, String name) {
-        if (ObjectUtil.isAnyNull(info) || StringUtil.isNameIllegal(name)) {
+        if (ObjectUtil.isNull(info) || StringUtil.isNameIllegal(name)) {
             throw new ConditionParametersException();
         }
 
@@ -158,7 +158,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public List<InfoRelationEntity> listRelation(InfoEntity info, @Nullable InfoWildcardRecord wildcard) {
-        if (ObjectUtil.isAnyNull(info)) {
+        if (ObjectUtil.isNull(info)) {
             throw new ConditionParametersException();
         }
 
@@ -167,7 +167,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
         criteriaQuery.select(root);
         criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), info.getId()));
-        if (!ObjectUtil.isAnyNull(wildcard)) {
+        if (!ObjectUtil.isNull(wildcard)) {
             if (wildcard.fuzzy()) {
                 if (wildcard.type() == String.class) {
                     String wildcardValue = StringUtil.readFormBytes(wildcard.value());
@@ -194,7 +194,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public int countRelation(InfoEntity info, @Nullable InfoWildcardRecord wildcard) {
-        if (ObjectUtil.isAnyNull(info)) {
+        if (ObjectUtil.isNull(info)) {
             throw new ConditionParametersException();
         }
 
@@ -203,7 +203,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
         Root<InfoRelationEntity> root = criteriaQuery.from(InfoRelationEntity.class);
         criteriaQuery.select(criteriaBuilder.count(root));
         criteriaQuery.where(criteriaBuilder.equal(root.get("parentId"), info.getId()));
-        if (!ObjectUtil.isAnyNull(wildcard)) {
+        if (!ObjectUtil.isNull(wildcard)) {
             if (wildcard.fuzzy()) {
                 if (wildcard.type() == String.class) {
                     String wildcardValue = StringUtil.readFormBytes(wildcard.value());
@@ -230,7 +230,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public void addRelation(InfoRelationEntity relation) {
-        if (ObjectUtil.isAnyNull(relation)) {
+        if (ObjectUtil.isNull(relation)) {
             throw new ConditionParametersException();
         }
 
@@ -243,7 +243,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public void deleteRelation(InfoRelationEntity relation) {
-        if (ObjectUtil.isAnyNull(relation)) {
+        if (ObjectUtil.isNull(relation)) {
             throw new ConditionParametersException();
         }
 

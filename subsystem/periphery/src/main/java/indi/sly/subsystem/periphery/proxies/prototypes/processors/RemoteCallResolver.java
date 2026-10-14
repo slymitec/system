@@ -36,7 +36,7 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
             CallContextRecord callContext = remote.getCallContext();
 
             List<String> clientRequestContentParameters = new ArrayList<>();
-            if (ObjectUtil.allNotNull(parameters)) {
+            if (ObjectUtil.notNull(parameters)) {
                 for (Object parameter : parameters) {
                     clientRequestContentParameters.add(ObjectUtil.transferToString(parameter));
                 }
@@ -55,7 +55,7 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
 
             ClientResponseRecord clientResponse = kernelObjectActor.call(callRequest).block();
 
-            if (ObjectUtil.isAnyNull(clientResponse)) {
+            if (ObjectUtil.isNull(clientResponse)) {
                 throw new StatusUnexpectedException();
             }
 

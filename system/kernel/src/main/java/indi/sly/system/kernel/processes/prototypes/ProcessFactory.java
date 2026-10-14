@@ -133,7 +133,7 @@ public class ProcessFactory extends AFactory {
     }
 
     public ProcessEndBuilder createProcessEnd(@Nullable ProcessObject parentProcess, ProcessObject process) {
-        if (ObjectUtil.isAnyNull(process)) {
+        if (ObjectUtil.isNull(process)) {
             throw new ConditionParametersException();
         }
 

@@ -60,7 +60,7 @@ public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntit
     }
 
     public final void setLimits(Map<Long, Integer> limits) {
-        if (ObjectUtil.isAnyNull(limits)) {
+        if (ObjectUtil.isNull(limits)) {
             throw new ConditionParametersException();
         }
 

@@ -23,7 +23,7 @@ public class TaskBuilder extends ABuilder {
     protected JobFactory factory;
 
     public void create(String name, long attribute, @Nullable UUID processId, ATaskInitializer initializer) {
-        if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(initializer)) {
+        if (StringUtil.isNameIllegal(name) || ObjectUtil.isNull(initializer)) {
             throw new ConditionParametersException();
         }
 

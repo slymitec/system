@@ -39,6 +39,7 @@ public class MemoryManager extends AManager {
 
     @Override
     public void shutdown() {
+        super.shutdown();
     }
 
     public AInfoRepositoryObject getInfoRepository(UUID id) {

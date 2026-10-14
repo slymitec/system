@@ -26,6 +26,7 @@ import java.util.UUID;
 public class CacheRepositoryObject extends AObject {
     @Resource
     private RedissonClient redissonClient;
+    @SuppressWarnings("NullAway.Init")
     private RLiveObjectService liveObjectService;
 
     @PostConstruct

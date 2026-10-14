@@ -12,9 +12,12 @@ public class ThreadRunDefinition extends ADefinition {
         this.parameters = new ArrayList<>();
     }
 
+    @SuppressWarnings("NullAway.Init")
     private ACacheableObject<?> cacheableObject;
     private final List<String> parameters;
+    @SuppressWarnings("NullAway.Init")
     private Object result;
+    @SuppressWarnings("NullAway.Init")
     private ASystemException exception;
 
     public ACacheableObject<?> getCacheableObject() {

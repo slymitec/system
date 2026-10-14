@@ -5,6 +5,7 @@ import indi.sly.system.kernel.security.values.SecurityDescriptorEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
@@ -23,14 +24,14 @@ public class InfoEntity extends APersistentEntity {
     @SuppressWarnings("NullAway.Init")
     @Column(name = "Opened", nullable = false)
     protected long opened;
-    @SuppressWarnings("NullAway.Init")
+    @Nullable
     @Column(length = 256, name = "Name", nullable = true)
     protected String name;
     @SuppressWarnings("NullAway.Init")
     @Column(columnDefinition = "json", name = "Date", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     protected Map<Long, Long> date;
-    @SuppressWarnings("NullAway.Init")
+    @Nullable
     @Column(columnDefinition = "json", name = "Security_Descriptor", nullable = true)
     @JdbcTypeCode(SqlTypes.JSON)
     protected SecurityDescriptorEntity securityDescriptor;
@@ -68,11 +69,11 @@ public class InfoEntity extends APersistentEntity {
         this.opened = opened;
     }
 
-    public String getName() {
+    public @Nullable String getName() {
         return this.name;
     }
 
-    public void setName(String name) {
+    public void setName(@Nullable String name) {
         this.name = name;
     }
 
@@ -84,11 +85,11 @@ public class InfoEntity extends APersistentEntity {
         this.date = date;
     }
 
-    public SecurityDescriptorEntity getSecurityDescriptor() {
+    public @Nullable SecurityDescriptorEntity getSecurityDescriptor() {
         return this.securityDescriptor;
     }
 
-    public void setSecurityDescriptor(SecurityDescriptorEntity securityDescriptor) {
+    public void setSecurityDescriptor(@Nullable SecurityDescriptorEntity securityDescriptor) {
         this.securityDescriptor = securityDescriptor;
     }
 

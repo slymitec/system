@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes;
 
 import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.DateTimeType;
@@ -10,10 +11,9 @@ import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
 import indi.sly.system.kernel.core.environment.containers.KernelConfiguration;
 import indi.sly.system.kernel.core.environment.containers.UserSpace;
 import indi.sly.system.kernel.processes.prototypes.*;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.Deque;
 import java.util.UUID;
@@ -21,6 +21,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ThreadManager extends AManager {
+    @SuppressWarnings("NullAway.Init")
     private ThreadFactory factory;
 
     @Override
@@ -37,10 +38,16 @@ public class ThreadManager extends AManager {
 
     @Override
     public void shutdown() {
+        super.shutdown();
     }
 
     public ThreadObject getCurrent() {
         UserSpace userSpace = this.coreManager.getUserSpace();
+
+        if (ObjectUtil.isAnyNull(userSpace)) {
+            throw new StatusNotReadyException();
+        }
+
         Deque<ThreadObject> threads = userSpace.getThreads();
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
@@ -60,9 +67,14 @@ public class ThreadManager extends AManager {
 
     public int size() {
         UserSpace userSpace = this.coreManager.getUserSpace();
+
+        if (ObjectUtil.isAnyNull(userSpace)) {
+            throw new StatusNotReadyException();
+        }
+
         Deque<ThreadObject> threads = userSpace.getThreads();
 
-        return ObjectUtil.isAnyNull(threads) ? 0 : threads.size();
+        return threads.size();
     }
 
     public ThreadObject create(UUID processID) {

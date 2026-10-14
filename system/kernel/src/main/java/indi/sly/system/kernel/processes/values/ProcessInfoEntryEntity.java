@@ -11,10 +11,14 @@ public class ProcessInfoEntryEntity extends APersistentEntity {
         this.date = new HashMap<>();
     }
 
+    @SuppressWarnings("NullAway.Init")
     private UUID index;
     private final Map<Long, Long> date;
+    @SuppressWarnings("NullAway.Init")
     private UUID id;
+    @SuppressWarnings("NullAway.Init")
     private PathRecord path;
+    @SuppressWarnings("NullAway.Init")
     private InfoOpenRecord infoOpen;
     private boolean unsupportedDelete;
 

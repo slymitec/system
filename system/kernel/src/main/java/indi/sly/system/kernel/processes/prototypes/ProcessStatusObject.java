@@ -24,7 +24,9 @@ import java.util.Set;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
+    @SuppressWarnings("NullAway.Init")
     protected ProcessFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
@@ -42,7 +44,7 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
     public long get() {
         ProcessEntity process = this.getSelf(LockType.READ);
 
-        Long status = ProcessStatusType.NULL;
+        long status = ProcessStatusType.NULL;
 
         Set<ProcessProcessorReadStatusFunction> resolvers = this.processorMediator.getReadProcessStatuses();
 

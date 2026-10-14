@@ -72,7 +72,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         return this.getSelf(LockType.READ).getOpened();
     }
 
-    public String getName() {
+    public @Nullable String getName() {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
@@ -218,7 +218,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             childInfo = resolver.apply(childInfo, info, type, this.cache, childType, identifier);
         }
 
-        if (ObjectUtil.isAnyNull(info)) {
+        if (ObjectUtil.isAnyNull(childInfo)) {
             throw new StatusUnexpectedException();
         }
 

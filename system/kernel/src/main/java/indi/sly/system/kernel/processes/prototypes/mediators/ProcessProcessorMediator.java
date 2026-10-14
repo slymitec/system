@@ -29,6 +29,7 @@ public class ProcessProcessorMediator extends AMediator {
         this.writeProcessTokens = new HashSet<>();
     }
 
+    @SuppressWarnings("NullAway.Init")
     private ProcessProcessorSelfFunction self;
     private final Set<ProcessProcessorReadStatusFunction> readProcessStatuses;
     private final Set<ProcessProcessorWriteStatusConsumer> writeProcessStatuses;

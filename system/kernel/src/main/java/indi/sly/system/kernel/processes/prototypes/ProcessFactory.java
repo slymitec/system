@@ -16,6 +16,7 @@ import indi.sly.system.kernel.processes.values.ProcessCacheEntity;
 import indi.sly.system.kernel.processes.values.ProcessChildCacheEntity;
 import indi.sly.system.kernel.processes.values.ProcessEntity;
 import indi.sly.system.kernel.processes.values.ProcessInfoEntryCacheEntity;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -131,7 +132,7 @@ public class ProcessFactory extends AFactory {
         return processCreateBuilder;
     }
 
-    public ProcessEndBuilder createProcessEnd(ProcessObject parentProcess, ProcessObject process) {
+    public ProcessEndBuilder createProcessEnd(@Nullable ProcessObject parentProcess, ProcessObject process) {
         if (ObjectUtil.isAnyNull(process)) {
             throw new ConditionParametersException();
         }

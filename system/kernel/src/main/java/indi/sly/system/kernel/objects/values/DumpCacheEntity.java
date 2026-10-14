@@ -3,6 +3,7 @@ package indi.sly.system.kernel.objects.values;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.values.ACacheEntity;
 import indi.sly.system.kernel.security.values.SecurityDescriptorSummaryRecord;
+import org.jspecify.annotations.Nullable;
 import org.redisson.api.annotation.REntity;
 
 import java.util.*;
@@ -21,7 +22,7 @@ public class DumpCacheEntity extends ACacheEntity {
     private UUID accountId;
     @SuppressWarnings("NullAway.Init")
     private PathRecord path;
-    @SuppressWarnings("NullAway.Init")
+    @Nullable
     private InfoOpenRecord infoOpen;
     private final List<SecurityDescriptorSummaryRecord> securityDescriptorSummary;
 
@@ -53,11 +54,11 @@ public class DumpCacheEntity extends ACacheEntity {
         this.path = path;
     }
 
-    public InfoOpenRecord getInfoOpen() {
+    public @Nullable InfoOpenRecord getInfoOpen() {
         return this.infoOpen;
     }
 
-    public void setInfoOpen(InfoOpenRecord infoOpen) {
+    public void setInfoOpen(@Nullable InfoOpenRecord infoOpen) {
         this.infoOpen = infoOpen;
     }
 

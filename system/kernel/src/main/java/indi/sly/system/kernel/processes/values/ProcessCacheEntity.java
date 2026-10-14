@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @REntity
 public class ProcessCacheEntity extends ACacheEntity {
+    @SuppressWarnings("NullAway.Init")
     private UUID processId;
 
     public UUID getProcessId() {

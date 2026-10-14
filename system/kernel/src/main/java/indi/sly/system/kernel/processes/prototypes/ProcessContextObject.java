@@ -27,7 +27,9 @@ import java.util.Set;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessContextObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
+    @SuppressWarnings("NullAway.Init")
     protected ProcessFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {

@@ -11,9 +11,6 @@ import indi.sly.system.kernel.core.values.APersistentEntity;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
 import indi.sly.system.kernel.processes.ThreadManager;
-import indi.sly.system.kernel.processes.values.PortCacheEntity;
-import indi.sly.system.kernel.processes.values.SignalCacheEntity;
-import indi.sly.system.kernel.processes.values.SignalEntryRecord;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
@@ -29,7 +26,9 @@ import java.util.*;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
+    @SuppressWarnings("NullAway.Init")
     protected ProcessFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {

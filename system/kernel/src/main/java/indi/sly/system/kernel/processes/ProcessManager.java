@@ -20,16 +20,17 @@ import indi.sly.system.kernel.processes.values.ProcessCreatorRecord;
 import indi.sly.system.kernel.processes.values.ThreadStatusType;
 import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.values.PrivilegeType;
+import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessManager extends AManager {
+    @SuppressWarnings("NullAway.Init")
     private ProcessFactory factory;
 
     public ProcessFactory getFactory() {
@@ -41,12 +42,12 @@ public class ProcessManager extends AManager {
         if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_SELF)) {
             this.factory = this.coreManager.create(ProcessFactory.class);
             this.factory.init();
-        } else if (LogicalUtil.isAnyEqual(startup, StartupType.STEP_INIT_KERNEL)) {
         }
     }
 
     @Override
     public void shutdown() {
+        super.shutdown();
     }
 
     private ProcessObject getTarget(UUID processId) {
@@ -73,7 +74,7 @@ public class ProcessManager extends AManager {
         return this.getTarget(thread.getProcessId());
     }
 
-    public ProcessObject getWithAuthorization(UUID processId, AccountAuthorizationObject accountAuthorization) {
+    public ProcessObject getWithAuthorization(UUID processId, @Nullable AccountAuthorizationObject accountAuthorization) {
         if (ValueUtil.isAnyNullOrEmpty(processId)) {
             throw new ConditionParametersException();
         }

@@ -15,6 +15,7 @@ public class PortCacheEntity extends ACacheEntity {
         this.value = ArrayUtil.EMPTY_BYTES;
     }
 
+    @SuppressWarnings("NullAway.Init")
     @RIndex
     private UUID processId;
     private final Set<UUID> sourceProcessIds;

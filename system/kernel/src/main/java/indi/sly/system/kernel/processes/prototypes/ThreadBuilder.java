@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.StatusAlreadyFinishedException;
+import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.DateTimeType;
 import indi.sly.system.kernel.core.date.prototypes.DateTimeObject;
@@ -12,17 +13,22 @@ import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ThreadBuilder extends ABuilder {
+    @SuppressWarnings("NullAway.Init")
     protected ThreadFactory factory;
 
     public ThreadObject create(UUID processId) {
         UserSpace userSpace = this.coreManager.getUserSpace();
+
+        if(ObjectUtil.isAnyNull(userSpace)){
+            throw new StatusNotReadyException();
+        }
+
         Deque<ThreadObject> threads = userSpace.getThreads();
 
         DateTimeObject dateTime = this.coreManager.getDateTime();
@@ -50,6 +56,11 @@ public class ThreadBuilder extends ABuilder {
 
     public void end() {
         UserSpace userSpace = this.coreManager.getUserSpace();
+
+        if(ObjectUtil.isAnyNull(userSpace)){
+            throw new StatusNotReadyException();
+        }
+
         Deque<ThreadObject> threads = userSpace.getThreads();
 
         if (ObjectUtil.isAnyNull(threads) || threads.isEmpty()) {

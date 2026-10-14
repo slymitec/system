@@ -1,9 +1,6 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.ConditionContextException;
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.lang.ConditionRefuseException;
-import indi.sly.system.common.lang.StatusRelationshipErrorException;
+import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -35,7 +32,9 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
+    @SuppressWarnings("NullAway.Init")
     protected ProcessFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
@@ -57,6 +56,10 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         for (ProcessProcessorReadComponentFunction resolver : resolvers) {
             source = resolver.apply(source, process);
+        }
+
+        if (ObjectUtil.isAnyNull(source)) {
+            throw new StatusNotReadyException();
         }
 
         return (ProcessTokenEntity) source;

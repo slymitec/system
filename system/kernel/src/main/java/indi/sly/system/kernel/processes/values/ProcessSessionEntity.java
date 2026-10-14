@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ProcessSessionEntity extends APersistentEntity {
+    @SuppressWarnings("NullAway.Init")
     private UUID sessionId;
     private long type;
 

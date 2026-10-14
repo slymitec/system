@@ -2,17 +2,14 @@ package indi.sly.system.kernel.processes.prototypes.processors;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
 import indi.sly.system.common.supports.LogicalUtil;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.ProcessManager;
-import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorCreateFunction;
 import indi.sly.system.kernel.processes.lang.ProcessLifeProcessorEndFunction;
 import indi.sly.system.kernel.processes.prototypes.ProcessContextObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessLifeProcessorMediator;
 import indi.sly.system.kernel.processes.values.ProcessContextType;
-import indi.sly.system.kernel.security.prototypes.AccountAuthorizationObject;
 import indi.sly.system.kernel.security.values.PrivilegeType;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

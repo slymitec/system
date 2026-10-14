@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -27,7 +28,9 @@ import java.util.Set;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
+    @SuppressWarnings("NullAway.Init")
     protected ProcessFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
@@ -49,6 +52,10 @@ public class ProcessStatisticsObject extends AChildCacheableObject<ProcessChildC
 
         for (ProcessProcessorReadComponentFunction resolver : resolvers) {
             source = resolver.apply(source, process);
+        }
+
+        if (ObjectUtil.isAnyNull(source)) {
+            throw new StatusNotReadyException();
         }
 
         return (ProcessStatisticsEntity) source;

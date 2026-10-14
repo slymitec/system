@@ -11,31 +11,40 @@ import java.util.UUID;
 @Entity
 @Table(name = "Kernel_Processes")
 public class ProcessEntity extends APersistentEntity {
+    @SuppressWarnings("NullAway.Init")
     @Id
     @Column(name = "Id", nullable = false, updatable = false)
     protected UUID id;
+    @SuppressWarnings("NullAway.Init")
     @Column(name = "Status", nullable = false)
     protected long status;
+    @SuppressWarnings("NullAway.Init")
     @Column(name = "Parent_ProcessId", nullable = true)
     protected UUID parentProcessId;
+    @SuppressWarnings("NullAway.Init")
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "json", name = "Communication", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     protected ProcessCommunicationEntity communication;
+    @SuppressWarnings("NullAway.Init")
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "json", name = "Context", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     protected ProcessContextEntity context;
+    @SuppressWarnings("NullAway.Init")
     @Column(columnDefinition = "json", name = "Info_Table", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     protected ProcessInfoTableEntity infoTable;
+    @SuppressWarnings("NullAway.Init")
     @Column(columnDefinition = "json", name = "Session_Info", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     protected ProcessSessionEntity session;
+    @SuppressWarnings("NullAway.Init")
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "json", name = "Statistics_Info", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     protected ProcessStatisticsEntity statistics;
+    @SuppressWarnings("NullAway.Init")
     @Column(columnDefinition = "json", name = "Token", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     protected ProcessTokenEntity token;

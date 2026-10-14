@@ -8,6 +8,7 @@ import java.util.Objects;
 
 @REntity
 public class ProcessChildCacheEntity extends ACacheEntity {
+    @SuppressWarnings("NullAway.Init")
     @RObjectField
     private ProcessCacheEntity process;
 

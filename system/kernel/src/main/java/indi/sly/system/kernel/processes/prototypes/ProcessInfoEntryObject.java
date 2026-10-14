@@ -1,7 +1,12 @@
 package indi.sly.system.kernel.processes.prototypes;
 
-import indi.sly.system.common.lang.*;
+import indi.sly.system.common.lang.ConditionContextException;
+import indi.sly.system.common.lang.StatusDisabilityException;
+import indi.sly.system.common.lang.StatusNotExistedException;
+import indi.sly.system.common.lang.StatusNotReadyException;
 import indi.sly.system.common.supports.CollectionUtil;
+import indi.sly.system.common.supports.ObjectUtil;
+import indi.sly.system.common.supports.UUIDUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.DateTimeType;
 import indi.sly.system.common.values.LockType;
@@ -16,11 +21,13 @@ import indi.sly.system.kernel.objects.values.InfoOpenRecord;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorWriteComponentConsumer;
 import indi.sly.system.kernel.processes.prototypes.mediators.ProcessProcessorMediator;
-import indi.sly.system.kernel.processes.values.*;
+import indi.sly.system.kernel.processes.values.ProcessEntity;
+import indi.sly.system.kernel.processes.values.ProcessInfoEntryCacheEntity;
+import indi.sly.system.kernel.processes.values.ProcessInfoEntryEntity;
+import indi.sly.system.kernel.processes.values.ProcessInfoTableEntity;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.Map;
 import java.util.Set;
@@ -29,10 +36,10 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEntryCacheEntity, ProcessInfoTableObject> {
+    @SuppressWarnings("NullAway.Init")
     protected ProcessFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected ProcessProcessorMediator processorMediator;
-
-    protected Provider<Boolean> isProcessCurrent;
 
     private ProcessEntity getSelf(long lock) {
         if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcessInfoTable().getProcess().getProcessId())) {
@@ -53,6 +60,10 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
         for (ProcessProcessorReadComponentFunction resolver : resolvers) {
             source = resolver.apply(source, process);
+        }
+
+        if (ObjectUtil.isAnyNull(source)) {
+            throw new StatusNotReadyException();
         }
 
         return (ProcessInfoTableEntity) source;
@@ -113,8 +124,6 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();
 
-        PathRecord path;
-
         ProcessEntity process = this.getSelf(LockType.WRITE);
 
         if (!this.isExist()) {
@@ -126,7 +135,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
         processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
-        path = processInfoEntry.getPath();
+        PathRecord path = processInfoEntry.getPath();
 
         this.flush(process, processInfoTable);
 
@@ -137,8 +146,6 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();
 
-        InfoOpenRecord infoOpen;
-
         ProcessEntity process = this.getSelf(LockType.WRITE);
 
         if (!this.isExist()) {
@@ -150,7 +157,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
         processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
-        infoOpen = processInfoEntry.getInfoOpen();
+        InfoOpenRecord infoOpen = processInfoEntry.getInfoOpen();
 
         this.flush(process, processInfoTable);
 
@@ -161,8 +168,6 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();
 
-        boolean unsupportedDelete;
-
         ProcessEntity process = this.getSelf(LockType.WRITE);
 
         if (!this.isExist()) {
@@ -174,7 +179,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
         processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
-        unsupportedDelete = processInfoEntry.isUnsupportedDelete();
+        boolean unsupportedDelete = processInfoEntry.isUnsupportedDelete();
 
         this.flush(process, processInfoTable);
 
@@ -202,14 +207,8 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
     }
 
     public synchronized InfoObject getInfo() {
-        if (!this.isProcessCurrent.acquire()) {
-            throw new StatusRelationshipErrorException();
-        }
-
         DateTimeObject dateTime = this.coreManager.getDateTime();
         long nowDateTime = dateTime.getCurrent();
-
-        PathRecord path;
 
         ProcessEntity process = this.getSelf(LockType.WRITE);
 
@@ -222,7 +221,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
         ProcessInfoEntryEntity processInfoEntry = processInfoTable.getByIndex(this.cache.getIndex());
         processInfoEntry.getDate().put(DateTimeType.ACCESS, nowDateTime);
 
-        path = processInfoEntry.getPath();
+        PathRecord path = processInfoEntry.getPath();
 
         this.flush(process, processInfoTable);
 
@@ -254,6 +253,6 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
 
         this.flush(process, processInfoTable);
 
-        this.cache.setIndex(null);
+        this.cache.setIndex(UUIDUtil.getEmpty());
     }
 }

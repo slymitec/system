@@ -14,6 +14,7 @@ public class ThreadDefinition extends ADefinition {
     }
 
     private UUID id;
+    @SuppressWarnings("NullAway.Init")
     private UUID processId;
     private long status;
     private ThreadContextDefinition context;

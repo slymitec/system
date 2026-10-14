@@ -9,9 +9,11 @@ import java.util.UUID;
 
 @REntity
 public class ProcessInfoEntryCacheEntity extends ACacheEntity {
+    @SuppressWarnings("NullAway.Init")
     @RObjectField
     private ProcessChildCacheEntity processInfoTable;
 
+    @SuppressWarnings("NullAway.Init")
     private UUID index;
 
     public ProcessChildCacheEntity getProcessInfoTable() {

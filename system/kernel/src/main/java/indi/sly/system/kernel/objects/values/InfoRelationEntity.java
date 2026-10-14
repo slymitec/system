@@ -1,8 +1,11 @@
 package indi.sly.system.kernel.objects.values;
 
 import indi.sly.system.kernel.core.values.APersistentEntity;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -20,7 +23,7 @@ public class InfoRelationEntity extends APersistentEntity {
     @SuppressWarnings("NullAway.Init")
     @Column(name = "Type", nullable = false)
     protected UUID type;
-    @SuppressWarnings("NullAway.Init")
+    @Nullable
     @Column(length = 256, name = "Name", nullable = true)
     protected String name;
 
@@ -51,11 +54,11 @@ public class InfoRelationEntity extends APersistentEntity {
         this.type = type;
     }
 
-    public String getName() {
+    public @Nullable String getName() {
         return this.name;
     }
 
-    public void setName(String name) {
+    public void setName(@Nullable String name) {
         this.name = name;
     }
 

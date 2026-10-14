@@ -1,6 +1,5 @@
 package indi.sly.system.kernel.processes.prototypes.processors;
 
-import indi.sly.system.common.lang.StatusOverflowException;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadComponentFunction;
 import indi.sly.system.kernel.processes.lang.ProcessProcessorReadStatusFunction;
@@ -36,34 +35,22 @@ public class ProcessMemberResolver extends AResolver implements IProcessResolver
         this.writeProcessStatus = ProcessEntity::setStatus;
 
         this.readProcessCommunication = (communication, process) -> process.getCommunication();
-        this.writeProcessCommunication = (process, communication) -> {
-            process.setCommunication((ProcessCommunicationEntity) communication);
-        };
+        this.writeProcessCommunication = (process, communication) -> process.setCommunication((ProcessCommunicationEntity) communication);
 
         this.readProcessContext = (context, process) -> process.getContext();
-        this.writeProcessContext = (process, context) -> {
-            process.setContext((ProcessContextEntity) context);
-        };
+        this.writeProcessContext = (process, context) -> process.setContext((ProcessContextEntity) context);
 
         this.readProcessInfoTable = (infoTable, process) -> process.getInfoTable();
-        this.writeProcessInfoTable = (process, infoTable) -> {
-            process.setInfoTable((ProcessInfoTableEntity) infoTable);
-        };
+        this.writeProcessInfoTable = (process, infoTable) -> process.setInfoTable((ProcessInfoTableEntity) infoTable);
 
         this.readProcessSession = (session, process) -> process.getSession();
-        this.writeProcessSession = (process, session) -> {
-            process.setSession((ProcessSessionEntity) session);
-        };
+        this.writeProcessSession = (process, session) -> process.setSession((ProcessSessionEntity) session);
 
         this.readProcessStatistics = (statistics, process) -> process.getStatistics();
-        this.writeProcessStatistics = (process, statistics) -> {
-            process.setStatistics((ProcessStatisticsEntity) statistics);
-        };
+        this.writeProcessStatistics = (process, statistics) -> process.setStatistics((ProcessStatisticsEntity) statistics);
 
         this.readProcessToken = (token, process) -> process.getToken();
-        this.writeProcessToken = (process, token) -> {
-            process.setToken((ProcessTokenEntity) token);
-        };
+        this.writeProcessToken = (process, token) -> process.setToken((ProcessTokenEntity) token);
     }
 
     @Override

@@ -2,6 +2,7 @@ package indi.sly.system.kernel.processes.prototypes;
 
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.LogicalUtil;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
@@ -22,7 +23,9 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
+    @SuppressWarnings("NullAway.Init")
     protected ProcessFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
@@ -44,6 +47,10 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
 
         for (ProcessProcessorReadComponentFunction resolver : resolvers) {
             source = resolver.apply(source, process);
+        }
+
+        if (ObjectUtil.isAnyNull(source)) {
+            throw new StatusNotReadyException();
         }
 
         return (ProcessSessionEntity) source;

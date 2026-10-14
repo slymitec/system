@@ -1,7 +1,5 @@
 package indi.sly.system.kernel.processes.values;
 
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.core.values.APersistentEntity;
 
@@ -13,10 +11,14 @@ public class ProcessContextEntity extends APersistentEntity {
     }
 
     private long type;
+    @SuppressWarnings("NullAway.Init")
     private PathRecord path;
+    @SuppressWarnings("NullAway.Init")
     private ApplicationRecord application;
     private final Map<String, String> environmentVariables;
+    @SuppressWarnings("NullAway.Init")
     private String parameters;
+    @SuppressWarnings("NullAway.Init")
     private PathRecord workFolder;
 
     public long getType() {

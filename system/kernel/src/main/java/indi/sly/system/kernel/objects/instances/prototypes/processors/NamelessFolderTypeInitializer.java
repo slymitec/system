@@ -70,13 +70,13 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
             throw new StatusNotSupportedException();
         }
 
-        UUID childInfoID = UUIDUtil.readFormBytes(identifier.value());
+        UUID childInfoId = UUIDUtil.readFormBytes(identifier.value());
         InfoSummaryRecord infoSummary;
 
         MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
         AInfoRepositoryObject infoRepository = memoryManager.getInfoRepository(this.getPoolId(info.getId(), info.getType()));
 
-        InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoID);
+        InfoRelationEntity infoRelation = infoRepository.getRelation(info, childInfoId);
 
         infoSummary = new InfoSummaryRecord(infoRelation.getId(), infoRelation.getType(), infoRelation.getName());
 

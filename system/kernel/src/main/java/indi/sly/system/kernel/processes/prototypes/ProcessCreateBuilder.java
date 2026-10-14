@@ -18,10 +18,14 @@ import java.util.List;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessCreateBuilder extends ABuilder {
+    @SuppressWarnings("NullAway.Init")
     protected ProcessFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected ProcessLifeProcessorMediator processorMediator;
 
+    @SuppressWarnings("NullAway.Init")
     protected ProcessObject parentProcess;
+    @SuppressWarnings("NullAway.Init")
     protected ProcessObject process;
 
     private void create() {

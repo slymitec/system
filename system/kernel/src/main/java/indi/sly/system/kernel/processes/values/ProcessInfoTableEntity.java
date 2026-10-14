@@ -39,7 +39,7 @@ public class ProcessInfoTableEntity extends APersistentEntity {
     }
 
     public ProcessInfoEntryEntity getByIndex(UUID index) {
-        ProcessInfoEntryEntity infoEntry = this.indexTable.getOrDefault(index, null);
+        ProcessInfoEntryEntity infoEntry = this.indexTable.get(index);
 
         if (ObjectUtil.isAnyNull(infoEntry)) {
             throw new StatusNotExistedException();
@@ -49,7 +49,7 @@ public class ProcessInfoTableEntity extends APersistentEntity {
     }
 
     public ProcessInfoEntryEntity getById(UUID id) {
-        ProcessInfoEntryEntity infoEntry = this.idTable.getOrDefault(id, null);
+        ProcessInfoEntryEntity infoEntry = this.idTable.get(id);
 
         if (ObjectUtil.isAnyNull(infoEntry)) {
             throw new StatusNotExistedException();

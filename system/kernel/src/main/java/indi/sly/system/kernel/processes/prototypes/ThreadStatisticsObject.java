@@ -17,7 +17,7 @@ import java.util.Map;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ThreadStatisticsObject extends AChildDefinitionObject<ThreadStatisticsDefinition, ThreadObject> {
     public long getDate(long dataTime) {
-        Long value = this.definition.getDate().getOrDefault(dataTime, null);
+        Long value = this.definition.getDate().get(dataTime);
 
         if (ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();

@@ -10,6 +10,7 @@ public class ProcessTokenEntity extends APersistentEntity {
         this.roles = new HashSet<>();
     }
 
+    @SuppressWarnings("NullAway.Init")
     private UUID accountId;
     private long privileges;
     private final Map<Long, Integer> limits;

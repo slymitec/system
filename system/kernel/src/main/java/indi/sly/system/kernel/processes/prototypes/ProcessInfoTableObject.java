@@ -30,7 +30,9 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCacheEntity, ProcessObject> {
+    @SuppressWarnings("NullAway.Init")
     protected ProcessFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
@@ -52,6 +54,10 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
 
         for (ProcessProcessorReadComponentFunction resolver : resolvers) {
             source = resolver.apply(source, process);
+        }
+
+        if (ObjectUtil.isAnyNull(source)) {
+            throw new StatusNotReadyException();
         }
 
         return (ProcessInfoTableEntity) source;

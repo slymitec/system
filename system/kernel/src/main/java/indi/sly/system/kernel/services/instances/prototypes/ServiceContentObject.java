@@ -2,6 +2,7 @@ package indi.sly.system.kernel.services.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
@@ -26,6 +27,10 @@ public class ServiceContentObject extends AInfoContentObject {
     public List<UUID> getDependencies() {
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
+
         return CollectionUtil.unmodifiable(service.getDependencies());
     }
 
@@ -43,6 +48,10 @@ public class ServiceContentObject extends AInfoContentObject {
 
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
+
         service.getDependencies().clear();
         service.getDependencies().addAll(dependencies);
 
@@ -58,6 +67,10 @@ public class ServiceContentObject extends AInfoContentObject {
         }
 
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
 
         return service.getSecret();
     }
@@ -76,6 +89,10 @@ public class ServiceContentObject extends AInfoContentObject {
 
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
+
         service.setSecret(secret);
 
         this.write(ObjectUtil.transferToJsonByteArray(service));
@@ -83,6 +100,10 @@ public class ServiceContentObject extends AInfoContentObject {
 
     public PathRecord getPath() {
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
 
         return service.getPath();
     }
@@ -101,6 +122,10 @@ public class ServiceContentObject extends AInfoContentObject {
 
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
+
         service.setPath(path);
 
         this.write(ObjectUtil.transferToJsonByteArray(service));
@@ -108,6 +133,10 @@ public class ServiceContentObject extends AInfoContentObject {
 
     public UUID getAccountId() {
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
 
         return service.getAccountId();
     }
@@ -126,6 +155,10 @@ public class ServiceContentObject extends AInfoContentObject {
 
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
+
         service.setAccountId(accountId);
 
         this.write(ObjectUtil.transferToJsonByteArray(service));
@@ -133,6 +166,10 @@ public class ServiceContentObject extends AInfoContentObject {
 
     public long getMode() {
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
 
         return service.getMode();
     }
@@ -147,6 +184,10 @@ public class ServiceContentObject extends AInfoContentObject {
 
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
+
         service.setMode(mode);
 
         this.write(ObjectUtil.transferToJsonByteArray(service));
@@ -154,6 +195,10 @@ public class ServiceContentObject extends AInfoContentObject {
 
     public long getStart() {
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
 
         return service.getStart();
     }
@@ -167,6 +212,10 @@ public class ServiceContentObject extends AInfoContentObject {
         }
 
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
 
         service.setStart(start);
 
@@ -182,6 +231,10 @@ public class ServiceContentObject extends AInfoContentObject {
         }
 
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
 
         return CollectionUtil.unmodifiable(service.getEnvironmentVariables());
     }
@@ -200,6 +253,10 @@ public class ServiceContentObject extends AInfoContentObject {
 
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
+
         service.getEnvironmentVariables().clear();
         service.getEnvironmentVariables().putAll(environmentVariables);
 
@@ -215,6 +272,10 @@ public class ServiceContentObject extends AInfoContentObject {
         }
 
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
 
         return service.getParameters();
     }
@@ -232,6 +293,10 @@ public class ServiceContentObject extends AInfoContentObject {
         }
 
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
 
         service.setParameters(parameters);
 
@@ -251,6 +316,10 @@ public class ServiceContentObject extends AInfoContentObject {
         }
 
         ServiceDefinition service = ObjectUtil.transferFromJsonByteArray(ServiceDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(service)) {
+            throw new StatusUnreadableException();
+        }
 
         service.getDependencies().clear();
         service.getDependencies().addAll(definition.getDependencies());

@@ -18,23 +18,21 @@ public class ServiceStatusEntity extends APersistentEntity {
         this.dependents = new HashSet<>();
     }
 
+    @SuppressWarnings("NullAway.Init")
     @Id
     @Column(name = "Id", nullable = false, updatable = false)
     protected UUID id;
-
+    @SuppressWarnings("NullAway.Init")
     @Column(name = "ProcessId", nullable = false)
     protected UUID processId;
-
     @ManyToMany
     @JoinTable(name = "Kernel_ServiceStatus_Relations", joinColumns = @JoinColumn(name = "ParentId"), inverseJoinColumns = @JoinColumn(name = "ChildId"))
     private final Set<ServiceStatusEntity> dependencies;
-
     @ManyToMany(mappedBy = "dependencies")
     private final Set<ServiceStatusEntity> dependents;
-
+    @SuppressWarnings("NullAway.Init")
     @Column(name = "Mode", nullable = false)
     protected Long mode;
-
     @Column(name = "Independence", nullable = false)
     private boolean independence;
 
@@ -64,9 +62,7 @@ public class ServiceStatusEntity extends APersistentEntity {
     public void removeDependency(ServiceStatusEntity dependency) {
         if (ObjectUtil.allNotNull(dependency) && this.dependencies.contains(dependency)) {
             this.dependencies.remove(dependency);
-            if (dependency.dependents.contains(this)) {
-                dependency.dependents.remove(this);
-            }
+            dependency.dependents.remove(this);
         }
     }
 

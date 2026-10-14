@@ -41,6 +41,7 @@ import java.util.*;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ServiceManager extends AManager {
+    @SuppressWarnings("NullAway.Init")
     private ServiceFactory factory;
 
     public ServiceFactory getFactory() {
@@ -71,6 +72,7 @@ public class ServiceManager extends AManager {
 
     @Override
     public void shutdown() {
+        super.shutdown();
     }
 
     public void createService(UUID serviceId, List<UUID> dependencies, String secret, PathRecord path, UUID accountId,

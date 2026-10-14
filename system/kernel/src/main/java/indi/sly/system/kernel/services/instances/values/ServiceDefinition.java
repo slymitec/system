@@ -12,12 +12,16 @@ public class ServiceDefinition extends ADefinition {
     }
 
     private final List<UUID> dependencies;
+    @SuppressWarnings("NullAway.Init")
     private String secret;
+    @SuppressWarnings("NullAway.Init")
     private PathRecord path;
+    @SuppressWarnings("NullAway.Init")
     private UUID accountId;
     private long mode;
     private long start;
     private final Map<String, String> environmentVariables;
+    @SuppressWarnings("NullAway.Init")
     private String parameters;
 
     public List<UUID> getDependencies() {

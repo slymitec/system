@@ -6,10 +6,14 @@ import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitia
 import java.util.UUID;
 
 public class TaskDefinition extends ADefinition {
+    @SuppressWarnings("NullAway.Init")
     private UUID id;
     private long attribute;
+    @SuppressWarnings("NullAway.Init")
     private String name;
+    @SuppressWarnings("NullAway.Init")
     private UUID processId;
+    @SuppressWarnings("NullAway.Init")
     private ATaskInitializer initializer;
 
     public UUID getId() {

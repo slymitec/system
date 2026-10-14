@@ -8,10 +8,10 @@ import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.kernel.core.AService;
 import indi.sly.system.kernel.core.boot.values.StartupType;
 import indi.sly.system.kernel.core.environment.containers.KernelSpace;
+import indi.sly.system.services.actors.prototypes.KernelObjectActorFactory;
 import indi.sly.system.services.core.environment.values.ServiceKernelExtensionSpace;
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
-import indi.sly.system.services.actors.prototypes.KernelObjectActorFactory;
-import indi.sly.system.services.jobs.instances.prototypes.processors.*;
+import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.CoreManagerTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.DateTimeObjectTaskInitializer;
 import indi.sly.system.services.jobs.instances.prototypes.processors.core.SystemVersionObjectTaskInitializer;
@@ -29,10 +29,10 @@ import indi.sly.system.services.jobs.prototypes.*;
 import indi.sly.system.services.jobs.values.CallContextRecord;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
+import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.UUID;
 
@@ -93,15 +93,18 @@ public class JobService extends AService {
 
     @Override
     public void shutdown() {
+        super.shutdown();
     }
 
     @Override
     public void check() {
+        super.check();
     }
 
+    @SuppressWarnings("NullAway.Init")
     protected JobFactory factory;
 
-    private void createTask(String name, long attribute, UUID processId, ATaskInitializer initializer) {
+    private void createTask(String name, long attribute, @Nullable UUID processId, ATaskInitializer initializer) {
         if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(initializer)) {
             throw new ConditionParametersException();
         }
@@ -118,13 +121,13 @@ public class JobService extends AService {
 
         ServiceKernelExtensionSpace serviceSpace = (ServiceKernelExtensionSpace) this.coreManager.getKernelSpace().getServiceSpace();
 
-        UUID taskId = serviceSpace.getNamedTaskIds().getOrDefault(name, null);
+        UUID taskId = serviceSpace.getNamedTaskIds().get(name);
 
         if (ValueUtil.isAnyNullOrEmpty(taskId)) {
             throw new StatusNotExistedException();
         }
 
-        TaskDefinition task = serviceSpace.getTasks().getOrDefault(taskId, null);
+        TaskDefinition task = serviceSpace.getTasks().get(taskId);
 
         if (ObjectUtil.isAnyNull(task)) {
             throw new StatusNotExistedException();

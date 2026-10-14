@@ -1,20 +1,18 @@
 package indi.sly.system.services.jobs.prototypes;
 
-import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.supports.StringUtil;
+import indi.sly.system.common.lang.StatusUnexpectedException;
+import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.core.prototypes.ADefinitionObject;
 import indi.sly.system.kernel.processes.prototypes.ThreadContextObject;
 import indi.sly.system.services.jobs.lang.TaskProcessorContentFunction;
 import indi.sly.system.services.jobs.lang.TaskProcessorEndConsumer;
-import indi.sly.system.services.jobs.lang.TaskProcessorRunConsumer;
 import indi.sly.system.services.jobs.lang.TaskProcessorStartConsumer;
 import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import indi.sly.system.services.jobs.values.TaskStatusDefinition;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +20,9 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TaskObject extends ADefinitionObject<TaskDefinition> {
+    @SuppressWarnings("NullAway.Init")
     protected TaskProcessorMediator processorMediator;
+    @SuppressWarnings("NullAway.Init")
     protected TaskStatusDefinition status;
 
     public UUID getId() {
@@ -64,6 +64,10 @@ public class TaskObject extends ADefinitionObject<TaskDefinition> {
 
         for (TaskProcessorContentFunction resolver : resolvers) {
             threadContext = resolver.apply(this.definition, this.status, threadContext);
+        }
+
+        if (ObjectUtil.isAnyNull(threadContext)) {
+            throw new StatusUnexpectedException();
         }
 
         TaskContentObject taskContent = this.coreManager.create(TaskContentObject.class);

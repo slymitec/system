@@ -2,8 +2,6 @@ package indi.sly.system.services.jobs.prototypes.processors;
 
 import indi.sly.system.common.lang.StatusRelationshipErrorException;
 import indi.sly.system.kernel.core.prototypes.processors.AResolver;
-import indi.sly.system.kernel.processes.ThreadManager;
-import indi.sly.system.kernel.processes.prototypes.ThreadObject;
 import indi.sly.system.services.jobs.lang.*;
 import indi.sly.system.services.jobs.prototypes.mediators.TaskProcessorMediator;
 import indi.sly.system.services.jobs.values.TaskDefinition;

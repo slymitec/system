@@ -8,16 +8,15 @@ import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.core.prototypes.processors.AInitializer;
 import indi.sly.system.services.core.values.TransactionType;
 import indi.sly.system.services.jobs.lang.TaskInitializerRunMethodConsumer;
-import indi.sly.system.services.jobs.lang.TaskRunConsumer;
 import indi.sly.system.services.jobs.prototypes.TaskContentObject;
 import indi.sly.system.services.jobs.values.TaskDefinition;
 import indi.sly.system.services.jobs.values.TaskInitializerRunRecord;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,6 +32,7 @@ public abstract class ATaskInitializer extends AInitializer {
     }
 
     private final Map<String, TaskInitializerRunRecord> runs;
+    @Nullable
     protected Function1<? extends ACacheableObject<?>, UUID> cacheableObjectFunction;
 
     protected final void register(String name, TaskInitializerRunMethodConsumer runMethod) {

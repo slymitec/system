@@ -7,7 +7,6 @@ import indi.sly.system.services.core.environment.values.ServiceKernelExtensionSp
 import indi.sly.system.services.core.prototypes.TransactionalActionComponent;
 import indi.sly.system.services.jobs.lang.CallContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.mediators.CallContextProcessorMediator;
-import indi.sly.system.services.jobs.values.CallContextRecord;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

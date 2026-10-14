@@ -3,6 +3,7 @@ package indi.sly.system.kernel.processes.values;
 import indi.sly.system.common.lang.ASystemException;
 import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public class ThreadRunDefinition extends ADefinition {
     @SuppressWarnings("NullAway.Init")
     private ACacheableObject<?> cacheableObject;
     private final List<String> parameters;
-    @SuppressWarnings("NullAway.Init")
+    @Nullable
     private Object result;
     @SuppressWarnings("NullAway.Init")
     private ASystemException exception;
@@ -32,11 +33,11 @@ public class ThreadRunDefinition extends ADefinition {
         return this.parameters;
     }
 
-    public Object getResult() {
+    public @Nullable Object getResult() {
         return this.result;
     }
 
-    public void setResult(Object result) {
+    public void setResult(@Nullable Object result) {
         this.result = result;
     }
 

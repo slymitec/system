@@ -1,6 +1,7 @@
 package indi.sly.system.services.jobs.values;
 
 import indi.sly.system.common.values.ADefinition;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,15 +12,16 @@ public class TaskStatusDefinition extends ADefinition {
         this.date = new HashMap<>();
     }
 
+    @Nullable
     private UUID handle;
     private final Map<Long, Long> date;
     private long runtime;
 
-    public UUID getHandle() {
+    public @Nullable UUID getHandle() {
         return this.handle;
     }
 
-    public void setHandle(UUID handle) {
+    public void setHandle(@Nullable UUID handle) {
         this.handle = handle;
     }
 

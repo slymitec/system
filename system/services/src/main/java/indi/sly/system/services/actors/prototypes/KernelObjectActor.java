@@ -29,7 +29,9 @@ public class KernelObjectActor extends AbstractActor implements IKernelObjectAct
         super(runtimeContext, id);
     }
 
+    @SuppressWarnings("NullAway.Init")
     protected CoreManager coreManager;
+    @SuppressWarnings("NullAway.Init")
     protected TaskObject task;
 
     @Override

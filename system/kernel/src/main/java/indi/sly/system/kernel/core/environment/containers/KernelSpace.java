@@ -21,7 +21,7 @@ public class KernelSpace extends ASystemSpace {
     private final KernelConfiguration configuration;
     private final Set<UUID> infoTypeIds;
     private final ThreadLocal<@Nullable UserSpace> userSpace;
-    @Nullable
+    @SuppressWarnings("NullAway.Init")
     private AKernelExtensionSpace serviceSpace;
 
     public KernelConfiguration getConfiguration() {
@@ -44,11 +44,11 @@ public class KernelSpace extends ASystemSpace {
         }
     }
 
-    public @Nullable AKernelExtensionSpace getServiceSpace() {
+    public AKernelExtensionSpace getServiceSpace() {
         return this.serviceSpace;
     }
 
-    public void setServiceSpace(@Nullable AKernelExtensionSpace serviceSpace) {
+    public void setServiceSpace(AKernelExtensionSpace serviceSpace) {
         this.serviceSpace = serviceSpace;
     }
 }

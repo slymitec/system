@@ -1,6 +1,5 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors.processes;
 
-import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessInfoEntryObject;

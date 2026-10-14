@@ -1,6 +1,5 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors.security;
 
-import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.kernel.security.UserManager;
 import indi.sly.system.kernel.security.prototypes.GroupObject;
 import indi.sly.system.kernel.security.prototypes.GroupTokenObject;

@@ -1,7 +1,6 @@
 package indi.sly.system.services.actors.prototypes;
 
 import indi.sly.system.common.supports.SpringHelper;
-import indi.sly.system.kernel.core.CoreManager;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import io.dapr.actors.runtime.ActorFactory;
 import io.dapr.actors.runtime.ActorRuntime;

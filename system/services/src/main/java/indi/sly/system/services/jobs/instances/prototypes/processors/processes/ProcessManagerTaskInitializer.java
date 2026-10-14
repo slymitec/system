@@ -1,7 +1,6 @@
 package indi.sly.system.services.jobs.instances.prototypes.processors.processes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
-import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.processes.ProcessManager;

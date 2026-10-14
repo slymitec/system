@@ -16,7 +16,9 @@ import java.util.List;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CallContextCreateBuilder extends ABuilder {
+    @SuppressWarnings("NullAway.Init")
     protected JobFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected CallContextProcessorMediator processorMediator;
 
     public CallContextObject create(CallContextRecord callContext) {

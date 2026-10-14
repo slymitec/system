@@ -14,6 +14,7 @@ public class ServiceKernelExtensionSpace extends AKernelExtensionSpace {
         this.namedTaskIds = new ConcurrentHashMap<>();
     }
 
+    @SuppressWarnings("NullAway.Init")
     private TransactionalActionComponent transactionalAction;
     private final Map<UUID, TaskDefinition> tasks;
     private final Map<String, UUID> namedTaskIds;

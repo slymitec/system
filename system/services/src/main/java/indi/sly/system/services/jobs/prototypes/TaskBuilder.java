@@ -9,18 +9,20 @@ import indi.sly.system.services.core.environment.values.ServiceKernelExtensionSp
 import indi.sly.system.services.jobs.instances.prototypes.processors.ATaskInitializer;
 import indi.sly.system.services.jobs.values.TaskAttributeType;
 import indi.sly.system.services.jobs.values.TaskDefinition;
+import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import jakarta.inject.Named;
 import java.util.UUID;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TaskBuilder extends ABuilder {
+    @SuppressWarnings("NullAway.Init")
     protected JobFactory factory;
 
-    public void create(String name, long attribute, UUID processId, ATaskInitializer initializer) {
+    public void create(String name, long attribute, @Nullable UUID processId, ATaskInitializer initializer) {
         if (StringUtil.isNameIllegal(name) || ObjectUtil.isAnyNull(initializer)) {
             throw new ConditionParametersException();
         }
@@ -53,13 +55,13 @@ public class TaskBuilder extends ABuilder {
 
         ServiceKernelExtensionSpace serviceSpace = (ServiceKernelExtensionSpace) this.coreManager.getKernelSpace().getServiceSpace();
 
-        UUID taskID = serviceSpace.getNamedTaskIds().getOrDefault(name, null);
+        UUID taskId = serviceSpace.getNamedTaskIds().get(name);
 
-        if (ValueUtil.isAnyNullOrEmpty(taskID)) {
+        if (ValueUtil.isAnyNullOrEmpty(taskId)) {
             throw new StatusNotExistedException();
         }
 
-        TaskDefinition task = serviceSpace.getTasks().getOrDefault(taskID, null);
+        TaskDefinition task = serviceSpace.getTasks().get(taskId);
 
         serviceSpace.getTasks().remove(task.getId());
         serviceSpace.getNamedTaskIds().remove(task.getName());

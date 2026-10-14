@@ -5,10 +5,10 @@ import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.kernel.core.prototypes.ACacheableObject;
 import indi.sly.system.kernel.core.prototypes.AChildDefinitionObject;
 import indi.sly.system.kernel.processes.values.ThreadContextDefinition;
+import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.List;
 
@@ -42,20 +42,16 @@ public class ThreadContextObject extends AChildDefinitionObject<ThreadContextDef
         this.definition.getRun().getParameters().addAll(parameters);
     }
 
-    public Object getResult() {
-        Object result = this.definition.getRun().getResult();
-
-        return result;
+    public @Nullable Object getResult() {
+        return this.definition.getRun().getResult();
     }
 
-    public void setResult(Object result) {
+    public void setResult(@Nullable Object result) {
         this.definition.getRun().setResult(result);
     }
 
     public ASystemException getRunException() {
-        ASystemException exception = this.definition.getRun().getException();
-
-        return exception;
+        return this.definition.getRun().getException();
     }
 
     public void setRunException(ASystemException exception) {

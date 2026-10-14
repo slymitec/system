@@ -8,7 +8,6 @@ import indi.sly.system.kernel.core.prototypes.processors.AResolver;
 import indi.sly.system.services.jobs.lang.CallContextProcessorCreateFunction;
 import indi.sly.system.services.jobs.prototypes.mediators.CallContextProcessorMediator;
 import indi.sly.system.services.jobs.values.CallContextProcessRecord;
-import indi.sly.system.services.jobs.values.CallContextRecord;
 import indi.sly.system.services.jobs.values.CallContextProcessType;
 import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

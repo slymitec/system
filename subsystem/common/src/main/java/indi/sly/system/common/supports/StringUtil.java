@@ -33,26 +33,6 @@ public abstract class StringUtil {
         return false;
     }
 
-    public static boolean isNameIllegal(@Nullable CharSequence... values) {
-        for (CharSequence value : values) {
-            if (StringUtil.isNameIllegal(value)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static boolean isNameIllegalButWildcard(@Nullable CharSequence... values) {
-        for (CharSequence value : values) {
-            if (StringUtil.isNameIllegalButWildcard(value)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public static String readFormBytes(byte @Nullable [] value) {
         if (ObjectUtil.isNull(value)) {
             throw new NullPointerException();

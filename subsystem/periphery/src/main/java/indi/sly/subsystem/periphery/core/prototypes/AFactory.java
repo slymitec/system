@@ -7,6 +7,5 @@ import org.springframework.context.annotation.Scope;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class AFactory extends APrototype {
-    public void init() {
-    }
+    public abstract void init();
 }

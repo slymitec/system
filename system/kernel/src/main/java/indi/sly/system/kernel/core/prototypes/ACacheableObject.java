@@ -12,12 +12,11 @@ import indi.sly.system.kernel.core.environment.values.CacheDurationType;
 import indi.sly.system.kernel.core.values.ACacheEntity;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
-import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
 public class ACacheableObject<T extends ACacheEntity> extends AObject {
-    @Nullable
+    @SuppressWarnings("NullAway.Init")
     protected T cache;
 
     public final T getCache() {

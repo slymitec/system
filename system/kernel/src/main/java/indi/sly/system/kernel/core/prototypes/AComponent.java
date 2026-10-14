@@ -6,5 +6,5 @@ import org.springframework.context.annotation.Scope;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public abstract  class AComponent extends APrototype {
+public abstract class AComponent extends APrototype {
 }

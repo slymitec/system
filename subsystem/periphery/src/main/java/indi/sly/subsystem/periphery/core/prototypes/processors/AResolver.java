@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Scope;
 public abstract class AResolver extends AProcessor implements IOrderlyResolver {
     @Override
     public int order() {
-        return 0;
+        return Integer.MAX_VALUE;
     }
 
     @Override

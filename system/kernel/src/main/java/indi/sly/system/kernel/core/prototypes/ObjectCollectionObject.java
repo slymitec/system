@@ -97,8 +97,6 @@ public class ObjectCollectionObject extends AObject {
             object.coreManager = this.coreManager;
         }
 
-        Class<? extends AObject> clazz = object.getClass();
-
         Lock lock = this.getLock(space, LockType.READ);
 
         lock.lock();

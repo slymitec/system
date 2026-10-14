@@ -15,6 +15,7 @@ public class BootObject extends AObject implements IStartupCapable {
         this.startupStatus = StartupType.SHUTDOWN;
     }
 
+    @SuppressWarnings("NullAway.Init")
     protected BootProcessorMediator processorMediator;
     protected long startupStatus;
 

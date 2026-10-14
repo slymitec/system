@@ -25,13 +25,7 @@ public class ObjectCollectionObject extends AObject {
     }
 
     public Lock getLock(long space, long lock) {
-        Lock readWriteLock = this.getSpace(space).getObjectLock(lock);
-
-        if (ObjectUtil.isAnyNull(readWriteLock)) {
-            throw new StatusNotSupportedException();
-        }
-
-        return readWriteLock;
+        return this.getSpace(space).getObjectLock(lock);
     }
 
     public long getLimit(long space) {
@@ -71,7 +65,7 @@ public class ObjectCollectionObject extends AObject {
 
             Map<UUID, AObject> objects = this.getSpace(space).getObjects();
 
-            AObject object = objects.getOrDefault(id, null);
+            AObject object = objects.get(id);
             if (ObjectUtil.isAnyNull(object)) {
                 throw new StatusNotExistedException();
             }
@@ -95,7 +89,7 @@ public class ObjectCollectionObject extends AObject {
 
             Map<Class<? extends AObject>, AObject> classedObjects = this.getSpace(space).getClassedObjects();
 
-            AObject object = classedObjects.getOrDefault(clazz, null);
+            AObject object = classedObjects.get(clazz);
             if (ObjectUtil.isAnyNull(object)) {
                 throw new StatusNotExistedException();
             }
@@ -209,7 +203,7 @@ public class ObjectCollectionObject extends AObject {
 
             Map<UUID, AObject> objects = this.getSpace(space).getObjects();
 
-            AObject object = objects.getOrDefault(id, null);
+            AObject object = objects.get(id);
             if (ObjectUtil.isAnyNull(object)) {
                 throw new StatusNotExistedException();
             }
@@ -232,7 +226,7 @@ public class ObjectCollectionObject extends AObject {
 
             Map<Class<? extends AObject>, AObject> classedObjects = this.getSpace(space).getClassedObjects();
 
-            AObject object = classedObjects.getOrDefault(clazz, null);
+            AObject object = classedObjects.get(clazz);
             if (ObjectUtil.isAnyNull(object)) {
                 throw new StatusNotExistedException();
             }

@@ -5,7 +5,6 @@ import indi.sly.subsystem.periphery.core.boot.prototypes.BootObject;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
 import indi.sly.subsystem.periphery.core.environment.containers.KernelSpace;
 import indi.sly.subsystem.periphery.core.environment.values.SpaceType;
-import indi.sly.subsystem.periphery.core.environment.containers.UserSpace;
 import indi.sly.subsystem.periphery.core.prototypes.APrototype;
 import indi.sly.subsystem.periphery.core.prototypes.CoreFactory;
 import indi.sly.subsystem.periphery.core.prototypes.ObjectCollectionObject;
@@ -23,6 +22,7 @@ import org.springframework.context.annotation.Scope;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CoreManager extends AManager {
+    @SuppressWarnings("NullAway.Init")
     private CoreFactory factory;
 
     public CoreFactory getFactory() {
@@ -57,6 +57,7 @@ public class CoreManager extends AManager {
 
     @Override
     public void shutdown() {
+        super.shutdown();
     }
 
     @Override
@@ -66,7 +67,9 @@ public class CoreManager extends AManager {
         }
     }
 
+    @SuppressWarnings("NullAway.Init")
     private PrototypeBuilder prototypeBuilder;
+    @SuppressWarnings("NullAway.Init")
     private ObjectCollectionObject objectCollection;
 
     public ObjectCollectionObject getObjectCollection() {

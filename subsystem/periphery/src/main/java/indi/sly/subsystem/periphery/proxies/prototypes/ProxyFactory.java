@@ -164,7 +164,7 @@ public class ProxyFactory extends AFactory {
 
         UUID[] handles = ObjectUtil.transferFromString(UUID[].class, definition.getValue());
 
-        if (ObjectUtil.isAnyNull(handles)) {
+        if (ObjectUtil.isNull(handles)) {
             throw new StatusRelationshipErrorException();
         }
 

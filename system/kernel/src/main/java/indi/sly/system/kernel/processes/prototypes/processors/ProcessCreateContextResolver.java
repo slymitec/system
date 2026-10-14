@@ -48,7 +48,7 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
                 FileSystemFileContentObject infoContent = (FileSystemFileContentObject) info.getContent();
                 infoContent.execute();
                 long infoContentLength = infoContent.length();
-                byte[] applicationSource = infoContent.read(0, (int) infoContentLength);
+                byte[] applicationSource = infoContent.readFile(0, (int) infoContentLength);
                 ApplicationRecord application = ObjectUtil.transferFromStringOrDefaultProvider(ApplicationRecord.class,
                         StringUtil.readFormBytes(applicationSource), () -> {
                             throw new StatusUnreadableException();

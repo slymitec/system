@@ -16,7 +16,7 @@ public abstract class AProxyObject extends AObject {
     public UUID getHandle() {
         UUID handle = ObjectUtil.transferFromString(UUID.class, this.remote.getValue());
 
-        if (ValueUtil.isAnyNullOrEmpty(handle)) {
+        if (ValueUtil.isNullOrEmpty(handle)) {
             throw new StatusUnexpectedException();
         }
 

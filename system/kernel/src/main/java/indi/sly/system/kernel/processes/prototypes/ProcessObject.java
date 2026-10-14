@@ -24,7 +24,7 @@ public class ProcessObject extends ACacheableObject<ProcessCacheEntity> {
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcessId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getProcessId())) {
             throw new ConditionContextException();
         }
 
@@ -36,7 +36,7 @@ public class ProcessObject extends ACacheableObject<ProcessCacheEntity> {
     }
 
     public UUID getId() {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcessId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getProcessId())) {
             throw new ConditionContextException();
         }
 
@@ -44,7 +44,7 @@ public class ProcessObject extends ACacheableObject<ProcessCacheEntity> {
     }
 
     public UUID getParentId() {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcessId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getProcessId())) {
             throw new ConditionContextException();
         }
 
@@ -52,7 +52,7 @@ public class ProcessObject extends ACacheableObject<ProcessCacheEntity> {
     }
 
     public boolean isCurrent() {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcessId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getProcessId())) {
             throw new ConditionContextException();
         }
 

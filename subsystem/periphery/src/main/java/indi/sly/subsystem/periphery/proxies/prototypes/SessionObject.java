@@ -24,7 +24,7 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
     }
 
     public <T extends AProxyObject> T getProxy(Class<T> clazz, UUID handle, CallContextProcessRecord callContextProcess) {
-        if (ObjectUtil.isAnyNull(clazz, callContextProcess) || ValueUtil.isAnyNullOrEmpty(handle)) {
+        if (ObjectUtil.isAnyNull(clazz, callContextProcess) || ValueUtil.isNullOrEmpty(handle)) {
             throw new ConditionParametersException();
         }
 
@@ -38,7 +38,7 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
     }
 
     private String doGetProxyAndInvoke(String taskName, UUID handle, CallContextProcessRecord callContextProcess, ClientRequestRecord clientRequest) {
-        if (ValueUtil.isAnyNullOrEmpty(handle) || ObjectUtil.isAnyNull(callContextProcess, clientRequest)) {
+        if (ValueUtil.isNullOrEmpty(handle) || ObjectUtil.isAnyNull(callContextProcess, clientRequest)) {
             throw new ConditionParametersException();
         }
 
@@ -56,7 +56,7 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
     }
 
     public String getProxyAndInvoke(String taskName, UUID handle, CallContextProcessRecord callContextProcess, ClientRequestRecord clientRequest) {
-        if (ValueUtil.isAnyNullOrEmpty(taskName)) {
+        if (ValueUtil.isNullOrEmpty(taskName)) {
             throw new ConditionParametersException();
         }
 
@@ -73,7 +73,7 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
         }
 
         String taskName = this.factory.acquireTaskName(clazz);
-        if (ValueUtil.isAnyNullOrEmpty(taskName)) {
+        if (ValueUtil.isNullOrEmpty(taskName)) {
             throw new StatusNotExistedException();
         }
 

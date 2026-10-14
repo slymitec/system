@@ -36,7 +36,7 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
     }
 
     public final UUID getHandle() {
-        if (ObjectUtil.isNull(this.cache) || ValueUtil.isAnyNullOrEmpty(this.cache.getId())) {
+        if (ObjectUtil.isNull(this.cache) || ValueUtil.isNullOrEmpty(this.cache.getId())) {
             throw new StatusNotSupportedException();
         }
 
@@ -47,11 +47,11 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
         if (ObjectUtil.isNull(this.cache)) {
             throw new StatusNotSupportedException();
         }
-        if (!ValueUtil.isAnyNullOrEmpty(this.cache.getId())) {
+        if (!ValueUtil.isNullOrEmpty(this.cache.getId())) {
             throw new StatusAlreadyFinishedException();
         }
 
-        if (ValueUtil.isAnyNullOrEmpty(cache.getId())) {
+        if (ValueUtil.isNullOrEmpty(cache.getId())) {
             cache.setId(UUIDUtil.createRandom());
         }
 
@@ -67,7 +67,7 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
         if (ObjectUtil.isNull(this.cache)) {
             throw new StatusNotSupportedException();
         }
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getId())) {
             throw new StatusAlreadyFinishedException();
         }
 
@@ -83,7 +83,7 @@ public class ACacheableObject<T extends ACacheEntity> extends AObject {
         if (ObjectUtil.isNull(this.cache)) {
             throw new StatusNotSupportedException();
         }
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getId())) {
             throw new StatusAlreadyFinishedException();
         }
 

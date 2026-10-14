@@ -43,7 +43,7 @@ public class NamelessFolderTypeInitializer extends AInfoTypeInitializer {
 
     @Override
     public void createChildProcedure(InfoEntity info, InfoEntity childInfo) {
-        if (ValueUtil.isAnyNullOrEmpty(childInfo.getId())) {
+        if (ValueUtil.isNullOrEmpty(childInfo.getId())) {
             throw new StatusNotSupportedException();
         }
 

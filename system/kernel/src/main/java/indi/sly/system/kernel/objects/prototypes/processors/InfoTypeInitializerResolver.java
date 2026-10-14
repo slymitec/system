@@ -66,18 +66,18 @@ public class InfoTypeInitializerResolver extends AResolver implements IInfoResol
                 childInfo = new InfoEntity();
             }
 
-            if (ValueUtil.isAnyNullOrEmpty(childInfo.getId())) {
+            if (ValueUtil.isNullOrEmpty(childInfo.getId())) {
                 if (identifier.type().equals(UUID.class)) {
                     childInfo.setId(UUIDUtil.readFormBytes(identifier.value()));
                 } else if (identifier.type().equals(String.class)) {
                     childInfo.setId(UUIDUtil.createRandom());
                 }
             }
-            if (ValueUtil.isAnyNullOrEmpty(childInfo.getType())) {
+            if (ValueUtil.isNullOrEmpty(childInfo.getType())) {
                 childInfo.setType(childType);
             }
             childInfo.setOpened(0);
-            if (ValueUtil.isAnyNullOrEmpty(childInfo.getName())) {
+            if (ValueUtil.isNullOrEmpty(childInfo.getName())) {
                 if (identifier.type().equals(UUID.class)) {
                     childInfo.setName(null);
                 } else if (identifier.type().equals(String.class)) {

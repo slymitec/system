@@ -22,7 +22,7 @@ public class RemoteObject extends ADefinitionObject<RemoteDefinition> {
     protected RemoteProcessorMediator processorMediator;
 
     public RemoteObject invoke(String method, Object... args) {
-        if (ValueUtil.isAnyNullOrEmpty(method)) {
+        if (ValueUtil.isNullOrEmpty(method)) {
             throw new ConditionParametersException();
         }
         if (ObjectUtil.isAnyNull(args)) {

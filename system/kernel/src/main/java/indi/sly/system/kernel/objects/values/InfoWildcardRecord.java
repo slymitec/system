@@ -32,7 +32,7 @@ public record InfoWildcardRecord(byte[] value, Class<?> type, boolean fuzzy) {
             throw new ConditionParametersException();
         }
 
-        this(UUIDUtil.writeToBytes(value), UUID.class, ValueUtil.isAnyNullOrEmpty(value));
+        this(UUIDUtil.writeToBytes(value), UUID.class, ValueUtil.isNullOrEmpty(value));
     }
 
     public InfoWildcardRecord(String value) {
@@ -78,7 +78,7 @@ public record InfoWildcardRecord(byte[] value, Class<?> type, boolean fuzzy) {
                 } catch (Exception e) {
                     id = null;
                 }
-                if (ValueUtil.isAnyNullOrEmpty(id)) {
+                if (ValueUtil.isNullOrEmpty(id)) {
                     throw new StatusUnreadableException();
                 }
 

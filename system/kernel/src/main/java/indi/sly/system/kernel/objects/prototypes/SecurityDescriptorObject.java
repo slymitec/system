@@ -37,7 +37,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
     protected InfoProcessorMediator processorMediator;
 
     private InfoEntity getSelf(long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfo().getInfoId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getInfo().getInfoId())) {
             throw new ConditionContextException();
         }
 
@@ -377,7 +377,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                     return true;
                 }
             } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.PARENT_PROCESS)
-                    && !ValueUtil.isAnyNullOrEmpty(process.getParentId()) && process.getParentId().equals(pairUserId.id())) {
+                    && !ValueUtil.isNullOrEmpty(process.getParentId()) && process.getParentId().equals(pairUserId.id())) {
                 if (LogicalUtil.isAllExist(pair.value(), permission)) {
                     allow = true;
                 }
@@ -385,7 +385,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                     return true;
                 }
             } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.SESSION)
-                    && !ValueUtil.isAnyNullOrEmpty(processSession.getId()) && processSession.getId().equals(pairUserId.id())) {
+                    && !ValueUtil.isNullOrEmpty(processSession.getId()) && processSession.getId().equals(pairUserId.id())) {
                 if (LogicalUtil.isAllExist(pair.value(), permission)) {
                     allow = true;
                 }
@@ -588,12 +588,12 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
                     userIds.add(pairUserId);
                 }
             } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.PARENT_PROCESS)
-                    && !ValueUtil.isAnyNullOrEmpty(process.getParentId()) && process.getParentId().equals(pairUserId.id())) {
+                    && !ValueUtil.isNullOrEmpty(process.getParentId()) && process.getParentId().equals(pairUserId.id())) {
                 if (LogicalUtil.isAllExist(audit, pair.value())) {
                     userIds.add(pairUserId);
                 }
             } else if (LogicalUtil.isAnyEqual(pairUserId.type(), UserType.SESSION)
-                    && !ValueUtil.isAnyNullOrEmpty(processSession.getId()) && processSession.getId().equals(pairUserId.id())) {
+                    && !ValueUtil.isNullOrEmpty(processSession.getId()) && processSession.getId().equals(pairUserId.id())) {
                 if (LogicalUtil.isAllExist(audit, pair.value())) {
                     userIds.add(pairUserId);
                 }

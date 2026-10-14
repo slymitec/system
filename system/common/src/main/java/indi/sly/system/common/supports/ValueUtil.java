@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public abstract class ValueUtil {
-    public static boolean isAnyNullOrEmpty(@Nullable Object value) {
+    public static boolean isNullOrEmpty(@Nullable Object value) {
         if (ObjectUtil.isNull(value)) {
             return true;
         }
@@ -32,12 +32,14 @@ public abstract class ValueUtil {
     }
 
     public static boolean isAnyNullOrEmpty(@Nullable Object... values) {
-        if (ObjectUtil.isAnyNull(values) || values.length == 0) {
+        if (values.length == 0) {
             return true;
         }
 
         for (Object value : values) {
-            if (value instanceof Optional) {
+            if (ObjectUtil.isNull(value)) {
+                return true;
+            } else if (value instanceof Optional) {
                 if (((Optional<?>) value).isEmpty()) {
                     return true;
                 }

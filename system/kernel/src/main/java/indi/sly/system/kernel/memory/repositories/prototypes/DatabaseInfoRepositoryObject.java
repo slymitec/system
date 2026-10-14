@@ -31,7 +31,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public boolean contain(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -42,7 +42,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public InfoEntity get(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -57,7 +57,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public InfoEntity get(UUID id, long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -114,7 +114,7 @@ public class DatabaseInfoRepositoryObject extends AInfoRepositoryObject {
 
     @Override
     public InfoRelationEntity getRelation(InfoEntity info, UUID id) {
-        if (ObjectUtil.isNull(info) || ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ObjectUtil.isNull(info) || ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 

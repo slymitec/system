@@ -62,7 +62,7 @@ public class TypeManager extends AManager {
     }
 
     public TypeObject get(UUID typeId) {
-        if (ValueUtil.isAnyNullOrEmpty(typeId)) {
+        if (ValueUtil.isNullOrEmpty(typeId)) {
             throw new ConditionParametersException();
         }
 

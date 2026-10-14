@@ -24,7 +24,7 @@ public class DistributionRepositoryObject extends AObject {
             throw new ConditionParametersException();
         }
 
-        if (ValueUtil.isAnyNullOrEmpty(parameter)) {
+        if (ValueUtil.isNullOrEmpty(parameter)) {
             return prefix + "_" + UUIDUtil.toString(id);
         } else {
             return prefix + "_" + UUIDUtil.toString(id) + "_" + parameter;

@@ -76,7 +76,7 @@ public abstract class ATaskInitializer extends AInitializer {
     }
 
     public final ACacheableObject<?> getCacheableObject(UUID handle) {
-        if (ValueUtil.isAnyNullOrEmpty(handle)) {
+        if (ValueUtil.isNullOrEmpty(handle)) {
             throw new ConditionParametersException();
         }
         if (ObjectUtil.isNull(this.cacheableObjectFunction)) {

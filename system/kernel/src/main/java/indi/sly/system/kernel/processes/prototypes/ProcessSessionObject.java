@@ -29,7 +29,7 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
@@ -111,7 +111,7 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
 
         ProcessSessionEntity processSession = this.init(process);
 
-        if (ValueUtil.isAnyNullOrEmpty(processSession.getSessionId())) {
+        if (ValueUtil.isNullOrEmpty(processSession.getSessionId())) {
             throw new StatusAlreadyExistedException();
         } else {
             processSession.setType(type);
@@ -137,7 +137,7 @@ public class ProcessSessionObject extends AChildCacheableObject<ProcessChildCach
 
         ProcessSessionEntity processSession = this.init(process);
 
-        if (ValueUtil.isAnyNullOrEmpty(processSession.getSessionId())) {
+        if (ValueUtil.isNullOrEmpty(processSession.getSessionId())) {
             throw new StatusRelationshipErrorException();
         }
 

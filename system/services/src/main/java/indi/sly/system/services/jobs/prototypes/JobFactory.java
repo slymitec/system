@@ -61,7 +61,7 @@ public class JobFactory extends AFactory {
         task.setDefinition(definition);
         task.processorMediator = processorMediator;
         task.status = new TaskStatusDefinition();
-        if (!ValueUtil.isAnyNullOrEmpty(handle)) {
+        if (!ValueUtil.isNullOrEmpty(handle)) {
             task.status.setHandle(handle);
         }
 

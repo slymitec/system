@@ -36,7 +36,7 @@ public class ProxyManager extends AManager {
     }
 
     public SessionObject getSession(UUID sessionId) {
-        if (ValueUtil.isAnyNullOrEmpty(sessionId)) {
+        if (ValueUtil.isNullOrEmpty(sessionId)) {
             throw new ConditionParametersException();
         }
 

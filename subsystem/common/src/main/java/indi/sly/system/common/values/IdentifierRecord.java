@@ -82,7 +82,7 @@ public record IdentifierRecord(byte[] value, Class<?> type) {
         public IdentifierRecord deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
             String value = parser.getString();
 
-            if (ValueUtil.isAnyNullOrEmpty(value)) {
+            if (ValueUtil.isNullOrEmpty(value)) {
                 return new IdentifierRecord();
             } else if (value.startsWith("<") && value.endsWith(">")) {
                 UUID id;
@@ -91,7 +91,7 @@ public record IdentifierRecord(byte[] value, Class<?> type) {
                 } catch (Exception e) {
                     id = null;
                 }
-                if (ValueUtil.isAnyNullOrEmpty(id)) {
+                if (ValueUtil.isNullOrEmpty(id)) {
                     throw new StatusUnreadableException();
                 }
 

@@ -29,7 +29,7 @@ public class CallContextCreateCheckClientProcessIdResolver extends AResolver imp
                 throw new ConditionRefuseException();
             }
             UUID processId = callContextProcess.processId();
-            if (ValueUtil.isAnyNullOrEmpty(processId)) {
+            if (ValueUtil.isNullOrEmpty(processId)) {
                 throw new ConditionRefuseException();
             }
 

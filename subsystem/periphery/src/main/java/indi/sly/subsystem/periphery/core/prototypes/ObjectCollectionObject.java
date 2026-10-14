@@ -54,7 +54,7 @@ public class ObjectCollectionObject extends AObject {
 
     @SuppressWarnings("unchecked")
     public <T extends AObject> T getById(long space, UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -101,7 +101,7 @@ public class ObjectCollectionObject extends AObject {
     }
 
     public <T extends AObject> void addById(long space, UUID id, T object) {
-        if (ValueUtil.isAnyNullOrEmpty(id) || ObjectUtil.isNull(object)) {
+        if (ValueUtil.isNullOrEmpty(id) || ObjectUtil.isNull(object)) {
             throw new ConditionParametersException();
         }
 
@@ -156,7 +156,7 @@ public class ObjectCollectionObject extends AObject {
     }
 
     public boolean containByID(long space, UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -192,7 +192,7 @@ public class ObjectCollectionObject extends AObject {
     }
 
     public void deleteById(long space, UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 

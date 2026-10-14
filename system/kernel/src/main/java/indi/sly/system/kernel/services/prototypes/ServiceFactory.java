@@ -31,7 +31,7 @@ public class ServiceFactory extends AFactory {
     }
 
     private void createService(UUID serviceId, ServiceDefinition definition) {
-        if (ValueUtil.isAnyNullOrEmpty(serviceId) || ObjectUtil.isNull(definition)) {
+        if (ValueUtil.isNullOrEmpty(serviceId) || ObjectUtil.isNull(definition)) {
             throw new ConditionParametersException();
         }
 
@@ -76,7 +76,7 @@ public class ServiceFactory extends AFactory {
     }
 
     public void deleteService(UUID serviceId) {
-        if (ValueUtil.isAnyNullOrEmpty(serviceId)) {
+        if (ValueUtil.isNullOrEmpty(serviceId)) {
             throw new ConditionParametersException();
         }
 

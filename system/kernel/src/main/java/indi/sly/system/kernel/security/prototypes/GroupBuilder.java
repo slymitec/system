@@ -60,7 +60,7 @@ public class GroupBuilder extends ABuilder {
     }
 
     public void delete(UUID groupId) {
-        if (ValueUtil.isAnyNullOrEmpty(groupId)) {
+        if (ValueUtil.isNullOrEmpty(groupId)) {
             throw new ConditionParametersException();
         }
 

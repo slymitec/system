@@ -33,7 +33,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
@@ -237,7 +237,7 @@ public class ProcessContextObject extends AChildCacheableObject<ProcessChildCach
     }
 
     public void setParameters(String parameters) {
-        if (ValueUtil.isAnyNullOrEmpty(parameters)) {
+        if (ValueUtil.isNullOrEmpty(parameters)) {
             throw new ConditionParametersException();
         }
 

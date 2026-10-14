@@ -47,7 +47,7 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
 
             UUID handle = ObjectUtil.transferFromString(UUID.class, remote.getValue());
 
-            if (ValueUtil.isAnyNullOrEmpty(handle)) {
+            if (ValueUtil.isNullOrEmpty(handle)) {
                 throw new StatusUnreadableException();
             }
 
@@ -69,7 +69,7 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
                 case ClientResponseTypes.SYSTEM_EXCEPTION -> {
                     String clientResponseValue = ObjectUtil.transferFromString(String.class, clientResponse.value());
 
-                    if (ValueUtil.isAnyNullOrEmpty(clientResponseValue)) {
+                    if (ValueUtil.isNullOrEmpty(clientResponseValue)) {
                         throw new StatusUnexpectedException();
                     }
 
@@ -78,7 +78,7 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
                 case ClientResponseTypes.OTHER_EXCEPTION -> {
                     String clientResponseValue = ObjectUtil.transferFromString(String.class, clientResponse.value());
 
-                    if (ValueUtil.isAnyNullOrEmpty(clientResponseValue)) {
+                    if (ValueUtil.isNullOrEmpty(clientResponseValue)) {
                         throw new StatusUnexpectedException();
                     }
 
@@ -101,7 +101,7 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
 
     @Override
     public void resolve(RemoteDefinition remote, RemoteProcessorMediator processorMediator) {
-        if (!ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
+        if (!ValueUtil.isNullOrEmpty(remote.getValue())) {
             processorMediator.getInvokes().add(this.invoke);
             processorMediator.getExpires().add(this.expire);
             processorMediator.getDies().add(this.die);

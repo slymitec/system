@@ -33,7 +33,7 @@ public class UserRepositoryObject extends AObject {
     private EntityManager entityManager;
 
     public boolean containAccount(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -43,7 +43,7 @@ public class UserRepositoryObject extends AObject {
     }
 
     public boolean containGroup(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -53,7 +53,7 @@ public class UserRepositoryObject extends AObject {
     }
 
     public AccountEntity getAccount(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -67,7 +67,7 @@ public class UserRepositoryObject extends AObject {
     }
 
     public AccountEntity getAccount(UUID id, long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -153,7 +153,7 @@ public class UserRepositoryObject extends AObject {
     }
 
     public GroupEntity getGroup(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -167,7 +167,7 @@ public class UserRepositoryObject extends AObject {
     }
 
     public GroupEntity getGroup(UUID id, long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 

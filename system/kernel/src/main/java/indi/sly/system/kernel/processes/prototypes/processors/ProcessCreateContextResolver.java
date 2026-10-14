@@ -36,7 +36,7 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
 
             processContext.setType(processCreator.contextType());
 
-            if (!ValueUtil.isAnyNullOrEmpty(processCreator.fileIndex())) {
+            if (!ValueUtil.isNullOrEmpty(processCreator.fileIndex())) {
                 ProcessInfoTableObject parentProcessInfoTable = parentProcess.getInfoTable();
                 ProcessInfoEntryObject parentProcessInfoEntry = parentProcessInfoTable.getByIndex(processCreator.fileIndex());
 
@@ -62,7 +62,7 @@ public class ProcessCreateContextResolver extends AResolver implements IProcessC
                 processContext.setApplication(application);
             }
 
-            if (!ValueUtil.isAnyNullOrEmpty(processCreator.parameters())) {
+            if (!ValueUtil.isNullOrEmpty(processCreator.parameters())) {
                 processContext.setParameters(processCreator.parameters());
             } else {
                 processContext.setParameters(StringUtil.EMPTY);

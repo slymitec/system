@@ -21,7 +21,7 @@ public abstract class UUIDUtil {
     }
 
     public static UUID getFromString(String uuid) {
-        if (ValueUtil.isAnyNullOrEmpty(uuid)) {
+        if (ValueUtil.isNullOrEmpty(uuid)) {
             throw new ConditionParametersException();
         }
 

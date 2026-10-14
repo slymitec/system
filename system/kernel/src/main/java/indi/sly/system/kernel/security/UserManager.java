@@ -76,7 +76,7 @@ public class UserManager extends AManager {
     }
 
     private AccountObject getTargetAccount(UUID accountId) {
-        if (ValueUtil.isAnyNullOrEmpty(accountId)) {
+        if (ValueUtil.isNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
 
@@ -113,7 +113,7 @@ public class UserManager extends AManager {
     }
 
     public AccountObject getAccountById(UUID accountId) {
-        if (ValueUtil.isAnyNullOrEmpty(accountId)) {
+        if (ValueUtil.isNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
 
@@ -163,7 +163,7 @@ public class UserManager extends AManager {
     }
 
     public GroupObject getGroupById(UUID groupId) {
-        if (ValueUtil.isAnyNullOrEmpty(groupId)) {
+        if (ValueUtil.isNullOrEmpty(groupId)) {
             throw new ConditionParametersException();
         }
 
@@ -262,7 +262,7 @@ public class UserManager extends AManager {
     }
 
     public AccountAuthorizationObject authorizeById(UUID accountId) {
-        if (ValueUtil.isAnyNullOrEmpty(accountId)) {
+        if (ValueUtil.isNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
 
@@ -287,7 +287,7 @@ public class UserManager extends AManager {
         if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }
-        if (ValueUtil.isAnyNullOrEmpty(accountPassword)) {
+        if (ValueUtil.isNullOrEmpty(accountPassword)) {
             accountPassword = StringUtil.EMPTY;
         }
 

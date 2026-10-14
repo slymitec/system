@@ -32,7 +32,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
@@ -262,7 +262,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     }
 
     public void setPortSourceProcessIds(UUID portId, Set<UUID> sourceProcessIds) {
-        if (ValueUtil.isAnyNullOrEmpty(portId) || ObjectUtil.isNull(sourceProcessIds)) {
+        if (ValueUtil.isNullOrEmpty(portId) || ObjectUtil.isNull(sourceProcessIds)) {
             throw new ConditionParametersException();
         }
 
@@ -323,7 +323,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     }
 
     public void sendPort(UUID portId, byte[] value) {
-        if (ValueUtil.isAnyNullOrEmpty(portId) || ObjectUtil.isNull(value)) {
+        if (ValueUtil.isNullOrEmpty(portId) || ObjectUtil.isNull(value)) {
             throw new ConditionParametersException();
         }
 
@@ -475,7 +475,7 @@ public class ProcessCommunicationObject extends AChildCacheableObject<ProcessChi
     }
 
     public void sendSignal(UUID signalId, long key, long value) {
-        if (ValueUtil.isAnyNullOrEmpty(signalId)) {
+        if (ValueUtil.isNullOrEmpty(signalId)) {
             throw new ConditionParametersException();
         }
 

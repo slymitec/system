@@ -87,7 +87,7 @@ public record PathRecord(List<IdentifierRecord> identifiers) {
                     } catch (Exception e) {
                         id = null;
                     }
-                    if (ValueUtil.isAnyNullOrEmpty(id)) {
+                    if (ValueUtil.isNullOrEmpty(id)) {
                         throw new StatusUnreadableException();
                     }
 

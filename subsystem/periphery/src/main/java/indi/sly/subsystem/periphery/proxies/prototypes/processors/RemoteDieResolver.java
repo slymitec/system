@@ -25,7 +25,7 @@ public class RemoteDieResolver extends AResolver implements IRemoteResolver {
 
     @Override
     public void resolve(RemoteDefinition remote, RemoteProcessorMediator processorMediator) {
-        if (ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
+        if (ValueUtil.isNullOrEmpty(remote.getValue())) {
             processorMediator.getDies().add(this.die);
         }
     }

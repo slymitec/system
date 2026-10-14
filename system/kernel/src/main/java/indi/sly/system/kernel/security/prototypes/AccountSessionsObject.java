@@ -36,7 +36,7 @@ public class AccountSessionsObject extends AChildCacheableObject<AccountChildCac
     }
 
     public void addSession(UUID sessionId) {
-        if (ValueUtil.isAnyNullOrEmpty(sessionId)) {
+        if (ValueUtil.isNullOrEmpty(sessionId)) {
             throw new ConditionParametersException();
         }
 
@@ -49,7 +49,7 @@ public class AccountSessionsObject extends AChildCacheableObject<AccountChildCac
     }
 
     public void deleteSession(UUID sessionId) {
-        if (ValueUtil.isAnyNullOrEmpty(sessionId)) {
+        if (ValueUtil.isNullOrEmpty(sessionId)) {
             throw new ConditionParametersException();
         }
 

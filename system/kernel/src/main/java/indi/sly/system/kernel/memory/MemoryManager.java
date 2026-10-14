@@ -43,7 +43,7 @@ public class MemoryManager extends AManager {
     }
 
     public AInfoRepositoryObject getInfoRepository(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 

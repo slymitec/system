@@ -76,7 +76,7 @@ public class ServiceContentObject extends AInfoContentObject {
     }
 
     public void setSecret(String secret) {
-        if (ValueUtil.isAnyNullOrEmpty(secret)) {
+        if (ValueUtil.isNullOrEmpty(secret)) {
             throw new ConditionParametersException();
         }
 
@@ -142,7 +142,7 @@ public class ServiceContentObject extends AInfoContentObject {
     }
 
     public void setAccountId(UUID accountId) {
-        if (ValueUtil.isAnyNullOrEmpty(accountId)) {
+        if (ValueUtil.isNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
 
@@ -281,7 +281,7 @@ public class ServiceContentObject extends AInfoContentObject {
     }
 
     public void setParameters(String parameters) {
-        if (ValueUtil.isAnyNullOrEmpty(parameters)) {
+        if (ValueUtil.isNullOrEmpty(parameters)) {
             throw new ConditionParametersException();
         }
 
@@ -304,7 +304,7 @@ public class ServiceContentObject extends AInfoContentObject {
     }
 
     public void set(ServiceDefinition definition) {
-        if (ValueUtil.isAnyNullOrEmpty(definition)) {
+        if (ValueUtil.isNullOrEmpty(definition)) {
             throw new ConditionParametersException();
         }
 

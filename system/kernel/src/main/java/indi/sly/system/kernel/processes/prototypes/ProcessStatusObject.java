@@ -30,7 +30,7 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
@@ -100,13 +100,13 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
                 if (!currentProcess.getId().equals(this.base.getParentId())
                         && !currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                         && !currentProcessToken.getAccountId().equals(processToken.getAccountId())
-                        && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
+                        && (!ValueUtil.isNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
                     throw new ConditionRefuseException();
                 }
             } else if (LogicalUtil.isAnyEqual(this.base.getStatus().get(), ProcessStatusType.INTERRUPTED)) {
                 if (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                         && !currentProcessToken.getAccountId().equals(processToken.getAccountId())
-                        && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
+                        && (!ValueUtil.isNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
                     throw new ConditionRefuseException();
                 }
             }
@@ -139,13 +139,13 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
                 if (!currentProcess.getId().equals(this.base.getParentId())
                         && !currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                         && !currentProcessToken.getAccountId().equals(processToken.getAccountId())
-                        && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
+                        && (!ValueUtil.isNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
                     throw new ConditionRefuseException();
                 }
             } else if (LogicalUtil.isAnyEqual(this.base.getStatus().get(), ProcessStatusType.RUNNING)) {
                 if (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                         && !currentProcessToken.getAccountId().equals(processToken.getAccountId())
-                        && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
+                        && (!ValueUtil.isNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
                     throw new ConditionRefuseException();
                 }
             }
@@ -189,7 +189,7 @@ public class ProcessStatusObject extends AChildCacheableObject<ProcessChildCache
         ProcessSessionObject processSession = this.base.getSession();
 
         if (!processCommunication.getPortIds().isEmpty() || processCommunication.isSignalExist()
-                || !processInfoTable.list().isEmpty() || !ValueUtil.isAnyNullOrEmpty(processSession.getId())) {
+                || !processInfoTable.list().isEmpty() || !ValueUtil.isNullOrEmpty(processSession.getId())) {
             throw new StatusIsUsedException();
         }
 

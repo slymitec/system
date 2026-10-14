@@ -37,7 +37,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     protected InfoProcessorMediator processorMediator;
 
     private InfoEntity getSelf(long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
@@ -49,7 +49,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public UUID getId() {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
@@ -57,7 +57,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public UUID getType() {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
@@ -65,7 +65,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public long getOpened() {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
@@ -73,7 +73,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public @Nullable String getName() {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
@@ -81,7 +81,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public PathRecord getPath() {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
@@ -89,7 +89,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public UUID getIndex() {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 
@@ -182,7 +182,7 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
     }
 
     public long getOpenAttribute() {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getInfoId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getInfoId())) {
             throw new ConditionContextException();
         }
 

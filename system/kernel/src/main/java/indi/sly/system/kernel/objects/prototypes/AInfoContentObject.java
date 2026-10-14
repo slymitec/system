@@ -25,7 +25,7 @@ public abstract class AInfoContentObject extends AChildCacheableObject<InfoConte
     protected InfoProcessorMediator processorMediator;
 
     private InfoEntity getSelf(long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(this.getCache().getInfo().getInfoId())) {
+        if (ValueUtil.isNullOrEmpty(this.getCache().getInfo().getInfoId())) {
             throw new ConditionContextException();
         }
 

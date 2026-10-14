@@ -19,7 +19,7 @@ public class RemoteCheckConditionResolver extends AResolver implements IRemoteRe
 
     public RemoteCheckConditionResolver() {
         this.invoke = (invokeRemote, remote, method, parameters) -> {
-            if (ValueUtil.isAnyNullOrEmpty(remote.getTaskName())) {
+            if (ValueUtil.isNullOrEmpty(remote.getTaskName())) {
                 throw new StatusNotSupportedException();
             }
 
@@ -27,13 +27,13 @@ public class RemoteCheckConditionResolver extends AResolver implements IRemoteRe
         };
 
         this.expire = (remote) -> {
-            if (ValueUtil.isAnyNullOrEmpty(remote.getTaskName())) {
+            if (ValueUtil.isNullOrEmpty(remote.getTaskName())) {
                 throw new StatusNotSupportedException();
             }
         };
 
         this.die = (remote) -> {
-            if (ValueUtil.isAnyNullOrEmpty(remote.getTaskName())) {
+            if (ValueUtil.isNullOrEmpty(remote.getTaskName())) {
                 throw new StatusNotSupportedException();
             }
         };
@@ -46,7 +46,7 @@ public class RemoteCheckConditionResolver extends AResolver implements IRemoteRe
 
     @Override
     public void resolve(RemoteDefinition remote, RemoteProcessorMediator processorMediator) {
-        if (ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
+        if (ValueUtil.isNullOrEmpty(remote.getValue())) {
             processorMediator.getInvokes().add(this.invoke);
             processorMediator.getExpires().add(this.expire);
             processorMediator.getDies().add(this.die);

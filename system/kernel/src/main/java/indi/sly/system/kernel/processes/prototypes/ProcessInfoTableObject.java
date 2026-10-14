@@ -36,7 +36,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
@@ -84,7 +84,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
     }
 
     public void inherit(UUID index) {
-        if (ValueUtil.isAnyNullOrEmpty(index)) {
+        if (ValueUtil.isNullOrEmpty(index)) {
             throw new ConditionParametersException();
         }
 
@@ -125,7 +125,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
     }
 
     public boolean containByIndex(UUID index) {
-        if (ValueUtil.isAnyNullOrEmpty(index)) {
+        if (ValueUtil.isNullOrEmpty(index)) {
             throw new ConditionParametersException();
         }
 
@@ -141,7 +141,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
     }
 
     public boolean containById(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -157,7 +157,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
     }
 
     public ProcessInfoEntryObject getByIndex(UUID index) {
-        if (ValueUtil.isAnyNullOrEmpty(index)) {
+        if (ValueUtil.isNullOrEmpty(index)) {
             throw new ConditionParametersException();
         }
 
@@ -173,7 +173,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
     }
 
     public ProcessInfoEntryObject getById(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -191,7 +191,7 @@ public class ProcessInfoTableObject extends AChildCacheableObject<ProcessChildCa
     }
 
     public ProcessInfoEntryObject create(UUID id, InfoCacheEntity cache, long openAttribute) {
-        if (ValueUtil.isAnyNullOrEmpty(id) || ObjectUtil.isNull(cache) || LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.CLOSE)) {
+        if (ValueUtil.isNullOrEmpty(id) || ObjectUtil.isNull(cache) || LogicalUtil.isAllExist(openAttribute, InfoOpenAttributeType.CLOSE)) {
             throw new ConditionParametersException();
         }
 

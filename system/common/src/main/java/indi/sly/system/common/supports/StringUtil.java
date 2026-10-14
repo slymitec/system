@@ -12,7 +12,7 @@ public abstract class StringUtil {
     public static final String EMPTY = "";
 
     public static boolean isNameIllegal(@Nullable CharSequence value) {
-        if (ValueUtil.isAnyNullOrEmpty(value)) {
+        if (ValueUtil.isNullOrEmpty(value)) {
             return true;
         }
         if (value.length() > 256 || StringUtils.containsAny(value, '/', '\\', ':', '*', '?', '\"', '<', '>', '|', '$') || Strings.CI.equals(value, ".") || Strings.CI.equals(value, "..") || (value.length() > 1 && value.charAt(value.length() - 1) == '.')) {
@@ -23,7 +23,7 @@ public abstract class StringUtil {
     }
 
     public static boolean isNameIllegalButWildcard(@Nullable CharSequence value) {
-        if (ValueUtil.isAnyNullOrEmpty(value)) {
+        if (ValueUtil.isNullOrEmpty(value)) {
             return true;
         }
         if (value.length() > 256 || StringUtils.containsAny(value, '/', '\\', ':', '\"', '<', '>', '|', '$') || Strings.CI.equals(value, ".") || Strings.CI.equals(value, "..") || (value.length() > 1 && value.charAt(value.length() - 1) == '.')) {

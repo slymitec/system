@@ -26,7 +26,7 @@ public class ProcessRepositoryObject extends AObject {
     private EntityManager entityManager;
 
     public boolean contain(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -36,7 +36,7 @@ public class ProcessRepositoryObject extends AObject {
     }
 
     public ProcessEntity get(UUID id) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 
@@ -50,7 +50,7 @@ public class ProcessRepositoryObject extends AObject {
     }
 
     public ProcessEntity get(UUID id, long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(id)) {
+        if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }
 

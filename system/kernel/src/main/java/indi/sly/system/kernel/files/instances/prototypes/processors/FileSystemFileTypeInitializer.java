@@ -64,11 +64,11 @@ public class FileSystemFileTypeInitializer extends AInfoTypeInitializer {
         boolean isPropertiesModified = false;
 
         property = properties.getOrDefault(FileSystemFilePropertyTypes.HIDDEN, StringUtil.EMPTY);
-        if (!ValueUtil.isAnyNullOrEmpty(property)) {
+        if (!ValueUtil.isNullOrEmpty(property)) {
             throw new ConditionRefuseException();
         }
         property = properties.getOrDefault(FileSystemFilePropertyTypes.UNCHANGED, StringUtil.EMPTY);
-        if (!ValueUtil.isAnyNullOrEmpty(property)) {
+        if (!ValueUtil.isNullOrEmpty(property)) {
             properties.remove(FileSystemFilePropertyTypes.UNCHANGED);
             isPropertiesModified = true;
         }

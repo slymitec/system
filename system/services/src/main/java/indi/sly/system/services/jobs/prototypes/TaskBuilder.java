@@ -39,7 +39,7 @@ public class TaskBuilder extends ABuilder {
         task.setAttribute(attribute);
         task.setName(name);
         if (LogicalUtil.isAllExist(task.getAttribute(), TaskAttributeType.HAS_PROCESS)
-                && !ValueUtil.isAnyNullOrEmpty(processId)) {
+                && !ValueUtil.isNullOrEmpty(processId)) {
             task.setProcessId(processId);
         }
         task.setInitializer(initializer);
@@ -49,7 +49,7 @@ public class TaskBuilder extends ABuilder {
     }
 
     public void delete(String name) {
-        if (ValueUtil.isAnyNullOrEmpty(name)) {
+        if (ValueUtil.isNullOrEmpty(name)) {
             throw new ConditionParametersException();
         }
 
@@ -57,7 +57,7 @@ public class TaskBuilder extends ABuilder {
 
         UUID taskId = serviceSpace.getNamedTaskIds().get(name);
 
-        if (ValueUtil.isAnyNullOrEmpty(taskId)) {
+        if (ValueUtil.isNullOrEmpty(taskId)) {
             throw new StatusNotExistedException();
         }
 

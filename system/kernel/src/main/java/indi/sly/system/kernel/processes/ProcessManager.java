@@ -51,7 +51,7 @@ public class ProcessManager extends AManager {
     }
 
     private ProcessObject getTarget(UUID processId) {
-        if (ValueUtil.isAnyNullOrEmpty(processId)) {
+        if (ValueUtil.isNullOrEmpty(processId)) {
             throw new ConditionParametersException();
         }
 
@@ -75,7 +75,7 @@ public class ProcessManager extends AManager {
     }
 
     public ProcessObject getWithAuthorization(UUID processId, @Nullable AccountAuthorizationObject accountAuthorization) {
-        if (ValueUtil.isAnyNullOrEmpty(processId)) {
+        if (ValueUtil.isNullOrEmpty(processId)) {
             throw new ConditionParametersException();
         }
 
@@ -94,7 +94,7 @@ public class ProcessManager extends AManager {
         if (!currentProcessToken.getAccountId().equals(processToken.getAccountId())
                 && (!currentProcessToken.isPrivileges(PrivilegeType.SECURITY_DO_WITH_ANY_ACCOUNT)
                 && !(ObjectUtil.notNull(accountAuthorization) && accountAuthorization.checkAndGetSummary().id().equals(processToken.getAccountId())))
-                && (!ValueUtil.isAnyNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
+                && (!ValueUtil.isNullOrEmpty(currentProcessSession.getId()) && !currentProcessSession.getId().equals(processSession.getId()))) {
             throw new ConditionRefuseException();
         }
 
@@ -106,7 +106,7 @@ public class ProcessManager extends AManager {
     }
 
     public ProcessObject create(AccountAuthorizationObject accountAuthorization, UUID fileIndex, String parameters, PathRecord workFolder, ProcessAdditionalCreatorRecord additionalCreator) {
-        if (ValueUtil.isAnyNullOrEmpty(fileIndex)) {
+        if (ValueUtil.isNullOrEmpty(fileIndex)) {
             throw new ConditionParametersException();
         }
 
@@ -115,7 +115,7 @@ public class ProcessManager extends AManager {
                 !ObjectUtil.notNull(additionalCreator) || additionalCreator.inheritSession(),
                 ObjectUtil.notNull(additionalCreator) ? additionalCreator.contextType() : ProcessContextType.EXECUTABLE,
                 fileIndex,
-                !ValueUtil.isAnyNullOrEmpty(parameters) ? parameters : StringUtil.EMPTY,
+                !ValueUtil.isNullOrEmpty(parameters) ? parameters : StringUtil.EMPTY,
                 ObjectUtil.notNull(workFolder) && !workFolder.identifiers().isEmpty() ? workFolder : null
         );
 
@@ -129,7 +129,7 @@ public class ProcessManager extends AManager {
         ProcessObject process = this.getCurrent();
         ProcessObject parentProcess = null;
 
-        if (!ValueUtil.isAnyNullOrEmpty(process.getParentId())) {
+        if (!ValueUtil.isNullOrEmpty(process.getParentId())) {
             try {
                 parentProcess = this.getTarget(process.getParentId());
             } catch (StatusNotExistedException _) {
@@ -141,14 +141,14 @@ public class ProcessManager extends AManager {
     }
 
     public void end(UUID processId) {
-        if (ValueUtil.isAnyNullOrEmpty(processId)) {
+        if (ValueUtil.isNullOrEmpty(processId)) {
             throw new ConditionParametersException();
         }
 
         ProcessObject process = this.getTarget(processId);
         ProcessObject parentProcess = null;
 
-        if (!ValueUtil.isAnyNullOrEmpty(process.getParentId())) {
+        if (!ValueUtil.isNullOrEmpty(process.getParentId())) {
             try {
                 parentProcess = this.getTarget(process.getParentId());
             } catch (StatusNotExistedException _) {

@@ -20,7 +20,7 @@ public class ProcessCreateSessionResolver extends AResolver implements IProcessC
             ProcessSessionObject parentProcessSession = parentProcess.getSession();
             ProcessSessionObject processSession = process.getSession();
 
-            if (processCreator.inheritSession() && !ValueUtil.isAnyNullOrEmpty(parentProcessSession.getId())) {
+            if (processCreator.inheritSession() && !ValueUtil.isNullOrEmpty(parentProcessSession.getId())) {
                 processSession.inherit();
             }
 

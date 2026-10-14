@@ -52,7 +52,7 @@ public class CallContextCreateCheckProcessResolver extends AResolver implements 
                 ProcessSessionObject processSession = process.getSession();
 
                 UUID processSessionId = processSession.getId();
-                if (!ValueUtil.isAnyNullOrEmpty(processSessionId) && !processSessionId.equals(callContextRequest.sessionId())) {
+                if (!ValueUtil.isNullOrEmpty(processSessionId) && !processSessionId.equals(callContextRequest.sessionId())) {
                     throw new ConditionRefuseException();
                 }
 

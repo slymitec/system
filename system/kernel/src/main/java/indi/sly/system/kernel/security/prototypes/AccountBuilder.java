@@ -64,7 +64,7 @@ public class AccountBuilder extends ABuilder {
     }
 
     public void delete(UUID accountId) {
-        if (ValueUtil.isAnyNullOrEmpty(accountId)) {
+        if (ValueUtil.isNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
 

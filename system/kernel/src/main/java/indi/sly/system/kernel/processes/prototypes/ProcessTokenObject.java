@@ -38,7 +38,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcess().getProcessId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
@@ -103,7 +103,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
 
         ProcessTokenEntity processToken = this.init(process);
 
-        if (!ValueUtil.isAnyNullOrEmpty(processToken.getAccountId())
+        if (!ValueUtil.isNullOrEmpty(processToken.getAccountId())
                 && !processToken.getAccountId().equals(accountAuthorizationSummary.id())) {
             throw new ConditionRefuseException();
         }
@@ -117,7 +117,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
         Set<UUID> processTokenRoles = processToken.getRoles();
         processTokenRoles.clear();
         processTokenRoles.addAll(accountAuthorizationToken.roles());
-        if (ValueUtil.isAnyNullOrEmpty(accountAuthorizationSummary.password())) {
+        if (ValueUtil.isNullOrEmpty(accountAuthorizationSummary.password())) {
             processTokenRoles.add(kernelConfiguration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
         }
 
@@ -375,7 +375,7 @@ public class ProcessTokenObject extends AChildCacheableObject<ProcessChildCacheE
             UserManager userManager = this.coreManager.getManager(UserManager.class);
 
             AccountObject account = userManager.getCurrentAccount();
-            if (ValueUtil.isAnyNullOrEmpty(account.getPassword())) {
+            if (ValueUtil.isNullOrEmpty(account.getPassword())) {
                 roles.add(kernelConfiguration.SECURITY_ROLE_EMPTY_PASSWORD_ID);
             }
         }

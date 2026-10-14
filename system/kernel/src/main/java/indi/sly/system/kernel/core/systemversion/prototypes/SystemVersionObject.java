@@ -14,7 +14,7 @@ public class SystemVersionObject extends ACacheableObject<SystemVersionCacheEnti
     public String getSystemVersion() {
         String systemVersion = this.cache.getSystemVersion();
 
-        if (ValueUtil.isAnyNullOrEmpty(systemVersion)) {
+        if (ValueUtil.isNullOrEmpty(systemVersion)) {
             systemVersion = StringUtil.EMPTY;
         }
 

@@ -42,7 +42,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
     protected ProcessProcessorMediator processorMediator;
 
     private ProcessEntity getSelf(long lock) {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getProcessInfoTable().getProcess().getProcessId())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getProcessInfoTable().getProcess().getProcessId())) {
             throw new ConditionContextException();
         }
 
@@ -78,7 +78,7 @@ public class ProcessInfoEntryObject extends AChildCacheableObject<ProcessInfoEnt
     }
 
     private boolean isExist() {
-        if (ValueUtil.isAnyNullOrEmpty(this.cache.getIndex())) {
+        if (ValueUtil.isNullOrEmpty(this.cache.getIndex())) {
             return false;
         } else {
             return this.base.containByIndex(this.cache.getIndex());

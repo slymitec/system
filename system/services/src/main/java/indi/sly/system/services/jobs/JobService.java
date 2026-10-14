@@ -123,7 +123,7 @@ public class JobService extends AService {
 
         UUID taskId = serviceSpace.getNamedTaskIds().get(name);
 
-        if (ValueUtil.isAnyNullOrEmpty(taskId)) {
+        if (ValueUtil.isNullOrEmpty(taskId)) {
             throw new StatusNotExistedException();
         }
 

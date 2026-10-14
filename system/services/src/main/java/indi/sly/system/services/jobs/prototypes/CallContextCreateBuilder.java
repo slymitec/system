@@ -22,7 +22,7 @@ public class CallContextCreateBuilder extends ABuilder {
     protected CallContextProcessorMediator processorMediator;
 
     public CallContextObject create(CallContextRecord callContext) {
-        if (ValueUtil.isAnyNullOrEmpty(callContext)) {
+        if (ValueUtil.isNullOrEmpty(callContext)) {
             throw new ConditionParametersException();
         }
 

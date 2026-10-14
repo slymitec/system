@@ -22,7 +22,7 @@ public class TaskProcessAndThreadResolver extends AResolver implements ITaskReso
     public TaskProcessAndThreadResolver() {
         this.start = (task, status) -> {
             if (LogicalUtil.isAllExist(task.getAttribute(), TaskAttributeType.HAS_PROCESS)
-                    && !ValueUtil.isAnyNullOrEmpty(task.getProcessId())) {
+                    && !ValueUtil.isNullOrEmpty(task.getProcessId())) {
                 ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
                 ThreadObject thread = threadManager.create(task.getProcessId());
 
@@ -33,7 +33,7 @@ public class TaskProcessAndThreadResolver extends AResolver implements ITaskReso
 
         this.end = (task, status) -> {
             if (LogicalUtil.isAllExist(task.getAttribute(), TaskAttributeType.HAS_PROCESS)
-                    && !ValueUtil.isAnyNullOrEmpty(task.getProcessId())) {
+                    && !ValueUtil.isNullOrEmpty(task.getProcessId())) {
                 ThreadManager threadManager = this.coreManager.getManager(ThreadManager.class);
                 ThreadObject thread = threadManager.getCurrent();
 
@@ -54,7 +54,7 @@ public class TaskProcessAndThreadResolver extends AResolver implements ITaskReso
 
     @Override
     public void resolve(TaskDefinition task, TaskProcessorMediator processorMediator) {
-        if (!ValueUtil.isAnyNullOrEmpty(task.getProcessId())) {
+        if (!ValueUtil.isNullOrEmpty(task.getProcessId())) {
             processorMediator.getStarts().add(this.start);
             processorMediator.getEnds().add(this.end);
         }

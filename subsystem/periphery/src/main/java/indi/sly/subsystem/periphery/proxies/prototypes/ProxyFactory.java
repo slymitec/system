@@ -192,7 +192,7 @@ public class ProxyFactory extends AFactory {
     }
 
     public <T extends AProxyObject> T buildProxy(Class<T> clazz, RemoteObject remote) {
-        if (ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
+        if (ValueUtil.isNullOrEmpty(remote.getValue())) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -203,7 +203,7 @@ public class ProxyFactory extends AFactory {
     }
 
     public <T extends AProxyObject> Set<T> buildProxySet(Class<T> clazz, RemoteObject remote) {
-        if (ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
+        if (ValueUtil.isNullOrEmpty(remote.getValue())) {
             throw new StatusRelationshipErrorException();
         }
 
@@ -219,7 +219,7 @@ public class ProxyFactory extends AFactory {
     }
 
     public <T extends AProxyObject> List<T> buildProxyList(Class<T> clazz, RemoteObject remote) {
-        if (ValueUtil.isAnyNullOrEmpty(remote.getValue())) {
+        if (ValueUtil.isNullOrEmpty(remote.getValue())) {
             throw new StatusRelationshipErrorException();
         }
 

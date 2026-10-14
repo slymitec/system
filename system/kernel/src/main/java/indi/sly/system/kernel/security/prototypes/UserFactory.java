@@ -37,7 +37,7 @@ public class UserFactory extends AFactory {
     }
 
     public AccountObject buildAccount(UUID accountId) {
-        if (ValueUtil.isAnyNullOrEmpty(accountId)) {
+        if (ValueUtil.isNullOrEmpty(accountId)) {
             throw new ConditionParametersException();
         }
 
@@ -77,7 +77,7 @@ public class UserFactory extends AFactory {
     }
 
     public GroupObject buildGroup(UUID groupId) {
-        if (ValueUtil.isAnyNullOrEmpty(groupId)) {
+        if (ValueUtil.isNullOrEmpty(groupId)) {
             throw new ConditionParametersException();
         }
 

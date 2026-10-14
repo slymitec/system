@@ -18,7 +18,7 @@ public class ProcessCreateInfoTableResolver extends AResolver implements IProces
 
     public ProcessCreateInfoTableResolver() {
         this.create = (process, parentProcess, processCreator) -> {
-            if (!ValueUtil.isAnyNullOrEmpty(processCreator.fileIndex())) {
+            if (!ValueUtil.isNullOrEmpty(processCreator.fileIndex())) {
                 ProcessInfoTableObject processInfoTable = process.getInfoTable();
 
                 ProcessInfoTableObject parentProcessInfoTable = parentProcess.getInfoTable();

@@ -9,6 +9,7 @@ import java.util.Objects;
 
 @REntity
 public class SecurityDescriptorCacheEntity extends ACacheEntity {
+    @SuppressWarnings("NullAway.Init")
     @RObjectField
     private InfoCacheEntity info;
     private boolean permission;

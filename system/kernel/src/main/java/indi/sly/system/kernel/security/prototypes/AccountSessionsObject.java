@@ -2,7 +2,6 @@ package indi.sly.system.kernel.security.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.supports.CollectionUtil;
-import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.ValueUtil;
 import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.prototypes.AChildCacheableObject;
@@ -21,6 +20,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AccountSessionsObject extends AChildCacheableObject<AccountChildCacheEntity, AccountObject> {
+    @SuppressWarnings("NullAway.Init")
     protected UserFactory factory;
 
     private AccountEntity getSelf(long lock) {

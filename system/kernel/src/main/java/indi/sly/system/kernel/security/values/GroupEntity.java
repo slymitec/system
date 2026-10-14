@@ -12,11 +12,14 @@ import java.util.UUID;
 @Entity
 @Table(name = "Kernel_Groups")
 public class GroupEntity extends APersistentEntity {
+    @SuppressWarnings("NullAway.Init")
     @Id
     @Column(name = "Id", nullable = false, updatable = false)
     protected UUID id;
+    @SuppressWarnings("NullAway.Init")
     @Column(length = 256, name = "Name", nullable = false)
     protected String name;
+    @SuppressWarnings("NullAway.Init")
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "json", name = "Token", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)

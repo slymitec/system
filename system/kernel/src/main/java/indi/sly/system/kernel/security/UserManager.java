@@ -21,8 +21,8 @@ import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeI
 import indi.sly.system.kernel.objects.infotypes.values.TypeInitializerAttributeType;
 import indi.sly.system.kernel.objects.prototypes.InfoObject;
 import indi.sly.system.kernel.objects.prototypes.SecurityDescriptorObject;
-import indi.sly.system.kernel.objects.values.InfoWildcardRecord;
 import indi.sly.system.kernel.objects.values.InfoSummaryRecord;
+import indi.sly.system.kernel.objects.values.InfoWildcardRecord;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessSessionObject;
@@ -30,10 +30,10 @@ import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.instances.prototypes.processors.AuditTypeInitializer;
 import indi.sly.system.kernel.security.prototypes.*;
 import indi.sly.system.kernel.security.values.*;
+import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +43,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserManager extends AManager {
+    @SuppressWarnings("NullAway.Init")
     private UserFactory factory;
 
     public UserFactory getFactory() {
@@ -71,6 +72,7 @@ public class UserManager extends AManager {
 
     @Override
     public void shutdown() {
+        super.shutdown();
     }
 
     private AccountObject getTargetAccount(UUID accountId) {
@@ -281,11 +283,11 @@ public class UserManager extends AManager {
         return this.authorizeByNameWithToken(accountName, accountPassword, null);
     }
 
-    public AccountAuthorizationObject authorizeByNameWithToken(String accountName, String accountPassword, AccountAuthorizationTokenRecord accountAuthorizationToken) {
+    public AccountAuthorizationObject authorizeByNameWithToken(String accountName, String accountPassword, @Nullable AccountAuthorizationTokenRecord accountAuthorizationToken) {
         if (StringUtil.isNameIllegal(accountName)) {
             throw new ConditionParametersException();
         }
-        if (ObjectUtil.isAnyNull(accountPassword)) {
+        if (ValueUtil.isAnyNullOrEmpty(accountPassword)) {
             accountPassword = StringUtil.EMPTY;
         }
 

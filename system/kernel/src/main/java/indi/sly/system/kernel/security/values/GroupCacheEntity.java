@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @REntity
 public class GroupCacheEntity extends ACacheEntity {
+    @SuppressWarnings("NullAway.Init")
     private UUID groupId;
 
     public UUID getGroupId() {

@@ -22,7 +22,9 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AccountBuilder extends ABuilder {
+    @SuppressWarnings("NullAway.Init")
     protected UserFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected ProcessTokenObject processToken;
 
     public AccountObject create(String accountName, String accountPassword) {

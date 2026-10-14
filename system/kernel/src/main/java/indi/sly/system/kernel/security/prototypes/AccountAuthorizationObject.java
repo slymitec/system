@@ -23,6 +23,7 @@ import java.util.*;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AccountAuthorizationObject extends ACacheableObject<AccountAuthorizationCacheEntity> {
+    @SuppressWarnings("NullAway.Init")
     protected UserFactory factory;
 
     public Map<Long, Long> getDate() {
@@ -41,11 +42,7 @@ public class AccountAuthorizationObject extends ACacheableObject<AccountAuthoriz
         long expiredTime =
                 this.coreManager.getKernelSpace().getConfiguration().SECURITY_ACCOUNT_AUTHORIZATION_EXPIRED_TIME;
 
-        if (nowDateTime - this.cache.getDate().get(DateTimeType.CREATE) > expiredTime) {
-            return false;
-        }
-
-        return true;
+        return nowDateTime - this.cache.getDate().get(DateTimeType.CREATE) <= expiredTime;
     }
 
     public AccountAuthorizationSummaryRecord checkAndGetSummary() {

@@ -13,9 +13,12 @@ public class AccountAuthorizationCacheEntity extends AccountChildCacheEntity {
         this.date = new HashMap<>();
     }
 
+    @SuppressWarnings("NullAway.Init")
     private String password;
     private final Map<Long, Long> date;
+    @SuppressWarnings("NullAway.Init")
     private ProcessChildCacheEntity processToken;
+    @SuppressWarnings("NullAway.Init")
     private AccountAuthorizationTokenRecord accountAuthorizationToken;
 
     public String getPassword() {

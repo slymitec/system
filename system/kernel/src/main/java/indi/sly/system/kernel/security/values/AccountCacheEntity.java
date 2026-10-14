@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @REntity
 public class AccountCacheEntity extends ACacheEntity {
+    @SuppressWarnings("NullAway.Init")
     private UUID accountId;
 
     public UUID getAccountId() {

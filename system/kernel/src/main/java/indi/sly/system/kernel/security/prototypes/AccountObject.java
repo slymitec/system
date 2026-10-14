@@ -26,6 +26,7 @@ import java.util.*;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AccountObject extends ACacheableObject<AccountCacheEntity> {
+    @SuppressWarnings("NullAway.Init")
     protected UserFactory factory;
 
     private AccountEntity getSelf(long lock) {

@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.security.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.values.PathRecord;
@@ -20,17 +21,29 @@ public class AuditContentObject extends AInfoContentObject {
     public UUID getProcessId() {
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(audit)) {
+            throw new StatusUnreadableException();
+        }
+
         return audit.getProcessId();
     }
 
     public UUID getAccountId() {
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(audit)) {
+            throw new StatusUnreadableException();
+        }
+
         return audit.getAccountId();
     }
 
     public PathRecord getPath() {
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(audit)) {
+            throw new StatusUnreadableException();
+        }
 
         return audit.getPath();
     }
@@ -42,6 +55,10 @@ public class AuditContentObject extends AInfoContentObject {
 
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(audit)) {
+            throw new StatusUnreadableException();
+        }
+
         audit.setPath(path);
 
         this.write(ObjectUtil.transferToJsonByteArray(audit));
@@ -49,6 +66,10 @@ public class AuditContentObject extends AInfoContentObject {
 
     public Set<UserIdRecord> getUserIds() {
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(audit)) {
+            throw new StatusUnreadableException();
+        }
 
         return CollectionUtil.unmodifiable(audit.getUserIds());
     }
@@ -60,6 +81,10 @@ public class AuditContentObject extends AInfoContentObject {
 
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(audit)) {
+            throw new StatusUnreadableException();
+        }
+
         audit.getUserIds().clear();
         audit.getUserIds().addAll(userIds);
 
@@ -69,11 +94,19 @@ public class AuditContentObject extends AInfoContentObject {
     public long getAudit() {
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(audit)) {
+            throw new StatusUnreadableException();
+        }
+
         return audit.getAudit();
     }
 
     public void setAudit(long value) {
         AuditDefinition audit = ObjectUtil.transferFromJsonByteArray(AuditDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(audit)) {
+            throw new StatusUnreadableException();
+        }
 
         audit.setAudit(value);
 

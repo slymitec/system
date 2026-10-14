@@ -8,6 +8,7 @@ import java.util.Objects;
 
 @REntity
 public class AccountChildCacheEntity extends ACacheEntity {
+    @SuppressWarnings("NullAway.Init")
     @RObjectField
     private AccountCacheEntity account;
 

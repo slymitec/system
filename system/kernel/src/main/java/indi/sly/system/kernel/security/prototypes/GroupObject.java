@@ -16,6 +16,7 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GroupObject extends ACacheableObject<GroupCacheEntity> {
+    @SuppressWarnings("NullAway.Init")
     protected UserFactory factory;
 
     private GroupEntity getSelf(long lock) {

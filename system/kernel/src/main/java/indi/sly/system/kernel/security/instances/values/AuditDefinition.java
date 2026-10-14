@@ -4,15 +4,21 @@ import indi.sly.system.common.values.ADefinition;
 import indi.sly.system.common.values.PathRecord;
 import indi.sly.system.kernel.security.values.UserIdRecord;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 public class AuditDefinition extends ADefinition {
     public AuditDefinition() {
         this.userIds = new HashSet<>();
     }
 
+    @SuppressWarnings("NullAway.Init")
     private UUID processId;
+    @SuppressWarnings("NullAway.Init")
     private UUID accountId;
+    @SuppressWarnings("NullAway.Init")
     private PathRecord path;
     private final Set<UserIdRecord> userIds;
     private long audit;

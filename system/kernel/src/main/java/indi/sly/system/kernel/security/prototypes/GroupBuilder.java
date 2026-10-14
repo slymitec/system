@@ -23,7 +23,9 @@ import java.util.UUID;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GroupBuilder extends ABuilder {
+    @SuppressWarnings("NullAway.Init")
     protected UserFactory factory;
+    @SuppressWarnings("NullAway.Init")
     protected ProcessTokenObject processToken;
 
     public GroupObject create(String groupName) {

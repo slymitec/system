@@ -21,6 +21,7 @@ import java.util.Map;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GroupTokenObject extends AChildCacheableObject<GroupChildCacheEntity, GroupObject> {
+    @SuppressWarnings("NullAway.Init")
     protected UserFactory factory;
 
     private GroupEntity getSelf(long lock) {

@@ -15,20 +15,25 @@ public class AccountEntity extends APersistentEntity {
         this.groups = new ArrayList<>();
     }
 
+    @SuppressWarnings("NullAway.Init")
     @Id
     @Column(name = "Id", nullable = false, updatable = false)
     protected UUID id;
+    @SuppressWarnings("NullAway.Init")
     @Column(length = 256, name = "Name", nullable = false)
     protected String name;
+    @SuppressWarnings("NullAway.Init")
     @Column(length = 256, name = "password", nullable = true)
     protected String password;
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "Kernel_Accounts_Groups", joinColumns = {@JoinColumn(name = "AccountId")}, inverseJoinColumns = {@JoinColumn(name = "GroupId")})
     protected List<GroupEntity> groups;
+    @SuppressWarnings("NullAway.Init")
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "json", name = "Token", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)
     protected UserTokenEntity token;
+    @SuppressWarnings("NullAway.Init")
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "json", name = "Sessions", nullable = false)
     @JdbcTypeCode(SqlTypes.JSON)

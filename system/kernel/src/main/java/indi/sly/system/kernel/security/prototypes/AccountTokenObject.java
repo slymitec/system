@@ -25,6 +25,7 @@ import java.util.Map;
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AccountTokenObject extends AChildCacheableObject<AccountChildCacheEntity, AccountObject> {
+    @SuppressWarnings("NullAway.Init")
     protected UserFactory factory;
 
     private AccountEntity getSelf(long lock) {

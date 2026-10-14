@@ -9,15 +9,14 @@ import indi.sly.system.kernel.core.environment.values.CacheDurationType;
 import indi.sly.system.kernel.core.prototypes.AFactory;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.CacheRepositoryObject;
-import indi.sly.system.kernel.memory.repositories.prototypes.UserRepositoryObject;
 import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.values.*;
+import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.util.UUID;
 
@@ -255,7 +254,7 @@ public class UserFactory extends AFactory {
         return accountAuthorization;
     }
 
-    public AccountAuthorizationObject buildAccountAuthorization(AccountObject account, String password, ProcessTokenObject processToken, AccountAuthorizationTokenRecord accountAuthorizationToken) {
+    public AccountAuthorizationObject buildAccountAuthorization(AccountObject account, String password, ProcessTokenObject processToken, @Nullable AccountAuthorizationTokenRecord accountAuthorizationToken) {
         AccountAuthorizationCacheEntity cache = new AccountAuthorizationCacheEntity();
 
         cache.setDuration(CacheDurationType.PREPARE);

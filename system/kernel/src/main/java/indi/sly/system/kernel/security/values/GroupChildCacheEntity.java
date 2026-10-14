@@ -8,6 +8,7 @@ import java.util.Objects;
 
 @REntity
 public class GroupChildCacheEntity extends ACacheEntity {
+    @SuppressWarnings("NullAway.Init")
     @RObjectField
     private GroupCacheEntity group;
 

@@ -6,6 +6,7 @@ import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import jakarta.inject.Named;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -20,14 +21,18 @@ public class PrototypeBuilder extends ABuilder {
         }
     }
 
-    public <T extends APrototype> T createPrototype(Class<T> clazz) {
+    public <T extends APrototype> T createPrototype(Class<T> clazz, @Nullable Object... args) {
         if (ObjectUtil.isAnyNull(clazz)) {
             throw new ConditionParametersException();
         }
 
         T corePrototype = null;
         try {
-            corePrototype = SpringHelper.getInstance(clazz);
+            if (ObjectUtil.isAnyNull(args) || args.length == 0) {
+                corePrototype = SpringHelper.getInstance(clazz);
+            } else {
+                corePrototype = SpringHelper.getInstance(clazz, args);
+            }
         } catch (RuntimeException e) {
             Constructor<T> constructor = null;
             try {

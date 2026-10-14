@@ -5,11 +5,10 @@ import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.common.supports.SpringHelper;
 import indi.sly.system.kernel.core.CoreManager;
+import jakarta.inject.Named;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.lang.reflect.Constructor;
 

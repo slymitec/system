@@ -10,6 +10,7 @@ public class FileSystemEntryDefinition extends ADefinition {
     }
 
     private long type;
+    @SuppressWarnings("NullAway.Init")
     private byte[] value;
 
     public long getType() {

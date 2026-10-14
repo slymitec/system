@@ -3,7 +3,6 @@ package indi.sly.system.kernel.files.instances.prototypes.processors;
 import indi.sly.system.common.lang.*;
 import indi.sly.system.common.supports.*;
 import indi.sly.system.common.values.IdentifierRecord;
-import indi.sly.system.common.values.LockType;
 import indi.sly.system.kernel.core.environment.containers.KernelConfiguration;
 import indi.sly.system.kernel.files.instances.prototypes.FileSystemFolderContentObject;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
@@ -11,17 +10,12 @@ import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
 import indi.sly.system.kernel.memory.MemoryManager;
 import indi.sly.system.kernel.memory.repositories.prototypes.AInfoRepositoryObject;
 import indi.sly.system.kernel.objects.infotypes.prototypes.processors.AInfoTypeInitializer;
-import indi.sly.system.kernel.objects.values.InfoWildcardRecord;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
-import indi.sly.system.kernel.objects.values.InfoEntity;
-import indi.sly.system.kernel.objects.values.InfoOpenRecord;
-import indi.sly.system.kernel.objects.values.InfoRelationEntity;
-import indi.sly.system.kernel.objects.values.InfoSummaryRecord;
+import indi.sly.system.kernel.objects.values.*;
+import jakarta.inject.Named;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,7 +47,10 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
     @Override
     public void deleteProcedure(InfoEntity info) {
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
-        assert entry != null;
+
+        if (ObjectUtil.isAnyNull(entry)) {
+            throw new StatusUnreadableException();
+        }
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
@@ -95,7 +92,10 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         }
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
-        assert entry != null;
+
+        if (ObjectUtil.isAnyNull(entry)) {
+            throw new StatusUnreadableException();
+        }
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
@@ -182,7 +182,10 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         }
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
-        assert entry != null;
+
+        if (ObjectUtil.isAnyNull(entry)) {
+            throw new StatusUnreadableException();
+        }
 
         String childInfoName = StringUtil.readFormBytes(identifier.value());
         InfoSummaryRecord infoSummary = null;
@@ -218,6 +221,8 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
             }
 
             infoSummary = new InfoSummaryRecord(UUIDUtil.readFormBytes(childInfoRelationID), UUIDUtil.readFormBytes(childInfoRelationType), childInfoName);
+        } else {
+            throw new StatusUnexpectedException();
         }
 
         return infoSummary;
@@ -230,7 +235,10 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         }
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
-        assert entry != null;
+
+        if (ObjectUtil.isAnyNull(entry)) {
+            throw new StatusUnreadableException();
+        }
 
         Set<InfoSummaryRecord> infoSummaries = new HashSet<>();
 
@@ -297,7 +305,10 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         String newChildInfoName = StringUtil.readFormBytes(oldIdentifier.value());
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
-        assert entry != null;
+
+        if (ObjectUtil.isAnyNull(entry)) {
+            throw new StatusUnreadableException();
+        }
 
         if (LogicalUtil.isAllExist(entry.getType(), FileSystemLocationType.REPOSITORY)) {
             MemoryManager memoryManager = this.coreManager.getManager(MemoryManager.class);
@@ -349,7 +360,10 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         }
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
-        assert entry != null;
+
+        if (ObjectUtil.isAnyNull(entry)) {
+            throw new StatusUnreadableException();
+        }
 
         String childInfoName = StringUtil.readFormBytes(identifier.value());
 

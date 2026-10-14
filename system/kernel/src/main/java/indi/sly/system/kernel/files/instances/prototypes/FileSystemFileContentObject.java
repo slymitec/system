@@ -3,6 +3,7 @@ package indi.sly.system.kernel.files.instances.prototypes;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusNotExistedException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
+import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ArrayUtil;
 import indi.sly.system.common.supports.LogicalUtil;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -10,10 +11,9 @@ import indi.sly.system.common.supports.StringUtil;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.files.instances.values.FileSystemLocationType;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +25,10 @@ import java.io.IOException;
 public class FileSystemFileContentObject extends AInfoContentObject {
     public long length() {
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+            throw new StatusUnreadableException();
+        }
 
         long length = -1;
 
@@ -43,14 +47,18 @@ public class FileSystemFileContentObject extends AInfoContentObject {
         return length;
     }
 
-    public byte[] read(long offset, int length) {
+    public byte[] readFile(long offset, int length) {
         if (length < 0 || offset + length > this.length()) {
             throw new ConditionParametersException();
         }
 
-        byte[] value = null;
+        byte[] value;
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+            throw new StatusUnreadableException();
+        }
 
         if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
             if (offset + length > Integer.MAX_VALUE) {
@@ -73,6 +81,8 @@ public class FileSystemFileContentObject extends AInfoContentObject {
             } catch (IOException e) {
                 throw new StatusUnexpectedException();
             }
+        } else {
+            throw new StatusUnreadableException();
         }
 
         this.write(ObjectUtil.transferToJsonByteArray(fileSystemEntry));
@@ -80,12 +90,16 @@ public class FileSystemFileContentObject extends AInfoContentObject {
         return value;
     }
 
-    public void write(byte[] value) {
+    public void writeFile(byte[] value) {
         if (ObjectUtil.isAnyNull(value)) {
             throw new ConditionParametersException();
         }
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+            throw new StatusUnreadableException();
+        }
 
         if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
             fileSystemEntry.setValue(value);
@@ -112,6 +126,10 @@ public class FileSystemFileContentObject extends AInfoContentObject {
         }
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+            throw new StatusUnreadableException();
+        }
 
         if (LogicalUtil.isAllExist(fileSystemEntry.getType(), FileSystemLocationType.REPOSITORY)) {
             if (this.length() + value.length > Integer.MAX_VALUE) {

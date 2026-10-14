@@ -1,6 +1,7 @@
 package indi.sly.system.kernel.files.instances.prototypes;
 
 import indi.sly.system.common.lang.ConditionRefuseException;
+import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
 import indi.sly.system.kernel.files.instances.values.FileSystemEntryDefinition;
 import indi.sly.system.kernel.objects.prototypes.AInfoContentObject;
@@ -8,10 +9,9 @@ import indi.sly.system.kernel.processes.ProcessManager;
 import indi.sly.system.kernel.processes.prototypes.ProcessObject;
 import indi.sly.system.kernel.processes.prototypes.ProcessTokenObject;
 import indi.sly.system.kernel.security.values.PrivilegeType;
+import jakarta.inject.Named;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import jakarta.inject.Named;
 
 @Named
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -28,6 +28,10 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+            throw new StatusUnreadableException();
+        }
+
         return fileSystemEntry.getType();
     }
 
@@ -42,6 +46,10 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
         }
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+            throw new StatusUnreadableException();
+        }
 
         fileSystemEntry.setType(type);
 
@@ -60,6 +68,10 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
 
+        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+            throw new StatusUnreadableException();
+        }
+
         return fileSystemEntry.getValue();
     }
 
@@ -74,6 +86,10 @@ public class FileSystemFolderContentObject extends AInfoContentObject {
         }
 
         FileSystemEntryDefinition fileSystemEntry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, this.read());
+
+        if (ObjectUtil.isAnyNull(fileSystemEntry)) {
+            throw new StatusUnreadableException();
+        }
 
         fileSystemEntry.setValue(configuration);
 

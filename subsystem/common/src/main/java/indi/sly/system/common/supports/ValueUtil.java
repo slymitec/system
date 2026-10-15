@@ -67,46 +67,6 @@ public abstract class ValueUtil {
         return false;
     }
 
-    public static boolean isAnyNullOrEmpty(@Nullable final Object value1, @Nullable final Object @Nullable [] values) {
-        if (ObjectUtil.isAnyNull(value1, values)) {
-            return true;
-        }
-
-        Object[] allValues = new Object[values.length + 1];
-        allValues[0] = value1;
-        System.arraycopy(values, 0, allValues, 1, values.length);
-
-        for (Object value : allValues) {
-            if (value instanceof Optional) {
-                if (((Optional<?>) value).isEmpty()) {
-                    return true;
-                }
-            } else if (value instanceof CharSequence) {
-                if (((CharSequence) value).isEmpty()) {
-                    return true;
-                }
-            } else if (value instanceof UUID) {
-                if (value.equals(UUIDUtil.getEmpty())) {
-                    return true;
-                }
-            } else if (value.getClass().isArray()) {
-                if (Array.getLength(value) == 0) {
-                    return true;
-                }
-            } else if (value instanceof Collection) {
-                if (((Collection<?>) value).isEmpty()) {
-                    return true;
-                }
-            } else if (value instanceof Map) {
-                if (((Map<?, ?>) value).isEmpty()) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     public static boolean isAnyNullOrEmpty(@Nullable final Object value1, @Nullable final Object value2, @Nullable final Object... values) {
         if (ObjectUtil.isAnyNull(value1, value2, values)) {
             return true;

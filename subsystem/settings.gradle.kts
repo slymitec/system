@@ -1,3 +1,3 @@
 rootProject.name = "subsystem"
 
-include("common", "periphery")
+include("common", "periphery", "applications")

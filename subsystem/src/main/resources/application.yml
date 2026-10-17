@@ -45,3 +45,12 @@ dapr:
   client:
     http-endpoint: http://10.28.0.16:3501
     grpc-endpoint: 10.28.0.16:50002
+
+sa-token:
+  token-name: slysystem
+  timeout: -1
+  active-timeout: -1
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-log: true

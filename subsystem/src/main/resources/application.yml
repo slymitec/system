@@ -47,7 +47,7 @@ dapr:
     grpc-endpoint: 10.28.0.16:50002
 
 sa-token:
-  token-name: slysystem
+  token-name: systemtoken
   timeout: -1
   active-timeout: -1
   is-concurrent: true

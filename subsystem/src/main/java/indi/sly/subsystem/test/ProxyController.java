@@ -29,7 +29,7 @@ import java.util.*;
 
 @RestController
 @Transactional
-public class TestController {
+public class ProxyController {
     protected CoreManager coreManager;
 
     private void init() {
@@ -42,8 +42,8 @@ public class TestController {
         }
     }
 
-    @RequestMapping(value = {"/test"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public Object test() {
+    @RequestMapping(value = {"/ptest0"}, method = {RequestMethod.GET, RequestMethod.POST})
+    public Object test0() {
         if (ObjectUtil.isNull(this.coreManager)) {
             this.init();
         }
@@ -67,7 +67,7 @@ public class TestController {
         return dateTime.getHandle().toString() + ": " + current;
     }
 
-    @RequestMapping(value = {"/test1"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = {"/ptest1"}, method = {RequestMethod.GET, RequestMethod.POST})
     public Object test1() {
         if (ObjectUtil.isNull(this.coreManager)) {
             this.init();
@@ -92,7 +92,7 @@ public class TestController {
         return info.getHandle().toString() + ": " + infoDate.getOrDefault(DateTimeType.CREATE, null);
     }
 
-    @RequestMapping(value = {"/test1r"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = {"/ptest1r"}, method = {RequestMethod.GET, RequestMethod.POST})
     public Object test1r() {
         if (ObjectUtil.isNull(this.coreManager)) {
             this.init();
@@ -139,7 +139,7 @@ public class TestController {
         }
     }
 
-    @RequestMapping(value = {"/test2"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = {"/ptest2"}, method = {RequestMethod.GET, RequestMethod.POST})
     public Object test2() {
         if (ObjectUtil.isNull(this.coreManager)) {
             this.init();
@@ -170,7 +170,7 @@ public class TestController {
         }
     }
 
-    @RequestMapping(value = {"/test3"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = {"/ptest3"}, method = {RequestMethod.GET, RequestMethod.POST})
     public Object test3() {
         if (ObjectUtil.isNull(this.coreManager)) {
             this.init();
@@ -200,7 +200,7 @@ public class TestController {
         return currentAccount.getHandle() + ": <br />" + result;
     }
 
-    @RequestMapping(value = {"/test4"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = {"/ptest4"}, method = {RequestMethod.GET, RequestMethod.POST})
     public Object test4() {
         if (ObjectUtil.isNull(this.coreManager)) {
             this.init();

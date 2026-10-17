@@ -72,7 +72,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
         if (this.cache.isPermission()) {
-            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+            if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFO)
                     && !securityDescriptor.getOwners().contains(processToken.getAccountId())
                     && this.denyPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, null)) {
                 throw new ConditionPermissionException();
@@ -143,7 +143,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFO)
                 && !securityDescriptor.getOwners().contains(processToken.getAccountId())
                 && this.denyPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, null)) {
             throw new ConditionPermissionException();
@@ -167,7 +167,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFO)
                 && !securityDescriptor.getOwners().contains(processToken.getAccountId())
                 && this.denyPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW, null)) {
             throw new ConditionPermissionException();
@@ -193,7 +193,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFO)
                 && !securityDescriptor.getOwners().contains(processToken.getAccountId())
                 && this.denyPermission(PermissionType.READPERMISSIONDESCRIPTOR_ALLOW, null)) {
             throw new ConditionPermissionException();
@@ -220,10 +220,10 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-        if ((!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+        if ((!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFO)
                 && !securityDescriptor.getOwners().contains(processToken.getAccountId())
                 && this.denyPermission(PermissionType.TAKEONWERSHIP_ALLOW, null))
-                || (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+                || (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFO)
                 && !owners.contains(processToken.getAccountId()))) {
             throw new ConditionPermissionException();
         }
@@ -258,7 +258,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
         ProcessSessionObject processSession = process.getSession();
 
         if ((ObjectUtil.isNull(permissionQueryFunc) || permissionQueryFunc.privilege())
-                && processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)) {
+                && processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFO)) {
             return false;
         }
 
@@ -436,7 +436,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
             }
         }
 
-        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+        if (!processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFO)
                 && !securityDescriptor.getOwners().contains(processToken.getAccountId())
                 && this.denyPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW, null)) {
             throw new ConditionPermissionException();
@@ -619,7 +619,7 @@ public class SecurityDescriptorObject extends AChildCacheableObject<SecurityDesc
 
         SecurityDescriptorEntity securityDescriptor = info.getSecurityDescriptor();
 
-        if (this.cache.isPermission() && !processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFOOBJECTS)
+        if (this.cache.isPermission() && !processToken.isPrivileges(PrivilegeType.OBJECTS_ACCESS_INFO)
                 && !securityDescriptor.getOwners().contains(processToken.getAccountId())
                 && this.denyPermission(PermissionType.CHANGEPERMISSIONDESCRIPTOR_ALLOW, null)) {
             throw new ConditionAuditException();

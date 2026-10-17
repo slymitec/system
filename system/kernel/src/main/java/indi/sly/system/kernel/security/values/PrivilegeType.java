@@ -7,7 +7,7 @@ public interface PrivilegeType {
     long CORE_MODIFY_PRIVILEGES = PrivilegeType.FULL;
     long CORE_MODIFY_DATETIME = 1L;
     long FILE_SYSTEM_ACCESS_MODIFY_MAPPING = 1L << 1;
-    long OBJECTS_ACCESS_INFOOBJECTS = 1L << 2;
+    long OBJECTS_ACCESS_INFO = 1L << 2;
     long PROCESSES_MODIFY_LIMITS = 1L << 3;
     long PROCESSES_MODIFY_SESSION = 1L << 4;
     long SERVICE_MODIFY = 1L << 5;

@@ -33,6 +33,7 @@ public class ProxyManager extends AManager {
 
     @Override
     public void shutdown() {
+        super.shutdown();
     }
 
     public SessionObject getSession(UUID sessionId) {

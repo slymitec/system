@@ -1,6 +1,7 @@
 package indi.sly.subsystem.periphery.proxies.values;
 
 import indi.sly.system.common.values.ADefinition;
+import org.jspecify.annotations.Nullable;
 
 public class RemoteDefinition extends ADefinition {
     public RemoteDefinition() {
@@ -8,7 +9,7 @@ public class RemoteDefinition extends ADefinition {
 
     @SuppressWarnings("NullAway.Init")
     private CallContextRecord callContext;
-    @SuppressWarnings("NullAway.Init")
+    @Nullable
     private String taskName;
     @SuppressWarnings("NullAway.Init")
     private String value;
@@ -21,11 +22,11 @@ public class RemoteDefinition extends ADefinition {
         this.callContext = callContext;
     }
 
-    public String getTaskName() {
+    public @Nullable String getTaskName() {
         return this.taskName;
     }
 
-    public void setTaskName(String taskName) {
+    public void setTaskName(@Nullable String taskName) {
         this.taskName = taskName;
     }
 

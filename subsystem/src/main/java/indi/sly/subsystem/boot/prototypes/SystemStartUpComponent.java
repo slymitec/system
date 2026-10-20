@@ -4,6 +4,7 @@ import indi.sly.subsystem.periphery.core.CoreManager;
 import indi.sly.subsystem.periphery.core.boot.prototypes.BootObject;
 import indi.sly.subsystem.periphery.core.boot.prototypes.IStartupCapable;
 import indi.sly.subsystem.periphery.core.boot.values.StartupType;
+import indi.sly.subsystem.periphery.core.environment.containers.KernelSpace;
 import indi.sly.subsystem.periphery.core.environment.values.SpaceType;
 import indi.sly.subsystem.periphery.core.prototypes.AComponent;
 import indi.sly.subsystem.periphery.memory.MemoryManager;
@@ -28,7 +29,13 @@ public class SystemStartUpComponent extends AComponent implements ApplicationRun
     @Transactional
     public void run(@NonNull ApplicationArguments args) {
         if (ObjectUtil.isNull(this.coreManager)) {
-            this.coreManager = SpringHelper.getInstance(CoreManager.class);
+            KernelSpace kernelSpace = SpringHelper.getInstance(KernelSpace.class);
+
+            this.coreManager = (CoreManager) kernelSpace.getClassedObjects().get(CoreManager.class);
+
+            if (ObjectUtil.notNull(this.coreManager)) {
+                this.coreManager.check();
+            }
 
             this.coreManager.startup(StartupType.STEP_INIT_SELF);
             this.coreManager.startup(StartupType.STEP_AFTER_SELF);

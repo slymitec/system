@@ -22,7 +22,7 @@ public class TokenController {
     private void init() {
         KernelSpace kernelSpace = SpringHelper.getInstance(KernelSpace.class);
 
-        this.coreManager = (CoreManager) kernelSpace.getClassedObjects().getOrDefault(CoreManager.class, null);
+        this.coreManager = (CoreManager) kernelSpace.getClassedObjects().get(CoreManager.class);
 
         if (ObjectUtil.notNull(this.coreManager)) {
             this.coreManager.check();

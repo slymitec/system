@@ -6,7 +6,6 @@ import indi.sly.system.kernel.core.CoreManager;
 import indi.sly.system.kernel.core.boot.prototypes.BootObject;
 import indi.sly.system.kernel.core.boot.prototypes.IStartupCapable;
 import indi.sly.system.kernel.core.boot.values.StartupType;
-import indi.sly.system.kernel.core.environment.containers.KernelSpace;
 import indi.sly.system.kernel.core.environment.containers.UserSpace;
 import indi.sly.system.kernel.core.environment.values.SpaceType;
 import indi.sly.system.kernel.core.prototypes.AComponent;
@@ -37,16 +36,14 @@ public class SystemStartUpComponent extends AComponent implements ApplicationRun
     @Transactional
     public void run(@NonNull ApplicationArguments args) {
         if (ObjectUtil.isNull(this.coreManager)) {
-            KernelSpace kernelSpace = SpringHelper.getInstance(KernelSpace.class);
+            this.coreManager = SpringHelper.getInstance(CoreManager.class);
 
-            this.coreManager = (CoreManager) kernelSpace.getClassedObjects().get(CoreManager.class);
+            this.coreManager.startup(StartupType.STEP_INIT_SELF);
+            this.coreManager.startup(StartupType.STEP_AFTER_SELF);
 
             if (ObjectUtil.notNull(this.coreManager)) {
                 this.coreManager.check();
             }
-
-            this.coreManager.startup(StartupType.STEP_INIT_SELF);
-            this.coreManager.startup(StartupType.STEP_AFTER_SELF);
 
             UserSpace userSpace = SpringHelper.getInstance(UserSpace.class);
             this.coreManager.setUserSpace(userSpace);

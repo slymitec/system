@@ -26,7 +26,7 @@ public class ProxyComponent extends AComponent implements InvocationHandler {
     public @Nullable Object invoke(Object proxy, Method method, Object @Nullable [] args) throws Throwable {
         String methodName = method.getName();
 
-        if (methodName.equals("getHandle")) {
+        if (methodName.equals("getHandle") && (ObjectUtil.isNull(args) || args.length == 0)) {
             UUID handle = ObjectUtil.transferFromString(UUID.class, this.remote.getValue());
 
             if (ValueUtil.isNullOrEmpty(handle)) {
@@ -34,20 +34,16 @@ public class ProxyComponent extends AComponent implements InvocationHandler {
             }
 
             return handle;
-        } else if (methodName.equals("die")) {
+        } else if (methodName.equals("die") && (ObjectUtil.isNull(args) || args.length == 0)) {
             this.remote.invoke("unCache", Void.class);
 
             return null;
-        } else if (methodName.equals("toString")) {
+        } else if (methodName.equals("toString") && (ObjectUtil.isNull(args) || args.length == 0)) {
             return this.remote.getValue();
-        } else if (methodName.equals("hashCode")) {
+        } else if (methodName.equals("hashCode") && (ObjectUtil.isNull(args) || args.length == 0)) {
             return System.identityHashCode(proxy);
-        } else if (methodName.equals("equals")) {
-            if (ObjectUtil.notNull(args) && args.length > 0) {
-                return proxy.equals(args[0]);
-            } else {
-                return false;
-            }
+        } else if (methodName.equals("equals") && (ObjectUtil.notNull(args) && args.length == 1)) {
+            return proxy.equals(args[0]);
         } else {
             Type[] genericParameterTypes = method.getGenericParameterTypes();
             Type returnType = method.getGenericReturnType();

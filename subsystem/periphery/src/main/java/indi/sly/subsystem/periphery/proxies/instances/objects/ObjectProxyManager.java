@@ -14,6 +14,6 @@ public class ObjectProxyManager extends AManagerProxyObject {
     public InfoProxyObject get(PathRecord path) {
         RemoteObject remote = this.remote.invoke("get", path);
 
-        return this.factory.buildProxy(InfoProxyObject.class, remote);
+        return this.factory.buildProxyObject(InfoProxyObject.class, remote);
     }
 }

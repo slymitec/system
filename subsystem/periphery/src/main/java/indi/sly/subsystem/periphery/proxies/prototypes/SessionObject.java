@@ -1,6 +1,7 @@
 package indi.sly.subsystem.periphery.proxies.prototypes;
 
 import indi.sly.subsystem.periphery.core.prototypes.ADefinitionObject;
+import indi.sly.subsystem.periphery.proxies.instances.IProxyManager;
 import indi.sly.subsystem.periphery.proxies.values.*;
 import indi.sly.system.common.lang.ConditionParametersException;
 import indi.sly.system.common.lang.StatusNotExistedException;
@@ -19,6 +20,24 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
     @SuppressWarnings("NullAway.Init")
     protected ProxyFactory factory;
 
+    public <T extends IProxyManager> T getManagerProxy2(Class<T> clazz, CallContextProcessRecord callContextProcess) {
+        return this.getProxy2(clazz, UUIDUtil.createRandom(), callContextProcess);
+    }
+
+    public <T extends IProxyManager> T getProxy2(Class<T> clazz, UUID handle, CallContextProcessRecord callContextProcess) {
+        if (ObjectUtil.isAnyNull(clazz, callContextProcess) || ValueUtil.isNullOrEmpty(handle)) {
+            throw new ConditionParametersException();
+        }
+
+        CallContextRecord callContext = new CallContextRecord(this.definition.getSessionId(), callContextProcess);
+
+        RemoteDefinition remote = new RemoteDefinition();
+        remote.setCallContext(callContext);
+        remote.setValue(ObjectUtil.transferToString(handle));
+
+        return this.factory.buildProxy(clazz, this.factory.buildRemote(remote));
+    }
+
     public <T extends AManagerProxyObject> T getManagerProxy(Class<T> clazz, CallContextProcessRecord callContextProcess) {
         return this.getProxy(clazz, UUIDUtil.createRandom(), callContextProcess);
     }
@@ -34,7 +53,7 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
         remote.setCallContext(callContext);
         remote.setValue(ObjectUtil.transferToString(handle));
 
-        return this.factory.buildProxy(clazz, this.factory.buildRemote(remote));
+        return this.factory.buildProxyObject(clazz, this.factory.buildRemote(remote));
     }
 
     private String doGetProxyAndInvoke(String taskName, UUID handle, CallContextProcessRecord callContextProcess, ClientRequestRecord clientRequest) {
@@ -72,7 +91,7 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
             throw new ConditionParametersException();
         }
 
-        String taskName = this.factory.acquireTaskName(clazz);
+        String taskName = this.factory.acquireObjectTaskName(clazz);
         if (ValueUtil.isNullOrEmpty(taskName)) {
             throw new StatusNotExistedException();
         }

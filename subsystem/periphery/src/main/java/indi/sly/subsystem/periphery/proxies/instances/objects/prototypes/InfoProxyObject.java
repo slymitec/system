@@ -56,7 +56,7 @@ public class InfoProxyObject extends AProxyObject {
     public InfoProxyObject getParent() {
         RemoteObject remote = this.remote.invoke("getParent");
 
-        return this.factory.buildProxy(InfoProxyObject.class, remote);
+        return this.factory.buildProxyObject(InfoProxyObject.class, remote);
     }
 
     public Map<Long, Long> getDate() {
@@ -68,13 +68,13 @@ public class InfoProxyObject extends AProxyObject {
     public SecurityDescriptorProxyObject getSecurityDescriptor() {
         RemoteObject remote = this.remote.invoke("getSecurityDescriptor");
 
-        return this.factory.buildProxy(SecurityDescriptorProxyObject.class, remote);
+        return this.factory.buildProxyObject(SecurityDescriptorProxyObject.class, remote);
     }
 
     public DumpProxyObject dump() {
         RemoteObject remote = this.remote.invoke("dump");
 
-        return this.factory.buildProxy(DumpProxyObject.class, remote);
+        return this.factory.buildProxyObject(DumpProxyObject.class, remote);
     }
 
     public UUID open(long openAttribute, Object... arguments) {
@@ -96,13 +96,13 @@ public class InfoProxyObject extends AProxyObject {
     public InfoProxyObject createChild(UUID childType, IdentifierRecord identifier) {
         RemoteObject remote = this.remote.invoke("createChild", childType, identifier);
 
-        return this.factory.buildProxy(InfoProxyObject.class, remote);
+        return this.factory.buildProxyObject(InfoProxyObject.class, remote);
     }
 
     public InfoProxyObject getChild(IdentifierRecord identifier) {
         RemoteObject remote = this.remote.invoke("getChild", identifier);
 
-        return this.factory.buildProxy(InfoProxyObject.class, remote);
+        return this.factory.buildProxyObject(InfoProxyObject.class, remote);
     }
 
     public void deleteChild(IdentifierRecord identifier) {
@@ -136,6 +136,6 @@ public class InfoProxyObject extends AProxyObject {
 
         RemoteObject remote = this.remote.invoke("getContent", contentClazz);
 
-        return this.factory.buildProxy(contentClazz, remote);
+        return this.factory.buildProxyObject(contentClazz, remote);
     }
 }

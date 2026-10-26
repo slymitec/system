@@ -39,7 +39,7 @@ public class AccountProxyObject extends AProxyObject {
     public Set<GroupProxyObject> getGroups() {
         RemoteObject remote = this.remote.invoke("getGroups");
 
-        return this.factory.buildProxySet(GroupProxyObject.class, remote);
+        return this.factory.buildProxyObjectSet(GroupProxyObject.class, remote);
     }
 
     public void setGroups(Set<GroupProxyObject> groups) {
@@ -57,12 +57,12 @@ public class AccountProxyObject extends AProxyObject {
     public GroupTokenProxyObject getToken() {
         RemoteObject remote = this.remote.invoke("getToken");
 
-        return this.factory.buildProxy(GroupTokenProxyObject.class, remote);
+        return this.factory.buildProxyObject(GroupTokenProxyObject.class, remote);
     }
 
     public AccountSessionsProxyObject getSessions() {
         RemoteObject remote = this.remote.invoke("getSessions");
 
-        return this.factory.buildProxy(AccountSessionsProxyObject.class, remote);
+        return this.factory.buildProxyObject(AccountSessionsProxyObject.class, remote);
     }
 }

@@ -4,9 +4,14 @@ import indi.sly.subsystem.periphery.core.CoreManager;
 import indi.sly.subsystem.periphery.core.environment.containers.KernelSpace;
 import indi.sly.subsystem.periphery.proxies.ProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.core.CoreProxyManager;
+import indi.sly.subsystem.periphery.proxies.instances.core.ICoreProxyManager;
+import indi.sly.subsystem.periphery.proxies.instances.core.IDateTimeProxy;
 import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.DateTimeProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.objects.ObjectProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.InfoProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.security.IAccountProxy;
+import indi.sly.subsystem.periphery.proxies.instances.security.IGroupProxy;
+import indi.sly.subsystem.periphery.proxies.instances.security.IUserProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.security.UserProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.AccountProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.GroupProxyObject;
@@ -58,13 +63,13 @@ public class ProxyController {
 
         CallContextProcessRecord callContextProcess = new CallContextProcessRecord(PROCESSES_PROTOTYPE_SYSTEM_ID, CallContextProcessType.CLIENT, null, null);
 
-        CoreProxyManager coreManager = session.getManagerProxy(CoreProxyManager.class, callContextProcess);
+        ICoreProxyManager coreManager = session.getManagerProxy2(ICoreProxyManager.class, callContextProcess);
 
-        DateTimeProxyObject dateTime = coreManager.getDateTime();
+        IDateTimeProxy dateTime = coreManager.getDateTime();
 
         long current = dateTime.getCurrent();
 
-        return dateTime.getHandle().toString() + ": " + current;
+        return dateTime.getHandle() + ": " + current;
     }
 
     @RequestMapping(value = {"/ptest1"}, method = {RequestMethod.GET, RequestMethod.POST})
@@ -186,14 +191,14 @@ public class ProxyController {
 
         CallContextProcessRecord callContextProcess = new CallContextProcessRecord(PROCESSES_PROTOTYPE_SYSTEM_ID, CallContextProcessType.CLIENT, null, null);
 
-        UserProxyManager userManager = session.getManagerProxy(UserProxyManager.class, callContextProcess);
+        IUserProxyManager userManager = session.getManagerProxy2(IUserProxyManager.class, callContextProcess);
 
-        AccountProxyObject currentAccount = userManager.getCurrentAccount();
+        IAccountProxy currentAccount = userManager.getCurrentAccount();
 
-        Set<GroupProxyObject> groups = currentAccount.getGroups();
+        Set<IGroupProxy> groups = currentAccount.getGroups();
 
         String result = "";
-        for (GroupProxyObject group : groups) {
+        for (IGroupProxy group : groups) {
             result += group.getHandle() + ":" + group.getName() + "<br />";
         }
 

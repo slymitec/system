@@ -26,6 +26,6 @@ public class GroupProxyObject extends AProxyObject {
     public GroupTokenProxyObject getToken() {
         RemoteObject remote = this.remote.invoke("getToken");
 
-        return this.factory.buildProxy(GroupTokenProxyObject.class, remote);
+        return this.factory.buildProxyObject(GroupTokenProxyObject.class, remote);
     }
 }

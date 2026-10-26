@@ -1,7 +1,11 @@
 package indi.sly.subsystem.periphery.proxies.prototypes;
 
 import indi.sly.subsystem.periphery.core.prototypes.AFactory;
+import indi.sly.subsystem.periphery.proxies.instances.IProxy;
 import indi.sly.subsystem.periphery.proxies.instances.core.CoreProxyManager;
+import indi.sly.subsystem.periphery.proxies.instances.core.ICoreProxyManager;
+import indi.sly.subsystem.periphery.proxies.instances.core.IDateTimeProxy;
+import indi.sly.subsystem.periphery.proxies.instances.core.ISystemVersionProxy;
 import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.DateTimeProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.SystemVersionProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.objects.ObjectProxyManager;
@@ -12,7 +16,8 @@ import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.instanc
 import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.instances.NamelessFolderContentProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.processes.ProcessProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.processes.prototypes.*;
-import indi.sly.subsystem.periphery.proxies.instances.security.UserProxyManager;
+import indi.sly.subsystem.periphery.proxies.instances.security.*;
+import indi.sly.subsystem.periphery.proxies.instances.security.instances.IAuditContentProxy;
 import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.*;
 import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.instances.AuditContentProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.services.ServicesProxyManager;
@@ -37,6 +42,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.lang.reflect.Proxy;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -46,11 +52,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ProxyFactory extends AFactory {
     public ProxyFactory() {
         this.remoteResolvers = new CopyOnWriteArrayList<>();
+        this.proxyTasks = new ConcurrentHashMap<>();
         this.proxyObjectTasks = new ConcurrentHashMap<>();
         this.systemExceptions = new ConcurrentHashMap<>();
     }
 
     private final List<IRemoteResolver> remoteResolvers;
+    private final Map<Class<? extends IProxy>, String> proxyTasks;
     private final Map<Class<? extends AProxyObject>, String> proxyObjectTasks;
     private final Map<String, ASystemException> systemExceptions;
 
@@ -81,43 +89,60 @@ public class ProxyFactory extends AFactory {
         this.systemExceptions.put("ConditionParametersException", new ConditionParametersException());
         this.systemExceptions.put("ConditionContextException", new ConditionContextException());
 
-        this.registerProxy(CoreProxyManager.class, "CoreManager");
-        this.registerProxy(SystemVersionProxyObject.class, "SystemVersionObject");
-        this.registerProxy(DateTimeProxyObject.class, "DateTimeObject");
+        this.registerProxy(ICoreProxyManager.class, "CoreManager");
+        this.registerProxy(IDateTimeProxy.class, "DateTimeObject");
+        this.registerProxy(ISystemVersionProxy.class, "SystemVersionObject");
 
-        this.registerProxy(ObjectProxyManager.class, "ObjectManager");
-        this.registerProxy(DumpProxyObject.class, "DumpObject");
-        this.registerProxy(InfoProxyObject.class, "InfoObject");
-        this.registerProxy(SecurityDescriptorProxyObject.class, "SecurityDescriptorObject");
-        this.registerProxy(FolderContentProxyObject.class, "FolderContentObject");
-        this.registerProxy(NamelessFolderContentProxyObject.class, "NamelessFolderContentObject");
+        this.registerProxyObject(CoreProxyManager.class, "CoreManager");
+        this.registerProxyObject(SystemVersionProxyObject.class, "SystemVersionObject");
+        this.registerProxyObject(DateTimeProxyObject.class, "DateTimeObject");
 
-        this.registerProxy(ProcessProxyManager.class, "ProcessManager");
-        this.registerProxy(ProcessProxyObject.class, "ProcessObject");
-        this.registerProxy(ProcessCommunicationProxyObject.class, "ProcessCommunicationObject");
-        this.registerProxy(ProcessContextProxyObject.class, "ProcessContextObject");
-        this.registerProxy(ProcessInfoEntryProxyObject.class, "ProcessInfoEntryObject");
-        this.registerProxy(ProcessInfoTableProxyObject.class, "ProcessInfoTableObject");
-        this.registerProxy(ProcessSessionProxyObject.class, "ProcessSessionObject");
-        this.registerProxy(ProcessStatisticsProxyObject.class, "ProcessStatisticsObject");
-        this.registerProxy(ProcessStatusProxyObject.class, "ProcessStatusObject");
-        this.registerProxy(ProcessTokenProxyObject.class, "ProcessTokenObject");
+        this.registerProxyObject(ObjectProxyManager.class, "ObjectManager");
+        this.registerProxyObject(DumpProxyObject.class, "DumpObject");
+        this.registerProxyObject(InfoProxyObject.class, "InfoObject");
+        this.registerProxyObject(SecurityDescriptorProxyObject.class, "SecurityDescriptorObject");
+        this.registerProxyObject(FolderContentProxyObject.class, "FolderContentObject");
+        this.registerProxyObject(NamelessFolderContentProxyObject.class, "NamelessFolderContentObject");
 
-        this.registerProxy(UserProxyManager.class, "UserManager");
-        this.registerProxy(AccountAuthorizationProxyObject.class, "AccountAuthorizationObject");
-        this.registerProxy(AccountProxyObject.class, "AccountObject");
-        this.registerProxy(AccountSessionsProxyObject.class, "AccountSessionsObject");
-        this.registerProxy(AccountTokenProxyObject.class, "AccountTokenObject");
-        this.registerProxy(GroupProxyObject.class, "GroupObject");
-        this.registerProxy(GroupTokenProxyObject.class, "GroupTokenObject");
-        this.registerProxy(AuditContentProxyObject.class, "AuditContentObject");
+        this.registerProxyObject(ProcessProxyManager.class, "ProcessManager");
+        this.registerProxyObject(ProcessProxyObject.class, "ProcessObject");
+        this.registerProxyObject(ProcessCommunicationProxyObject.class, "ProcessCommunicationObject");
+        this.registerProxyObject(ProcessContextProxyObject.class, "ProcessContextObject");
+        this.registerProxyObject(ProcessInfoEntryProxyObject.class, "ProcessInfoEntryObject");
+        this.registerProxyObject(ProcessInfoTableProxyObject.class, "ProcessInfoTableObject");
+        this.registerProxyObject(ProcessSessionProxyObject.class, "ProcessSessionObject");
+        this.registerProxyObject(ProcessStatisticsProxyObject.class, "ProcessStatisticsObject");
+        this.registerProxyObject(ProcessStatusProxyObject.class, "ProcessStatusObject");
+        this.registerProxyObject(ProcessTokenProxyObject.class, "ProcessTokenObject");
 
-        this.registerProxy(ServicesProxyManager.class, "ServicesManager");
-        this.registerProxy(ServiceContentProxyObject.class, "ServiceContentObject");
+        this.registerProxy(IUserProxyManager.class, "UserManager");
+        this.registerProxy(IAccountAuthorizationProxy.class, "AccountAuthorizationObject");
+        this.registerProxy(IAccountProxy.class, "AccountObject");
+        this.registerProxy(IAccountSessionsProxy.class, "AccountSessionsObject");
+        this.registerProxy(IAccountTokenProxy.class, "AccountTokenObject");
+        this.registerProxy(IGroupProxy.class, "GroupObject");
+        this.registerProxy(IGroupTokenProxy.class, "GroupTokenObject");
+        this.registerProxy(IAuditContentProxy.class, "AuditContentObject");
+
+        this.registerProxyObject(UserProxyManager.class, "UserManager");
+        this.registerProxyObject(AccountAuthorizationProxyObject.class, "AccountAuthorizationObject");
+        this.registerProxyObject(AccountProxyObject.class, "AccountObject");
+        this.registerProxyObject(AccountSessionsProxyObject.class, "AccountSessionsObject");
+        this.registerProxyObject(AccountTokenProxyObject.class, "AccountTokenObject");
+        this.registerProxyObject(GroupProxyObject.class, "GroupObject");
+        this.registerProxyObject(GroupTokenProxyObject.class, "GroupTokenObject");
+        this.registerProxyObject(AuditContentProxyObject.class, "AuditContentObject");
+
+        this.registerProxyObject(ServicesProxyManager.class, "ServicesManager");
+        this.registerProxyObject(ServiceContentProxyObject.class, "ServiceContentObject");
     }
 
-    private void registerProxy(Class<? extends AProxyObject> clazz, String taskName) {
+    private void registerProxyObject(Class<? extends AProxyObject> clazz, String taskName) {
         this.proxyObjectTasks.put(clazz, taskName);
+    }
+
+    private void registerProxy(Class<? extends IProxy> clazz, String taskName) {
+        this.proxyTasks.put(clazz, taskName);
     }
 
     public IKernelObjectActor getKernelObjectActor(String taskName, UUID handle) {
@@ -132,7 +157,11 @@ public class ProxyFactory extends AFactory {
         return this.systemExceptions.get(systemExceptionName);
     }
 
-    public String acquireTaskName(Class<? extends AProxyObject> clazz) {
+    public String acquireTaskName(Class<? extends IProxy> clazz) {
+        return this.proxyTasks.get(clazz);
+    }
+
+    public String acquireObjectTaskName(Class<? extends AProxyObject> clazz) {
         return this.proxyObjectTasks.get(clazz);
     }
 
@@ -182,16 +211,17 @@ public class ProxyFactory extends AFactory {
         return remotes;
     }
 
-    private <T extends AProxyObject> T createProxy(Class<T> clazz, RemoteObject remote) {
-        T proxy = this.coreManager.create(clazz);
+    @SuppressWarnings("unchecked")
+    private <T extends IProxy> T createProxy(Class<T> clazz, RemoteObject remote) {
+        ProxyComponent proxyComponent = this.coreManager.create(ProxyComponent.class);
 
-        proxy.factory = this;
-        proxy.remote = remote;
+        proxyComponent.factory = this;
+        proxyComponent.remote = remote;
 
-        return proxy;
+        return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, proxyComponent);
     }
 
-    public <T extends AProxyObject> T buildProxy(Class<T> clazz, RemoteObject remote) {
+    public <T extends IProxy> T buildProxy(Class<T> clazz, RemoteObject remote) {
         if (ValueUtil.isNullOrEmpty(remote.getValue())) {
             throw new StatusRelationshipErrorException();
         }
@@ -202,7 +232,7 @@ public class ProxyFactory extends AFactory {
         return this.createProxy(clazz, remote);
     }
 
-    public <T extends AProxyObject> Set<T> buildProxySet(Class<T> clazz, RemoteObject remote) {
+    public <T extends IProxy> Set<T> buildProxySet(Class<T> clazz, RemoteObject remote) {
         if (ValueUtil.isNullOrEmpty(remote.getValue())) {
             throw new StatusRelationshipErrorException();
         }
@@ -218,7 +248,7 @@ public class ProxyFactory extends AFactory {
         return proxySet;
     }
 
-    public <T extends AProxyObject> List<T> buildProxyList(Class<T> clazz, RemoteObject remote) {
+    public <T extends IProxy> List<T> buildProxyList(Class<T> clazz, RemoteObject remote) {
         if (ValueUtil.isNullOrEmpty(remote.getValue())) {
             throw new StatusRelationshipErrorException();
         }
@@ -229,6 +259,58 @@ public class ProxyFactory extends AFactory {
 
         for (RemoteObject remotePair : remotes) {
             proxySet.add(this.buildProxy(clazz, remotePair));
+        }
+
+        return proxySet;
+    }
+
+    private <T extends AProxyObject> T createProxyObject(Class<T> clazz, RemoteObject remote) {
+        T proxy = this.coreManager.create(clazz);
+
+        proxy.factory = this;
+        proxy.remote = remote;
+
+        return proxy;
+    }
+
+    public <T extends AProxyObject> T buildProxyObject(Class<T> clazz, RemoteObject remote) {
+        if (ValueUtil.isNullOrEmpty(remote.getValue())) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        String taskName = this.acquireObjectTaskName(clazz);
+        remote.getDefinition().setTaskName(taskName);
+
+        return this.createProxyObject(clazz, remote);
+    }
+
+    public <T extends AProxyObject> Set<T> buildProxyObjectSet(Class<T> clazz, RemoteObject remote) {
+        if (ValueUtil.isNullOrEmpty(remote.getValue())) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        RemoteObject[] remotes = this.splitProxyRemote(remote);
+
+        Set<T> proxySet = new HashSet<>();
+
+        for (RemoteObject remotePair : remotes) {
+            proxySet.add(this.buildProxyObject(clazz, remotePair));
+        }
+
+        return proxySet;
+    }
+
+    public <T extends AProxyObject> List<T> buildProxyObjectList(Class<T> clazz, RemoteObject remote) {
+        if (ValueUtil.isNullOrEmpty(remote.getValue())) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        RemoteObject[] remotes = this.splitProxyRemote(remote);
+
+        List<T> proxySet = new ArrayList<>();
+
+        for (RemoteObject remotePair : remotes) {
+            proxySet.add(this.buildProxyObject(clazz, remotePair));
         }
 
         return proxySet;

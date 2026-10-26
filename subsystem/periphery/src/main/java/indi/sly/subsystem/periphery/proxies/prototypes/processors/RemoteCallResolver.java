@@ -9,6 +9,7 @@ import indi.sly.subsystem.periphery.proxies.prototypes.IKernelObjectActor;
 import indi.sly.subsystem.periphery.proxies.prototypes.ProxyFactory;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.values.*;
+import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.lang.StatusUnreadableException;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -51,7 +52,12 @@ public class RemoteCallResolver extends AResolver implements IRemoteResolver {
                 throw new StatusUnreadableException();
             }
 
-            IKernelObjectActor kernelObjectActor = proxyFactory.getKernelObjectActor(remote.getTaskName(), handle);
+            String taskName = remote.getTaskName();
+            if (ValueUtil.isNullOrEmpty(taskName)) {
+                throw new ConditionContextException();
+            }
+
+            IKernelObjectActor kernelObjectActor = proxyFactory.getKernelObjectActor(taskName, handle);
 
             ClientResponseRecord clientResponse = kernelObjectActor.call(callRequest).block();
 

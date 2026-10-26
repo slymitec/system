@@ -33,42 +33,42 @@ public class ProcessProxyObject extends AProxyObject {
     public ProcessStatusProxyObject getStatus() {
         RemoteObject remote = this.remote.invoke("getStatus");
 
-        return this.factory.buildProxy(ProcessStatusProxyObject.class, remote);
+        return this.factory.buildProxyObject(ProcessStatusProxyObject.class, remote);
     }
 
     public ProcessCommunicationProxyObject getCommunication() {
         RemoteObject remote = this.remote.invoke("getCommunication");
 
-        return this.factory.buildProxy(ProcessCommunicationProxyObject.class, remote);
+        return this.factory.buildProxyObject(ProcessCommunicationProxyObject.class, remote);
     }
 
     public ProcessContextProxyObject getContext() {
         RemoteObject remote = this.remote.invoke("getContext");
 
-        return this.factory.buildProxy(ProcessContextProxyObject.class, remote);
+        return this.factory.buildProxyObject(ProcessContextProxyObject.class, remote);
     }
 
     public ProcessInfoTableProxyObject getInfoTable() {
         RemoteObject remote = this.remote.invoke("getInfoTable");
 
-        return this.factory.buildProxy(ProcessInfoTableProxyObject.class, remote);
+        return this.factory.buildProxyObject(ProcessInfoTableProxyObject.class, remote);
     }
 
     public ProcessSessionProxyObject getSession() {
         RemoteObject remote = this.remote.invoke("getSession");
 
-        return this.factory.buildProxy(ProcessSessionProxyObject.class, remote);
+        return this.factory.buildProxyObject(ProcessSessionProxyObject.class, remote);
     }
 
     public ProcessStatisticsProxyObject getStatistics() {
         RemoteObject remote = this.remote.invoke("getStatistics");
 
-        return this.factory.buildProxy(ProcessStatisticsProxyObject.class, remote);
+        return this.factory.buildProxyObject(ProcessStatisticsProxyObject.class, remote);
     }
 
     public ProcessTokenProxyObject getToken() {
         RemoteObject remote = this.remote.invoke("getToken");
 
-        return this.factory.buildProxy(ProcessTokenProxyObject.class, remote);
+        return this.factory.buildProxyObject(ProcessTokenProxyObject.class, remote);
     }
 }

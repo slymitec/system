@@ -20,11 +20,11 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
     @SuppressWarnings("NullAway.Init")
     protected ProxyFactory factory;
 
-    public <T extends IProxyManager> T getManagerProxy2(Class<T> clazz, CallContextProcessRecord callContextProcess) {
-        return this.getProxy2(clazz, UUIDUtil.createRandom(), callContextProcess);
+    public <T extends IProxyManager> T getManagerProxy(Class<T> clazz, CallContextProcessRecord callContextProcess) {
+        return this.getProxy(clazz, UUIDUtil.createRandom(), callContextProcess);
     }
 
-    public <T extends IProxyManager> T getProxy2(Class<T> clazz, UUID handle, CallContextProcessRecord callContextProcess) {
+    public <T extends IProxyManager> T getProxy(Class<T> clazz, UUID handle, CallContextProcessRecord callContextProcess) {
         if (ObjectUtil.isAnyNull(clazz, callContextProcess) || ValueUtil.isNullOrEmpty(handle)) {
             throw new ConditionParametersException();
         }
@@ -38,11 +38,11 @@ public class SessionObject extends ADefinitionObject<SessionDefinition> {
         return this.factory.buildProxy(clazz, this.factory.buildRemote(remote));
     }
 
-    public <T extends AManagerProxyObject> T getManagerProxy(Class<T> clazz, CallContextProcessRecord callContextProcess) {
-        return this.getProxy(clazz, UUIDUtil.createRandom(), callContextProcess);
+    public <T extends AManagerProxyObject> T getObjectManagerProxy(Class<T> clazz, CallContextProcessRecord callContextProcess) {
+        return this.getObjectProxy(clazz, UUIDUtil.createRandom(), callContextProcess);
     }
 
-    public <T extends AProxyObject> T getProxy(Class<T> clazz, UUID handle, CallContextProcessRecord callContextProcess) {
+    public <T extends AProxyObject> T getObjectProxy(Class<T> clazz, UUID handle, CallContextProcessRecord callContextProcess) {
         if (ObjectUtil.isAnyNull(clazz, callContextProcess) || ValueUtil.isNullOrEmpty(handle)) {
             throw new ConditionParametersException();
         }

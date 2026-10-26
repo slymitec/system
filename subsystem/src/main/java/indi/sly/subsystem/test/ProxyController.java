@@ -3,7 +3,6 @@ package indi.sly.subsystem.test;
 import indi.sly.subsystem.periphery.core.CoreManager;
 import indi.sly.subsystem.periphery.core.environment.containers.KernelSpace;
 import indi.sly.subsystem.periphery.proxies.ProxyManager;
-import indi.sly.subsystem.periphery.proxies.instances.core.CoreProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.core.ICoreProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.core.IDateTimeProxy;
 import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.DateTimeProxyObject;
@@ -12,9 +11,6 @@ import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.InfoPro
 import indi.sly.subsystem.periphery.proxies.instances.security.IAccountProxy;
 import indi.sly.subsystem.periphery.proxies.instances.security.IGroupProxy;
 import indi.sly.subsystem.periphery.proxies.instances.security.IUserProxyManager;
-import indi.sly.subsystem.periphery.proxies.instances.security.UserProxyManager;
-import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.AccountProxyObject;
-import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.GroupProxyObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.SessionObject;
 import indi.sly.subsystem.periphery.proxies.values.CallContextProcessRecord;
 import indi.sly.subsystem.periphery.proxies.values.CallContextProcessType;
@@ -63,7 +59,7 @@ public class ProxyController {
 
         CallContextProcessRecord callContextProcess = new CallContextProcessRecord(PROCESSES_PROTOTYPE_SYSTEM_ID, CallContextProcessType.CLIENT, null, null);
 
-        ICoreProxyManager coreManager = session.getManagerProxy2(ICoreProxyManager.class, callContextProcess);
+        ICoreProxyManager coreManager = session.getManagerProxy(ICoreProxyManager.class, callContextProcess);
 
         IDateTimeProxy dateTime = coreManager.getDateTime();
 
@@ -88,7 +84,7 @@ public class ProxyController {
 
         CallContextProcessRecord callContextProcess = new CallContextProcessRecord(PROCESSES_PROTOTYPE_SYSTEM_ID, CallContextProcessType.CLIENT, null, null);
 
-        ObjectProxyManager objectManager = session.getManagerProxy(ObjectProxyManager.class, callContextProcess);
+        ObjectProxyManager objectManager = session.getObjectManagerProxy(ObjectProxyManager.class, callContextProcess);
 
         InfoProxyObject info = objectManager.get(new PathRecord(List.of(new IdentifierRecord("Files"))));
 
@@ -116,7 +112,7 @@ public class ProxyController {
 
             UUID handle = UUID.fromString("01a10613-1c5f-7570-a16d-990ad2cc5b18");
 
-            InfoProxyObject info = session.getProxy(InfoProxyObject.class, handle, callContextProcess);
+            InfoProxyObject info = session.getObjectProxy(InfoProxyObject.class, handle, callContextProcess);
 
             System.out.println(info.getName());
 
@@ -163,7 +159,7 @@ public class ProxyController {
 
             UUID handle = UUID.fromString("01a1026c-c1b0-7214-ae1c-690bee6f82f2");
 
-            DateTimeProxyObject dateTime = session.getProxy(DateTimeProxyObject.class, handle, callContextProcess);
+            DateTimeProxyObject dateTime = session.getObjectProxy(DateTimeProxyObject.class, handle, callContextProcess);
 
             long current = dateTime.getCurrent();
 
@@ -191,7 +187,7 @@ public class ProxyController {
 
         CallContextProcessRecord callContextProcess = new CallContextProcessRecord(PROCESSES_PROTOTYPE_SYSTEM_ID, CallContextProcessType.CLIENT, null, null);
 
-        IUserProxyManager userManager = session.getManagerProxy2(IUserProxyManager.class, callContextProcess);
+        IUserProxyManager userManager = session.getManagerProxy(IUserProxyManager.class, callContextProcess);
 
         IAccountProxy currentAccount = userManager.getCurrentAccount();
 

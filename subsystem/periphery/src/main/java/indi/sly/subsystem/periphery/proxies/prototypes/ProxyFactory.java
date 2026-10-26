@@ -8,20 +8,22 @@ import indi.sly.subsystem.periphery.proxies.instances.core.IDateTimeProxy;
 import indi.sly.subsystem.periphery.proxies.instances.core.ISystemVersionProxy;
 import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.DateTimeProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.core.prototypes.SystemVersionProxyObject;
-import indi.sly.subsystem.periphery.proxies.instances.objects.ObjectProxyManager;
+import indi.sly.subsystem.periphery.proxies.instances.objects.*;
 import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.DumpProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.InfoProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.SecurityDescriptorProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.instances.FolderContentProxyObject;
 import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.instances.NamelessFolderContentProxyObject;
-import indi.sly.subsystem.periphery.proxies.instances.processes.ProcessProxyManager;
+import indi.sly.subsystem.periphery.proxies.instances.processes.*;
 import indi.sly.subsystem.periphery.proxies.instances.processes.prototypes.*;
 import indi.sly.subsystem.periphery.proxies.instances.security.*;
 import indi.sly.subsystem.periphery.proxies.instances.security.instances.IAuditContentProxy;
 import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.*;
 import indi.sly.subsystem.periphery.proxies.instances.security.prototypes.instances.AuditContentProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.services.IServicesProxyManager;
 import indi.sly.subsystem.periphery.proxies.instances.services.ServicesProxyManager;
-import indi.sly.subsystem.periphery.proxies.instances.services.prototypes.ServiceContentProxyObject;
+import indi.sly.subsystem.periphery.proxies.instances.services.instances.IServiceContentProxy;
+import indi.sly.subsystem.periphery.proxies.instances.services.prototypes.instances.ServiceContentProxyObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.mediators.RemoteProcessorMediator;
 import indi.sly.subsystem.periphery.proxies.prototypes.processors.IRemoteResolver;
 import indi.sly.subsystem.periphery.proxies.prototypes.processors.RemoteCallResolver;
@@ -93,6 +95,36 @@ public class ProxyFactory extends AFactory {
         this.registerProxy(IDateTimeProxy.class, "DateTimeObject");
         this.registerProxy(ISystemVersionProxy.class, "SystemVersionObject");
 
+        this.registerProxy(IObjectProxyManager.class, "ObjectManager");
+        this.registerProxy(IDumpProxy.class, "DumpObject");
+        this.registerProxy(IInfoProxy.class, "InfoObject");
+        this.registerProxy(ISecurityDescriptorProxy.class, "SecurityDescriptorObject");
+        this.registerProxy(IFolderContentProxy.class, "FolderContentObject");
+        this.registerProxy(INamelessFolderContentProxy.class, "NamelessFolderContentObject");
+
+        this.registerProxy(IProcessProxyManager.class, "ProcessManager");
+        this.registerProxy(IProcessProxy.class, "ProcessObject");
+        this.registerProxy(IProcessCommunicationProxy.class, "ProcessCommunicationObject");
+        this.registerProxy(IProcessContextProxy.class, "ProcessContextObject");
+        this.registerProxy(IProcessInfoEntryProxy.class, "ProcessInfoEntryObject");
+        this.registerProxy(IProcessInfoTableProxy.class, "ProcessInfoTableObject");
+        this.registerProxy(IProcessSessionProxy.class, "ProcessSessionObject");
+        this.registerProxy(IProcessStatisticsProxy.class, "ProcessStatisticsObject");
+        this.registerProxy(IProcessStatusProxy.class, "ProcessStatusObject");
+        this.registerProxy(IProcessTokenProxy.class, "ProcessTokenObject");
+
+        this.registerProxy(IUserProxyManager.class, "UserManager");
+        this.registerProxy(IAccountAuthorizationProxy.class, "AccountAuthorizationObject");
+        this.registerProxy(IAccountProxy.class, "AccountObject");
+        this.registerProxy(IAccountSessionsProxy.class, "AccountSessionsObject");
+        this.registerProxy(IAccountTokenProxy.class, "AccountTokenObject");
+        this.registerProxy(IGroupProxy.class, "GroupObject");
+        this.registerProxy(IGroupTokenProxy.class, "GroupTokenObject");
+        this.registerProxy(IAuditContentProxy.class, "AuditContentObject");
+
+        this.registerProxy(IServicesProxyManager.class, "ServicesManager");
+        this.registerProxy(IServiceContentProxy.class, "ServiceContentObject");
+
         this.registerProxyObject(CoreProxyManager.class, "CoreManager");
         this.registerProxyObject(SystemVersionProxyObject.class, "SystemVersionObject");
         this.registerProxyObject(DateTimeProxyObject.class, "DateTimeObject");
@@ -114,15 +146,6 @@ public class ProxyFactory extends AFactory {
         this.registerProxyObject(ProcessStatisticsProxyObject.class, "ProcessStatisticsObject");
         this.registerProxyObject(ProcessStatusProxyObject.class, "ProcessStatusObject");
         this.registerProxyObject(ProcessTokenProxyObject.class, "ProcessTokenObject");
-
-        this.registerProxy(IUserProxyManager.class, "UserManager");
-        this.registerProxy(IAccountAuthorizationProxy.class, "AccountAuthorizationObject");
-        this.registerProxy(IAccountProxy.class, "AccountObject");
-        this.registerProxy(IAccountSessionsProxy.class, "AccountSessionsObject");
-        this.registerProxy(IAccountTokenProxy.class, "AccountTokenObject");
-        this.registerProxy(IGroupProxy.class, "GroupObject");
-        this.registerProxy(IGroupTokenProxy.class, "GroupTokenObject");
-        this.registerProxy(IAuditContentProxy.class, "AuditContentObject");
 
         this.registerProxyObject(UserProxyManager.class, "UserManager");
         this.registerProxyObject(AccountAuthorizationProxyObject.class, "AccountAuthorizationObject");

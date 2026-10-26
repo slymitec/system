@@ -1,4 +1,4 @@
-package indi.sly.subsystem.periphery.proxies.instances.services.prototypes;
+package indi.sly.subsystem.periphery.proxies.instances.services.prototypes.instances;
 
 import indi.sly.subsystem.periphery.proxies.instances.objects.prototypes.AInfoContentProxyObject;
 import indi.sly.subsystem.periphery.proxies.prototypes.RemoteObject;

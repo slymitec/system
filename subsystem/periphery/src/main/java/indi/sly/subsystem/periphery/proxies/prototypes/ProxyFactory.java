@@ -262,13 +262,13 @@ public class ProxyFactory extends AFactory {
 
         RemoteObject[] remotes = this.splitProxyRemote(remote);
 
-        Set<T> proxySet = new HashSet<>();
+        Set<T> proxies = new HashSet<>();
 
         for (RemoteObject remotePair : remotes) {
-            proxySet.add(this.buildProxy(clazz, remotePair));
+            proxies.add(this.buildProxy(clazz, remotePair));
         }
 
-        return proxySet;
+        return proxies;
     }
 
     public <T extends IProxy> List<T> buildProxyList(Class<T> clazz, RemoteObject remote) {
@@ -278,13 +278,29 @@ public class ProxyFactory extends AFactory {
 
         RemoteObject[] remotes = this.splitProxyRemote(remote);
 
-        List<T> proxySet = new ArrayList<>();
+        List<T> proxies = new ArrayList<>();
 
         for (RemoteObject remotePair : remotes) {
-            proxySet.add(this.buildProxy(clazz, remotePair));
+            proxies.add(this.buildProxy(clazz, remotePair));
         }
 
-        return proxySet;
+        return proxies;
+    }
+
+    public <T extends IProxy> Queue<T> buildProxyQueue(Class<T> clazz, RemoteObject remote) {
+        if (ValueUtil.isNullOrEmpty(remote.getValue())) {
+            throw new StatusRelationshipErrorException();
+        }
+
+        RemoteObject[] remotes = this.splitProxyRemote(remote);
+
+        Queue<T> proxies = new ArrayDeque<>();
+
+        for (RemoteObject remotePair : remotes) {
+            proxies.offer(this.buildProxy(clazz, remotePair));
+        }
+
+        return proxies;
     }
 
     private <T extends AProxyObject> T createProxyObject(Class<T> clazz, RemoteObject remote) {

@@ -2,6 +2,7 @@ package indi.sly.subsystem.periphery.proxies.prototypes;
 
 import indi.sly.subsystem.periphery.core.prototypes.AComponent;
 import indi.sly.subsystem.periphery.proxies.instances.IProxy;
+import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.ClassUtil;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -71,72 +72,89 @@ public class ProxyComponent extends AComponent implements InvocationHandler {
             return arg;
         }
 
-        if (type instanceof Class<?> clazz) {
-            if (ClassUtil.isThisOrSuperContain(clazz, IProxy.class) && arg instanceof IProxy proxy) {
-                return proxy.getHandle();
-            } else {
+        switch (type) {
+            case Class<?> clazz -> {
+                if (ClassUtil.isThisOrSuperContain(clazz, IProxy.class) && arg instanceof IProxy proxy) {
+                    return proxy.getHandle();
+                } else {
+                    return arg;
+                }
+            }
+            case ParameterizedType parameterizedType -> {
+                Type rawType = parameterizedType.getRawType();
+                Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+
+                if (!(rawType instanceof Class<?> rawClass) || actualTypeArguments.length == 0) {
+                    return arg;
+                } else if (ClassUtil.isThisOrSuperContain(rawClass, Set.class)) {
+                    Set<Object> out = new LinkedHashSet<>();
+
+                    for (Object e : (Set<?>) arg) {
+                        out.add(this.convertArgument(e, actualTypeArguments[0]));
+                    }
+
+                    return out;
+                } else if (ClassUtil.isThisOrSuperContain(rawClass, List.class)) {
+                    List<Object> out = new ArrayList<>();
+
+                    for (Object e : (List<?>) arg) {
+                        out.add(this.convertArgument(e, actualTypeArguments[0]));
+                    }
+
+                    return out;
+                } else if (ClassUtil.isThisOrSuperContain(rawClass, Collection.class)) {
+                    Collection<Object> out = new ArrayList<>();
+
+                    for (Object e : (Collection<?>) arg) {
+                        out.add(this.convertArgument(e, actualTypeArguments[0]));
+                    }
+
+                    return out;
+                } else if (ClassUtil.isThisOrSuperContain(rawClass, Map.class)) {
+                    Map<Object, Object> out = new LinkedHashMap<>();
+
+                    for (Map.Entry<?, ?> e : ((Map<?, ?>) arg).entrySet()) {
+                        out.put(this.convertArgument(e.getKey(), actualTypeArguments[0]), this.convertArgument(e.getValue(), actualTypeArguments[1]));
+                    }
+
+                    return out;
+                } else {
+                    return arg;
+                }
+            }
+            case WildcardType wildcardType -> {
+                Type[] upperBounds = wildcardType.getUpperBounds();
+
+                return upperBounds.length > 0 ? this.convertArgument(arg, upperBounds[0]) : arg;
+            }
+            case TypeVariable<?> typeVariable -> {
+                Type[] bounds = typeVariable.getBounds();
+
+                return bounds.length > 0 ? this.convertArgument(arg, bounds[0]) : arg;
+            }
+            case GenericArrayType genericArrayType when arg.getClass().isArray() -> {
+                int len = Array.getLength(arg);
+
+                Type componentType = genericArrayType.getGenericComponentType();
+
+                Object[] converted = new Object[len];
+                for (int i = 0; i < len; i++) {
+                    converted[i] = this.convertArgument(Array.get(arg, i), componentType);
+                }
+
+                Class<?> outputComponentClass = this.inferComponentClass(converted, componentType);
+
+                Object out = Array.newInstance(outputComponentClass, len);
+                for (int i = 0; i < len; i++) {
+                    Array.set(out, i, converted[i]);
+                }
+
+                return out;
+            }
+            default -> {
                 return arg;
             }
-        } else if (type instanceof ParameterizedType parameterizedType) {
-            Type rawType = parameterizedType.getRawType();
-            Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-
-            if (!(rawType instanceof Class<?> rawClass) || actualTypeArguments.length == 0) {
-                return arg;
-            } else if (ClassUtil.isThisOrSuperContain(rawClass, Set.class)) {
-                Set<Object> out = new LinkedHashSet<>();
-
-                for (Object e : (Set<?>) arg) {
-                    out.add(this.convertArgument(e, actualTypeArguments[0]));
-                }
-
-                return out;
-            } else if (ClassUtil.isThisOrSuperContain(rawClass, List.class)) {
-                List<Object> out = new ArrayList<>();
-
-                for (Object e : (List<?>) arg) {
-                    out.add(this.convertArgument(e, actualTypeArguments[0]));
-                }
-
-                return out;
-            } else if (ClassUtil.isThisOrSuperContain(rawClass, Collection.class)) {
-                Collection<Object> out = new ArrayList<>();
-
-                for (Object e : (Collection<?>) arg) {
-                    out.add(this.convertArgument(e, actualTypeArguments[0]));
-                }
-
-                return out;
-            } else if (ClassUtil.isThisOrSuperContain(rawClass, Map.class)) {
-                Map<Object, Object> out = new LinkedHashMap<>();
-
-                for (Map.Entry<?, ?> e : ((Map<?, ?>) arg).entrySet()) {
-                    out.put(this.convertArgument(e.getKey(), actualTypeArguments[0]), this.convertArgument(e.getValue(), actualTypeArguments[1]));
-                }
-
-                return out;
-            } else {
-                return arg;
-            }
-        } else if (type instanceof WildcardType wildcardType) {
-            Type[] upperBounds = wildcardType.getUpperBounds();
-
-            return upperBounds.length > 0 ? this.convertArgument(arg, upperBounds[0]) : arg;
-        } else if (type instanceof TypeVariable<?> typeVariable) {
-            Type[] bounds = typeVariable.getBounds();
-
-            return bounds.length > 0 ? this.convertArgument(arg, bounds[0]) : arg;
-        } else if (type instanceof GenericArrayType genericArrayType && arg.getClass().isArray()) {
-            int len = Array.getLength(arg);
-
-            Object out = Array.newInstance(erase(genericArrayType.getGenericComponentType()), len);
-            for (int i = 0; i < len; i++) {
-                Array.set(out, i, this.convertArgument(Array.get(arg, i), genericArrayType.getGenericComponentType()));
-            }
-
-            return out;
         }
-        return arg;
     }
 
     private @Nullable Class<?> erase(Type type) {
@@ -148,12 +166,12 @@ public class ProxyComponent extends AComponent implements InvocationHandler {
                 return (Class<?>) parameterizedType.getRawType();
             }
             case WildcardType wildcardType -> {
-                Type[] ub = wildcardType.getUpperBounds();
-                return ub.length > 0 ? erase(ub[0]) : null;
+                Type[] upperBounds = wildcardType.getUpperBounds();
+                return upperBounds.length > 0 ? erase(upperBounds[0]) : null;
             }
             case TypeVariable<?> typeVariable -> {
-                Type[] b = typeVariable.getBounds();
-                return b.length > 0 ? erase(b[0]) : null;
+                Type[] bounds = typeVariable.getBounds();
+                return bounds.length > 0 ? erase(bounds[0]) : null;
             }
             case GenericArrayType genericArrayType -> {
                 Class<?> comp = erase(genericArrayType.getGenericComponentType());
@@ -167,70 +185,108 @@ public class ProxyComponent extends AComponent implements InvocationHandler {
 
     @SuppressWarnings("unchecked")
     private @Nullable Object buildReturnValue(Type type, RemoteObject remote) {
-        if (type instanceof Class<?> clazz) {
-            if (clazz.equals(Void.TYPE) || clazz.equals(Void.class)) {
-                return null;
-            } else if (ClassUtil.isThisOrSuperContain(clazz, IProxy.class)) {
-                return this.factory.buildProxy((Class<? extends IProxy>) clazz, remote);
-            } else {
-                return this.factory.getValue(clazz, remote);
-            }
-        }
-
-        if (type instanceof ParameterizedType parameterizedType) {
-            Type rawType = parameterizedType.getRawType();
-            Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-
-            Class<?> rawClass = this.erase(rawType);
-            if (rawClass == null) {
-                return this.factory.getValue(Object.class, remote);
-            }
-
-            if (actualTypeArguments.length == 0) {
-                return this.factory.getValue(rawClass, remote);
-            }
-
-            Class<?> elemClass = this.erase(actualTypeArguments[0]);
-            boolean isProxyElem = elemClass != null && ClassUtil.isThisOrSuperContain(elemClass, IProxy.class);
-
-            if (isProxyElem) {
-                if (ClassUtil.isThisOrSuperContain(rawClass, Set.class)) {
-                    return this.factory.buildProxySet((Class<? extends IProxy>) elemClass, remote);
-                }
-                if (ClassUtil.isThisOrSuperContain(rawClass, List.class)) {
-                    return this.factory.buildProxyList((Class<? extends IProxy>) elemClass, remote);
+        switch (type) {
+            case Class<?> clazz -> {
+                if (clazz.equals(Void.TYPE) || clazz.equals(Void.class)) {
+                    return null;
+                } else if (ClassUtil.isThisOrSuperContain(clazz, IProxy.class)) {
+                    return this.factory.buildProxy((Class<? extends IProxy>) clazz, remote);
+                } else {
+                    return this.factory.getValue(clazz, remote);
                 }
             }
+            case ParameterizedType parameterizedType -> {
+                Type rawType = parameterizedType.getRawType();
+                Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
 
-            return this.factory.getValue(rawClass, remote);
-        }
+                Class<?> rawClass = this.erase(rawType);
+                if (rawClass == null) {
+                    return this.factory.getValue(Object.class, remote);
+                } else if (actualTypeArguments.length == 0) {
+                    return this.factory.getValue(rawClass, remote);
+                } else {
+                    Class<?> elemClass = this.erase(actualTypeArguments[0]);
+                    boolean isProxyElem = elemClass != null && ClassUtil.isThisOrSuperContain(elemClass, IProxy.class);
 
-        if (type instanceof WildcardType wildcardType) {
-            Type[] upperBounds = wildcardType.getUpperBounds();
+                    if (isProxyElem) {
+                        if (ClassUtil.isThisOrSuperContain(rawClass, Set.class)) {
+                            return this.factory.buildProxySet((Class<? extends IProxy>) elemClass, remote);
+                        } else if (ClassUtil.isThisOrSuperContain(rawClass, List.class) || ClassUtil.isThisOrSuperContain(rawClass, Collection.class)) {
+                            return this.factory.buildProxyList((Class<? extends IProxy>) elemClass, remote);
+                        } else if (ClassUtil.isThisOrSuperContain(rawClass, Queue.class)) {
+                            return this.factory.buildProxyQueue((Class<? extends IProxy>) elemClass, remote);
+                        } else {
+                            throw new StatusNotSupportedException();
+                        }
+                    }
 
-            return upperBounds.length > 0
-                    ? this.buildReturnValue(upperBounds[0], remote)
-                    : this.factory.getValue(Object.class, remote);
-        }
+                    return this.factory.getValue(rawClass, remote);
+                }
+            }
+            case WildcardType wildcardType -> {
+                Type[] upperBounds = wildcardType.getUpperBounds();
 
-        if (type instanceof TypeVariable<?> typeVariable) {
-            Type[] bounds = typeVariable.getBounds();
+                return upperBounds.length > 0
+                        ? this.buildReturnValue(upperBounds[0], remote)
+                        : this.factory.getValue(Object.class, remote);
+            }
+            case TypeVariable<?> typeVariable -> {
+                Type[] bounds = typeVariable.getBounds();
 
-            return bounds.length > 0
-                    ? this.buildReturnValue(bounds[0], remote)
-                    : this.factory.getValue(Object.class, remote);
-        }
+                return bounds.length > 0 ? this.buildReturnValue(bounds[0], remote) : this.factory.getValue(Object.class, remote);
+            }
+            case GenericArrayType genericArrayType -> {
+                Class<?> comp = this.erase(genericArrayType.getGenericComponentType());
 
-        if (type instanceof GenericArrayType genericArrayType) {
-            Class<?> comp = this.erase(genericArrayType.getGenericComponentType());
-            if (comp == null) {
+                Class<?> arrayClass = comp != null ? Array.newInstance(comp, 0).getClass() : Object[].class;
+
+                return this.factory.getValue(arrayClass, remote);
+            }
+            default -> {
                 return this.factory.getValue(Object.class, remote);
             }
+        }
+    }
 
-            Class<?> arrayClass = Array.newInstance(comp, 0).getClass();
-            return this.factory.getValue(arrayClass, remote);
+    private @Nullable Class<?> inferComponentClass(Object[] converted, Type declaredComponentType) {
+        Class<?> common = null;
+
+        for (Object e : converted) {
+            if (ObjectUtil.isNull(e)) {
+                continue;
+            }
+            Class<?> c = e.getClass();
+            if (ObjectUtil.isNull(common)) {
+                common = c;
+            } else if (common != c) {
+                common = this.commonSuperClass(common, c);
+                if (common == Object.class) {
+                    return Object.class;
+                }
+            }
         }
 
-        return this.factory.getValue(Object.class, remote);
+        if (ObjectUtil.isNull(common)) {
+            return common;
+        } else {
+            Class<?> erased = this.erase(declaredComponentType);
+
+            return erased != null ? erased : Object.class;
+        }
+    }
+
+    private Class<?> commonSuperClass(Class<?> a, Class<?> b) {
+        if (a.isAssignableFrom(b)) {
+            return a;
+        } else if (b.isAssignableFrom(a)) {
+            return b;
+        } else {
+            for (Class<?> c = a.getSuperclass(); c != null; c = c.getSuperclass()) {
+                if (c.isAssignableFrom(b)) {
+                    return c;
+                }
+            }
+            return Object.class;
+        }
     }
 }

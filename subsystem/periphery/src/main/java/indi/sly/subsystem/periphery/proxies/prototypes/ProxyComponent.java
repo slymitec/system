@@ -205,22 +205,32 @@ public class ProxyComponent extends AComponent implements InvocationHandler {
                 } else if (actualTypeArguments.length == 0) {
                     return this.factory.getValue(rawClass, remote);
                 } else {
-                    Class<?> elemClass = this.erase(actualTypeArguments[0]);
-                    boolean isProxyElem = elemClass != null && ClassUtil.isThisOrSuperContain(elemClass, IProxy.class);
-
-                    if (isProxyElem) {
-                        if (ClassUtil.isThisOrSuperContain(rawClass, Set.class)) {
-                            return this.factory.buildProxySet((Class<? extends IProxy>) elemClass, remote);
-                        } else if (ClassUtil.isThisOrSuperContain(rawClass, List.class) || ClassUtil.isThisOrSuperContain(rawClass, Collection.class)) {
-                            return this.factory.buildProxyList((Class<? extends IProxy>) elemClass, remote);
-                        } else if (ClassUtil.isThisOrSuperContain(rawClass, Queue.class)) {
-                            return this.factory.buildProxyQueue((Class<? extends IProxy>) elemClass, remote);
-                        } else {
-                            throw new StatusNotSupportedException();
+                    Class<?> proxyElemClass = null;
+                    for (Type actualTypeArgument : actualTypeArguments) {
+                        Class<?> c = this.erase(actualTypeArgument);
+                        if (c != null && ClassUtil.isThisOrSuperContain(c, IProxy.class)) {
+                            proxyElemClass = c;
+                            break;
                         }
                     }
 
-                    return this.factory.getValue(rawClass, remote);
+                    if (proxyElemClass == null) {
+                        return this.factory.getValue(rawClass, remote);
+                    } else if (actualTypeArguments.length == 1) {
+                        if (ClassUtil.isThisOrSuperContain(rawClass, Set.class)) {
+                            return this.factory.buildProxySet((Class<? extends IProxy>) proxyElemClass, remote);
+                        } else if (ClassUtil.isThisOrSuperContain(rawClass, List.class)) {
+                            return this.factory.buildProxyList((Class<? extends IProxy>) proxyElemClass, remote);
+                        } else if (ClassUtil.isThisOrSuperContain(rawClass, Queue.class)) {
+                            return this.factory.buildProxyQueue((Class<? extends IProxy>) proxyElemClass, remote);
+                        } else if (ClassUtil.isThisOrSuperContain(rawClass, Collection.class)) {
+                            return this.factory.buildProxyList((Class<? extends IProxy>) proxyElemClass, remote);
+                        } else {
+                            throw new StatusNotSupportedException();
+                        }
+                    } else {
+                        throw new StatusNotSupportedException();
+                    }
                 }
             }
             case WildcardType wildcardType -> {

@@ -259,25 +259,25 @@ public class ProxyComponent extends AComponent implements InvocationHandler {
     }
 
     private @Nullable Class<?> inferComponentClass(Object[] converted, Type declaredComponentType) {
-        Class<?> common = null;
+        Class<?> result = null;
 
         for (Object e : converted) {
             if (ObjectUtil.isNull(e)) {
                 continue;
             }
             Class<?> c = e.getClass();
-            if (ObjectUtil.isNull(common)) {
-                common = c;
-            } else if (common != c) {
-                common = this.commonSuperClass(common, c);
-                if (common == Object.class) {
+            if (ObjectUtil.isNull(result)) {
+                result = c;
+            } else if (result != c) {
+                result = this.commonSuperClass(result, c);
+                if (result == Object.class) {
                     return Object.class;
                 }
             }
         }
 
-        if (ObjectUtil.isNull(common)) {
-            return common;
+        if (ObjectUtil.isNull(result)) {
+            return null;
         } else {
             Class<?> erased = this.erase(declaredComponentType);
 

@@ -19,3 +19,5 @@ gradle.properties
 .idea/
 
 **/.DS_Store
+
+AGENTS.md

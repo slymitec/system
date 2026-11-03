@@ -85,8 +85,6 @@ public class FileSystemFileContentObject extends AInfoContentObject {
             throw new StatusUnreadableException();
         }
 
-        this.write(ObjectUtil.transferToJsonByteArray(fileSystemEntry));
-
         return value;
     }
 

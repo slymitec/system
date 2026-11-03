@@ -43,7 +43,7 @@ public class DateTimeObjectTaskInitializer extends ATaskInitializer {
 
         List<String> parameters = content.getParameters();
 
-        long dateTime = ObjectUtil.transferFromString(Long.class, parameters.get(1));
+        long dateTime = ObjectUtil.transferFromString(Long.class, parameters.getFirst());
         dateTimeObject.correct(dateTime);
     }
 }

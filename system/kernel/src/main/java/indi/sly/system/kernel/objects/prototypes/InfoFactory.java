@@ -192,7 +192,7 @@ public class InfoFactory extends AFactory {
 
         infoContent.setCache(cache);
         infoContent.setBase(info);
-        info.processorMediator = processorMediator;
+        infoContent.processorMediator = processorMediator;
 
         return infoContent;
     }

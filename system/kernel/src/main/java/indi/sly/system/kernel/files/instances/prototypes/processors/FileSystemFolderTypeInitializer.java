@@ -302,7 +302,7 @@ public class FileSystemFolderTypeInitializer extends AInfoTypeInitializer {
         }
 
         String oldChildInfoName = StringUtil.readFormBytes(oldIdentifier.value());
-        String newChildInfoName = StringUtil.readFormBytes(oldIdentifier.value());
+        String newChildInfoName = StringUtil.readFormBytes(newIdentifier.value());
 
         FileSystemEntryDefinition entry = ObjectUtil.transferFromJsonByteArray(FileSystemEntryDefinition.class, info.getContent());
 

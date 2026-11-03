@@ -97,7 +97,7 @@ public class ObjectCollectionObject extends AObject {
             object.coreManager = this.coreManager;
         }
 
-        Lock lock = this.getLock(space, LockType.READ);
+        Lock lock = this.getLock(space, LockType.WRITE);
 
         lock.lock();
         try {
@@ -123,7 +123,7 @@ public class ObjectCollectionObject extends AObject {
 
         Class<? extends AObject> clazz = object.getClass();
 
-        Lock lock = this.getLock(space, LockType.READ);
+        Lock lock = this.getLock(space, LockType.WRITE);
 
         lock.lock();
         try {
@@ -139,7 +139,7 @@ public class ObjectCollectionObject extends AObject {
         }
     }
 
-    public boolean containByID(long space, UUID id) {
+    public boolean containById(long space, UUID id) {
         if (ValueUtil.isNullOrEmpty(id)) {
             throw new ConditionParametersException();
         }

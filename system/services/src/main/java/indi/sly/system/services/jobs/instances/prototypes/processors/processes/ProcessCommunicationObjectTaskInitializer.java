@@ -162,7 +162,7 @@ public class ProcessCommunicationObjectTaskInitializer extends ATaskInitializer 
         }
 
         UUID portId = ObjectUtil.transferFromString(UUID.class, parameters.getFirst());
-        byte[] value = ObjectUtil.transferFromString(byte[].class, parameters.getFirst());
+        byte[] value = ObjectUtil.transferFromString(byte[].class, parameters.get(1));
 
         processCommunication.sendPort(portId, value);
     }

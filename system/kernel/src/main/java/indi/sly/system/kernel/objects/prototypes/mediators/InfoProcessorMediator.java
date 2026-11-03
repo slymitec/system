@@ -2,10 +2,12 @@ package indi.sly.system.kernel.objects.prototypes.mediators;
 
 import indi.sly.system.kernel.core.prototypes.AMediator;
 import indi.sly.system.kernel.objects.lang.*;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import jakarta.inject.Named;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class InfoProcessorMediator extends AMediator {
     private InfoProcessorSelfFunction self;
     @SuppressWarnings("NullAway.Init")
     private InfoProcessorParentFunction parent;
-    @SuppressWarnings("NullAway.Init")
+    @Nullable
     private InfoProcessorSecurityDescriptorFunction securityDescriptor;
     private final List<InfoProcessorDumpFunction> dumps;
     private final List<InfoProcessorOpenFunction> opens;
@@ -64,7 +66,7 @@ public class InfoProcessorMediator extends AMediator {
         this.parent = parent;
     }
 
-    public InfoProcessorSecurityDescriptorFunction getSecurityDescriptor() {
+    public @Nullable InfoProcessorSecurityDescriptorFunction getSecurityDescriptor() {
         return this.securityDescriptor;
     }
 

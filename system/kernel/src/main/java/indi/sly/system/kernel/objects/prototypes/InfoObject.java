@@ -2,6 +2,7 @@ package indi.sly.system.kernel.objects.prototypes;
 
 import indi.sly.system.common.lang.ConditionContextException;
 import indi.sly.system.common.lang.ConditionParametersException;
+import indi.sly.system.common.lang.StatusNotSupportedException;
 import indi.sly.system.common.lang.StatusUnexpectedException;
 import indi.sly.system.common.supports.CollectionUtil;
 import indi.sly.system.common.supports.ObjectUtil;
@@ -125,6 +126,10 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
         TypeObject type = typeManager.get(this.getType());
 
         InfoProcessorSecurityDescriptorFunction resolver = this.processorMediator.getSecurityDescriptor();
+
+        if (ObjectUtil.isNull(resolver)) {
+            throw new StatusNotSupportedException();
+        }
 
         SecurityDescriptorCacheEntity securityDescriptorCache = resolver.apply(info, type, this.cache);
 

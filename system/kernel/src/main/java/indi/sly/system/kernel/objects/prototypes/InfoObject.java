@@ -358,7 +358,9 @@ public class InfoObject extends ACacheableObject<InfoCacheEntity> {
             infoOpen = processInfoEntry.getOpen();
         }
 
-        Class<? extends AInfoContentObject> contentType = type.getInitializer().getContentTypeProcedure(this.getSelf(LockType.READ), infoOpen);
+        InfoEntity info = this.getSelf(LockType.READ);
+
+        Class<? extends AInfoContentObject> contentType = type.getInitializer().getContentTypeProcedure(info, infoOpen);
 
         return this.factory.buildInfoContent(this.processorMediator, this, contentType);
     }

@@ -62,21 +62,21 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         throw new StatusNotSupportedException();
     }
 
-    public Map<String, String> readPropertiesProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
+    public Map<String, String> readPropertiesProcedure(InfoEntity info, @Nullable InfoOpenRecord infoOpen) {
         return info.getProperties();
     }
 
-    public void writePropertiesProcedure(InfoEntity info, Map<String, String> properties, InfoOpenRecord infoOpen) {
+    public void writePropertiesProcedure(InfoEntity info, Map<String, String> properties, @Nullable InfoOpenRecord infoOpen) {
         info.setProperties(properties);
     }
 
     public abstract Class<? extends AInfoContentObject> getContentTypeProcedure(InfoEntity info, @Nullable InfoOpenRecord infoOpen);
 
-    public byte[] readContentProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
+    public byte[] readContentProcedure(InfoEntity info, @Nullable InfoOpenRecord infoOpen) {
         return info.getContent();
     }
 
-    public void writeContentProcedure(InfoEntity info, InfoOpenRecord infoOpen, byte[] source) {
+    public void writeContentProcedure(InfoEntity info, @Nullable InfoOpenRecord infoOpen, byte[] source) {
         if (source.length > 4096) {
             throw new StatusOverflowException();
         }
@@ -84,6 +84,6 @@ public abstract class AInfoTypeInitializer extends AInitializer {
         info.setContent(source);
     }
 
-    public void executeContentProcedure(InfoEntity info, InfoOpenRecord infoOpen) {
+    public void executeContentProcedure(InfoEntity info, @Nullable InfoOpenRecord infoOpen) {
     }
 }
